@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAARH//49c\u003d",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T17:29:34Z",
+      "side": 1,
+      "message": "Yeah, i don\u0027t think we need any tricky imports for this one.  Also, this is most likely to be used in foreground.",
+      "parentUuid": "AAAARH//4/s\u003d",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAARH//4/I\u003d",
         "filename": "nodepool/nodedb.py",
         "patchSetId": 7
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAARH//48Y\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T17:29:34Z",
+      "side": 1,
+      "message": "I like having numeric values in RDBMSs when possible.  It\u0027s usually faster (not important here) and prevents typos screwing up enum-like things (important here).",
+      "parentUuid": "AAAARH//4/I\u003d",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAARH//4+w\u003d",
         "filename": "nodepool/nodedb.py",
         "patchSetId": 7
@@ -47,6 +83,24 @@
       "writtenOn": "2013-08-15T17:22:39Z",
       "side": 1,
       "message": "Not sure if my question about abort, commit, and delete was addressed in the old change. We don\u0027t use them, should they exist?",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//48g\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T17:29:34Z",
+      "side": 1,
+      "message": "It was answered:\n\n  Commit is, at least. I want to keep all of them around.",
+      "parentUuid": "AAAARH//4+w\u003d",
       "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
