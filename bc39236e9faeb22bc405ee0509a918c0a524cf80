@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARH//7u8\u003d",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "return 0 here and sys.exit(main()) below would allow us to test this function. Granted, it\u0027s unlikely we\u0027ll do that in the near future - so take this or leave it.",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7u0\u003d",
+        "filename": "nodepool/myjenkins.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "Copyright header?",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7uk\u003d",
+        "filename": "nodepool/myjenkins.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "Importing both? I\u0027m assuming this is just a straight file copy - so there\u0027s no need to nitpick the insides of it right now.",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7uA\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "super(NodeUpdateListener, self).__init__()",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7t4\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "This looks like you might have been going to log additional information about the exception (judging from the :)",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7tw\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "super()",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7tI\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "If createJenkinsNode throws an exception, the state will still be ready - should we catch here and set the state back to something else?",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7tA\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "Yes, btw.",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7so\u003d",
+        "filename": "requirements.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "d2to1 is no longer needed.",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7sk\u003d",
+        "filename": "requirements.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "pbr\u003e\u003d0.5.21,\u003c1.0",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7sU\u003d",
+        "filename": "setup.cfg",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "These three lines are no longer needed.",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7sI\u003d",
+        "filename": "setup.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "There is a better boilerplate setup.py file now - latest hacking and most of python-*client should have it. However...",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7sA\u003d",
+        "filename": "setup.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "setup_requres\u003d[\u0027pbr\u003e\u003d0.5.21,\u003c1.0\u0027],",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//7sE\u003d",
+        "filename": "setup.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-15T00:54:03Z",
+      "side": 1,
+      "message": "pbr\u003dTrue",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
