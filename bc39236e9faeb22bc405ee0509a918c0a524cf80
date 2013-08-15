@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "AAAARH//5rw\u003d",
+        "filename": "nodepool/myjenkins.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T14:39:42Z",
+      "side": 1,
+      "message": "They do different things.  Even the docs for urllib2 say to use urllib.urlencode.\n\nI think this gets better in 3.",
+      "parentUuid": "AAAARH//7uk\u003d",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAARH//7uA\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 4
@@ -87,6 +105,24 @@
     },
     {
       "key": {
+        "uuid": "AAAARH//5qk\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T14:39:42Z",
+      "side": 1,
+      "message": "Nope, the exception follows this line in the exception log handler.",
+      "parentUuid": "AAAARH//7t4\u003d",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAARH//7tw\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 4
@@ -115,6 +151,24 @@
       "writtenOn": "2013-08-15T00:54:03Z",
       "side": 1,
       "message": "If createJenkinsNode throws an exception, the state will still be ready - should we catch here and set the state back to something else?",
+      "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//5qI\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-15T14:39:42Z",
+      "side": 1,
+      "message": "It will propagate up through the current function (launchNode) and be caught by the outer try/except in run()",
+      "parentUuid": "AAAARH//7tI\u003d",
       "revId": "bc39236e9faeb22bc405ee0509a918c0a524cf80",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
