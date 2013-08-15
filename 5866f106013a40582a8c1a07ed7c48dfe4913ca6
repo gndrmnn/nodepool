@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARH//4/s\u003d",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-15T17:22:39Z",
+      "side": 1,
+      "message": "I think the daemon lib will chdir to / after which having \u0027.\u0027 at the head of the sys.path doesn\u0027t make much sense. Should be ok unless we start importing things after the chdir.",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//4/I\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-15T17:22:39Z",
+      "side": 1,
+      "message": "While we have the option maybe we should make the states as they appear in the DB more readable? We could use the actual string that they represent or the first character? This isn\u0027t necessary but I always have to look in this file before manually editing the DB.",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//4+w\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-15T17:22:39Z",
+      "side": 1,
+      "message": "Not sure if my question about abort, commit, and delete was addressed in the old change. We don\u0027t use them, should they exist?",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//4+k\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-15T17:22:39Z",
+      "side": 1,
+      "message": "Much more readable with the multiplication. Thank you.",
+      "revId": "5866f106013a40582a8c1a07ed7c48dfe4913ca6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
