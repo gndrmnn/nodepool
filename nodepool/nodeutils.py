@@ -17,6 +17,7 @@
 # limitations under the License.
 
 import novaclient.client
+import errno
 import time
 import paramiko
 import socket
@@ -150,13 +151,14 @@ def wait_for_resource(wait_resource, timeout=3600):
 
 
 def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
-    # HPcloud may return errno 111 for about 30 seconds after adding the IP
+    # HPcloud may return ECONNREFUSED or EHOSTUNREACH
+    # for about 30 seconds after adding the IP
     for count in iterate_timeout(timeout, "ssh access"):
         try:
             client = SSHClient(ip, username, **connect_kwargs)
             break
         except socket.error, e:
-            if e[0] not in [111, 113]:
+            if e[0] not in [errno.ECONNREFUSED, errno.EHOSTUNREACH]:
                 log.exception('Exception while testing ssh access:')
 
     out = client.ssh("test ssh access", "echo access okay")
