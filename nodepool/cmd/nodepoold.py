@@ -24,8 +24,8 @@ pid_file_module = extras.try_imports(['daemon.pidlockfile', 'daemon.pidfile'])
 
 import logging.config
 import os
-import sys
 import signal
+import sys
 
 # No nodepool imports here because they pull in paramiko which must not be
 # imported until after the daemonization.
@@ -90,7 +90,7 @@ def main():
 
     if npd.args.version:
         from nodepool.version import version_info as npd_version_info
-        print "Nodepool version: %s" % npd_version_info.version_string()
+        print("Nodepool version: %s" % npd_version_info.version_string())
         return(0)
 
     pid = pid_file_module.TimeoutPIDLockFile(npd.args.pidfile, 10)

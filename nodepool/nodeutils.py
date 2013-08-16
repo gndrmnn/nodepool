@@ -16,15 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import novaclient.client
 import errno
-import time
+import logging
 import paramiko
 import socket
-import logging
-from sshclient import SSHClient
+import time
 
-import nodedb
+import novaclient.client
+
+from nodepool import nodedb
+from nodepool.sshclient import SSHClient
 
 log = logging.getLogger("nodepool.utils")
 
@@ -157,7 +158,7 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
         try:
             client = SSHClient(ip, username, **connect_kwargs)
             break
-        except socket.error, e:
+        except socket.error as e:
             if e[0] not in [errno.ECONNREFUSED, errno.EHOSTUNREACH]:
                 log.exception('Exception while testing ssh access:')
 
@@ -183,7 +184,7 @@ def create_server(client, hostname, base_image, flavor, add_key=False):
 
 
 def create_image(client, server, image_name):
-    # TODO: fix novaclient so it returns an image here
+    # TODO(jog0): fix novaclient so it returns an image here
     # image = server.create_image(name)
     uuid = server.manager.create_image(server, image_name)
     image = client.images.get(uuid)

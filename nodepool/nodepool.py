@@ -16,19 +16,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-import time
 import json
-import threading
-import yaml
-import apscheduler.scheduler
+import logging
 import os
-import myjenkins
+import threading
+import time
+import yaml
+
 from statsd import statsd
 import zmq
 
-import nodedb
-import nodeutils as utils
+from nodepool.apscheduler import scheduler
+from nodepool import myjenkins
+from nodepool import nodedb
+from nodepool import nodeutils as utils
 
 MINS = 60
 HOURS = 60 * MINS
@@ -228,16 +229,13 @@ class NodeLauncher(threading.Thread):
         node_desc = 'Dynamic single use %s node' % self.image.name
         labels = self.image.name
         priv_key = '/var/lib/jenkins/.ssh/id_rsa'
+        launcher_params = dict(port=22, host=self.node.ip)
         if self.target.jenkins_credentials_id:
-            launcher_params = {'port': 22,
-                               'credentialsId':
-                                   self.target.jenkins_credentials_id,  # noqa
-                               'host': self.node.ip}
+            launcher_params['credentialsId'] = (
+                self.target.jenkins_credentials_id)
         else:
-            launcher_params = {'port': 22,
-                               'username': 'jenkins',
-                               'privatekey': priv_key,
-                               'host': self.node.ip}
+            launcher_params['username'] = 'jenkins'
+            launcher_params['privatekey'] = priv_key
         try:
             jenkins.create_node(
                 self.node.nodename,
@@ -426,7 +424,7 @@ class NodePool(threading.Thread):
         self.zmq_context = None
         self.zmq_listeners = {}
         self.db = None
-        self.apsched = apscheduler.scheduler.Scheduler()
+        self.apsched = scheduler.Scheduler()
         self.apsched.start()
 
         self.update_cron = ''

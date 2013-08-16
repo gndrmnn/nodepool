@@ -161,9 +161,9 @@ class NodeDatabase(object):
 
     def print_state(self):
         for provider_name in self.getProviders():
-            print 'Provider:', provider_name
+            print('Provider:', provider_name)
             for image_name in self.getImages(provider_name):
-                print '  Base image:', image_name
+                print('  Base image:', image_name)
                 current = self.getCurrentSnapshotImage(
                     provider_name, image_name)
                 for snapshot_image in self.getSnapshotImages():
@@ -172,14 +172,14 @@ class NodeDatabase(object):
                         continue
                     is_current = ('[current]' if current == snapshot_image
                                   else '')
-                    print '    Snapshot: %s %s %s' % (
+                    print('    Snapshot: %s %s %s' % (
                         snapshot_image.hostname,
                         STATE_NAMES[snapshot_image.state],
-                        is_current)
+                        is_current))
                 for node in self.getNodes():
-                    print '  Node: %s %s %s %s %s' % (
+                    print('  Node: %s %s %s %s %s' % (
                         node.id, node.hostname, STATE_NAMES[node.state],
-                        node.state_time, node.ip)
+                        node.state_time, node.ip))
 
     def abort(self):
         self.session.rollback()
@@ -219,7 +219,7 @@ class NodeDatabase(object):
             snapshot_image_table.c.provider_name == provider_name,
             snapshot_image_table.c.image_name == image_name,
             snapshot_image_table.c.state == READY).order_by(
-            snapshot_image_table.c.version.desc()).all()
+                snapshot_image_table.c.version.desc()).all()
         if not images:
             return None
         return images[0]
