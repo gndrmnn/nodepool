@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARH//1pg\u003d",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-08-16T13:48:54Z",
+      "side": 1,
+      "message": "I agree with lifeless here- I do think that errno.ECONNREFUSED, errno.EHOSTUNREACH is more readable. Same in the comment above. That said - I\u0027m happy to just make that a followon patch.",
+      "revId": "a7144ff7d118801c010f359288a1bc76861902eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
