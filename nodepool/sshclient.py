@@ -32,19 +32,19 @@ class SSHClient(object):
 
     def ssh(self, action, command):
         stdin, stdout, stderr = self.client.exec_command(command)
-        print command
+        print(command)
         output = ''
         for x in stdout:
             output += x
             sys.stdout.write(x)
         ret = stdout.channel.recv_exit_status()
-        print stderr.read()
+        print(stderr.read())
         if ret:
             raise Exception("Unable to %s" % action)
         return output
 
     def scp(self, source, dest):
-        print 'copy', source, dest
+        print('copy', source, dest)
         ftp = self.client.open_sftp()
         ftp.put(source, dest)
         ftp.close()
