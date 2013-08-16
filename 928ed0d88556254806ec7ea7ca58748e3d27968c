@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARH//3iQ\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-16T00:21:47Z",
+      "side": 1,
+      "message": "Ideally those changes would be separate - I realise this is a tiny patch, and if there was nothing else at issue I certainly wouldn\u0027t -1 on this basis alone; more a request for the future.",
+      "revId": "928ed0d88556254806ec7ea7ca58748e3d27968c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//3ik\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-16T00:21:47Z",
+      "side": 1,
+      "message": "If this is required it seems like the DB schema should require non-NULL.",
+      "revId": "928ed0d88556254806ec7ea7ca58748e3d27968c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//3iY\u003d",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-16T00:21:47Z",
+      "side": 1,
+      "message": "Please use errno for this:\nif e.errno not in (errno.ECONNREFUSED, errno.EHOSTUNREACH):\n\n- this is much more readable and maintanable.",
+      "revId": "928ed0d88556254806ec7ea7ca58748e3d27968c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
