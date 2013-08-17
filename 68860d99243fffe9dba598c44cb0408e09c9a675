@@ -16,6 +16,24 @@
       "revId": "68860d99243fffe9dba598c44cb0408e09c9a675",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARH//y0M\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-17T15:44:01Z",
+      "side": 1,
+      "message": "Some rough Saturday morning counting comes up with 4 DB connections if we are also updating an image at the same time. So the default of 5 is probably fine here.",
+      "parentUuid": "AAAARH//y0o\u003d",
+      "revId": "68860d99243fffe9dba598c44cb0408e09c9a675",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
