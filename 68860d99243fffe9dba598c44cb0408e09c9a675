@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARH//y0o\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-17T15:39:31Z",
+      "side": 1,
+      "message": "Do we know what the minimum number of connections to spin up + tear down one node is? Looking at http://docs.sqlalchemy.org/en/latest/core/pooling.html#sqlalchemy.pool.QueuePool.__init__ I think we should set pool_size to that number if 5 is too low.",
+      "revId": "68860d99243fffe9dba598c44cb0408e09c9a675",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
