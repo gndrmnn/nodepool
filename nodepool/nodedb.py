@@ -154,7 +154,8 @@ mapper(SnapshotImage, snapshot_image_table,
 
 class NodeDatabase(object):
     def __init__(self, dburi):
-        self.engine = create_engine(dburi, echo=False)
+        self.engine = create_engine(dburi, echo=False, max_overflow=100,
+                                    pool_recycle=3600)
         metadata.create_all(self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.session = scoped_session(self.session_factory)
