@@ -84,6 +84,13 @@ class FakeClient(object):
         self.servers = FakeList([])
         self.servers.api = self
 
+        self.user = 'fake'
+        self.password = 'fake'
+        self.projectid = 'fake'
+        self.service_type = None
+        self.service_name = None
+        self.region_name = None
+
 
 class FakeSSHClient(object):
     def ssh(self, description, cmd):
