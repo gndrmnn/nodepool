@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARX///h0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-18T16:01:01Z",
+      "side": 1,
+      "message": "When updating a client\u0027s config or swapping out credentials, setting old client to None here will leak file descriptors. Jeblair is punting on solving this problem in a thread safe manner for now.",
+      "revId": "c56d1d0d2ea4950f4b3e50b8f6bfb9801662f13c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
