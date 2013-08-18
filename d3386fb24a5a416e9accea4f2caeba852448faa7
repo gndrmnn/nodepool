@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARn///7o\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-18T21:41:50Z",
+      "side": 1,
+      "message": "This seems like a horrible race condition to embed into our code - clearly we have it today, but this won\u0027t fix it, it just reduces the probability.\n\nI think it\u0027s worth capturing these things: file a bug somewhere about the race existing, then both where you have the delay, and in this commit message, add a link to that bug with a short summary of the issue.",
+      "revId": "d3386fb24a5a416e9accea4f2caeba852448faa7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
