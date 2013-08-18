@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARn///7U\u003d",
+        "filename": "tox.ini",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-18T21:42:44Z",
+      "side": 1,
+      "message": "So when I proposed this change in another project you complained about baby + bathwater tossing. How is this different?",
+      "revId": "1c896555f029e1f11a6c77ff08def60eaefba476",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
