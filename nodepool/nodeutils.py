@@ -40,22 +40,6 @@ def iterate_timeout(max_seconds, purpose):
     raise Exception("Timeout waiting for %s" % purpose)
 
 
-def get_client(provider):
-    args = ['1.1', provider.username, provider.password,
-            provider.project_id, provider.auth_url]
-    kwargs = {}
-    if provider.service_type:
-        kwargs['service_type'] = provider.service_type
-    if provider.service_name:
-        kwargs['service_name'] = provider.service_name
-    if provider.region_name:
-        kwargs['region_name'] = provider.region_name
-    if provider.auth_url == 'fake':
-        return fakeprovider.FAKE_CLIENT
-    client = novaclient.client.Client(*args, **kwargs)
-    return client
-
-
 def get_jenkins(url, user, apikey):
     if apikey == 'fake':
         return fakeprovider.FakeJenkins()
