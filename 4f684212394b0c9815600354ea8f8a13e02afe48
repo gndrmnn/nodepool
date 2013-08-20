@@ -84,6 +84,24 @@
       "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3oU\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T22:16:35Z",
+      "side": 1,
+      "message": "This method and the _waitForResource calls above run in threads outside of the providerManager so will not prevent the manager threads from continueing to do their work. As a result these default timeout values are fine.",
+      "parentUuid": "AAAARn//3uo\u003d",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
