@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARn//31M\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T21:57:58Z",
+      "side": 1,
+      "message": "This reads a lot more clearly to me if instead of a new if block we made this an else to the if (p.username ...):",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//30g\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T21:57:58Z",
+      "side": 1,
+      "message": "Does this try except handle the two passes needed to delete a node?",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//30E\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T21:57:58Z",
+      "side": 1,
+      "message": "For consistency this should probably got into the try on lines 745-746. This way it will match the deleteNode method.",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3zY\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T21:57:58Z",
+      "side": 1,
+      "message": "Same comment here as the previous comment.",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3uo\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-20T21:57:58Z",
+      "side": 1,
+      "message": "Since we are serializing everything should this timeout be much shorter? Same question for the default timeout passed to _waitForResource above.",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
