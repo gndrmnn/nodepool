@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAARn//3n8\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-20T22:25:39Z",
+      "side": 1,
+      "message": "there are 2 ways we may not have an oldmanager: there never was one, or we have nulled it out because parameters changed.",
+      "parentUuid": "AAAARn//31M\u003d",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAARn//30g\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2013-08-20T21:57:58Z",
       "side": 1,
       "message": "Does this try except handle the two passes needed to delete a node?",
+      "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3nw\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-08-20T22:25:39Z",
+      "side": 1,
+      "message": "The cleanupServer method waits for the server to be gone.  If it doesn\u0027t go away, it\u0027ll get picked up on the next pass.  That\u0027s not quite the same behavior as before, but it\u0027s close.  If we lower that timeout, it\u0027ll be closer.",
+      "parentUuid": "AAAARn//30g\u003d",
       "revId": "4f684212394b0c9815600354ea8f8a13e02afe48",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
