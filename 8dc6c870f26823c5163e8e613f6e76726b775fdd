@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARn//3AM\u003d",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-21T02:58:43Z",
+      "side": 1,
+      "message": "FWIW I\u0027d usually write this something like:\nif not safe_hasattr(obj, \u0027id\u0027):\n    obj \u003d self.get(obj)\nself._list.remove(obj)\n\nwhich is both less code and also fixes a bug (hasattr before 3.2 can swallow exceptions in appropriately).\n\nHowever - this is just really just cosmetic.",
+      "revId": "8dc6c870f26823c5163e8e613f6e76726b775fdd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3AI\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-21T02:58:43Z",
+      "side": 1,
+      "message": "I realise it\u0027s existing code but this sort of deep comparison really cries out for a simple dict you could compare:\nif p.details !\u003d oldmanager.provider.details:\n\n...",
+      "revId": "8dc6c870f26823c5163e8e613f6e76726b775fdd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARn//3AE\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-08-21T02:58:43Z",
+      "side": 1,
+      "message": "What happens if the manager throws an exception in stop? Do we end up wedged?",
+      "revId": "8dc6c870f26823c5163e8e613f6e76726b775fdd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
