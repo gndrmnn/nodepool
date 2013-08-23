@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAASX//7Bk\u003d",
+        "filename": "nodepool/jenkins_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-23T18:31:01Z",
+      "side": 1,
+      "message": "Logging this case may be useful if we run into problems with nodepool getting confused and readding the same nodes over and over.",
+      "revId": "0ec22465146c77970ae9cde45362ab6a502a903a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASX//67g\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-23T18:31:01Z",
+      "side": 1,
+      "message": "This function is getting really long. Perhaps the for provider in providers loop can become a function and the for target in targets loop can become a function too?",
+      "revId": "0ec22465146c77970ae9cde45362ab6a502a903a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASX//67Q\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-23T18:31:01Z",
+      "side": 1,
+      "message": "The JenkinsManager doesn\u0027t do anything special to handle the noop Jenkins case. Will myjenkins handle that or will not having a Jenkins target break nodepool?",
+      "revId": "0ec22465146c77970ae9cde45362ab6a502a903a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASX//68A\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-23T18:31:01Z",
+      "side": 1,
+      "message": "Same comment as before. I have a slight preference for making this if the else condition of the if on line 549. I have to think a little harder about why there are two ifs with the same condition in a row.",
+      "revId": "0ec22465146c77970ae9cde45362ab6a502a903a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
