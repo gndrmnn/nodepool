@@ -401,7 +401,10 @@ class ImageUpdater(threading.Thread):
                                (server_id, self.snap_image.id))
 
     def bootstrapServer(self, server, key):
-        ssh_kwargs = {}
+        log = logging.getLogger("nodepool.image.build.%s.%s" %
+                                (self.provider.name, self.image.name))
+
+        ssh_kwargs = dict(log=log)
         if key:
             ssh_kwargs['pkey'] = key
         else:
