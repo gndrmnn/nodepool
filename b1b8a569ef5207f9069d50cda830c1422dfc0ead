@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAASn//sDg\u003d",
+        "filename": "nodepool/sshclient.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-08-30T20:58:57Z",
+      "side": 1,
+      "message": "Might be nice to include the stderr in the Exception() text.",
+      "revId": "b1b8a569ef5207f9069d50cda830c1422dfc0ead",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
