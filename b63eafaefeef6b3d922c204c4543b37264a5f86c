@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAASn//ozE\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-09-02T02:47:23Z",
+      "side": 1,
+      "message": "I find it\u0027s nice to have the imports alpha sorted; easier to avoid merge conflicts in future.",
+      "revId": "b63eafaefeef6b3d922c204c4543b37264a5f86c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASn//oxA\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-09-02T02:47:23Z",
+      "side": 1,
+      "message": "If prettytable isn\u0027t in the stdlib, it should be split out into the 3rd-party imports section.",
+      "revId": "b63eafaefeef6b3d922c204c4543b37264a5f86c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASn//oy0\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-09-02T02:47:23Z",
+      "side": 1,
+      "message": "Ditto.\n\nAlso - this is probably more idiomatic as:\n\n from nodepool import nodepool\n from nodepool import nodedb",
+      "revId": "b63eafaefeef6b3d922c204c4543b37264a5f86c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASn//oys\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-09-02T02:47:23Z",
+      "side": 1,
+      "message": "You may find this method makes testing tricky; usually better to do basicConfig Just Once, in the if __name__ block.",
+      "revId": "b63eafaefeef6b3d922c204c4543b37264a5f86c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAASn//oyU\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-09-02T02:47:23Z",
+      "side": 1,
+      "message": "I\u0027d move all the functionality here into the command object, there doesn\u0027t seem to be any reason to be driving this from outside it.",
+      "revId": "b63eafaefeef6b3d922c204c4543b37264a5f86c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
