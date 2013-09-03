@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAASn//hI8\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-09-03T21:25:28Z",
+      "side": 1,
+      "message": "Is this not a noop? running and configured have already been determined to be equivalent.",
+      "revId": "7a1fe1891f5097635817b76b5483a7ba82cf04e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
