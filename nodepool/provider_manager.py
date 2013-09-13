@@ -21,6 +21,9 @@ import paramiko
 import novaclient
 import novaclient.client
 import threading
+import glanceclient
+import glanceclient.client
+import keystoneclient.v2_0.client as ksclient
 import time
 
 import fakeprovider
@@ -91,14 +94,14 @@ class NotFound(Exception):
 
 class CreateServerTask(Task):
     def main(self, client):
-        server = client.servers.create(**self.args)
+        server = client.nova.servers.create(**self.args)
         return str(server.id)
 
 
 class GetServerTask(Task):
     def main(self, client):
         try:
-            server = client.servers.get(self.args['server_id'])
+            server = client.nova.servers.get(self.args['server_id'])
         except novaclient.exceptions.NotFound:
             raise NotFound()
         return make_server_dict(server)
@@ -106,52 +109,52 @@ class GetServerTask(Task):
 
 class DeleteServerTask(Task):
     def main(self, client):
-        client.servers.delete(self.args['server_id'])
+        client.nova.servers.delete(self.args['server_id'])
 
 
 class ListServersTask(Task):
     def main(self, client):
-        servers = client.servers.list()
+        servers = client.nova.servers.list()
         return [make_server_dict(server) for server in servers]
 
 
 class AddKeypairTask(Task):
     def main(self, client):
-        client.keypairs.create(**self.args)
+        client.nova.keypairs.create(**self.args)
 
 
 class ListKeypairsTask(Task):
     def main(self, client):
-        keys = client.keypairs.list()
+        keys = client.nova.keypairs.list()
         return [dict(id=str(key.id), name=key.name) for
                 key in keys]
 
 
 class DeleteKeypairTask(Task):
     def main(self, client):
-        client.keypairs.delete(self.args['name'])
+        client.nova.keypairs.delete(self.args['name'])
 
 
 class CreateFloatingIPTask(Task):
     def main(self, client):
-        ip = client.floating_ips.create(**self.args)
+        ip = client.nova.floating_ips.create(**self.args)
         return dict(id=str(ip.id), ip=ip.ip)
 
 
 class AddFloatingIPTask(Task):
     def main(self, client):
-        client.servers.add_floating_ip(**self.args)
+        client.nova.servers.add_floating_ip(**self.args)
 
 
 class GetFloatingIPTask(Task):
     def main(self, client):
-        ip = client.floating_ips.get(self.args['ip_id'])
+        ip = client.nova.floating_ips.get(self.args['ip_id'])
         return dict(id=str(ip.id), ip=ip.ip, instance_id=str(ip.instance_id))
 
 
 class ListFloatingIPsTask(Task):
     def main(self, client):
-        ips = client.floating_ips.list()
+        ips = client.nova.floating_ips.list()
         return [dict(id=str(ip.id), ip=ip.ip,
                      instance_id=str(ip.instance_id)) for
                 ip in ips]
@@ -159,24 +162,34 @@ class ListFloatingIPsTask(Task):
 
 class RemoveFloatingIPTask(Task):
     def main(self, client):
-        client.servers.remove_floating_ip(**self.args)
+        client.nova.servers.remove_floating_ip(**self.args)
 
 
 class DeleteFloatingIPTask(Task):
     def main(self, client):
-        client.floating_ips.delete(self.args['ip_id'])
+        client.nova.floating_ips.delete(self.args['ip_id'])
 
 
 class CreateImageTask(Task):
     def main(self, client):
         # This returns an id
-        return str(client.servers.create_image(**self.args))
+        return str(client.nova.servers.create_image(**self.args))
+
+
+class UploadImageTask(Task):
+    def main(self, client):
+        image = client.glance.images.create(
+            name=self.args['image_name'], is_public=False,
+            disk_format=self.args['disk_format'],
+            container_format=self.args['container_format'])
+        image.update(data=open(self.args['filename'], 'rb'))
+        return image.id
 
 
 class GetImageTask(Task):
     def main(self, client):
         try:
-            image = client.images.get(**self.args)
+            image = client.nova.images.get(**self.args)
         except novaclient.exceptions.NotFound:
             raise NotFound()
         # HP returns 404, rackspace can return a 'DELETED' image.
@@ -188,7 +201,7 @@ class GetImageTask(Task):
 class ListExtensionsTask(Task):
     def main(self, client):
         try:
-            resp, body = client.client.get('/extensions')
+            resp, body = client.nova.client.get('/extensions')
             return [x['alias'] for x in body['extensions']]
         except novaclient.exceptions.NotFound:
             # No extensions present.
@@ -197,26 +210,32 @@ class ListExtensionsTask(Task):
 
 class ListFlavorsTask(Task):
     def main(self, client):
-        flavors = client.flavors.list()
+        flavors = client.nova.flavors.list()
         return [dict(id=str(flavor.id), ram=flavor.ram, name=flavor.name)
                 for flavor in flavors]
 
 
 class ListImagesTask(Task):
     def main(self, client):
-        images = client.images.list()
+        images = client.nova.images.list()
         return [make_image_dict(image) for image in images]
 
 
 class FindImageTask(Task):
     def main(self, client):
-        image = client.images.find(**self.args)
+        image = client.nova.images.find(**self.args)
         return dict(id=str(image.id))
 
 
 class DeleteImageTask(Task):
     def main(self, client):
-        client.images.delete(**self.args)
+        client.nova.images.delete(**self.args)
+
+
+class ClientContainer(object):
+    def __init__(self, nova, glance):
+        self.nova = nova
+        self.glance = glance
 
 
 class ProviderManager(TaskManager):
@@ -253,18 +272,41 @@ class ProviderManager(TaskManager):
         self._cloud_metadata_read = True
 
     def _getClient(self):
-        args = ['1.1', self.provider.username, self.provider.password,
-                self.provider.project_id, self.provider.auth_url]
-        kwargs = {}
+        nova_kwargs = {}
+        keystone_kwargs = {}
+        glance_kwargs = {}
+
+        # specific args for client
+        nova_kwargs['auth_url'] = keystone_kwargs['auth_url'] = \
+            self.provider.auth_url
+
+        keystone_kwargs['username'] = self.provider.username
+        keystone_kwargs['password'] = self.provider.password
+        keystone_kwargs['tenant_name'] = self.provider.project_id
+
         if self.provider.service_type:
-            kwargs['service_type'] = self.provider.service_type
+            nova_kwargs['service_type'] = self.provider.service_type
+            glance_kwargs['service_type'] = 'image'
         if self.provider.service_name:
-            kwargs['service_name'] = self.provider.service_name
+            glance_kwargs['service_name'] = self.provider.service_name
         if self.provider.region_name:
-            kwargs['region_name'] = self.provider.region_name
+            nova_kwargs['region_name'] = keystone_kwargs['region_name'] = \
+                self.provider.region_name
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
-        return novaclient.client.Client(*args, **kwargs)
+        nova = novaclient.client.Client(
+            '1.1', self.provider.username, self.provider.password,
+            self.provider.project_id, **nova_kwargs)
+        keystone = ksclient.Client(**keystone_kwargs)
+        glance_endpoint = keystone.service_catalog.url_for(
+            attr='region',
+            filter_value=keystone_kwargs['region_name'],
+            service_type='image')
+        glance_endpoint = glance_endpoint.replace("/v1.0", "")
+        glance = glanceclient.client.Client(
+            '1', glance_endpoint, token=keystone.auth_token,
+            **glance_kwargs)
+        return ClientContainer(nova, glance)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
@@ -414,6 +456,11 @@ class ProviderManager(TaskManager):
 
     def getImage(self, image_id):
         return self.submitTask(GetImageTask(image=image_id))
+
+    def uploadImage(self, image_name, filename, disk_format, container_format):
+        return self.submitTask(UploadImageTask(
+            image_name=image_name, filename='%s.%s' % (filename, disk_format),
+            disk_format=disk_format, container_format=container_format))
 
     def listExtensions(self):
         return self.submitTask(ListExtensionsTask())
