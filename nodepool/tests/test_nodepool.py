@@ -42,6 +42,7 @@ class TestNodepool(tests.DBTestCase):
                      'Gearman client connect',
                      'Gearman client poll',
                      'fake-provider',
+                     'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
                      ]
@@ -91,6 +92,22 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+        pool.stop()
+
+    def test_dib_node(self):
+        """Test that a dib image and node are created"""
+        configfile = self.setup_config('node_dib.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-dib-provider',
+                                     label_name='fake-dib-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+        self.assertEqual(len(nodes), 1)
         pool.stop()
 
     def test_subnodes(self):
