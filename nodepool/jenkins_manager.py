@@ -96,6 +96,7 @@ class JenkinsManager(TaskManager):
     def _getClient(self):
         if self.target.jenkins_apikey == 'fake':
             return fakeprovider.FakeJenkins(self.target.jenkins_user)
+
         return myjenkins.Jenkins(self.target.jenkins_url,
                                  self.target.jenkins_user,
                                  self.target.jenkins_apikey)
