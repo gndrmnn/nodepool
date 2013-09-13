@@ -405,6 +405,18 @@ class ImageUpdater(threading.Thread):
                                " %s for image id: %s" %
                                (server_id, self.snap_image.id))
 
+    def runScriptOnHost(self, host, msg, script, *args):
+        env_vars = ''
+        for k, v in os.environ.items():
+            if k.startswith('NODEPOOL_'):
+                env_vars += ' %s="%s"' % (k, v)
+        cmd = "cd /opt/nodepool-scripts && %s ./%s" % (env_vars, script)
+        for arg in args:
+            cmd += " "
+            cmd += arg
+
+        host.ssh(msg, cmd)
+
     def bootstrapServer(self, server, key):
         log = logging.getLogger("nodepool.image.build.%s.%s" %
                                 (self.provider.name, self.image.name))
@@ -432,14 +444,15 @@ class ImageUpdater(threading.Thread):
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
                  "sudo chmod -R a+rx /opt/nodepool-scripts")
+        if self.image.diskimage:
+            image_dest = "/tmp/%s" % self.image.diskimage
+            host.scp(self.image.diskimage, image_dest)
+            self.runScriptOnHost(
+                host, "run takeover script", self.image.diskimage, image_dest)
+
         if self.image.setup:
-            env_vars = ''
-            for k, v in os.environ.items():
-                if k.startswith('NODEPOOL_'):
-                    env_vars += ' %s="%s"' % (k, v)
-            host.ssh("run setup script",
-                     "cd /opt/nodepool-scripts && %s ./%s" %
-                     (env_vars, self.image.setup))
+            self.runScriptOnHost(
+                host, "run setup script", self.image.setup)
 
 
 class ConfigValue(object):
@@ -478,6 +491,10 @@ class ZMQPublisher(ConfigValue):
     pass
 
 
+class DiskImage(ConfigValue):
+    pass
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -510,6 +527,7 @@ class NodePool(threading.Thread):
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
+        newconfig.diskimages = {}
         newconfig.crons = {}
 
         for name, default in [
@@ -528,6 +546,12 @@ class NodePool(threading.Thread):
             z.name = addr
             z.listener = None
             newconfig.zmq_publishers[z.name] = z
+
+        for diskimage in config['diskimages']:
+            d = DiskImage()
+            d.name = diskimage['name']
+            newconfig.diskimages[d.name] = d
+            d.elements = diskimage['elements']
 
         for provider in config['providers']:
             p = Provider()
@@ -551,6 +575,7 @@ class NodePool(threading.Thread):
                 i.min_ram = image['min-ram']
                 i.setup = image.get('setup')
                 i.reset = image.get('reset')
+                i.diskimage = image.get('diskimage')
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
