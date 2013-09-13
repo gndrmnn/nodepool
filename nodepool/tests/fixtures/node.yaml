@@ -1,4 +1,7 @@
 script-dir: .
+elements-dir: .
+images-dir: .
+
 dburi: '{dburi}'
 
 cron:
