@@ -1,4 +1,6 @@
 script-dir: .
+elements-dir: .
+images-dir: .
 
 dburi: '{dburi}'
 
@@ -14,14 +16,14 @@ zmq-publishers:
 #  - host: localhost
 
 labels:
-  - name: fake-label
-    image: fake-image
+  - name: fake-dib-label
+    image: fake-dib-image
     min-ready: 1
     providers:
-      - name: fake-provider
+      - name: fake-dib-provider
 
 providers:
-  - name: fake-provider
+  - name: fake-dib-provider
     keypair: 'if-present-use-this-keypair'
     username: 'fake'
     password: 'fake'
@@ -33,11 +35,10 @@ providers:
       - net-id: 'some-uuid'
     rate: 0.0001
     images:
-      - name: fake-image
+      - name: fake-dib-image
         base-image: 'Fake Precise'
         min-ram: 8192
-        name-filter: 'Fake'
-        setup: prepare_node_devstack.sh
+        diskimage: fake-dib-image
 
 targets:
   - name: fake-target
@@ -45,3 +46,11 @@ targets:
       url: https://jenkins.example.org/
       user: fake
       apikey: fake
+
+diskimages:
+  - name: fake-dib-image
+    elements:
+      - ubuntu
+      - vm
+    release: precise
+
