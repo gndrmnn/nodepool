@@ -172,6 +172,12 @@ class CreateImageTask(Task):
         return str(client.servers.create_image(**self.args))
 
 
+class UploadImageTask(Task):
+    def main(self, client):
+        # This returns an id
+        return str(client.servers.create_image(**self.args))
+
+
 class GetImageTask(Task):
     def main(self, client):
         try:
@@ -226,6 +232,7 @@ class ProviderManager(TaskManager):
                                               provider.rate)
         self.provider = provider
         self._client = self._getClient()
+        self._glance_client = self._getGlanceClient()
         self._images = {}
         self._cloud_metadata_read = False
         self.__flavors = {}
@@ -249,6 +256,9 @@ class ProviderManager(TaskManager):
         self.__flavors = self._getFlavors()
         self.__extensions = self.listExtensions()
         self._cloud_metadata_read = True
+
+    def _getGlanceClient(self):
+
 
     def _getClient(self):
         args = ['1.1', self.provider.username, self.provider.password,
@@ -414,6 +424,9 @@ class ProviderManager(TaskManager):
 
     def getImage(self, image_id):
         return self.submitTask(GetImageTask(image=image_id))
+
+    def uploadImage(self, filename):
+        return self.submitTask(UploadImageTask(filename=filename))
 
     def listExtensions(self):
         return self.submitTask(ListExtensionsTask())
