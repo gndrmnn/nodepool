@@ -25,6 +25,8 @@ import os.path
 import paramiko
 import random
 import re
+import shlex
+import subprocess
 import threading
 import time
 import yaml
@@ -400,9 +402,11 @@ class NodeLauncher(threading.Thread):
             raise LaunchNetworkException("Unable to find public IP of server")
 
         self.node.ip = ip
+        # only exec that for snapshot images
         self.log.debug("Node id: %s is running, ip: %s, testing ssh" %
                        (self.node.id, ip))
         connect_kwargs = dict(key_filename=self.image.private_key)
+
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,
                                  timeout=self.timeout):
@@ -646,8 +650,8 @@ class SubNodeLauncher(threading.Thread):
             raise LaunchNetworkException("Unable to find public IP of server")
 
         self.subnode.ip = ip
-        self.log.debug("Subnode id: %s for node id: %s is running, ip: %s, "
-                       "testing ssh" %
+        self.log.debug("Subnode id: %s for node id: %s is running, "
+                       "ip: %s, testing ssh" %
                        (self.subnode_id, self.node_id, ip))
         connect_kwargs = dict(key_filename=self.image.private_key)
         if not utils.ssh_connect(ip, self.image.username,
@@ -667,7 +671,6 @@ class SubNodeLauncher(threading.Thread):
 
 
 class ImageUpdater(threading.Thread):
-    log = logging.getLogger("nodepool.ImageUpdater")
 
     def __init__(self, nodepool, provider, image, snap_image_id):
         threading.Thread.__init__(self, name='ImageUpdater for %s' %
@@ -677,6 +680,8 @@ class ImageUpdater(threading.Thread):
         self.snap_image_id = snap_image_id
         self.nodepool = nodepool
         self.scriptdir = self.nodepool.config.scriptdir
+        self.elementsdir = self.nodepool.config.elementsdir
+        self.imagesdir = self.nodepool.config.imagesdir
 
     def run(self):
         try:
@@ -710,6 +715,103 @@ class ImageUpdater(threading.Thread):
                     self.log.exception("Exception deleting image id: %s:" %
                                        self.snap_image.id)
                     return
+
+
+class DiskImageUpdater(ImageUpdater):
+
+    log = logging.getLogger("nodepool.DiskImageUpdater")
+
+    def __init__(self, nodepool, provider, image, snap_image_id,
+                 diskimage_settings):
+        super(DiskImageUpdater, self).__init__(nodepool, provider, image,
+                                               snap_image_id)
+        self.diskimage_settings = diskimage_settings
+
+    def updateImage(self, session):
+        start_time = time.time()
+        timestamp = int(start_time)
+
+        # TODO(mordred) we can optimize by making an image once, not per
+        # provider
+        filename = os.path.join(self.imagesdir,
+                                '%s-%s' % (self.image.name, str(timestamp)))
+        self.log.info("Creating image id: %s with filename %s for %s in %s" %
+                      (self.snap_image.id, filename, self.image.name,
+                       self.provider.name))
+
+        # TODO(mordred) abusing the hostname field
+        self.snap_image.hostname = filename
+        self.snap_image.version = timestamp
+        session.commit()
+
+        self.buildImage(filename)
+
+        image_name = ('%s-%s.template.openstack.org' %
+                      (self.image.name, str(timestamp)))
+        image_id = self.manager.uploadImage(image_name, filename,
+                                            'qcow2', 'bare')
+        self.snap_image.external_id = image_id
+        session.commit()
+        self.log.debug("Image id: %s building image %s" %
+                       (self.snap_image.id, image_id))
+        # It can take a _very_ long time for Rackspace 1.0 to save an image
+        self.manager.waitForImage(image_id, IMAGE_TIMEOUT)
+
+        if statsd:
+            dt = int((time.time() - start_time) * 1000)
+            key = 'nodepool.image_update.%s.%s' % (self.image.name,
+                                                   self.provider.name)
+            statsd.timing(key, dt)
+            statsd.incr(key)
+
+        self.snap_image.state = nodedb.READY
+        session.commit()
+        self.log.info("Image %s in %s is ready" % (self.snap_image.hostname,
+                                                   self.provider.name))
+
+    def buildImage(self, filename):
+        if filename.startswith('./fake-dib-image'):
+            return True
+
+        env = os.environ.copy()
+        for k, v in os.environ.items():
+            if k.startswith('NODEPOOL_'):
+                env[k] = v
+
+        env['ELEMENTS_PATH'] = self.elementsdir
+        img_elements = ''
+        extra_options = ''
+        if self.diskimage_settings:
+            env['DIB_RELEASE'] = self.diskimage_settings.release
+            img_elements = self.diskimage_settings.elements
+            if self.diskimage_settings.qemu_img_options:
+                extra_options = ('--qemu-img-options %s' %
+                                 self.diskimage_settings.qemu_img_options)
+
+        cmd = ('disk-image-create -x --no-tmpfs %s -o %s %s' %
+               (extra_options, filename, img_elements))
+        self.log.info('Running %s' % cmd)
+
+        p = subprocess.Popen(
+            shlex.split(cmd),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=env)
+        (stdout, stderr) = p.communicate()
+        if self.log:
+            self.log.info(stdout)
+        if stderr:
+            for line in stderr:
+                if self.log:
+                    self.log.error(line.rstrip())
+        ret = p.returncode
+        if ret:
+            raise Exception("Unable to create %s" % filename)
+
+
+class SnapshotImageUpdater(ImageUpdater):
+
+    log = logging.getLogger("nodepool.SnapshotImageUpdater")
 
     def updateImage(self, session):
         start_time = time.time()
@@ -907,6 +1009,10 @@ class GearmanServer(ConfigValue):
     pass
 
 
+class DiskImage(ConfigValue):
+    pass
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -944,11 +1050,14 @@ class NodePool(threading.Thread):
         newconfig.targets = {}
         newconfig.labels = {}
         newconfig.scriptdir = config.get('script-dir')
+        newconfig.elementsdir = config.get('elements-dir')
+        newconfig.imagesdir = config.get('images-dir')
         newconfig.dburi = config.get('dburi')
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
         newconfig.gearman_servers = {}
+        newconfig.diskimages = {}
         newconfig.crons = {}
 
         for name, default in [
@@ -989,6 +1098,18 @@ class NodePool(threading.Thread):
                 p.name = provider['name']
                 l.providers[p.name] = p
 
+        if 'diskimages' in config:
+            for diskimage in config['diskimages']:
+                d = DiskImage()
+                d.name = diskimage['name']
+                newconfig.diskimages[d.name] = d
+                if 'elements' in diskimage:
+                    d.elements = u' '.join(diskimage['elements'])
+                else:
+                    d.elements = ''
+                d.release = diskimage.get('release', '')
+                d.qemu_img_options = diskimage.get('qemu-img-options', '')
+
         for provider in config['providers']:
             p = Provider()
             p.name = provider['name']
@@ -1017,8 +1138,9 @@ class NodePool(threading.Thread):
                 i.base_image = image['base-image']
                 i.min_ram = image['min-ram']
                 i.name_filter = image.get('name-filter', None)
-                i.setup = image.get('setup')
+                i.setup = image.get('setup', None)
                 i.reset = image.get('reset')
+                i.diskimage = image.get('diskimage', None)
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
@@ -1456,7 +1578,20 @@ class NodePool(threading.Thread):
         snap_image = session.createSnapshotImage(
             provider_name=provider.name,
             image_name=image.name)
-        t = ImageUpdater(self, provider, image, snap_image.id)
+        if image.setup:
+            t = SnapshotImageUpdater(self, provider, image, snap_image.id)
+        elif image.diskimage:
+            if image.diskimage in self.config.diskimages:
+                diskimage_settings = self.config.diskimages[image.diskimage]
+            else:
+                diskimage_settings = None
+            t = DiskImageUpdater(self, provider, image, snap_image.id,
+                                 diskimage_settings)
+        else:
+            raise Exception(
+                "Invalid image config. Must specify either a setup script, or"
+                " a diskimage to use.")
+
         t.start()
         # Enough time to give them different timestamps (versions)
         # Just to keep things clearer.

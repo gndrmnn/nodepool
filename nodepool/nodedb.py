@@ -295,6 +295,7 @@ class NodeDatabaseSession(object):
 
     def getCurrentSnapshotImage(self, provider_name, image_name):
         images = self.getOrderedReadySnapshotImages(provider_name, image_name)
+
         if not images:
             return None
         return images[0]
