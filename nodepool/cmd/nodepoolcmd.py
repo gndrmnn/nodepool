@@ -52,6 +52,11 @@ class NodePoolCmd(object):
         cmd_image_update.add_argument('image', help='image name')
         cmd_image_update.set_defaults(func=self.image_update)
 
+        cmd_image_build = subparsers.add_parser('image-build',
+                                                 help='build image')
+        cmd_image_build.add_argument('image', help='image name')
+        cmd_image_build.set_defaults(func=self.image_build)
+
         cmd_alien_list = subparsers.add_parser(
             'alien-list',
             help='list nodes not accounted for by nodepool')
@@ -86,6 +91,14 @@ class NodePoolCmd(object):
             help='delete an image')
         cmd_image_delete.set_defaults(func=self.image_delete)
         cmd_image_delete.add_argument('id', help='image id')
+
+        cmd_image_upload = subparsers.add_parser(
+            'image-upload',
+            help='upload an image')
+        cmd_image_upload.set_defaults(func=self.image_upload)
+        cmd_image_upload.add_argument('provider', help='provider name',
+                                      nargs='?', default='all')
+        cmd_image_upload.add_argument('image', help='image name')
 
         self.args = parser.parse_args()
 
@@ -125,11 +138,48 @@ class NodePoolCmd(object):
 
     def image_update(self):
         self.pool.reconfigureManagers(self.pool.config)
-        provider = self.pool.config.providers[self.args.provider]
-        image = provider.images[self.args.image]
+        image = self.pool.config.labels[self.args.image]
+        if image.is_diskimage:
+            # first build image, then upload it
+            self.image_build()
+            self.image_upload()
+        else:
+            if self.args.provider == 'all':
+                # iterate for all providers listed in label
+                for provider in image.providers:
+                    provider = self.pool.config.providers[provider.name]
+                    self.pool.updateImage(session, image, provider)
+            else:
+                provider = self.pool.config.providers[self.args.provider]
+                self.pool.updateImage(session, image, provider)
+             
+    def image_build(self):
+        image = self.pool.config.labels[self.args.image]
+        if not image.is_diskimage:
+            # only can build disk images, not snapshots
+            raise Exception("Trying to build a non disk-image-builder image: %s" %
+                            image.name)
 
+        self.pool.reconfigureImageBuilder(self.pool.config)
+        self.pool.buildImage(self.pool.config.diskimages[image.image])
+        self.pool.waitForBuiltImages()
+
+    def image_upload(self):
+        self.pool.reconfigureManagers(self.pool.config)
+        image = self.pool.config.labels[self.args.image]
+        if not image.is_diskimage:
+            # only can build disk images, not snapshots
+            raise Exception("Trying to upload a non disk-image-builder image: %s" %
+                            image.name)
+
+        self.pool.reconfigureManagers(self.pool.config)
         with self.pool.getDB().getSession() as session:
-            self.pool.updateImage(session, provider.name, image.name)
+            if self.args.provider == 'all':
+                # iterate for all providers listed in label
+                for provider in image.providers:
+                    self.pool.uploadImage(session, provider, image)
+            else:
+                self.pool.uploadImage(session, provider, image)
 
     def alien_list(self):
         self.pool.reconfigureManagers(self.pool.config)
