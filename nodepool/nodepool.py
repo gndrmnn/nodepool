@@ -16,20 +16,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-import time
-import json
-import threading
-import yaml
-import apscheduler.scheduler
-import os
 from statsd import statsd
+import apscheduler.scheduler
+import gear
+import json
+import logging
+import math
+import os
+import threading
+import time
+import yaml
 import zmq
 
+import jenkins_manager
 import nodedb
 import nodeutils as utils
 import provider_manager
-import jenkins_manager
 
 MINS = 60
 HOURS = 60 * MINS
@@ -158,6 +160,45 @@ class NodeUpdateListener(threading.Thread):
     def handleCompletePhase(self, nodename, jobname, result):
         t = NodeCompleteThread(self.nodepool, nodename, jobname, result)
         t.start()
+
+
+class GearmanClient(gear.Client):
+    def getNeededWorkers(self):
+        needed_workers = {}
+        job_worker_map = {}
+        unspecified_jobs = {}
+        for connection in self.active_connections:
+            try:
+                req = gear.StatusAdminRequest()
+                connection.sendAdminRequest(req)
+            except Exception:
+                self.log.exception("Exception while listing functions")
+                continue
+            for line in req.response.split('\n'):
+                parts = [x.strip() for x in line.split()]
+                if not parts or parts[0] == '.':
+                    continue
+                deficit = int(parts[1]) - int(parts[3])
+                if ':' in parts[0]:
+                    job, worker = parts[0].split(':')
+                    workers = job_worker_map.get(job, [])
+                    workers.append(worker)
+                    job_worker_map[job] = workers
+                    if deficit:
+                        needed_workers[worker] = (
+                            needed_workers.get(worker, 0) + deficit)
+                elif deficit:
+                    job = parts[0]
+                    unspecified_jobs[job] = (unspecified_jobs.get(job, 0) +
+                                             deficit)
+        for job, deficit in unspecified_jobs.items():
+            workers = job_worker_map.get(job)
+            if not workers:
+                continue
+            worker = workers[0]
+            needed_workers[worker] = (needed_workers.get(worker, 0) +
+                                      deficit)
+        return needed_workers
 
 
 class NodeLauncher(threading.Thread):
@@ -480,6 +521,10 @@ class ZMQPublisher(ConfigValue):
     pass
 
 
+class GearmanServer(ConfigValue):
+    pass
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -489,6 +534,7 @@ class NodePool(threading.Thread):
         self._stopped = False
         self.config = None
         self.zmq_context = None
+        self.gearman_client = None
         self.apsched = None
 
     def stop(self):
@@ -512,6 +558,7 @@ class NodePool(threading.Thread):
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
+        newconfig.gearman_servers = {}
         newconfig.crons = {}
 
         for name, default in [
@@ -530,6 +577,13 @@ class NodePool(threading.Thread):
             z.name = addr
             z.listener = None
             newconfig.zmq_publishers[z.name] = z
+
+        for server in config.get('gearman-servers', []):
+            g = GearmanServer()
+            g.host = server['host']
+            g.port = server.get('port', 4730)
+            g.name = g.host + '_' + str(g.port)
+            newconfig.gearman_servers[g.name] = g
 
         for provider in config['providers']:
             p = Provider()
@@ -557,6 +611,8 @@ class NodePool(threading.Thread):
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
+        #.factor
+        factor_total = 0.0
         for target in config['targets']:
             t = Target()
             t.name = target['name']
@@ -586,6 +642,13 @@ class NodePool(threading.Thread):
                     p.name = provider['name']
                     i.providers[p.name] = p
                     p.min_ready = provider['min-ready']
+                    p.factor = 0.0
+                    factor_total += p.min_ready
+        for t in newconfig.targets.values():
+            for i in t.images.values():
+                for p in i.providers.values():
+                    p.factor = p.min_ready / factor_total
+
         return newconfig
 
     def reconfigureDatabase(self, config):
@@ -690,6 +753,30 @@ class NodePool(threading.Thread):
             z.listener = NodeUpdateListener(self, z.name)
             z.listener.start()
 
+    def reconfigureGearmanClient(self, config):
+        if self.config:
+            running = set(self.config.gearman_servers.keys())
+        else:
+            running = set()
+
+        configured = set(config.gearman_servers.keys())
+        if running == configured:
+            self.log.debug("Gearman client does not need to be updated")
+            if self.config:
+                config.gearman_servers = self.config.gearman_servers
+            return
+
+        if self.gearman_client:
+            self.log.debug("Stopping gearman client")
+            self.gearman_client.shutdown()
+            self.gearman_client = None
+        if configured:
+            self.gearman_client = GearmanClient()
+            for g in config.gearman_servers.values():
+                self.log.debug("Adding gearman server %s" % g.name)
+                self.gearman_client.addServer(g.host, g.port)
+            self.gearman_client.waitForServer()
+
     def setConfig(self, config):
         self.config = config
 
@@ -702,27 +789,123 @@ class NodePool(threading.Thread):
     def getJenkinsManager(self, target):
         return self.config.jenkins_managers[target.name]
 
-    def getNumNeededNodes(self, session, target, provider, image):
-        # Count machines that are ready and machines that are building,
-        # so that if the provider is very slow, we aren't queueing up tons
-        # of machines to be built.
-        n_ready = len(session.getNodes(provider.name, image.name, target.name,
-                                       nodedb.READY))
-        n_building = len(session.getNodes(provider.name, image.name,
-                                          target.name, nodedb.BUILDING))
-        n_test = len(session.getNodes(provider.name, image.name,
-                                      target.name, nodedb.TEST))
-        n_provider = len(session.getNodes(provider.name))
-        num_to_launch = provider.min_ready - (n_ready + n_building + n_test)
+    def getNeededNodes(self, session):
+        # Get the current demand for nodes.
+        if self.gearman_client:
+            needed_workers = self.gearman_client.getNeededWorkers()
+        else:
+            needed_workers = {}
 
-        # Don't launch more than our provider max
-        max_servers = self.config.providers[provider.name].max_servers
-        num_to_launch = min(max_servers - n_provider, num_to_launch)
+        self.log.debug("Starting node launch calculation with demand: %s" %
+                       needed_workers)
 
-        # Don't launch less than 0
-        num_to_launch = max(0, num_to_launch)
+        nodes_to_launch = {}
+        image_factor_totals = {}
 
-        return num_to_launch
+        def inner_loop():
+            # Start with the number to launch from last time through
+            # the loop.
+            last_num_to_launch = nodes_to_launch.get(provider, 0)
+
+            # Calculate the contribution factor for this
+            # target-image-provider (TIP) for this time through the
+            # loop (it can change in subsequent iterations because
+            # this or other providers may hit their max).
+            image_factor_total = image_factor_totals.get(
+                image.name, 1.0)
+            if image_factor_total > 0.0:
+                factor = provider.factor / image_factor_total
+                image_factor_total -= provider.factor
+            else:
+                factor = 0.0
+            image_factor_totals[image.name] = image_factor_total
+            if image.name not in needed_workers:
+                needed_workers[image.name] = 0
+
+            # Calculate how may of these nodes are needed, starting
+            # with the current demand if we have it.
+            needed1 = needed_workers[image.name]
+            # Reduce by this TIP's contribution factor.
+            needed2 = int(math.ceil(factor * needed1))
+            # Make sure we are at least maintaining min-ready for this
+            # TIP.
+            needed3 = max(needed2, (provider.min_ready-last_num_to_launch))
+
+            # Count machines that are ready and machines that
+            # are building, so that we aren't queueing up tons
+            # of machines to be built.
+            n_ready = len(session.getNodes(provider.name,
+                                           image.name, target.name,
+                                           nodedb.READY))
+            n_building = len(session.getNodes(provider.name,
+                                              image.name, target.name,
+                                              nodedb.BUILDING))
+            n_test = len(session.getNodes(provider.name, image.name,
+                                          target.name, nodedb.TEST))
+            n_provider = len(session.getNodes(provider.name))
+
+            # Reduce the need by the number of nodes for this TIP we
+            # are currently building.
+            needed4 = needed3 - (n_ready + n_building + n_test)
+            # We don't need less than zero nodes.
+            needed = max(0, needed4)
+
+            # Find the max servers for this _provider_ (not TIP).
+            provider_max = self.config.providers[provider.name]\
+                .max_servers
+            # Add our current need to the number to launch (limiting
+            # to the provider max).
+            num_to_launch1 = (last_num_to_launch +
+                              min(provider_max - n_provider, needed))
+
+            # Don't launch less than 0.
+            num_to_launch = max(0, num_to_launch1)
+
+            # Subsequent providers still need to launch their share
+            # plus whatever was over the max for this provider
+            needed_workers[image.name] -= (n_ready + n_building +
+                                           n_test + num_to_launch)
+            needed_workers[image.name] = max(0, needed_workers[image.name])
+
+            nodes_to_launch[provider] = num_to_launch
+
+            self.log.debug("  %s:%s:%s "
+                           "factor: %.02f (%.02f) "
+                           "needed: %s (%s, %s, %s, %s) "
+                           "ready: %s building: %s test: %s "
+                           "provider: %s max: %s "
+                           "launch: %s (%s, %s) still_needed: %s"% (
+                    target.name, image.name, provider.name,
+                    factor, image_factor_total,
+                    needed, needed1, needed2, needed3, needed4,
+                    n_ready, n_building, n_test,
+                    n_provider, provider_max,
+                    num_to_launch, last_num_to_launch, num_to_launch1,
+                    needed_workers[image.name]))
+
+            if num_to_launch != last_num_to_launch:
+                return True
+            return False
+
+        done = False
+        count = 0
+        while not done:
+            count += 1
+            if count == 100:
+                self.log.error("Node calculation failed to stabilize")
+                done = True
+            changed = False
+            for target in self.config.targets.values():
+                for image in target.images.values():
+                    for provider in image.providers.values():
+                        if inner_loop():
+                            changed = True
+            if not changed:
+                done = True
+            else:
+                self.log.debug("Launch calculation changed, running again")
+
+        return nodes_to_launch
 
     def run(self):
         while not self._stopped:
@@ -732,6 +915,7 @@ class NodePool(threading.Thread):
                 self.reconfigureManagers(config)
                 self.reconfigureCrons(config)
                 self.reconfigureUpdateListeners(config)
+                self.reconfigureGearmanClient(config)
                 self.setConfig(config)
 
                 with self.getDB().getSession() as session:
@@ -742,12 +926,12 @@ class NodePool(threading.Thread):
 
     def _run(self, session):
         self.checkForMissingImages(session)
+        nodes_to_launch = self.getNeededNodes(session)
         for target in self.config.targets.values():
             self.log.debug("Examining target: %s" % target.name)
             for image in target.images.values():
                 for provider in image.providers.values():
-                    num_to_launch = self.getNumNeededNodes(
-                        session, target, provider, image)
+                    num_to_launch = nodes_to_launch.get(provider, 0)
                     if num_to_launch:
                         self.log.info("Need to launch %s %s nodes for "
                                       "%s on %s" %
