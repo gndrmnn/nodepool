@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAS3//LNU\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2013-10-02T22:12:26Z",
+      "side": 1,
+      "message": "Cosmetic, but missing a \u003e here.",
+      "revId": "25db69032495c55f893e19f2a2f7ebf72aecb73b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAS3//LMw\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2013-10-02T22:12:26Z",
+      "side": 1,
+      "message": "Another missing \u003e here.",
+      "revId": "25db69032495c55f893e19f2a2f7ebf72aecb73b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAS3//LKU\u003d",
+        "filename": "tools/fake.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2013-10-02T22:12:26Z",
+      "side": 1,
+      "message": "What are your thoughts on how we perform this transition in the production config? Just shut down nodepool during a quiet period for a bit while we merge this and the config change at the same time?",
+      "revId": "25db69032495c55f893e19f2a2f7ebf72aecb73b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
