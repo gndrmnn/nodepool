@@ -50,6 +50,24 @@
       "revId": "25db69032495c55f893e19f2a2f7ebf72aecb73b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAS3//Jdw\u003d",
+        "filename": "tools/fake.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-10-03T14:37:41Z",
+      "side": 1,
+      "message": "Yeah.  Stop puppet, merge change, stop nodepool, apply change, start nodepool, start puppet.",
+      "parentUuid": "AAAAS3//LKU\u003d",
+      "revId": "25db69032495c55f893e19f2a2f7ebf72aecb73b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
