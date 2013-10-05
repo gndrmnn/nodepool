@@ -195,6 +195,12 @@ class DeleteImageTask(Task):
         client.images.delete(**self.args)
 
 
+class FindNetworkTask(Task):
+    def main(self, client):
+        network = client.networks.find(**self.args)
+        return network.id
+
+
 class ProviderManager(TaskManager):
     log = logging.getLogger("nodepool.ProviderManager")
 
@@ -255,6 +261,23 @@ class ProviderManager(TaskManager):
         self._images[name] = image
         return image
 
+    def findFixedNetwork(self, name):
+        """
+        Find a specific network by name.
+
+        :param name: list
+
+        :rtype: list of nics <net-id=net-uuid>
+        """
+        ret = []
+        for n in name:
+            network = {
+                'net-id': self.submitTask(FindNetworkTask(label=n))
+            }
+            ret.append(network)
+
+        return ret
+
     def deleteImage(self, name):
         if name in self._images:
             del self._images[name]
@@ -273,13 +296,28 @@ class ProviderManager(TaskManager):
         return self.submitTask(DeleteKeypairTask(name=name))
 
     def createServer(self, name, min_ram, image_id=None,
-                     image_name=None, key_name=None):
+                     image_name=None, key_name=None, fixed_network=None):
+        """
+        Create (boot) a server.
+
+        :param name: Something to name the server.
+        :param min_ram:
+        :param image_id:
+        :param image_name:
+        :param key_name:
+        :param fixed_network: (optional) An ordered list of networks to be
+                              added to this server.
+
+        :rtype: Server id
+        """
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram)
         create_args = dict(name=name, image=image_id, flavor=flavor['id'])
         if key_name:
             create_args['key_name'] = key_name
+        if fixed_network:
+            create_args['nics'] = self.findFixedNetwork(fixed_network)
 
         return self.submitTask(CreateServerTask(**create_args))
 
