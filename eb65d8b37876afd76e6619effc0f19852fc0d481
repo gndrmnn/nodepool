@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//+5w\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-06T23:50:48Z",
+      "side": 1,
+      "message": "I\u0027d really like to see a test showing how/why this is correct vs the old code.",
+      "revId": "eb65d8b37876afd76e6619effc0f19852fc0d481",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
