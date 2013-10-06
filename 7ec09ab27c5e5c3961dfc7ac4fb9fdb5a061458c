@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//+54\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-06T23:48:50Z",
+      "side": 1,
+      "message": "This needs some explanation of why - either in the code or commit message.",
+      "revId": "7ec09ab27c5e5c3961dfc7ac4fb9fdb5a061458c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
