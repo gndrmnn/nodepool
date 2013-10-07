@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//750\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-07T19:42:41Z",
+      "side": 1,
+      "message": "Please document that additional **kwargs will be passed directly to Nova.",
+      "revId": "5d2226089ec4a4c83fde779d8483a5de648029e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
