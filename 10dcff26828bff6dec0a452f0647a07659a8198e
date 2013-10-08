@@ -34,6 +34,42 @@
       "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//3ng\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-10-08T18:00:25Z",
+      "side": 1,
+      "message": "Yes; if there are several jobs queued for \u0027check-tempest...\u0027 and that job can be serviced by \u0027devstack-precise\u0027 as well as \u0027check-devstack-precise\u0027, it will interpret that as a request for whichever shows up first.\n\nIt\u0027s not wrong, but it\u0027s not ideal. Room for future improvement.",
+      "parentUuid": "AAAATH//3rQ\u003d",
+      "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//3nI\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-10-08T18:00:25Z",
+      "side": 1,
+      "message": "It\u0027s undefined, but the current implementation in gear is likely to be somewhat but not completely stable (it may change when a function is added).",
+      "parentUuid": "AAAATH//3oQ\u003d",
+      "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
