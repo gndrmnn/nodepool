@@ -16,6 +16,24 @@
       "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//3oQ\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2013-10-08T17:56:46Z",
+      "side": 1,
+      "message": "I think that\u0027s only possible if StatusAdminRequest() consistently returns its results in a consistent order?",
+      "parentUuid": "AAAATH//3rQ\u003d",
+      "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
