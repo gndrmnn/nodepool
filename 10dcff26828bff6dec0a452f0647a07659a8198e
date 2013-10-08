@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//3rQ\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-10-08T17:38:28Z",
+      "side": 1,
+      "message": "Does this unfairly bias towards the first listed worker for a job?",
+      "revId": "10dcff26828bff6dec0a452f0647a07659a8198e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
