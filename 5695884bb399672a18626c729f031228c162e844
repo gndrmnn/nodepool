@@ -16,6 +16,24 @@
       "revId": "5695884bb399672a18626c729f031228c162e844",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//tWs\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-10-10T21:49:36Z",
+      "side": 1,
+      "message": "Compare to launchNode below -- this means you can pass in a ProviderImage or a TargetImage and this method will correctly get the one it needs (ProviderImage).  Otherwise, this would be duplicated in a couple of other methods (where it actually gets more complex because those methods don\u0027t care about ProviderImages otherwise).",
+      "parentUuid": "AAAATH//tXk\u003d",
+      "revId": "5695884bb399672a18626c729f031228c162e844",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
