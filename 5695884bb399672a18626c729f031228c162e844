@@ -34,6 +34,24 @@
       "revId": "5695884bb399672a18626c729f031228c162e844",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//tU0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-10-10T21:53:11Z",
+      "side": 1,
+      "message": "Gotcha, thank you for the explanation.",
+      "parentUuid": "AAAATH//tWs\u003d",
+      "revId": "5695884bb399672a18626c729f031228c162e844",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
