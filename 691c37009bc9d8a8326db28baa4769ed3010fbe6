@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//h2c\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-10-14T22:54:40Z",
+      "side": 1,
+      "message": "We only need nodes to count the number of rows. Would it be more performant to have mysql calculate that for us? (probably doesn\u0027t matter at the scale nodepool runs at).",
+      "revId": "691c37009bc9d8a8326db28baa4769ed3010fbe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
