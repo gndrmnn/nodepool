@@ -16,6 +16,24 @@
       "revId": "691c37009bc9d8a8326db28baa4769ed3010fbe6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//h2I\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-10-14T22:56:35Z",
+      "side": 1,
+      "message": "I agree with all of the things you said.  Future enhancement?  :)",
+      "parentUuid": "AAAATH//h2c\u003d",
+      "revId": "691c37009bc9d8a8326db28baa4769ed3010fbe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
