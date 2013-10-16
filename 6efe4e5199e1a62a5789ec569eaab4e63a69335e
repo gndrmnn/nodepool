@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATH//cpM\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-16T02:04:37Z",
+      "side": 1,
+      "message": "\u0027name\u0027 as a list is confusing. How about \u0027network_names\u0027.",
+      "revId": "6efe4e5199e1a62a5789ec569eaab4e63a69335e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//cpI\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-16T02:04:37Z",
+      "side": 1,
+      "message": "I\u0027m not sure it\u0027s needed, but jeblair asked for a type check here - e.g. \u0027if isinstance (network_names, str): raise ValueError(\u0027network_names must be a list\u0027)\u0027.",
+      "revId": "6efe4e5199e1a62a5789ec569eaab4e63a69335e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATH//cpQ\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-16T02:04:37Z",
+      "side": 1,
+      "message": "per jeblair: \u0027fixed_networks\u0027. I\u0027d like you to also be clearer about the type - is it a list of strings ? Are they uuids or names or is either acceptable?",
+      "revId": "6efe4e5199e1a62a5789ec569eaab4e63a69335e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
