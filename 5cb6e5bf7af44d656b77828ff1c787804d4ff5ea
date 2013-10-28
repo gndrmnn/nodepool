@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//yzM\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-28T23:09:29Z",
+      "side": 1,
+      "message": "Having this in a bindep requirements file would be better, I think.",
+      "revId": "5cb6e5bf7af44d656b77828ff1c787804d4ff5ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//yzI\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-28T23:09:29Z",
+      "side": 1,
+      "message": "The git review isn\u0027t really part of dependency installation... perhaps move it lower? Or articulate that it\u0027s a separate concern?",
+      "revId": "5cb6e5bf7af44d656b77828ff1c787804d4ff5ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
