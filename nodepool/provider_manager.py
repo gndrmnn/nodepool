@@ -128,7 +128,7 @@ class DeleteKeypairTask(Task):
 
 class CreateFloatingIPTask(Task):
     def main(self, client):
-        ip = client.floating_ips.create(**self.args)
+        ip = client.floating_ips.create(self.args['pool'])
         return dict(id=ip.id, ip=ip.ip)
 
 
@@ -209,7 +209,8 @@ class ProviderManager(TaskManager):
 
     def _getClient(self):
         args = ['1.1', self.provider.username, self.provider.password,
-                self.provider.project_id, self.provider.auth_url]
+                self.provider.project_id, self.provider.auth_url,
+                self.provider.pool]
         kwargs = {}
         if self.provider.service_type:
             kwargs['service_type'] = self.provider.service_type
@@ -217,6 +218,8 @@ class ProviderManager(TaskManager):
             kwargs['service_name'] = self.provider.service_name
         if self.provider.region_name:
             kwargs['region_name'] = self.provider.region_name
+        if self.provider.pool:
+            kwargs['pool'] = self.provider.pool
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
         return novaclient.client.Client(*args, **kwargs)
