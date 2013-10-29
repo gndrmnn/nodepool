@@ -1,5 +1,7 @@
 Developer setup:
 
+If you want use the floating-ip, set the item "default_floating_pool" in nova.conf
+
 mysql -u root
 
 mysql> create database nodepool;
