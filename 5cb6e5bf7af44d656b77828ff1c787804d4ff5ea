@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAATn//yrs\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2013-10-29T00:10:53Z",
+      "side": 1,
+      "message": "I don\u0027t know. In our actual infrastructure this is all handled by puppet and no manual stuff is required. This is just some basic requirements for a dev setup.",
+      "parentUuid": "AAAATn//yzM\u003d",
+      "revId": "5cb6e5bf7af44d656b77828ff1c787804d4ff5ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn//yzI\u003d",
         "filename": "README",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-28T23:09:29Z",
       "side": 1,
       "message": "The git review isn\u0027t really part of dependency installation... perhaps move it lower? Or articulate that it\u0027s a separate concern?",
+      "revId": "5cb6e5bf7af44d656b77828ff1c787804d4ff5ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//yro\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2013-10-29T00:10:53Z",
+      "side": 1,
+      "message": "Good point, I\u0027ll bump it down a bit so it\u0027s more clear.",
+      "parentUuid": "AAAATn//yzI\u003d",
       "revId": "5cb6e5bf7af44d656b77828ff1c787804d4ff5ea",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
