@@ -24,6 +24,9 @@ directory, ie:
 
 git review -x XXXXX
 
+If the cloud being used has no default_floating_pool defined in nova.conf,
+you will need to configure a pool name using nodepool.layout to use floating IPs.
+
 Set up database:
 
 mysql -u root

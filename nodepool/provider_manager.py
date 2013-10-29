@@ -333,6 +333,8 @@ class ProviderManager(TaskManager):
                                           address=address))
 
     def addPublicIP(self, server_id, pool=None):
+        if not pool:
+            pool = self.provider.pool
         ip = self.createFloatingIP(pool)
         self.addFloatingIP(server_id, ip['ip'])
         for count in iterate_timeout(600, "ip to be added"):
