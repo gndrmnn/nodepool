@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAATn//sPY\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-10-30T11:37:19Z",
+      "side": 1,
+      "message": "thank you",
+      "parentUuid": "AAAATn//tQw\u003d",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn//t5Q\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2013-10-30T01:18:37Z",
       "side": 1,
       "message": "Closes-Bug: #1245829",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//sPM\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-10-30T11:37:19Z",
+      "side": 1,
+      "message": "thank you,i \u0027ll correct it soon.",
+      "parentUuid": "AAAATn//t5Q\u003d",
       "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "AAAATn//sQ8\u003d",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-10-30T11:37:19Z",
+      "side": 1,
+      "message": "thank you,i\u0027ll correct it soon.",
+      "parentUuid": "AAAATn//tRE\u003d",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn//tQ4\u003d",
         "filename": "README",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2013-10-30T06:44:52Z",
       "side": 1,
       "message": "Perhaps this should be in the general operational docs?",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//sP8\u003d",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-10-30T11:37:19Z",
+      "side": 1,
+      "message": "i think it\u0027s better to pass the \"pool\" when nodepool call novaAPI,what do you think about it.",
+      "parentUuid": "AAAATn//tQ4\u003d",
       "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
