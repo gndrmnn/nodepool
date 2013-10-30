@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAATn//tQw\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-30T06:44:52Z",
+      "side": 1,
+      "message": "Typo - explanations.\n\nHowever, there is also a grammar issue, I would say \"Add explanation on how to use floating-ip.\"",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn//t5Q\u003d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -13,6 +30,40 @@
       "writtenOn": "2013-10-30T01:18:37Z",
       "side": 1,
       "message": "Closes-Bug: #1245829",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//tRE\u003d",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-30T06:44:52Z",
+      "side": 1,
+      "message": "Please preserve the blank line here for consistency.",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//tQ4\u003d",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-10-30T06:44:52Z",
+      "side": 1,
+      "message": "Perhaps this should be in the general operational docs?",
       "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
