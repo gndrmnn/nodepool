@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//t5Q\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 8289
+      },
+      "writtenOn": "2013-10-30T01:18:37Z",
+      "side": 1,
+      "message": "Closes-Bug: #1245829",
+      "revId": "1a55f7b0078da7b6838d3b13c3cb984db96ef6a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
