@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//kXQ\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-01T06:32:58Z",
+      "side": 1,
+      "message": "\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d is 9 but nodepool is 8 characters long.\n\nplease remove one.",
+      "revId": "807c883e1a1ec5797fabf66fe695390240cedeff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//kXE\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-01T06:32:58Z",
+      "side": 1,
+      "message": "Ditto here -this needs to line up.",
+      "revId": "807c883e1a1ec5797fabf66fe695390240cedeff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//kWw\u003d",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-01T06:32:58Z",
+      "side": 1,
+      "message": "Please convert the other headings in the file at the same time, otherwise it\u0027s inconsistent.",
+      "revId": "807c883e1a1ec5797fabf66fe695390240cedeff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
