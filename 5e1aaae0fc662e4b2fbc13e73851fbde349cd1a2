@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//gL4\u003d",
+        "filename": "README",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-04T07:16:29Z",
+      "side": 1,
+      "message": "You haven\u0027t fixed this. Developer setup is meant to be a header. Perhaps drop the Misc header?",
+      "revId": "5e1aaae0fc662e4b2fbc13e73851fbde349cd1a2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
