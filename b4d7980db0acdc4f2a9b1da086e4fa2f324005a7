@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//e0Q\u003d",
+        "filename": "README",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-05T01:52:43Z",
+      "side": 1,
+      "message": "\"Developer setup\" needs to be a header. We seem to be miscommunicating. Perhaps switch to a higher bandwidth channel like IRC?",
+      "revId": "b4d7980db0acdc4f2a9b1da086e4fa2f324005a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
