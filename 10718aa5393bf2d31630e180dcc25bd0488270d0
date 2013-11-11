@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//ReM\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:46:36Z",
+      "side": 1,
+      "message": "This says flavor.",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//ReI\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:46:36Z",
+      "side": 1,
+      "message": "This says image. Which is it?",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//ReE\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:46:36Z",
+      "side": 1,
+      "message": "nit: I prefer a dense wrapping for this sort of thing, pep8 accepts it. Up to you.",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//Rd8\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:46:36Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//Rd0\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:46:36Z",
+      "side": 1,
+      "message": "The \u0027and name_filter\u0027 is redundant, as None in \u0027\u0027 is False. This implies that this function is buggy. I think you want:\n\n if (f[\u0027ram\u0027] \u003e\u003d min_ram and (not name_filter or name_filter in f[\u0027name\u0027])):\n\nWhich indicates your tests are broken. Please fix :)",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
