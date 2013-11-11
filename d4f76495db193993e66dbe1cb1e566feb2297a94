@@ -16,6 +16,24 @@
       "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//S4o\u003d",
+        "filename": "README",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-11-11T14:23:21Z",
+      "side": 1,
+      "message": "Yes,thank you.But we use openstack\u0027s client in pool\u0027s codes,if we want to support other clouds,we should modify the pool\u0027s codes.I think we can add a BP about it. What do you think about it ?",
+      "parentUuid": "AAAATn//UOU\u003d",
+      "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
