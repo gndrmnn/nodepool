@@ -34,6 +34,24 @@
       "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//RdQ\u003d",
+        "filename": "README",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-11T22:51:39Z",
+      "side": 1,
+      "message": "I think you misunderstand: It is the cloud providers responsibility to setup default_floating_pool.\n\nAlternatively, nodepool could use accept a pool name as a parameter.",
+      "parentUuid": "AAAATn//S4o\u003d",
+      "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
