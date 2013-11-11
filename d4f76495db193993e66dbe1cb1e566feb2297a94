@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn//UOU\u003d",
+        "filename": "README",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-11-11T05:26:47Z",
+      "side": 1,
+      "message": "Excelent. Could you re-word this to also indicate that the nova.conf instruction is if you are running your own cloud? Something like, if you want to use floating-ip, your cloud provider must support it, or if you are running your own OpenStack, be sure ot set the item ...",
+      "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
