@@ -52,6 +52,24 @@
       "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//RAU\u003d",
+        "filename": "README",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-11-12T02:14:30Z",
+      "side": 1,
+      "message": "Thank you,lifeless.you\u0027re right: It is the cloud providers responsibility to setup default_floating_pool.\nBut I didn\u0027t know we should setup default_floating_pool as before,because it is not necessary.So i think nodepool tells the users is better.\nAlternatively,we also could add the pool in nodepool.layout,and pass the pool to openstack\u0027s client.",
+      "parentUuid": "AAAATn//RdQ\u003d",
+      "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
