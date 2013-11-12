@@ -84,6 +84,24 @@
       "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//Oag\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2013-11-12T16:25:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAATn//Rd0\u003d",
+      "revId": "10718aa5393bf2d31630e180dcc25bd0488270d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
