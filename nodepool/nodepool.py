@@ -612,6 +612,7 @@ class NodePool(threading.Thread):
             p.service_type = provider.get('service-type')
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
+            p.availability_zone = provider.get('availability-zone')
             p.max_servers = provider['max-servers']
             p.rate = provider.get('rate', 1.0)
             p.boot_timeout = provider.get('boot-timeout', 60)

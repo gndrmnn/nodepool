@@ -100,6 +100,7 @@ class FakeClient(object):
         self.client.service_type = None
         self.client.service_name = None
         self.client.region_name = None
+        self.client.availability_zone = None
 
 
 class FakeSSHClient(object):
