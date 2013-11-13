@@ -70,6 +70,24 @@
       "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn//Iss\u003d",
+        "filename": "README",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-13T23:49:49Z",
+      "side": 1,
+      "message": "Thats my point yes - nodepool should support both ways. Something like:\n\n\"\"\"If the cloud being used has no default_floating_pool defined in nova.conf you will need to define a pool name use nodepool.layout to use floating ips.\"\"\"\n\nThat will hint to cloud operators deploying nodepool themselves, and provide the workaround for other users. If the workaround isn\u0027t coded up in nodepool yet, we should add it ;)",
+      "parentUuid": "AAAATn//RAU\u003d",
+      "revId": "d4f76495db193993e66dbe1cb1e566feb2297a94",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
