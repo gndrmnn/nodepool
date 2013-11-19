@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+4Sk\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-11-19T01:51:15Z",
+      "side": 1,
+      "message": "The Client returned below doesn\u0027t seem to take an availability_zone kwarg. I think this may end up being a noop. Instead client.servers.create() in CreateServerTask appears to take an availability_zone kwarg. Is this in the correct spot? I have a hunch that nova will just give you a VM wherever it has room if we leave out the availability zone, which may be fine for a first stab at this but not so good long term.",
+      "revId": "d2a3e6c13c2fbf272709e4c1c09a8a9c41c4232d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
