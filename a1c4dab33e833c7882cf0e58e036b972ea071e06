@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+kn4\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-11-22T23:39:29Z",
+      "side": 1,
+      "message": "This is constructed in such a way that it is a required parameter, but I don\u0027t think you want it to be.",
+      "revId": "a1c4dab33e833c7882cf0e58e036b972ea071e06",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
