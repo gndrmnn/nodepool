@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAATn/+WYY\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 8021
+      },
+      "writtenOn": "2013-11-27T02:39:20Z",
+      "side": 1,
+      "message": "Yes,I\u0027fix it in next patch.",
+      "parentUuid": "AAAATn/+Wi0\u003d",
+      "revId": "e5373edc66c67015531ab52a1bb632d36b6d21f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn/+Wig\u003d",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2013-11-27T01:49:47Z",
       "side": 1,
       "message": "We don\u0027t need to keep track of pool in novaclient itself as the pool is passed directly to floating_ips.create from addPublicIP.",
+      "revId": "e5373edc66c67015531ab52a1bb632d36b6d21f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/+WYo\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 8021
+      },
+      "writtenOn": "2013-11-27T02:39:20Z",
+      "side": 1,
+      "message": "Thank you,Clark,The addPublicIP is called in launchNode:ip \u003d self.manager.addPublicIP(server_id),but the pool is passed None.So what do you think?",
+      "parentUuid": "AAAATn/+Wig\u003d",
       "revId": "e5373edc66c67015531ab52a1bb632d36b6d21f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
