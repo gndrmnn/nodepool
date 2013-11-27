@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+Wi0\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-11-27T01:49:47Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this continue to use **self.args so that new arguments to floating_ips.create are supported without much code overhaul?",
+      "revId": "e5373edc66c67015531ab52a1bb632d36b6d21f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/+Wig\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-11-27T01:49:47Z",
+      "side": 1,
+      "message": "We don\u0027t need to keep track of pool in novaclient itself as the pool is passed directly to floating_ips.create from addPublicIP.",
+      "revId": "e5373edc66c67015531ab52a1bb632d36b6d21f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
