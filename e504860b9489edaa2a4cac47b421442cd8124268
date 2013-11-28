@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+OJU\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-28T18:43:09Z",
+      "side": 1,
+      "message": "It might be worth moving to %(id)s with hostname %(hostname)s for %(name)s in %(provider)s\" %\ndict(id\u003dself.snap_image.id, hostname\u003dhostname, name\u003dself.image.name, provider\u003dself.provider.name))\n\nat this point.",
+      "revId": "e504860b9489edaa2a4cac47b421442cd8124268",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
