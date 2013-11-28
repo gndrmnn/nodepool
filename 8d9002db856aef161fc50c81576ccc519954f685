@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+OJI\u003d",
+        "filename": "README",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-28T18:44:44Z",
+      "side": 1,
+      "message": "We don\u0027t create the pool here so define is inappropriate I think.\n\n\"you will need to configure a pool name using nodepool.layout to use floating IPs.\"",
+      "revId": "8d9002db856aef161fc50c81576ccc519954f685",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
