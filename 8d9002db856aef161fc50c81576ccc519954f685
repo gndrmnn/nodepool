@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "AAAATn/+OI8\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-11-28T18:45:26Z",
+      "side": 1,
+      "message": "Please wrap this text at 70 characters.",
+      "revId": "8d9002db856aef161fc50c81576ccc519954f685",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn/+OJI\u003d",
         "filename": "README",
         "patchSetId": 8
