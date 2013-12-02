@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/+D4Y\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-12-02T23:08:32Z",
+      "side": 1,
+      "message": "Pass in self.provider.pool when calling self.manager.addPublicIP().",
+      "revId": "9897b89cdda5dc702b715c7dcb1000284a70a0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/+D4Q\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-12-02T23:08:32Z",
+      "side": 1,
+      "message": "Pass in self.provider.pool when calling self.manager.addPublicIP().",
+      "revId": "9897b89cdda5dc702b715c7dcb1000284a70a0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/+D4M\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-12-02T23:08:32Z",
+      "side": 1,
+      "message": "This should be p.pool \u003d provider.get(\u0027pool\u0027) so that the pool argument is not required.",
+      "revId": "9897b89cdda5dc702b715c7dcb1000284a70a0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/+D38\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-12-02T23:08:32Z",
+      "side": 1,
+      "message": "These two new lines should be removed if the callers of addPublicIP pass in pool.",
+      "revId": "9897b89cdda5dc702b715c7dcb1000284a70a0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
