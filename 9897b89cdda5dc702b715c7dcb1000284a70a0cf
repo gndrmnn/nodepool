@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "AAAATn/+DbA\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 8336
+      },
+      "writtenOn": "2013-12-03T01:50:32Z",
+      "side": 1,
+      "message": "I could not pass with self.provider.pool, self.provider only support name. Reading the link,please: http://paste.openstack.org/show/54030/",
+      "parentUuid": "AAAATn/+D4Q\u003d",
+      "revId": "9897b89cdda5dc702b715c7dcb1000284a70a0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAATn/+D4M\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 9
