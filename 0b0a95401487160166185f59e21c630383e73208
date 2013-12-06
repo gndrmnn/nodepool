@@ -16,6 +16,24 @@
       "revId": "0b0a95401487160166185f59e21c630383e73208",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/9tXo\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2013-12-06T21:20:53Z",
+      "side": 1,
+      "message": "We are going to give this a try as is then if we need more data we can add the facility for that in the future.",
+      "parentUuid": "AAAATn/9t1A\u003d",
+      "revId": "0b0a95401487160166185f59e21c630383e73208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
