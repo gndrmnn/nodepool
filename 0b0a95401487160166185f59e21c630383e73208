@@ -34,6 +34,74 @@
       "revId": "0b0a95401487160166185f59e21c630383e73208",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/9rD0\u003d",
+        "filename": "tools/fake-servers.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-12-08T20:35:58Z",
+      "side": 1,
+      "message": "I realise this was already like this, but it should be split into stdlib \u0026 third party libraries [except where import order affects things].\n\n import json\n import logging\n import select\n import socket\n import threading\n\n import gear\n import zmq",
+      "revId": "0b0a95401487160166185f59e21c630383e73208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/9rDw\u003d",
+        "filename": "tools/fake-servers.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-12-08T20:35:58Z",
+      "side": 1,
+      "message": "And two lines of VWS between top level items so an extra line here.",
+      "revId": "0b0a95401487160166185f59e21c630383e73208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/9rDs\u003d",
+        "filename": "tools/fake-servers.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-12-08T20:35:58Z",
+      "side": 1,
+      "message": "And here.",
+      "revId": "0b0a95401487160166185f59e21c630383e73208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAATn/9rDo\u003d",
+        "filename": "tools/fake-servers.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-12-08T20:35:58Z",
+      "side": 1,
+      "message": "And here.",
+      "revId": "0b0a95401487160166185f59e21c630383e73208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
