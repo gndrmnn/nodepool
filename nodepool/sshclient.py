@@ -56,3 +56,6 @@ class SSHClient(object):
         ftp = self.client.open_sftp()
         ftp.put(source, dest)
         ftp.close()
+
+    def close(self):
+        self.client.close()
