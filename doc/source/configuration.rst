@@ -236,6 +236,13 @@ same name.  Example::
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+          install: install_node.sh
+          install-done-stamp: /installation_complete
+          install-poll-interval: 10
+          install-poll-count: 60
+          wait-for-shutoff-before-snapshot: False
+          shutoff-poll-count: 0
+          shutoff-poll-interval: 10
     - name: provider2
       username: 'username'
       password: 'password'
@@ -290,6 +297,24 @@ The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A
 maximum of five entries is allowed, and both keys and values must be
 255 characters or less.
+
+The `install` key is optional and defines a script to be run after Nova
+has reported the node as booted, but before Nodepool considers the node
+ready to be prepared. This script could be used to install the operating
+system.
+
+`install-done-stamp` is also optional - even when `install` is used.  It
+defines a file which will exist when the install phase is complete, and
+will be polled for at the interval (in secs) and count also defined by the
+variables `install-poll-interval` and `install-poll-count`. This allows the
+image to be rebooted by the `install` script - potentially several times
+- before the install phase is completed.
+
+`wait-for-shutoff-before-snapshot` optional parameter to make sure the
+instance has reached `SHUTOFF` state before snapshoting it. This could be
+useful to ensure that the instance's filesystem is consistent. The system
+will poll the cloud for `shutoff-poll-count` many times, waiting
+`shutoff-poll-interval` seconds between the polls.
 
 targets
 -------
