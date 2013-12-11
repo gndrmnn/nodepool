@@ -181,6 +181,10 @@ same name.  Example::
           reset: reset_node.sh
           username: jenkins
           private-key: /var/lib/jenkins/.ssh/id_rsa
+          install: install_node.sh
+          install-done-stamp: /installation_complete
+          install-poll-interval: 10
+          install-poll-count: 60
     - name: provider2
       username: 'username'
       password: 'password'
@@ -218,6 +222,17 @@ at random and provide that to nova. This should give a good distribution
 of availability zones being used. If you need more control of the
 distribution you can use multiple logical providers each providing a
 different list of availabiltiy zones.
+
+The `install` key is optional and defines a script to be run after Nova
+has reported the node as booted, but before Nodepool considers the node
+ready to be prepared.  The install phase is separate from the prepare
+phase defined by `setup`.
+
+`install-done-stamp` is also optional - even when `install` is used.  It
+defines a file which will exist when the install phase is complete, and
+will be polled for at the interval and count also defined in the file.
+This allows the image to be rebooted by the `install` script - potentially
+several times - before the install phase is completed.
 
 targets
 -------
