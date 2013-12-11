@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/9agQ\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2013-12-11T19:24:48Z",
+      "side": 1,
+      "message": "I think something more descriptive would be nice here, like \u0027getSSHConnection\u0027.",
+      "revId": "7826414fc2e4d881afb4d78323c2e0bbd0c5220e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
