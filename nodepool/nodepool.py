@@ -483,6 +483,8 @@ class ImageUpdater(threading.Thread):
             raise Exception("Unable to find public IP of server")
         server['public_v4'] = ip
 
+        self.installServer(server, key, use_password=use_password)
+
         self.bootstrapServer(server, key, use_password=use_password)
 
         image_id = self.manager.createImage(server_id, hostname)
@@ -514,10 +516,7 @@ class ImageUpdater(threading.Thread):
                                " %s for image id: %s" %
                                (server_id, self.snap_image.id))
 
-    def bootstrapServer(self, server, key, use_password=False):
-        log = logging.getLogger("nodepool.image.build.%s.%s" %
-                                (self.provider.name, self.image.name))
-
+    def getSSHConnection(self, server, key, log, use_password):
         ssh_kwargs = dict(log=log)
         if not use_password:
             ssh_kwargs['pkey'] = key
@@ -530,10 +529,9 @@ class ImageUpdater(threading.Thread):
                                      timeout=CONNECT_TIMEOUT)
             if host:
                 break
+        return host
 
-        if not host:
-            raise Exception("Unable to log in via SSH")
-
+    def copyNodepoolScripts(self, host):
         host.ssh("make scripts dir", "mkdir -p scripts")
         for fname in os.listdir(self.scriptdir):
             path = os.path.join(self.scriptdir, fname)
@@ -544,6 +542,16 @@ class ImageUpdater(threading.Thread):
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
                  "sudo chmod -R a+rx /opt/nodepool-scripts")
+
+    def bootstrapServer(self, server, key, use_password=False):
+        log = logging.getLogger("nodepool.image.build.%s.%s" %
+                                (self.provider.name, self.image.name))
+        host = self.getSSHConnection(server, key, log, use_password)
+        if not host:
+            raise Exception("Unable to log in via SSH")
+
+        self.copyNodepoolScripts(host)
+
         if self.image.setup:
             env_vars = ''
             for k, v in os.environ.items():
@@ -552,6 +560,52 @@ class ImageUpdater(threading.Thread):
             host.ssh("run setup script",
                      "cd /opt/nodepool-scripts && %s ./%s" %
                      (env_vars, self.image.setup))
+
+    def installServer(self, server, key, use_password=False):
+        if not self.image.install:
+            return
+
+        log = logging.getLogger("nodepool.image.install.%s.%s" %
+                                (self.provider.name, self.image.name))
+
+        host = self.getSSHConnection(server, key, log, use_password)
+        if not host:
+            raise Exception("Unable to log in via SSH")
+
+        self.copyNodepoolScripts(host)
+
+        host.ssh("run install script",
+                 "cd /opt/nodepool-scripts && ./%s" % self.image.install)
+
+        host.close()
+        self.waitForInstallationToCompete(server, key)
+
+    def waitForInstallationToCompete(self, server, key):
+        if not self.image.install_done_stamp:
+            return
+
+        log = logging.getLogger("nodepool.image.install.wait.%s.%s" %
+                                (self.provider.name, self.image.name))
+
+        remaining_polls = self.image.install_poll_count
+
+        while remaining_polls:
+            host = self.getSSHConnection(server, key, log)
+            if host:
+                status = host.ssh(
+                    "check install status",
+                    "test -e %s && echo DONE || true" % (
+                        self.image.install_done_stamp),
+                    output=True)
+                host.close()
+                status = status or ''
+                if "DONE" in status:
+                    return
+            remaining_polls -= 1
+            time.sleep(self.image.install_poll_interval)
+
+        raise Exception(
+            'Failed to install host - max number of polls reached')
 
 
 class ConfigValue(object):
@@ -682,6 +736,10 @@ class NodePool(threading.Thread):
                 i.min_ram = image['min-ram']
                 i.name_filter = image.get('name-filter', None)
                 i.setup = image.get('setup')
+                i.install = image.get('install')
+                i.install_done_stamp = image.get('install-done-stamp')
+                i.install_poll_interval = image.get('install-poll-interval', 30)
+                i.install_poll_count = image.get('install-poll-count', 10)
                 i.reset = image.get('reset')
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
