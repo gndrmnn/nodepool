@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/9Wzg\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 5044
+      },
+      "writtenOn": "2013-12-12T10:10:03Z",
+      "side": 1,
+      "message": "I might be wrong, but if the takeover script runs kexec/reboot, will you be able to re-use the host (ssh connection)? I think you would need a new connection? Also, would need to know when the takeover has finished.",
+      "revId": "8b17fb3affda14610a85b6667cce6c75b89e9132",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
