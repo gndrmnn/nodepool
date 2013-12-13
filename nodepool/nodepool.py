@@ -393,6 +393,7 @@ class ImageUpdater(threading.Thread):
         self.snap_image_id = snap_image_id
         self.nodepool = nodepool
         self.scriptdir = self.nodepool.config.scriptdir
+        self.ssh_key = self.nodepool.config.ssh_key
 
     def run(self):
         try:
@@ -529,6 +530,8 @@ class ImageUpdater(threading.Thread):
             for k, v in os.environ.items():
                 if k.startswith('NODEPOOL_'):
                     env_vars += ' %s="%s"' % (k, v)
+            if 'NODEPOOL_SSH_KEY' not in env_vars and self.ssh_key:
+                env_vars += ' NODEPOOL_SSH_KEY="%s"' % self.ssh_key
             host.ssh("run setup script",
                      "cd /opt/nodepool-scripts && %s ./%s" %
                      (env_vars, self.image.setup))
@@ -600,10 +603,13 @@ class NodePool(threading.Thread):
         newconfig = Config()
         newconfig.db = None
         newconfig.dburi = None
+        newconfig.ssh_key = None
+        newconfig.ssh_key_file = None
         newconfig.providers = {}
         newconfig.targets = {}
         newconfig.scriptdir = config.get('script-dir')
         newconfig.dburi = config.get('dburi')
+        newconfig.ssh_key_file = config.get('ssh-key-file')
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
@@ -701,6 +707,13 @@ class NodePool(threading.Thread):
             config.db = nodedb.NodeDatabase(config.dburi)
         else:
             config.db = self.config.db
+
+    def reloadSSHKey(self, config):
+        if (config.ssh_key_file and ((not self.config) or
+            config.ssh_key_file != self.config.ssh_key_file)):
+            config.ssh_key = open(config.ssh_key_file, 'rb').read()
+        elif config.ssh_key_file:
+            config.ssh_key = self.config.ssh_key
 
     def reconfigureManagers(self, config):
         stop_managers = []
@@ -963,6 +976,7 @@ class NodePool(threading.Thread):
             try:
                 config = self.loadConfig()
                 self.reconfigureDatabase(config)
+                self.reloadSSHKey(config)
                 self.reconfigureManagers(config)
                 self.reconfigureCrons(config)
                 self.reconfigureUpdateListeners(config)
