@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAATn/9LEk\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2013-12-15T23:33:08Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be in the inner loop - it should be 4 characters further left, otherwise you\u0027re setting it one for each item in os.environ.\n\nAlso the double string subst is a bit weird. Why not just\nenv_vars +\u003d \u0027 NODEPOOL_SSH_KEY\u003d\"%s\"\u0027 % (self.ssh_key,)",
+      "revId": "c38e9f53266f2fa254589ae4ee7ae1e039097ed8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
