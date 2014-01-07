@@ -185,6 +185,9 @@ same name.  Example::
           install-done-stamp: /installation_complete
           install-poll-interval: 10
           install-poll-count: 60
+          launch-done-stamp: /launch_complete
+          launch-poll-interval: 30
+          launch-poll-count: 10
     - name: provider2
       username: 'username'
       password: 'password'
@@ -233,6 +236,10 @@ defines a file which will exist when the install phase is complete, and
 will be polled for at the interval and count also defined in the file.
 This allows the image to be rebooted by the `install` script - potentially
 several times - before the install phase is completed.
+
+`launch-done-stamp` along with the poll interval and poll count settings
+allow the VM to run some preparation steps, potentially including reboots,
+before a node launched by Nova is ready to have a job scheduled on it.
 
 targets
 -------
