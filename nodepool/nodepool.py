@@ -649,6 +649,14 @@ class NodePool(threading.Thread):
             p.pool = provider.get('pool')
             p.rate = provider.get('rate', 1.0)
             p.boot_timeout = provider.get('boot-timeout', 60)
+            p.use_neutron = (str(provider.get('use-neutron', 'false')).lower()
+                             in ['true', 'yes', 't', '1'])
+            if p.use_neutron:
+                net_id = provider.get('net-id', None)
+                if not net_id:
+                    raise Exception("The net-id argument is required for "
+                                    "enabled Neutron support.")
+                p.nics = [{"net-id": net_id, "v4-fixed-ip": ""}]
             p.images = {}
             for image in provider['images']:
                 i = ProviderImage()

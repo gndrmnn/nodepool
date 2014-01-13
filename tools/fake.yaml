@@ -19,6 +19,8 @@ providers:
     project-id: 'fake'
     max-servers: 96
     pool: 'fake'
+    use-neutron: 'false'
+    net-id: 'its not needed if not use-neutron'
     images:
       - name: nodepool-fake
         base-image: 'Fake Precise'
