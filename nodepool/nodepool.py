@@ -436,7 +436,10 @@ class ImageUpdater(threading.Thread):
         self.log.info("Creating image id: %s with hostname %s for %s in %s" %
                       (self.snap_image.id, hostname, self.image.name,
                        self.provider.name))
-        if self.manager.hasExtension('os-keypairs'):
+        if self.provider.keypair:
+            key_name = self.provider.keypair
+            key = None
+        elif self.manager.hasExtension('os-keypairs'):
             key_name = hostname.split('.')[0]
             key = self.manager.addKeypair(key_name)
         else:
@@ -646,6 +649,7 @@ class NodePool(threading.Thread):
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
             p.max_servers = provider['max-servers']
+            p.keypair = provider.get('keypair', None)
             p.pool = provider.get('pool')
             p.rate = provider.get('rate', 1.0)
             p.boot_timeout = provider.get('boot-timeout', 60)
