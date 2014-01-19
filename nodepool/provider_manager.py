@@ -394,9 +394,12 @@ class ProviderManager(TaskManager):
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
 
-        for count in iterate_timeout(600, "waiting for server %s deletion" %
-                                     server_id):
-            try:
-                self.getServer(server_id)
-            except NotFound:
-                return
+        # retry up to 10 times to delete the server, waiting a minute between
+        for retry in range(10):
+            for count in iterate_timeout(60, "waiting for server %s deletion" %
+                                         server_id):
+                try:
+                    self.getServer(server_id)
+                except NotFound:
+                    return
+            self.deleteServer(server_id)
