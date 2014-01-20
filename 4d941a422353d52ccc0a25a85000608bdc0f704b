@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/+6eQ\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-01-20T19:54:58Z",
+      "side": 1,
+      "message": "If there are lots of servers to free this is just going to block the taskmanager thread entirely until each one is gone. So it serializes everything.\n\nTo delete faster, the simplest way would be to just run the whole reap check more often, or if that is slow to determine what to delete, put these servers in an in memory cached datastructure and try to delete everything in it every minute or so.",
+      "revId": "4d941a422353d52ccc0a25a85000608bdc0f704b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
