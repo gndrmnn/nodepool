@@ -1093,7 +1093,13 @@ class NodePool(threading.Thread):
                 self.log.debug('Deleting server %s for node id: %s' %
                                (node.external_id,
                                 node.id))
-                manager.cleanupServer(server['id'])
+                deleted = manager.cleanupServer(
+                    server['id'], block_on_delete=False)
+                if not deleted:
+                    # The cloud provider hasn't deleted the server yet, we need
+                    # to keep our DB record until they do. Periodic cleanup
+                    # will retry the deletion.
+                    return
             except provider_manager.NotFound:
                 pass
 
@@ -1121,7 +1127,13 @@ class NodePool(threading.Thread):
                 self.log.debug('Deleting server %s for image id: %s' %
                                (snap_image.server_external_id,
                                 snap_image.id))
-                manager.cleanupServer(server['id'])
+                deleted = manager.cleanupServer(
+                    server['id'], block_on_delete=False)
+                if not deleted:
+                    # The cloud provider hasn't deleted the server yet, we need
+                    # to keep our DB record until they do. Periodic cleanup
+                    # will retry the deletion.
+                    return
             except provider_manager.NotFound:
                 self.log.warning('Image server id %s not found' %
                                  snap_image.server_external_id)
