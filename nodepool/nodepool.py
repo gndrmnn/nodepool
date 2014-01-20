@@ -1180,7 +1180,8 @@ class NodePool(threading.Thread):
     def cleanupOneNode(self, session, node):
         now = time.time()
         time_in_state = now - node.state_time
-        if (node.state in [nodedb.READY, nodedb.HOLD] or
+        if node.state != nodedb.DELETE and (
+            node.state in [nodedb.READY, nodedb.HOLD] or
             time_in_state < 900):
             return
         delete = False
