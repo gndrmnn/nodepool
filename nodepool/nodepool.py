@@ -1178,7 +1178,8 @@ class NodePool(threading.Thread):
         self.log.debug("Finished periodic cleanup")
 
     def cleanupOneNode(self, session, node):
-        if (node.state in [nodedb.READY, nodedb.HOLD] or
+        if node.state != nodedb.DELETE and (
+            node.state in [nodedb.READY, nodedb.HOLD] or
             node.state_time < 900):
             return
         delete = False
