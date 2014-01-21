@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/+2Pg\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-01-21T13:40:38Z",
+      "side": 1,
+      "message": "There\u0027s an HOURS variable in the top scope which could be used here. I know it wasn\u0027t used previously in the deleted code though, so not a -1 from me.",
+      "revId": "5e1050f20d6904dffddc4453eba2191df31f325d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
