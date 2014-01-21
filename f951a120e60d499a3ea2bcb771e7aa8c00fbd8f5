@@ -16,6 +16,24 @@
       "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+2IM\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-01-21T14:04:11Z",
+      "side": 1,
+      "message": "Oh, nevermind--this method would have died on that exception anyway, huh?",
+      "parentUuid": "AAAAUH/+2N4\u003d",
+      "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
