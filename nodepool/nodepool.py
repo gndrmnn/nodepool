@@ -46,6 +46,9 @@ TEST_CLEANUP = 5 * MINS      # When to start deleting a node that is in TEST
 KEEP_OLD_IMAGE = 24 * HOURS  # How long to keep an old (good) image
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
                              # its job.
+DELETE_RETRY = 18            # How many times to retry deleting a node in
+                             # the node complete thread (total time spent
+                             # attempting deletion is DELETE_RETRY*10 mins)
 
 
 class NodeCompleteThread(threading.Thread):
@@ -124,7 +127,12 @@ class NodeCompleteThread(threading.Thread):
             statsd.incr(key + '.builds')
 
         time.sleep(DELETE_DELAY)
-        self.nodepool.deleteNode(session, node)
+        for x in range(DELETE_RETRY):
+            try:
+                self.nodepool.deleteNode(session, node)
+            except Exception:
+                self.log.exception("Exception while deleting node id: %s "
+                                   "(attempt %s)" % (node.id, x+1))
 
 
 class NodeUpdateListener(threading.Thread):
