@@ -16,6 +16,24 @@
       "revId": "b2861e52e52e625d79d76e3c72686c4c20ab2694",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+zkE\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-01-21T22:22:23Z",
+      "side": 1,
+      "message": "It hasn\u0027t: a commit is caused in the node.state assigner, so we could throw an exception from mysql here due to a transaction conflict (e.g. with the CLI).",
+      "parentUuid": "AAAAUH/+2QI\u003d",
+      "revId": "b2861e52e52e625d79d76e3c72686c4c20ab2694",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
