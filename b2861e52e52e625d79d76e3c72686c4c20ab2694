@@ -52,6 +52,24 @@
       "revId": "b2861e52e52e625d79d76e3c72686c4c20ab2694",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+vQ4\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-01-22T16:43:41Z",
+      "side": 1,
+      "message": "Everything is always wrapped in a general exception handler, so we don\u0027t need it in order to avoid a thread exiting or anything.  However, this error message may still be mildly useful (in seeing the process the program followed after the initial error), but could now probably be better worded as \"Exception marking node id: %s for deletion\".",
+      "parentUuid": "AAAAUH/+zis\u003d",
+      "revId": "b2861e52e52e625d79d76e3c72686c4c20ab2694",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
