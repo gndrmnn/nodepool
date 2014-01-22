@@ -34,6 +34,23 @@
       "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+vOI\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-01-22T16:48:43Z",
+      "side": 1,
+      "message": "Why even wait one cycle?  Why not return before the iterate loop?",
+      "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
