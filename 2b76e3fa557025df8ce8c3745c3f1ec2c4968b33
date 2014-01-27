@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Submitted-by: Jenkins
+Submitted-at: Mon, 27 Jan 2014 23:49:22 +0000
+Reviewed-on: https://review.openstack.org/66367
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
