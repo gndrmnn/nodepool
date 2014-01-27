@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/+Z5o\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2014-01-27T09:46:48Z",
+      "side": 0,
+      "message": "Seems to be a bug that this doesn\u0027t pass use_password so fixed in this commit too.",
+      "revId": "cbf04d9566d0d027c2f504e64db373aa236969b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
