@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/+PoM\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-01-28T18:42:56Z",
+      "side": 1,
+      "message": "Hex is 0-9a-f not a-z.",
+      "revId": "42a4deb6a61bf64ae281aa0fcc2f0205c5582e79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
