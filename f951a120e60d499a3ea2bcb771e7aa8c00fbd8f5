@@ -51,6 +51,24 @@
       "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+Uks\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-01-28T01:27:53Z",
+      "side": 1,
+      "message": "We could do that later in the stack - I wanted to keep this a small tidy patch.",
+      "parentUuid": "AAAAUH/+vOI\u003d",
+      "revId": "f951a120e60d499a3ea2bcb771e7aa8c00fbd8f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
