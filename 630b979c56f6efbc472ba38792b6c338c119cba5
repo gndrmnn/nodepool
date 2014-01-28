@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/+Plk\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-01-28T18:48:14Z",
+      "side": 1,
+      "message": "Would it be better to keep a single ssh connection open rather than opening a bunch of ssh connections over time? The setup and teardown of connections isn\u0027t free.",
+      "revId": "630b979c56f6efbc472ba38792b6c338c119cba5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+Pj0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-01-28T18:48:14Z",
+      "side": 1,
+      "message": "Is it simpler to check stdout than to check a return code? I think you can just `test -e %s` if you check the return code.",
+      "revId": "630b979c56f6efbc472ba38792b6c338c119cba5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
