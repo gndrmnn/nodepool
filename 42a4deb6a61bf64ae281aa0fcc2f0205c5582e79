@@ -16,6 +16,24 @@
       "revId": "42a4deb6a61bf64ae281aa0fcc2f0205c5582e79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/+JmE\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2014-01-29T17:27:18Z",
+      "side": 1,
+      "message": "Thanks for sounding the stupid mistake alarm *grin*\n\nFixed.  But also supporting lower+upper now.",
+      "parentUuid": "AAAAUH/+PoM\u003d",
+      "revId": "42a4deb6a61bf64ae281aa0fcc2f0205c5582e79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
