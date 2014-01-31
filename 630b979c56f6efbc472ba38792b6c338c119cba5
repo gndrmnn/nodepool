@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAUH/98w0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-01-31T18:54:24Z",
+      "side": 1,
+      "message": "I suppose we only need this to build images so the impact isn\u0027t too terrible.",
+      "parentUuid": "AAAAUH/+Joc\u003d",
+      "revId": "630b979c56f6efbc472ba38792b6c338c119cba5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAUH/+Pj0\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 6
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "If the return code is nonzero, the ssh client will throw an exception, that\u0027s why I am checking the standard output.",
       "parentUuid": "AAAAUH/+Pj0\u003d",
+      "revId": "630b979c56f6efbc472ba38792b6c338c119cba5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH/98wI\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-01-31T18:54:24Z",
+      "side": 1,
+      "message": "In that case why not catch the exception?",
+      "parentUuid": "AAAAUH/+JoM\u003d",
       "revId": "630b979c56f6efbc472ba38792b6c338c119cba5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
