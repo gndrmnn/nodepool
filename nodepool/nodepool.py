@@ -329,10 +329,12 @@ class NodeLauncher(threading.Thread):
 
         self.node.ip = ip
 
+        key_name, key, use_password = self.getKeyDetails(self.provider, self.manager, hostname)
+
         if self.image.launch_done_stamp:
             waitForFile(
                 server,
-                self.image.private_key,
+                key,
                 self.image.launch_done_stamp,
                 self.image.launch_poll_count,
                 self.image.launch_poll_interval,
@@ -447,18 +449,7 @@ class ImageUpdater(threading.Thread):
         self.log.info("Creating image id: %s with hostname %s for %s in %s" %
                       (self.snap_image.id, hostname, self.image.name,
                        self.provider.name))
-        if self.provider.keypair:
-            key_name = self.provider.keypair
-            key = None
-            use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
-        else:
-            key_name = None
-            key = None
-            use_password = True
+        key_name, key, use_password = getKeyDetails(self.provider, self.manager, hostname)
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -590,6 +581,21 @@ class ImageUpdater(threading.Thread):
             poll_interval=self.image.install_poll_interval,
             log=log)
 
+def getKeyDetails(provider, manager, hostname):
+        if provider.keypair:
+            key_name = provider.keypair
+            key = None
+            use_password = False
+        elif manager and manager.hasExtension('os-keypairs'):
+            key_name = hostname.split('.')[0]
+            key = manager.addKeypair(key_name)
+            use_password = False
+        else:
+            key_name = None
+            key = None
+            use_password = True
+
+        return key_name, key, use_password
 
 def getSSHConnection(server, key, log, use_password):
     ssh_kwargs = dict(log=log)
