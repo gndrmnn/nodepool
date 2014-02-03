@@ -22,6 +22,7 @@ import gear
 import json
 import logging
 import os.path
+import paramiko
 import re
 import threading
 import time
@@ -332,7 +333,7 @@ class NodeLauncher(threading.Thread):
         if self.image.launch_done_stamp:
             waitForFile(
                 server,
-                self.image.private_key,
+                paramiko.RSAKey.from_private_key_file(self.image.private_key),
                 self.image.launch_done_stamp,
                 self.image.launch_poll_count,
                 self.image.launch_poll_interval,
@@ -449,7 +450,7 @@ class ImageUpdater(threading.Thread):
                        self.provider.name))
         if self.provider.keypair:
             key_name = self.provider.keypair
-            key = None
+            key = paramiko.RSAKey.from_private_key_file(self.image.private_key)
             use_password = False
         elif self.manager.hasExtension('os-keypairs'):
             key_name = hostname.split('.')[0]
