@@ -329,10 +329,12 @@ class NodeLauncher(threading.Thread):
 
         self.node.ip = ip
 
+        key_name, key, use_password = self.getKeyDetails()
+        
         if self.image.launch_done_stamp:
             waitForFile(
                 server,
-                self.image.private_key,
+                key,
                 self.image.launch_done_stamp,
                 self.image.launch_poll_count,
                 self.image.launch_poll_interval,
@@ -438,15 +440,7 @@ class ImageUpdater(threading.Thread):
                                        self.snap_image.id)
                     return
 
-    def updateImage(self, session):
-        start_time = time.time()
-        timestamp = int(start_time)
-
-        hostname = ('%s-%s.template.openstack.org' %
-                    (self.image.name, str(timestamp)))
-        self.log.info("Creating image id: %s with hostname %s for %s in %s" %
-                      (self.snap_image.id, hostname, self.image.name,
-                       self.provider.name))
+    def getKeyDetails(self):
         if self.provider.keypair:
             key_name = self.provider.keypair
             key = None
@@ -459,6 +453,20 @@ class ImageUpdater(threading.Thread):
             key_name = None
             key = None
             use_password = True
+
+        return key_name, key, use_password
+        
+
+    def updateImage(self, session):
+        start_time = time.time()
+        timestamp = int(start_time)
+
+        hostname = ('%s-%s.template.openstack.org' %
+                    (self.image.name, str(timestamp)))
+        self.log.info("Creating image id: %s with hostname %s for %s in %s" %
+                      (self.snap_image.id, hostname, self.image.name,
+                       self.provider.name))
+        key_name, key, use_password = self.getKeyDetails()
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
