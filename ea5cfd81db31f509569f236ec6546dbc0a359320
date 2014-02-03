@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH/91qA\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2014-02-03T13:20:54Z",
+      "side": 1,
+      "message": "For consistency parameters should be hyphen separated, not underscore.",
+      "revId": "ea5cfd81db31f509569f236ec6546dbc0a359320",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
