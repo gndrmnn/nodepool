@@ -22,6 +22,7 @@ import gear
 import json
 import logging
 import os.path
+import paramiko
 import re
 import threading
 import time
@@ -449,7 +450,7 @@ class ImageUpdater(threading.Thread):
                        self.provider.name))
         if self.provider.keypair:
             key_name = self.provider.keypair
-            key = None
+            key = paramiko.RSAKey.load_from_private_key(image.private_key)
             use_password = False
         elif self.manager.hasExtension('os-keypairs'):
             key_name = hostname.split('.')[0]
