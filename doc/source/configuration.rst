@@ -98,6 +98,7 @@ same name.  Example::
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 28800
       rate: 1.0
       images:
         - name: precise
@@ -123,6 +124,7 @@ same name.  Example::
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 28800
       rate: 1.0
       images:
         - name: precise
@@ -136,9 +138,9 @@ same name.  Example::
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.  For images, the
 `name`, `base-image`, and `min-ram` keys are required.  The `username`
-and `private-key` values default to the values indicated.  Nodepool
-expects that user to exist after running the script indicated by
-`setup`.
+, `private-key` and `cleanup-timeout` values default to the values 
+indicated.  Nodepool expects that user to exist after running the 
+script indicated by `setup`.
 
 targets
 -------

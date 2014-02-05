@@ -704,6 +704,7 @@ class NodePool(threading.Thread):
             p.rate = provider.get('rate', 1.0)
             p.boot_timeout = provider.get('boot-timeout', 60)
             p.use_neutron = bool(provider.get('networks', ()))
+            p.cleanup_timeout = provider.get('cleanup-timeout', NODE_CLEANUP)
             if p.use_neutron:
                 p.nics = provider.get('networks')
             p.images = {}
@@ -1277,6 +1278,7 @@ class NodePool(threading.Thread):
     def cleanupOneNode(self, session, node):
         now = time.time()
         time_in_state = now - node.state_time
+        provider = self.config.providers[node.provider_name]
         if (node.state in [nodedb.READY, nodedb.HOLD]):
             return
         delete = False
@@ -1285,7 +1287,7 @@ class NodePool(threading.Thread):
         elif (node.state == nodedb.TEST and
               time_in_state > TEST_CLEANUP):
             delete = True
-        elif time_in_state > NODE_CLEANUP:
+        elif time_in_state > provider.cleanup_timeout:
             delete = True
         if delete:
             try:
