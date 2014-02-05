@@ -206,6 +206,7 @@ provider, the Nodepool image types are also defined (see
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 28800
       rate: 1.0
       availability-zones:
         - az1
@@ -245,6 +246,7 @@ provider, the Nodepool image types are also defined (see
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 28800
       rate: 1.0
       template-hostname: '{image.name}-{timestamp}-nodepool-template'
       images:
@@ -263,9 +265,9 @@ provider, the Nodepool image types are also defined (see
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.
 
-Both `boot-timeout` and `launch-timeout` keys are optional.  The
-`boot-timeout` key defaults to 60 seconds and `launch-timeout` key
-will default to 3600 seconds.
+The keys `boot-timeout`, `launch-timeout` and `cleanup-timeout` are optional.
+The `boot-timeout` key defaults to 60 seconds, `launch-timeout` key
+will default to 3600 seconds and `cleanup-timeout` key to 28800.
 
 The optional `networks` section may be used to specify custom
 Neutron networks that get attached to each node. You can specify

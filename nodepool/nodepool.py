@@ -46,8 +46,6 @@ WATERMARK_SLEEP = 10         # Interval between checking if new servers needed
 IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
 CONNECT_TIMEOUT = 10 * MINS  # How long to try to connect after a server
                              # is ACTIVE
-NODE_CLEANUP = 8 * HOURS     # When to start deleting a node that is not
-                             # READY or HOLD
 TEST_CLEANUP = 5 * MINS      # When to start deleting a node that is in TEST
 IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
@@ -423,7 +421,8 @@ class NodeLauncher(threading.Thread):
         if self.label.subnodes:
             self.log.info("Node id: %s is waiting on subnodes" % self.node.id)
 
-            while ((time.time() - start_time) < (NODE_CLEANUP - 60)):
+            while ((time.time() - start_time) < (
+                    self.provider.cleanup_timeout - 60)):
                 session.commit()
                 ready_subnodes = [n for n in self.node.subnodes
                                   if n.state == nodedb.READY]
@@ -1274,6 +1273,7 @@ class NodePool(threading.Thread):
                 'template-hostname',
                 '{image.name}-{timestamp}.template.openstack.org'
             )
+            p.cleanup_timeout = provider.get('cleanup-timeout', 28800)
             p.images = {}
             for image in provider['images']:
                 i = ProviderImage()
@@ -2180,6 +2180,7 @@ class NodePool(threading.Thread):
     def cleanupOneNode(self, session, node):
         now = time.time()
         time_in_state = now - node.state_time
+        provider = self.config.providers[node.provider_name]
         if (node.state in [nodedb.READY, nodedb.HOLD]):
             return
         delete = False
@@ -2188,7 +2189,7 @@ class NodePool(threading.Thread):
         elif (node.state == nodedb.TEST and
               time_in_state > TEST_CLEANUP):
             delete = True
-        elif time_in_state > NODE_CLEANUP:
+        elif time_in_state > provider.cleanup_timeout:
             delete = True
         if delete:
             try:
