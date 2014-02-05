@@ -98,6 +98,7 @@ same name.  Example::
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 8
       rate: 1.0
       images:
         - name: precise
@@ -123,6 +124,7 @@ same name.  Example::
       service-name: 'compute'
       region-name: 'region1'
       max-servers: 96
+      cleanup-timeout: 8
       rate: 1.0
       images:
         - name: precise
