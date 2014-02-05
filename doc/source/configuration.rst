@@ -240,6 +240,7 @@ provider, the Nodepool image types are also defined (see
         - az1
       boot-timeout: 120
       launch-timeout: 900
+      cleanup-timeout: 28800
       template-hostname: '{image.name}-{timestamp}.template.openstack.org'
       pool: 'public'
       image-type: qcow2
@@ -326,6 +327,10 @@ provider, the Nodepool image types are also defined (see
 
   ``boot-timeout``
     In seconds. Default 60.
+
+  ``cleanup-timeout``
+    When to start deleting a node that is not READY or HOLD.
+    In seconds. Default 28800.
 
   ``launch-timeout``
     In seconds. Default 3600.

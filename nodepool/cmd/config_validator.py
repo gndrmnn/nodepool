@@ -64,6 +64,7 @@ class ConfigValidator:
             }],
             'boot-timeout': int,
             'api-timeout': int,
+            'cleanup-timeout': int,
             'rate': float,
             'images': [images]
         }
