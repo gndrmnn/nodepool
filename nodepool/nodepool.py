@@ -651,6 +651,7 @@ class NodePool(threading.Thread):
             p.password = provider['password']
             p.project_id = provider['project-id']
             p.auth_url = provider['auth-url']
+            p.auth_system = provider.get('auth-system', None)
             p.service_type = provider.get('service-type')
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
@@ -726,6 +727,7 @@ class NodePool(threading.Thread):
                     p.password != oldmanager.provider.password or
                     p.project_id != oldmanager.provider.project_id or
                     p.auth_url != oldmanager.provider.auth_url or
+                    p.auth_system != oldmanager.provider.auth_system or
                     p.service_type != oldmanager.provider.service_type or
                     p.service_name != oldmanager.provider.service_name or
                     p.max_servers != oldmanager.provider.max_servers or
