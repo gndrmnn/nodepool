@@ -408,6 +408,14 @@ class ImageUpdater(threading.Thread):
                 self.snap_image = session.getSnapshotImage(
                     self.snap_image_id)
                 self.manager = self.nodepool.getProviderManager(self.provider)
+            except KeyError:
+                # This provider isn't in the provider list and may have failed
+                # initialisation
+                self.log.exception("Exception preparing to update image %s "
+                                   "in %s:" % (self.image.name,
+                                               self.provider.name))
+                session.delete(self.snap_image)
+                return
             except Exception:
                 self.log.exception("Exception preparing to update image %s "
                                    "in %s:" % (self.image.name,
@@ -739,8 +747,15 @@ class NodePool(threading.Thread):
             else:
                 self.log.debug("Creating new ProviderManager object for %s" %
                                p.name)
-                config.provider_managers[p.name] = \
-                    provider_manager.ProviderManager(p)
+                try:
+                    config.provider_managers[p.name] = \
+                        provider_manager.ProviderManager(p)
+                except:
+                    # We couldn't connect to the provider its not yet in the
+                    # list of provider_managers and retry next time round
+                    self.log.exception('Unable to connect to provider : %s'
+                                       % p.name)
+                    continue
                 config.provider_managers[p.name].start()
 
         for t in config.targets.values():
