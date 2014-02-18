@@ -20,6 +20,7 @@ import errno
 import time
 import socket
 import logging
+import paramiko
 from sshclient import SSHClient
 
 import fakeprovider
@@ -49,6 +50,10 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
         except socket.error, e:
             if e[0] not in [errno.ECONNREFUSED, errno.EHOSTUNREACH]:
                 log.exception('Exception while testing ssh access:')
+        except paramiko.PasswordRequiredException:
+            # cloud-init may not have finished configuring ssh yet
+            log.exception('Exception while testing ssh access for  %s:'
+                          % username)
 
     out = client.ssh("test ssh access", "echo access okay", output=True)
     if "access okay" in out:
