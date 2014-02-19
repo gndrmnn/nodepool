@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Approved+1: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Submitted-by: Jenkins
+Submitted-at: Wed, 19 Feb 2014 19:28:12 +0000
+Reviewed-on: https://review.openstack.org/74803
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
