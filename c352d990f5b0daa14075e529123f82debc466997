@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+pZw\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T01:30:25Z",
+      "side": 1,
+      "message": "Could this have a NotFound exception because we cached and old version of the list? eg create server then 2 seconds later delete it? And if so would that cause a problem? I am guessing that it would essentially noop and need to be cleaned up later by the cron?",
+      "revId": "c352d990f5b0daa14075e529123f82debc466997",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
