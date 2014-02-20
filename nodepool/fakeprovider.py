@@ -16,6 +16,7 @@
 
 import StringIO
 import novaclient
+import requests.exceptions
 import threading
 import time
 import uuid
@@ -92,6 +93,12 @@ class FakeHTTPClient(object):
             return None, dict(extensions=dict())
 
 
+class BadHTTPClient(object):
+    '''Always raises a ProxyError'''
+    def get(self, path):
+        raise requests.exceptions.ProxyError
+
+
 class FakeClient(object):
     def __init__(self):
         self.flavors = FakeList([
@@ -102,6 +109,12 @@ class FakeClient(object):
         self.client = FakeHTTPClient()
         self.servers = FakeList([])
         self.servers.api = self
+
+
+class BadClient(FakeClient):
+    def __init__(self):
+        FakeClient.__init__(self)
+        self.client = BadHTTPClient()
 
 
 class FakeGlanceClient(object):
@@ -191,3 +204,4 @@ class FakeJenkins(object):
 
 
 FAKE_CLIENT = FakeClient()
+BAD_CLIENT = BadClient()

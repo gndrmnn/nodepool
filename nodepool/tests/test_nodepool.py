@@ -20,6 +20,7 @@ import time
 
 from nodepool import tests
 from nodepool import nodedb
+import nodepool.fakeprovider
 import nodepool.nodepool
 
 
@@ -151,3 +152,19 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
+
+    def test_proxy_timeout(self):
+        """Test that we re-run a task after a ProxyError"""
+        configfile = self.setup_config('node.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        self.addCleanup(pool.stop)
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        provider = pool.config.providers['fake-provider']
+        manager = pool.getProviderManager(provider)
+        manager._client = nodepool.fakeprovider.BAD_CLIENT
+
+        manager.listExtensions()  # Call client.get()
+        # If we didn't raise an uncaught exception, we pass
