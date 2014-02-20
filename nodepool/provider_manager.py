@@ -27,6 +27,7 @@ import glanceclient
 import glanceclient.client
 import keystoneclient.v2_0.client as ksclient
 import time
+import requests.exceptions
 
 import fakeprovider
 from task_manager import Task, TaskManager, ManagerStoppedException
@@ -263,7 +264,7 @@ class ProviderManager(TaskManager):
         super(ProviderManager, self).__init__(None, provider.name,
                                               provider.rate)
         self.provider = provider
-        self._client = self._getClient()
+        self.resetClient()
         self._images = {}
         self._networks = {}
         self._cloud_metadata_read = False
@@ -310,6 +311,16 @@ class ProviderManager(TaskManager):
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
         return novaclient.client.Client(*args, **kwargs)
+
+    def runTask(self, task):
+        try:
+            task.run(self._client)
+        except requests.exceptions.ProxyError:
+            self.resetClient()
+            task.run(self._client)
+
+    def resetClient(self):
+        self._client = self._getClient()
 
     def _getFlavors(self):
         flavors = self.listFlavors()

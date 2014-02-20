@@ -21,6 +21,7 @@ import threading
 from six.moves import queue as Queue
 import logging
 import time
+import requests.exceptions
 
 
 class ManagerStoppedException(Exception):
@@ -53,6 +54,8 @@ class Task(object):
     def run(self, client):
         try:
             self.done(self.main(client))
+        except requests.exceptions.ProxyError as e:
+            raise e
         except Exception as e:
             self.exception(e, sys.exc_info()[2])
 
@@ -89,7 +92,7 @@ class TaskManager(threading.Thread):
             self.log.debug("Manager %s running task %s (queue: %s)" %
                            (self.name, task, self.queue.qsize()))
             start = time.time()
-            task.run(self._client)
+            self.runTask(task)
             last_ts = time.time()
             self.log.debug("Manager %s ran task %s in %ss" %
                            (self.name, task, (last_ts - start)))
@@ -101,3 +104,6 @@ class TaskManager(threading.Thread):
                 "Manager %s is no longer running" % self.name)
         self.queue.put(task)
         return task.wait()
+
+    def runTask(self, task):
+        task.run(self._client)
