@@ -27,6 +27,8 @@ import glanceclient
 import glanceclient.client
 import keystoneclient.v2_0.client as ksclient
 import time
+import requests.exceptions
+import sys
 
 import fakeprovider
 from task_manager import Task, TaskManager, ManagerStoppedException
@@ -263,7 +265,7 @@ class ProviderManager(TaskManager):
         super(ProviderManager, self).__init__(None, provider.name,
                                               provider.rate)
         self.provider = provider
-        self._client = self._getClient()
+        self.resetClient()
         self._images = {}
         self._networks = {}
         self._cloud_metadata_read = False
@@ -310,6 +312,24 @@ class ProviderManager(TaskManager):
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
         return novaclient.client.Client(*args, **kwargs)
+
+    def runTask(self, task):
+        try:
+            task.run(self._client)
+        except requests.exceptions.ProxyError:
+            # Try to get a new client object if we get a ProxyError
+            self.log.exception('Resetting client due to ProxyError')
+            self.resetClient()
+            try:
+                task.run(self._client)
+            except requests.exceptions.ProxyError as e:
+                # If we get a second ProxyError, then make sure it gets raised
+                # the same way all other Exceptions from the Task object do.
+                # This will move the Exception to the main thread.
+                task.exception(e, sys.exc_info()[2])
+
+    def resetClient(self):
+        self._client = self._getClient()
 
     def _getFlavors(self):
         flavors = self.listFlavors()
