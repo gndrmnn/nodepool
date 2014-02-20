@@ -50,6 +50,24 @@
       "revId": "bd2a96e3a86acbd2f82ba7611a486f9eabee340a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUX/+ffE\u003d",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2014-02-20T21:49:20Z",
+      "side": 1,
+      "message": "So that it can be overridden in ProviderManager",
+      "parentUuid": "AAAAUX/+fts\u003d",
+      "revId": "bd2a96e3a86acbd2f82ba7611a486f9eabee340a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
