@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+e4c\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T23:11:28Z",
+      "side": 1,
+      "message": "I think this could be a make_image_dict(image) call instead of the direct call to dict(), but this was present in old code so doesn\u0027t need to be fixed here.",
+      "revId": "b818085c978bca2fa387b275e960f1d5a4311e04",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
