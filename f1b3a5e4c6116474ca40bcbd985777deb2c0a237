@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+pos\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-02-20T00:56:54Z",
+      "side": 1,
+      "message": "I\u0027d prefer that we not log exceptions like this in the log for events that we are actually handling:\n\n  ERROR:nodepool.ImageUpdater:Exception preparing to update image nodepool-precise in hpcloud-az2:\n  Traceback (most recent call last):\n    File \"/home/corvus/rs/github/nodepool/nodepool/nodepool.py\", line 410, in _run\n      self.manager \u003d self.nodepool.getProviderManager(self.provider)\n    File \"/home/corvus/rs/github/nodepool/nodepool/nodepool.py\", line 873, in getProviderManager\n      return self.config.provider_managers[provider.name]\n  KeyError: \u0027hpcloud-az2\u0027\n\nInstead, I\u0027d rather test for this ahead of time.  Possibly even further back so that we don\u0027t even launch this thread if it can\u0027t succeed.  In fact, it\u0027s not entirely clear to me why this is necessary because already nodepool shouldn\u0027t launch image update threads for providers that it doesn\u0027t know about...",
+      "revId": "f1b3a5e4c6116474ca40bcbd985777deb2c0a237",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
