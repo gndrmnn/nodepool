@@ -16,6 +16,24 @@
       "revId": "c352d990f5b0daa14075e529123f82debc466997",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUX/+pVA\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-02-20T01:41:24Z",
+      "side": 1,
+      "message": "If that happened, then this method will think the server has been deleted.  If the provider doesn\u0027t act on the delete request, then we will have leaked a node.",
+      "parentUuid": "AAAAUX/+pZw\u003d",
+      "revId": "c352d990f5b0daa14075e529123f82debc466997",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
