@@ -221,6 +221,9 @@ class ProviderManager(TaskManager):
             return fakeprovider.FAKE_CLIENT
         return novaclient.client.Client(*args, **kwargs)
 
+    def reset_client(self):
+        self._client = self._getClient()
+
     def _getFlavors(self):
         l = [dict(id=f.id, ram=f.ram, name=f.name)
              for f in self._client.flavors.list()]
@@ -348,6 +351,7 @@ class ProviderManager(TaskManager):
                 return newip['ip']
 
     def createImage(self, server_id, image_name):
+        self.reset_client()
         return self.submitTask(CreateImageTask(server=server_id,
                                                image_name=image_name))
 
