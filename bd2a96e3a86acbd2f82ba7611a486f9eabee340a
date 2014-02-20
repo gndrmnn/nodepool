@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+fuA\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T21:22:16Z",
+      "side": 1,
+      "message": "I know novaclient depends on requests, should we explicitly add the dependency since we are explicitly importing requests here?",
+      "revId": "bd2a96e3a86acbd2f82ba7611a486f9eabee340a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUX/+ft8\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T21:22:16Z",
+      "side": 1,
+      "message": "Isn\u0027t this redundant as runTask above will reset the client for us?",
+      "revId": "bd2a96e3a86acbd2f82ba7611a486f9eabee340a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUX/+fts\u003d",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T21:22:16Z",
+      "side": 1,
+      "message": "Why pull this out into a new method?",
+      "revId": "bd2a96e3a86acbd2f82ba7611a486f9eabee340a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
