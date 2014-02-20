@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+fyo\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-02-20T21:13:58Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to have the lock around it because python will only run one thread at a time and once a thread dies it will not be resurrected.",
+      "revId": "ef799c42367fa8761090d4a6449a88a88348e4e7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
