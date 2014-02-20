@@ -202,7 +202,7 @@ class ProviderManager(TaskManager):
         super(ProviderManager, self).__init__(None, provider.name,
                                               provider.rate)
         self.provider = provider
-        self._client = self._getClient()
+        self.resetClient()
         self._images = {}
         self._cloud_metadata_read = False
         self.__flavors = {}
@@ -240,6 +240,16 @@ class ProviderManager(TaskManager):
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
         return novaclient.client.Client(*args, **kwargs)
+
+    def runTask(self, task):
+        try:
+            task.run(self._client)
+        except novaclient.client.requests.adapters.ProxyError:
+            self.resetClient()
+            task.run(self._client)
+
+    def resetClient(self):
+        self._client = self._getClient()
 
     def _getFlavors(self):
         l = [dict(id=f.id, ram=f.ram, name=f.name)

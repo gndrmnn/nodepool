@@ -81,10 +81,13 @@ class TaskManager(threading.Thread):
                     break
                 time.sleep(self.rate - delta)
             self.log.debug("Manager %s running task %s" % (self.name, task))
-            task.run(self._client)
+            self.runTask()
             last_ts = time.time()
             self.queue.task_done()
 
     def submitTask(self, task):
         self.queue.put(task)
         return task.wait()
+
+    def runTask(self, task):
+        task.run(self._client)
