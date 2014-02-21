@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+bto\u003d",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 6786
+      },
+      "writtenOn": "2014-02-21T06:41:18Z",
+      "side": 1,
+      "message": "\u0027task\u0027 argument missed",
+      "revId": "11f453a78eccc725056e0098d1ae5b1b34d51892",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
