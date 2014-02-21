@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUX/+U1c\u003d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-02-21T21:21:58Z",
+      "side": 1,
+      "message": "Looks like I can abandon I47b2c8f42e79de7f40f9373c477e89d1f5a85144 in that case.",
+      "revId": "08a62543482c6af0db932fabaf0b62ec15ab13e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
