@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Approved+1: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Submitted-by: Jenkins
+Submitted-at: Fri, 21 Feb 2014 00:53:22 +0000
+Reviewed-on: https://review.openstack.org/75223
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
