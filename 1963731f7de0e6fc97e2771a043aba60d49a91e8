@@ -1,0 +1,11 @@
+Approved+1: James E. Blair <corvus@inaugust.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Verified+2: Jenkins
+Code-Review+1: Derek Higgins <derekh@redhat.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Sergey Lukjanov <slukjanov@mirantis.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 24 Feb 2014 21:48:53 +0000
+Reviewed-on: https://review.openstack.org/74825
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
