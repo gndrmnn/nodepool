@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAVn//0NE\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-04T00:00:14Z",
+      "side": 1,
+      "message": "Note this value should be made in seconds.",
+      "revId": "cf5592748ab02555ec4be54c349c3592d3e16bdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAVn//0NA\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-04T00:00:14Z",
+      "side": 1,
+      "message": "Note this value should be made in seconds.",
+      "revId": "cf5592748ab02555ec4be54c349c3592d3e16bdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAVn//0Nk\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-04T00:00:14Z",
+      "side": 1,
+      "message": "The condition here is odd to me. Can you push the log.warning into the if delete: on line 1211 and avoid checking delete twice?",
+      "revId": "cf5592748ab02555ec4be54c349c3592d3e16bdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAVn//0M0\u003d",
+        "filename": "tools/fake.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-04T00:00:14Z",
+      "side": 1,
+      "message": "Note this value should be made in seconds.",
+      "revId": "cf5592748ab02555ec4be54c349c3592d3e16bdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
