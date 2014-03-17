@@ -378,8 +378,16 @@ class ProviderManager(TaskManager):
         self.submitTask(AddFloatingIPTask(server=server_id,
                                           address=address))
 
+    def createOrReuseFloatingIP(self, pool=None):
+        for ip in self.listFloatingIPs():
+            if ip['instance_id'] is None:
+                self.log.debug('Reusing floating ip %s' % ip)
+                return ip
+        self.log.debug('Creating new floating ip %s' % ip)
+        return self.createFloatingIP(pool)
+
     def addPublicIP(self, server_id, pool=None):
-        ip = self.createFloatingIP(pool)
+        ip = self.createOrFetchFloatingIP(pool)
         self.addFloatingIP(server_id, ip['ip'])
         for count in iterate_timeout(600, "ip to be added"):
             try:
@@ -435,14 +443,6 @@ class ProviderManager(TaskManager):
             # it still doesn't exist, then propogate the exception.
             time.sleep(SERVER_LIST_AGE + 1)
             server = self.getServerFromList(server_id)
-
-        if self.hasExtension('os-floating-ips'):
-            for ip in self.listFloatingIPs():
-                if ip['instance_id'] == server_id:
-                    self.log.debug('Deleting floating ip for server %s' %
-                                   server_id)
-                    self.removeFloatingIP(server_id, ip['ip'])
-                    self.deleteFloatingIP(ip['id'])
 
         if (self.hasExtension('os-keypairs') and
             server['key_name'] != self.provider.keypair):
