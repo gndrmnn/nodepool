@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH//Als\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-20T23:43:08Z",
+      "side": 1,
+      "message": "Isn\u0027t the DB set up such that these deletes are not necessary? I guess it doesn\u0027t hurt to be explicit about it here.\n\nThe waitForServerDeletion() is necessary so we may as well do that and an explicit db delete too.",
+      "revId": "325f8df8f666f39f23f64d67e33b90bdadf155af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
