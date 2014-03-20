@@ -16,6 +16,24 @@
       "revId": "325f8df8f666f39f23f64d67e33b90bdadf155af",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH//AhU\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-20T23:50:01Z",
+      "side": 1,
+      "message": "Not strictly necessary but deleting them from the db as they are really deleted means the db will be more correct during the next pass if something goes wrong and an exception is raised.",
+      "parentUuid": "AAAAWH//Als\u003d",
+      "revId": "325f8df8f666f39f23f64d67e33b90bdadf155af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
