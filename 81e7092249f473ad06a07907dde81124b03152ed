@@ -16,6 +16,24 @@
       "revId": "81e7092249f473ad06a07907dde81124b03152ed",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+6U0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-21T18:47:04Z",
+      "side": 1,
+      "message": "We can remove even more than that actually!",
+      "parentUuid": "AAAAWH/+6mg\u003d",
+      "revId": "81e7092249f473ad06a07907dde81124b03152ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
