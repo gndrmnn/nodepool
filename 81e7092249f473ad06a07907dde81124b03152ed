@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+6mg\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-21T18:34:33Z",
+      "side": 1,
+      "message": "Rereading this code I am not sure this math is necessary anymore. Can we just set total_label_min_ready[label.name] \u003d label.min_ready and be done with it?",
+      "revId": "81e7092249f473ad06a07907dde81124b03152ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
