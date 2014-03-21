@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH//AUk\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-21T00:40:28Z",
+      "side": 1,
+      "message": "I am not sure I understand the config problem completely. This code isn\u0027t problematic because the same image shows up across all providers. It is problematic because a single provider can provide multiple images. Not all of the images belonging to one provider may have the same subnode count.\n\nIf we update the arg list to this function to be addProvider(self, provider, target, image) then we can image.subnodes to AllocationSubRequest and get a different AllocationSubrequest using something like (provider, image) as the dict key.\n\nI haven\u0027t thought this all the way though but it seems like it would be viable.",
+      "parentUuid": "AAAAWH//AZs\u003d",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH//Aco\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 1
