@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH//AhQ\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-21T00:07:26Z",
+      "side": 1,
+      "message": "We should add a docs job to this repo. I don\u0027t know if that tab will be rendered funny compared to the lines above it.",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH//Af0\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-21T00:07:26Z",
+      "side": 1,
+      "message": "Because we get the sub requests based on provider I think we may end up undercalculating the available number in AllocationSubRequest below if we ask for an image here with no subnodes that has a different image with subnodes.",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH//Aco\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-21T00:07:26Z",
+      "side": 1,
+      "message": "This is the other side of my SubNodeAllocationRequest concern. I think we need to pass the image into addProvider as well to get the correct subnode value for each image.",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
