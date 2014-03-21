@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH//AZQ\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-21T00:18:38Z",
+      "side": 1,
+      "message": "Will fix.",
+      "parentUuid": "AAAAWH//AhQ\u003d",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH//Af0\u003d",
         "filename": "nodepool/allocation.py",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH//AZs\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-21T00:18:38Z",
+      "side": 1,
+      "message": "Yep.  I\u0027m not sure we can do much better than documenting that subnodes should be equal across providers in the config for now.  At least, not without some moderate refactoring of the config.",
+      "parentUuid": "AAAAWH//Af0\u003d",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH//Aco\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-03-21T00:07:26Z",
       "side": 1,
       "message": "This is the other side of my SubNodeAllocationRequest concern. I think we need to pass the image into addProvider as well to get the correct subnode value for each image.",
+      "revId": "5055094776688e74f437e95c681431811858e0d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH//AZY\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-21T00:18:38Z",
+      "side": 1,
+      "message": "We could, but I think the problem is actually in the config (that there are things that should be common among images of the same name from different providers).",
+      "parentUuid": "AAAAWH//Aco\u003d",
       "revId": "5055094776688e74f437e95c681431811858e0d6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
