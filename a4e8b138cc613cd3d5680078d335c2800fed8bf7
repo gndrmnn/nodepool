@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+l18\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-25T17:31:06Z",
+      "side": 1,
+      "message": "As discussed in IRC, we\u0027ll make this partially deterministic to avoid collisions.",
+      "parentUuid": "AAAAWH/+mCg\u003d",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+mD0\u003d",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+l2g\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-25T17:31:06Z",
+      "side": 1,
+      "message": "Oops.",
+      "parentUuid": "AAAAWH/+mD0\u003d",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+mA4\u003d",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2014-03-25T17:14:20Z",
       "side": 1,
       "message": "If we want to be extra careful we can cur.execute(\"drop database %s\", (self.name,)) before creating the db. Also note I think you want execute to do the interpolation to avoid injections attacks.",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+l2o\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-25T17:31:06Z",
+      "side": 1,
+      "message": "We can\u0027t use that because database names can\u0027t be quoted.  We generate the name so it\u0027s safe to use.",
+      "parentUuid": "AAAAWH/+mA4\u003d",
       "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
