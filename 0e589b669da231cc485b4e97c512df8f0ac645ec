@@ -16,6 +16,24 @@
       "revId": "0e589b669da231cc485b4e97c512df8f0ac645ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+le0\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-25T18:09:40Z",
+      "side": 1,
+      "message": "Jeblair has convinced me that errors when names collide in the case that the above code would \"fix\" are desirable and shouldn\u0027t be masked.",
+      "parentUuid": "AAAAWH/+lh4\u003d",
+      "revId": "0e589b669da231cc485b4e97c512df8f0ac645ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
