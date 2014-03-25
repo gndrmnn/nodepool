@@ -34,6 +34,24 @@
       "revId": "0e589b669da231cc485b4e97c512df8f0ac645ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+lew\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-25T18:09:46Z",
+      "side": 1,
+      "message": "In the exceptional case of a collision, I think it would be better to let the runner error here rather than risk the chance of two tests accessing the db at the same time.",
+      "parentUuid": "AAAAWH/+lh4\u003d",
+      "revId": "0e589b669da231cc485b4e97c512df8f0ac645ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
