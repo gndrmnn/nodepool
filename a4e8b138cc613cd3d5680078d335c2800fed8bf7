@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+mCg\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-25T17:14:20Z",
+      "side": 1,
+      "message": "If we want to be deterministic here I thought we can introspect the current test name and use that + pidnumber. Determinism may help debugging post test if we need to interact with a schema directly.",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+mD0\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-25T17:14:20Z",
+      "side": 1,
+      "message": "It unfortunate but _ is the python gettext translate function... Not necessarily a bad thing here but maybe something to consider changing to x or __ or nop etc.",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+mA4\u003d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-25T17:14:20Z",
+      "side": 1,
+      "message": "If we want to be extra careful we can cur.execute(\"drop database %s\", (self.name,)) before creating the db. Also note I think you want execute to do the interpolation to avoid injections attacks.",
+      "revId": "a4e8b138cc613cd3d5680078d335c2800fed8bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
