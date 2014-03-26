@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+aj0\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1240,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2014-03-26T23:30:35Z",
+      "side": 1,
+      "message": "I know we talk about it in IRC yesterday, but wanted to raise it here. Testing this patch raised the issue with min_ready: 0, images would not build. Wanted to see if you wanted to address that here or another patchset.",
+      "revId": "c8bbb56e508d6440361fe73a55f2cebd7317d70b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+ajw\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1576,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2014-03-26T23:30:35Z",
+      "side": 1,
+      "message": "delete dead code since you are here?",
+      "revId": "c8bbb56e508d6440361fe73a55f2cebd7317d70b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
