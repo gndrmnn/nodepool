@@ -1,3 +1,6 @@
+# flake8 does not pin pep8 or pyflakes, do that here
+pep8==1.4.6
+pyflakes==0.8
 flake8==2.0
 coverage
 sphinx>=1.1.2,<1.2
