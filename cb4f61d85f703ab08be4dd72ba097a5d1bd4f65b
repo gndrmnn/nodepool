@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+b7o\u003d",
+        "filename": "test-requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-26T19:36:38Z",
+      "side": 1,
+      "message": "Worth noting, hacking currently requires instead:\n\n    pep8\u003d\u003d1.4.5\n    pyflakes\u003e\u003d0.7.2,\u003c0.7.4\n    flake8\u003d\u003d2.0\n\nMight make sense to keep consistent?",
+      "revId": "cb4f61d85f703ab08be4dd72ba097a5d1bd4f65b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
