@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+ZCw\u003d",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-03-27T05:47:12Z",
+      "side": 1,
+      "message": "I really like how simple the DB fixtures makes doing this.",
+      "revId": "e761215f61e80abd6c5ece52839054f75d4be3f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
