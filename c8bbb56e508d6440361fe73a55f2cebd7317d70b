@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+SwM\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1240,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:59:02Z",
+      "side": 1,
+      "message": "This keeps the current behavior.  I want to change it, but we should do that in another patchset.",
+      "parentUuid": "AAAAWH/+aj0\u003d",
+      "revId": "c8bbb56e508d6440361fe73a55f2cebd7317d70b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+ajw\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-26T23:30:35Z",
       "side": 1,
       "message": "delete dead code since you are here?",
+      "revId": "c8bbb56e508d6440361fe73a55f2cebd7317d70b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+SwA\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1576,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:59:02Z",
+      "side": 1,
+      "message": "what dead code?  these are comments that document the graphite keys that are being built; i refer to them when working on the code below.",
+      "parentUuid": "AAAAWH/+ajw\u003d",
       "revId": "c8bbb56e508d6440361fe73a55f2cebd7317d70b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
