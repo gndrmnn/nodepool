@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+S14\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:53:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAAWH/+kY4\u003d",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+Zwg\u003d",
         "filename": "nodepool/allocation.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-03-27T03:08:45Z",
       "side": 1,
       "message": "Should we give this param a default (ie 0)",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+S0w\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:53:44Z",
+      "side": 1,
+      "message": "It\u0027s never called without it (it\u0027s not the kind of function a developer would call and need default values), so I\u0027d prefer to leave it as is (and make sure that when it is used, the developer has thought everything through).",
+      "parentUuid": "AAAAWH/+Zwg\u003d",
       "revId": "6c98780b9efaef097caff28e41c995e425defd63",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+Szk\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:53:44Z",
+      "side": 1,
+      "message": "Probably so.  I\u0027m not sure why the rest of this was written that way, but it is so I\u0027d lean toward consistency now and changing later (maybe when we have tests).",
+      "parentUuid": "AAAAWH/+Zsw\u003d",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+Zng\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -81,6 +135,24 @@
       "writtenOn": "2014-03-27T03:08:45Z",
       "side": 1,
       "message": "I\u0027m not a fan of this hardcoding openstack.org...",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+SzM\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-27T19:53:44Z",
+      "side": 1,
+      "message": "I don\u0027t like it either.  But it\u0027s consistent with current behavior (which should be changed).",
+      "parentUuid": "AAAAWH/+Zng\u003d",
       "revId": "6c98780b9efaef097caff28e41c995e425defd63",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
