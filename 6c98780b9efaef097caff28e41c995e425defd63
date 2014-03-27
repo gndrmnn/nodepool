@@ -19,6 +19,74 @@
     },
     {
       "key": {
+        "uuid": "AAAAWH/+Zwg\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-03-27T03:08:45Z",
+      "side": 1,
+      "message": "Should we give this param a default (ie 0)",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+ZwY\u003d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-03-27T03:08:45Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+Zsw\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-03-27T03:08:45Z",
+      "side": 1,
+      "message": "Instead of all here you could use .one() and not need to return the head of the list",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+Zng\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-03-27T03:08:45Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of this hardcoding openstack.org...",
+      "revId": "6c98780b9efaef097caff28e41c995e425defd63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAWH/+kUA\u003d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
