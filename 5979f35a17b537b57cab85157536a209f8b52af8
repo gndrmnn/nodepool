@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+Qy4\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-28T01:18:39Z",
+      "side": 1,
+      "message": "It looks like this was supposed to be \"`providers` list\" instead (plural, as the example above it is).",
+      "revId": "5979f35a17b537b57cab85157536a209f8b52af8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+QzI\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-28T01:18:39Z",
+      "side": 1,
+      "message": "This line and the one above it should say \"`subnodes` key\" (again plural).",
+      "revId": "5979f35a17b537b57cab85157536a209f8b52af8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+QyU\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-28T01:18:39Z",
+      "side": 1,
+      "message": "The multi-precise label is using precise images, as its name would imply, not quantal like the old example used.",
+      "revId": "5979f35a17b537b57cab85157536a209f8b52af8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+Qxc\u003d",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-28T01:18:39Z",
+      "side": 1,
+      "message": "The shebang should be removed since you\u0027re removing the global conditional main() execution at the end, leaving only some imports and assignments (making this file not very usefully runnable anyway).",
+      "revId": "5979f35a17b537b57cab85157536a209f8b52af8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
