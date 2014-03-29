@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+IQU\u003d",
+        "filename": "nodepool/tests/fixtures/subnodes.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T00:24:29Z",
+      "side": 1,
+      "message": "Again with the */1 (copy-paste, or am I misunderstanding how nodepool applies this syntax compared to cron?).",
+      "revId": "14907dde09a3b82b86841fd3f7f9ffa50c751c84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
