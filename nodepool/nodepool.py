@@ -1151,6 +1151,12 @@ class NodePool(threading.Thread):
                 count += 1 + len(n.subnodes)
             return count
 
+        def delete_nodes(label_name, state, limit):
+            nodes = session.getNodes(label_name=label_name, state=state,
+                                     limit=limit)
+            for n in nodes:
+                self.deleteNode(n.id)
+
         # Actual need is demand - (ready + building)
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
@@ -1164,6 +1170,10 @@ class NodePool(threading.Thread):
             self.log.debug("  Deficit: %s: %s (start: %s min: %s ready: %s)" %
                            (label.name, demand, start_demand, min_demand,
                             ready))
+            if n_ready > min_demand:
+                limit = n_ready - min_demand
+                self.log.debug("    Surplus: %s: %s" % (label.name, limit))
+                delete_nodes(label.name, nodedb.READY, limit)
 
         # Start setting up the allocation system.  Add a provider for
         # each node provider, along with current capacity

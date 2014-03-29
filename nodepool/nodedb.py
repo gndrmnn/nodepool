@@ -303,7 +303,7 @@ class NodeDatabaseSession(object):
         return new
 
     def getNodes(self, provider_name=None, label_name=None, target_name=None,
-                 state=None):
+                 state=None, limit=None):
         exp = self.session().query(Node).order_by(
             node_table.c.provider_name,
             node_table.c.label_name)
@@ -315,7 +315,11 @@ class NodeDatabaseSession(object):
             exp = exp.filter_by(target_name=target_name)
         if state:
             exp = exp.filter(node_table.c.state == state)
-        return exp.all()
+        if limit:
+            exp = exp.limit(limit)
+        else:
+            exp = exp.all()
+        return exp
 
     def createNode(self, *args, **kwargs):
         new = Node(*args, **kwargs)
