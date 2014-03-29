@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+IRs\u003d",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T00:10:21Z",
+      "side": 1,
+      "message": "This was apparently supposed to be image-update.",
+      "revId": "8e8f974b7805a0716a404469f0407038371c9dd2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+IRc\u003d",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T00:10:21Z",
+      "side": 1,
+      "message": "Typo worth fixing while you\u0027re in here. Nowhere near as fun as a game of nodepolo though.",
+      "revId": "8e8f974b7805a0716a404469f0407038371c9dd2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
