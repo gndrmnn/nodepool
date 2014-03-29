@@ -16,6 +16,24 @@
       "revId": "0862067c7880038fd09ea664f461c33368d95820",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+G48\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2014-03-29T18:40:32Z",
+      "side": 1,
+      "message": "After looking at the code more, a SIGHUP is not needed since the configure gets re-ready each tick.  So, I just need to confirm what happens when jenkins is actually running and a surplus is detected.",
+      "parentUuid": "AAAAWH/+G7A\u003d",
+      "revId": "0862067c7880038fd09ea664f461c33368d95820",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
