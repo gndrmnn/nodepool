@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+G7A\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2014-03-29T18:24:06Z",
+      "side": 1,
+      "message": "I\u0027ve had a chance to test this locally, but one thing I am concerned about is what happens if a reconfigure takes place when a jenkins node is actually in a running state.\n\nCurrently we don\u0027t support a signal to reconfigure, and nodepool is manually stopped / started.  However, it is something that might need to be tested.",
+      "revId": "0862067c7880038fd09ea664f461c33368d95820",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
