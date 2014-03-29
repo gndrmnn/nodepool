@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+IRE\u003d",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T00:20:16Z",
+      "side": 1,
+      "message": "In cronese isn\u0027t */1 the same as just * (with no step modulus)?",
+      "revId": "9909272e5496a383018546b1fa2ecdec88e16782",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
