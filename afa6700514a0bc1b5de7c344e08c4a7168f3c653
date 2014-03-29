@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/+G6k\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T18:28:52Z",
+      "side": 1,
+      "message": "I suggest switching the positions of the second and third sentences in this paragraph.",
+      "revId": "afa6700514a0bc1b5de7c344e08c4a7168f3c653",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAWH/+G6Q\u003d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-03-29T18:28:52Z",
+      "side": 1,
+      "message": "You\u0027ve introduced a verb tense disagreement by removing the d from \"created\" which should get fixed.",
+      "revId": "afa6700514a0bc1b5de7c344e08c4a7168f3c653",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
