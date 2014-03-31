@@ -444,6 +444,7 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
             ftp = host.client.open_sftp()
+            ftp.mkdir('/etc/nodepool', mode=0o755)
 
             f = ftp.open('/etc/nodepool/role', 'w')
             f.write(role + '\n')
