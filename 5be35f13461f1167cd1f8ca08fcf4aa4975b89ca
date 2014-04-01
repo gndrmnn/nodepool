@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/91rA\u003d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-04-01T18:47:45Z",
+      "side": 1,
+      "message": "Would it be better to put the except Exception: catch block here and return if the exception is thrown? that way ftp exceptions are not ignored as well.",
+      "revId": "5be35f13461f1167cd1f8ca08fcf4aa4975b89ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
