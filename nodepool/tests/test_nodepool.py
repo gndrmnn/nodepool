@@ -74,6 +74,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that an image and node are created"""
         configfile = self.setup_config('node.yaml')
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=0.5)
+        pool.updateConfig()
         pool.start()
         time.sleep(2)
         self.waitForNodes(pool)
@@ -90,6 +91,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that an image and node are created"""
         configfile = self.setup_config('subnodes.yaml')
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=0.5)
+        pool.updateConfig()
         pool.start()
         time.sleep(2)
         self.waitForNodes(pool)
