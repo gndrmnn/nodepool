@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH/9zBE\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-04-02T03:31:52Z",
+      "side": 1,
+      "message": "Won\u0027t this delete every floating ip every time ?",
+      "revId": "0f09a39e49316d46af3e0dd56f586de11d9f58b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
