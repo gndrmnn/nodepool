@@ -20,6 +20,7 @@ import logging
 import paramiko
 import novaclient
 import novaclient.client
+import threading
 import time
 
 import fakeprovider
@@ -232,6 +233,7 @@ class ProviderManager(TaskManager):
         self.__extensions = {}
         self._servers = []
         self._servers_time = 0
+        self._floatingip_lock = threading.Lock()
 
     @property
     def _flavors(self):
@@ -388,8 +390,12 @@ class ProviderManager(TaskManager):
                                           address=address))
 
     def addPublicIP(self, server_id, pool=None):
-        ip = self.createFloatingIP(pool)
-        self.addFloatingIP(server_id, ip['ip'])
+        try:
+            self._floatingip_lock.acquire()
+            ip = self.createFloatingIP(pool)
+            self.addFloatingIP(server_id, ip['ip'])
+        finally:
+            self._floatingip_lock.release()
         for count in iterate_timeout(600, "ip to be added to %s in %s" %
                                      (server_id, self.provider.name)):
             try:
@@ -448,11 +454,19 @@ class ProviderManager(TaskManager):
 
         if self.hasExtension('os-floating-ips'):
             for ip in self.listFloatingIPs():
-                if ip['instance_id'] == server_id:
-                    self.log.debug('Deleting floating ip for server %s' %
-                                   server_id)
-                    self.removeFloatingIP(server_id, ip['ip'])
-                    self.deleteFloatingIP(ip['id'])
+                try:
+                    self._floatingip_lock.acquire()
+                    if not ip['instance_id']:
+                        self.log.debug('Deleting floating ip %s' %
+                                       ip['ip'])
+                        self.deleteFloatingIP(ip['id'])
+                    elif ip['instance_id'] == server_id:
+                        self.log.debug('Deleting floating ip for server %s' %
+                                       server_id)
+                        self.removeFloatingIP(server_id, ip['ip'])
+                        self.deleteFloatingIP(ip['id'])
+                finally:
+                    self._floatingip_lock.release()
 
         if (self.hasExtension('os-keypairs') and
             server['key_name'] != self.provider.keypair):
