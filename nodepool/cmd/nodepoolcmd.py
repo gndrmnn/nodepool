@@ -157,17 +157,20 @@ class NodePoolCmd(object):
         t.align = 'l'
         with self.pool.getDB().getSession() as session:
             for provider in self.pool.config.providers.values():
-                if (self.args.provider and
-                    provider.name != self.args.provider):
-                    continue
-                manager = self.pool.getProviderManager(provider)
-
-                for image in manager.listImages():
-                    if image['metadata'].get('image_type') == 'snapshot':
-                        if not session.getSnapshotImageByExternalID(
-                            provider.name, image['id']):
-                            t.add_row([provider.name, image['name'],
-                                       image['id']])
+                if provider.provider_type == nodepool.OPENSTACK:
+                    if (self.args.provider and
+                        provider.name != self.args.provider):
+                        continue
+                    manager = self.pool.getProviderManager(provider)
+    
+                    for image in manager.listImages():
+                        if image['metadata'].get('image_type') == 'snapshot':
+                            if not session.getSnapshotImageByExternalID(
+                                provider.name, image['id']):
+                                t.add_row([provider.name, image['name'],
+                                           image['id']])
+                else:
+                    print ('command supported only for OpenStack provider')
         print t
 
     def hold(self):
