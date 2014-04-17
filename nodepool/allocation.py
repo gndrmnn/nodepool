@@ -35,6 +35,9 @@ The algorithm is:
 
   Run:
 
+  * Randomly shuffle the requests while placing a higher weight on
+    requests with more nodes requested.
+
   * For each label, set the requested number of nodes from each
     provider to be proportional to that providers overall capacity.
 
@@ -53,6 +56,23 @@ The algorithm is:
     that label.
 """
 
+import random
+
+
+def weightedshuffle(reqs):
+    total = sum([x.amount for x in reqs])
+    r = random.uniform(0, total)
+    marker = 0
+    newreqs = []
+    for index, req in enumerate(reqs):
+        marker = marker + req.amount
+        if marker >= r:
+            newreqs.append(req)
+            del reqs[index]
+            if reqs:
+                newreqs.extend(weightedshuffle(reqs))
+            return newreqs
+
 
 class AllocationProvider(object):
     """A node provider and its capacity."""
@@ -67,6 +87,7 @@ class AllocationProvider(object):
 
     def makeGrants(self):
         reqs = self.sub_requests[:]
+        reqs = weightedshuffle(reqs)
         # Sort the requests by priority so we fill the most specific
         # requests first (e.g., if this provider is the only one that
         # can supply foo nodes, then it should focus on supplying them
@@ -86,6 +107,13 @@ class AllocationProvider(object):
                 ratio = 0.0
             grant = int(round(req.amount))
             grant = min(grant, int(round(self.available * ratio)))
+            # If nothing was granted but grants were available, then allocate
+            # 1, this was probably because of a low ratio. We do this so low
+            # demand requests don't get completely overlooked. The
+            # weightedshuffle above ensures the low demand request is first in
+            # the list of reqs a proportionate number of times.
+            if grant == 0 and self.available:
+                grant = 1
             # This adjusts our availability as well as the values of
             # other requests, so values will be correct the next time
             # through the loop.
