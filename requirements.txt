@@ -4,6 +4,7 @@ gear
 PyYAML
 python-jenkins
 paramiko>1.9.0
+libvirt-python
 lockfile
 lxml
 python-daemon
