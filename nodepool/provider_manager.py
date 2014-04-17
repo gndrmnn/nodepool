@@ -23,12 +23,23 @@ import novaclient.client
 import time
 
 import fakeprovider
+import nodepool
+import kvm_provider_manager
 from task_manager import Task, TaskManager
 
 
 SERVER_LIST_AGE = 5   # How long to keep a cached copy of the server list
 ITERATE_INTERVAL = 2  # How long to sleep while waiting for something
                       # in a loop
+
+
+def getNewProviderManager(provider):
+    if provider.provider_type == nodepool.KVM:
+        return kvm_provider_manager.KVMProviderManager(provider)
+    elif provider.provider_type == nodepool.OPENSTACK:
+        return OpenStackProviderManager(provider)
+    else:
+        raise Exception("Unknown provider type: %s" % provider.provider_type)
 
 
 def iterate_timeout(max_seconds, purpose):
@@ -218,12 +229,12 @@ class DeleteImageTask(Task):
         client.images.delete(**self.args)
 
 
-class ProviderManager(TaskManager):
-    log = logging.getLogger("nodepool.ProviderManager")
+class OpenStackProviderManager(TaskManager):
+    log = logging.getLogger("nodepool.OpenStackProviderManager")
 
     def __init__(self, provider):
-        super(ProviderManager, self).__init__(None, provider.name,
-                                              provider.rate)
+        super(OpenStackProviderManager, self).__init__(None, provider.name,
+                                                       provider.rate)
         self.provider = provider
         self._client = self._getClient()
         self._images = {}
