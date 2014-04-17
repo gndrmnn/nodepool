@@ -5,6 +5,7 @@ PyYAML
 python-jenkins
 paramiko>1.9.0
 lockfile
+lxml
 python-daemon
 extras
 statsd>=1.0.0,<3.0

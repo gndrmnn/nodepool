@@ -105,19 +105,25 @@ providers or images are used to create them).  Example::
       ready-script: setup_multinode.sh
       providers:
         - name: provider1
+    -name: my-trusty
+     image: trusty
+     minready: 2
+     providers:
+       - name: provider3
 
 The `name`, `image`, and `min-ready` keys are required.  The
 `providers` list is also required if any nodes should actually be
 created (e.g., the label is not currently disabled).
 
-The `subnodes` key is used to configure multi-node support.  If a
-`subnodes` key is supplied to an image, it indicates that the specified
-number of additional nodes of the same image type should be created
-and associated with each node for that image.  Only one node from each
-such group will be added to the target, the subnodes are expected to
-communicate directly with each other.  In the example above, for each
-Precise node added to the target system, two additional nodes will be
-created and associated with it.
+The `subnodes` key is used to configure multi-node support (available
+only for OpenStack provider).  If a`subnodes` key is supplied to an
+image, it indicates that the specified number of additional nodes of
+the same image type should be created and associated with each node
+for that image.  Only one node from each such group will be added
+to the target, the subnodes are expected to communicate directly
+with each other.  In the example above, for each Precise node added
+to the target system, two additional nodes will be created
+and associated with it.
 
 The script specified by `ready-script` (which is expected to be in
 `/opt/nodepool-scripts` along with the setup script) can be used to
@@ -144,13 +150,17 @@ Those files include:
 providers
 ---------
 
-Lists the OpenStack cloud providers Nodepool should use.  Within each
-provider, the Nodepool image types are also defined.  If the resulting
-images from different providers should be equivalent, give them the
-same name.  Example::
+Lists the OpenStack cloud and KVM/QEMU host providers Nodepool should use.
+Within each provider, the Nodepool image types are also defined.
+If the resulting images from different providers should be equivalent, give them the
+same name. Image for OpenStack cloud and KVM/QEMU host not compatiible!
+Image for KVM/QEMU stored as file in directory, but OpenStack use for this Glance.
+KVM/QEMU host needed setup libvirt library.
+Example::
 
   providers:
     - name: provider1
+      provider-type: 'OpenStack'
       username: 'username'
       password: 'password'
       auth-url: 'http://auth.provider1.example.com/'
@@ -176,6 +186,7 @@ same name.  Example::
           username: jenkins
           private-key: /var/lib/jenkins/.ssh/id_rsa
     - name: provider2
+      provider-type: 'OpenStack'
       username: 'username'
       password: 'password'
       auth-url: 'http://auth.provider2.example.com/'
@@ -193,13 +204,44 @@ same name.  Example::
           reset: reset_node.sh
           username: jenkins
           private-key: /var/lib/jenkins/.ssh/id_rsa
+    - name: provider3
+      provider-type: 'KVM'
+      username: 'username'
+      keypair: '/home/pool/.ssh/id_rsa'
+      auth-url: '192.168.1.2'
+      source-images-dir: '/home/pool/'
+      dest-images-dir: '/var/lib/libvirt/images2'
+      templates-images-dir: '/var/lib/libvirt/images2/templates/'
+      networks:
+        - net-id: 'nodepool'
+      max-servers: 96
+      rate: 1.0
+      images:
+        - name: trusty
+          base-image: 'trusty.qcow2'
+          min-ram: 8192
+          vcpu: 1
+          setup: prepare_node.sh
+          username: jenkins
+          private-key: /var/lib/jenkins/.ssh/id_rsa
 
-For providers, the `name`, `username`, `password`, `auth-url`,
-`project-id`, and `max-servers` keys are required.  For images, the
-`name`, `base-image`, and `min-ram` keys are required.  The `username`
-and `private-key` values default to the values indicated.  Nodepool
-expects that user to exist after running the script indicated by
+For OpenStack providers, the `name`, `username`, `password`, `auth-url`,
+`project-id`, and `max-servers` keys are required.
+For KVM/QEMU hosts,  the `name`, `username`, `keypair`, `auth-url`,
+`source-images-dir` and `dest-images-dir` keys are required. Use
+password for login to host isn't acceptable (only keypair). In
+`source-images-dir` specifies the path to the directory with
+the source images on the machine with running Nodepool, later here
+will be copied to the host KVM/QEMU through SSH. `dest-images-dir`
+points to the directory where will be placed the images of virtual
+machines on the host. `templates-images-dir` is optional key points
+to directory where will be placed the template images.
+For images, the `name`, `base-image`, and `min-ram` keys are required.
+The `username` and `private-key` values default to the values indicated.
+Nodepool expects that user to exist after running the script indicated by
 `setup`.
+
+
 
 targets
 -------
