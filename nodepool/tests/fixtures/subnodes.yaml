@@ -28,6 +28,7 @@ labels:
 
 providers:
   - name: fake-provider
+    provider-type: 'OpenStack'
     keypair: 'if-present-use-this-keypair'
     username: 'fake'
     password: 'fake'
