@@ -19,6 +19,7 @@
 from statsd import statsd
 import apscheduler.scheduler
 import gear
+import hashlib
 import json
 import logging
 import os.path
@@ -49,6 +50,10 @@ IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
                              # its job.
+
+
+OPENSTACK = 'OpenStack'      # Type of node provider
+KVM = 'KVM'
 
 
 class NodeCompleteThread(threading.Thread):
@@ -321,25 +326,38 @@ class NodeLauncher(threading.Thread):
 
     def launchNode(self, session):
         start_time = time.time()
+        hostname = '%s-%s-%s.slave.%s' % (
+            self.image.name, self.provider.name, self.node.id,
+            self.provider.provider_type.lower())
 
-        hostname = '%s-%s-%s.slave.openstack.org' % (
-            self.label.name, self.provider.name, self.node.id)
         self.node.hostname = hostname
         self.node.nodename = hostname.split('.')[0]
         self.node.target_name = self.target.name
 
-        snap_image = session.getCurrentSnapshotImage(
-            self.provider.name, self.image.name)
+        log_message = "Creating server with hostname %s"\
+                      " in %s from image %s for node id: %s"\
+                      % (hostname, self.provider.name,
+                         self.image.name, self.node_id)
+
+        self.log.info(log_message)
+
+        snap_image = session.getCurrentSnapshotImage(self.provider.name,
+                                                     self.image.name)
         if not snap_image:
-            raise Exception("Unable to find current snapshot image %s in %s" %
+            raise Exception("Unable to find current "
+                            "snapshot image %s in %s" %
                             (self.image.name, self.provider.name))
 
-        self.log.info("Creating server with hostname %s in %s from image %s "
-                      "for node id: %s" % (hostname, self.provider.name,
-                                           self.image.name, self.node_id))
-        server_id = self.manager.createServer(
-            hostname, self.image.min_ram,
-            snap_image.external_id, name_filter=self.image.name_filter)
+        if self.provider.provider_type == KVM:
+            server_id = self.manager.createServer(
+                hostname, self.image.min_ram,
+                self.image.vcpu, self.image.name)
+
+        elif self.provider.provider_type == OPENSTACK:
+            server_id = self.manager.createServer(
+                hostname, self.image.min_ram,
+                snap_image.external_id, name_filter=self.image.name_filter)
+
         self.node.external_id = server_id
         session.commit()
 
@@ -351,9 +369,10 @@ class NodeLauncher(threading.Thread):
                             (server_id, self.node.id, server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
+        if not ip and self.provider.provider_type == OPENSTACK:
+            if self.manager.hasExtension('os-floating-ips'):
+                ip = self.manager.addPublicIP(server_id,
+                                              pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
 
@@ -606,11 +625,179 @@ class SubNodeLauncher(threading.Thread):
         self.nodepool.updateStats(session, self.provider.name)
 
 
-class ImageUpdater(threading.Thread):
-    log = logging.getLogger("nodepool.ImageUpdater")
+class KVMImageUpdater(threading.Thread):
+    log = logging.getLogger("nodepool.KVMImageUpdater")
 
     def __init__(self, nodepool, provider, image, snap_image_id):
-        threading.Thread.__init__(self, name='ImageUpdater for %s' %
+        threading.Thread.__init__(self, name='KVMImageUpdater for %s' %
+                                  snap_image_id)
+
+        self.provider = provider
+        self.image = image
+        self.snap_image_id = snap_image_id
+        self.nodepool = nodepool
+        self.scriptdir = self.nodepool.config.scriptdir
+
+    def run(self):
+        try:
+            self._run()
+        except Exception:
+            self.log.exception("Exception in run method:")
+
+    def _run(self):
+        with self.nodepool.getDB().getSession() as session:
+            self.log.debug("Updating image %s in %s " % (self.image.name,
+                                                         self.provider.name))
+            try:
+                self.snap_image = session.getSnapshotImage(
+                    self.snap_image_id)
+                self.manager = self.nodepool.getProviderManager(self.provider)
+            except Exception:
+                self.log.exception("Exception preparing to update image %s "
+                                   "in %s:" % (self.image.name,
+                                               self.provider.name))
+                return
+
+            try:
+                self.updateImage(session)
+            except Exception:
+                self.log.exception("Exception updating image %s in %s:" %
+                                   (self.image.name, self.provider.name))
+                try:
+                    if self.snap_image:
+                        self.nodepool.deleteImage(self.snap_image)
+                except Exception:
+                    self.log.exception("Exception deleting image id: %s:" %
+                                       self.snap_image.id)
+                    return
+
+    def updateImage(self, session):
+        start_time = time.time()
+        timestamp = int(start_time)
+
+        hostname = ('%s.template.kvm' %
+                    (self.image.name))
+        self.log.info("Creating image id: %s with hostname %s for %s in %s" %
+                      (self.snap_image.id, hostname, self.image.name,
+                       self.provider.name))
+        try:
+            self.copyBaseImageToHost()
+        except Exception:
+            raise Exception("Copy image failed")
+
+        server_id = self.manager.createServer(
+            hostname, self.image.min_ram,
+            self.image.vcpu, self.image.name,
+            for_template=True)
+
+        self.snap_image.hostname = hostname
+        self.snap_image.version = timestamp
+        session.commit()
+
+        self.log.debug("Image id: %s waiting for server %s" %
+                       (self.snap_image.id, server_id))
+        server = self.manager.waitForServer(server_id)
+        if server['status'] != 'ACTIVE':
+            raise Exception("Server %s for image id: %s status: %s" %
+                            (server_id, self.snap_image.id, server['status']))
+        ip = server.get('public_v4')
+        if not ip:
+            raise Exception("Unable to find public IP of server")
+        connect_kwargs = dict(key_filename=self.provider.keypair)
+        if not utils.ssh_connect(ip, self.image.username,
+                                 connect_kwargs=connect_kwargs,
+                                 timeout=CONNECT_TIMEOUT):
+            raise Exception("Unable to connect via ssh")
+
+        self.bootstrapServer(server, 'root', self.image.private_key)
+        if statsd:
+            dt = int((time.time() - start_time) * 1000)
+            key = 'nodepool.launch.%s.%s.%s' % (self.image.name,
+                                                self.provider.name,
+                                                self.target.name)
+            statsd.timing(key, dt)
+            statsd.incr(key)
+        self.manager.cleanupServer(server_id, for_template=True)
+        self.snap_image.state = nodedb.READY
+        session.commit()
+
+    def _getLocalFileMD5(self, file_path):
+        with open(file_path, 'rb') as fl:
+            m = hashlib.md5()
+            while True:
+                data = fl.read(8192)
+                if not data:
+                    break
+                m.update(data)
+            return m.hexdigest()
+
+    def _getRemoteFileMD5(self, ssh_connect, file_path):
+        command = "md5sum {0}".format(file_path)
+        output = ssh_connect.ssh("get file's md5sum from host",
+                                 command,
+                                 output=True)
+        file_hash, file_path = output.split()
+        return file_hash
+
+    def copyBaseImageToHost(self):
+        connect_kwargs = dict(key_filename=self.provider.keypair)
+        host = utils.ssh_connect(self.provider.auth_url,
+                                 self.provider.username,
+                                 connect_kwargs)
+        command = "mkdir -p {0}".format(self.provider.templates_images_dir)
+        host.ssh("make images dir", command)
+        path_to_source_image = os.path.join(self.provider.source_images_dir,
+                                            self.image.base_image)
+        path_to_dest_image = os.path.join(self.provider.templates_images_dir,
+                                          self.image.base_image)
+        host.scp(path_to_source_image, path_to_dest_image)
+        copied_image_hash = self._getRemoteFileMD5(host, path_to_dest_image)
+        source_image_hash = self._getLocalFileMD5(path_to_source_image)
+        if source_image_hash != copied_image_hash:
+            raise Exception("Checksum does not match")
+        return source_image_hash
+
+    def bootstrapServer(self, server, user, key_filename):
+        log = logging.getLogger("nodepool.image.build.%s.%s" %
+                                (self.provider.name, self.image.name))
+        connect_kwargs = dict(key_filename=self.provider.keypair)
+        host = utils.ssh_connect(server['public_v4'],
+                                 user,
+                                 connect_kwargs=connect_kwargs,
+                                 timeout=CONNECT_TIMEOUT)
+
+        if not host:
+            raise Exception("Unable to log in via SSH")
+
+        host.ssh("make scripts dir", "mkdir -p scripts")
+        for fname in os.listdir(self.scriptdir):
+            path = os.path.join(self.scriptdir, fname)
+            if not os.path.isfile(path):
+                continue
+            host.scp(path, 'scripts/%s' % fname)
+        host.ssh("move scripts to opt",
+                 "sudo mv scripts /opt/nodepool-scripts")
+        host.ssh("set scripts permissions",
+                 "sudo chmod -R a+rx /opt/nodepool-scripts")
+        self.log.debug('All scripts copied to host')
+        if self.image.setup:
+            env_vars = ''
+            for k, v in os.environ.items():
+                if k.startswith('NODEPOOL_'):
+                    env_vars += ' %s="%s"' % (k, v)
+            host.ssh("run setup script",
+                     "cd /opt/nodepool-scripts && %s ./%s" %
+                     (env_vars, self.image.setup))
+            host.ssh("flush file system buffers", "sync")
+            host.ssh("make delay", "sleep 5")
+        self.log.debug('Scripts is setup')
+
+
+class OpenStackImageUpdater(threading.Thread):
+    log = logging.getLogger("nodepool.OpenStackImageUpdater")
+
+    def __init__(self, nodepool, provider, image, snap_image_id):
+        threading.Thread.__init__(self, name='OpenStackImageUpdater for %s' %
                                   snap_image_id)
         self.provider = provider
         self.image = image
@@ -930,14 +1117,23 @@ class NodePool(threading.Thread):
             p = Provider()
             p.name = provider['name']
             newconfig.providers[p.name] = p
+            p.provider_type = provider['provider-type']
             p.username = provider['username']
-            p.password = provider['password']
-            p.project_id = provider['project-id']
-            p.auth_url = provider['auth-url']
+            p.password = provider.get('password')
+            p.project_id = provider.get('project-id')
+            p.auth_url = provider.get('auth-url')
             p.service_type = provider.get('service-type')
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
             p.max_servers = provider['max-servers']
+
+            p.ram = provider.get('ram')
+            p.dest_images_dir = provider.get('dest-images-dir')
+            template_dir = os.path.join(p.dest_images_dir, 'templates')
+            p.templates_images_dir = provider.get('templates-images-dir',
+                                                  template_dir)
+            p.source_images_dir = provider.get('source-images-dir')
+
             p.keypair = provider.get('keypair', None)
             p.pool = provider.get('pool')
             p.rate = provider.get('rate', 1.0)
@@ -949,8 +1145,9 @@ class NodePool(threading.Thread):
                 i = ProviderImage()
                 i.name = image['name']
                 p.images[i.name] = i
-                i.base_image = image['base-image']
+                i.base_image = image.get('base-image')
                 i.min_ram = image['min-ram']
+                i.vcpu = image.get('vcpu')
                 i.name_filter = image.get('name-filter', None)
                 i.setup = image.get('setup')
                 i.reset = image.get('reset')
@@ -1013,7 +1210,7 @@ class NodePool(threading.Thread):
                 self.log.debug("Creating new ProviderManager object for %s" %
                                p.name)
                 config.provider_managers[p.name] = \
-                    provider_manager.ProviderManager(p)
+                    provider_manager.getNewProviderManager(p)
                 config.provider_managers[p.name].start()
 
         for t in config.targets.values():
@@ -1365,15 +1562,28 @@ class NodePool(threading.Thread):
     def _updateImage(self, session, provider_name, image_name):
         provider = self.config.providers[provider_name]
         image = provider.images[image_name]
-        snap_image = session.createSnapshotImage(
+        new_snap_image = session.createSnapshotImage(
             provider_name=provider.name,
-            image_name=image.name)
-        t = ImageUpdater(self, provider, image, snap_image.id)
-        t.start()
-        # Enough time to give them different timestamps (versions)
-        # Just to keep things clearer.
-        time.sleep(2)
-        return t
+            image_name=image_name)
+        if provider.provider_type == OPENSTACK:
+            t = OpenStackImageUpdater(self, provider, image, new_snap_image.id)
+            t.start()
+            # Enough time to give them different timestamps (versions)
+            # Just to keep things clearer.
+            time.sleep(2)
+            return t
+        elif provider.provider_type == KVM:
+            # Delete old snapshots
+            snap_images = session.getSnapshotImages()
+            for snap_image in snap_images:
+                if (snap_image.provider_name == provider.name and
+                    snap_image.image_name == image.name and
+                    snap_image.id != new_snap_image.id):
+                    self.deleteImage(snap_image)
+            t = KVMImageUpdater(self, provider, image, new_snap_image.id)
+            t.start()
+            time.sleep(2)
+            return t
 
     def launchNode(self, session, provider, label, target):
         try:
@@ -1511,7 +1721,7 @@ class NodePool(threading.Thread):
                 self.log.warning('Image server id %s not found' %
                                  snap_image.server_external_id)
 
-        if snap_image.external_id:
+        if snap_image.external_id and provider.provider_type == OPENSTACK:
             try:
                 remote_image = manager.getImage(snap_image.external_id)
                 self.log.debug('Deleting image %s' % remote_image['id'])
@@ -1519,7 +1729,11 @@ class NodePool(threading.Thread):
             except provider_manager.NotFound:
                 self.log.warning('Image id %s not found' %
                                  snap_image.external_id)
-
+        elif provider.provider_type == KVM:
+            image = provider.images[snap_image.image_name]
+            path_to_dest_image = os.path.join(provider.templates_images_dir,
+                                              image.base_image)
+            manager.deleteImage(path_to_dest_image)
         snap_image.delete()
         self.log.info("Deleted image id: %s" % snap_image.id)
 
@@ -1533,7 +1747,6 @@ class NodePool(threading.Thread):
         # This function should be run periodically to clean up any hosts
         # that may have slipped through the cracks, as well as to remove
         # old images.
-
         self.log.debug("Starting periodic cleanup")
 
         for k, t in self._delete_threads.items()[:]:
