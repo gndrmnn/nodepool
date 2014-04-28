@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAWH//fPE\u003d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-03-17T15:59:10Z",
+      "side": 1,
+      "message": "method names don\u0027t match (Fetch / Reuse)",
+      "revId": "ea3027ce8b2d8cb3c3b7142e23e9c6f767e9a52e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
