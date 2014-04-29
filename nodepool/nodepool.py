@@ -358,9 +358,11 @@ class NodeLauncher(threading.Thread):
 
     def launchNode(self, session):
         start_time = time.time()
+        timestamp = int(start_time)
 
-        hostname = '%s-%s-%s.slave.openstack.org' % (
-            self.label.name, self.provider.name, self.node.id)
+        hostname = self.target.hostname.format(
+            label=self.label, provider=self.provider, node=self.node,
+            timestamp=str(timestamp))
         self.node.hostname = hostname
         self.node.nodename = hostname.split('.')[0]
         self.node.target_name = self.target.name
@@ -601,9 +603,11 @@ class SubNodeLauncher(threading.Thread):
 
     def launchSubNode(self, session):
         start_time = time.time()
+        timestamp = int(start_time)
 
-        hostname = '%s-%s-%s-%s.slave.openstack.org' % (
-            self.label.name, self.provider.name, self.node_id, self.subnode_id)
+        hostname = self.target.subnode_hostname.format(
+            label=self.label, provider=self.provider, node_id=self.node_id,
+            subnode_id=self.subnode_id, timestamp=str(timestamp))
         self.subnode.hostname = hostname
         self.subnode.nodename = hostname.split('.')[0]
 
@@ -713,8 +717,8 @@ class ImageUpdater(threading.Thread):
         start_time = time.time()
         timestamp = int(start_time)
 
-        hostname = ('%s-%s.template.openstack.org' %
-                    (self.image.name, str(timestamp)))
+        hostname = self.provider.template_hostname.format(
+            provider=self.provider, image=self.image, timestamp=str(timestamp))
         self.log.info("Creating image id: %s with hostname %s for %s in %s" %
                       (self.snap_image.id, hostname, self.image.name,
                        self.provider.name))
@@ -1003,6 +1007,10 @@ class NodePool(threading.Thread):
             p.launch_timeout = provider.get('launch-timeout', 3600)
             p.use_neutron = bool(provider.get('networks', ()))
             p.nics = provider.get('networks')
+            p.template_hostname = provider.get(
+                'template-hostname',
+                '{image.name}-{timestamp}.template.openstack.org'
+            )
             p.images = {}
             for image in provider['images']:
                 i = ProviderImage()
@@ -1036,7 +1044,15 @@ class NodePool(threading.Thread):
                 t.jenkins_credentials_id = None
                 t.jenkins_test_job = None
             t.rate = target.get('rate', 1.0)
-
+            t.hostname = target.get(
+                'hostname',
+                '{label.name}-{provider.name}-{node.id}.slave.openstack.org'
+            )
+            t.subnode_hostname = target.get(
+                'subnode-hostname',
+                '{label.name}-{provider.name}-{node_id}-{subnode_id}'
+                '.slave.openstack.org'
+            )
         return newconfig
 
     def reconfigureDatabase(self, config):
