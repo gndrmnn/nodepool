@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad9bd40_c05fb83f",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-05-06T19:00:42Z",
+      "side": 1,
+      "message": "Would this be more clear as os.kill(pidfile_pid, 0) ?",
+      "revId": "10258eff1d6f65611cea3a51a0356c8f995730fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
