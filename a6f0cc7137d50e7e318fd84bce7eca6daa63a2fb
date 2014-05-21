@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7adec928_6c92e0f7",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-05-21T18:47:13Z",
+      "side": 1,
+      "message": "For consistency should we pass node and subnode here instead of node_id and subnode_id? Or change the launchNode above to pass node_id instead. Either way isfine by me but I think it needs to be consistent.",
+      "revId": "a6f0cc7137d50e7e318fd84bce7eca6daa63a2fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
