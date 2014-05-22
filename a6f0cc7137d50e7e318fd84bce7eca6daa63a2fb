@@ -16,6 +16,24 @@
       "revId": "a6f0cc7137d50e7e318fd84bce7eca6daa63a2fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7adec928_9901253c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-05-22T01:53:17Z",
+      "side": 1,
+      "message": "Yeah I had a problem with this also.\n\nI did it like this because that\u0027s what is available to the SubNodeLauncher class. To make it more consistent we\u0027d have refactor what is passed in. Is this something we want to do?",
+      "parentUuid": "7adec928_6c92e0f7",
+      "revId": "a6f0cc7137d50e7e318fd84bce7eca6daa63a2fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
