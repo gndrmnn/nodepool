@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_c43db4bd",
+        "filename": "tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-05-29T22:03:22Z",
+      "side": 1,
+      "message": "Just noting that we explicitly ignore H above because some of the H rules are silly, but this change only enables the check to catch this particular error which is fine by me.",
+      "revId": "e3dd94d65c88f6b7041e1f778420d731d3047cce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
