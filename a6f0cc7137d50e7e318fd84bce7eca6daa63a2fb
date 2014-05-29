@@ -34,6 +34,24 @@
       "revId": "a6f0cc7137d50e7e318fd84bce7eca6daa63a2fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ae8d1ca_267d25b2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-05-29T05:39:28Z",
+      "side": 1,
+      "message": "Instead of providing \"node\" above, \"node_id\" is provided consistently.",
+      "parentUuid": "7adec928_9901253c",
+      "revId": "a6f0cc7137d50e7e318fd84bce7eca6daa63a2fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
