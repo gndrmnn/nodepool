@@ -346,7 +346,8 @@ class NodeLauncher(threading.Thread):
             try:
                 self.nodepool.launchStats(statsd_key, dt, self.image.name,
                                           self.provider.name,
-                                          self.target.name)
+                                          self.target.name,
+                                          self.node.az)
             except Exception:
                 self.log.exception("Exception reporting launch stats:")
 
@@ -588,7 +589,8 @@ class SubNodeLauncher(threading.Thread):
             try:
                 self.nodepool.launchStats(statsd_key, dt, self.image.name,
                                           self.provider.name,
-                                          self.node_target_name)
+                                          self.node_target_name,
+                                          self.node_az)
             except Exception:
                 self.log.exception("Exception reporting launch stats:")
 
@@ -1797,9 +1799,17 @@ class NodePool(threading.Thread):
             key = 'nodepool.provider.%s.max_servers' % provider.name
             statsd.gauge(key, provider.max_servers)
 
-    def launchStats(self, subkey, dt, image_name, provider_name, target_name):
+    def launchStats(self, subkey, dt, image_name,
+                    provider_name, target_name, node_az):
         if not statsd:
             return
+        self._launchStats(subkey, dt, image_name, provider_name, target_name)
+        if node_az:
+            subkey = node_az + '.' + subkey
+            self._launchStats(subkey, dt, image_name,
+                              provider_name, target_name)
+
+    def _launchStats(self, subkey, dt, image_name, provider_name, target_name):
         #nodepool.launch.provider.PROVIDER.subkey
         #nodepool.launch.image.IMAGE.subkey
         #nodepool.launch.target.TARGET.subkey
