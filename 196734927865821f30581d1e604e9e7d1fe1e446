@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_a0acb436",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-02T18:33:39Z",
+      "side": 1,
+      "message": "If we\u0027re keeping them the same, I think we should just reference the node, so I don\u0027t think we need this column.",
+      "revId": "196734927865821f30581d1e604e9e7d1fe1e446",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_6b460d25",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-02T18:33:39Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "196734927865821f30581d1e604e9e7d1fe1e446",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_8bfa79bb",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-02T18:33:39Z",
+      "side": 1,
+      "message": "this can be \"self.node_az\" or something that should be able to be initialized when this class is instantiated",
+      "revId": "196734927865821f30581d1e604e9e7d1fe1e446",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_0bd5891b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-02T18:33:39Z",
+      "side": 1,
+      "message": "probably in the config file we should spell it out as \u0027availability-zones\u0027.  azs might be a little context-free.",
+      "revId": "196734927865821f30581d1e604e9e7d1fe1e446",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
