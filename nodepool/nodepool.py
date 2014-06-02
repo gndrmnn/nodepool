@@ -344,6 +344,8 @@ class NodeLauncher(threading.Thread):
                     statsd_key = 'error.unknown'
 
             try:
+                if self.node.az:
+                    statsd_key = self.node.az + '.' + statsd_key
                 self.nodepool.launchStats(statsd_key, dt, self.image.name,
                                           self.provider.name,
                                           self.target.name)
@@ -586,6 +588,8 @@ class SubNodeLauncher(threading.Thread):
                     statsd_key = 'error.unknown'
 
             try:
+                if self.node.az:
+                    statsd_key = self.node_az + '.' + statsd_key
                 self.nodepool.launchStats(statsd_key, dt, self.image.name,
                                           self.provider.name,
                                           self.node_target_name)
