@@ -20,6 +20,7 @@ import logging
 import paramiko
 import novaclient
 import novaclient.client
+import threading
 import time
 
 import fakeprovider
@@ -232,6 +233,7 @@ class ProviderManager(TaskManager):
         self.__extensions = {}
         self._servers = []
         self._servers_time = 0
+        self._servers_lock = threading.Lock()
 
     @property
     def _flavors(self):
@@ -436,8 +438,18 @@ class ProviderManager(TaskManager):
 
     def listServers(self):
         if time.time() - self._servers_time >= SERVER_LIST_AGE:
-            self._servers = self.submitTask(ListServersTask())
-            self._servers_time = time.time()
+            # Since we're using cached data anyway, we don't need to
+            # have more than one thread actually submit the list
+            # servers task.  Let the first one submit it while holding
+            # a lock, and the non-blocking acquire method will cause
+            # subsequent threads to just skip this and use the old
+            # data until it succeeds.
+            if self._servers_lock.acquire(False):
+                try:
+                    self._servers = self.submitTask(ListServersTask())
+                    self._servers_time = time.time()
+                finally:
+                    self._servers_lock.release()
         return self._servers
 
     def deleteServer(self, server_id):
