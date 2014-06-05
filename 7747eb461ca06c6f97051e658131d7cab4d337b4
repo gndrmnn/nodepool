@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_bc0e19e3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 0,
+      "message": "Why is this removed? ImageUpdater uses self.log. Do we expect every subclass to define a log object? I don\u0027t think that is necessary.",
+      "revId": "7747eb461ca06c6f97051e658131d7cab4d337b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

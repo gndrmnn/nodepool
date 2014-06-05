@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_dc112505",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to have been written yet.",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_fcfb41be",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 739,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "There was a bug fix to check the return code from uploading/snapshotting images that jeblair added. We should make sure that is done here.",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_1cf70dd4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "upload image should be synchronous above right? I wouldn\u0027t expect that we need to wait here",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_3c0209b4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "Should these values be optional so that you can use the old snapshot image updater?",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_5c66f5bb",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "Are we using neutron anywhere? I think this should be removed to reduce the complexity of the change if it isn\u0027t required for dib support.",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_7c0811da",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "Your fake client here needs to have a fake client container.",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_9c0b1dd5",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:17Z",
+      "side": 1,
+      "message": "See comment about neutron in ClientContainer()",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
