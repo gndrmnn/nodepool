@@ -70,6 +70,23 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_1c1e2d0c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-06-05T20:26:56Z",
+      "side": 1,
+      "message": "Nevermind I see that there is a check below for None and snapshot is used if there is that data.",
+      "revId": "457d6b59c79f592a7411db3073913e2f9fb2d27f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_5c66f5bb",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 6
