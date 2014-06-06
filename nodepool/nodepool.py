@@ -250,8 +250,14 @@ class GearmanClient(gear.Client):
                 if not parts[0].startswith('build:'):
                     continue
                 function = parts[0][len('build:'):]
-                # total jobs in queue - running
-                queued = int(parts[1]) - int(parts[2])
+                # total jobs in queue (including building jobs)
+                # NOTE(jhesketh): Jobs that are being built are accounted for
+                # in the demand algorithm by subtracting the running nodes.
+                # If there are foreign (to nodepool) workers accepting jobs
+                # the demand will be higher than actually required. However
+                # better to have too many than too few and if you have a
+                # foreign worker this may be desired.
+                queued = int(parts[1])
                 if queued > 0:
                     self.__log.debug("Function: %s queued: %s" % (function,
                                                                   queued))
@@ -1451,14 +1457,17 @@ class NodePool(threading.Thread):
                 count += 1 + len(n.subnodes)
             return count
 
-        # Actual need is demand - (ready + building)
+        # Actual need is demand - (ready + building + used)
+        # NOTE(jhesketh): This assumes that the nodes in use are actually being
+        # used for a job in demand.
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
             min_demand = start_demand + label.min_ready
             n_ready = count_nodes(label.name, nodedb.READY)
             n_building = count_nodes(label.name, nodedb.BUILDING)
+            n_used = count_nodes(label.name, nodedb.USED)
             n_test = count_nodes(label.name, nodedb.TEST)
-            ready = n_ready + n_building + n_test
+            ready = n_ready + n_building + n_used + n_test
             demand = max(min_demand - ready, 0)
             label_demand[label.name] = demand
             self.log.debug("  Deficit: %s: %s (start: %s min: %s ready: %s)" %
