@@ -166,6 +166,9 @@ same name.  Example::
         - az1
       boot-timeout: 120
       launch-timeout: 900
+      networks:
+        - net-id: 'some-uuid'
+        - net-label: 'some-network-name'
       images:
         - name: precise
           base-image: 'Precise'
@@ -210,6 +213,13 @@ expects that user to exist after running the script indicated by
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
 `boot-timeout` key defaults to 60 seconds and `launch-timeout` key
 will default to 3600 seconds.
+
+The optional `networks` section may be used to specify custom
+Neutron networks that get attached to each node. You can specify
+Neutron networks using either the `net-id` or `net-label`. If
+only the `net-label` is specified the network UUID is automatically
+queried via the Nova os-tenant-networks API extension (this requires
+that the cloud provider has deployed this extension).
 
 The `availability-zones` key is optional. Without it nodepool will rely
 on nova to schedule an availability zone. If it is provided the value
