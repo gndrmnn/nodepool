@@ -1679,6 +1679,8 @@ class NodePool(threading.Thread):
             delete = True
         if delete:
             try:
+                self.log.debug("cron is attempting to cleanup node id: %s"
+                               % node.id)
                 self.deleteNode(node.id)
             except Exception:
                 self.log.exception("Exception deleting node id: "
