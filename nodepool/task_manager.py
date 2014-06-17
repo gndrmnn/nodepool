@@ -71,10 +71,10 @@ class TaskManager(threading.Thread):
 
     def run(self):
         last_ts = 0
-        while self._running:
+        while True:
             task = self.queue.get()
-            if not task:
-                continue
+            if (task is None) and (not self._running):
+                break
             while True:
                 delta = time.time() - last_ts
                 if delta >= self.rate:
