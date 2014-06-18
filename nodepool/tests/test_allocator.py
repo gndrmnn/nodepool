@@ -101,6 +101,11 @@ class TwoProvidersTwoLabels(tests.AllocatorTestCase):
         ('four_nodes_over_quota',
          dict(provider1=2, provider2=2, label1=4, label2=4,
               results=[1, 1, 1, 1])),
+        # ensure we get at least 1 label1 even when label2
+        # is much bigger than it
+        ('one_node_way_over_quota',
+         dict(provider1=2, provider2=2, label1=2, label2=100,
+              results=[1, 1, 0, 2])),
         ]
 
     def setUp(self):

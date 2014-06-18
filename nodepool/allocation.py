@@ -86,6 +86,13 @@ class AllocationProvider(object):
                 ratio = 0.0
             grant = int(round(req.amount))
             grant = min(grant, int(round(self.available * ratio)))
+
+            # grant may have worked out to zero from above, but if we
+            # have not allocated at least one node
+            if req.amount > 0 and req.request.at_least_one is False:
+                grant = max(grant, 1)
+                req.request.at_least_one = True
+
             # This adjusts our availability as well as the values of
             # other requests, so values will be correct the next time
             # through the loop.
@@ -97,6 +104,14 @@ class AllocationRequest(object):
     def __init__(self, name, amount):
         self.name = name
         self.amount = float(amount)
+
+        # A flag to tell us we have at least one allocation somewhere.
+        # When going over quota, it's possible for the largest
+        # allocation requests to drown out the smaller ones.  However,
+        # these smaller ones were made for a reason; they can be for
+        # check jobs that must run to clear the gate.
+        self.at_least_one = False
+
         # Sub-requests of individual providers that make up this
         # request.  AllocationProvider -> AllocationSubRequest
         self.sub_requests = {}
