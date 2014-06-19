@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_1bad8531",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 360
+      },
+      "writtenOn": "2014-06-19T13:50:07Z",
+      "side": 1,
+      "message": "Nodepool has a database. Why not store these there?",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
