@@ -1263,8 +1263,13 @@ class NodePool(threading.Thread):
                            (label.name, demand, start_demand, min_demand,
                             ready))
 
-        # Start setting up the allocation system.  Add a provider for
-        # each node provider, along with current capacity
+        # Start setting up the allocation system.
+
+        # initialize the historical state of grants
+        allocation.load_grants()
+
+        # Add a provider for each node provider, along with current
+        # capacity
         allocation_providers = {}
         for provider in self.config.providers.values():
             provider_max = provider.max_servers
