@@ -173,5 +173,138 @@ class TwoProvidersTwoLabelsOneShared(tests.AllocatorTestCase):
         ap2.makeGrants()
 
 
+class RoundRobinOverAllocation(tests.RoundRobinTestCase):
+    """Test the round-robin behaviour of the AllocationHistory object to
+    ensure fairness of distribution
+
+    """
+
+    scenarios = [
+        # * one_to_one
+        #
+        # test that with only one node available we cycle through the
+        # available labels.
+        #
+        # There's a slight trick with the ordering here; makeGrants()
+        # algorithm allocates proportionally from the available nodes
+        # (i.e. if there's allocations for 100 and 50, then the first
+        # gets twice as many of the available nodes than the second).
+        # The algorithm is
+        #
+        #  1) add up all your peer requests
+        #  2) calculate your ratio = (your_request / all_peers)
+        #  3) multiples that ratio by the available nodes
+        #  4) take the floor() (you can only allocate a whole node)
+        #
+        # So we've got 8 total requests, each requesting one node:
+        #
+        #  label1 = 1/7 other requests = 0.142 * 1 available node = 0
+        #  label2 = 1/6 other requests = 0.166 * 1 available node = 0
+        #  label3 = 1/4 other requests = 0.25  * 1 available node = 0
+        #  ...
+        #  label7 = 1/1 other requests = 1 * 1 available node = 1
+        #
+        # ergo label7 is the first to be granted its request.  Thus we
+        # start the round-robin from there
+        ('one_to_one',
+         dict(provider1=1, provider2=0,
+              label1=1, label2=1, label3=1, label4=1,
+              label5=1, label6=1, label7=1, label8=1,
+              results=['label7',
+                       'label1',
+                       'label2',
+                       'label3',
+                       'label4',
+                       'label5',
+                       'label6',
+                       'label8',
+                       'label7',
+                       'label1',
+                       'label2'])),
+
+        # * at_quota
+        #
+        # Test that when at quota, every node gets allocated on every
+        # round; i.e. nobody ever misses out.  odds go to ap1, even to
+        # ap2
+        ('at_quota',
+         dict(provider1=4, provider2=4,
+              label1=1, label2=1, label3=1, label4=1,
+              label5=1, label6=1, label7=1, label8=1,
+              results=[
+                  'label1', 'label3', 'label5', 'label7',
+                  'label2', 'label4', 'label6', 'label8'] * 11
+              )),
+
+        # * big_fish_little_pond
+        #
+        # In this test we have one label that far outweighs the other.
+        # From the description of the ratio allocation above, it can
+        # swamp the allocation pool and not allow other nodes to come
+        # online.
+        #
+        # Here with two nodes, we check that one node is dedicated to
+        # the larger label request, but the second node cycles through
+        # the smaller requests.
+        ('big_fish_little_pond',
+         dict(provider1=1, provider2=1,
+              label1=100, label2=1, label3=1, label4=1,
+              label5=1, label6=1, label7=1, label8=1,
+              results=['label1', 'label1',
+                       'label1', 'label2',
+                       'label1', 'label3',
+                       'label1', 'label4',
+                       'label1', 'label5',
+                       'label1', 'label6',
+                       'label1', 'label7',
+                       'label1', 'label8',
+                       'label1', 'label2',
+                       'label1', 'label3',
+                       'label1', 'label4'])),
+    ]
+
+    def setUp(self):
+        super(RoundRobinOverAllocation, self).setUp()
+
+        ah = allocation.AllocationHistory()
+
+        def do_it():
+            ap1 = allocation.AllocationProvider('provider1', self.provider1)
+            ap2 = allocation.AllocationProvider('provider2', self.provider2)
+
+            at1 = allocation.AllocationTarget('target1')
+
+            ars = []
+            ars.append(allocation.AllocationRequest('label1', self.label1, ah))
+            ars.append(allocation.AllocationRequest('label2', self.label2, ah))
+            ars.append(allocation.AllocationRequest('label3', self.label3, ah))
+            ars.append(allocation.AllocationRequest('label4', self.label4, ah))
+            ars.append(allocation.AllocationRequest('label5', self.label5, ah))
+            ars.append(allocation.AllocationRequest('label6', self.label6, ah))
+            ars.append(allocation.AllocationRequest('label7', self.label7, ah))
+            ars.append(allocation.AllocationRequest('label8', self.label8, ah))
+
+            # each request to one target, and can be satisfied by both
+            # providers
+            for ar in ars:
+                ar.addTarget(at1, 0)
+                ar.addProvider(ap1, at1, 0)
+                ar.addProvider(ap2, at1, 0)
+
+            ap1.makeGrants()
+            for g in ap1.grants:
+                self.allocations.append(g.request.name)
+            ap2.makeGrants()
+            for g in ap2.grants:
+                self.allocations.append(g.request.name)
+
+            ah.grantsDone()
+
+        # run the test several times to make sure we bounce around
+        # enough
+        for i in range(0, 11):
+            do_it()
+
+
 def load_tests(loader, in_tests, pattern):
     return testscenarios.load_tests_apply_scenarios(loader, in_tests, pattern)
