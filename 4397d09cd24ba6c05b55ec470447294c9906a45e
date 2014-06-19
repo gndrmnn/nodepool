@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1ae5cdf2_40f5594f",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-19T15:40:54Z",
+      "side": 1,
+      "message": "I don\u0027t think the last sentence is correct -- there are really two \"queues\" at work here: Zuul\u0027s pipelines (eg, the \"gate queue\"), and the Gearman job queue (also managed by Zuul).  Nodepool has no visibility into Zuul\u0027s pipelines, it only sees the Gearman job queue.  The fact that jobs are still waiting on nodes causes the pipeline to have changes sitting in it for a long time, but eventually those jobs will run and the pipeline will clear out (unless the system permanently exceeds capacity).  The problem is that it\u0027s \"bursty\" where we have to wait for the f20 deficit to become so great or the spare capacity to increase past 1 node per cycle for nodepool to decide to launch f20 nodes and clear out those old changes.\n\nThe fact that Zuul\u0027s pipelines back up is not actually a factor in this system, it\u0027s \"just\" a human factor where we don\u0027t like the fact that it could take 10 hours to run the jobs needed for a change.\n\nI would say the last sentence should read:\n\n  If \u0027fedora\u0027 is required for a gate-check job, older changes may wait in Zuul\u0027s\n  pipelines longer than expected while jobs for newer changes continue to receive\n  precise nodes and overall merge throughput decreases during such contention.",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_1bad8531",
         "filename": "nodepool/allocation.py",
         "patchSetId": 2
@@ -13,6 +30,57 @@
       "writtenOn": "2014-06-19T13:50:07Z",
       "side": 1,
       "message": "Nodepool has a database. Why not store these there?",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_6095f5e2",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-19T15:40:54Z",
+      "side": 1,
+      "message": "Actually, why store them at all?  Why not just keep this in memory, and accept that if nodepool restarts, we might have a short period with unbalanced allocations?",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_809a0112",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-19T15:40:54Z",
+      "side": 1,
+      "message": "I don\u0027t think the state should be stored in module-global variables.  Instead, I think we should have a new class that nodepool instantiates once and passes into the Allocator constructor each time.",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_a09b7d15",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-19T15:40:54Z",
+      "side": 1,
+      "message": "I don\u0027t think this will solve the starvation problem, and in fact, I think it may make it worse.  Remember that in contention, we boot one node at a time, so this will end up strictly alternating between two node types.  We will boot precise, devstack-precise, precise, devstack-precise, ... and never boot an f20 node until we are completely out of contention.\n\nUltimately, I think this needs to be a sorted list of requests.  Fortunately, it already is -- it\u0027s sorted by \"priority\".  We just need to define priority in a way that causes the allocation to be fair to all node types in contention.",
       "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
