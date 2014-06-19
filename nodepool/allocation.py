@@ -53,6 +53,86 @@ The algorithm is:
     that label.
 """
 
+import pickle
+
+# History allocation tracking
+
+#  The goal of the history allocation tracking is to ensure forward
+#  progress by not starving any particular label when in over-quota
+#  situations.  For example, if you have two labels, say 'fedora' and
+#  'ubuntu', and 'ubuntu' is requesting many more nodes than 'fedora',
+#  it is quite possible that 'fedora' never gets any allocations.  If
+#  'fedora' is required for a gate-check job -- which needs to pass
+#  the clear the queues and reduce over-allocation -- the problem
+#  amplifies as more and more jobs back-up.
+#
+#  We track the history of allocations by label.  Each
+#  AllocationRequest gets a AllocationHistory object which is stored
+#  in the global allocation_history[] list.
+#
+#  When a sub-allocation gets a grant, it records this via a call to
+#  AllocationHistory.granted().  This way all the sub-allocations
+#  contribute to tracking the total grants for the parent
+#  AllocationRequest.
+#
+#  Each time an AllocationProvider calls makeGrants(), it calls
+#  save_grants() to dump out the current state.  The final result in
+#  the dump file is the cumulative record of what was requested and
+#  what was granted for each label.
+#
+#  This information is loaded via a call to allocation.load_grants()
+#  before calculating the next distribution of nodes.  A list of
+#  labels that received no grants the last time around is created in
+#  ungranted[].  We use that in AllocationProvider.makeGrants() to
+#  prioritize these requests.
+#
+
+GRANT_HISTORY_FILE='/tmp/nodepool_grants.dump'
+allocation_history = []
+ungranted = []
+
+class AllocationHistory(object):
+    '''The history of an AllocationRequest'''
+
+    def __init__(self, label, requested):
+        self.label = label
+        self.requested = requested
+        self.provided = 0
+        allocation_history.append(self)
+
+    def granted(self, amount):
+        self.provided += amount
+
+    def __repr__(self):
+        return 'AllocationHistory %s %d req %d provide' % (self.label,
+                                                           self.requested,
+                                                           self.provided)
+
+def load_grants():
+    global ungranted
+    global allocation_history
+
+    # clear the history & start again
+    allocation_history = []
+
+    try:
+        f = open(GRANT_HISTORY_FILE, 'r')
+    except:
+        return
+    last_grants = pickle.load(f)
+    f.close()
+
+    # build a simple list of who didn't get their grants last time
+    # around from the picked history
+    ungranted = [x.label
+                 for x in last_grants if x.provided == 0]
+
+load_grants()
+
+def save_grants():
+    f = open(GRANT_HISTORY_FILE, 'w')
+    pickle.dump(allocation_history, f)
+    f.close()
 
 class AllocationProvider(object):
     """A node provider and its capacity."""
@@ -72,7 +152,18 @@ class AllocationProvider(object):
         # can supply foo nodes, then it should focus on supplying them
         # and leave bar nodes to other providers).
         reqs.sort(lambda a, b: cmp(a.getPriority(), b.getPriority()))
+
+        # Firstly go through and allocate any requests for labels that
+        # were ungranted last-time through.  Any other requests will
+        # pass through to the usual ratio-based calculations
+        ratio_reqs=[]
         for req in reqs:
+            if (req.request.name in ungranted) and self.available:
+                req.grant( min(req.amount, self.available) )
+            else:
+                ratio_reqs.append(req)
+
+        for req in ratio_reqs:
             total_requested = 0.0
             # Within a specific priority, limit the number of
             # available nodes to a value proportionate to the request.
@@ -84,12 +175,15 @@ class AllocationProvider(object):
                 ratio = float(req.amount) / total_requested
             else:
                 ratio = 0.0
+
             grant = int(round(req.amount))
             grant = min(grant, int(round(self.available * ratio)))
             # This adjusts our availability as well as the values of
             # other requests, so values will be correct the next time
             # through the loop.
             req.grant(grant)
+
+        save_grants()
 
 
 class AllocationRequest(object):
@@ -103,6 +197,8 @@ class AllocationRequest(object):
         # Targets to which nodes from this request may be assigned.
         # AllocationTarget -> AllocationRequestTarget
         self.request_targets = {}
+
+        self.history = AllocationHistory(name, amount)
 
     def __repr__(self):
         return '<AllocationRequest for %s of %s>' % (self.amount, self.name)
@@ -172,6 +268,7 @@ class AllocationSubRequest(object):
         if amount > 0:
             grant = AllocationGrant(self.request, self.provider,
                                     amount, self.targets)
+            self.request.history.granted(amount)
             # This is now a grant instead of a request.
             self.provider.grants.append(grant)
         else:
