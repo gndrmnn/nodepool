@@ -72,6 +72,15 @@ class AllocatorTestCase(BaseTestCase):
                                                           for x in self.agt]))
 
 
+class RoundRobinTestCase(BaseTestCase):
+    def setUp(self):
+        super(RoundRobinTestCase, self).setUp()
+        self.allocations = []
+
+    def test_allocator(self):
+        self.assertListEqual(self.allocations, self.results)
+
+
 class MySQLSchemaFixture(fixtures.Fixture):
     def setUp(self):
         super(MySQLSchemaFixture, self).setUp()
