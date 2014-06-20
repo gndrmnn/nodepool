@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_2a472d1e",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 2284
+      },
+      "writtenOn": "2014-06-20T10:38:15Z",
+      "side": 1,
+      "message": "Nitpick:\n\nClearer possibly with a dict?:\n\n  try:\n      a \u003d self.current_allocations[label]\n      a[\u0027requested\u0027] +\u003d amount\n  except KeyError:\n      self.current_allocations[label] \u003d dict(requested\u003damount, granted\u003d0)",
+      "revId": "a29807aa4eaeefa7836693a9599f6e236af056df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_2a648de3",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 2284
+      },
+      "writtenOn": "2014-06-20T10:38:15Z",
+      "side": 1,
+      "message": "Is this break also appropriate in the case where (label not in a) for a recent allocation *but* there were also consecutive failures to allocate for that label further back in the history?",
+      "revId": "a29807aa4eaeefa7836693a9599f6e236af056df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
