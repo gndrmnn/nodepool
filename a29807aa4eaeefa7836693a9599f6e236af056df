@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_d4cbcb1b",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T12:33:20Z",
+      "side": 1,
+      "message": "The C programmer in me says no, the python yes :)  I\u0027ll work into next revision",
+      "parentUuid": "1ae5cdf2_2a472d1e",
+      "revId": "a29807aa4eaeefa7836693a9599f6e236af056df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_2a648de3",
         "filename": "nodepool/allocation.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-20T10:38:15Z",
       "side": 1,
       "message": "Is this break also appropriate in the case where (label not in a) for a recent allocation *but* there were also consecutive failures to allocate for that label further back in the history?",
+      "revId": "a29807aa4eaeefa7836693a9599f6e236af056df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_14d293d0",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T12:33:20Z",
+      "side": 1,
+      "message": "The idea is just to go back as far as the last allocation; at least if you got an allocation you got *something*",
+      "parentUuid": "1ae5cdf2_2a648de3",
       "revId": "a29807aa4eaeefa7836693a9599f6e236af056df",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
