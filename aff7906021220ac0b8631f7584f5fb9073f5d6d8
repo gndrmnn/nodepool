@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_7f355ef5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2014-06-20T23:41:41Z",
+      "side": 1,
+      "message": "I\u0027m not sure about adding it here if you should use net-id OR net-label - would using both make sense/work? We want the example to be a configuration that would probably work, not an exhaustive list of options (description below helps with this)",
+      "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
