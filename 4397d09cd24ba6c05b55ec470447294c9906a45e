@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_95906a44",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T05:28:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ae5cdf2_40f5594f",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_1bad8531",
         "filename": "nodepool/allocation.py",
         "patchSetId": 2
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_553182eb",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T05:28:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ae5cdf2_6095f5e2",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_809a0112",
         "filename": "nodepool/allocation.py",
         "patchSetId": 2
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_752cbe93",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T05:28:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ae5cdf2_809a0112",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_a09b7d15",
         "filename": "nodepool/allocation.py",
         "patchSetId": 2
@@ -81,6 +135,24 @@
       "writtenOn": "2014-06-19T15:40:54Z",
       "side": 1,
       "message": "I don\u0027t think this will solve the starvation problem, and in fact, I think it may make it worse.  Remember that in contention, we boot one node at a time, so this will end up strictly alternating between two node types.  We will boot precise, devstack-precise, precise, devstack-precise, ... and never boot an f20 node until we are completely out of contention.\n\nUltimately, I think this needs to be a sorted list of requests.  Fortunately, it already is -- it\u0027s sorted by \"priority\".  We just need to define priority in a way that causes the allocation to be fair to all node types in contention.",
+      "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_f599ae6d",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-20T05:28:30Z",
+      "side": 1,
+      "message": "I think that we need to track across multiple iterations and promote those that aren\u0027t getting any allocations.  My next review takes all your suggestions and hopefully does that",
+      "parentUuid": "1ae5cdf2_a09b7d15",
       "revId": "4397d09cd24ba6c05b55ec470447294c9906a45e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
