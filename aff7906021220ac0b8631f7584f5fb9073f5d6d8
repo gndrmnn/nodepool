@@ -16,6 +16,40 @@
       "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_71b025dc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-23T01:34:28Z",
+      "side": 1,
+      "message": "This example will work - it describes one nic by net-id and one by net-label.",
+      "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_51ade982",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-23T01:34:28Z",
+      "side": 1,
+      "message": "So I don\u0027t like this bit - I believe it actually shrinks the generality of nodepool here. The prior configuration could specify any parameter Nova would accept and pass through (e.g. net-id + subnet-id).\n\nInstead, if you did this, I think it would preserve the generality, and allow label resolution:\n\n nics \u003d []\n for network in self.provider.networks:\n     network \u003d dict(network)\n     if \u0027net-label\u0027 in network:\n         network[\u0027net-id\u0027] \u003d self.findNetwork(network.pop(\u0027net-label\u0027)[\u0027id\u0027]\n     nics.append(network)\n         \nbut that said - since we also contribute to nova, isn\u0027t the right thing to do just to do this in Nova itself? Nova can make just as unambiguous a decision as we can...",
+      "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
