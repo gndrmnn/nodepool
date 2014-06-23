@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_31e13dd0",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-23T01:34:44Z",
+      "side": 1,
+      "message": "Another, possibly better fix would be assertListEqual, which is specifically intended to handle this well.",
+      "revId": "1d5397ee8a9bf59e10f6506b697b0696b663ee7a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
