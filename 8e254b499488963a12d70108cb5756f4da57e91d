@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_b1c54d3e",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-23T01:34:32Z",
+      "side": 1,
+      "message": "It seems like putting hostname in this set of files would be more consistent. AIUI you\u0027re adding hostname to $1 because another script already needs it, but since its fluking it - how about adding it to a /etc file, then changing the existing script to use the /etc file?",
+      "revId": "8e254b499488963a12d70108cb5756f4da57e91d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
