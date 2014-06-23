@@ -50,6 +50,24 @@
       "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_47dfd4d6",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 360
+      },
+      "writtenOn": "2014-06-23T16:12:28Z",
+      "side": 1,
+      "message": "I would argue the undocumented generality of the previous code as a bad thing which could eventually lead to spurious data getting sent off to Nova. Nodepool should own its config file and not have sections of it sent verbatim off to some remote service. I\u0027m mean like oops, we just sent the Nova API all the passwords because of a config file error...\n\nAs for contributing to Nova... people keep saying that.  What I\u0027m doing here matches how things already work for images so I think we aren\u0027t breaking rules, or incurring technical debt. Perhaps in the long term we do both, but it is arguably easier to do this today in nodepool so I\u0027d say lets just get on w/ it.",
+      "parentUuid": "1ae5cdf2_51ade982",
+      "revId": "aff7906021220ac0b8631f7584f5fb9073f5d6d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
