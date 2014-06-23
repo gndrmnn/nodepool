@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_91d131fd",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-23T01:34:51Z",
+      "side": 1,
+      "message": "So one interesting case here is to consider a redundant nodepool as HA insurance. That would be a big honking foreign worker in this model, AIUI.",
+      "revId": "c86096f5e8a548d93ddee018cc7dd7bd8de12083",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
