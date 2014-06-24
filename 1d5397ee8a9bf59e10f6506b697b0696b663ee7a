@@ -16,6 +16,24 @@
       "revId": "1d5397ee8a9bf59e10f6506b697b0696b663ee7a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_9a390e42",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-24T11:00:37Z",
+      "side": 1,
+      "message": "This is cool, but not in python2.6.\n\nDo we want to import unittest2 for this?",
+      "parentUuid": "1ae5cdf2_31e13dd0",
+      "revId": "1d5397ee8a9bf59e10f6506b697b0696b663ee7a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
