@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_d5e8b7b5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 17
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-24T18:29:32Z",
+      "side": 1,
+      "message": "Whats a location-image?",
+      "revId": "4b9d2715655784f76300139c210c6f9c9e5fec36",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_b5e5ebdd",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-06-24T18:29:32Z",
+      "side": 1,
+      "message": "This seems like an orthogonal set of changes unrelated to image building?",
+      "revId": "4b9d2715655784f76300139c210c6f9c9e5fec36",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
