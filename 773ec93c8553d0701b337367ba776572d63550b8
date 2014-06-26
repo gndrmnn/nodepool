@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ae5cdf2_62a6e7c1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-26T22:57:51Z",
+      "side": 1,
+      "message": "Why is this not relevant for diskimages?",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_82abf386",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-26T22:57:51Z",
+      "side": 1,
+      "message": "same question",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_a2938f5a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-26T22:57:51Z",
+      "side": 1,
+      "message": "I think we should do this in the first cut.  We can do that by having the buildImage happen in a thread of its own that, when finished, starts these threads for each of the providers while passing in the path to the image.",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_c2909b50",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-26T22:57:51Z",
+      "side": 1,
+      "message": "else is not needed",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_e299177b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-06-26T22:57:51Z",
+      "side": 1,
+      "message": "Why remove Exception?",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
