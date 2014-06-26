@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_d1bb2273",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-26T10:41:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ae5cdf2_d4cc0237",
+      "revId": "8a5ca291932f4b197355d3a6fc2ef777a1fd116e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_f4d1fecc",
         "filename": "nodepool/allocation.py",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2014-06-25T23:24:09Z",
       "side": 1,
       "message": "Slightly worried that this sorting happens after we deal with waiters. I think that means we can end up in a situation where we handle waiters and can\u0027t handle anything else even though we have quota.\n\nWhat do you think about adding a test case for this scenario? basically have one label only provided by the first label but the first provider serves long waiting nodes instead. Second provider could provide nodes but only nodes from that special label need building. We could set the test as an expected fail if that is the current behavior. I am just thinking a test would help us stay on top of this as expected behavior if we move forward with this change as is.",
+      "revId": "8a5ca291932f4b197355d3a6fc2ef777a1fd116e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ae5cdf2_b18bf6be",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-06-26T10:41:39Z",
+      "side": 1,
+      "message": "\u003e I think that means we can end up in a situation where we handle waiters and can\u0027t handle anything else even though we have quota.\n\nI don\u0027t think so ... if we have satisfied everyone who is waiting, and self.available is still \u003e 0, then the rest of the available nodes will be allocated as per the usual ratio mechanism?  \n\nYour point above fixed nodes is interesting, so I added some test-cases for this in the next version.  I think it behaves as I would expect",
+      "parentUuid": "1ae5cdf2_f4d1fecc",
       "revId": "8a5ca291932f4b197355d3a6fc2ef777a1fd116e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
