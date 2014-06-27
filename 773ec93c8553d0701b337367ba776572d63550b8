@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "1ae5cdf2_49f9fdc6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2014-06-27T12:41:56Z",
+      "side": 1,
+      "message": "The reason I thought that we should leave it until later is that as best I can tell we\u0027re going to need to change the data model. Currently, an image is a property of a provider, and this makes a diskimage that is a global thing that wants to be uploaded to a provider. That seemed like a rather big change to lump in - but certainly willing to take a stab.",
+      "parentUuid": "1ae5cdf2_a2938f5a",
+      "revId": "773ec93c8553d0701b337367ba776572d63550b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ae5cdf2_c2909b50",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 20
