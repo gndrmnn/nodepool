@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab895d6_6ddd8f14",
+        "filename": "nodepool/jenkins_manager.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "This seems unnecessary for this changeset (adds clutter)",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab895d6_8de2e3d3",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab895d6_edcd1f88",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "extra whitespace compared to other classes",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab895d6_0d1df30f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "nodepool shouldn\u0027t hardcode the image names like this anymore.\n\nSee https://review.openstack.org/#/c/90883/ which was approved but had a merge conflict.",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab895d6_6db66fde",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "This option needs documenting",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab895d6_4defebb0",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 21
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "02e2a90be5de275c66388ff5c80c749dbdd7d629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

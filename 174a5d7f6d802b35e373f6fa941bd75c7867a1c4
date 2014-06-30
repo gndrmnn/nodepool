@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab895d6_6d058fc1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-06-30T08:10:23Z",
+      "side": 0,
+      "message": "I think this should stay in here... if the child-classes want to overwrite it that\u0027s fine, but it\u0027d be better to keep it since this class calls self.log.exception etc",
+      "revId": "174a5d7f6d802b35e373f6fa941bd75c7867a1c4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
