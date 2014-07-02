@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_8693764e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-07-02T00:42:15Z",
+      "side": 1,
+      "message": "There are two methods that start the image rebuilding process depending on whether we\u0027re updating a single image or all of them.  The method below is called to update all of them -- but notice that it in turn calls the method to update a single image for each provider-image combination.",
+      "revId": "c543f0c71fd09dd1a730d03851e218006bcb1929",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_a69a3a61",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-07-02T00:42:15Z",
+      "side": 1,
+      "message": "The method below is the one that updates a single image.  It\u0027s either called by the method above, or from the command line (\"nodepool image-update hpcloud precise\"), or from the method that checks for missing images.",
+      "revId": "c543f0c71fd09dd1a730d03851e218006bcb1929",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_c69d6e5b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 1599,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-07-02T00:42:15Z",
+      "side": 1,
+      "message": "This is the method that actually does the work to update a single image on a single provider.",
+      "revId": "c543f0c71fd09dd1a730d03851e218006bcb1929",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_e6a3529c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-07-02T00:42:15Z",
+      "side": 1,
+      "message": "Since we already have a loop above (see 1st comment) that iterates over all the providers, we probably shouldn\u0027t do it here.",
+      "revId": "c543f0c71fd09dd1a730d03851e218006bcb1929",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
