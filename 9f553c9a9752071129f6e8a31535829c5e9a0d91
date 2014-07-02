@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_8ef281d0",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-07-02T23:58:17Z",
+      "side": 1,
+      "message": "And seeing history here with a totally different meaning makes me even more sure about asking for the rename above ;)",
+      "revId": "9f553c9a9752071129f6e8a31535829c5e9a0d91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_aeed85f1",
+        "filename": "nodepool/tests/test_allocator.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-07-02T23:58:17Z",
+      "side": 1,
+      "message": "For this one, you can fix it like so:\n\n Test complex round-robin allocations.\n\n When we have a complex situation with some nodes only provided by some providers\n we need to be more sophisticated in our tests. Consider that:\n * label1...",
+      "revId": "9f553c9a9752071129f6e8a31535829c5e9a0d91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
