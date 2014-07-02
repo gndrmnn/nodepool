@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_2ee25503",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-07-02T23:58:15Z",
+      "side": 1,
+      "message": "These code sections seem duplicated, perhaps factoring into a helper would be useful at this point?",
+      "revId": "0159720794dff837020c073f178f28342a725758",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
