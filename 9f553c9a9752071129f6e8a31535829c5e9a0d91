@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "baada198_7d915d98",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-07-03T04:03:14Z",
+      "side": 1,
+      "message": "Am I misunderstanding, or is there another missing comment?",
+      "parentUuid": "baada198_8ef281d0",
+      "revId": "9f553c9a9752071129f6e8a31535829c5e9a0d91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baada198_aeed85f1",
         "filename": "nodepool/tests/test_allocator.py",
         "patchSetId": 8
