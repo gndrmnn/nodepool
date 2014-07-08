@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_980b1f23",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-08T04:14:38Z",
+      "side": 1,
+      "message": "This here means that all gearman servers that this client is connected are counted. Therefore so long as nodepool has all of the servers configured in its config it should be able to count the load.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
