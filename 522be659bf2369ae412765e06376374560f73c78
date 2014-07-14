@@ -2,6 +2,91 @@
   "comments": [
     {
       "key": {
+        "uuid": "baada198_50a18944",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 5660
+      },
+      "writtenOn": "2014-07-14T14:35:51Z",
+      "side": 1,
+      "message": "in advance.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_f0be1d64",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5660
+      },
+      "writtenOn": "2014-07-14T14:35:51Z",
+      "side": 1,
+      "message": "connected to,",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_1069d1f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 5660
+      },
+      "writtenOn": "2014-07-14T14:35:51Z",
+      "side": 1,
+      "message": "is being run",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_303a55e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 5660
+      },
+      "writtenOn": "2014-07-14T14:35:51Z",
+      "side": 1,
+      "message": "jobs), then subtract the nodes considered to be USED.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_4b7b9e7a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 5660
+      },
+      "writtenOn": "2014-07-14T14:35:51Z",
+      "side": 1,
+      "message": "If running and used are the same, then the calculations are not equal. The amount would be added twice (running and used) to the amount subtracted from min_demand. I don\u0027t follow the logic.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baada198_980b1f23",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
