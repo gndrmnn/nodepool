@@ -101,6 +101,23 @@
       "revId": "522be659bf2369ae412765e06376374560f73c78",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_3d04de48",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 4190
+      },
+      "writtenOn": "2014-07-14T21:42:03Z",
+      "side": 1,
+      "message": "I don\u0027t follow - my concern was that running a second nodepool - not a second jenkins - would show up as a foreign worker in your comment below. So demand would be off by a factor of 2.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
