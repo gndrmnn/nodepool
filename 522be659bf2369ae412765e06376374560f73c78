@@ -118,6 +118,24 @@
       "revId": "522be659bf2369ae412765e06376374560f73c78",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_3e4f636c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-15T10:25:55Z",
+      "side": 1,
+      "message": "Ah, right you are. However I\u0027m not sure that we\u0027d ever run more than one nodepool. Even if we counted the demand excluding running jobs (ie as it was before this patch) both nodepools would see the same demand and try to launch new nodes each. At worst this change, with foreign workers, will simply launch more than the demand really requires.\n\nI agree this isn\u0027t perfect but at least we can determine the demand off gearman alone.",
+      "parentUuid": "baada198_3d04de48",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
