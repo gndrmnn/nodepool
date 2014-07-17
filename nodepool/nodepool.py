@@ -625,40 +625,43 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
 
-            host.ssh("test for config dir", "ls /etc/nodepool")
-
             ftp = host.client.open_sftp()
 
-            # The Role of this node
-            f = ftp.open('/etc/nodepool/role', 'w')
-            f.write(role + '\n')
-            f.close()
-            # The IP of this node
-            f = ftp.open('/etc/nodepool/node', 'w')
-            f.write(n.ip + '\n')
-            f.close()
-            # The private IP of this node
-            f = ftp.open('/etc/nodepool/node_private', 'w')
-            f.write(n.ip_private + '\n')
-            f.close()
-            # The IP of the primary node of this node set
-            f = ftp.open('/etc/nodepool/primary_node', 'w')
-            f.write(self.node.ip + '\n')
-            f.close()
-            # The private IP of the primary node of this node set
-            f = ftp.open('/etc/nodepool/primary_node_private', 'w')
-            f.write(self.node.ip_private + '\n')
-            f.close()
-            # The IPs of all sub nodes in this node set
-            f = ftp.open('/etc/nodepool/sub_nodes', 'w')
-            for subnode in self.node.subnodes:
-                f.write(subnode.ip + '\n')
-            f.close()
-            # The private IPs of all sub nodes in this node set
-            f = ftp.open('/etc/nodepool/sub_nodes_private', 'w')
-            for subnode in self.node.subnodes:
-                f.write(subnode.ip_private + '\n')
-            f.close()
+            nodepool_info = dict(
+                # The Role of this node
+                role=role,
+                # The IP of this node
+                node=n.ip,
+                # The private IP of this node
+                node_private=n.ip_private,
+                # The IP of the primary node of this node set
+                primary_node=self.node.ip,
+                # The private IP of the primary node of this node set
+                primary_node_private=self.node.ip_private,
+                # The IPs of all sub nodes in this node set
+                sub_nodes=[subnode.ip for subnode in self.node.subnodes],
+                # The private IPs of all sub nodes in this node set
+                sub_nodes_private=[
+                    subnode.ip_private for subnode in self.node.subnodes],
+                # The instance UUID for this node
+                uuid=n.external_id
+                # The name of the cloud provider
+                provider=self.provider.name,
+                # The name of the cloud region
+                region=self.provider.region_name,
+                # The name of the cloud az
+                az=self.node.az,
+            )
+
+            for key, value in nodepool_info.items():
+                f = ftp.open('/etc/nodepool/%s' % key, 'w')
+                if isinstance(value, list):
+                    for v in value:
+                        f.write(v + '\n')
+                else:
+                    f.write(value + '\n')
+                f.close()
+
             # The SSH key for this node set
             f = ftp.open('/etc/nodepool/id_rsa', 'w')
             key.write_private_key(f)
@@ -666,6 +669,7 @@ class NodeLauncher(threading.Thread):
             f = ftp.open('/etc/nodepool/id_rsa.pub', 'w')
             f.write(public_key + '\n')
             f.close()
+
             # Provider information for this node set
             f = ftp.open('/etc/nodepool/provider', 'w')
             f.write('NODEPOOL_PROVIDER=%s\n' % self.provider.name)
@@ -674,9 +678,38 @@ class NodeLauncher(threading.Thread):
                 self.provider.region_name or '',))
             f.write('NODEPOOL_AZ=%s\n' % (self.node.az or '',))
             f.close()
-            # The instance UUID for this node
-            f = ftp.open('/etc/nodepool/uuid', 'w')
-            f.write(n.external_id + '\n')
+            )
+
+            # Write the multi-node info in ansible fact format.
+            # This will make facts like "ansible_local.nodepol_info.role"
+            host.ssh("Ensure ansible facts dir",
+                     "mkdir -p /etc/ansible/facts.d")
+
+            f = ftp.open('/etc/ansible/facts.d/nodepool.fact', 'w')
+            json.dump(dict(nodepool_info=nodepool_info), f)
+            f.close()
+
+            # Write an ansible inventory, to allow for job content in ansible
+            # format easily.
+            inventory = '[all]\n'
+            inventory += self.node.ip + '\n'
+            for subnode in self.node.subnodes:
+                inventory += subnode.ip + '\n'
+            inventory = '[primary]\n'
+            inventory += 'localhost ansible_connection=local host_counter=1\n'
+            inventory += '[subnodes]'
+            inv_fmt = '%s ansible_connection=local host_counter=%d\n'
+            for counter in range(2, len(self.node.subnodes)):
+                inventory += inv_fmt % (subnode[counter].ip_private, counter)
+            inventory += '[subnodes_public]'
+            for counter in range(2, len(self.node.subnodes)):
+                inventory += inv_fmt % (subnode[counter].ip, counter)
+
+            host.ssh("Ensure ansible inventory dir",
+                     "mkdir -p /etc/nodepool/ansible")
+
+            f = ftp.open('/etc/nodepool/ansible/hosts', 'w')
+            f.write(inventory)
             f.close()
 
             ftp.close()
@@ -1531,14 +1564,12 @@ class NodePool(threading.Thread):
                     if 'nodepool_provider_name' in meta:
                         # Current metadata scheme
                         provider_key = 'nodepool_provider_name'
-                        snapshot_key = 'nodepool_snapshot_image_id'
                         node_id_key = 'nodepool_node_id'
                     elif 'nodepool' in meta:
                         # Previous nodepool metadata schema. Support reading
                         # for transition
                         meta = json.loads(meta['nodepool'])
                         provider_key = 'provider_name'
-                        snapshot_key = 'snapshot_image_id'
                         node_id_key = 'node_id'
                     else:
                         self.log.debug("Instance %s (%s) in %s has no "
@@ -1553,7 +1584,7 @@ class NodePool(threading.Thread):
                                            provider.name,
                                            meta[provider_key]))
                         continue
-                    node_id = meta.get('node_id')
+                    node_id = meta.get(node_id_key)
                     if node_id:
                         if session.getNode(node_id):
                             continue
