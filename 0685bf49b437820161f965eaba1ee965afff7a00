@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_bcea3472",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-07-17T12:26:07Z",
+      "side": 1,
+      "message": "We usually want to exit quickly, so I think we should abort the image builds here.  The existing system just marks \u0027BUILDING\u0027 images and nodes as \u0027DELETE\u0027 when it restarts.",
+      "revId": "0685bf49b437820161f965eaba1ee965afff7a00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
