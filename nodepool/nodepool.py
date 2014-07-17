@@ -485,6 +485,22 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
 
+            # Write the multi-node info in ansible fact format.
+            # This will make facts like "ansible_local.nodepol.role" ... etc.
+            nodepool_info dict(
+                role = role,
+                primary_node = self.node.ip,
+                sub_nodes = self.node.subnodes,
+            )
+
+            host.ssh("Ensure ansible facts dir",
+                     "mkdir -p /etc/ansible/facts.d")
+
+            ftp = host.client.open_sftp()
+            f = ftp.open('/etc/ansible/facts.d/nodepool.fact')
+            json.dump(nodepool_info, f)
+            f.close()
+
             # TODO(jeblair): Remove 'try' once we have updated images
             # everywhere; this is just to help with the transition
             # from images without /etc/nodepool to ones with.
