@@ -492,9 +492,45 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
 
-            host.ssh("test for config dir", "ls /etc/nodepool")
-
             ftp = host.client.open_sftp()
+
+            # Write the multi-node info in ansible fact format.
+            # This will make facts like "ansible_local.nodepol.role" ... etc.
+            nodepool_info = dict(
+                role=role,
+                provider=self.provider.name,
+                region=self.provider.region_name,
+                az=self.node.az,
+            )
+
+            host.ssh("Ensure ansible facts dir",
+                     "mkdir -p /etc/ansible/facts.d")
+
+            f = ftp.open('/etc/ansible/facts.d/nodepool.fact', 'w')
+            json.dump(nodepool_info, f)
+            f.close()
+
+            # Write an ansible inventory, to allow for job content in ansible
+            # format easily.
+            inventory = '[all]\n'
+            inventory += self.node.ip + '\n'
+            for subnode in self.node.subnodes:
+                inventory += subnode.ip + '\n'
+            inventory = '[primary]\n'
+            inventory += 'localhost ansible_connection=local host_counter=1\n'
+            inventory += '[subnodes]'
+            inv_fmt = '%s ansible_connection=local host_counter=%d\n'
+            for counter in range(2, len(self.node.subnodes)):
+                inventory += inv_fmt % (subnode[counter].ip_private, counter)
+            inventory += '[subnodes_public]'
+            for counter in range(2, len(self.node.subnodes)):
+                inventory += inv_fmt % (subnode[counter].ip, counter)
+
+            f = ftp.open('/etc/ansible/hosts', 'w')
+            f.write(inventory)
+            f.close()
+
+            host.ssh("test for config dir", "ls /etc/nodepool")
 
             # The Role of this node
             f = ftp.open('/etc/nodepool/role', 'w')
