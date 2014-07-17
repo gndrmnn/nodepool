@@ -162,6 +162,18 @@ class Node(object):
         if session:
             session.commit()
 
+    def get_inventory(self):
+        inventory = '[all]\n'
+        inventory += self.ip + '\n'
+        for subnode in self.node.subnodes:
+            inventory += subnode.ip + '\n'
+        inventory = '[controller]\n'
+        inventory += self.ip + '\n'
+        inventory += '[subnodes]'
+        for subnode in self.node.subnodes:
+            inventory += subnode.ip + '\n'
+        return inventory
+
 
 class SubNode(object):
     def __init__(self, node,
