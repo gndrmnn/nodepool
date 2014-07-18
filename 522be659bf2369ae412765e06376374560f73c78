@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "baada198_6bffcd02",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-18T08:51:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baada198_50a18944",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baada198_f0be1d64",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2014-07-14T14:35:51Z",
       "side": 1,
       "message": "connected to,",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_ae2bb380",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-18T08:51:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baada198_f0be1d64",
       "revId": "522be659bf2369ae412765e06376374560f73c78",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "baada198_0e3adfcc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-18T08:51:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baada198_1069d1f8",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baada198_303a55e7",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "baada198_ee584b33",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-18T08:51:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "baada198_303a55e7",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baada198_4b7b9e7a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -81,6 +153,24 @@
       "writtenOn": "2014-07-14T14:35:51Z",
       "side": 1,
       "message": "If running and used are the same, then the calculations are not equal. The amount would be added twice (running and used) to the amount subtracted from min_demand. I don\u0027t follow the logic.",
+      "revId": "522be659bf2369ae412765e06376374560f73c78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_8ee98f1c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-07-18T08:51:41Z",
+      "side": 1,
+      "message": "If you look at how it was previously calculated (line 13 of this commit message) the running jobs were considered in the start_demand. These have been moved to the demand calculation as shown above. Therefore it isn\u0027t counted multiple times.",
+      "parentUuid": "baada198_4b7b9e7a",
       "revId": "522be659bf2369ae412765e06376374560f73c78",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
