@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 import tempfile
 import threading
@@ -22,10 +23,12 @@ from nodepool import tests
 from nodepool import nodedb
 import nodepool.nodepool
 
+log = logging.getLogger(__name__)
+
 
 class TestNodepool(tests.DBTestCase):
+
     def setup_config(self, filename):
-        super(TestNodepool, self).setUp()
         configfile = os.path.join(os.path.dirname(tests.__file__),
                                   'fixtures', filename)
         config = open(configfile).read()
@@ -41,7 +44,7 @@ class TestNodepool(tests.DBTestCase):
                      'NodeUpdateListener',
                      'Gearman client connect',
                      'Gearman client poll',
-                     'fake-provider',
+                     'fake-provider', 'fake-provider1', 'fake-provider2',
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
@@ -152,3 +155,59 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
         pool.stop()
+
+    def test_capacity(self):
+        """Test providers at capacity"""
+        configfile = self.setup_config('capacity.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        self.addCleanup(pool.stop)
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        seen = { 'fake-precise': 0,
+                 'fake-fedora': 0,
+                 'fake-trusty': 0,
+                 'fake-centos': 0,
+        }
+
+        while True:
+
+            nodes = []
+
+            with pool.getDB().getSession() as session:
+                for label in seen.keys():
+
+                    log.debug("Checking for READY %s nodes" % label)
+
+                    l = session.getNodes(provider_name='fake-provider1',
+                                         label_name=label,
+                                         target_name='fake-target',
+                                         state=nodedb.READY)
+
+                    log.debug(" ... %d ready on provider1" % len(l))
+                    seen[label] += len(l)
+                    nodes += l
+
+                    l = session.getNodes(provider_name='fake-provider2',
+                                         label_name=label,
+                                         target_name='fake-target',
+                                         state=nodedb.READY)
+
+                    log.debug(" ... %d ready after provider2" % len(l))
+                    seen[label] += len(l)
+                    nodes += l
+
+                done = True
+                for k in seen.keys():
+                    if seen[k] != 5:
+                        log.debug("only seen %d %s nodes" % (seen[k], k))
+                        done = False
+                    if done:
+                        return
+                log.debug("not done, try again")
+
+                log.debug("Clearing out seen nodes")
+                for n in nodes:
+                    log.debug(" ... delete node %d" % n.id)
+                    pool._deleteNode(session, n)
