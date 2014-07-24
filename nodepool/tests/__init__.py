@@ -50,7 +50,7 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
             stderr = self.useFixture(fixtures.StringStream('stderr')).stream
             self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
         if os.environ.get('OS_LOG_CAPTURE') in TRUE_VALUES:
-            self.useFixture(fixtures.FakeLogger(level=logging.DEBUG))
+            self.useFixture(fixtures.FakeLogger(level=logging.DEBUG, format=logging.BASIC_FORMAT))
         else:
             logging.basicConfig(level=logging.DEBUG)
         self.useFixture(fixtures.NestedTempfile())
@@ -70,6 +70,19 @@ class AllocatorTestCase(BaseTestCase):
                              'expected %s and got %s' % (i, self.results,
                                                          [x.amount
                                                           for x in self.agt]))
+
+
+class RoundRobinTestCase(BaseTestCase):
+    def setUp(self):
+        super(RoundRobinTestCase, self).setUp()
+        self.allocations = []
+
+    def test_allocator(self):
+        for i, label in enumerate(self.results):
+            self.assertEqual(self.results[i], self.allocations[i],
+                             'Error at pos %d, '
+                             'expected %s and got %s' % (i, self.results,
+                                                         self.allocations))
 
 
 class MySQLSchemaFixture(fixtures.Fixture):

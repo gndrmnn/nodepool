@@ -98,7 +98,10 @@ class FakeClient(object):
             Dummy(id='f1', ram=8192, name='Fake Flavor'),
             Dummy(id='f2', ram=8192, name='Unreal Flavor'),
         ])
-        self.images = FakeList([Dummy(id='i1', name='Fake Precise')])
+        self.images = FakeList([Dummy(id='i1', name='Fake Precise'),
+                                Dummy(id='i2', name='Fake Fedora'),
+                                Dummy(id='i3', name='Fake CentOS'),
+                                Dummy(id='i4', name='Fake Trusty')])
         self.client = FakeHTTPClient()
         self.servers = FakeList([])
         self.servers.api = self
