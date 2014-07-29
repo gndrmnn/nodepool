@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_d1b0dfff",
+        "filename": "nodepool/allocation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-07-29T22:09:52Z",
+      "side": 1,
+      "message": "We could use max(available, 0), but  this is fine.",
+      "revId": "6adc87d3a98af5e89b0d6e20010ba946a45bb43b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
