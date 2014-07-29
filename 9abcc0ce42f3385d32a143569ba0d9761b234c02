@@ -33,6 +33,24 @@
       "revId": "9abcc0ce42f3385d32a143569ba0d9761b234c02",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_c9c5b63f",
+        "filename": "nodepool/jenkins_manager.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-07-29T10:52:56Z",
+      "side": 1,
+      "message": "The \u0027fake\u0027 check is to enable testing for targets. We aren\u0027t properly using mock on the tests, but relying on \u0027fake\u0027 labels to enable testing",
+      "parentUuid": "baada198_c174b839",
+      "revId": "9abcc0ce42f3385d32a143569ba0d9761b234c02",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
