@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_ee582427",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-08-01T18:43:26Z",
+      "side": 1,
+      "message": "Wow, novaclient should maybe reconsider this as a way to make extensions work.",
+      "revId": "e471cea178033523070301f9c890b19fbe63ab33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
