@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_02aa4719",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 36
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-08-04T21:05:22Z",
+      "side": 1,
+      "message": "Co-Authored-By: ...\nhttps://wiki.openstack.org/wiki/GitCommitMessages#Including_external_references",
+      "revId": "8cf508b98d220ec36b5f200aeaec2937a555a431",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_22a58b47",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 36
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-08-04T21:05:22Z",
+      "side": 1,
+      "message": "I don\u0027t think this is called anywhere.  Unless I\u0027m missing something, this, or something like it, would need to be called by launchNode to select the appropriate image?",
+      "revId": "8cf508b98d220ec36b5f200aeaec2937a555a431",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
