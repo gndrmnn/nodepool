@@ -47,7 +47,9 @@ class SSHClient(object):
                 self.log.error(line.rstrip())
         ret = stdout.channel.recv_exit_status()
         if ret:
-            raise Exception("Unable to %s" % action)
+            raise Exception(
+                "Unable to %s\ncommand: %s\nstdout: %s\nstderr: %s"
+                % (action, command, ''.join(stdout), ''.join(stderr)))
         return out
 
     def scp(self, source, dest):
