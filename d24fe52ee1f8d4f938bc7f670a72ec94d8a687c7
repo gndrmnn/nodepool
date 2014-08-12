@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_a9cee629",
+        "filename": "nodepool/sshclient.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9420
+      },
+      "writtenOn": "2014-08-12T09:29:58Z",
+      "side": 1,
+      "message": "is stdout and stderr are composed of multiple lines, wouldn\u0027t it be easier to read if joined with something like a space or a newline rather than just pushing them all together?",
+      "revId": "d24fe52ee1f8d4f938bc7f670a72ec94d8a687c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
