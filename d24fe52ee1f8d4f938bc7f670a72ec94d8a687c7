@@ -34,6 +34,24 @@
       "revId": "d24fe52ee1f8d4f938bc7f670a72ec94d8a687c7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_2cf10464",
+        "filename": "nodepool/sshclient.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9420
+      },
+      "writtenOn": "2014-08-12T09:54:21Z",
+      "side": 1,
+      "message": "Ah, OK.",
+      "parentUuid": "baada198_cc37a8e2",
+      "revId": "d24fe52ee1f8d4f938bc7f670a72ec94d8a687c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
