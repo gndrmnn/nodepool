@@ -34,6 +34,24 @@
       "revId": "f0068be1148425ec348ab740158e77e9929d212d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ab29df4_dd02dbb3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 261
+      },
+      "writtenOn": "2014-08-13T19:32:49Z",
+      "side": 1,
+      "message": "gotcha... but you\u0027re looking at gerrit, I\u0027m looking at git log on my workstation!\n\nanyway this is just because today I am more pedant than usual.",
+      "parentUuid": "baada198_03a11fa8",
+      "revId": "f0068be1148425ec348ab740158e77e9929d212d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
