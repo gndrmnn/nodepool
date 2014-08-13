@@ -16,6 +16,24 @@
       "revId": "f0068be1148425ec348ab740158e77e9929d212d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_03a11fa8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 4395
+      },
+      "writtenOn": "2014-08-13T17:57:31Z",
+      "side": 1,
+      "message": "You can click on that link in gerrit and it links you to this patch. I\u0027ve seen others do it. Also you can type that id into gerrit search box and it will find the patch.",
+      "parentUuid": "baada198_3a9d7d59",
+      "revId": "f0068be1148425ec348ab740158e77e9929d212d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
