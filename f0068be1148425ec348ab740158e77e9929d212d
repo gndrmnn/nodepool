@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_3a9d7d59",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 261
+      },
+      "writtenOn": "2014-08-13T09:29:10Z",
+      "side": 1,
+      "message": "is it ok to put a gerrit change-id in a commit message?\n\nIt seems like this paragraph is more suitable for a gerrit comment than a commit message - also because it won\u0027t make sense anymore once the bug is fixed.",
+      "revId": "f0068be1148425ec348ab740158e77e9929d212d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

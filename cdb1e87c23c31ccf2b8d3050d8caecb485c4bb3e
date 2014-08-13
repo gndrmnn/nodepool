@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baada198_9aa1293d",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 261
+      },
+      "writtenOn": "2014-08-13T09:29:10Z",
+      "side": 0,
+      "message": "It seems to me that an exception raised by the task this call start will not cause this method to interrupt, and we will get to deleteServer in any case.",
+      "revId": "cdb1e87c23c31ccf2b8d3050d8caecb485c4bb3e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baada198_da300109",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 261
+      },
+      "writtenOn": "2014-08-13T09:29:10Z",
+      "side": 0,
+      "message": "if the above comment is correct, then deleteServer will disassociate the floating ip but not delete it. There will be no link between floating IP and vm and so you would not be able to recycle it anymore.\n\nIf the analysis is correct we need to verify the floating IP for the server has been actually removed before deleting it",
+      "revId": "cdb1e87c23c31ccf2b8d3050d8caecb485c4bb3e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
