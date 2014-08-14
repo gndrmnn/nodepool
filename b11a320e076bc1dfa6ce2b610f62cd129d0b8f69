@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "7ac7a964_8d1d8776",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 1138,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-08-14T09:23:43Z",
+      "side": 1,
+      "message": "This is new section to be used for building images using dib. I\u0027m with you in that there is no much documentation, we need to update documentation for nodepool as well to reflect that changes.",
+      "parentUuid": "7ac7a964_cca2289a",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac7a964_9d3a2435",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 40
@@ -98,6 +116,24 @@
       "writtenOn": "2014-08-14T01:22:20Z",
       "side": 1,
       "message": "I think this should be getDibImages() as we are handling Dib images here not snapshot images. This is the reason for the -1 not my other comments.",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_1858d755",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-08-14T09:23:43Z",
+      "side": 1,
+      "message": "No, let me explain that. We have the check for getDibImages() before. That part detects if no dib image is generated for the current label and generates that.\nBut in this second check, it detects if we have an snapshot of that image uploaded to the provider. If not, it uploads it (based on the dib image that should exist).\nSo the current process using dib is:\nbuild dib image once -\u003e upload snapshots for all the providers -\u003e spin nodes based on the snapshot for each provider",
+      "parentUuid": "7ac7a964_bd3e0028",
       "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -138,6 +174,24 @@
     },
     {
       "key": {
+        "uuid": "7ac7a964_980f87e1",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-08-14T09:23:43Z",
+      "side": 1,
+      "message": "Yes, i just got the code like that at the point i picked it, didn\u0027t want to modify that.",
+      "parentUuid": "7ac7a964_fdf15896",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac7a964_1deff4b1",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 40
@@ -149,6 +203,24 @@
       "writtenOn": "2014-08-14T01:22:20Z",
       "side": 1,
       "message": "Shouldn\u0027t this be nova_kwargs? Looking at our layout.yaml I am pretty sure this should be nova-kwargs. (This is another comment associated to the -1).",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_38ef53b2",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-08-14T09:23:43Z",
+      "side": 1,
+      "message": "Agree, good catch!",
+      "parentUuid": "7ac7a964_1deff4b1",
       "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
