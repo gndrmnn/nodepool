@@ -19,6 +19,57 @@
     },
     {
       "key": {
+        "uuid": "7ac7a964_0734f9dc",
+        "filename": "nodepool/jenkins_manager.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "(nit) This seems unnecessary",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_a72505ad",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "Since 90883 merged, the template name is no longer hard-coded.",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_cca2289a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 1138,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "This new option doesn\u0027t appear to be documented",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac7a964_9d3a2435",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 40
@@ -47,6 +98,23 @@
       "writtenOn": "2014-08-14T01:22:20Z",
       "side": 1,
       "message": "I think this should be getDibImages() as we are handling Dib images here not snapshot images. This is the reason for the -1 not my other comments.",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_aca40c58",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 1751,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "Should there be a check for is_diskimage here?\n\nThere is an inconsistency in that _updateImage checks that it is a snapshot type whereas this method does no similar check. The cmd/nodepool.py does route to the appropriate place, but perhaps extra checks wouldn\u0027t hurt",
       "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -98,6 +166,40 @@
       "writtenOn": "2014-08-14T01:22:20Z",
       "side": 1,
       "message": "I think we know this will fail against rackspace because the keystone catalog entry for it is wrong. But we can follow up with a way to handle weird identity services.",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_2c2c7cab",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 40
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "(nit) would be neater to match positively here and return True",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_8c12f060",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 40
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-14T05:40:19Z",
+      "side": 1,
+      "message": "(nit) This seems unnecessary",
       "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
