@@ -152,3 +152,19 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
         pool.stop()
+
+    def test_failing_client(self):
+        """Test that an image and node are created even when a client fails"""
+        configfile = self.setup_config('fail_client.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+        pool.stop()
