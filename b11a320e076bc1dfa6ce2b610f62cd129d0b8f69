@@ -118,6 +118,24 @@
       "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_e0f44b89",
+        "filename": "nodepool/tests/fixtures/node_dib.yaml",
+        "patchSetId": 40
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-08-14T02:03:39Z",
+      "side": 1,
+      "message": "Never mind this comment now. I get it. We are describing how this provider boots this dib image.",
+      "parentUuid": "7ac7a964_5d308c56",
+      "revId": "b11a320e076bc1dfa6ce2b610f62cd129d0b8f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
