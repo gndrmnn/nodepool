@@ -312,6 +312,8 @@ class ProviderManager(TaskManager):
                 self.provider.region_name
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
+        if self.provider.auth_url == 'fake-fail':
+            raise Exception('Client has failed. Tests should not timeout')
 
         nova = novaclient.client.Client(
             '1.1', self.provider.username, self.provider.password,
