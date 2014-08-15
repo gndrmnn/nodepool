@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ac7a964_a7e13700",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-08-15T18:58:25Z",
+      "side": 1,
+      "message": "This just hides the true exception.  It would be better to not have a try/except at all here.",
+      "revId": "1490b9400fdf77fa85a94a1748e5a687e0540c0d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_e7e24f00",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-08-15T18:58:25Z",
+      "side": 1,
+      "message": "Same thing.",
+      "revId": "1490b9400fdf77fa85a94a1748e5a687e0540c0d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
