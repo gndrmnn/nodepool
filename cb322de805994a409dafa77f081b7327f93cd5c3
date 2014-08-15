@@ -16,6 +16,23 @@
       "revId": "cb322de805994a409dafa77f081b7327f93cd5c3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac7a964_b1916e54",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-08-15T23:57:58Z",
+      "side": 1,
+      "message": "The more I think about this the more I think we should remove it because we are not actually doing anything in this function that raises exceptions so we don\u0027t need to test this case.\n\nI can propose a followup change to remove this if statement or you can. Or we can remove it in this change.",
+      "revId": "cb322de805994a409dafa77f081b7327f93cd5c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
