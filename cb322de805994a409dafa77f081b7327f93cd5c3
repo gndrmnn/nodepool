@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ac7a964_b1ab2ed5",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-08-15T23:46:28Z",
+      "side": 1,
+      "message": "I am not entirely sure this is how I want to \"mock\" this particular thing out, but it should work for now.",
+      "revId": "cb322de805994a409dafa77f081b7327f93cd5c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
