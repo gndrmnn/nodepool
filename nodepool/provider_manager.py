@@ -312,23 +312,27 @@ class ProviderManager(TaskManager):
                 self.provider.region_name
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
+        if self.provider.auth_url == 'fake-fail':
+            raise Exception('Client has failed. Tests should not timeout')
 
-        nova = novaclient.client.Client(
-            '1.1', self.provider.username, self.provider.password,
-            self.provider.project_id, **nova_kwargs)
+        try:
+            nova = novaclient.client.Client(
+                '1.1', self.provider.username, self.provider.password,
+                self.provider.project_id, **nova_kwargs)
+            keystone = ksclient.Client(**keystone_kwargs)
 
-        keystone = ksclient.Client(**keystone_kwargs)
-
-        glance_endpoint = keystone.service_catalog.url_for(
-            attr='region',
-            filter_value=keystone_kwargs['region_name'],
-            service_type='image')
-        glance_endpoint = glance_endpoint.replace("/v1.0", "")
-        glance = glanceclient.client.Client(
-            '1', glance_endpoint, token=keystone.auth_token,
-            **glance_kwargs)
-
-        return ClientContainer(nova, glance)
+            glance_endpoint = keystone.service_catalog.url_for(
+                attr='region',
+                filter_value=keystone_kwargs['region_name'],
+                service_type='image')
+            glance_endpoint = glance_endpoint.replace("/v1.0", "")
+            glance = glanceclient.client.Client(
+                '1', glance_endpoint, token=keystone.auth_token,
+                **glance_kwargs)
+            return ClientContainer(nova, glance)
+        except Exception:
+           raise Exception('Unable to access to nova for provider '
+                           '%s' % self.provider.name)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
