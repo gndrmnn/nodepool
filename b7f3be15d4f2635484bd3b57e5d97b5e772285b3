@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ac7a964_09f3d673",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-16T04:17:16Z",
+      "side": 0,
+      "message": "As a personal preference I didn\u0027t mind this distinction",
+      "revId": "b7f3be15d4f2635484bd3b57e5d97b5e772285b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
