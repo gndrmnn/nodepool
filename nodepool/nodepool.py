@@ -70,6 +70,21 @@ class LaunchNetworkException(Exception):
 class LaunchAuthException(Exception):
     statsd_key = 'error.auth'
 
+def _extract_fixed_ip(server):
+    # Consider the ip as fixed,
+    # if no 'OS-EXT-IPS:type' attribute present
+    print server
+    for net in server['addresses'].values():
+        for addr in net:
+            if addr['version'] != 4:
+                continue
+            addr_type = addr.get('OS-EXT-IPS:type')
+            if addr_type:
+                if addr_type == 'fixed':
+                    return addr['addr']
+            else:
+                return addr['addr']
+    raise KeyError('No fixed ip found for server')
 
 class NodeCompleteThread(threading.Thread):
     log = logging.getLogger("nodepool.NodeCompleteThread")
@@ -405,6 +420,12 @@ class NodeLauncher(threading.Thread):
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
+        if self.manager.hasExtension('os-floating-ips'):
+            fixed_ip = server['fixed_v4_ip'] = _extract_fixed_ip(server)
+        else:
+            fixed_ip = ip
+
+        self.node.fixed_ip = fixed_ip
         self.node.ip = ip
         self.log.debug("Node id: %s is running, ip: %s, testing ssh" %
                        (self.node.id, ip))
@@ -431,6 +452,11 @@ class NodeLauncher(threading.Thread):
 
         nodelist = []
         for subnode in self.node.subnodes:
+            if self.manager.hasExtension('os-floating-ips'):
+                 server = self.manager.getServerFromList(subnode.external_id)
+                 subnode.fixed_ip = _extract_fixed_ip(server)
+            else:
+                subnode.fixed_ip = subnode.ip
             nodelist.append(('sub', subnode))
         nodelist.append(('primary', self.node))
 
@@ -504,9 +530,16 @@ class NodeLauncher(threading.Thread):
                 f = ftp.open('/etc/nodepool/primary_node', 'w')
                 f.write(self.node.ip + '\n')
                 f.close()
+                f = ftp.open('/etc/nodepool/primary_node_fixed', 'w')
+                f.write(self.node.fixed_ip + '\n')
+                f.close()
                 f = ftp.open('/etc/nodepool/sub_nodes', 'w')
                 for subnode in self.node.subnodes:
                     f.write(subnode.ip + '\n')
+                f.close()
+                f = ftp.open('/etc/nodepool/sub_nodes_fixed', 'w')
+                for subnode in self.node.subnodes:
+                    f.write(subnode.fixed_ip + '\n')
                 f.close()
                 f = ftp.open('/etc/nodepool/id_rsa', 'w')
                 key.write_private_key(f)
@@ -656,6 +689,12 @@ class SubNodeLauncher(threading.Thread):
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
+        if self.manager.hasExtension('os-floating-ips'):
+            fixed_ip = server['fixed_v4_ip'] = _extract_fixed_ip(server)
+        else:
+            fixed_ip = ip
+
+        self.subnode.fixed_ip =  fixed_ip
         self.subnode.ip = ip
         self.log.debug("Subnode id: %s for node id: %s is running, "
                        "ip: %s, testing ssh" %
