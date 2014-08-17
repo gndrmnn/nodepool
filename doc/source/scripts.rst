@@ -43,9 +43,14 @@ Those files include:
   node is the primary (the node added to the target and which will run
   the job), or a sub-node.
 **/etc/nodepool/primary_node**
-  The IP address of the primary node.
+  The IP address of the primary node, usable for external access.
+**/etc/nodepool/primary_node_fixed**
+  The Fixed IP address of the primary node, for internal communication.
 **/etc/nodepool/sub_nodes**
-  The IP addresses of the sub nodes, one on each line.
+  The IP addresses of the sub nodes, one on each line,
+  usable for external access.
+**/etc/nodepool/sub_nodes_fixed**
+  The Fixed IP addresses of the sub nodes, one on each line.
 **/etc/nodepool/id_rsa**
   An OpenSSH private key generated specifically for this node group.
 **/etc/nodepool/id_rsa.pub**
