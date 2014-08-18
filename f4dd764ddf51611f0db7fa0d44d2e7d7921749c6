@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Verified+2: Jenkins
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Submitted-by: Jenkins
+Submitted-at: Mon, 18 Aug 2014 23:47:10 +0000
+Reviewed-on: https://review.openstack.org/115125
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
