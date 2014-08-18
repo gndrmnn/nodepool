@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1abeadc6_9e374be3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-08-18T23:34:45Z",
+      "side": 1,
+      "message": "Normally, I would expect the description of the fix to be in a paragraph above here, and not in the form of a \"Header:\".  But I\u0027m not going to -1 based on that.",
+      "revId": "f4dd764ddf51611f0db7fa0d44d2e7d7921749c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
