@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1abeadc6_013676e7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-08-19T07:37:53Z",
+      "side": 1,
+      "message": "perhaps add \u0027from the providers glance\u0027?",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
