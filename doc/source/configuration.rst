@@ -156,9 +156,8 @@ providers
 ---------
 
 Lists the OpenStack cloud providers Nodepool should use.  Within each
-provider, the Nodepool image types are also defined.  If the resulting
-images from different providers should be equivalent, give them the
-same name.  Example::
+provider, the Nodepool image types are also defined (see
+:ref:`images` for details).  Example::
 
   providers:
     - name: provider1
@@ -183,6 +182,7 @@ same name.  Example::
         - name: precise
           base-image: 'Precise'
           min-ram: 8192
+          name-filter: 'something to match'
           setup: prepare_node.sh
           reset: reset_node.sh
           username: jenkins
@@ -215,11 +215,7 @@ same name.  Example::
           private-key: /var/lib/jenkins/.ssh/id_rsa
 
 For providers, the `name`, `username`, `password`, `auth-url`,
-`project-id`, and `max-servers` keys are required.  For images, the
-`name`, `base-image`, and `min-ram` keys are required.  The `username`
-and `private-key` values default to the values indicated.  Nodepool
-expects that user to exist after running the script indicated by
-`setup`. See :ref:`scripts` for setup script details.
+`project-id`, and `max-servers` keys are required.
 
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
 `boot-timeout` key defaults to 60 seconds and `launch-timeout` key
@@ -239,6 +235,47 @@ at random and provide that to nova. This should give a good distribution
 of availability zones being used. If you need more control of the
 distribution you can use multiple logical providers each providing a
 different list of availabiltiy zones.
+
+.. _images:
+
+images
+~~~~~~
+
+Example::
+
+  images:
+    - name: precise
+      base-image: 'Precise'
+      min-ram: 8192
+      name-filter: 'something to match'
+      setup: prepare_node.sh
+      reset: reset_node.sh
+      username: jenkins
+      private-key: /var/lib/jenkins/.ssh/id_rsa
+
+For `images`, the `name`, `base-image`, and `min-ram` keys are
+required.
+
+`base-image` is the UUID or string-name of the image to boot.
+
+If the resulting images from different providers `base-image` should
+be equivalent, give them the same name; e.g. if one provider has a
+``Fedora 20`` image and another has an equivalent ``Fedora 20
+(Heisenbug)`` image, they should use a common `name`.  Otherwise
+select a unique `name`.
+
+The `min-ram` setting will determine the flavor of `base-image` to use
+(e.g. ``m1.medium``, ``m1.large``, etc).  The smallest flavor that
+meets the `min-ram` requirements will be chosen.  You may specify an
+additional `name-filter` which will be required to match on the
+flavor-name (e.g. Rackspace offer a "Performance" flavour; setting
+`name-filter` to ``Performance`` will ensure the chosen flavor also
+contains this string as well as meeting `min-ram` requirements).
+
+The `username` and `private-key` values default to the
+values indicated.  Nodepool expects that user to exist after running
+the script indicated by `setup`. See :ref:`scripts` for setup script
+details.
 
 targets
 -------
