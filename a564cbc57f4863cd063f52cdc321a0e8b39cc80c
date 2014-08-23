@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1abeadc6_15719e0b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-08-23T14:44:51Z",
+      "side": 0,
+      "message": "This was causing scheduled image updates to fail with:\n\n    ERROR nodepool.NodePool: Exception in periodic image update:\n    Traceback (most recent call last):\n      File \"/usr/local/lib/python2.7/dist-packages/nodepool/nodepool.py\", line 1690, in _doUpdateImages\n        self.updateImages(session)\n      File \"/usr/local/lib/python2.7/dist-packages/nodepool/nodepool.py\", line 1720, in updateImages\n        self.updateImage(session, provider.name, label.image)\n    AttributeError: \u0027str\u0027 object has no attribute \u0027name\u0027",
+      "revId": "a564cbc57f4863cd063f52cdc321a0e8b39cc80c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
