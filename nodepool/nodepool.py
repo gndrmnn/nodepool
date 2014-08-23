@@ -1501,15 +1501,15 @@ class NodePool(threading.Thread):
                                          target_name=target.name)
                 allocation_requests[label.name] = ar
                 ar.addTarget(at, len(nodes))
-                for provider in label.providers.values():
+                for provider_name in label.providers:
                     # This request may be supplied by this provider
                     # (and nodes from this provider supplying this
                     # request should be distributed to this target).
                     sr, agt = ar.addProvider(
-                        allocation_providers[provider.name],
+                        allocation_providers[provider_name],
                         at, label.subnodes)
                     tlps[agt] = (target, label,
-                                 self.config.providers[provider.name])
+                                 self.config.providers[provider_name])
 
         self.log.debug("  Allocation requests:")
         for ar in allocation_requests.values():
@@ -1713,11 +1713,11 @@ class NodePool(threading.Thread):
                 # Label is configured to be disabled, skip creating the image.
                 continue
 
-            for provider in label.providers:
+            for provider_name in label.providers:
                 if label.is_diskimage:
-                    self.uploadImage(session, provider.name, label.image)
+                    self.uploadImage(session, provider_name, label.image)
                 else:
-                    self.updateImage(session, provider.name, label.image)
+                    self.updateImage(session, provider_name, label.image)
 
     def updateImage(self, session, provider_name, image_name):
         try:
@@ -2173,8 +2173,8 @@ class NodePool(threading.Thread):
                 label_key = '%s.%s' % (target_key, label.name)
                 key = '%s.min_ready' % label_key
                 statsd.gauge(key, label.min_ready)
-                for provider in label.providers.values():
-                    provider_key = '%s.%s' % (label_key, provider.name)
+                for provider_name in label.providers:
+                    provider_key = '%s.%s' % (label_key, provider_name)
                     for state in nodedb.STATE_NAMES.values():
                         base_state_key = '%s.%s' % (base_key, state)
                         provider_state_key = '%s.%s' % (provider_key, state)
