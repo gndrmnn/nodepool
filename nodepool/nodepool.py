@@ -529,10 +529,15 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
 
+            env = {}
             env_vars = ''
             for k, v in os.environ.items():
                 if k.startswith('NODEPOOL_'):
-                    env_vars += ' %s="%s"' % (k, v)
+                    env[k] = v
+            for k, v in self.provider.env_vars.items():
+                env[k] = v
+            for k, v in env.items():
+                env_vars += ' %s="%s"' % (k, v)
             host.ssh("run ready script",
                      "cd /opt/nodepool-scripts && %s ./%s %s" %
                      (env_vars, self.label.ready_script, n.hostname),
@@ -1196,6 +1201,7 @@ class NodePool(threading.Thread):
                 '{image.name}-{timestamp}.template.openstack.org'
             )
             p.images = {}
+            p.env_vars = provider.get('env_vars', {})
             for image in provider['images']:
                 i = ProviderImage()
                 i.name = image['name']
