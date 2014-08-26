@@ -134,10 +134,11 @@ providers or images are used to create them).  Example::
         - name: provider1
 
 The `name` and `image` keys are required.  The `providers` list is
-also required if any nodes should actually be created (e.g., the
-label is not currently disabled). The `min-ready` key is optional
-and defaults to 2. If the value is -1 the label is considered
-disabled.
+also required if any nodes should actually be created (e.g., the label
+is not currently disabled). The `min-ready` key is optional and
+defaults to 2. If the value is -1 the label is considered disabled.
+``min-ready`` is best-effort based on available capacity and is not a
+guaranteed allocation.
 
 The `subnodes` key is used to configure multi-node support.  If a
 `subnodes` key is supplied to an image, it indicates that the specified
@@ -194,6 +195,8 @@ same name.  Example::
           reset: reset_node.sh
           username: jenkins
           private-key: /var/lib/jenkins/.ssh/id_rsa
+      env-vars:
+        OPENSTACK_HOST: a.b.c.d
     - name: provider2
       username: 'username'
       password: 'password'
@@ -213,6 +216,8 @@ same name.  Example::
           reset: reset_node.sh
           username: jenkins
           private-key: /var/lib/jenkins/.ssh/id_rsa
+      env-vars:
+        OPENSTACK_HOST: w.x.y.z
 
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.  For images, the
@@ -239,6 +244,14 @@ at random and provide that to nova. This should give a good distribution
 of availability zones being used. If you need more control of the
 distribution you can use multiple logical providers each providing a
 different list of availabiltiy zones.
+
+The `env-vars` key is optional. It allows to specify a list of
+environment variables that will be appended to the variables whose names
+starts with NODEPOOL_ prefix. Using that approach it is possible
+to assign different values to the same variable name. This might be useful
+when nodepool creates VMs in different datacenters, and every VM requires an
+IP address of OpenStack host or something like that that depends on the VM's
+location.
 
 targets
 -------
