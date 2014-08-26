@@ -538,6 +538,9 @@ class NodeLauncher(threading.Thread):
             f.write('NODEPOOL_REGION=%s\n' % (
                 self.provider.region_name or '',))
             f.write('NODEPOOL_AZ=%s\n' % (self.node.az or '',))
+            # Provider environment variables goes here
+            for k, v in self.provider.env_vars.items():
+                f.write("%s='%s'\n" % (k, v.replace('\'', '\\\'')))
             f.close()
 
             ftp.close()
@@ -1066,6 +1069,7 @@ class SnapshotImageUpdater(ImageUpdater):
             if not os.path.isfile(path):
                 continue
             host.scp(path, 'scripts/%s' % fname)
+
         host.ssh("move scripts to opt",
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
@@ -1263,6 +1267,7 @@ class NodePool(threading.Thread):
                 '{image.name}-{timestamp}.template.openstack.org'
             )
             p.images = {}
+            p.env_vars = provider.get('env-vars', {})
             for image in provider['images']:
                 i = ProviderImage()
                 i.name = image['name']
