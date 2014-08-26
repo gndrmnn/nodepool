@@ -17,6 +17,7 @@
 # limitations under the License.
 
 from statsd import statsd
+from tempfile import mkstemp
 import apscheduler.scheduler
 import gear
 import json
@@ -1066,6 +1067,15 @@ class SnapshotImageUpdater(ImageUpdater):
             if not os.path.isfile(path):
                 continue
             host.scp(path, 'scripts/%s' % fname)
+
+        fd, tpath = mkstemp()
+        tfile = os.fdopen(fd, 'w')
+        for k, v in self.provider.env_vars.items():
+            tfile.write("{0}='{1}'\n".format(k, v.replace('\'', '\\\'')))
+        os.close(fd)
+        host.scp(tpath, 'scripts/environment.sh')
+        os.remove(tpath)
+
         host.ssh("move scripts to opt",
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
@@ -1263,6 +1273,7 @@ class NodePool(threading.Thread):
                 '{image.name}-{timestamp}.template.openstack.org'
             )
             p.images = {}
+            p.env_vars = provider.get('env-vars', {})
             for image in provider['images']:
                 i = ProviderImage()
                 i.name = image['name']
