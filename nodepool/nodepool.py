@@ -1066,6 +1066,14 @@ class SnapshotImageUpdater(ImageUpdater):
             if not os.path.isfile(path):
                 continue
             host.scp(path, 'scripts/%s' % fname)
+
+        ftp = host.client.open_sftp()
+        f = ftp.open('/etc/nodepool/environment', 'w')
+        for k, v in self.provider.env_vars.items():
+            f.write("%s='%s'\n" % (k, v.replace('\'', '\\\'')))
+        f.close()
+        ftp.close()
+
         host.ssh("move scripts to opt",
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
@@ -1263,6 +1271,11 @@ class NodePool(threading.Thread):
                 '{image.name}-{timestamp}.template.openstack.org'
             )
             p.images = {}
+            p.env_vars = provider.get('env-vars', {})
+            if not isinstance(p.env_vars, dict):
+                self.log.error("%: ignoring per-provider env-vars; "
+                               "should be a dict" % p.name)
+                p.env_vars = {}
             for image in provider['images']:
                 i = ProviderImage()
                 i.name = image['name']
