@@ -1473,6 +1473,7 @@ class NodePool(threading.Thread):
             n_provider = count_nodes_and_subnodes(provider.name)
             available = provider_max - n_provider
             ap = allocation.AllocationProvider(provider.name, available)
+            self.log.debug("%s has %d available" % (provider.name, available))
             allocation_providers[provider.name] = ap
 
         # "Target-Label-Provider" -- the triplet of info that identifies

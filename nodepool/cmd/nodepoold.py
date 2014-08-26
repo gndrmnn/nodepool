@@ -106,8 +106,7 @@ class NodePoolDaemon(object):
             logging.config.fileConfig(fp)
         else:
             logging.basicConfig(level=logging.DEBUG,
-                                format='%(asctime)s %(levelname)s %(name)s: '
-                                       '%(message)s')
+                                format="[%(asctime)s %(threadName)s] %(levelname)s:%(name)s:%(message)s")
 
     def exit_handler(self, signum, frame):
         self.pool.stop()
