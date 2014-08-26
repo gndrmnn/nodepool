@@ -236,6 +236,8 @@ provider, the Nodepool image types are also defined (see
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+      env-vars:
+        OPENSTACK_HOST: a.b.c.d
     - name: provider2
       username: 'username'
       password: 'password'
@@ -259,6 +261,8 @@ provider, the Nodepool image types are also defined (see
           meta:
               key: value
               key2: value
+      env-vars:
+        OPENSTACK_HOST: w.x.y.z
 
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.
@@ -334,6 +338,14 @@ The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A
 maximum of five entries is allowed, and both keys and values must be
 255 characters or less.
+
+The `env-vars` key is optional. It allows to specify a list of
+environment variables that will be appended to the variables whose names
+starts with ``NODEPOOL_`` prefix. Using that approach it is possible
+to assign different values to the same variable name. This might be useful
+when nodepool creates VMs in different datacenters, and every VM requires an
+IP address of OpenStack host or something like that that depends on the VM's
+location.
 
 targets
 -------
