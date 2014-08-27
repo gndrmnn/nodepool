@@ -41,6 +41,8 @@ class TestNodepool(tests.DBTestCase):
                      'Gearman client connect',
                      'Gearman client poll',
                      'fake-provider',
+                     'fake-provider1',
+                     'fake-provider2',
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
@@ -151,3 +153,25 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
+
+    def test_capacity(self):
+        """Test multiple providers at capacity"""
+        configfile = self.setup_config('capacity.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        self.addCleanup(pool.stop)
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+
+            nodes = []
+            for provider in ('fake-provider1', 'fake-provider2'):
+                for label in ('fake-precise', 'fake-fedora',
+                              'fake-centos', 'fake-trusty'):
+                    nodes += session.getNodes(provider_name=provider,
+                                              label_name=label,
+                                              target_name='fake-target',
+                                              state=nodedb.READY)
+
+            self.assertEqual(len(nodes), 20)

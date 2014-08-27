@@ -32,7 +32,7 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
 
     def setUp(self):
         super(BaseTestCase, self).setUp()
-        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 60)
+        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 120)
         try:
             test_timeout = int(test_timeout)
         except ValueError:
