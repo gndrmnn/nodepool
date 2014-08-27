@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1abeadc6_85a3529d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 2834
+      },
+      "writtenOn": "2014-08-27T03:59:27Z",
+      "side": 1,
+      "message": "line 77 looks like stray debug - was it intentional?",
+      "revId": "1912675ebecc342c1a7f3edf38afd05bb1157293",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
