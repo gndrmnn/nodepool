@@ -35,9 +35,21 @@ import zmq
 class MyGearmanServer(gear.Server):
     def handleStatus(self, request):
         request.connection.conn.send(("build:fake_job\t%s\t0\t0\n" %
-                                      self._count).encode('utf8'))
-        request.connection.conn.send(("build:fake_job:devstack-precise\t%s\t0\t0\n" %
                                       0).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:bare-precise\t%s\t0\t0\n" %
+                                      227).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:bare-centos6\t%s\t0\t0\n" %
+                                      100).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:devstack-precise\t%s\t0\t0\n" %
+                                      163).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:devstack-f20\t%s\t0\t0\n" %
+                                      2).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:bare-trusty\t%s\t0\t0\n" %
+                                      284).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:devstack-trusty\t%s\t0\t0\n" %
+                                      1838).encode('utf8'))
+        request.connection.conn.send(("build:fake_job:py3k-precise\t%s\t0\t0\n" %
+                                      19).encode('utf8'))
         request.connection.conn.send(b'.\n')
 
 class FakeStatsd(object):

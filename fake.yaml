@@ -1,0 +1,489 @@
+script-dir: .
+dburi: 'mysql://nodepool@localhost/nodepool_fake'
+
+cron:
+  cleanup: '*/1 * * * *'
+  check: '*/1 * * * *'
+  update-image: '14 2 * * *'
+
+zmq-publishers:
+  - tcp://localhost:8881
+
+gearman-servers:
+  - host: localhost
+
+labels:
+  - name: devstack-precise
+    image: devstack-precise
+    min-ready: 5
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: devstack-precise-check
+    image: devstack-precise-check
+    min-ready: 0
+    providers:
+      - name: fake-provider8
+  - name: bare-precise
+    image: bare-precise
+    min-ready: 21
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: devstack-trusty
+    image: devstack-trusty
+    min-ready: 42
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: bare-trusty
+    image: bare-trusty
+    min-ready: 21
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: bare-centos6
+    image: bare-centos6
+    min-ready: 21
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: py3k-precise
+    image: py3k-precise
+    min-ready: 21
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: dsvm-precise-krnl
+    image: dsvm-precise-krnl
+    min-ready: 1
+    providers:
+      - name: fake-provider6
+  - name: devstack-trusty-2-node
+    image: devstack-trusty
+    subnodes: 1
+    min-ready: 1
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: devstack-precise-2-node
+    image: devstack-precise
+    subnodes: 1
+    min-ready: 0
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+  - name: devstack-f20
+    image: devstack-f20
+    min-ready: 5
+    providers:
+      - name: fake-provider1
+      - name: fake-provider2
+      - name: fake-provider3
+      - name: fake-provider4
+      - name: fake-provider5
+      - name: fake-provider6
+      - name: fake-provider7
+      - name: fake-provider8
+
+providers:
+  - name: fake-provider6
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 184
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: dsvm-precise-krnl
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider7
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 55
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider8
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 85
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-precise-check
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider1
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 100
+    availability-zones:
+      - az1
+      - az2
+      - az3
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider2
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 100
+    availability-zones:
+      - az1
+      - az2
+      - az3
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider3
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 100
+    availability-zones:
+      - az1
+      - az2
+      - az3
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider4
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 100
+    availability-zones:
+      - az1
+      - az2
+      - az3
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+  - name: fake-provider5
+    username: 'fake'
+    password: 'fake'
+    auth-url: 'fake'
+    project-id: 'fake'
+    max-servers: 100
+    availability-zones:
+      - az1
+      - az2
+      - az3
+    images:
+      - name: devstack-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-trusty
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: bare-centos6
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: py3k-precise
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+      - name: devstack-f20
+        base-image: 'Fake Precise'
+        min-ram: 8192
+        setup: prepare_node_devstack.sh
+
+targets:
+  - name: fake-jenkins1
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins2
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins3
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins4
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins5
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins6
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
+  - name: fake-jenkins7
+    jenkins:
+      url: https://jenkins.example.org/
+      user: fake
+      apikey: fake
