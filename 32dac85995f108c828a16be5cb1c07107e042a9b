@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa98f980_6519d378",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-09-02T21:47:19Z",
+      "side": 1,
+      "message": "I did :) and it was really helpful so thank you for the detailed commit message.",
+      "revId": "32dac85995f108c828a16be5cb1c07107e042a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
