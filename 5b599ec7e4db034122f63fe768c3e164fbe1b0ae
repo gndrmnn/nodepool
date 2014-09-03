@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1abeadc6_91e83d18",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-09-03T09:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_ae115d5f",
+      "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_99aa2984",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-25T13:19:04Z",
       "side": 1,
       "message": "I would put this entry between labels and providers, since that\u0027s the order in which you have their corresponding documentation below.",
+      "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1abeadc6_d1f2b505",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-09-03T09:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_99aa2984",
       "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1abeadc6_f1f7b1f3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-09-03T09:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_99406909",
+      "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_d9e5810b",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "1abeadc6_11dc2d74",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-09-03T09:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_d9e5810b",
+      "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_b99d255c",
         "filename": "doc/source/scripts.rst",
         "patchSetId": 2
@@ -81,6 +153,24 @@
       "writtenOn": "2014-08-25T13:19:04Z",
       "side": 1,
       "message": "Not sure why you started a new line here... RST interpreters will flow these together into a common paragraph so it doesn\u0027t hurt anything, but it does make the plaintext version slightly harder to read.",
+      "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1abeadc6_b13b799b",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-09-03T09:27:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_b99d255c",
       "revId": "5b599ec7e4db034122f63fe768c3e164fbe1b0ae",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
