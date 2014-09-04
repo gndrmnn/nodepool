@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa98f980_84a66fac",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 5803
+      },
+      "writtenOn": "2014-09-04T15:55:13Z",
+      "side": 1,
+      "message": "No, I just use it to see the the type of the server.",
+      "parentUuid": "1abeadc6_85a3529d",
+      "revId": "1912675ebecc342c1a7f3edf38afd05bb1157293",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_22c13d2f",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2014-08-28T23:13:01Z",
       "side": 1,
       "message": "If the type attribute isn\u0027t present, do we want to assume that the first address is the only one we want?",
+      "revId": "1912675ebecc342c1a7f3edf38afd05bb1157293",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_e4701b42",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 5803
+      },
+      "writtenOn": "2014-09-04T15:55:13Z",
+      "side": 1,
+      "message": "yes.\n\nProbably this branch will not, but if it does probably the machine just have one nic and the host does not supports floating ip. Otherwise for handling multiple NIC we might need logic for query and mapping network ids to names.",
+      "parentUuid": "1abeadc6_22c13d2f",
       "revId": "1912675ebecc342c1a7f3edf38afd05bb1157293",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
