@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa98f980_4e665dee",
+        "filename": "tools/fake.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-09-04T21:13:40Z",
+      "side": 0,
+      "message": "I think this is going to collide with your similar edit in I48933ddb89a4a89cb22e1cb005469833f91c1f66 (which is already approved).",
+      "revId": "ed29412ed214a2c129e610ef7cc0bd13f4b60ab9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
