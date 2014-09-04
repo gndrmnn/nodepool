@@ -2026,6 +2026,8 @@ class NodePool(threading.Thread):
 
         for node_id in node_ids:
             try:
+                self.log.debug("Periodic cleanup examining node id %s:" %
+                               node_id)
                 with self.getDB().getSession() as session:
                     node = session.getNode(node_id)
                     if node:
@@ -2036,6 +2038,8 @@ class NodePool(threading.Thread):
 
         for image_id in image_ids:
             try:
+                self.log.debug("Periodic cleanup examining image id %s:" %
+                               image_id)
                 with self.getDB().getSession() as session:
                     image = session.getSnapshotImage(image_id)
                     self.cleanupOneImage(session, image)
