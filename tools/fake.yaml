@@ -35,9 +35,6 @@ providers:
     project-id: 'fake'
     max-servers: 96
     pool: 'fake'
-    networks:
-      - net-id: 'some-uuid'
-      - net-label: 'some-label'
     images:
       - name: nodepool-fake
         base-image: 'Fake Precise'
