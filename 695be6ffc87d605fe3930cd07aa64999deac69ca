@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa98f980_80490233",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-09-04T12:54:43Z",
+      "side": 1,
+      "message": "what if the capacity is less than the min_ready+start_demand?",
+      "revId": "695be6ffc87d605fe3930cd07aa64999deac69ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_006512b4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-09-04T12:54:43Z",
+      "side": 1,
+      "message": "Should we set min_demand to the capacity available?",
+      "revId": "695be6ffc87d605fe3930cd07aa64999deac69ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
