@@ -33,6 +33,24 @@
       "revId": "695be6ffc87d605fe3930cd07aa64999deac69ca",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_dc5767c8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-09-04T22:31:05Z",
+      "side": 1,
+      "message": "I think what you\u0027re saying is \n\n if capacity \u003c min_ready + start_demand:\n  min_demand \u003d capacity\n\nI think that\u0027s sub-optimal -- it is the allocators job to hand out available capacity in a proportional manner.  If start_demand is very high, we don\u0027t want to hide that from the allocator by only ever asking for \"capacity\" nodes.\n\nThis change is also not perfect, because it doesn\u0027t take into account as it loops that \"capacity\" is really going down.  Probably another solution to this that might provide slightly better behaviour is to provide information to the allocator about two \"tiers\" of nodes -- the demand requests and the min-ready requests.  it should satisfy the demand requests before considering the \"ready\" requests.\n\nthis is a more extensive/risky change to the allocator, however, and i think this change gets us mostly there",
+      "parentUuid": "fa98f980_006512b4",
+      "revId": "695be6ffc87d605fe3930cd07aa64999deac69ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
