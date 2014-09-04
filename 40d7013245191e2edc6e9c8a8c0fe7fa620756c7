@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa98f980_b0756dcc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2014-09-04T18:40:11Z",
+      "side": 1,
+      "message": "While you\u0027re in here making edits and we\u0027re migrating to Trusty, maybe use Trusty for the default examples?",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa98f980_104e3997",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2014-09-04T18:40:11Z",
+      "side": 1,
+      "message": "Perhaps change this one to Precise.",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_013676e7",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
