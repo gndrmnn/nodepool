@@ -783,6 +783,8 @@ class DiskImageBuilder(threading.Thread):
             extra_options = ''
             env['DIB_RELEASE'] = image.release
             img_elements = image.elements
+            env['DIB_IMAGE_NAME'] = image.name
+            env['DIB_IMAGE_FILENAME'] = image.filename
 
             if image.qemu_img_options:
                 extra_options = ('--qemu-img-options %s' %
