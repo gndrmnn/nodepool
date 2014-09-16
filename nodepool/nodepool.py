@@ -463,7 +463,7 @@ class NodeLauncher(threading.Thread):
                     host=self.node.ip,
                     description='Dynamic single use %s node' % self.label.name,
                     executors=1,
-                    root='/home/jenkins')
+                    root='/home/%s' % self.image.username)
         if not self.target.jenkins_test_job:
             args['labels'] = self.label.name
         if self.target.jenkins_credentials_id:
