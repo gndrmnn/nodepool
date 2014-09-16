@@ -186,6 +186,7 @@ same name.  Example::
           setup: prepare_node.sh
           reset: reset_node.sh
           username: jenkins
+          user-home: '/home/{username}'
           private-key: /var/lib/jenkins/.ssh/id_rsa
         - name: quantal
           base-image: 'Quantal'
@@ -193,6 +194,7 @@ same name.  Example::
           setup: prepare_node.sh
           reset: reset_node.sh
           username: jenkins
+          user-home: '/home/{username}'
           private-key: /var/lib/jenkins/.ssh/id_rsa
     - name: provider2
       username: 'username'
@@ -212,13 +214,14 @@ same name.  Example::
           setup: prepare_node.sh
           reset: reset_node.sh
           username: jenkins
+          user-home: '/home/{username}'
           private-key: /var/lib/jenkins/.ssh/id_rsa
 
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.  For images, the
-`name`, `base-image`, and `min-ram` keys are required.  The `username`
-and `private-key` values default to the values indicated.  Nodepool
-expects that user to exist after running the script indicated by
+`name`, `base-image`, and `min-ram` keys are required.  The `username`,
+`user-home` and `private-key` values default to the values indicated.
+Nodepool expects that user to exist after running the script indicated by
 `setup`. See :ref:`scripts` for setup script details.
 
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
