@@ -375,7 +375,7 @@ class ProviderManager(TaskManager):
         return self.submitTask(DeleteKeypairTask(name=name))
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
-                     az=None, key_name=None, name_filter=None):
+                     az=None, key_name=None, name_filter=None, meta=None):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
@@ -384,6 +384,8 @@ class ProviderManager(TaskManager):
             create_args['key_name'] = key_name
         if az:
             create_args['availability_zone'] = az
+        if meta:
+            create_args['meta'] = meta
         if self.provider.use_neutron:
             nics = []
             for network in self.provider.networks:

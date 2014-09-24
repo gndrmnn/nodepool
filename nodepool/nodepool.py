@@ -385,7 +385,8 @@ class NodeLauncher(threading.Thread):
                                            self.image.name, self.node_id))
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
-            name_filter=self.image.name_filter, az=self.node.az)
+            name_filter=self.image.name_filter, az=self.node.az,
+            meta=self.image.meta)
         self.node.external_id = server_id
         session.commit()
 
@@ -641,7 +642,8 @@ class SubNodeLauncher(threading.Thread):
                          self.image.name, self.subnode_id, self.node_id))
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
-            name_filter=self.image.name_filter, az=self.node_az)
+            name_filter=self.image.name_filter, az=self.node_az,
+            meta=self.image.meta)
         self.subnode.external_id = server_id
         session.commit()
 
@@ -935,7 +937,7 @@ class SnapshotImageUpdater(ImageUpdater):
             server_id = self.manager.createServer(
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
-                image_id=image_id)
+                image_id=image_id, meta=self.image.meta)
         except Exception:
             if (self.manager.hasExtension('os-keypairs') and
                 not self.provider.keypair):
@@ -1138,6 +1140,7 @@ class NodePool(threading.Thread):
         self._image_builder_queue.join()
 
     def loadConfig(self):
+
         self.log.debug("Loading configuration")
         config = yaml.load(open(self.configfile))
 
@@ -1249,6 +1252,14 @@ class NodePool(threading.Thread):
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
+                i.meta = image.get('meta', None)
+                # 5 elements, and no key or value can be > 255 chars
+                # per novaclient.servers.create() rules
+                if i.meta:
+                    if len(i.meta) > 5 or \
+                       any([len(k) > 255 or len(v) > 255
+                            for k, v in i.meta.iteritems()]):
+                        raise SyntaxError("Invalid meta for %s" % i.name)
 
         for target in config['targets']:
             t = Target()
