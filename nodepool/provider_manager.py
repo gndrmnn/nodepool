@@ -485,9 +485,10 @@ class ProviderManager(TaskManager):
             if newip['instance_id'] == server_id:
                 return newip['ip']
 
-    def createImage(self, server_id, image_name):
+    def createImage(self, server_id, image_name, meta):
         return self.submitTask(CreateImageTask(server=server_id,
-                                               image_name=image_name))
+                                               image_name=image_name,
+                                               meta=meta))
 
     def getImage(self, image_id):
         return self.submitTask(GetImageTask(image=image_id))
