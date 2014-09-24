@@ -969,7 +969,8 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.bootstrapServer(server, key, use_password=use_password)
 
-        image_id = self.manager.createImage(server_id, hostname)
+        image_id = self.manager.createImage(server_id, hostname,
+                                            self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
@@ -1249,6 +1250,14 @@ class NodePool(threading.Thread):
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
+                i.meta = image.get('meta', None)
+                # 5 elements, and no key or value can be > 255 chars
+                # per novaclient.servers.create() rules
+                if i.meta:
+                    if len(i.meta) > 5 or \
+                       any([len(k) > 255 or len(v) > 255
+                            for k, v in i.meta.iteritems()]):
+                        raise SyntaxError("Invalid meta for %s" % i.name)
 
         for target in config['targets']:
             t = Target()
