@@ -876,7 +876,7 @@ class DiskImageUpdater(ImageUpdater):
         stripped_filename = self.filename.replace(".qcow2", "")
         image_path = os.path.join(self.imagesdir, stripped_filename)
         image_id = self.manager.uploadImage(image_name, image_path,
-                                            'qcow2', 'bare')
+                                            'qcow2', 'bare', self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
@@ -969,7 +969,8 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.bootstrapServer(server, key, use_password=use_password)
 
-        image_id = self.manager.createImage(server_id, hostname)
+        image_id = self.manager.createImage(server_id, hostname,
+                                            self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
@@ -1249,6 +1250,20 @@ class NodePool(threading.Thread):
                 i.username = image.get('username', 'jenkins')
                 i.private_key = image.get('private-key',
                                           '/var/lib/jenkins/.ssh/id_rsa')
+
+                # note this does "double-duty" -- for
+                # SnapshotImageUpdater the meta-data dict is passed to
+                # nova when the snapshot image is created.  For
+                # DiskImageUpdater, this dict is expanded and used as
+                # custom properties when the image is uploaded.
+                i.meta = image.get('meta', {})
+                # 5 elements, and no key or value can be > 255 chars
+                # per novaclient.servers.create() rules
+                if i.meta:
+                    if len(i.meta) > 5 or \
+                       any([len(k) > 255 or len(v) > 255
+                            for k, v in i.meta.iteritems()]):
+                        raise SyntaxError("Invalid meta for %s" % i.name)
 
         for target in config['targets']:
             t = Target()

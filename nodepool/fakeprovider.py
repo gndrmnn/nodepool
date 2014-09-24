@@ -81,7 +81,8 @@ class FakeList(object):
         t.start()
         return s
 
-    def create_image(self, server, image_name):
+    def create_image(self, server, image_name, meta):
+        # XXX : validate metadata?
         x = self.api.images.create(name=image_name)
         return x.id
 
