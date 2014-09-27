@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9df570_88bdb0b9",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2014-09-27T19:28:02Z",
+      "side": 1,
+      "message": "Note, this *is* inconsistent with the positional format string style used elsewhere in this file. (Also, python stdlib logging can take a list of replacement arguments following the string and avoid actually doing any substitution work at all unless the loglevel is sufficient, though we\u0027re not really taking advantage of that optimization anywhere here either, so meh.)",
+      "revId": "12b5ba62d6afa6984254ad6488be57fe91824979",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
