@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+1: Kurt Taylor <kurt.r.taylor@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 30 Sep 2014 22:14:27 +0000
+Reviewed-on: https://review.openstack.org/125186
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
