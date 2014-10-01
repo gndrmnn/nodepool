@@ -18,3 +18,4 @@ MySQL-python
 PrettyTable>=0.6,<0.8
 six>=1.4.1
 diskimage-builder
+oslo.i18n>=1.0.0  # Apache-2.0
