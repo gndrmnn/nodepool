@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa201ad_e0f5a757",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1266,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-03T20:18:19Z",
+      "side": 1,
+      "message": "I think it would be a bit more graceful here to log the error then set meta to {} instead of causing the reconfigure to fail. Otherwise the entire reconfigure will fail to work properly which may cause problems with more than just meta data.",
+      "revId": "73346d6e717bc8a35631decb439ec954c63a6d85",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa201ad_00e70bad",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-03T20:18:19Z",
+      "side": 1,
+      "message": "This check should be updated to compare meta data too.",
+      "revId": "73346d6e717bc8a35631decb439ec954c63a6d85",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
