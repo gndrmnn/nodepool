@@ -55,6 +55,7 @@ class ConfigValidator:
             'project-id': str,
             'max-servers': int,
             'pool': str,
+            'image-type': str,
             'networks': [{
                 'net-id': str,
                 'net-label': str,
