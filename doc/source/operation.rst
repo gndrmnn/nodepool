@@ -22,6 +22,30 @@ This way if you find that a newly created image is problematic, you
 may simply delete it and Nodepool will revert to using the previous
 image.
 
+Metadata
+--------
+
+When nodepool creates instances, it will assign the following nova
+metadata:
+
+  group
+    The name of the provider as a string.
+
+  groups
+    A list containing the name of the image as a string.
+
+  nodepool_image_name
+    The name of the image as a string.
+
+  nodepool_provider_name
+    The name of the provider as a string.
+
+  nodepool_node_id
+    The nodepool id of the node as a string.
+
+The ``group`` and ``groups`` names are constructed in this way to
+facilitate easy use with ansible.
+
 Command Line Tools
 ==================
 
