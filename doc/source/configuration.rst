@@ -173,7 +173,6 @@ will be built using the provider snapshot approach::
     qemu-img-options: compat=0.10
     env-vars:
         DIB_DISTRIBUTION_MIRROR: http://archive.ubuntu.com
-        DIB_EXTRA_VARIABLE: foobar
 
 For diskimages, the `name` is required. The `elements` section
 enumerates all the elements that will be included when building the
@@ -184,7 +183,8 @@ allows to specify custom settings that qemu will be using to build the
 final image. Settings there have to be separated by commas, and must
 follow qemu syntax.  `env-vars` is an optional dictionary of arbitrary
 environment variables that will be available in the spawned
-diskimage-builder child process.
+diskimage-builder child process. The diskimage specific env-vars update
+the provider global `image-env-vars` described below.
 
 providers
 ---------
@@ -210,6 +210,10 @@ provider, the Nodepool image types are also defined (see
       launch-timeout: 900
       template-hostname: '{image.name}-{timestamp}.template.openstack.org'
       pool: 'public'
+      image-type: qcow2
+      image-env-vars:
+        DIB_IMAGE_CACHE: /opt/dib_cache
+        QEMU_IMG_OPTIONS: compat=0.10
       networks:
         - net-id: 'some-uuid'
         - net-label: 'some-network-name'
@@ -234,6 +238,11 @@ provider, the Nodepool image types are also defined (see
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+        - name: devstack-trusty
+          min-ram: 30720
+          diskimage: devstack-trusty
+          username: jenkins
+          private-key: /home/nodepool/.ssh/id_rsa
     - name: provider2
       username: 'username'
       password: 'password'
@@ -283,6 +292,12 @@ different list of availabiltiy zones.
 The 'pool' key is optional.  This can be used to specify a floating ip
 pool in cases where the 'public' pool is unavailable or undesirable.
 
+The ``image-type`` specifies the image type supported by this provider.
+The disk images built by diskimage-builder will output an image for each
+``image-type`` specified by a provider using that particular diskimage.
+The default value is ``qcow2``, and values of ``vhd``, ``raw`` are also
+expected to be valid if you have a sufficiently new diskimage-builder.
+
 .. _images:
 
 images
@@ -328,8 +343,7 @@ indicated.  Nodepool expects that user to exist after running the
 script indicated by `setup`. `setup` will be used only when not
 building images using diskimage-builder, in that case settings defined
 in the ``diskimages`` section will be used instead. See :ref:`scripts`
-for setup script details.  See :ref:`scripts` for setup script
-details.
+for setup script details.
 
 The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A
