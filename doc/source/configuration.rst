@@ -171,6 +171,9 @@ will be built using the provider snapshot approach::
       - node-devstack
     release: precise
     qemu-img-options: compat=0.10
+    image-types:
+      - qcow2
+      - vhd
     env-vars:
         DIB_DISTRIBUTION_MIRROR: http://archive.ubuntu.com
         DIB_EXTRA_VARIABLE: foobar
@@ -184,7 +187,10 @@ allows to specify custom settings that qemu will be using to build the
 final image. Settings there have to be separated by commas, and must
 follow qemu syntax.  `env-vars` is an optional dictionary of arbitrary
 environment variables that will be available in the spawned
-diskimage-builder child process.
+diskimage-builder child process. `image-types` specifies a list of
+image types that disk image builder should output. This is useful if
+you need different formats for different cloud providers. It should
+be provided as a list and defaults to `[qcow2]`.
 
 providers
 ---------
@@ -234,6 +240,12 @@ provider, the Nodepool image types are also defined (see
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+        - name: devstack-trusty
+          min-ram: 30720
+          diskimage: devstack-trusty
+          image-type: qcow2
+          username: jenkins
+          private-key: /home/nodepool/.ssh/id_rsa
     - name: provider2
       username: 'username'
       password: 'password'
@@ -328,8 +340,10 @@ indicated.  Nodepool expects that user to exist after running the
 script indicated by `setup`. `setup` will be used only when not
 building images using diskimage-builder, in that case settings defined
 in the ``diskimages`` section will be used instead. See :ref:`scripts`
-for setup script details.  See :ref:`scripts` for setup script
-details.
+for setup script details.  The ``image-type`` is used when consuming
+a diskimage-builder built image and you need to upload a non
+default image format to your cloud provider.  The default value is
+``qcow2``.
 
 The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A

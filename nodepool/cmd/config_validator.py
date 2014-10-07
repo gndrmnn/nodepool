@@ -90,6 +90,7 @@ class ConfigValidator:
             'name': str,
             'elements': [str],
             'release': v.Any(str, int),
+            'image-types': [str],
             'env-vars': dict,
         }
 
