@@ -375,7 +375,7 @@ class ProviderManager(TaskManager):
         return self.submitTask(DeleteKeypairTask(name=name))
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
-                     az=None, key_name=None, name_filter=None):
+                     az=None, key_name=None, name_filter=None, node_id=None):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
@@ -395,6 +395,19 @@ class ProviderManager(TaskManager):
                 else:
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
+        # Make provider.name the primary group and also put the node into
+        # a group with other nodes that share the same image. However,
+        # also list each of those values directly so that consumption
+        # programs don't need to play a game of knowing that groups[0] is
+        # the image name or anything silly like that.
+        create_args['meta'] = dict(
+            group=self.provider.name,
+            groups=[image_name],
+            image_name=image_name,
+            provider_name=self.provider.name,
+        )
+        if node_id:
+            create_args['meta']['node_id'] = node_id
 
         return self.submitTask(CreateServerTask(**create_args))
 
