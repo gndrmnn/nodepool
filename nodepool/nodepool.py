@@ -760,9 +760,10 @@ class DiskImageBuilder(threading.Thread):
                 extra_options = ('--qemu-img-options %s' %
                                  image.qemu_img_options)
             img_elements = image.elements
+            img_types = image.image_types
 
-            cmd = ('disk-image-create -x --no-tmpfs %s -o %s %s' %
-                   (extra_options, out_file_path, img_elements))
+            cmd = ('disk-image-create -x -t %s --no-tmpfs %s -o %s %s' %
+                   (img_types, extra_options, out_file_path, img_elements))
 
             if 'fake-dib-image' in filename:
                 cmd = 'echo ' + cmd
@@ -874,10 +875,11 @@ class DiskImageUpdater(ImageUpdater):
     log = logging.getLogger("nodepool.DiskImageUpdater")
 
     def __init__(self, nodepool, provider, image, snap_image_id,
-                 filename):
+                 filename, image_type):
         super(DiskImageUpdater, self).__init__(nodepool, provider, image,
                                                snap_image_id)
         self.filename = filename
+        self.image_type = image_type
         self.image_name = image.name
 
     def updateImage(self, session):
@@ -894,11 +896,10 @@ class DiskImageUpdater(ImageUpdater):
         self.snap_image.version = timestamp
         session.commit()
 
-        # strip extension from filename
-        stripped_filename = self.filename.replace(".qcow2", "")
-        image_path = os.path.join(self.imagesdir, stripped_filename)
+        image_path = os.path.join(self.imagesdir, self.filename)
         image_id = self.manager.uploadImage(image_name, image_path,
-                                            'qcow2', 'bare', self.image.meta)
+                                            self.image_type, 'bare',
+                                            self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
@@ -1220,6 +1221,8 @@ class NodePool(threading.Thread):
                     d.env_vars = diskimage['env-vars']
                 else:
                     d.env_vars = {}
+                d.image_types = ','.join(diskimage.get('image-types',
+                                                       ['qcow2']))
 
         for label in config['labels']:
             l = Label()
@@ -1273,6 +1276,7 @@ class NodePool(threading.Thread):
                 i.setup = image.get('setup', None)
                 i.reset = image.get('reset')
                 i.diskimage = image.get('diskimage', None)
+                i.image_type = image.get('image-type', 'qcow2')
                 i.username = image.get('username', 'jenkins')
                 i.user_home = image.get('user-home', '/home/jenkins')
                 i.private_key = image.get('private-key',
@@ -1362,6 +1366,8 @@ class NodePool(threading.Thread):
                 new_images[k].reset != old_images[k].reset or
                 new_images[k].username != old_images[k].username or
                 new_images[k].user_home != old_images[k].user_home or
+                new_images[k].diskimage != old_images[k].diskimage or
+                new_images[k].image_type != old_images[k].image_type or
                 new_images[k].private_key != old_images[k].private_key or
                 new_images[k].meta != old_images[k].meta):
                 return False
@@ -1887,8 +1893,7 @@ class NodePool(threading.Thread):
                     self.log.debug("Queued image building task for %s" %
                                    image.name)
                     dib_image = session.createDibImage(image_name=image.name,
-                                                       filename=filename +
-                                                       ".qcow2")
+                                                       filename=filename)
 
                     # add this build to queue
                     self._image_builder_queue.put(dib_image.id)
@@ -1907,10 +1912,11 @@ class NodePool(threading.Thread):
             filename = images[0].filename
             provider_entity = self.config.providers[provider]
             provider_image = provider_entity.images[images[0].image_name]
+            image_type = provider_image.image_type
             snap_image = session.createSnapshotImage(
                 provider_name=provider, image_name=image_name)
             t = DiskImageUpdater(self, provider_entity, provider_image,
-                                 snap_image.id, filename)
+                                 snap_image.id, filename, image_type)
             t.start()
 
             # Enough time to give them different timestamps (versions)
@@ -2094,9 +2100,14 @@ class NodePool(threading.Thread):
         self.log.info("Deleted image id: %s" % snap_image.id)
 
     def deleteDibImage(self, dib_image):
+        image_config = self.config.diskimages.get(dib_image.image_name)
+        if not image_config:
+            # The config was removed deletion will have to be manual
+            return
         # Delete a dib image and it's associated file
-        if os.path.exists(dib_image.filename):
-            os.remove(dib_image.filename)
+        for image_type in image_config.image_types:
+            if os.path.exists(dib_image.filename + '.' + image_type):
+                os.remove(dib_image.filename + '.' + image_type)
 
         dib_image.state = nodedb.DELETE
         dib_image.delete()
