@@ -210,6 +210,7 @@ provider, the Nodepool image types are also defined (see
       launch-timeout: 900
       template-hostname: '{image.name}-{timestamp}.template.openstack.org'
       pool: 'public'
+      image-type: qcow2
       networks:
         - net-id: 'some-uuid'
         - net-label: 'some-network-name'
@@ -234,6 +235,11 @@ provider, the Nodepool image types are also defined (see
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+        - name: devstack-trusty
+          min-ram: 30720
+          diskimage: devstack-trusty
+          username: jenkins
+          private-key: /home/nodepool/.ssh/id_rsa
     - name: provider2
       username: 'username'
       password: 'password'
@@ -283,6 +289,11 @@ different list of availabiltiy zones.
 The 'pool' key is optional.  This can be used to specify a floating ip
 pool in cases where the 'public' pool is unavailable or undesirable.
 
+The ``image-type`` is used when consuming a diskimage-builder built
+image and you need to upload a non default image format to your
+cloud provider.  The default value is
+``qcow2``.
+
 .. _images:
 
 images
@@ -328,8 +339,7 @@ indicated.  Nodepool expects that user to exist after running the
 script indicated by `setup`. `setup` will be used only when not
 building images using diskimage-builder, in that case settings defined
 in the ``diskimages`` section will be used instead. See :ref:`scripts`
-for setup script details.  See :ref:`scripts` for setup script
-details.
+for setup script details.
 
 The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A
