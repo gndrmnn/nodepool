@@ -171,6 +171,9 @@ will be built using the provider snapshot approach::
       - node-devstack
     release: precise
     qemu-img-options: compat=0.10
+    image-types:
+      - qcow2
+      - vpc
 
 For diskimages, the `name` is required. The `elements` section
 enumerates all the elements that will be included when building
@@ -179,7 +182,11 @@ in the same config file. `release` specifies the distro to be
 used as a base image to build the image using diskimage-builder.
 `qemu-img-options` allows to specify custom settings that qemu
 will be using to build the final image. Settings there have to
-be separated by commas, and must follow qemu syntax.
+be separated by commas, and must follow qemu syntax. `image-types`
+specifies a list of image types that disk image builder should
+output. This is useful if you need different formats for different
+cloud providers. It should be provided as a list and defaults to
+`[qcow2]`.
 
 providers
 ---------
@@ -228,6 +235,12 @@ same name.  Example::
           username: jenkins
           user-home: '/home/jenkins'
           private-key: /var/lib/jenkins/.ssh/id_rsa
+        - name: devstack-trusty
+          min-ram: 30720
+          diskimage: devstack-trusty
+          image-type: qcow2
+          username: jenkins
+          private-key: /home/nodepool/.ssh/id_rsa
     - name: provider2
       username: 'username'
       password: 'password'
@@ -257,7 +270,10 @@ Nodepool expects that user to exist after running the script indicated by
 `setup`. `setup` will be used only when not building images
 using diskimage-builder, in that case settings defined in
 the ``diskimages`` section will be used instead. See :ref:`scripts`
-for setup script details.
+for setup script details. The ``image-type`` is used when consuming
+a disk-image-builder built image and you need to upload a non
+default image format to your cloud provider. The default value is
+``qcow2``.
 
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
 `boot-timeout` key defaults to 60 seconds and `launch-timeout` key
