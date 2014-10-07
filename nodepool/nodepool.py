@@ -385,7 +385,8 @@ class NodeLauncher(threading.Thread):
                                            self.image.name, self.node_id))
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
-            name_filter=self.image.name_filter, az=self.node.az)
+            name_filter=self.image.name_filter, az=self.node.az,
+            node_id=self.node_id)
         self.node.external_id = server_id
         session.commit()
 
@@ -641,7 +642,8 @@ class SubNodeLauncher(threading.Thread):
                          self.image.name, self.subnode_id, self.node_id))
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
-            name_filter=self.image.name_filter, az=self.node_az)
+            name_filter=self.image.name_filter, az=self.node_az,
+            node_id=self.node_id)
         self.subnode.external_id = server_id
         session.commit()
 
