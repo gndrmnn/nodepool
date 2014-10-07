@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import logging
 import paramiko
 
@@ -360,7 +361,7 @@ class ProviderManager(TaskManager):
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
                      az=None, key_name=None, name_filter=None,
-                     config_drive=None):
+                     config_drive=None, node_id=None):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
@@ -381,6 +382,21 @@ class ProviderManager(TaskManager):
                 else:
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
+        # Put provider.name and image_name in as groups so that ansible
+        # inventory can auto-create groups for us based on each of those
+        # qualities
+        # Also list each of those values directly so that non-ansible
+        # consumption programs don't need to play a game of knowing that
+        # groups[0] is the image name or anything silly like that.
+        create_args['meta'] = dict(
+            groups=json.dumps([image_name, self.provider.name]),
+            nodepool_image_name=image_name,
+            nodepool_provider_name=self.provider.name,
+        )
+        # Add the nodepool node_id to the image metadata for use of
+        # external processing scripts
+        if node_id:
+            create_args['meta']['nodepool_node_id'] = node_id
 
         return self.submitTask(CreateServerTask(**create_args))
 
