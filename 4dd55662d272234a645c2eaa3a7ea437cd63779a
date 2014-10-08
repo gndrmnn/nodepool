@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa201ad_f9b279e3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-08T02:30:34Z",
+      "side": 1,
+      "message": "document image-type below as well?",
+      "revId": "4dd55662d272234a645c2eaa3a7ea437cd63779a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa201ad_f90ef98a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-08T02:30:34Z",
+      "side": 1,
+      "message": "shouldn\u0027t this check if \u0027qcow2\u0027 is already in the list?  otherwise it seems to end up passing multiple qcow2 arguments to \"-t\"?\n\nalso it might be clearer to keep this as a python list, and do this join in line 744 closer to where it is being passed to d-i-b",
+      "revId": "4dd55662d272234a645c2eaa3a7ea437cd63779a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
