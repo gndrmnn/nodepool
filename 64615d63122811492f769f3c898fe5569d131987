@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "baa201ad_c8d073cb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 8767
+      },
+      "writtenOn": "2014-10-08T14:26:04Z",
+      "side": 1,
+      "message": "nodepool subsitutes values... see providers.template-hostname field :)\n\nAnyway maybe it is better to make patchset as simple as possible",
+      "parentUuid": "baa201ad_bb183076",
+      "revId": "64615d63122811492f769f3c898fe5569d131987",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baa201ad_db289488",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2014-10-03T20:30:30Z",
       "side": 1,
       "message": "You should update this comparison too so that the check for new data is complete.",
+      "revId": "64615d63122811492f769f3c898fe5569d131987",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa201ad_3d921ff6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 8767
+      },
+      "writtenOn": "2014-10-08T14:26:04Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "baa201ad_fb2d5896",
       "revId": "64615d63122811492f769f3c898fe5569d131987",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
