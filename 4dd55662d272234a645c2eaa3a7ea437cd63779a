@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "baa201ad_171e1a0c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-10-08T12:08:25Z",
+      "side": 1,
+      "message": "different",
+      "revId": "4dd55662d272234a645c2eaa3a7ea437cd63779a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baa201ad_f9b279e3",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 2
@@ -48,6 +65,23 @@
       "side": 1,
       "message": "No it should only ever provide one qcow2 because that value is the default if image-types is None or [].\n\nI did the join here because d.elements is managed this way, and I thought consistency would be good.",
       "parentUuid": "baa201ad_f90ef98a",
+      "revId": "4dd55662d272234a645c2eaa3a7ea437cd63779a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa201ad_17e53a08",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2074,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-10-08T12:08:25Z",
+      "side": 1,
+      "message": "A check here for dib_image.image_name existign on self.config.diskimages won\u0027t hurt, in order to prevent crash if removed by some reason",
       "revId": "4dd55662d272234a645c2eaa3a7ea437cd63779a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
