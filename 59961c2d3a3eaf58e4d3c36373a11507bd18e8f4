@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa201ad_24ec55f3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 11017
+      },
+      "writtenOn": "2014-10-13T19:04:58Z",
+      "side": 1,
+      "message": "Nit: add comma before \u0027and\u0027.   ... \u0027user-home\u0027, and \u0027private-key\u0027 ...",
+      "revId": "59961c2d3a3eaf58e4d3c36373a11507bd18e8f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
