@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "baa201ad_d113fa59",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-15T21:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa98f980_b0756dcc",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa98f980_104e3997",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "baa201ad_f110fe4f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-15T21:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa98f980_104e3997",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1abeadc6_013676e7",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2014-08-19T07:37:53Z",
       "side": 1,
       "message": "perhaps add \u0027from the providers glance\u0027?",
+      "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa201ad_f1c1de80",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-15T21:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1abeadc6_013676e7",
       "revId": "40d7013245191e2edc6e9c8a8c0fe7fa620756c7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
