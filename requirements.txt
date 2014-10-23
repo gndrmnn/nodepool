@@ -3,7 +3,7 @@ pbr>=0.6,!=0.7,<1.0
 gear
 PyYAML
 python-jenkins
-paramiko>1.9.0
+paramiko>=1.15
 lockfile
 python-daemon
 extras
