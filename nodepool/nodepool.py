@@ -733,14 +733,26 @@ class DiskImageBuilder(threading.Thread):
             out_file_path = os.path.join(self.nodepool.config.imagesdir,
                                          filename)
 
-            extra_options = ''
+            extra_options = []
             if image.qemu_img_options:
-                extra_options = ('--qemu-img-options %s' %
-                                 image.qemu_img_options)
+                extra_options.append = ('--qemu-img-options %s' %
+                                        image.qemu_img_options)
+
+            # set cache directory if present
+            if self.nodepool.config.cachedir:
+                extra_options.append('--image-cache %s' %
+                                     self.nodepool.config.cachedir)
+
             img_elements = image.elements
 
+            # join all extra options
+            if len(extra_options) > 0:
+                final_options = ' '.join(extra_options)
+            else:
+                final_options = ''
+
             cmd = ('disk-image-create -x --no-tmpfs %s -o %s %s' %
-                   (extra_options, out_file_path, img_elements))
+                   (final_options, out_file_path, img_elements))
 
             if 'fake-dib-image' in filename:
                 cmd = 'echo ' + cmd
@@ -1151,6 +1163,7 @@ class NodePool(threading.Thread):
         newconfig.scriptdir = config.get('script-dir')
         newconfig.elementsdir = config.get('elements-dir')
         newconfig.imagesdir = config.get('images-dir')
+        newconfig.cachedir = config.get('cache-dir')
         newconfig.dburi = config.get('dburi')
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}

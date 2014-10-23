@@ -58,6 +58,19 @@ Example::
 
   images-dir: /path/to/images/dir
 
+cache-dir
+----------
+
+When we generate images using disk-image-builder, the
+disk-image-create script allows to set the cache directory
+to use. This is useful to point to a volume with free
+disk space. If not set, disk-image-create is pointing to
+~/.cache/image-create to store cached files.
+
+Example::
+
+  cache-dir: /path/to/images/cache
+
 dburi
 -----
 Indicates the URI for the database connection.  See the `SQLAlchemy
