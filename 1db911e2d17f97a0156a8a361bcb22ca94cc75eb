@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_66faa676",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-23T23:28:29Z",
+      "side": 1,
+      "message": "This should super() instead of calling directly.",
+      "revId": "1db911e2d17f97a0156a8a361bcb22ca94cc75eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_6628e6e2",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-23T23:28:29Z",
+      "side": 1,
+      "message": "Isn\u0027t this a noop? if we don\u0027t catch the exception then reraise it the exception will bubble up. This is the same behavior as the current code so I think this can just be removed.",
+      "revId": "1db911e2d17f97a0156a8a361bcb22ca94cc75eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_66dd46e0",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-23T23:28:29Z",
+      "side": 1,
+      "message": "Please also comment that client.get() is going to get the non BAD_CLIENT which will not throw an exception. I couldn\u0027t understand the test until you explained this in irc.",
+      "revId": "1db911e2d17f97a0156a8a361bcb22ca94cc75eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
