@@ -110,6 +110,28 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
         self.assertEqual(len(nodes), 1)
 
+    def test_dib_and_snap_label(self):
+        """Test that a label with dib and snapshot images build."""
+        configfile = self.setup_config('node_dib_and_snap.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        pool.start()
+        self.addCleanup(pool.stop)
+        time.sleep(3)
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider1',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+        self.assertEqual(len(nodes), 1)
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider2',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+        self.assertEqual(len(nodes), 1)
+
     def test_subnodes(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('subnodes.yaml')
