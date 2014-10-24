@@ -1195,23 +1195,6 @@ class NodePool(threading.Thread):
                 d.release = diskimage.get('release', '')
                 d.qemu_img_options = diskimage.get('qemu-img-options', '')
 
-        for label in config['labels']:
-            l = Label()
-            l.name = label['name']
-            newconfig.labels[l.name] = l
-            l.image = label['image']
-            l.min_ready = label.get('min-ready', 2)
-            l.subnodes = label.get('subnodes', 0)
-            l.ready_script = label.get('ready-script')
-            l.providers = {}
-            for provider in label['providers']:
-                p = LabelProvider()
-                p.name = provider['name']
-                l.providers[p.name] = p
-
-            # if image is in diskimages, mark it to build once
-            l.is_diskimage = (l.image in newconfig.diskimages)
-
         for provider in config['providers']:
             p = Provider()
             p.name = provider['name']
@@ -1268,6 +1251,24 @@ class NodePool(threading.Thread):
                         self.log.error("Invalid metadata for %s; ignored"
                                        % i.name)
                         i.meta = {}
+
+        for label in config['labels']:
+            l = Label()
+            l.name = label['name']
+            newconfig.labels[l.name] = l
+            l.image = label['image']
+            l.min_ready = label.get('min-ready', 2)
+            l.subnodes = label.get('subnodes', 0)
+            l.ready_script = label.get('ready-script')
+            l.providers = {}
+            for provider in label['providers']:
+                p = LabelProvider()
+                p.name = provider['name']
+                l.providers[p.name] = p
+                if newconfig.providers[p.name].images[l.image].diskimage:
+                    l.has_diskimage = True
+                else:
+                    l.has_snapshot = True
 
         for target in config['targets']:
             t = Target()
@@ -1709,7 +1710,7 @@ class NodePool(threading.Thread):
                 continue
 
             # check if image is there, if not, build it
-            if label.is_diskimage:
+            if label.has_diskimage:
                 found = False
                 for dib_image in session.getDibImages():
                     if (dib_image.image_name == label.image and
@@ -1753,7 +1754,7 @@ class NodePool(threading.Thread):
                             if available_images:
                                 self.uploadImage(session, provider.name,
                                                  label.image)
-            else:
+            elif label.has_snapshot:
                 # snapshots
                 for provider in label.providers.values():
                     found = False
@@ -1785,7 +1786,7 @@ class NodePool(threading.Thread):
                 continue
 
             # check if image is there, if not, build it
-            if label.is_diskimage:
+            if label.has_diskimage:
                 self.buildImage(self.config.diskimages[label.image])
                 needs_build = True
         if needs_build:
@@ -1798,9 +1799,9 @@ class NodePool(threading.Thread):
                 continue
 
             for provider in label.providers.values():
-                if label.is_diskimage:
+                if label.has_diskimage:
                     self.uploadImage(session, provider.name, label.image)
-                else:
+                elif label.has_snapshot:
                     self.updateImage(session, provider.name, label.image)
 
     def updateImage(self, session, provider_name, image_name):
@@ -1811,9 +1812,8 @@ class NodePool(threading.Thread):
                 "Could not update image %s on %s", image_name, provider_name)
 
     def _updateImage(self, session, provider_name, image_name):
-        # check type of image depending on label
-        is_diskimage = (image_name in self.config.diskimages)
-        if is_diskimage:
+        # check type of image depending on diskimage flag
+        if image.diskimage:
             raise Exception(
                 "Cannot update disk image images. "
                 "Please build and upload images")
@@ -1836,9 +1836,8 @@ class NodePool(threading.Thread):
         return t
 
     def buildImage(self, image):
-        # check type of image depending on label
-        is_diskimage = (image.name in self.config.diskimages)
-        if not is_diskimage:
+        # check type of image depending on diskimage flag
+        if not image.diskimage:
             raise Exception(
                 "Cannot build non disk image images. "
                 "Please create snapshots for them")
