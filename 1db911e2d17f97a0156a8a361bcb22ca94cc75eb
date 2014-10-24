@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9aa7fdbe_bad01ef7",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2014-10-24T00:38:21Z",
+      "side": 1,
+      "message": "No this is not a noop, this is needed so that the exception will continue to be raised in the current thread. What the following except block ends up doing is moving the exception across threads so that the call trace goes through task.wait() in submitTask rather than being raised up through task.run() in runTask. Without this, the ProxyError will never make it to the except block being added in the ProviderManager.",
+      "parentUuid": "9aa7fdbe_6628e6e2",
+      "revId": "1db911e2d17f97a0156a8a361bcb22ca94cc75eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aa7fdbe_66dd46e0",
         "filename": "nodepool/tests/test_nodepool.py",
         "patchSetId": 18
