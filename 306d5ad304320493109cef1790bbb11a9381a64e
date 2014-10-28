@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_550ebce6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-10-28T23:51:22Z",
+      "side": 1,
+      "message": "This should be in the providermanager",
+      "revId": "306d5ad304320493109cef1790bbb11a9381a64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_7513c00d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-10-28T23:51:22Z",
+      "side": 1,
+      "message": "Getting the private address should be the same as the public one (eg, the provider manager should handle it, and it should be available is an attribute on the returned server object.",
+      "revId": "306d5ad304320493109cef1790bbb11a9381a64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_95f744d4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-10-28T23:51:22Z",
+      "side": 1,
+      "message": "This needs a schema update to add the private ip field to node.",
+      "revId": "306d5ad304320493109cef1790bbb11a9381a64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_b5f448d0",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-10-28T23:51:22Z",
+      "side": 1,
+      "message": "Schema change to add private_ip to subnode.",
+      "revId": "306d5ad304320493109cef1790bbb11a9381a64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
