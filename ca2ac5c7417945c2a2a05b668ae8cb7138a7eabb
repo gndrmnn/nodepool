@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_1281aa4d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-28T22:44:11Z",
+      "side": 1,
+      "message": "should you maybe chown this 600 so ssh is happy to use it as a private key?",
+      "revId": "ca2ac5c7417945c2a2a05b668ae8cb7138a7eabb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
