@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_0a679ceb",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-29T16:40:36Z",
+      "side": 1,
+      "message": "This line doesn\u0027t seem to do anything. Can it be removed?",
+      "revId": "112661a6060131504c6aeb16d1782e1d3285e934",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_2aab80d7",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-10-29T16:40:36Z",
+      "side": 1,
+      "message": "Does this need the same ipv4 filter check as on line 77? Can this return an ipv6 address when you acces s ret[0]? (Assumption seems to be that we will ipv4 all of these private addrs).",
+      "revId": "112661a6060131504c6aeb16d1782e1d3285e934",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
