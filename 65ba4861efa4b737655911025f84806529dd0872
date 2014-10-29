@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa7fdbe_35a5b8b5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-29T00:00:00Z",
+      "side": 1,
+      "message": "has_diskimage really has the hallmark of being a function that returns a bool",
+      "revId": "65ba4861efa4b737655911025f84806529dd0872",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_b590c84f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-29T00:00:00Z",
+      "side": 1,
+      "message": "maybe this should be disk_image_providers[]?\n\nand has_diskimage() should be just \"return self.has_disk_image_providers\"?",
+      "revId": "65ba4861efa4b737655911025f84806529dd0872",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa7fdbe_d59d4c68",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 1715,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-10-29T00:00:00Z",
+      "side": 1,
+      "message": "it seems kind of odd that this is actually a list of [provider.name] for the image, but later on we iterate for label.providers.values()",
+      "revId": "65ba4861efa4b737655911025f84806529dd0872",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
