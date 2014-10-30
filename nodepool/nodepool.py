@@ -1058,9 +1058,16 @@ class SnapshotImageUpdater(ImageUpdater):
             for k, v in os.environ.items():
                 if k.startswith('NODEPOOL_'):
                     env_vars += ' %s="%s"' % (k, v)
+
+            # non-interactive "cloud-user" type logins can have very
+            # restrictive paths of just /bin:/usr/bin ... it's
+            # reasonable in the setup scripts to assume you can "sudo"
+            # and run things from sbins
+            set_path = "export PATH=" \
+                       "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
             host.ssh("run setup script",
-                     "cd /opt/nodepool-scripts && %s ./%s %s" %
-                     (env_vars, self.image.setup, server['name']))
+                     "%s; cd /opt/nodepool-scripts && %s ./%s %s" %
+                     (set_path, env_vars, self.image.setup, server['name']))
 
 
 class ConfigValue(object):
