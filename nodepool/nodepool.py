@@ -406,8 +406,9 @@ class NodeLauncher(threading.Thread):
             raise LaunchNetworkException("Unable to find public IP of server")
 
         self.node.ip = ip
-        self.log.debug("Node id: %s is running, ip: %s, testing ssh" %
-                       (self.node.id, ip))
+        self.log.debug("Node id: %s is running, ip: %s, ipv6: %s, "
+                       "testing ssh" % (self.node.id, ip,
+                                        server.get('public_v6')))
         connect_kwargs = dict(key_filename=self.image.private_key)
 
         if not utils.ssh_connect(ip, self.image.username,
@@ -665,8 +666,9 @@ class SubNodeLauncher(threading.Thread):
 
         self.subnode.ip = ip
         self.log.debug("Subnode id: %s for node id: %s is running, "
-                       "ip: %s, testing ssh" %
-                       (self.subnode_id, self.node_id, ip))
+                       "ip: %s, ipv6: %s, testing ssh" %
+                       (self.subnode_id, self.node_id, ip,
+                        server.get('public_v6')))
         connect_kwargs = dict(key_filename=self.image.private_key)
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,

@@ -79,6 +79,7 @@ def make_server_dict(server):
     if hasattr(server, 'progress'):
         d['progress'] = server.progress
     d['public_v4'] = get_public_ip(server)
+    d['public_v6'] = get_public_ip(server, version=6)
     return d
 
 
