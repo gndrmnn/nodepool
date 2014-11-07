@@ -1,5 +1,13 @@
 :title: Installation
 
+.. _`ZMQ Event Publisher`:
+   http://git.openstack.org/cgit/openstack-infra/zmq-event-publisher/tree/README
+
+
+.. _`configuration file format`:
+   http://docs.python.org/2/library/logging.config.html#configuration-file-format
+
+
 Installation
 ============
 
@@ -12,8 +20,7 @@ External Requirements
 Jenkins
 ~~~~~~~
 
-You should have a Jenkins server running with the `ZMQ Event Publisher
-<http://git.openstack.org/cgit/openstack-infra/zmq-event-publisher/tree/README>`
+You should have a Jenkins server running with the `ZMQ Event Publisher`_
 plugin installed (it is available in the Jenkins Update Center).  Be
 sure that the machine where you plan to run Nodepool can connect to
 the ZMQ port specified by the plugin on your Jenkins master(s).
@@ -66,7 +73,5 @@ Configuration
 Nodepool has a single required configuration file and an optional
 logging configuration file.
 
-The logging configuration file is in the standard python logging
-`configuration file format
-<http://docs.python.org/2/library/logging.config.html#configuration-file-format>`.
+The logging configuration file is in the standard python logging `configuration file format`_.
 The Nodepool configuration file is described in :ref:`configuration`.
