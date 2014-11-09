@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_ac1f9608",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-11-09T19:00:27Z",
+      "side": 1,
+      "message": "Is that related with the purpose of this patch?",
+      "revId": "4c5a5485f05bc6d25cec208259d52c71eb1330d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
