@@ -316,6 +316,11 @@ useful to ensure that the instance's filesystem is consistent. The system
 will poll the cloud for `shutoff-poll-count` many times, waiting
 `shutoff-poll-interval` seconds between the polls.
 
+`launch-done-stamp` is an optional key to specify a path on the node. The
+node will be considered ready when a file exists at that path. Nodepool will
+retry to check the stamp file `launch-poll-count` many times waiting
+`launch-poll-interval` seconds between the polls.
+
 targets
 -------
 

@@ -407,9 +407,12 @@ class NodeLauncher(threading.Thread):
 
         self.node.ip_private = server.get('private_v4')
         self.node.ip = ip
+        connect_kwargs = dict(key_filename=self.image.private_key)
+
+        self.waitForLaunchStamp(ip, self.image.username, connect_kwargs)
+
         self.log.debug("Node id: %s is running, ip: %s, testing ssh" %
                        (self.node.id, ip))
-        connect_kwargs = dict(key_filename=self.image.private_key)
 
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,
@@ -456,6 +459,42 @@ class NodeLauncher(threading.Thread):
             self.log.info("Node id: %s added to jenkins" % self.node.id)
 
         return dt
+
+    def waitForLaunchStamp(self, ip, username, connect_kwargs):
+        if not self.image.launch_done_stamp:
+            self.log.info("No launch condition specified")
+            return
+
+        self.log.info("Node id: %s is ACTIVE, ip: %s, waiting for stamp "
+                "file: %s" % (self.node.id, ip, self.image.launch_done_stamp))
+
+        remaining_polls = self.image.launch_poll_count
+
+        while remaining_polls:
+            try:
+                host = utils.ssh_connect(ip, username, connect_kwargs)
+            except Exception as e:
+                self.log.info("Poll %s: Ignored ssh connection error %s",
+                              remaining_polls,
+                              e)
+                host = None
+
+            if host:
+                status = host.ssh(
+                    "check launch status",
+                    "test -e %s && echo DONE || true" % (
+                        self.image.launch_done_stamp),
+                    output=True)
+                host.close()
+                status = status or ''
+                if "DONE" in status:
+                    self.log.info("Launch stamp found")
+                    return
+            remaining_polls -= 1
+            time.sleep(self.image.launch_poll_interval)
+
+        raise Exception(
+            'Failed to launch host - max number of polls reached')
 
     def createJenkinsNode(self):
         jenkins = self.nodepool.getJenkinsManager(self.target)
@@ -1361,6 +1400,9 @@ class NodePool(threading.Thread):
                     'wait-for-shutoff-before-snapshot', False)
                 i.shutoff_poll_interval = image.get('shutoff-poll-interval', 0)
                 i.shutoff_poll_count = image.get('shutoff-poll-count', 0)
+                i.launch_done_stamp = image.get('launch-done-stamp')
+                i.launch_poll_interval = image.get('launch-poll-interval', 10)
+                i.launch_poll_count = image.get('launch-poll-count', 40)
                 i.reset = image.get('reset')
                 i.diskimage = image.get('diskimage', None)
                 i.username = image.get('username', 'jenkins')
