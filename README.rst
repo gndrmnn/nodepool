@@ -15,7 +15,7 @@ Install dependencies:
     sudo apt-get -qy install git mysql-server libmysqlclient-dev g++ python-dev python-pip
     mkdir src
     cd ~/src
-    git clone git://git.openstack.org/openstack-infra/config
+    git clone git://git.openstack.org/openstack-infra/system-config
     git clone git://git.openstack.org/openstack-infra/nodepool
     cd nodepool
     sudo pip install -U -r requirements.txt
