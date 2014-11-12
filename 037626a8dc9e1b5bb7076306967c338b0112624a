@@ -16,6 +16,24 @@
       "revId": "037626a8dc9e1b5bb7076306967c338b0112624a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_e9a219ad",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-11-12T23:18:36Z",
+      "side": 1,
+      "message": "ok, was thinking they were symlinks but that\u0027s not universally true i guess",
+      "parentUuid": "5a890539_a620414a",
+      "revId": "037626a8dc9e1b5bb7076306967c338b0112624a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
