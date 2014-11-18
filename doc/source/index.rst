@@ -15,6 +15,7 @@ Contents:
    configuration
    scripts
    operation
+   api
 
 Indices and tables
 ==================
