@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_63b802e6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 10980
+      },
+      "writtenOn": "2014-11-20T23:59:36Z",
+      "side": 1,
+      "message": "Adding $PATH itself to that list would further insulate from weird changes on the vendor side.",
+      "revId": "784b92b7d1830e24fddc14c78a68a5faeba181b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
