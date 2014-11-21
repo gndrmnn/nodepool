@@ -16,6 +16,24 @@
       "revId": "784b92b7d1830e24fddc14c78a68a5faeba181b8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_237d1ae8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-11-21T00:08:08Z",
+      "side": 1,
+      "message": "The point is more to standarise ... if say rackspace added something to their build of ssh that sets the PATH to some magic that makes their images work (very, very unlikely), i would not like to write my script, run it on rackspace and think it works, then have it break everywhere else",
+      "parentUuid": "5a890539_63b802e6",
+      "revId": "784b92b7d1830e24fddc14c78a68a5faeba181b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
