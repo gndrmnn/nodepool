@@ -212,6 +212,8 @@ class UploadImageTask(Task):
         glance_kwargs = {'service_type': 'image'}
         if provider.region_name:
             keystone_kwargs['region_name'] = provider.region_name
+        else:
+            keystone_kwargs['region_name'] = None
 
         # get endpoint and authtoken
         keystone = ksclient.Client(**keystone_kwargs)
