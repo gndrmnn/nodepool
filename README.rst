@@ -43,6 +43,8 @@ floating ips.
 
 Set up database for interactive testing:
 
+Create the database:
+
 .. code-block:: bash
 
     mysql -u root

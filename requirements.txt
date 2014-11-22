@@ -21,3 +21,4 @@ voluptuous
 kazoo
 Paste
 WebOb>=1.2.3
+alembic>=0.4.1
