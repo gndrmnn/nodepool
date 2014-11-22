@@ -1,0 +1,2 @@
+This directory contains the migration scripts for the nodepool project.  Please
+see the README in nodepool/migration on how to use and generate new migrations.
