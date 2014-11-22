@@ -15,25 +15,91 @@
 
 import json
 import logging
+import os
 import threading
 import time
 
+from alembic import command as alembic_command
+from alembic import config as alembic_config
+from alembic import script as alembic_script
 import fixtures
+from sqlalchemy import MetaData, create_engine, inspect
+from sqlalchemy.orm import RelationshipProperty
 
 from nodepool import jobs
 from nodepool import tests
+from nodepool import migration
 from nodepool import nodedb
 import nodepool.fakeprovider
 import nodepool.nodepool
+
 
 
 class TestNodepool(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestNodepool")
 
     def test_db(self):
+        # NOTE(notmorgan): This test verifies that schema
+        # creation via SQLAlchemy Metadata create_all() works
+        # as expected.
         db = nodedb.NodeDatabase(self.dburi)
         with db.getSession() as session:
             session.getNodes()
+
+    def _get_alembic_connection(self):
+        engine_kwargs = dict(echo=False, pool_recycle=3600)
+        if 'sqlite:' not in self.dburi:
+            engine_kwargs['max_overflow'] = -1
+        config = alembic_config.Config(
+            os.path.join(
+                os.path.dirname(migration.__file__), 'alembic.ini'))
+        config.set_main_option('script_location',
+                               'nodepool.migration:alembic_migrations')
+        self.engine = create_engine(self.dburi, **engine_kwargs)
+
+        config.dburi = self.dburi
+        config.engine = self.engine
+        conn = config.engine.connect()
+
+        return conn, config
+
+    def assertDBSchemaMatchesModels(self):
+        conn, config = self._get_alembic_connection()
+        models = {table.name: table for table in nodedb._TABLES}
+        model_table_names = list(models.keys())
+
+        iengine = inspect(config.engine)
+        tables = iengine.get_table_names()
+
+        for table in tables:
+            name = table.name
+            self.asssertIn(name, model_table_names)
+            columns = [c["name"] for c in iengine.get_columns(table)]
+            mapper = inspect(models[name])
+
+            for column_prop in mapper.attrs:
+                if not isinstance(column_prop, RelationshipProperty):
+                    for column in column_prop.columns:
+                        self.assertIn(column.key, columns)
+
+    def test_alembic_migrations_upgrade(self):
+        """Verify a DB under management with an old rev upgrades"""
+        conn, config = self._get_alembic_connection()
+        script = alembic_script.ScriptDirectory.from_config(config)
+        revision = script.get_base()
+        alembic_command.upgrade(config, revision)
+        db = nodedb.NodeDatabase(self.dburi)
+        with db.getSession() as session:
+            session.getNodes()
+
+        # TODO(notmorgan): Check models match the schema after migrations
+
+    def test_alembic_migrations_populated_db_fails(self):
+        """Verify a DB populated and not under management fails to upgrade."""
+        conn, config = self._get_alembic_connection()
+        meta = MetaData()
+        meta.create_all(bind=config.engine)
+        self.assertRaises(RuntimeError, nodedb.NodeDatabase, self.dburi)
 
     def test_node(self):
         """Test that an image and node are created"""
