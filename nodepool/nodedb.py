@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import time
 
 # States:
@@ -41,6 +42,10 @@ STATE_NAMES = {
     TEST: 'test',
     }
 
+from alembic import command as alembic_command
+from alembic import config as alembic_config
+from alembic.runtime import migration as alembic_migration
+import migration
 from sqlalchemy import Table, Column, Integer, String, \
     MetaData, create_engine
 from sqlalchemy.orm import scoped_session, mapper, relationship, foreign
@@ -300,8 +305,33 @@ class NodeDatabase(object):
         if 'sqlite:' not in dburi:
             engine_kwargs['max_overflow'] = -1
 
+        config = alembic_config.Config(
+            os.path.join(
+                os.path.dirname(migration.__file__), 'alembic.ini'))
+        config.set_main_option('script_location',
+                               'nodepool.migration:alembic_migrations')
         self.engine = create_engine(dburi, **engine_kwargs)
-        metadata.create_all(self.engine)
+
+        config.dburi = dburi
+        config.engine = self.engine
+        conn = config.engine.connect()
+        migration_context = alembic_migration.MigrationContext.configure(conn)
+        current_rev = migration_context.get_current_revision()
+        if current_rev:
+            alembic_command.upgrade(config, 'head')
+        else:
+            # NOTE(notmorgan): The DB is not under management, only populate
+            # and stamp an empty DB.
+            _meta = MetaData()
+            _meta.reflect(bind=config.engine)
+            if _meta.tables:
+                raise RuntimeError('Specified Database is not under alembic '
+                                   'management but has data in it. Please '
+                                   'ensure the DB is under alembic management '
+                                   'and up-to-date or empty.')
+            metadata.create_all(bind=config.engine)
+            alembic_command.stamp(config, 'head')
+
         self.session_factory = sessionmaker(bind=self.engine)
         self.session = scoped_session(self.session_factory)
 
