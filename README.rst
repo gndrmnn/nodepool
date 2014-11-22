@@ -43,6 +43,8 @@ floating ips.
 
 Set up database for interactive testing:
 
+Create the database:
+
 .. code-block:: bash
 
     mysql -u root
@@ -50,6 +52,12 @@ Set up database for interactive testing:
     mysql> create database nodepool;
     mysql> GRANT ALL ON nodepool.* TO 'nodepool'@'localhost';
     mysql> flush privileges;
+
+Populate the database:
+
+.. code-block:: bash
+
+    nodepool-db-manage upgrade head
 
 Set up database for unit tests:
 
