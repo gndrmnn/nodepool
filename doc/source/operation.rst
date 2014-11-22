@@ -183,3 +183,24 @@ the same and makes it easy to turn the provider back on).
 If urgency is required you can delete the nodes directly instead of
 waiting for them to go through their normal lifecycle but the effect is
 the same.
+
+Upgrades to Alembic Managed DB Schemas
+======================================
+
+When upgrading nodepool from a state before alembic migrations were used
+to manage the DB schema, it is recommended that the old-schema upgrade
+path of dropping the DB and letting nodepool re-create it be used.
+Basic steps to perform this are as follows:
+
+1. Stop Nodepool
+
+2. Delete active resources nodepool is responsible for
+
+3. Drop and recreate the nodepool database
+
+4. Restart Nodepool, the DB schema will be recreated
+
+
+Note that future schema changes will be handled automatically when
+nodepool is restarted, provided it is an upgrade. Downgrades will
+need to be managed manually if performed.
