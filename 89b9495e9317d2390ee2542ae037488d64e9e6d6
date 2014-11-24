@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a890539_3eb41a81",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 5044
+      },
+      "writtenOn": "2014-11-24T07:11:59Z",
+      "side": 1,
+      "message": "OK, I will do that.",
+      "parentUuid": "5a890539_275ad350",
+      "revId": "89b9495e9317d2390ee2542ae037488d64e9e6d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a890539_2708132d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-11-19T08:56:59Z",
       "side": 1,
       "message": "I will add a conditional to check for launch stamp here, and i will not enter into the method if not needed, to improve performance.",
+      "revId": "89b9495e9317d2390ee2542ae037488d64e9e6d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_7e5f8241",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 5044
+      },
+      "writtenOn": "2014-11-24T07:11:59Z",
+      "side": 1,
+      "message": "We are running commands on remote systems through ssh with nodepool. The cost of a function call is a several order of magnitudes less than those things.",
+      "parentUuid": "5a890539_2708132d",
       "revId": "89b9495e9317d2390ee2542ae037488d64e9e6d6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
