@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_3190b1ec",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-11-24T23:24:11Z",
+      "side": 1,
+      "message": "You know the code better than me, but why isn\u0027t sendAdminRequest() handling this?  it\u0027s _ naming suggests maybe this should be done for you...",
+      "revId": "5edaddee0736ad4d15b21734c7a3ad71385112cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
