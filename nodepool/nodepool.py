@@ -34,10 +34,14 @@ import yaml
 import zmq
 
 import allocation
+import fakeprovider
 import jenkins_manager
 import nodedb
 import nodeutils as utils
 import provider_manager
+
+import glanceclient
+import keystoneclient.v2_0.client as ksclient
 
 MINS = 60
 HOURS = 60 * MINS
@@ -880,6 +884,44 @@ class DiskImageUpdater(ImageUpdater):
         self.filename = filename
         self.image_name = image.name
 
+    def uploadImage(self, image_name, filename, disk_format,
+                    container_format, meta):
+        # skip if testing
+        if image_name.startswith('fake-dib-image'):
+            image = fakeprovider.FakeGlanceClient()
+            image.update(data='fake')
+        else:
+            # first get glance client
+            keystone_kwargs = {'auth_url': self.provider.auth_url,
+                               'username': self.provider.username,
+                               'password': self.provider.password,
+                               'tenant_name': self.provider.project_id}
+            if self.provider.region_name:
+                keystone_kwargs['region_name'] = self.provider.region_name
+            glance_kwargs = {'service_type': 'image'}
+
+            # get endpoint and authtoken
+            keystone = ksclient.Client(**keystone_kwargs)
+            glance_endpoint = keystone.service_catalog.url_for(
+                attr='region',
+                filter_value=keystone_kwargs['region_name'],
+                service_type='image')
+            glance_endpoint = glance_endpoint.replace('/v1.0', '')
+
+            # configure glance client
+            gclient = glanceclient.client.Client(
+                '1', glance_endpoint,
+                token=keystone.auth_token, **glance_kwargs)
+
+            image = gclient.images.create(
+                name=image_name, is_public=False,
+                disk_format=disk_format,
+                container_format=container_format,
+                **meta)
+            with open('%s.%s' % (filename, disk_format), 'rb') as f:
+                image.update(data=f)
+        return image.id
+
     def updateImage(self, session):
         start_time = time.time()
         timestamp = int(start_time)
@@ -897,8 +939,8 @@ class DiskImageUpdater(ImageUpdater):
         # strip extension from filename
         stripped_filename = self.filename.replace(".qcow2", "")
         image_path = os.path.join(self.imagesdir, stripped_filename)
-        image_id = self.manager.uploadImage(image_name, image_path,
-                                            'qcow2', 'bare', self.image.meta)
+        image_id = self.uploadImage(image_name, image_path,
+                                    'qcow2', 'bare', self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
