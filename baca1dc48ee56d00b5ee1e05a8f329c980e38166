@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_d67d716e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 9
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-11-26T04:20:45Z",
+      "side": 1,
+      "message": "it says /etc/nodepool/provider here, but in the other file it opens /etc/nodepool/environment?",
+      "revId": "baca1dc48ee56d00b5ee1e05a8f329c980e38166",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
