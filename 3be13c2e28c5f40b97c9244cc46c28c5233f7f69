@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_8142b865",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-11-26T11:05:56Z",
+      "side": 1,
+      "message": "We should see an example of `launch-done-stamp` somewhere in here.",
+      "revId": "3be13c2e28c5f40b97c9244cc46c28c5233f7f69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
