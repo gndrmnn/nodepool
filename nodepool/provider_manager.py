@@ -530,12 +530,41 @@ class ProviderManager(TaskManager):
     def getImage(self, image_id):
         return self.submitTask(GetImageTask(image=image_id))
 
+    def get_glance_client(self, provider):
+        keystone_kwargs = {'auth_url': provider.auth_url,
+                           'username': provider.username,
+                           'password': provider.password,
+                           'tenant_name': provider.project_id}
+        glance_kwargs = {'service_type': 'image'}
+        if provider.region_name:
+            keystone_kwargs['region_name'] = provider.region_name
+
+        # get endpoint and authtoken
+        keystone = ksclient.Client(**keystone_kwargs)
+        glance_endpoint = keystone.service_catalog.url_for(
+            attr='region',
+            filter_value=keystone_kwargs['region_name'],
+            service_type='image')
+        glance_endpoint = glance_endpoint.replace('/v1.0', '')
+
+        # configure glance client
+        glance = glanceclient.client.Client('1', glance_endpoint,
+                                            token=keystone.auth_token,
+                                            **glance_kwargs)
+        return glance
+
     def uploadImage(self, image_name, filename, disk_format, container_format,
                     meta):
-        return self.submitTask(UploadImageTask(
-            image_name=image_name, filename='%s.%s' % (filename, disk_format),
-            disk_format=disk_format, container_format=container_format,
-            provider=self.provider, meta=meta))
+        if image_name.startswith('fake-'):
+            return self.submitTask( UploadImageTask(
+                image_name=image_name, filename='%s.%s' % (filename, disk_format),
+                disk_format=disk_format, container_format=container_format,
+                provider=self.provider, meta=meta))
+        else:
+            return UploadImageTask(
+                image_name=image_name, filename='%s.%s' % (filename, disk_format),
+                disk_format=disk_format, container_format=container_format,
+                provider=self.provider, meta=meta)
 
     def listExtensions(self):
         return self.submitTask(ListExtensionsTask())
