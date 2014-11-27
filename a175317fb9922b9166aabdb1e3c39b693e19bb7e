@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_09d8867e",
+        "filename": "doc/source/api.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-11-27T13:02:30Z",
+      "side": 1,
+      "message": "whitespaces...",
+      "revId": "a175317fb9922b9166aabdb1e3c39b693e19bb7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
