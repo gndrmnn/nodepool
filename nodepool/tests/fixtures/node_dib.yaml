@@ -53,4 +53,7 @@ diskimages:
       - ubuntu
       - vm
     release: precise
+    env-vars:
+      ENV_VAR_1: foo
+      ENV_VAR_2: bar
 

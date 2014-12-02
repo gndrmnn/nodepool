@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "*** fake-image-builder: start"
+
+echo "arguments:"
+echo "----"
+echo $*
+echo "----"
+
+# test passing of env-var
+if [[ ${ENV_VAR_1} != "foo" ]]; then
+    echo "ENV_VAR_1 not set"
+    exit 1
+fi
+if [[ ${ENV_VAR_2} != "bar" ]]; then
+    echo "ENV_VAR_1 not set"
+    exit 1
+fi
+
+echo "*** fake-image-builder: done"
