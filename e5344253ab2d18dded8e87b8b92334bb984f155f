@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_6c5461ca",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-12-02T08:36:07Z",
+      "side": 1,
+      "message": "I really don\u0027t like to use \u0027fake\u0027 everywhere to test our changes. I think we should be moved to a more smart testing but this needs a complete rewrite. Just my thoughts there...",
+      "revId": "e5344253ab2d18dded8e87b8b92334bb984f155f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
