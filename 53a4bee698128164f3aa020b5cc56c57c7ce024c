@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_4caa451b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1896,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-12-02T08:56:42Z",
+      "side": 1,
+      "message": "This will send the image name without extension. Are we ok with that? We are assuming that all different formats are created properly and the entry is representing all generated image formats, right?",
+      "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_6cfb8147",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2109,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-12-02T08:56:42Z",
+      "side": 1,
+      "message": "don\u0027t we need a dot separator between name and extension?",
+      "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_8ca42d4c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2014-12-02T08:56:42Z",
+      "side": 1,
+      "message": "same comments",
+      "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
