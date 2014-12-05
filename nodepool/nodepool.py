@@ -752,9 +752,6 @@ class DiskImageBuilder(threading.Thread):
         for k, v in image.env_vars.items():
             env[k] = v
 
-        out_file_path = os.path.join(self.nodepool.config.imagesdir,
-                                     filename)
-
         extra_options = ''
         if image.qemu_img_options:
             extra_options = ('--qemu-img-options %s' %
@@ -762,7 +759,7 @@ class DiskImageBuilder(threading.Thread):
         img_elements = image.elements
 
         cmd = ('disk-image-create -x --no-tmpfs %s -o %s %s' %
-               (extra_options, out_file_path, img_elements))
+               (extra_options, filename, img_elements))
 
         if 'fake-dib-image' in filename:
             cmd = 'echo ' + cmd
@@ -898,8 +895,7 @@ class DiskImageUpdater(ImageUpdater):
 
         # strip extension from filename
         stripped_filename = self.filename.replace(".qcow2", "")
-        image_path = os.path.join(self.imagesdir, stripped_filename)
-        image_id = self.manager.uploadImage(image_name, image_path,
+        image_id = self.manager.uploadImage(image_name, stripped_filename,
                                             'qcow2', 'bare', self.image.meta)
         self.snap_image.external_id = image_id
         session.commit()
