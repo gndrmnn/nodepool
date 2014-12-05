@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a890539_da46467b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1896,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-12-05T17:11:35Z",
+      "side": 1,
+      "message": "Yes, in fact if you read the dib code they don\u0027t seem to have ever wanted the supplied filename to include an extension and dib expects to add that itself.\n\nThe way dib multi image output works is dib will fail if any of the outputs fails (which is what we want so that we don\u0027t have up to date qcow2 and out of date vhd for example).\n\nSo using an extensionless filename is more inline with what dib expects and should result in consistency because dib will fail if any output fails.",
+      "parentUuid": "5a890539_4caa451b",
+      "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a890539_6cfb8147",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2014-12-02T08:56:42Z",
       "side": 1,
       "message": "don\u0027t we need a dot separator between name and extension?",
+      "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a890539_9a975eeb",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2109,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-12-05T17:11:35Z",
+      "side": 1,
+      "message": "Yup good catch.",
+      "parentUuid": "5a890539_6cfb8147",
       "revId": "53a4bee698128164f3aa020b5cc56c57c7ce024c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
