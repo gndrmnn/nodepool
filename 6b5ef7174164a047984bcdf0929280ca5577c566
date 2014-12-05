@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_da84860d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-12-05T16:59:06Z",
+      "side": 1,
+      "message": "Deletion requires jenkins managers as one of the delete operations is to remove a node from jenkins.",
+      "revId": "6b5ef7174164a047984bcdf0929280ca5577c566",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
