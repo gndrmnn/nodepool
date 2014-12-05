@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_dd0ba022",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2014-12-05T17:13:38Z",
+      "side": 1,
+      "message": "This paragraph needs updating too.",
+      "revId": "f53670f73ec899b7d063c54baf385e3afb3a32a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
