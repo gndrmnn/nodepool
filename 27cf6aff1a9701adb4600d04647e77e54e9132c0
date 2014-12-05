@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a890539_dab80678",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2014-12-05T17:10:14Z",
+      "side": 0,
+      "message": "I think the best way to accomplish this is to perform the operation within this method instead of using the task queue.",
+      "revId": "27cf6aff1a9701adb4600d04647e77e54e9132c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
