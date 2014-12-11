@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a961159_c61443a2",
+        "filename": "README.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2014-12-11T02:53:40Z",
+      "side": 1,
+      "message": "It\u0027s really \"the\" infra/system-config one?  maybe link to it for reference?",
+      "revId": "f731828a96d5d1ce9226ace458a04a8651e71130",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
