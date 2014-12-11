@@ -7,6 +7,10 @@ echo "----"
 echo $*
 echo "----"
 
+if [[ ${DIB_RELEASE} != "21" ]]; then
+    echo "DIB_RELEASE not set correctly"
+fi
+
 # test passing of real-life env-vars
 if [[ ${TMPDIR} != "/opt/dib_tmp" ]]; then
     echo "TMPDIR not set"
