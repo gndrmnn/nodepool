@@ -16,6 +16,24 @@
       "revId": "f731828a96d5d1ce9226ace458a04a8651e71130",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a961159_5db48081",
+        "filename": "README.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2014-12-11T21:16:26Z",
+      "side": 1,
+      "message": "This is a style question (more style guide updates!), we\u0027re giving the git URL in the document above and we historically haven\u0027t repeated it with links inline. This is particularly true in this case where the should have already cloned the repository by the time they get to this step.",
+      "parentUuid": "3a961159_c61443a2",
+      "revId": "f731828a96d5d1ce9226ace458a04a8651e71130",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
