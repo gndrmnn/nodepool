@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a961159_4e282f33",
+        "filename": "nodepool/tests/fixtures/capacity.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2014-12-22T17:10:13Z",
+      "side": 1,
+      "message": "Why add this if it\u0027s commented out?",
+      "revId": "1a3ae6c51c8d1f4c1a567137380a7358db8bde78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
