@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a961159_40d0f3c8",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2014-12-23T02:03:26Z",
+      "side": 1,
+      "message": "You\u0027re missing a blank line here.\n\nI think you should also test mocking out the client for the bad client so that if it continues to fail the exception is raised as expected.",
+      "revId": "4e08dc2412de0670d8e3dacc66fc3e8e7cfe760b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
