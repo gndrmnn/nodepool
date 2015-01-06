@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3a961159_ac0b7429",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-01-06T23:57:30Z",
+      "side": 1,
+      "message": "If diskimage_providers and snapshot_providers could be dicts of name -\u003e LabelProvider just like l.providers, i think that would be good too.",
+      "revId": "1a073a98949c668ec115d6f5da99a3c8366657ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a961159_acda94e6",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 14
