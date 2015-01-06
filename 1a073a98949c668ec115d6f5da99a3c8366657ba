@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a961159_acda94e6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-01-06T23:47:56Z",
+      "side": 1,
+      "message": "Usually I have tried to call variables like this \"provider_name\" to avoid confusion.",
+      "revId": "1a073a98949c668ec115d6f5da99a3c8366657ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a961159_ccd7e0bd",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 1785,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-01-06T23:47:56Z",
+      "side": 1,
+      "message": "Ditto on the _name thing",
+      "revId": "1a073a98949c668ec115d6f5da99a3c8366657ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
