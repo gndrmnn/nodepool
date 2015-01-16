@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a961159_72876c5b",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-01-16T20:45:39Z",
+      "side": 0,
+      "message": "This was the old problematic block of code.",
+      "revId": "d4c6c6526af02e2858194ef846c0f42c8fff357e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
