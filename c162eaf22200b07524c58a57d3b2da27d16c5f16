@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa81d914_f77223e4",
+        "filename": "requirements.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1106
+      },
+      "writtenOn": "2015-01-28T15:44:08Z",
+      "side": 1,
+      "message": "why not \u003e\u003d 2.0.4 ?",
+      "revId": "c162eaf22200b07524c58a57d3b2da27d16c5f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
