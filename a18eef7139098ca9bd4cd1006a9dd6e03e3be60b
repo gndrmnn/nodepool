@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_cfbdb104",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-01-30T20:43:09Z",
+      "side": 1,
+      "message": "This is a bit misleading now: Provider p219 does not provide image dpc\nBecause it does. The issue is that there\u0027s no label associated with it. That seems to be the desired error message in line 225 which is not getting hit.",
+      "revId": "a18eef7139098ca9bd4cd1006a9dd6e03e3be60b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
