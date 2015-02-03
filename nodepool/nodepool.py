@@ -1830,10 +1830,13 @@ class NodePool(threading.Thread):
             self.log.exception("Exception in periodic image update:")
 
     def updateImages(self, session):
+        self.log.debug("Updating all images.")
         # first run the snapshot image updates
         for label in self.config.labels.values():
             # only update if min_ready not negative
             if label.snapshot_providers and label.min_ready >= 0:
+                self.log.debug("Update snapshot label %s in providers %s" %
+                               (label.name, label.snapshot_providers.keys()))
                 for provider_name in label.snapshot_providers.keys():
                     self.updateImage(session, provider_name, label.image)
 
@@ -1852,6 +1855,8 @@ class NodePool(threading.Thread):
         # Upload newly built images to all providers that use dib built images
         for label in self.config.labels.values():
             if label.diskimage_providers and label.min_ready >= 0:
+                self.log.debug("Update dib label %s in providers %s" %
+                               (label.name, label.diskimage_providers.keys()))
                 for provider_name in label.diskimage_providers.keys():
                     self.uploadImage(session, provider_name, label.image)
 
