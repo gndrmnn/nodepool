@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_c19c38c3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-02-03T16:27:22Z",
+      "side": 1,
+      "message": "There should be an INFO level line as in the snapshot updater; should probably say \"uploading image\".",
+      "revId": "3bcb17b9af9e710a0a86bc64c3d2922288b76016",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_e19f7cb2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-02-03T16:27:22Z",
+      "side": 1,
+      "message": "This should say \"saving image\".",
+      "revId": "3bcb17b9af9e710a0a86bc64c3d2922288b76016",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_01a7300d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1858,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-02-03T16:27:22Z",
+      "side": 1,
+      "message": "May I suggest \"Upload dib label\"...?",
+      "revId": "3bcb17b9af9e710a0a86bc64c3d2922288b76016",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
