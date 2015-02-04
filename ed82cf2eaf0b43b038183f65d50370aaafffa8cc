@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_4e6cdf35",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-04T01:25:51Z",
+      "side": 1,
+      "message": "Nit: Its not the pattern in this file (although it should be), but putting quotes around ${DIB_RELEASE} will result in a more clean failure when DIB_RELEASE is not set (which is what the current fail case is I believe?\n\n#notaminusone",
+      "revId": "ed82cf2eaf0b43b038183f65d50370aaafffa8cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_ce19afd8",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-04T01:25:51Z",
+      "side": 1,
+      "message": "Missing an exit 1?",
+      "revId": "ed82cf2eaf0b43b038183f65d50370aaafffa8cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
