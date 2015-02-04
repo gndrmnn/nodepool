@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_135e9476",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1869,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-04T00:49:34Z",
+      "side": 1,
+      "message": "We have lost some logging in this change. Was that removed as they were deemed no longer necessary as part of your testing?",
+      "revId": "8e3a98e7a5fb8d7838ab737b6f592c21a7053c84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
