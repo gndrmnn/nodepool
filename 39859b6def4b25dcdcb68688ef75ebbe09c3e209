@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da86d52c_225c1fed",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-04T01:51:15Z",
+      "side": 1,
+      "message": "disreguard that, I see where I went wrong ;)",
+      "parentUuid": "da86d52c_6240d734",
+      "revId": "39859b6def4b25dcdcb68688ef75ebbe09c3e209",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da86d52c_a2464f4d",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-04T01:44:52Z",
       "side": 1,
       "message": "Ditto",
+      "revId": "39859b6def4b25dcdcb68688ef75ebbe09c3e209",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_a2672fb6",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-04T01:51:15Z",
+      "side": 1,
+      "message": "same here",
+      "parentUuid": "da86d52c_a2464f4d",
       "revId": "39859b6def4b25dcdcb68688ef75ebbe09c3e209",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
