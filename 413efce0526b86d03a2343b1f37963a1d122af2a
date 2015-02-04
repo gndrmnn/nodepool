@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_4ea21f9a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-04T01:21:14Z",
+      "side": 1,
+      "message": "I think this may collide with jeblairs image build fix. In that change he switches this to if \u0027fake-\u0027 in filename iirc. Not a huge deal thouhg, we will just have to rebase one change when the other merges.",
+      "revId": "413efce0526b86d03a2343b1f37963a1d122af2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
