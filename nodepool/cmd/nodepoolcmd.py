@@ -23,6 +23,8 @@ from nodepool import nodedb
 from nodepool import nodepool
 from prettytable import PrettyTable
 
+from log_config_generator import generate_log_config
+
 
 class NodePoolCmd(object):
     def __init__(self):
@@ -119,6 +121,20 @@ class NodePoolCmd(object):
             nargs='?', default='all')
         cmd_image_upload.add_argument('image', help='image name')
 
+        cmd_logging_config = subparsers.add_parser(
+            'generate-log-config',
+            help='output a sample logging configuration file')
+        cmd_logging_config.set_defaults(func=generate_log_config,
+                                        which='generate_log_config')
+        cmd_logging_config.add_argument(
+            '--log_dir', help='directory for main log output',
+            default='/var/log/nodepool/')
+        cmd_logging_config.add_argument(
+            '--image_log_dir', help='directory for image build log output',
+            default='/var/log/nodepool/image')
+        cmd_logging_config.add_argument(
+            '--output', help='file to output sample config',
+            type=argparse.FileType('w'), default=sys.stdout)
         self.args = parser.parse_args()
 
     def setup_logging(self):
@@ -320,6 +336,12 @@ class NodePoolCmd(object):
             from nodepool.version import version_info as npc_version_info
             print "Nodepool version: %s" % npc_version_info.version_string()
             return(0)
+
+        if getattr(self.args, 'which', '') == 'generate_log_config':
+            return self.args.func(self.args.config,
+                                  self.args.log_dir,
+                                  self.args.image_log_dir,
+                                  self.args.output)
 
         self.pool = nodepool.NodePool(self.args.config)
         config = self.pool.loadConfig()
