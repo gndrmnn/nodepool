@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_af631ddc",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-06T17:36:25Z",
+      "side": 1,
+      "message": "If we don\u0027t want to use group and groups because then we have to implicitly know what they mean and add explicit metadata parameters instead, why bother with group and groups metavars at all?\n\nSeems like this gets a lot simpler for everyone if we just remove the group and groups values.",
+      "revId": "c2a9a50cd69a73daa7aa163157810ff386f2cb7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
