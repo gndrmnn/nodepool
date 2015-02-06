@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_b2ab861d",
+        "filename": "nodepool/migration/alembic_migrations/versions/001_initial_version.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-06T18:30:08Z",
+      "side": 1,
+      "message": "unique\u003dFalse is not specified in the nodedb.py schema and sqlalchemy docs don\u0027t say what the default value is. Alembic\u0027s default is False so it is likely that this is ok but it stands out as a potential delta from the nodedb schema.",
+      "revId": "28df03baa63b66c85d2f839d4954b360fa5eccfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_92ae822e",
+        "filename": "nodepool/migration/cli.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-06T18:30:08Z",
+      "side": 1,
+      "message": "I almost wonder if we should provider a default dburi instead of requiring a nodepool config be loaded. But thats probably a very premature optimization.",
+      "revId": "28df03baa63b66c85d2f839d4954b360fa5eccfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
