@@ -16,6 +16,24 @@
       "revId": "31c3d4086d85957296b0b24aea1116ed2623ab09",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_de53a1e0",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-02-06T20:20:35Z",
+      "side": 1,
+      "message": "Mm, looks as i messed with the rebase, applying that again.",
+      "parentUuid": "da86d52c_0f87c913",
+      "revId": "31c3d4086d85957296b0b24aea1116ed2623ab09",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
