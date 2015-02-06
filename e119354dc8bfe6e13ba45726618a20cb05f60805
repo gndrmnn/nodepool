@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_f8015d07",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1527,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-06T19:29:40Z",
+      "side": 1,
+      "message": "try/catch is generally the pythonic way of doing this.\n\n#notaminusone",
+      "revId": "e119354dc8bfe6e13ba45726618a20cb05f60805",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
