@@ -24,6 +24,8 @@ from nodepool import nodepool
 from nodepool.version import version_info as npc_version_info
 from prettytable import PrettyTable
 
+from log_config_generator import generate_log_config
+
 
 class NodePoolCmd(object):
     def __init__(self):
@@ -121,6 +123,20 @@ class NodePoolCmd(object):
             nargs='?', default='all')
         cmd_image_upload.add_argument('image', help='image name')
 
+        cmd_logging_config = subparsers.add_parser(
+            'generate-log-config',
+            help='output a sample logging configuration file')
+        cmd_logging_config.set_defaults(func=generate_log_config,
+                                        which='generate_log_config')
+        cmd_logging_config.add_argument(
+            '--log_dir', help='directory for main log output',
+            default='/var/log/nodepool/')
+        cmd_logging_config.add_argument(
+            '--image_log_dir', help='directory for image build log output',
+            default='/var/log/nodepool/image')
+        cmd_logging_config.add_argument(
+            '--output', help='file to output sample config',
+            type=argparse.FileType('w'), default=sys.stdout)
         self.args = parser.parse_args()
 
     def setup_logging(self):
