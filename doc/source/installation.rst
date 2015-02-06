@@ -63,10 +63,21 @@ pyzmq used by nodepool.
 Configuration
 -------------
 
-Nodepool has a single required configuration file and an optional
-logging configuration file.
-
-The logging configuration file is in the standard python logging
-`configuration file format
-<http://docs.python.org/2/library/logging.config.html#configuration-file-format>`_.
 The Nodepool configuration file is described in :ref:`configuration`.
+
+Logging Configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+Nodepool has an optional logging configuration file.  The logging
+configuration file is in the standard python logging `configuration
+file format
+<http://docs.python.org/2/library/logging.config.html#configuration-file-format>`_.
+
+To assist in creating a useful logging configuration file for complex
+environments, the `nodepool generate-log-config` command can be used.
+This will read your configuration file and translate it to a
+logging-configuration file with sensible defaults.
+
+In particular this configuration provides for the image-build logs to
+be separated out into separate files (see the `--image-log-dir`
+argument) to facilitate easier debugging of image build issues.
