@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_0f87c913",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-06T17:45:13Z",
+      "side": 1,
+      "message": "My comment from ps3 still applies. Node deletion deletes from the cloud, the nodepool db, and jenkins. It requires that the jenkins managers be configured.",
+      "revId": "31c3d4086d85957296b0b24aea1116ed2623ab09",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
