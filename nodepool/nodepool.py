@@ -777,11 +777,15 @@ class DiskImageBuilder(threading.Thread):
 
         self.log.info('Running %s' % cmd)
 
-        p = subprocess.Popen(
-            shlex.split(cmd),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            env=env)
+        cmd_split = shlex.split(cmd)
+        try:
+            p = subprocess.Popen(
+                cmd_split,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                env=env)
+        except OSError:
+            raise Exception("Could not find '%s' executable." % cmd_split[0])
 
         while True:
             ln = p.stdout.readline()
