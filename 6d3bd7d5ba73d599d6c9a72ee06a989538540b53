@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_f3a4d24c",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-10T01:41:18Z",
+      "side": 1,
+      "message": "I don\u0027t think get_glance_client is necessary here since you are using UploadImageTask below which has its own glance client retrieval mathod.",
+      "revId": "6d3bd7d5ba73d599d6c9a72ee06a989538540b53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_1363261b",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-10T01:41:18Z",
+      "side": 1,
+      "message": "This special case should not be necessary and should be removed. UploadImageTask handles it just fine internally.",
+      "revId": "6d3bd7d5ba73d599d6c9a72ee06a989538540b53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
