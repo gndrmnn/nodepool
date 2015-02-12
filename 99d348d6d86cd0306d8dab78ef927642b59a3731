@@ -1,0 +1,11 @@
+Verified+2: Jenkins
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+1: yolanda.robla <info@ysoft.biz>
+Code-Review+2: Sergey Lukjanov <slukjanov@mirantis.com>
+Workflow+1: Sergey Lukjanov <slukjanov@mirantis.com>
+Code-Review+1: Andrew Bramley <andrew@tesora.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 12 Feb 2015 17:42:46 +0000
+Reviewed-on: https://review.openstack.org/151286
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
