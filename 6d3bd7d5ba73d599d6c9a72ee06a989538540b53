@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da86d52c_afda7075",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-02-12T11:24:47Z",
+      "side": 1,
+      "message": "as we are removing that class, this comment doesn\u0027t apply",
+      "parentUuid": "da86d52c_f3a4d24c",
+      "revId": "6d3bd7d5ba73d599d6c9a72ee06a989538540b53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da86d52c_1363261b",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 8
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Pretty sure that this fails because you have to call the main() method on the UploadImageTask. Since we aren\u0027t using the Task system anyways I think we should just go back to the code like it was in patchset 5. Take the old Task code and move it into the manager to make it synchronous.",
       "parentUuid": "da86d52c_aca58248",
+      "revId": "6d3bd7d5ba73d599d6c9a72ee06a989538540b53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_6fccf8bb",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-02-12T11:24:47Z",
+      "side": 1,
+      "message": "Back to the roots... makes sense",
+      "parentUuid": "da86d52c_b9376ffe",
       "revId": "6d3bd7d5ba73d599d6c9a72ee06a989538540b53",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
