@@ -330,6 +330,9 @@ in the ``diskimages`` section will be used instead. See :ref:`scripts`
 for setup script details.  See :ref:`scripts` for setup script
 details.
 
+The `config_drive` value is optional and defines whether config_drive
+should be used for the image.
+
 The `meta` section is optional.  It is a dict of arbitrary key/value
 metadata to store for this server using the nova metadata service. A
 maximum of five entries is allowed, and both keys and values must be
