@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_999a076d",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-02-14T00:22:52Z",
+      "side": 1,
+      "message": "This should have been fine to leave the comma on, right? Anyway, if so merely cosmetic and not a huge deal.",
+      "revId": "3d19e188d15e2405f38d7d140c134df45c86ab5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
