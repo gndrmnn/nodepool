@@ -15,7 +15,6 @@
 # under the License.
 
 import StringIO
-import novaclient
 import threading
 import time
 import uuid
@@ -30,6 +29,18 @@ class Dummy(object):
 
     def delete(self):
         self.manager.delete(self)
+
+    def __getitem__(self, key):
+        return getattr(self, key, None)
+
+    def get(self, key):
+        return getattr(self, key, None)
+
+    def set(self, key, value):
+        setattr(self, key, value)
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
 
 
 class FakeList(object):
@@ -50,7 +61,7 @@ class FakeList(object):
         for x in self._list:
             if x.id == id:
                 return x
-        raise novaclient.exceptions.NotFound(404)
+        raise
 
     def _finish(self, obj, delay, status):
         time.sleep(delay)
@@ -71,10 +82,8 @@ class FakeList(object):
                   name=kw['name'],
                   status='BUILD',
                   adminPass='fake',
-                  addresses=dict(
-                      public=[dict(version=4, addr='fake')],
-                      private=[dict(version=4, addr='fake')]
-                  ),
+                  public_v4='fake',
+                  private_v4='fake',
                   metadata={},
                   manager=self)
         self._list.append(s)
@@ -89,6 +98,9 @@ class FakeList(object):
         x = self.api.images.create(name=image_name)
         return x.id
 
+    def has_extension(self, extension_name):
+        return True
+
 
 class FakeHTTPClient(object):
     def get(self, path):
@@ -98,14 +110,44 @@ class FakeHTTPClient(object):
 
 class FakeClient(object):
     def __init__(self):
-        self.flavors = FakeList([
-            Dummy(id='f1', ram=8192, name='Fake Flavor'),
-            Dummy(id='f2', ram=8192, name='Unreal Flavor'),
-        ])
         self.images = FakeList([Dummy(id='i1', name='Fake Precise')])
         self.client = FakeHTTPClient()
         self.servers = FakeList([])
         self.servers.api = self
+
+
+class FakeShadeClient(object):
+
+    def __init__(self):
+        self.dummy_image = {'id': 'image-id', 'name': 'image-name',
+                            'status': 'ACTIVE'}
+        self.dummy_server = Dummy(id='fake-server')
+        self.dummy_server_dict = {'id': 'fake-server'}
+
+        self.images = FakeList([Dummy(id='i1', name='Fake Precise')])
+        self.client = FakeHTTPClient()
+        self.servers = FakeList([])
+        self.servers.api = self
+
+    def get_image_dict(self, **kwargs):
+        return self.dummy_image
+
+    def get_server_dict(self, name_or_id):
+        return self.dummy_server_dict
+
+    def create_server(self, auto_ip=True, ips=None, ip_pool=None,
+                      root_volume=None, terminate_volume=False,
+                      wait=False, timeout=180, **bootkwargs):
+        return self.servers.create(name='fake-server')
+
+    def delete_server(self, name, wait=False, timeout=180):
+        return self.servers.delete(name)
+
+    def list_server_dicts(self):
+        return self.servers.list()
+
+    def list_keypair_dicts(self):
+        return []
 
 
 class FakeGlanceClient(object):
@@ -194,4 +236,4 @@ class FakeJenkins(object):
         return d
 
 
-FAKE_CLIENT = FakeClient()
+FAKE_CLIENT = FakeShadeClient()
