@@ -207,6 +207,7 @@ provider, the Nodepool image types are also defined (see
       template-hostname: '{image.name}-{timestamp}.template.openstack.org'
       pool: 'public'
       image-type: qcow2
+      ipv6-preferred: False
       networks:
         - net-id: 'some-uuid'
         - net-label: 'some-network-name'
@@ -266,6 +267,12 @@ For providers, the `name`, `username`, `password`, `auth-url`,
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
 `boot-timeout` key defaults to 60 seconds and `launch-timeout` key
 will default to 3600 seconds.
+
+The `ipv6-preferred` key is optional. If it is set to True, nodepool
+will try to find ipv6 in public net first as the ip address for
+ssh connection to build snapshot images and create jenkins slave definition.
+If ipv6 is not found or the key is not specified or set to False,
+ipv4 address will be used.
 
 The optional `networks` section may be used to specify custom
 Neutron networks that get attached to each node. You can specify
