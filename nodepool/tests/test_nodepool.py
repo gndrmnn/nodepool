@@ -46,7 +46,8 @@ class TestNodepool(tests.DBTestCase):
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
-                     'DiskImageBuilder queue'
+                     'DiskImageBuilder queue',
+                     'ImageUpdater for 1'
                      ]
 
         while True:

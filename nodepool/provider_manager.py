@@ -18,14 +18,8 @@
 
 import logging
 import paramiko
-import novaclient
-import novaclient.client
-import novaclient.extension
-import novaclient.v1_1.contrib.tenant_networks
+import shade
 import threading
-import glanceclient
-import glanceclient.client
-import keystoneclient.v2_0.client as ksclient
 import time
 
 import fakeprovider
@@ -48,154 +42,47 @@ def iterate_timeout(max_seconds, purpose):
     raise Exception("Timeout waiting for %s" % purpose)
 
 
-def get_public_ip(server, version=4):
-    for addr in server.addresses.get('public', []):
-        if type(addr) == type(u''):  # Rackspace/openstack 1.0
-            return addr
-        if addr['version'] == version:  # Rackspace/openstack 1.1
-            return addr['addr']
-    for addr in server.addresses.get('private', []):
-        # HPcloud
-        if (addr['version'] == version and version == 4):
-            quad = map(int, addr['addr'].split('.'))
-            if quad[0] == 10:
-                continue
-            if quad[0] == 192 and quad[1] == 168:
-                continue
-            if quad[0] == 172 and (16 <= quad[1] <= 31):
-                continue
-            return addr['addr']
-    return None
-
-
-def get_private_ip(server):
-    ret = []
-    for (name, network) in server.addresses.iteritems():
-        if name == 'private':
-            ret.extend([addrs['addr']
-                        for addrs in network if addrs['version'] == 4])
-        else:
-            for interface_spec in network:
-                if interface_spec['version'] != 4:
-                    continue
-                if ('OS-EXT-IPS:type' in interface_spec
-                        and interface_spec['OS-EXT-IPS:type'] == 'fixed'):
-                    ret.append(interface_spec['addr'])
-    if not ret:
-        if server.status == 'ACTIVE':
-            # Server expected to have at least one address in ACTIVE status
-            # TODO: uncomment this code when all nodes have private IPs
-            # raise KeyError('No private ip found for server')
-            return None
-        else:
-            return None
-    return ret[0]
-
-
-def make_server_dict(server):
-    d = dict(id=str(server.id),
-             name=server.name,
-             status=server.status,
-             addresses=server.addresses)
-    if hasattr(server, 'adminPass'):
-        d['admin_pass'] = server.adminPass
-    if hasattr(server, 'key_name'):
-        d['key_name'] = server.key_name
-    if hasattr(server, 'progress'):
-        d['progress'] = server.progress
-    d['public_v4'] = get_public_ip(server)
-    d['private_v4'] = get_private_ip(server)
-    return d
-
-
-def make_image_dict(image):
-    d = dict(id=str(image.id), name=image.name, status=image.status,
-             metadata=image.metadata)
-    if hasattr(image, 'progress'):
-        d['progress'] = image.progress
-    return d
-
-
 class NotFound(Exception):
     pass
 
 
 class CreateServerTask(Task):
     def main(self, client):
-        server = client.servers.create(**self.args)
+        server = client.create_server(auto_ip=True, **self.args)
         return str(server.id)
 
 
 class GetServerTask(Task):
     def main(self, client):
-        try:
-            server = client.servers.get(self.args['server_id'])
-        except novaclient.exceptions.NotFound:
+        server = client.get_server_dict(self.args['server_id'])
+        if not server:
             raise NotFound()
-        return make_server_dict(server)
+        return server
 
 
 class DeleteServerTask(Task):
     def main(self, client):
-        client.servers.delete(self.args['server_id'])
+        client.delete_server(self.args['server_id'])
 
 
 class ListServersTask(Task):
     def main(self, client):
-        servers = client.servers.list()
-        return [make_server_dict(server) for server in servers]
+        return client.list_server_dicts()
 
 
 class AddKeypairTask(Task):
     def main(self, client):
-        client.keypairs.create(**self.args)
+        return client.create_keypair(**self.args)
 
 
 class ListKeypairsTask(Task):
     def main(self, client):
-        keys = client.keypairs.list()
-        return [dict(id=str(key.id), name=key.name) for
-                key in keys]
+        return client.list_keypair_dicts()
 
 
 class DeleteKeypairTask(Task):
     def main(self, client):
-        client.keypairs.delete(self.args['name'])
-
-
-class CreateFloatingIPTask(Task):
-    def main(self, client):
-        ip = client.floating_ips.create(**self.args)
-        return dict(id=str(ip.id), ip=ip.ip)
-
-
-class AddFloatingIPTask(Task):
-    def main(self, client):
-        client.servers.add_floating_ip(**self.args)
-
-
-class GetFloatingIPTask(Task):
-    def main(self, client):
-        ip = client.floating_ips.get(self.args['ip_id'])
-        return dict(id=str(ip.id), ip=ip.ip, instance_id=str(ip.instance_id))
-
-
-class ListFloatingIPsTask(Task):
-    def main(self, client):
-        ips = client.floating_ips.list()
-        return [dict(id=str(ip.id), ip=ip.ip,
-                     instance_id=str(ip.instance_id)) for
-                ip in ips]
-
-
-class RemoveFloatingIPTask(Task):
-    def main(self, client):
-        client.servers.remove_floating_ip(**self.args)
-
-
-class DeleteFloatingIPTask(Task):
-    def main(self, client):
-        client.floating_ips.delete(self.args['ip_id'])
+        client.delete_keypair(self.args['name'])
 
 
 class CreateImageTask(Task):
@@ -206,24 +93,10 @@ class CreateImageTask(Task):
 
 class GetImageTask(Task):
     def main(self, client):
-        try:
-            image = client.images.get(**self.args)
-        except novaclient.exceptions.NotFound:
+        image = client.get_image_dict(**self.args)
+        if not image:
             raise NotFound()
-        # HP returns 404, rackspace can return a 'DELETED' image.
-        if image.status == 'DELETED':
-            raise NotFound()
-        return make_image_dict(image)
-
-
-class ListExtensionsTask(Task):
-    def main(self, client):
-        try:
-            resp, body = client.client.get('/extensions')
-            return [x['alias'] for x in body['extensions']]
-        except novaclient.exceptions.NotFound:
-            # No extensions present.
-            return []
+        return image
 
 
 class ListFlavorsTask(Task):
@@ -240,9 +113,8 @@ class ListImagesTask(Task):
 
 
 class FindImageTask(Task):
-    def main(self, client):
-        image = client.images.find(**self.args)
-        return dict(id=str(image.id))
+    def main(self, client, exclude=None):
+        return client.get_image_dict(**self.args)
 
 
 class DeleteImageTask(Task):
@@ -268,7 +140,6 @@ class ProviderManager(TaskManager):
         self._networks = {}
         self._cloud_metadata_read = False
         self.__flavors = {}
-        self.__extensions = {}
         self._servers = []
         self._servers_time = 0
         self._servers_lock = threading.Lock()
@@ -282,23 +153,17 @@ class ProviderManager(TaskManager):
             self._getCloudMetadata()
         return self.__flavors
 
-    @property
-    def _extensions(self):
-        if not self._cloud_metadata_read:
-            self._getCloudMetadata()
-        return self.__extensions
-
     def _getCloudMetadata(self):
         self.__flavors = self._getFlavors()
-        self.__extensions = self.listExtensions()
         self._cloud_metadata_read = True
 
     def _getClient(self):
-        tenant_networks = novaclient.extension.Extension(
-            'tenant_networks', novaclient.v1_1.contrib.tenant_networks)
-        args = ['1.1', self.provider.username, self.provider.password,
-                self.provider.project_id, self.provider.auth_url]
-        kwargs = {'extensions': [tenant_networks]}
+        kwargs = dict(
+            username=self.provider.username,
+            password=self.provider.password,
+            project_name=self.provider.project_id,
+            auth_url=self.provider.auth_url,
+        )
         if self.provider.service_type:
             kwargs['service_type'] = self.provider.service_type
         if self.provider.service_name:
@@ -309,19 +174,12 @@ class ProviderManager(TaskManager):
             kwargs['timeout'] = self.provider.api_timeout
         if self.provider.auth_url == 'fake':
             return fakeprovider.FAKE_CLIENT
-        return novaclient.client.Client(*args, **kwargs)
+        return shade.openstack_cloud(**kwargs)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
         flavors.sort(lambda a, b: cmp(a['ram'], b['ram']))
         return flavors
-
-    def hasExtension(self, extension):
-        # Note: this will throw an error if the provider is offline
-        # but all the callers are in threads so the mainloop won't be affected.
-        if extension in self._extensions:
-            return True
-        return False
 
     def findFlavor(self, min_ram, name_filter=None):
         # Note: this will throw an error if the provider is offline
@@ -333,12 +191,9 @@ class ProviderManager(TaskManager):
                 return f
         raise Exception("Unable to find flavor with min ram: %s" % min_ram)
 
-    def findImage(self, name):
-        if name in self._images:
-            return self._images[name]
-        image = self.submitTask(FindImageTask(name=name))
-        self._images[name] = image
-        return image
+    def findImage(self, name_or_id, exclude=None):
+        return self.submitTask(FindImageTask(name_or_id=name_or_id,
+                                             exclude=exclude))
 
     def findNetwork(self, label):
         if label in self._networks:
@@ -352,6 +207,15 @@ class ProviderManager(TaskManager):
             del self._images[name]
         return self.submitTask(DeleteImageTask(image=name))
 
+    # TODO: how to get the hasExtension(os-keypairs) ?
+    def ensureKeypair(self, key_name, hostname):
+        if key_name:
+            return key_name, None, False
+        else:
+            key_name = hostname.split('.')[0]
+            key = self.addKeypair(key_name)
+            return key_name , key, False
+
     def addKeypair(self, name):
         key = paramiko.RSAKey.generate(2048)
         public_key = key.get_name() + ' ' + key.get_base64()
@@ -364,10 +228,17 @@ class ProviderManager(TaskManager):
     def deleteKeypair(self, name):
         return self.submitTask(DeleteKeypairTask(name=name))
 
-    def createServer(self, name, min_ram, image_id=None, image_name=None,
-                     az=None, key_name=None, name_filter=None):
-        if image_name:
-            image_id = self.findImage(image_name)['id']
+    def deleteFailedKeypair(self, name):
+        for kp in self.listKeypairs():
+            if kp['name'] == name:
+                self.deleteKeypair(name)
+                break
+
+
+    def createServer(self, name, min_ram, image_name_or_id,
+                     az=None, key_name=None, name_filter=None, exclude=None):
+        image_id = self.findImage(
+            name_or_id=image_name_or_id, exclude=exclude)['id']
         flavor = self.findFlavor(min_ram, name_filter)
         create_args = dict(name=name, image=image_id, flavor=flavor['id'])
         if key_name:
@@ -385,14 +256,13 @@ class ProviderManager(TaskManager):
                 else:
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
+        if self.provider.pool:
+            create_args['pool'] = self.provider.pool
 
         return self.submitTask(CreateServerTask(**create_args))
 
     def getServer(self, server_id):
         return self.submitTask(GetServerTask(server_id=server_id))
-
-    def getFloatingIP(self, ip_id):
-        return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
 
     def getServerFromList(self, server_id):
         for s in self.listServers():
@@ -449,36 +319,6 @@ class ProviderManager(TaskManager):
             return True
         return self._waitForResource('image', image_id, timeout)
 
-    def createFloatingIP(self, pool=None):
-        return self.submitTask(CreateFloatingIPTask(pool=pool))
-
-    def addFloatingIP(self, server_id, address):
-        self.submitTask(AddFloatingIPTask(server=server_id,
-                                          address=address))
-
-    def addPublicIP(self, server_id, pool=None):
-        ip = self.createFloatingIP(pool)
-        try:
-            self.addFloatingIP(server_id, ip['ip'])
-        except novaclient.exceptions.ClientException:
-            # Delete the floating IP here as cleanupServer will not
-            # have access to the ip -> server mapping preventing it
-            # from removing this IP.
-            self.deleteFloatingIP(ip['id'])
-            raise
-        for count in iterate_timeout(600, "ip to be added to %s in %s" %
-                                     (server_id, self.provider.name)):
-            try:
-                newip = self.getFloatingIP(ip['id'])
-            except ManagerStoppedException:
-                raise
-            except Exception:
-                self.log.exception('Unable to get IP details for server %s, '
-                                   'will retry' % (server_id))
-                continue
-            if newip['instance_id'] == server_id:
-                return newip['ip']
-
     def createImage(self, server_id, image_name, meta):
         return self.submitTask(CreateImageTask(server=server_id,
                                                image_name=image_name,
@@ -528,12 +368,6 @@ class ProviderManager(TaskManager):
             image.update(data=open(filename, 'rb'))
             glanceclient = None
         return image.id
-
-    def listExtensions(self):
-        return self.submitTask(ListExtensionsTask())
-
-    def listImages(self):
-        return self.submitTask(ListImagesTask())
 
     def listFlavors(self):
         return self.submitTask(ListFlavorsTask())
@@ -594,15 +428,7 @@ class ProviderManager(TaskManager):
         # This will either get the server or raise an exception
         server = self.getServerFromList(server_id)
 
-        if self.hasExtension('os-floating-ips'):
-            for ip in self.listFloatingIPs():
-                if ip['instance_id'] == server_id:
-                    self.log.debug('Deleting floating ip for server %s' %
-                                   server_id)
-                    self.deleteFloatingIP(ip['id'])
-
-        if (self.hasExtension('os-keypairs') and
-                server['key_name'] != self.provider.keypair):
+        if server['key_name'] != self.provider.keypair:
             for kp in self.listKeypairs():
                 if kp['name'] == server['key_name']:
                     self.log.debug('Deleting keypair for server %s' %

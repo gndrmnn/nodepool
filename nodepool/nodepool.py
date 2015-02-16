@@ -385,7 +385,8 @@ class NodeLauncher(threading.Thread):
                       "for node id: %s" % (hostname, self.provider.name,
                                            self.image.name, self.node_id))
         server_id = self.manager.createServer(
-            hostname, self.image.min_ram, snap_image.external_id,
+            hostname, self.image.min_ram,
+            image_name_or_id=snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az)
         self.node.external_id = server_id
         session.commit()
@@ -393,6 +394,7 @@ class NodeLauncher(threading.Thread):
         self.log.debug("Waiting for server %s for node id: %s" %
                        (server_id, self.node.id))
         server = self.manager.waitForServer(server_id, self.launch_timeout)
+        self.log.debug('server is %s' % str(server))
         if server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for node id: %s "
                                         "status: %s" %
@@ -400,9 +402,6 @@ class NodeLauncher(threading.Thread):
                                          server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -657,7 +656,8 @@ class SubNodeLauncher(threading.Thread):
                       % (hostname, self.provider.name,
                          self.image.name, self.subnode_id, self.node_id))
         server_id = self.manager.createServer(
-            hostname, self.image.min_ram, snap_image.external_id,
+            hostname, self.image.min_ram,
+            image_name_or_id=snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az)
         self.subnode.external_id = server_id
         session.commit()
@@ -674,9 +674,6 @@ class SubNodeLauncher(threading.Thread):
                                          self.node_id, server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -953,18 +950,9 @@ class SnapshotImageUpdater(ImageUpdater):
         self.log.info("Creating image id: %s with hostname %s for %s in %s" %
                       (self.snap_image.id, hostname, self.image.name,
                        self.provider.name))
-        if self.provider.keypair:
-            key_name = self.provider.keypair
-            key = None
-            use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
-        else:
-            key_name = None
-            key = None
-            use_password = True
+        key_name, key, use_password = self.manager.ensureKeypair(
+            key_name=self.provider.keypair,
+            hostname=hostname)
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -976,18 +964,17 @@ class SnapshotImageUpdater(ImageUpdater):
             image_id = None
         try:
             server_id = self.manager.createServer(
-                hostname, self.image.min_ram, image_name=image_name,
-                key_name=key_name, name_filter=self.image.name_filter,
-                image_id=image_id)
+                hostname, self.image.min_ram,
+                image_name_or_id=self.image.base_image,
+                key_name=key_name, name_filter=self.image.name_filter)
         except Exception:
-            if (self.manager.hasExtension('os-keypairs') and
-                not self.provider.keypair):
-                for kp in self.manager.listKeypairs():
-                    if kp['name'] == key_name:
-                        self.log.debug(
-                            'Deleting keypair for failed image build %s' %
-                            self.snap_image.id)
-                        self.manager.deleteKeypair(kp['name'])
+            # need to delete keypair
+            # TODO: how to get the hasExtension(os-keypairs) ?
+            if not self.provider.keypair:
+                self.log.debug(
+                    'Deleting keypair for failed image build %s' %
+                    self.snap_image.id)
+                self.manager.deleteFailedKeypair(server_auth)
             raise
 
         self.snap_image.hostname = hostname
@@ -1003,9 +990,6 @@ class SnapshotImageUpdater(ImageUpdater):
                             (server_id, self.snap_image.id, server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
         server['public_v4'] = ip
@@ -1056,8 +1040,10 @@ class SnapshotImageUpdater(ImageUpdater):
         else:
             ssh_kwargs['password'] = server['admin_pass']
 
+        log.debug('before connect')
         host = utils.ssh_connect(server['public_v4'], 'root', ssh_kwargs,
                                  timeout=CONNECT_TIMEOUT)
+        log.debug('after connect')
 
         if not host:
             # We have connected to the node but couldn't do anything as root
@@ -1776,6 +1762,7 @@ class NodePool(threading.Thread):
             for i in range(num_to_launch):
                 snap_image = session.getCurrentSnapshotImage(
                     provider.name, label.image)
+                self.log.debug('i search snapshot for provider %s - image %s' % (provider.name, label.image))
                 if not snap_image:
                     self.log.debug("No current image for %s on %s"
                                    % (label.image, provider.name))
@@ -1783,12 +1770,16 @@ class NodePool(threading.Thread):
                     self.launchNode(session, provider, label, target)
 
     def checkForMissingSnapshotImage(self, session, provider, image):
+        self.log.debug('I start checkinf for missing images')
         found = False
         for snap_image in session.getSnapshotImages():
+            self.log.debug('I have snap image %s' % str(snap_image))
             if (snap_image.provider_name == provider.name and
                 snap_image.image_name == image.name and
                 snap_image.state in [nodedb.READY,
                                      nodedb.BUILDING]):
+                self.log.debug('i found it')
+                self.log.debug('provider %s - name %s - state %s' % (snap_image.provider_name, snap_image.image_name, snap_image.state))
                 found = True
         if not found:
             self.log.warning("Missing image %s on %s" %
@@ -1892,8 +1883,10 @@ class NodePool(threading.Thread):
                 "Could not update image %s on %s", image_name, provider_name)
 
     def _updateImage(self, session, provider_name, image_name):
+        self.log.debug('I update image %s' % image_name)
         provider = self.config.providers[provider_name]
         image = provider.images[image_name]
+        self.log.debug('Image is %s' % str(image))
         # check type of image depending on diskimage flag
         if image.diskimage:
             raise Exception(
@@ -1904,9 +1897,11 @@ class NodePool(threading.Thread):
             raise Exception(
                 "Invalid image config. Must specify either "
                 "a setup script, or a diskimage to use.")
+        self.log.debug('before create snapshot')
         snap_image = session.createSnapshotImage(
             provider_name=provider.name,
             image_name=image_name)
+        self.log.debug('after create snapshot')
 
         t = SnapshotImageUpdater(self, provider, image, snap_image.id)
         t.start()
