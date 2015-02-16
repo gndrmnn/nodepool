@@ -15,7 +15,6 @@
 # under the License.
 
 import StringIO
-import novaclient
 import threading
 import time
 import uuid
@@ -50,7 +49,7 @@ class FakeList(object):
         for x in self._list:
             if x.id == id:
                 return x
-        raise novaclient.exceptions.NotFound(404)
+        raise
 
     def _finish(self, obj, delay, status):
         time.sleep(delay)
@@ -107,6 +106,49 @@ class FakeClient(object):
         self.servers = FakeList([])
         self.servers.api = self
 
+
+class FakeShadeClient(object):
+
+    def __init__(self):
+        self.dummy_image = {'id': 'image-id', 'name': 'image-name',
+                            'status': 'ACTIVE'}
+        self.dummy_server = Dummy(id='fake-server')
+        self.dummy_server_dict = {'id': 'fake-server'}
+
+        self.flavors = FakeList([
+            Dummy(id='f1', ram=8192, name='Fake Flavor'),
+            Dummy(id='f2', ram=8192, name='Unreal Flavor'),
+        ])
+
+        self.images = FakeList([Dummy(id='i1', name='Fake Precise')])
+        self.client = FakeHTTPClient()
+        self.servers = FakeList([{'id':'fake-server', 'status':'ACTIVE',
+                                  'public_v4': 'fake',
+                                  'private_v4': 'fake',
+                                  'name': 'server',
+                                  'key_name': 'fake_key'}])
+        self.servers.api = self
+
+
+    def get_image_dict(self, **kwargs):
+        return self.dummy_image
+
+    def get_server_dict(self, name_or_id):
+        return self.dummy_server_dict
+
+    def create_server(self, auto_ip=True, ips=None, ip_pool=None,
+                      root_volume=None, terminate_volume=False,
+                      wait=False, timeout=180, **bootkwargs):
+        return self.dummy_server
+
+    def delete_server(self, name, wait=False, timeout=180):
+        pass
+
+    def list_server_dicts(self):
+        return self.servers.list()
+
+    def list_keypair_dicts(self):
+        return []
 
 class FakeGlanceClient(object):
     def __init__(self):
@@ -194,4 +236,4 @@ class FakeJenkins(object):
         return d
 
 
-FAKE_CLIENT = FakeClient()
+FAKE_CLIENT = FakeShadeClient()
