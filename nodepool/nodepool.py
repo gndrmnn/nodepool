@@ -385,7 +385,8 @@ class NodeLauncher(threading.Thread):
                       "for node id: %s" % (hostname, self.provider.name,
                                            self.image.name, self.node_id))
         server_id = self.manager.createServer(
-            hostname, self.image.min_ram, snap_image.external_id,
+            hostname, self.image.min_ram,
+            image_name_or_id=snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az)
         self.node.external_id = server_id
         session.commit()
@@ -400,9 +401,6 @@ class NodeLauncher(threading.Thread):
                                          server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -657,7 +655,8 @@ class SubNodeLauncher(threading.Thread):
                       % (hostname, self.provider.name,
                          self.image.name, self.subnode_id, self.node_id))
         server_id = self.manager.createServer(
-            hostname, self.image.min_ram, snap_image.external_id,
+            hostname, self.image.min_ram,
+            image_name_or_id=snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az)
         self.subnode.external_id = server_id
         session.commit()
@@ -674,9 +673,6 @@ class SubNodeLauncher(threading.Thread):
                                          self.node_id, server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -953,6 +949,10 @@ class SnapshotImageUpdater(ImageUpdater):
         self.log.info("Creating image id: %s with hostname %s for %s in %s" %
                       (self.snap_image.id, hostname, self.image.name,
                        self.provider.name))
+        server_auth = self.manager.ensureKeypair(
+            key_name=self.provider.keypair,
+            hostname=hostname)
+
         if self.provider.keypair:
             key_name = self.provider.keypair
             key = None
@@ -966,8 +966,6 @@ class SnapshotImageUpdater(ImageUpdater):
             key = None
             use_password = True
 
-        uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
-                                                            '[0-9a-fA-F]')
         if re.match(uuid_pattern, self.image.base_image):
             image_name = None
             image_id = self.image.base_image
@@ -976,7 +974,8 @@ class SnapshotImageUpdater(ImageUpdater):
             image_id = None
         try:
             server_id = self.manager.createServer(
-                hostname, self.image.min_ram, image_name=image_name,
+                hostname, self.image.min_ram,
+                image_name_or_id=self.image.base_image,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id)
         except Exception:
@@ -1003,9 +1002,6 @@ class SnapshotImageUpdater(ImageUpdater):
                             (server_id, self.snap_image.id, server['status']))
 
         ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
         server['public_v4'] = ip
