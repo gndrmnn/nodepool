@@ -72,7 +72,8 @@ class FakeList(object):
                   status='BUILD',
                   adminPass='fake',
                   addresses=dict(
-                      public=[dict(version=4, addr='fake')],
+                      public=[dict(version=4, addr='fake'),
+                              dict(version=6, addr='fake_v6')],
                       private=[dict(version=4, addr='fake')]
                   ),
                   metadata={},
