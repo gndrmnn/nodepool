@@ -203,6 +203,22 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
 
+    def test_node_ipv6(self):
+        """Test that a node is created with ipv6 preferred"""
+        configfile = self.setup_config('node_ipv6.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+            self.assertEqual(nodes[0].ip, 'fake_v6')
+
     def test_node_delete_success(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
