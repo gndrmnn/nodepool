@@ -400,6 +400,8 @@ class NodeLauncher(threading.Thread):
                                          server['status']))
 
         ip = server.get('public_v4')
+        if server.get('public_v6') and self.provider.ipv6_preferred:
+            ip = server.get('public_v6')
         if not ip and self.manager.hasExtension('os-floating-ips'):
             ip = self.manager.addPublicIP(server_id,
                                           pool=self.provider.pool)
@@ -676,6 +678,8 @@ class SubNodeLauncher(threading.Thread):
                                          self.node_id, server['status']))
 
         ip = server.get('public_v4')
+        if server.get('public_v6') and self.provider.ipv6_preferred:
+            ip = server.get('public_v6')
         if not ip and self.manager.hasExtension('os-floating-ips'):
             ip = self.manager.addPublicIP(server_id,
                                           pool=self.provider.pool)
@@ -1009,12 +1013,14 @@ class SnapshotImageUpdater(ImageUpdater):
                             (server_id, self.snap_image.id, server['status']))
 
         ip = server.get('public_v4')
+        if server.get('public_v6') and self.provider.ipv6_preferred:
+            ip = server.get('public_v6')
         if not ip and self.manager.hasExtension('os-floating-ips'):
             ip = self.manager.addPublicIP(server_id,
                                           pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
-        server['public_v4'] = ip
+        server['public_ip'] = ip
 
         self.bootstrapServer(server, key, use_password=use_password)
 
@@ -1062,7 +1068,7 @@ class SnapshotImageUpdater(ImageUpdater):
         else:
             ssh_kwargs['password'] = server['admin_pass']
 
-        host = utils.ssh_connect(server['public_v4'], 'root', ssh_kwargs,
+        host = utils.ssh_connect(server['public_ip'], 'root', ssh_kwargs,
                                  timeout=CONNECT_TIMEOUT)
 
         if not host:
@@ -1071,7 +1077,7 @@ class SnapshotImageUpdater(ImageUpdater):
             # didn't occur), we can connect with a very sort timeout.
             for username in ['ubuntu', 'fedora', 'cloud-user', 'centos']:
                 try:
-                    host = utils.ssh_connect(server['public_v4'], username,
+                    host = utils.ssh_connect(server['public_ip'], username,
                                              ssh_kwargs,
                                              timeout=10)
                     if host:
@@ -1288,6 +1294,7 @@ class NodePool(threading.Thread):
             p.launch_timeout = provider.get('launch-timeout', 3600)
             p.use_neutron = bool(provider.get('networks', ()))
             p.networks = provider.get('networks')
+            p.ipv6_preferred = provider.get('ipv6-preferred')
             p.azs = provider.get('availability-zones')
             p.template_hostname = provider.get(
                 'template-hostname',
