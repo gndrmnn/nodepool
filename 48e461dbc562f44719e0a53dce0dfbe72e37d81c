@@ -16,6 +16,24 @@
       "revId": "48e461dbc562f44719e0a53dce0dfbe72e37d81c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_9ff71dd4",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-16T15:55:53Z",
+      "side": 1,
+      "message": "I believe we poll because each test has a different set of non white listed threads (determined by the configuration for that particular test). Could enumerate them here though then join with a timeout. However each test already has a global timeout (see line 47) so not too worried about blocking forever.\n\nFinally this is just a small code reorg so that other test classes can use these utilities, any rewrite of the utilities themselves should go in another change.",
+      "parentUuid": "da86d52c_9001e3b1",
+      "revId": "48e461dbc562f44719e0a53dce0dfbe72e37d81c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
