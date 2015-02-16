@@ -34,6 +34,24 @@
       "revId": "48e461dbc562f44719e0a53dce0dfbe72e37d81c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_74a1a845",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-16T19:01:10Z",
+      "side": 1,
+      "message": "Global timeout thing makes sense, thanks. I dont understand the polling comment though? Threading.enumerate returns the thread objects, so you already have the thread objects you need. You can basically replace line 82 with t.join(1); continue and remove the sleep and itll be problem solved?\n\nAnyhow, the global timeout is what I was most concerned with, and since thats not an issue ill remove the -1 :).",
+      "parentUuid": "da86d52c_9ff71dd4",
+      "revId": "48e461dbc562f44719e0a53dce0dfbe72e37d81c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
