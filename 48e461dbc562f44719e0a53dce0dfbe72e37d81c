@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_9001e3b1",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-02-16T07:01:46Z",
+      "side": 1,
+      "message": "Why are we polling rather than using t.join(timeout)? Also, its probably really useful to log the threads that we are waiting for, otherwise debugging this can be a nightmare. Oh, and is there some sane max timeout value we can pick where we just fail the test rather than blocking forever? Tests that fail by blocking forever make me sad.",
+      "revId": "48e461dbc562f44719e0a53dce0dfbe72e37d81c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
