@@ -46,13 +46,14 @@ class TestNodepool(tests.DBTestCase):
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
-                     'DiskImageBuilder queue'
+                     'DiskImageBuilder queue',
                      ]
 
         while True:
             done = True
             for t in threading.enumerate():
                 if t.name not in whitelist:
+                    print t.name
                     done = False
             if done:
                 return
