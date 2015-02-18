@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da86d52c_5674439b",
+        "filename": "nodepool/cmd/log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-18T22:47:04Z",
+      "side": 1,
+      "message": "This should likely be your copyright or your employers.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_76794792",
+        "filename": "nodepool/cmd/log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-18T22:47:04Z",
+      "side": 1,
+      "message": "I think you want this to return (provider[\u0027name\u0027], label[\u0027image\u0027]) because label name may not match image name. And since we allow labels for multiple node envs this may be repeated so you should use a set instead of a list for ret.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_966a3bb3",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-18T22:47:04Z",
+      "side": 1,
+      "message": "We might want to consider a better way to handle this but definitely not in this change.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_b66f3fc3",
+        "filename": "nodepool/tests/test_log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-02-18T22:47:04Z",
+      "side": 1,
+      "message": "Same copyright thing as before. Likely yours or your employers not the foundations.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
