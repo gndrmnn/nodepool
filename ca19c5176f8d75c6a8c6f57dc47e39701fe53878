@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da86d52c_44cba8a3",
+        "filename": "nodepool/cmd/log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-02-19T01:24:25Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "da86d52c_5674439b",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da86d52c_76794792",
         "filename": "nodepool/cmd/log_config_generator.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2015-02-18T22:47:04Z",
       "side": 1,
       "message": "I think you want this to return (provider[\u0027name\u0027], label[\u0027image\u0027]) because label name may not match image name. And since we allow labels for multiple node envs this may be repeated so you should use a set instead of a list for ret.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_044ff092",
+        "filename": "nodepool/cmd/log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-02-19T01:24:25Z",
+      "side": 1,
+      "message": "Ok, as discussed the KISS thing to do here is to produce a logger for each (provider, image[\u0027name\u0027]) -- which should be unique.\n\nI\u0027ve fixed this and updated the docstring on generate_log_config to explain it a little more",
+      "parentUuid": "da86d52c_76794792",
       "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "da86d52c_e4d1fc57",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-02-19T01:24:25Z",
+      "side": 1,
+      "message": "actually, a closer reading of the manual does show there\u0027s a slightly better way [1]\n\n However, if it is necessary to check the name of the subparser that was invoked, the dest keyword argument to the add_subparsers() call will work:\n\nso I\u0027ve done this in the updated version\n\n[1] https://docs.python.org/2/library/argparse.html#argparse.ArgumentParser.add_subparsers",
+      "parentUuid": "da86d52c_966a3bb3",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da86d52c_b66f3fc3",
         "filename": "nodepool/tests/test_log_config_generator.py",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2015-02-18T22:47:04Z",
       "side": 1,
       "message": "Same copyright thing as before. Likely yours or your employers not the foundations.",
+      "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da86d52c_c44dd83c",
+        "filename": "nodepool/tests/test_log_config_generator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-02-19T01:24:25Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "da86d52c_b66f3fc3",
       "revId": "ca19c5176f8d75c6a8c6f57dc47e39701fe53878",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
