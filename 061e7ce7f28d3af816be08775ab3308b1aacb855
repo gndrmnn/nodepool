@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Verified+2: Jenkins
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Elizabeth K. Joseph <lyz@princessleia.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 24 Feb 2015 23:17:54 +0000
+Reviewed-on: https://review.openstack.org/158903
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
