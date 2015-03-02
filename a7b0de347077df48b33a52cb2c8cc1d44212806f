@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba7be1f8_3e6601ee",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 4220
+      },
+      "writtenOn": "2015-03-02T20:12:54Z",
+      "side": 1,
+      "message": "nitpick: s/no image/on image\njust a thing to maybe fix if other things require a patch.",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba7be1f8_fe59c935",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4220
+      },
+      "writtenOn": "2015-03-02T20:12:54Z",
+      "side": 1,
+      "message": "Just out of curiosity - is there a particular reason for setting the default here vs. through the call to parser.add_argument()?",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
