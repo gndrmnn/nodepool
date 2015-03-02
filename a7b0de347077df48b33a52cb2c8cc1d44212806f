@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "ba7be1f8_a27bafbc",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-02T23:53:27Z",
+      "side": 1,
+      "message": "\"as a certain user\"",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba7be1f8_fe59c935",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
@@ -30,6 +47,23 @@
       "writtenOn": "2015-03-02T20:12:54Z",
       "side": 1,
       "message": "Just out of curiosity - is there a particular reason for setting the default here vs. through the call to parser.add_argument()?",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba7be1f8_0239dbf1",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-02T23:53:27Z",
+      "side": 1,
+      "message": "this feels like it should be a global",
       "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
