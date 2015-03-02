@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba7be1f8_9ff6045c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-03-02T23:01:08Z",
+      "side": 1,
+      "message": "The SubNodes object type added in line 502 is not serializable",
+      "revId": "ff2107c6b8b530642c922788215394fa959c4e95",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
