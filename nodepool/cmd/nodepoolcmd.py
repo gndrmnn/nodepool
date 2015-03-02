@@ -16,6 +16,8 @@
 
 import argparse
 import logging.config
+import os
+import pwd
 import sys
 import time
 
@@ -24,6 +26,12 @@ from nodepool import nodepool
 from nodepool.version import version_info as npc_version_info
 from prettytable import PrettyTable
 
+
+class InvalidUserException(Exception):
+    pass
+
+
+log = logging.getLogger("nodepool.Cmd")
 
 class NodePoolCmd(object):
     def __init__(self):
@@ -39,6 +47,10 @@ class NodePoolCmd(object):
                             help='show version')
         parser.add_argument('--debug', dest='debug', action='store_true',
                             help='show DEBUG level logging')
+        parser.add_argument('--enforced-user', metavar='enforced_user',
+                            help='enforce that script is run '
+                                 'as a certain user',
+                            default='nodepool')
 
         subparsers = parser.add_subparsers(title='commands',
                                            description='valid commands',
@@ -122,6 +134,14 @@ class NodePoolCmd(object):
         cmd_image_upload.add_argument('image', help='image name')
 
         self.args = parser.parse_args()
+
+        # check if we need to enforce the user, and exit if not match
+        if (self.args.enforced_user and
+                pwd.getpwduid(os.getuid())[0] != self.args.enforced_user):
+            log.error('Tried to run script with different user than %s. '
+                      'See --enforced-user parameter in help for more '
+                      'information' % self.args.enforced_user)
+            raise InvalidUserException
 
     def setup_logging(self):
         if self.args.debug:
