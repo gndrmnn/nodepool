@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "ba7be1f8_a013835a",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-03T15:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba7be1f8_a27bafbc",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba7be1f8_fe59c935",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ba7be1f8_6006eb1d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-03T15:56:32Z",
+      "side": 1,
+      "message": "No special reason really. Moved to default",
+      "parentUuid": "ba7be1f8_fe59c935",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba7be1f8_0239dbf1",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
@@ -64,6 +100,24 @@
       "writtenOn": "2015-03-02T23:53:27Z",
       "side": 1,
       "message": "this feels like it should be a global",
+      "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba7be1f8_c03eb7b7",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-03T15:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba7be1f8_0239dbf1",
       "revId": "a7b0de347077df48b33a52cb2c8cc1d44212806f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
