@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_b14fa4bc",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-05T19:46:18Z",
+      "side": 1,
+      "message": "The admin protocol, while somewhat standardized between gearmand and gear, is not as well documented and might change a bit between implementations. The definition, seen here: http://gearman.org/protocol/ does not specify the exact format of the fields. So it might be wise to be resilient to things like \u0027-\u0027 or even \u0027\u0027 instead of \u00270\u0027. I\u0027m not saying try to predict everything, but failing gracefully here with a warning seems in order given the ambiguous spec, and would be preferrable to letting a ValueError thrash its way back up to the call site.\n\nSo maybe\n\n\n    try:\n        queued \u003d int(parts[1])\n    except ValueError as e:\n        self.__log.warn(\u0027Server returned non-integer value in status. (%s)\u0027 % str(e))\n        queued \u003d 0",
+      "revId": "82973bb6f0e8ed2733f7b938b53c4a37c25ff91e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
