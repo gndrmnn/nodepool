@@ -15,6 +15,7 @@
 # under the License.
 
 import argparse
+import datetime
 import logging.config
 import sys
 import time
@@ -136,18 +137,18 @@ class NodePoolCmd(object):
     def list(self, node_id=None):
         t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target", "Hostname",
                          "NodeName", "Server ID", "IP", "State",
-                         "Age (hours)"])
+                         "Age"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
             for node in session.getNodes():
                 if node_id and node.id != node_id:
                     continue
+                age = datetime.timedelta(seconds=(int(now - node.state_time)))
                 t.add_row([node.id, node.provider_name, node.az,
                            node.label_name, node.target_name, node.hostname,
                            node.nodename, node.external_id, node.ip,
-                           nodedb.STATE_NAMES[node.state],
-                           '%.02f' % ((now - node.state_time) / 3600)])
+                           nodedb.STATE_NAMES[node.state], age])
             print t
 
     def dib_image_list(self):
