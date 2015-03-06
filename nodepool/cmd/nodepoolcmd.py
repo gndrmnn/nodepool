@@ -135,19 +135,28 @@ class NodePoolCmd(object):
 
     def list(self, node_id=None):
         t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target", "Hostname",
-                         "NodeName", "Server ID", "IP", "State",
-                         "Age (hours)"])
+                         "NodeName", "Server ID", "IP", "State", "Age"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
             for node in session.getNodes():
                 if node_id and node.id != node_id:
                     continue
+
+                dt = int(now - node.state_time)
+                m, s = divmod(dt, 60)
+                h, m = divmod(m, 60)
+                if h:
+                    age = '%dh %02dm %02ds' % (h, m, s)
+                elif m:
+                    age = '%dm %02ds' % (m, s)
+                else:
+                    age = '%ds' % (s)
+
                 t.add_row([node.id, node.provider_name, node.az,
                            node.label_name, node.target_name, node.hostname,
                            node.nodename, node.external_id, node.ip,
-                           nodedb.STATE_NAMES[node.state],
-                           '%.02f' % ((now - node.state_time) / 3600)])
+                           nodedb.STATE_NAMES[node.state], age])
             print t
 
     def dib_image_list(self):
