@@ -15,6 +15,7 @@ fi
 # test passing of real-life env-vars
 if [[ "${TMPDIR}" != "/opt/dib_tmp" ]]; then
     echo "TMPDIR not set"
+    touch ${TMPDIR}/fail
     exit 1
 fi
 
