@@ -63,3 +63,12 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
     if "access okay" in out:
         return client
     return None
+
+
+def age(timestamp):
+    now = time.time()
+    dt = now - timestamp
+    m, s = divmod(dt, 60)
+    h, m = divmod(m, 60)
+    d, h = divmod(h, 24)
+    return '%02d:%02d:%02d:%02d' % (d, h, m, s)
