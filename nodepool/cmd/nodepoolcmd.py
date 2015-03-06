@@ -21,12 +21,12 @@ import time
 
 from nodepool import nodedb
 from nodepool import nodepool
+from nodepool.nodeutils import age
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
 
 log = logging.getLogger(__name__)
-
 
 class NodePoolCmd(object):
     def __init__(self):
@@ -145,9 +145,8 @@ class NodePoolCmd(object):
     def list(self, node_id=None):
         t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target", "Hostname",
                          "NodeName", "Server ID", "IP", "State",
-                         "Age (hours)"])
+                         "Age"])
         t.align = 'l'
-        now = time.time()
         with self.pool.getDB().getSession() as session:
             for node in session.getNodes():
                 if node_id and node.id != node_id:
@@ -156,34 +155,32 @@ class NodePoolCmd(object):
                            node.label_name, node.target_name, node.hostname,
                            node.nodename, node.external_id, node.ip,
                            nodedb.STATE_NAMES[node.state],
-                           '%.02f' % ((now - node.state_time) / 3600)])
+                           age(node.state_time)])
             print t
 
     def dib_image_list(self):
         t = PrettyTable(["ID", "Image", "Filename", "Version",
-                         "State", "Age (hours)"])
+                         "State", "Age"])
         t.align = 'l'
-        now = time.time()
         with self.pool.getDB().getSession() as session:
             for image in session.getDibImages():
                 t.add_row([image.id, image.image_name,
                            image.filename, image.version,
                            nodedb.STATE_NAMES[image.state],
-                           '%.02f' % ((now - image.state_time) / 3600)])
+                           age(image.state_time)])
             print t
 
     def image_list(self):
         t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
-                         "Image ID", "Server ID", "State", "Age (hours)"])
+                         "Image ID", "Server ID", "State", "Age"])
         t.align = 'l'
-        now = time.time()
         with self.pool.getDB().getSession() as session:
             for image in session.getSnapshotImages():
                 t.add_row([image.id, image.provider_name, image.image_name,
                            image.hostname, image.version,
                            image.external_id, image.server_external_id,
                            nodedb.STATE_NAMES[image.state],
-                           '%.02f' % ((now - image.state_time) / 3600)])
+                           age(image.state_time)])
             print t
 
     def image_update(self):
