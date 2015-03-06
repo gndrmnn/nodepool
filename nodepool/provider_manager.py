@@ -498,10 +498,14 @@ class ProviderManager(TaskManager):
 
         # get endpoint and authtoken
         keystone = ksclient.Client(**keystone_kwargs)
-        glance_endpoint = keystone.service_catalog.url_for(
-            attr='region',
-            filter_value=keystone_kwargs['region_name'],
-            service_type='image')
+        if provider.region_name:
+            glance_endpoint = keystone.service_catalog.url_for(
+                attr='region',
+                filter_value=keystone_kwargs['region_name'],
+                service_type='image')
+        else:
+            glance_endpoint = keystone.service_catalog.url_for(
+                service_type='image')
         glance_endpoint = glance_endpoint.replace('/v1.0', '')
 
         # configure glance client
