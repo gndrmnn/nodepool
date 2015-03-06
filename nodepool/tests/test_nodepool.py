@@ -69,6 +69,18 @@ class TestNodepool(tests.DBTestCase):
         with db.getSession() as session:
             session.getNodes()
 
+    def waitForImage(self, pool, provider_name, image_name):
+        self.wait_for_config(pool)
+        while True:
+            self.wait_for_threads()
+            with pool.getDB().getSession() as session:
+                image = session.getCurrentSnapshotImage(provider_name,
+                                                        image_name)
+                if image:
+                    break
+                time.sleep(1)
+        self.wait_for_threads()
+
     def waitForNodes(self, pool):
         self.wait_for_config(pool)
         while True:
@@ -86,7 +98,7 @@ class TestNodepool(tests.DBTestCase):
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
-        time.sleep(3)
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
 
         with pool.getDB().getSession() as session:
@@ -102,7 +114,7 @@ class TestNodepool(tests.DBTestCase):
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
-        time.sleep(3)
+        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
 
         with pool.getDB().getSession() as session:
@@ -118,7 +130,8 @@ class TestNodepool(tests.DBTestCase):
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
-        time.sleep(3)
+        self.waitForImage(pool, 'fake-provider1', 'fake-dib-image')
+        self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
         self.waitForNodes(pool)
 
         with pool.getDB().getSession() as session:
@@ -139,7 +152,7 @@ class TestNodepool(tests.DBTestCase):
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
-        time.sleep(3)
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
 
         with pool.getDB().getSession() as session:
@@ -164,7 +177,7 @@ class TestNodepool(tests.DBTestCase):
         pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
-        time.sleep(3)
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
 
         with pool.getDB().getSession() as session:
