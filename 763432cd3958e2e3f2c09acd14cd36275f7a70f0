@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_860ead39",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1170,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-06T20:08:12Z",
+      "side": 1,
+      "message": "This history object being global to multiple getNeededNodes() calls seems to be what is causing the KeyError exceptions. See comments in getNeededNodes for more info.",
+      "revId": "763432cd3958e2e3f2c09acd14cd36275f7a70f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_c1324ff1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1711,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-06T20:08:12Z",
+      "side": 1,
+      "message": "This clears out the \"global\" allocation history, so if two callers call this method and one intends on making a grant but the other calls grantsDone() first we end up with a KeyError when making the grant in ap.makeGrants() above. We should consider making this method a monitor during testing or possibly we can just have two sets of histories as the important info is whether or not we need to launch nodes.",
+      "revId": "763432cd3958e2e3f2c09acd14cd36275f7a70f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
