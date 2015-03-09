@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_22322df2",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-09T05:06:19Z",
+      "side": 1,
+      "message": "why not\n\n glance_endpoint_kwargs \u003d {\u0027service_type\u0027: \u0027image\u0027}",
+      "revId": "5ad7e61113b8f89a45aa8e25029041e147e9a686",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_422f2188",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-09T05:06:19Z",
+      "side": 1,
+      "message": "glance_endpoint_kwargs \u003d {\u0027attr\u0027: \u0027region\u0027, \u0027filter_value\u0027 ... }",
+      "revId": "5ad7e61113b8f89a45aa8e25029041e147e9a686",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_8254b9ff",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-09T05:06:19Z",
+      "side": 1,
+      "message": "single call with **glance_endpoint_kwargs",
+      "revId": "5ad7e61113b8f89a45aa8e25029041e147e9a686",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
