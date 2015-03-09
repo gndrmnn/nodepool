@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_319986c4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1778,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-09T16:02:26Z",
+      "side": 1,
+      "message": "Here is one call to getNeededNodes in the main loop of the nodepool scheduler.",
+      "revId": "97efa54ba11183c7a35af7e290687b96b7142638",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_d1ef4a1c",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-09T16:02:26Z",
+      "side": 1,
+      "message": "Here is the call to getNeededNodes that each tests is making in a wait loop.",
+      "revId": "97efa54ba11183c7a35af7e290687b96b7142638",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
