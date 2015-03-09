@@ -1620,27 +1620,31 @@ class NodePool(threading.Thread):
         # Actual need is demand - (ready + building)
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
-
-            # ignore min-ready if it doesn't look like we'll have the
-            # capacity to deal with it.
-            capacity = 0
-            for provider in label.providers.values():
-                capacity += allocation_providers[provider.name].available
-            if capacity < label.min_ready:
-                min_demand = start_demand
-            else:
-                min_demand = start_demand + label.min_ready
-
             n_ready = count_nodes(label.name, nodedb.READY)
             n_building = count_nodes(label.name, nodedb.BUILDING)
             n_test = count_nodes(label.name, nodedb.TEST)
             ready = n_ready + n_building + n_test
-            demand = max(min_demand - ready, 0)
+
+            capacity = 0
+            for provider in label.providers.values():
+                capacity += allocation_providers[provider.name].available
+
+            # the requested number of nodes minus those already available
+            demand = max(0, start_demand - ready)
+            #extra nodes to satisfy min-ready demand for this label
+            extra_demand = max(0, label.min_ready - ready)
+            # we only request extras if there is clearly capacity for them.
+            # this is to avoid the allocator making bad choices spinning up
+            # nodes to satisfy min-ready when there is "real" work to do
+            # with other nodes.
+            if (demand + extra_demand) <= capacity:
+                demand += extra_demand
+
             label_demand[label.name] = demand
             self.log.debug("  Deficit: %s: %s "
-                           "(start: %s min: %s ready: %s capacity: %s)" %
+                           "(start: %s extra: %s ready: %s capacity: %s)" %
                            (label.name, demand,
-                            start_demand, min_demand, ready, capacity))
+                            start_demand, extra_demand, ready, capacity))
 
         # "Target-Label-Provider" -- the triplet of info that identifies
         # the source and location of each node.  The mapping is
