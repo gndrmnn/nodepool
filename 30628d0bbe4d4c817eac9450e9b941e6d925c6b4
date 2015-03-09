@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_9b187fd4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1633,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-09T23:35:31Z",
+      "side": 1,
+      "message": "we do this add",
+      "revId": "30628d0bbe4d4c817eac9450e9b941e6d925c6b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_7bf10b6a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1638,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-09T23:35:31Z",
+      "side": 1,
+      "message": "then we subtract.  it\u0027s really hard to reason about.\n\nI think a refacotor would go a long way to helping clarity here.\n\nif we have \"extra\" nodes required to satisfy min_ready, we only want to request them if there is capacity\n\n # the requested number of nodes minus those already available\n demand \u003d start_demand - ready\n #extra nodes to satisfy min-demand for this label\n extra_demand \u003d max(0, label.min_ready - ready) \n # we only request extras if there is clearly capacity for them.\n # this is to avoid the allocator making bad choices spinning up\n # nodes to satisfy min-ready when there is \"real\" work to do\n # with other nodes.\n if demand + extra_demand \u003c\u003d capacity:  them\n   demand +\u003d extra_demand\n\nand then ditch this line?",
+      "revId": "30628d0bbe4d4c817eac9450e9b941e6d925c6b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
