@@ -1620,21 +1620,21 @@ class NodePool(threading.Thread):
         # Actual need is demand - (ready + building)
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
+            n_ready = count_nodes(label.name, nodedb.READY)
+            n_building = count_nodes(label.name, nodedb.BUILDING)
+            n_test = count_nodes(label.name, nodedb.TEST)
+            ready = n_ready + n_building + n_test
 
             # ignore min-ready if it doesn't look like we'll have the
             # capacity to deal with it.
             capacity = 0
             for provider in label.providers.values():
                 capacity += allocation_providers[provider.name].available
-            if capacity < label.min_ready:
+            if (capacity + ready) < label.min_ready:
                 min_demand = start_demand
             else:
                 min_demand = start_demand + label.min_ready
 
-            n_ready = count_nodes(label.name, nodedb.READY)
-            n_building = count_nodes(label.name, nodedb.BUILDING)
-            n_test = count_nodes(label.name, nodedb.TEST)
-            ready = n_ready + n_building + n_test
             demand = max(min_demand - ready, 0)
             label_demand[label.name] = demand
             self.log.debug("  Deficit: %s: %s "
