@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_6707a982",
+        "filename": "nodepool/tests/fixtures/node_dib_and_snap_fail.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-10T04:50:33Z",
+      "side": 1,
+      "message": "yeah, gotta be careful with this that \u0027true\u0027 doesn\u0027t get turned into True if you forget the string quotes",
+      "revId": "2ab2e2e80e2d880270d1792163187261a0a70b3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
