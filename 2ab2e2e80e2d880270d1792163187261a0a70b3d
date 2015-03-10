@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a80dd14_6ebaf5c1",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 11
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-03-10T21:46:12Z",
+      "side": 1,
+      "message": "(notaminusone) since this is the (really) big hammer putting it at the end might be nicer.",
+      "revId": "2ab2e2e80e2d880270d1792163187261a0a70b3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a80dd14_6707a982",
         "filename": "nodepool/tests/fixtures/node_dib_and_snap_fail.yaml",
         "patchSetId": 11
