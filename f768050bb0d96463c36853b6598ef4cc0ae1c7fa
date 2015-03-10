@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_ce94c18e",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-10T21:37:04Z",
+      "side": 1,
+      "message": "We may want to further refine this schema to eg require either base-image or diskimage. But as is this is a good first step we can build on.",
+      "revId": "f768050bb0d96463c36853b6598ef4cc0ae1c7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_ee91859b",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-10T21:37:04Z",
+      "side": 1,
+      "message": "I believe both of these timeouts can actually be floats, but requiring they be ints is fine for now. Another thing we can further refine in followup changes.",
+      "revId": "f768050bb0d96463c36853b6598ef4cc0ae1c7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_0e8fb976",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-10T21:37:04Z",
+      "side": 1,
+      "message": "Might consider collecting the list of label: provider pairs that are not valid and throwing an excetion for all of them so that the error is as complete as possible. But again good for a followup change.",
+      "revId": "f768050bb0d96463c36853b6598ef4cc0ae1c7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_ae806d47",
+        "filename": "nodepool/tests/fixtures/config_validate/yaml_error.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-10T21:37:04Z",
+      "side": 1,
+      "message": "This being the error is particularly hard to pick up on in gertty. I figured this would be it because of the previous run in with this issue. Maybe we should comment the line at the very least so that its clear this is why it should fail to parse as yaml?\n\nAlso I should see about showing the right alignment edge in gertty more properly.",
+      "revId": "f768050bb0d96463c36853b6598ef4cc0ae1c7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
