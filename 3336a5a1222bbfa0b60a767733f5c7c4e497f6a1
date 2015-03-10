@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_36b953cc",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1634,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-10T11:37:15Z",
+      "side": 1,
+      "message": "if you do some more changes, add an extra space here",
+      "revId": "3336a5a1222bbfa0b60a767733f5c7c4e497f6a1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
