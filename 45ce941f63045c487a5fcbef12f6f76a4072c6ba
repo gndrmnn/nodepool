@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a80dd14_0a9a096e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1635,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-03-11T23:07:24Z",
+      "side": 1,
+      "message": "if start_demand - ready is a negative value, then we\u0027d be combining label.min_ready to 0",
+      "parentUuid": "9a80dd14_472f9c3e",
+      "revId": "45ce941f63045c487a5fcbef12f6f76a4072c6ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a80dd14_67cae0a2",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
