@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9a80dd14_8cee47b3",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-11T04:52:24Z",
+      "side": 1,
+      "message": "yeah, i chased that one down - I8f44e92f2a0f25a75926b1813a8b374e79b4f5db",
+      "parentUuid": "9a80dd14_ee91859b",
+      "revId": "f768050bb0d96463c36853b6598ef4cc0ae1c7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a80dd14_0e8fb976",
         "filename": "nodepool/cmd/config_validator.py",
         "patchSetId": 2
