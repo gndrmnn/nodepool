@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_d15b7d2c",
+        "filename": "nodepool/tests/fixtures/node_dib_and_snap_upload_fail.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-11T00:26:56Z",
+      "side": 1,
+      "message": "Maybe call this UPLOAD_SHOULD_FAIL so that it is clear which portion of the fakes is meant to fail.",
+      "revId": "fbec9bc28e3511e7739105ee47e187a92eef0b26",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_f13881d6",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-11T00:26:56Z",
+      "side": 1,
+      "message": "Should rebase on my test stack for dib builds failing then the above sleep is not necessary and you have to explicity wait for successful image builds then wait for nodes. I think it may include fixes that will make this test possible.",
+      "revId": "fbec9bc28e3511e7739105ee47e187a92eef0b26",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_110fd52f",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-11T00:26:56Z",
+      "side": 1,
+      "message": "This should assert len(nodes) \u003d\u003d 0 because fake-provider1 is the provider with the image that will fail to upload.",
+      "revId": "fbec9bc28e3511e7739105ee47e187a92eef0b26",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
