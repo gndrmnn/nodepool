@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_91866564",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-03-11T00:30:32Z",
+      "side": 1,
+      "message": "This line can also be removed.",
+      "revId": "795bfd5c2c5e320ee45f2127fdf6acac10c593d7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
