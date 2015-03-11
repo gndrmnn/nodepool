@@ -109,11 +109,15 @@ class FakeClient(object):
 
 
 class FakeGlanceClient(object):
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.id = 'fake-glance-id'
+        self.should_fail = bool(kwargs.get('SHOULD_FAIL', 'false'))
 
     def update(self, **kwargs):
-        return True
+        if self.should_fail:
+            raise RuntimeError('This image has SHOULD_FAIL set to True.')
+        else:
+            return True
 
 
 class FakeFile(StringIO.StringIO):
