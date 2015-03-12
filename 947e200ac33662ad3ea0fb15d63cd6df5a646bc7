@@ -1,0 +1,12 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Jenkins
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+1: yolanda.robla <info@ysoft.biz>
+Code-Review+1: Ian Wienand <iwienand@redhat.com>
+Code-Review+1: greghaynes <greg@greghaynes.net>
+Submitted-by: Jenkins
+Submitted-at: Thu, 12 Mar 2015 20:34:56 +0000
+Reviewed-on: https://review.openstack.org/162237
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
