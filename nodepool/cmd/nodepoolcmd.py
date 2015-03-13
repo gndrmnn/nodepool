@@ -19,10 +19,11 @@ import logging.config
 import sys
 import time
 
+import prettytable
+
 from nodepool import nodedb
 from nodepool import nodepool
 from nodepool.version import version_info as npc_version_info
-from prettytable import PrettyTable
 
 
 class NodePoolCmd(object):
@@ -134,9 +135,9 @@ class NodePoolCmd(object):
                                        '%(message)s')
 
     def list(self, node_id=None):
-        t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target", "Hostname",
-                         "NodeName", "Server ID", "IP", "State",
-                         "Age (hours)"])
+        t = prettytable.PrettyTable(["ID", "Provider", "AZ", "Label", "Target",
+                                     "Hostname", "NodeName", "Server ID", "IP",
+                                     "State", "Age (hours)"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
@@ -151,8 +152,8 @@ class NodePoolCmd(object):
             print t
 
     def dib_image_list(self):
-        t = PrettyTable(["ID", "Image", "Filename", "Version",
-                         "State", "Age (hours)"])
+        t = prettytable.PrettyTable(["ID", "Image", "Filename", "Version",
+                                     "State", "Age (hours)"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
@@ -164,8 +165,9 @@ class NodePoolCmd(object):
             print t
 
     def image_list(self):
-        t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
-                         "Image ID", "Server ID", "State", "Age (hours)"])
+        t = prettytable.PrettyTable(["ID", "Provider", "Image", "Hostname",
+                                     "Version", "Image ID", "Server ID",
+                                     "State", "Age (hours)"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
@@ -245,7 +247,8 @@ class NodePoolCmd(object):
     def alien_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
-        t = PrettyTable(["Provider", "Hostname", "Server ID", "IP"])
+        t = prettytable.PrettyTable(["Provider", "Hostname", "Server ID",
+                                     "IP"])
         t.align = 'l'
         with self.pool.getDB().getSession() as session:
             for provider in self.pool.config.providers.values():
@@ -264,7 +267,7 @@ class NodePoolCmd(object):
     def alien_image_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
-        t = PrettyTable(["Provider", "Name", "Image ID"])
+        t = prettytable.PrettyTable(["Provider", "Name", "Image ID"])
         t.align = 'l'
         with self.pool.getDB().getSession() as session:
             for provider in self.pool.config.providers.values():

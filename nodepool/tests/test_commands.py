@@ -16,6 +16,7 @@
 import sys  # noqa making sure its available for monkey patching
 
 import fixtures
+import mock
 
 from nodepool.cmd import nodepoolcmd
 from nodepool import tests
@@ -27,17 +28,40 @@ class TestNodepoolCMD(tests.DBTestCase):
         argv.extend(args)
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
 
+    def assert_images_listed(self, configfile, image_cnt, status="ready"):
+        self.patch_argv("-c", configfile, "image-list")
+        with mock.patch('prettytable.PrettyTable') as mocked:
+            instance = mocked.return_value
+            add_row = instance.add_row
+            to_str = instance.__str__
+            to_str.return_value = 'Mocked image listing output'
+            nodepoolcmd.main()
+            self.assertEquals(mocked.called, True)
+            images_with_status = 0
+            for args, kwargs in add_row.call_args_list:
+                row = args[0]
+                status_column = 7
+                if row[status_column] == status:
+                    images_with_status += 1
+            self.assertEquals(images_with_status, image_cnt)
+            self.assertEquals(len(add_row.mock_calls), image_cnt)
+            self.assertEquals(to_str.called, True)
+
     def test_snapshot_image_update(self):
         configfile = self.setup_config("node.yaml")
         self.patch_argv("-c", configfile, "image-update",
                         "fake-provider", "fake-image")
         nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 1)
 
     def test_dib_image_update(self):
         configfile = self.setup_config("node_dib.yaml")
         self.patch_argv("-c", configfile, "image-update",
                         "fake-dib-provider", "fake-dib-image")
         nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 1)
 
     def test_dib_snapshot_image_update(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
@@ -47,15 +71,24 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "image-update",
                         "fake-provider2", "fake-dib-image")
         nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 2)
 
     def test_dib_snapshot_image_update_all(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
         self.patch_argv("-c", configfile, "image-update",
                         "all", "fake-dib-image")
         nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 2)
 
     def test_image_update_all(self):
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "image-update",
                         "all", "fake-image1")
         nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 1)
+
+    def test_image_list_empty(self):
+        self.assert_images_listed(self.setup_config("node_cmd.yaml"), 0)
