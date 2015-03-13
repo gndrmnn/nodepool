@@ -22,6 +22,7 @@ import time
 from nodepool import nodedb
 from nodepool import nodepool
 from nodepool.version import version_info as npc_version_info
+import prettytable
 from prettytable import PrettyTable
 
 
@@ -164,8 +165,9 @@ class NodePoolCmd(object):
             print t
 
     def image_list(self):
-        t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
-                         "Image ID", "Server ID", "State", "Age (hours)"])
+        t = prettytable.PrettyTable(["ID", "Provider", "Image", "Hostname",
+                                     "Version", "Image ID", "Server ID",
+                                     "State", "Age (hours)"])
         t.align = 'l'
         now = time.time()
         with self.pool.getDB().getSession() as session:
