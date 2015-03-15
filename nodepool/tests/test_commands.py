@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import sys  # noqa making sure its available for monkey patching
+import time
 
 import fixtures
 import mock
@@ -39,6 +40,20 @@ class TestNodepoolCMD(tests.DBTestCase):
             self.assertEquals(mocked.called, True)
             self.assertEquals(len(add_row.mock_calls), image_cnt)
             self.assertEquals(to_str.called, True)
+
+    def waitForImage(self, provider_name, image_name):
+        while True:
+            with mock.patch('prettytable.PrettyTable') as mocked:
+                instance = mocked.return_value
+                add_row = instance.add_row
+                instance.__str__.return_value = 'Mocked image listing output'
+                nodepoolcmd.main()
+                status = str(add_row.mock_calls[0][1][0][7])
+                if status == 'ready':
+                    # This ugly indexing grabs the first arg of the first call
+                    image_id = str(add_row.mock_calls[0][1][0][0])
+                    return image_id
+                time.sleep(1)
 
     def test_snapshot_image_update(self):
         configfile = self.setup_config("node.yaml")
@@ -86,3 +101,16 @@ class TestNodepoolCMD(tests.DBTestCase):
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "image-delete", "invalid-image")
         nodepoolcmd.main()
+
+    def test_image_delete_snapshot(self):
+        configfile = self.setup_config("node_cmd.yaml")
+        self.patch_argv("-c", configfile, "image-update",
+                        "all", "fake-image1")
+        nodepoolcmd.main()
+        self.patch_argv("-c", configfile, "image-list")
+        image_id = self.waitForImage("fake-provider1", "fake-image1")
+
+        self.patch_argv("-c", configfile, "image-delete", image_id)
+        nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 0)
