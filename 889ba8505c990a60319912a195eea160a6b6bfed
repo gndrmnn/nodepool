@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_90fa2341",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-15T18:46:36Z",
+      "side": 1,
+      "message": "wow, that\u0027s really ugly, can we have a more readable command here?",
+      "revId": "889ba8505c990a60319912a195eea160a6b6bfed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
