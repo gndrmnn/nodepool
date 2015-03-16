@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_7033c162",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2130,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-16T19:36:02Z",
+      "side": 1,
+      "message": "Not going to make you change this here, but we should possibly return an error value (or bubble an exception up) so that we can exit with an appropriate return code to the shell. The old code doesn\u0027t do this so really just something to keep in mind with this method.",
+      "revId": "115dc5a6e70361d3b28397f3cdc2bd57d0bcc240",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
