@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_9c74d1d1",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-16T19:25:10Z",
+      "side": 1,
+      "message": "This is only asserting the number of rows that are returned by prettytable and does not assert anything about their content. At the very least we should be checking that we get back valid node data in each row rather than garbage or error data.",
+      "revId": "6bc50b64529a084ea086ac682505bd0696d29d59",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
