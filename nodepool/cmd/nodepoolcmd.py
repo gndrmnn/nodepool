@@ -125,10 +125,10 @@ class NodePoolCmd(object):
             nargs='?', default='all')
         cmd_image_upload.add_argument('image', help='image name')
 
-        cmd_config_validate = subparsers.add_parser(
-            'config-validate',
+        cmd_validate_config = subparsers.add_parser(
+            'validate-config',
             help='Validate configuration file')
-        cmd_config_validate.set_defaults(func=self.config_validate)
+        cmd_validate_config.set_defaults(func=self.validate_config)
 
         self.args = parser.parse_args()
 
@@ -320,14 +320,14 @@ class NodePoolCmd(object):
         self.pool.reconfigureManagers(self.pool.config, False)
         self.pool.deleteImage(self.args.id)
 
-    def config_validate(self):
+    def validate_config(self):
         validator = ConfigValidator(self.args.config)
         validator.validate()
         log.info("Configuation validation complete")
 
     def main(self):
         # commands which do not need to start-up or parse config
-        if self.args.command in ('config-validate'):
+        if self.args.command in ('validate-config'):
             return self.args.func()
 
         self.pool = nodepool.NodePool(self.args.config)

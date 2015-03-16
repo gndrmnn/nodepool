@@ -27,21 +27,21 @@ class TestConfigValidation(tests.BaseTestCase):
 
     def test_good_config(self):
         config = os.path.join(os.path.dirname(tests.__file__),
-                              'fixtures', 'config_validate', 'good.yaml')
+                              'fixtures', 'validate_config', 'good.yaml')
 
         validator = ConfigValidator(config)
         validator.validate()
 
     def test_yaml_error(self):
         config = os.path.join(os.path.dirname(tests.__file__),
-                              'fixtures', 'config_validate', 'yaml_error.yaml')
+                              'fixtures', 'validate_config', 'yaml_error.yaml')
 
         validator = ConfigValidator(config)
         self.assertRaises(ParserError, validator.validate)
 
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
-                              'fixtures', 'config_validate',
+                              'fixtures', 'validate_config',
                               'schema_error.yaml')
 
         validator = ConfigValidator(config)
