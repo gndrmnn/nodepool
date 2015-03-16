@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a80dd14_47cfee29",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-16T17:05:21Z",
+      "side": 1,
+      "message": "10 minutes seems a long time to wait for a failure.  If we\u0027re waiting for background things to happen, maybe we need to adjust some delays in the test configuration?",
+      "revId": "889ba8505c990a60319912a195eea160a6b6bfed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_27cafa1a",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-16T17:05:21Z",
+      "side": 1,
+      "message": "We\u0027re only using the pretty table mocking for the side effect of determining state, and this also has the side effect of making the table column order fixed.  Can we just inspect the database like we do in the other tests?",
+      "revId": "889ba8505c990a60319912a195eea160a6b6bfed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a80dd14_90fa2341",
         "filename": "nodepool/tests/test_commands.py",
         "patchSetId": 1
