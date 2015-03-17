@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_67e1052a",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T23:23:07Z",
+      "side": 1,
+      "message": "a comment about what this is matching would help clarify things",
+      "revId": "661edaf03fb0b3667955a0cef840d595f3f7b15e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_07dcc973",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T23:23:07Z",
+      "side": 1,
+      "message": "what is the difference between this and the call below it?",
+      "revId": "661edaf03fb0b3667955a0cef840d595f3f7b15e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_a784dd5d",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T23:23:07Z",
+      "side": 1,
+      "message": "use call_count directly?",
+      "revId": "661edaf03fb0b3667955a0cef840d595f3f7b15e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
