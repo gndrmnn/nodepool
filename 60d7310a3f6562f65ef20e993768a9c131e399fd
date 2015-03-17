@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_987ccaed",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T05:07:58Z",
+      "side": 1,
+      "message": "i don\u0027t believe this change should be necessary",
+      "revId": "60d7310a3f6562f65ef20e993768a9c131e399fd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_587c12b6",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T05:07:58Z",
+      "side": 1,
+      "message": "i\u0027m no super mock expert, but think that if you do\n \n @mock.patch(\u0027prettytable.PrettyTable.add_row\u0027)\n def assert_images_listed(self, configfile, image_cnt, status\u003d\u0027ready\u0027, m_add_row)\n\nyou can remove a lot of this",
+      "revId": "60d7310a3f6562f65ef20e993768a9c131e399fd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_58533239",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-17T05:07:58Z",
+      "side": 1,
+      "message": "why need this, it seems we only check the called argument list?",
+      "revId": "60d7310a3f6562f65ef20e993768a9c131e399fd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
