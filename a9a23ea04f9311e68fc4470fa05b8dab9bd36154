@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_017dabe7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1106
+      },
+      "writtenOn": "2015-03-17T16:35:01Z",
+      "side": 1,
+      "message": "Closes-Bug: SB-2000020",
+      "revId": "a9a23ea04f9311e68fc4470fa05b8dab9bd36154",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
