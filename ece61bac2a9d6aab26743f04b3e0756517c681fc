@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_55082228",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-18T03:26:47Z",
+      "side": 1,
+      "message": "i guess you\u0027re just asserting that it exits?  shouldn\u0027t we at least check that it returns 1?  better still, mock the logging output and assert that the error you put in is actually output",
+      "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
