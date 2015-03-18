@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_a7e5b80b",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-18T02:18:51Z",
+      "side": 1,
+      "message": "nit: could probably have more self-documenting name like \"assert_image_status\" because it\u0027s really checking for images with a given status",
+      "revId": "b3090b525bfde6006006bb2f0d40beed5ac76e82",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
