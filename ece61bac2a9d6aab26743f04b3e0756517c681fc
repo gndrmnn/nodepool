@@ -51,6 +51,24 @@
       "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_babf5dcf",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-18T21:34:01Z",
+      "side": 1,
+      "message": "@greghaynes : mocking log.error and checking the error you expect to see there is logged isn\u0027t really fragile.  but ok",
+      "parentUuid": "9a80dd14_92fd2cb4",
+      "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
