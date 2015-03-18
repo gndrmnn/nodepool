@@ -16,6 +16,24 @@
       "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_92fd2cb4",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-03-18T17:57:25Z",
+      "side": 1,
+      "message": "Its basically a smoke test. Theres no return 1 that could possibly happen and parsing log messages is super fragile. The correct fix is mentioned in a previous patch (we should properly return errors when in command mode) but thats a more complex change for another patch.",
+      "parentUuid": "9a80dd14_55082228",
+      "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
