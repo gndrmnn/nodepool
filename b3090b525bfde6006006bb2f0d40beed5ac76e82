@@ -16,6 +16,23 @@
       "revId": "b3090b525bfde6006006bb2f0d40beed5ac76e82",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_cc91cd47",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-18T17:26:50Z",
+      "side": 1,
+      "message": "This could be turned into a dict and made cleaner and more future proof; but this will work for now.",
+      "revId": "b3090b525bfde6006006bb2f0d40beed5ac76e82",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
