@@ -34,6 +34,23 @@
       "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_3c761240",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-18T19:04:09Z",
+      "side": 1,
+      "message": "Ya I was happy with not fixing this now in my ps1 comment. There is definitely an improvement that can be made but we shouldn\u0027t require this bug fix redo the entire delete image command simply to test it a bit better.",
+      "revId": "ece61bac2a9d6aab26743f04b3e0756517c681fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
