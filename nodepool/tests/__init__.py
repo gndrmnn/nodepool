@@ -102,6 +102,11 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
                 return
             time.sleep(0.1)
 
+    def useNodepool(self, *args, **kwargs):
+        pool = nodepool.NodePool(*args, **kwargs)
+        self.addCleanup(pool.stop)
+        return pool
+
 
 class AllocatorTestCase(object):
     def setUp(self):
