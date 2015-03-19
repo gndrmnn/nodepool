@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a80dd14_dc694d26",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-03-19T13:55:08Z",
+      "side": 1,
+      "message": "Group and groups are interpreted by the ansible openstack inventory to put nodes in to groups - so adding them here gives us the ability for very little cost to do ansible things on a subset of the nodes in our nodepool- even if that\u0027s just running a query. We may never want to - but we\u0027ll be able to trivially chose to if we fill those in.\n\nThe other values are more for human consumption - but I agree with jhesketh - they should really be in a sub-dict called nodepool for clarity.",
+      "parentUuid": "da86d52c_af631ddc",
+      "revId": "c2a9a50cd69a73daa7aa163157810ff386f2cb7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a80dd14_96c18d50",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2015-03-19T02:20:06Z",
       "side": 1,
       "message": "This could be confusing.. specifically it\u0027s nodepool\u0027s id, not the instance id. I wonder if this should all be in a sub-dict of meta values \u0027nodepool\u0027?",
+      "revId": "c2a9a50cd69a73daa7aa163157810ff386f2cb7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_1cd4c5e7",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-03-19T13:55:08Z",
+      "side": 1,
+      "message": "That\u0027s an excellent suggestion",
+      "parentUuid": "9a80dd14_96c18d50",
       "revId": "c2a9a50cd69a73daa7aa163157810ff386f2cb7e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
