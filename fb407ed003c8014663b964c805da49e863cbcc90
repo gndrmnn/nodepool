@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_36c46191",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-19T02:13:27Z",
+      "side": 0,
+      "message": "(nit) was this whitespace removal deliberate?",
+      "revId": "fb407ed003c8014663b964c805da49e863cbcc90",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
