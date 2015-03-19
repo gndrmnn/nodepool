@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_d62b0580",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-19T01:57:11Z",
+      "side": 1,
+      "message": "If people are working off a relative path \u0027for some reason\u0027, wouldn\u0027t they expect that path to be relative to imagesdir?\n\nI think we may need to an if filename[0] \u003d\u003d \u0027/\u0027, then don\u0027t join type check. Otherwise as it stands it appears to work correctly?",
+      "revId": "acdbb84fe248081e90f1b64385086d1bd0213b49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
