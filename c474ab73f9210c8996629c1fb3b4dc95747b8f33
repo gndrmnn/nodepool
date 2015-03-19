@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_f6ef291b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-19T02:07:52Z",
+      "side": 1,
+      "message": "This can be either a boolean or volume-id. Should there be validation on this or to make sure the image exists? Otherwise all image-creation tasks may fail.",
+      "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
