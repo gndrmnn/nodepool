@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import threading
 from six.moves import queue as Queue
 import logging
@@ -30,31 +29,16 @@ class ManagerStoppedException(Exception):
 class Task(object):
     def __init__(self, **kw):
         self._wait_event = threading.Event()
-        self._exception = None
-        self._traceback = None
-        self._result = None
         self.args = kw
 
-    def done(self, result):
-        self._result = result
-        self._wait_event.set()
-
-    def exception(self, e, tb):
-        self._exception = e
-        self._traceback = tb
+    def enable(self):
         self._wait_event.set()
 
     def wait(self):
         self._wait_event.wait()
-        if self._exception:
-            raise self._exception, None, self._traceback
-        return self._result
 
     def run(self, client):
-        try:
-            self.done(self.main(client))
-        except Exception as e:
-            self.exception(e, sys.exc_info()[2])
+        return self.main(client)
 
 
 class TaskManager(threading.Thread):
@@ -86,13 +70,8 @@ class TaskManager(threading.Thread):
                 if delta >= self.rate:
                     break
                 time.sleep(self.rate - delta)
-            self.log.debug("Manager %s running task %s (queue: %s)" %
-                           (self.name, task, self.queue.qsize()))
-            start = time.time()
-            task.run(self._client)
+            task.enable()
             last_ts = time.time()
-            self.log.debug("Manager %s ran task %s in %ss" %
-                           (self.name, task, (last_ts - start)))
             self.queue.task_done()
 
     def submitTask(self, task):
@@ -100,4 +79,12 @@ class TaskManager(threading.Thread):
             raise ManagerStoppedException(
                 "Manager %s is no longer running" % self.name)
         self.queue.put(task)
-        return task.wait()
+        task.wait()
+        self.log.debug("Manager %s running task %s (queue: %s)" %
+                       (self.name, task, self.queue.qsize()))
+        start = time.time()
+        ret = task.run(self._client)
+        end = time.time()
+        self.log.debug("Manager %s ran task %s in %ss" %
+                       (self.name, task, (end - start)))
+        return ret
