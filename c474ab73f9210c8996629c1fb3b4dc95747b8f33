@@ -16,6 +16,24 @@
       "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_03f47459",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2015-03-19T09:51:18Z",
+      "side": 1,
+      "message": "This change has only been tested with booleans; should we validate that it must be a boolean or just add a comment that says we don\u0027t support volume-ids for the config-drive setting?",
+      "parentUuid": "9a80dd14_f6ef291b",
+      "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
