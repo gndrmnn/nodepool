@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_bec5485d",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 25
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-03-20T07:51:54Z",
+      "side": 1,
+      "message": "Theres now a self.useNodepool method for creating and adding the cleanup. Not worth -1ing over, but if you end up doing another round with this patch probably good to fix.",
+      "revId": "4e241944ae8fd78fdf48777defb7abbb3c5f298a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
