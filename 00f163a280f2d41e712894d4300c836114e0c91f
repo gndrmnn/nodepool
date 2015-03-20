@@ -16,6 +16,41 @@
       "revId": "00f163a280f2d41e712894d4300c836114e0c91f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_028d2431",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-20T00:57:59Z",
+      "side": 1,
+      "message": "ok, i see the point you don\u0027t want to bail.  this is the only thing writing to stderr like this though, so ensuring ongoing consistency would be nice",
+      "parentUuid": "9a80dd14_335b5d23",
+      "revId": "00f163a280f2d41e712894d4300c836114e0c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_627d001c",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-20T00:57:59Z",
+      "side": 1,
+      "message": "think this fn wants the same treatment",
+      "revId": "00f163a280f2d41e712894d4300c836114e0c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
