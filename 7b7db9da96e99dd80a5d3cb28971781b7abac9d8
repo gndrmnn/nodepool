@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_e75e3944",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "You probably meant \u0027server is None\u0027. Boolean checks on objects could get wacky as the class evolves.",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_a741a164",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "Guessing this is uncovered by tests. The reference to server[\u0027status\u0027] will raise a TypeError if server is None, since None doesn\u0027t have a __getitem__ attribute. Probably need to do a conditional above and use a variable for this.",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_5a27d8b5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "Same here regarding \u0027is None\u0027",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_1a1ac06e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_67196987",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "FYI, changing signature of public method here. I understand we don\u0027t make guarantees, but it doesn\u0027t seem necessary. I\u0027d rather see a docstring with a clear definition instead.",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_a70fe137",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-03-20T21:25:52Z",
+      "side": 1,
+      "message": "Same public method soapbox here.",
+      "revId": "7b7db9da96e99dd80a5d3cb28971781b7abac9d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
