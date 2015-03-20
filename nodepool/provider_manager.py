@@ -22,6 +22,7 @@ import novaclient
 import novaclient.client
 import novaclient.extension
 import novaclient.v1_1.contrib.tenant_networks
+from six.moves import queue as Queue
 import threading
 import glanceclient
 import glanceclient.client
@@ -122,6 +123,14 @@ class GetServerTask(Task):
         except novaclient.exceptions.NotFound:
             raise NotFound()
         return make_server_dict(server)
+
+
+class RebuildServerTask(Task):
+    def main(self, client):
+        create_task = self.args['create_task']
+        delete_task = self.args['delete_task']
+        # TODO(clarkb) Merge create_task and delete_task args into rebuild kwargs
+        client.servers.rebuild(**kwargs)
 
 
 class DeleteServerTask(Task):
@@ -264,6 +273,53 @@ class ProviderManager(TaskManager):
         self._ips = []
         self._ips_time = 0
         self._ips_lock = threading.Lock()
+        self._delete_queue = Queue.Queue()
+
+    def run(self):
+        last_ts = 0
+        while True:
+            try:
+                task = self.queue.get_nowait()
+            except Queue.Empty:
+                try:
+                    task = self._delete_queue.get_nowait()
+                except Queue.Empty:
+                    task = None
+            if not task:
+                if not self._running:
+                    break
+                continue
+            while True:
+                delta = time.time() - last_ts
+                if delta >= self.rate:
+                    break
+                time.sleep(self.rate - delta)
+            self.log.debug("Manager %s running task %s (queue: %s)" %
+                           (self.name, task, self.queue.qsize()))
+            start = time.time()
+            task.run(self._client)
+            last_ts = time.time()
+            self.log.debug("Manager %s ran task %s in %ss" %
+                           (self.name, task, (last_ts - start)))
+            self.queue.task_done()
+
+    def submitTask(self, task):
+        if not self._running:
+            raise ManagerStoppedException(
+                "Manager %s is no longer running" % self.name)
+        if isinstance(task, DeleteServerTask):
+            self._delete_queue.put(task)
+        elif isinstance(task, CreateServerTask):
+            try:
+                delete_task = self._delete_queue.get_nowait()
+                delete_task.done()
+                self.queue.put(RebuildServerTask(create_task=task,
+                                                 delete_task=delete_task))
+            except Queue.Empty:
+                self.queue.put(task)
+        else:
+            self.queue.put(task)
+        return task.wait()
 
     @property
     def _flavors(self):
@@ -586,6 +642,8 @@ class ProviderManager(TaskManager):
         # This will either get the server or raise an exception
         server = self.getServerFromList(server_id)
 
+        # TODO(clarkb) Need to push floating ip and keypair deletion into
+        # DeleteServerTask (or otherwise handle this).
         if self.hasExtension('os-floating-ips'):
             for ip in self.listFloatingIPs():
                 if ip['instance_id'] == server_id:
