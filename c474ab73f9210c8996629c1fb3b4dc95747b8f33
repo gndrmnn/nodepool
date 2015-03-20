@@ -52,6 +52,24 @@
       "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_c44e9d6e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2015-03-20T15:58:31Z",
+      "side": 1,
+      "message": "I wonder if that\u0027s a future extension, or a deprecated option that hasn\u0027t been removed from nova-client yet... Looking at the Nova code I think that we can only have a boolean value here?\nhttp://git.openstack.org/cgit/openstack/nova/tree/nova/compute/api.py#n639",
+      "parentUuid": "9a80dd14_d3f4bc56",
+      "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
