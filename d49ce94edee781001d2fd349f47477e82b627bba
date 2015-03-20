@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a80dd14_e20650cd",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-20T00:50:26Z",
+      "side": 1,
+      "message": "The old s was a Dummy node not a fake glance image. Not sure how an image has ip addrs. I think this works fine due to how FakeGlanceImage is defined but its confusing to read. Can we clean that up so that it is clear this is a fake node?",
+      "revId": "d49ce94edee781001d2fd349f47477e82b627bba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
