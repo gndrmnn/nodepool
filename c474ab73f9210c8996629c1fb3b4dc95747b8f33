@@ -34,6 +34,24 @@
       "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a80dd14_d3f4bc56",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-20T03:23:07Z",
+      "side": 1,
+      "message": "My reading of the nova client is that it should support volume-ids. I\u0027d say we should confirm that and support it if feasible.",
+      "parentUuid": "9a80dd14_03f47459",
+      "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
