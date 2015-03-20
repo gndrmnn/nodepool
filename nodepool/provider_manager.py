@@ -20,6 +20,7 @@ import logging
 import paramiko
 import novaclient
 import novaclient.client
+import novaclient.exceptions
 import novaclient.extension
 import novaclient.v1_1.contrib.tenant_networks
 import threading
@@ -111,7 +112,13 @@ class NotFound(Exception):
 
 class CreateServerTask(Task):
     def main(self, client):
-        server = client.servers.create(**self.args)
+        try:
+            server = client.servers.create(**self.args)
+        except novaclient.exceptions.ClientException as e:
+            if e.code == 500 or e.code == 502:
+                # We see these errors, then recover later
+                return None
+            raise
         return str(server.id)
 
 
@@ -383,9 +390,9 @@ class ProviderManager(TaskManager):
     def getFloatingIP(self, ip_id):
         return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
 
-    def getServerFromList(self, server_id):
+    def getServerFromList(self, name_or_id):
         for s in self.listServers():
-            if s['id'] == server_id:
+            if s['id'] == name_or_id or s['name'] == name_or_id:
                 return s
         raise NotFound()
 
@@ -422,8 +429,8 @@ class ProviderManager(TaskManager):
             if status in ['ACTIVE', 'ERROR']:
                 return resource
 
-    def waitForServer(self, server_id, timeout=3600):
-        return self._waitForResource('server', server_id, timeout)
+    def waitForServer(self, name_or_id, timeout=3600):
+        return self._waitForResource('server', name_or_id, timeout)
 
     def waitForServerDeletion(self, server_id, timeout=600):
         for count in iterate_timeout(600, "server %s deletion in %s" %

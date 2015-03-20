@@ -387,17 +387,23 @@ class NodeLauncher(threading.Thread):
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az)
-        self.node.external_id = server_id
-        session.commit()
+        if server_id:
+            self.node.external_id = server_id
+            session.commit()
+        else:
+            server_id = hostname
 
         self.log.debug("Waiting for server %s for node id: %s" %
                        (server_id, self.node.id))
         server = self.manager.waitForServer(server_id, self.launch_timeout)
-        if server['status'] != 'ACTIVE':
+        if not server or server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for node id: %s "
                                         "status: %s" %
                                         (server_id, self.node.id,
                                          server['status']))
+
+        self.node.external_id = server.id
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
@@ -663,19 +669,25 @@ class SubNodeLauncher(threading.Thread):
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az)
-        self.subnode.external_id = server_id
-        session.commit()
+        if server_id:
+            self.subnode.external_id = server_id
+            session.commit()
+        else:
+            server_id = hostname
 
         self.log.debug("Waiting for server %s for subnode id: %s for "
                        "node id: %s" %
                        (server_id, self.subnode_id, self.node_id))
         server = self.manager.waitForServer(server_id, self.launch_timeout)
-        if server['status'] != 'ACTIVE':
+
+        if not server or server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for subnode id: "
                                         "%s for node id: %s "
                                         "status: %s" %
                                         (server_id, self.subnode_id,
                                          self.node_id, server['status']))
+        self.subnode.external_id = server.id
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
@@ -996,15 +1008,21 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.snap_image.hostname = hostname
         self.snap_image.version = timestamp
-        self.snap_image.server_external_id = server_id
+        if server_id:
+            self.snap_image.server_external_id = server_id
+        else:
+            server_id = hostname
         session.commit()
 
         self.log.debug("Image id: %s waiting for server %s" %
                        (self.snap_image.id, server_id))
         server = self.manager.waitForServer(server_id)
-        if server['status'] != 'ACTIVE':
+        if not server or server['status'] != 'ACTIVE':
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))
+
+        self.snap_image.server_external_id = server.id
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
