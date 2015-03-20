@@ -301,7 +301,7 @@ class NodeLauncher(threading.Thread):
     log = logging.getLogger("nodepool.NodeLauncher")
 
     def __init__(self, nodepool, provider, label, target, node_id, timeout,
-                 launch_timeout):
+                 launch_timeout, rebuild):
         threading.Thread.__init__(self, name='NodeLauncher for %s' % node_id)
         self.provider = provider
         self.label = label
@@ -311,6 +311,7 @@ class NodeLauncher(threading.Thread):
         self.timeout = timeout
         self.nodepool = nodepool
         self.launch_timeout = launch_timeout
+        self.rebuild = rebuild
 
     def run(self):
         try:
@@ -383,11 +384,19 @@ class NodeLauncher(threading.Thread):
         self.log.info("Creating server with hostname %s in %s from image %s "
                       "for node id: %s" % (hostname, self.provider.name,
                                            self.image.name, self.node_id))
-        server_id = self.manager.createServer(
-            hostname, self.image.min_ram, snap_image.external_id,
-            name_filter=self.image.name_filter, az=self.node.az,
-            node_id=self.node_id)
-        self.node.external_id = server_id
+        if rebuild:
+            server_id = self.node.external_id
+            self.manager.rebuildServer(
+                server_id, hostname,
+                self.image.min_ram, snap_image.external_id,
+                name_filter=self.image.name_filter,
+                node_id=self.node_id)
+        else:
+            server_id = self.manager.createServer(
+                hostname, self.image.min_ram, snap_image.external_id,
+                name_filter=self.image.name_filter, az=self.node.az,
+                node_id=self.node_id)
+            self.node.external_id = server_id
         session.commit()
 
         self.log.debug("Waiting for server %s for node id: %s" %
@@ -399,14 +408,17 @@ class NodeLauncher(threading.Thread):
                                         (server_id, self.node.id,
                                          server['status']))
 
-        ip = server.get('public_v4')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
-        if not ip:
-            raise LaunchNetworkException("Unable to find public IP of server")
+        if rebuild:
+            ip = self.node.ip
+        else:
+            ip = server.get('public_v4')
+            if not ip and self.manager.hasExtension('os-floating-ips'):
+                ip = self.manager.addPublicIP(server_id,
+                                              pool=self.provider.pool)
+            if not ip:
+                raise LaunchNetworkException("Unable to find public IP of server")
 
-        self.node.ip = ip
+            self.node.ip = ip
         self.log.debug("Node id: %s is running, ip: %s, testing ssh" %
                        (self.node.id, ip))
         connect_kwargs = dict(key_filename=self.image.private_key)
@@ -1891,9 +1903,10 @@ class NodePool(threading.Thread):
             az = random.choice(provider.azs)
         else:
             az = None
-        node = session.createNode(provider.name, label.name, target.name, az)
+        (rebuild, node) = session.createNode(
+            provider.name, label.name, target.name, az)
         t = NodeLauncher(self, provider, label, target, node.id, timeout,
-                         launch_timeout)
+                         launch_timeout, rebuild)
         t.start()
 
     def launchSubNode(self, session, node):
@@ -1927,7 +1940,6 @@ class NodePool(threading.Thread):
                 manager.waitForServerDeletion(subnode.external_id)
             except provider_manager.NotFound:
                 pass
-        subnode.delete()
 
     def deleteNode(self, node_id):
         try:
@@ -1970,31 +1982,10 @@ class NodePool(threading.Thread):
 
         for subnode in node.subnodes:
             if subnode.external_id:
-                try:
-                    self.log.debug('Deleting server %s for subnode id: '
-                                   '%s of node id: %s' %
-                                   (subnode.external_id, subnode.id, node.id))
-                    manager.cleanupServer(subnode.external_id)
-                except provider_manager.NotFound:
-                    pass
-
-        if node.external_id:
-            try:
-                self.log.debug('Deleting server %s for node id: %s' %
-                               (node.external_id, node.id))
-                manager.cleanupServer(node.external_id)
-                manager.waitForServerDeletion(node.external_id)
-            except provider_manager.NotFound:
-                pass
-            node.external_id = None
-
-        for subnode in node.subnodes:
-            if subnode.external_id:
-                manager.waitForServerDeletion(subnode.external_id)
-                subnode.delete()
-
-        node.delete()
-        self.log.info("Deleted node id: %s" % node.id)
+                self.log.debug('Deleting server %s for subnode id: '
+                               '%s of node id: %s' %
+                               (subnode.external_id, subnode.id, node.id))
+                subnode.state = nodedb.DELETE
 
         if statsd:
             dt = int((time.time() - node.state_time) * 1000)

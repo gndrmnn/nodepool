@@ -382,7 +382,7 @@ class NodeDatabaseSession(object):
         return new
 
     def getNodes(self, provider_name=None, label_name=None, target_name=None,
-                 state=None):
+                 az=None, state=None):
         exp = self.session().query(Node).order_by(
             node_table.c.provider_name,
             node_table.c.label_name)
@@ -392,15 +392,25 @@ class NodeDatabaseSession(object):
             exp = exp.filter_by(label_name=label_name)
         if target_name:
             exp = exp.filter_by(target_name=target_name)
+        if az:
+            exp = exp.filter_by(az=az)
         if state:
             exp = exp.filter(node_table.c.state == state)
         return exp.all()
 
     def createNode(self, *args, **kwargs):
-        new = Node(*args, **kwargs)
-        self.session().add(new)
+        # provider.name, label.name, target.name, az
+        nodes_to_delete = self.getNodes(state=DELETE, *kwargs)
+        if len(nodes_to_delete) > 0:
+            node = nodes_to_delete[0]
+            node.state = BUILDING
+            rebuild = True
+    `   else:
+            node = Node(*args, **kwargs)
+            self.session().add(node)
+            rebuild = False
         self.commit()
-        return new
+        return (rebuild, node)
 
     def createSubNode(self, *args, **kwargs):
         new = SubNode(*args, **kwargs)

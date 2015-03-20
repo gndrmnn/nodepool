@@ -100,6 +100,12 @@ class CreateServerTask(Task):
         return str(server.id)
 
 
+class RebuildServerTask(Task):
+    def main(self, client):
+        server = client.servers.rebuild(**self.args)
+        return str(server.id)
+
+
 class GetServerTask(Task):
     def main(self, client):
         try:
@@ -374,12 +380,44 @@ class ProviderManager(TaskManager):
     def deleteKeypair(self, name):
         return self.submitTask(DeleteKeypairTask(name=name))
 
+    def _getMetaDict(image_name, node_id=None):
+        # Make provider.name the primary group and also put the node into
+        # a group with other nodes that share the same nodepool image.
+        # ansible openstack inventory knows how to group nodes based on
+        # values in the group and groups meta info.
+        # Also list each of those values directly so that non-ansible
+        # consumption programs don't need to play a game of knowing that
+        # groups[0] is the image name or anything silly like that.
+        meta = dict(
+            group=self.provider.name,
+            groups=[image_name],
+            nodepool=dict(
+                image_name=image_name,
+                provider_name=self.provider.name,
+        ))
+        if node_id:
+            meta['nodepool']['node_id'] = node_id
+        return meta
+
+    def rebuildServer(self, server_id, name,
+                      image_id=None, image_name=None,
+                      name_filter=None, node_id=None):
+        if image_name:
+            image_id = self.findImage(image_name)['id']
+        rebuid_args = dict(
+            id=server_id, name=name, image=image_id,
+            meta=self._getMetaDict(image_name, node_id))
+
+        return self.submitTask(RebuildServerTask(**rebuild_args))
+
     def createServer(self, name, min_ram, image_id=None, image_name=None,
                      az=None, key_name=None, name_filter=None, node_id=None):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
-        create_args = dict(name=name, image=image_id, flavor=flavor['id'])
+        create_args = dict(
+            name=name, image=image_id, flavor=flavor['id'],
+            meta=self._getMetaDict(image_name, node_id))
         if key_name:
             create_args['key_name'] = key_name
         if az:
@@ -395,23 +433,6 @@ class ProviderManager(TaskManager):
                 else:
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
-        # Make provider.name the primary group and also put the node into
-        # a group with other nodes that share the same nodepool image.
-        # ansible openstack inventory knows how to group nodes based on
-        # values in the group and groups meta info.
-        # Also list each of those values directly so that non-ansible
-        # consumption programs don't need to play a game of knowing that
-        # groups[0] is the image name or anything silly like that.
-        create_args['meta'] = dict(
-            group=self.provider.name,
-            groups=[image_name],
-            nodepool=dict(
-                image_name=image_name,
-                provider_name=self.provider.name,
-            ),
-        )
-        if node_id:
-            create_args['meta']['nodepool']['node_id'] = node_id
 
         return self.submitTask(CreateServerTask(**create_args))
 
