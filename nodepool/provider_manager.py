@@ -20,6 +20,7 @@ import logging
 import paramiko
 import novaclient
 import novaclient.client
+import novaclient.exceptions
 import novaclient.extension
 import novaclient.v1_1.contrib.tenant_networks
 import threading
@@ -111,7 +112,13 @@ class NotFound(Exception):
 
 class CreateServerTask(Task):
     def main(self, client):
-        server = client.servers.create(**self.args)
+        try:
+            server = client.servers.create(**self.args)
+        except novaclient.exceptions.ClientException as e:
+            if e.code == 500 or e.code == 502:
+                # We see these errors, then recover later
+                return None
+            raise
         return str(server.id)
 
 
@@ -384,8 +391,9 @@ class ProviderManager(TaskManager):
         return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
 
     def getServerFromList(self, server_id):
+        """Get a server - server_id can be name or id"""
         for s in self.listServers():
-            if s['id'] == server_id:
+            if s['id'] == server_id or s['name'] == server_id:
                 return s
         raise NotFound()
 
@@ -588,7 +596,7 @@ class ProviderManager(TaskManager):
 
         if self.hasExtension('os-floating-ips'):
             for ip in self.listFloatingIPs():
-                if ip['instance_id'] == server_id:
+                if ip['instance_id'] == server['id']:
                     self.log.debug('Deleting floating ip for server %s' %
                                    server_id)
                     self.deleteFloatingIP(ip['id'])
@@ -598,8 +606,8 @@ class ProviderManager(TaskManager):
             for kp in self.listKeypairs():
                 if kp['name'] == server['key_name']:
                     self.log.debug('Deleting keypair for server %s' %
-                                   server_id)
+                                   server['id'])
                     self.deleteKeypair(kp['name'])
 
-        self.log.debug('Deleting server %s' % server_id)
-        self.deleteServer(server_id)
+        self.log.debug('Deleting server %s' % server['id'])
+        self.deleteServer(server['id'])

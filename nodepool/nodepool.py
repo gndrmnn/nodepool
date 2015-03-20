@@ -387,17 +387,27 @@ class NodeLauncher(threading.Thread):
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az)
-        self.node.external_id = server_id
-        session.commit()
+        if server_id:
+            self.node.external_id = server_id
+            session.commit()
+        else:
+            server_id = hostname
 
         self.log.debug("Waiting for server %s for node id: %s" %
                        (server_id, self.node.id))
         server = self.manager.waitForServer(server_id, self.launch_timeout)
-        if server['status'] != 'ACTIVE':
+        if server is None or server['status'] != 'ACTIVE':
+            if server is None:
+                launch_status = "Server never returned after a 500 error"
+            else:
+                launch_status = server['status']
             raise LaunchStatusException("Server %s for node id: %s "
                                         "status: %s" %
                                         (server_id, self.node.id,
-                                         server['status']))
+                                         launch_status))
+
+        self.node.external_id = server['id']
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
@@ -663,19 +673,29 @@ class SubNodeLauncher(threading.Thread):
         server_id = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az)
-        self.subnode.external_id = server_id
-        session.commit()
+        if server_id:
+            self.subnode.external_id = server_id
+            session.commit()
+        else:
+            server_id = hostname
 
         self.log.debug("Waiting for server %s for subnode id: %s for "
                        "node id: %s" %
                        (server_id, self.subnode_id, self.node_id))
         server = self.manager.waitForServer(server_id, self.launch_timeout)
-        if server['status'] != 'ACTIVE':
+
+        if server is None or server['status'] != 'ACTIVE':
+            if server is None:
+                launch_status = "Server never returned after a 500 error"
+            else:
+                launch_status = server['status']
             raise LaunchStatusException("Server %s for subnode id: "
                                         "%s for node id: %s "
                                         "status: %s" %
                                         (server_id, self.subnode_id,
-                                         self.node_id, server['status']))
+                                         self.node_id, launch_status))
+        self.subnode.external_id = server['id']
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
@@ -996,15 +1016,25 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.snap_image.hostname = hostname
         self.snap_image.version = timestamp
-        self.snap_image.server_external_id = server_id
+        if server_id:
+            self.snap_image.server_external_id = server_id
+        else:
+            server_id = hostname
         session.commit()
 
         self.log.debug("Image id: %s waiting for server %s" %
                        (self.snap_image.id, server_id))
         server = self.manager.waitForServer(server_id)
-        if server['status'] != 'ACTIVE':
+        if server is None or server['status'] != 'ACTIVE':
+            if server is None:
+                launch_status = "Server never returned after a 500 error"
+            else:
+                launch_status = server['status']
             raise Exception("Server %s for image id: %s status: %s" %
-                            (server_id, self.snap_image.id, server['status']))
+                            (server_id, self.snap_image.id, launch_status))
+
+        self.snap_image.server_external_id = server['id']
+        session.commit()
 
         ip = server.get('public_v4')
         if not ip and self.manager.hasExtension('os-floating-ips'):
@@ -2083,27 +2113,37 @@ class NodePool(threading.Thread):
 
         for subnode in node.subnodes:
             if subnode.external_id:
-                try:
-                    self.log.debug('Deleting server %s for subnode id: '
-                                   '%s of node id: %s' %
-                                   (subnode.external_id, subnode.id, node.id))
-                    manager.cleanupServer(subnode.external_id)
-                except provider_manager.NotFound:
-                    pass
-
-        if node.external_id:
+                subnode_server_id = subnode.external_id
+            else:
+                subnode_server_id = subnode.hostname
             try:
-                self.log.debug('Deleting server %s for node id: %s' %
-                               (node.external_id, node.id))
-                manager.cleanupServer(node.external_id)
-                manager.waitForServerDeletion(node.external_id)
+                self.log.debug('Deleting server %s for subnode id: '
+                               '%s of node id: %s' %
+                               (subnode_server_id, subnode.id, node.id))
+                manager.cleanupServer(subnode_server_id)
             except provider_manager.NotFound:
                 pass
-            node.external_id = None
+
+        if node.external_id:
+            server_id = node.external_id
+        else:
+            server_id = node.hostname
+        try:
+            self.log.debug('Deleting server %s for node id: %s' %
+                           (server_id, node.id))
+            manager.cleanupServer(server_id)
+            manager.waitForServerDeletion(server_id)
+        except provider_manager.NotFound:
+            pass
+        node.external_id = None
 
         for subnode in node.subnodes:
             if subnode.external_id:
-                manager.waitForServerDeletion(subnode.external_id)
+                subnode_server_id = subnode.external_id
+            else:
+                subnode_server_id = subnode.hostname
+            if subnode.external_id:
+                manager.waitForServerDeletion(subnode_server_id)
                 subnode.delete()
 
         node.delete()
