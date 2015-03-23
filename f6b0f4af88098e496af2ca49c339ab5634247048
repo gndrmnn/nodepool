@@ -16,6 +16,23 @@
       "revId": "f6b0f4af88098e496af2ca49c339ab5634247048",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_d37e0eae",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-23T21:19:31Z",
+      "side": 1,
+      "message": "I think this asserts that the node was _replaced_ successfully.  At this point we should have one node in DELETE and one node in READY.  So perhaps it should assert that there is a node in DELETE for clarity?",
+      "revId": "f6b0f4af88098e496af2ca49c339ab5634247048",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
