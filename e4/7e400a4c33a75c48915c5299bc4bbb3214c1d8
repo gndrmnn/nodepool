@@ -1,0 +1,12 @@
+Verified+2: Jenkins
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+1: yolanda.robla <info@ysoft.biz>
+Code-Review+2: Joshua Hesketh <joshua.hesketh@rackspace.com>
+Workflow+1: Joshua Hesketh <joshua.hesketh@rackspace.com>
+Code-Review+1: greghaynes <greg@greghaynes.net>
+Code-Review+1: Brian Hunter <bhunter@tesora.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 23 Mar 2015 04:55:19 +0000
+Reviewed-on: https://review.openstack.org/166057
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
