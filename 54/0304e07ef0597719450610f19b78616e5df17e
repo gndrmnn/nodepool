@@ -1,0 +1,11 @@
+Verified+2: Jenkins
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+1: yolanda.robla <info@ysoft.biz>
+Code-Review+2: Joshua Hesketh <joshua.hesketh@rackspace.com>
+Workflow+1: Joshua Hesketh <joshua.hesketh@rackspace.com>
+Code-Review+1: greghaynes <greg@greghaynes.net>
+Submitted-by: Jenkins
+Submitted-at: Mon, 23 Mar 2015 04:30:45 +0000
+Reviewed-on: https://review.openstack.org/165792
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
