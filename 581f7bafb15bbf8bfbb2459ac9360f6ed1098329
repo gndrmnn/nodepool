@@ -16,6 +16,24 @@
       "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_9f4ae281",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-03-23T17:43:03Z",
+      "side": 1,
+      "message": "These lists need to be shared (which makes sense - nova needs to know about images it can boot from).",
+      "parentUuid": "1a6ced46_fbb86a2c",
+      "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
