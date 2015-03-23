@@ -70,6 +70,24 @@
       "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_a0b083f5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-23T03:15:28Z",
+      "side": 1,
+      "message": "http://docs.openstack.org/developer/python-novaclient/ref/v2/servers.html\nAbout half way down the page:\n  config_drive – (optional extension) value for config drive either boolean, or volume-id\n\nBut yes, looking at the code that doesn\u0027t seem to be the case. Might need some more input here.\n\nEither way I think we should validate this option.",
+      "parentUuid": "9a80dd14_c44e9d6e",
+      "revId": "c474ab73f9210c8996629c1fb3b4dc95747b8f33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
