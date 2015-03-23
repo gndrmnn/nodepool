@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6ced46_fbb86a2c",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-23T04:02:58Z",
+      "side": 1,
+      "message": "why even declare this here and use a global? Couldn\u0027t you create the FakeList at line 42 (of this change)",
+      "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
