@@ -51,6 +51,24 @@
       "revId": "f6b0f4af88098e496af2ca49c339ab5634247048",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_31abd5d9",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-24T00:33:26Z",
+      "side": 1,
+      "message": "Yep, that was what I was referring to. Actually ensuring it is gone, or what happens if it doesn\u0027t delete because the provider failed (eg len(nodes) would be 2, but maybe it\u0027s not being tracked)",
+      "parentUuid": "1a6ced46_a5586757",
+      "revId": "f6b0f4af88098e496af2ca49c339ab5634247048",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
