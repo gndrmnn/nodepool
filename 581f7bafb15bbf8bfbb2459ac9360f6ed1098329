@@ -52,6 +52,24 @@
       "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_75fa74be",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-03-24T18:09:09Z",
+      "side": 1,
+      "message": "Ah, youre saying to instanciate at import time. That is actually a step back IMO - import time work is a pretty big antipattern.\n\nIf the issue is just code duplication I can make a function that does the work and have both call it?",
+      "parentUuid": "1a6ced46_11109900",
+      "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
