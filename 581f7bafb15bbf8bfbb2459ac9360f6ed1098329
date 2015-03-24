@@ -34,6 +34,24 @@
       "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6ced46_11109900",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-03-24T00:42:19Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it still be shared if you instantiated it on line 42?",
+      "parentUuid": "1a6ced46_9f4ae281",
+      "revId": "581f7bafb15bbf8bfbb2459ac9360f6ed1098329",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
