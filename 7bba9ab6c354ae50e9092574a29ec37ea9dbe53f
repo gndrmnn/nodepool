@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6ced46_72bc2107",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-03-25T14:57:46Z",
+      "side": 1,
+      "message": "Note that time is no longer imported in this file, so when your change is merged into the tip of the master branch for testing this module is not found.",
+      "revId": "7bba9ab6c354ae50e9092574a29ec37ea9dbe53f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
