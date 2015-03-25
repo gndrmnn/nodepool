@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import fixtures
+import os.path
 
 from nodepool import tests
 from nodepool import nodedb
@@ -44,6 +45,18 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+
+    def test_logging_config(self):
+        configfile = self.setup_config('node.yaml')
+        logging_configfile = os.path.join(os.path.dirname(__file__),
+                                          'fixtures', 'nodepool.logging.conf')
+        pool = self.useNodepool(configfile, watermark_sleep=1,
+                                logging_configfile=logging_configfile)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+        self.assertEqual(pool.loggingconfig.configfile_hash,
+                         '047c7e66caf9600486c373a389ed4b84')
 
     def test_dib_node(self):
         """Test that a dib image and node are created"""
