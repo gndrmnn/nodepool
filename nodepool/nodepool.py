@@ -19,8 +19,10 @@
 from statsd import statsd
 import apscheduler.scheduler
 import gear
+import hashlib
 import json
 import logging
+import logging.config
 import os.path
 import paramiko
 import Queue
@@ -1153,13 +1155,61 @@ class DiskImage(ConfigValue):
     pass
 
 
+class _LoggingConfig():
+    """Wrapper for a reloadable logging configuration file
+
+    Note that we assume the logging has been setup, and only reload if
+    we see the file change from when we are initalizied.  This allows
+    the "front-end" of nodepoold to setup the logging to capture
+    output before NodePool() itself is initalized & started.
+
+    We use a hash rather than stat() or something like inotify because
+    it's very portable and should be immune to puppet touching the
+    file, even if it doesn't modify it.
+
+    :param str configfile: the logging configuration file to monitor,
+                           or None to just leave logging alone
+
+    """
+    log = logging.getLogger("nodepool.LoggingConfig")
+
+    def _calculate_hash(self):
+        try:
+            with open(self.configfile) as f:
+                return hashlib.md5(f.read()).hexdigest()
+        except Exception as e:
+            raise Exception("config reload failed: %s" % e)
+
+    def __init__(self, configfile):
+        self.configfile = configfile
+        self.configfile_hash = None
+        if self.configfile:
+            self.configfile_hash = self._calculate_hash()
+
+    def reload(self):
+        if not self.configfile:
+            return
+
+        # fileConfig closes all loggers and starts again; we don't
+        # want to do that heavyweight operation unless something has
+        # changed.
+        new_hash = self._calculate_hash()
+        if new_hash != self.configfile_hash:
+            self.configfile_hash = new_hash
+            self.log.info("Reloading logging configuration")
+            logging.config.fileConfig(self.configfile)
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
-    def __init__(self, configfile, watermark_sleep=WATERMARK_SLEEP):
+    def __init__(self, configfile,
+                 watermark_sleep=WATERMARK_SLEEP,
+                 logging_configfile=None):
         threading.Thread.__init__(self, name='NodePool')
         self.configfile = configfile
         self.watermark_sleep = watermark_sleep
+        self.loggingconfig = _LoggingConfig(logging_configfile)
         self._stopped = False
         self.config = None
         self.zmq_context = None
@@ -1188,6 +1238,8 @@ class NodePool(threading.Thread):
         self._image_builder_queue.join()
 
     def loadConfig(self):
+        self.loggingconfig.reload()
+
         self.log.debug("Loading configuration")
         config = yaml.load(open(self.configfile))
 
