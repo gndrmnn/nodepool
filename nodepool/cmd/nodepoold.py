@@ -98,6 +98,7 @@ class NodePoolDaemon(object):
         self.args = parser.parse_args()
 
     def setup_logging(self):
+        fp = None
         if self.args.logconfig:
             fp = os.path.expanduser(self.args.logconfig)
             if not os.path.exists(fp):
@@ -108,6 +109,7 @@ class NodePoolDaemon(object):
             logging.basicConfig(level=logging.DEBUG,
                                 format='%(asctime)s %(levelname)s %(name)s: '
                                        '%(message)s')
+        return fp
 
     def exit_handler(self, signum, frame):
         self.pool.stop()
@@ -117,8 +119,9 @@ class NodePoolDaemon(object):
 
     def main(self):
         import nodepool.nodepool
-        self.setup_logging()
-        self.pool = nodepool.nodepool.NodePool(self.args.config)
+        logging_configfile = self.setup_logging()
+        self.pool = nodepool.nodepool.NodePool(self.args.config,
+                                               logging_configfile)
 
         signal.signal(signal.SIGUSR1, self.exit_handler)
         signal.signal(signal.SIGUSR2, stack_dump_handler)
