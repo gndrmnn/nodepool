@@ -364,8 +364,14 @@ across all of the targets which are on-line::
       hostname: '{label.name}-{provider.name}-{node_id}'
       subnode-hostname: '{label.name}-{provider.name}-{node_id}-{subnode_id}'
 
-For targets, the `name` is required.  If using Jenkins, the `url`,
-`user`, and `apikey` keys are required.  If the `credentials-id` key
-is provided, Nodepool will configure the Jenkins slave to use the
-Jenkins credential identified by that ID, otherwise it will use the
-username and ssh keys configured in the image.
+For targets, the `name` is required.
+
+If using Jenkins, the `url`, `user`, and `apikey` keys are required and refer
+to the credentials used by nodepool to log in to the Jenkins master.
+
+If the `credentials-id` key is provided, it is used by the configured Jenkins
+master to log in to the Jenkins slaves. This id is a Jenkins credential
+identified by that ID. If `credentials-id` is not provided the username
+and ssh keys configured in the image are used instead, in this case ensure
+that the path to the ssh keys exist on the Jenkins master system as well
+as your Nodepool system.
