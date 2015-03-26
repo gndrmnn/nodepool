@@ -261,6 +261,8 @@ provider, the Nodepool image types are also defined (see
 For providers, the `name`, `username`, `password`, `auth-url`,
 `project-id`, and `max-servers` keys are required.
 
+`project-id`: Some clouds may refer to the `project-id` as `tenant-id`.
+
 Both `boot-timeout` and `launch-timeout` keys are optional.  The
 `boot-timeout` key defaults to 60 seconds and `launch-timeout` key
 will default to 3600 seconds.
