@@ -120,10 +120,6 @@ class FakeHTTPClient(object):
 
 class FakeClient(object):
     def __init__(self, *args, **kwargs):
-        self.flavors = FakeList([
-            Dummy(id='f1', ram=8192, name='Fake Flavor'),
-            Dummy(id='f2', ram=8192, name='Unreal Flavor'),
-        ])
         self.images = get_fake_images_list()
         self.client = FakeHTTPClient()
         self.servers = FakeList([])
@@ -138,11 +134,19 @@ class FakeGlanceImage(object):
 class FakeOpenStackCloud(object):
     nova_client = FakeClient()
 
+    flavors = FakeList([
+        Dummy(id='f1', ram=8192, name='Fake Flavor'),
+        Dummy(id='f2', ram=8192, name='Unreal Flavor'),
+    ])
+
     def create_image(self, **kwargs):
         if kwargs.get('SHOULD_FAIL', '').lower() == 'true':
             raise RuntimeError('This image has SHOULD_FAIL set to True.')
         else:
             return FakeGlanceImage()
+
+    def get_flavor_by_ram(self, **kwargs):
+        return dict(id='f1')
 
 
 class FakeFile(StringIO.StringIO):
