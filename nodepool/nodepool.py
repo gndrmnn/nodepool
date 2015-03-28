@@ -1247,6 +1247,7 @@ class NodePool(threading.Thread):
             p.password = provider['password']
             p.project_id = provider['project-id']
             p.auth_url = provider['auth-url']
+            p.cloud = provider.get('cloud', None)
             p.service_type = provider.get('service-type')
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
