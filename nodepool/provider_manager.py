@@ -210,13 +210,6 @@ class ListExtensionsTask(Task):
             return []
 
 
-class ListFlavorsTask(Task):
-    def main(self, client):
-        flavors = client.nova_client.flavors.list()
-        return [dict(id=str(flavor.id), ram=flavor.ram, name=flavor.name)
-                for flavor in flavors]
-
-
 class ListImagesTask(Task):
     def main(self, client):
         images = client.nova_client.images.list()
@@ -252,7 +245,6 @@ class ProviderManager(TaskManager):
         self._images = {}
         self._networks = {}
         self._cloud_metadata_read = False
-        self.__flavors = {}
         self.__extensions = {}
         self._servers = []
         self._servers_time = 0
@@ -262,19 +254,12 @@ class ProviderManager(TaskManager):
         self._ips_lock = threading.Lock()
 
     @property
-    def _flavors(self):
-        if not self._cloud_metadata_read:
-            self._getCloudMetadata()
-        return self.__flavors
-
-    @property
     def _extensions(self):
         if not self._cloud_metadata_read:
             self._getCloudMetadata()
         return self.__extensions
 
     def _getCloudMetadata(self):
-        self.__flavors = self._getFlavors()
         self.__extensions = self.listExtensions()
         self._cloud_metadata_read = True
 
@@ -299,11 +284,6 @@ class ProviderManager(TaskManager):
         kwargs['manager'] = self
         return shade.openstack_cloud.openstack_cloud(**kwargs)
 
-    def _getFlavors(self):
-        flavors = self.listFlavors()
-        flavors.sort(lambda a, b: cmp(a['ram'], b['ram']))
-        return flavors
-
     def hasExtension(self, extension):
         # Note: this will throw an error if the provider is offline
         # but all the callers are in threads so the mainloop won't be affected.
@@ -315,11 +295,8 @@ class ProviderManager(TaskManager):
         # Note: this will throw an error if the provider is offline
         # but all the callers are in threads (they call in via CreateServer) so
         # the mainloop won't be affected.
-        for f in self._flavors:
-            if (f['ram'] >= min_ram
-                    and (not name_filter or name_filter in f['name'])):
-                return f
-        raise Exception("Unable to find flavor with min ram: %s" % min_ram)
+        # NOTE shade API calls are managed inside of the nodepool TaskManager
+        return self._client.get_flavor_by_ram(ram=min_ram, include=name_filter)
 
     def findImage(self, name):
         if name in self._images:
@@ -506,9 +483,6 @@ class ProviderManager(TaskManager):
 
     def listImages(self):
         return self.submitTask(ListImagesTask())
-
-    def listFlavors(self):
-        return self.submitTask(ListFlavorsTask())
 
     def listFloatingIPs(self):
         if time.time() - self._ips_time >= IPS_LIST_AGE:

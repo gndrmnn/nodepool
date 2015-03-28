@@ -131,10 +131,6 @@ class FakeHTTPClient(object):
 
 class FakeClient(object):
     def __init__(self, *args, **kwargs):
-        self.flavors = FakeList([
-            Dummy(id='f1', ram=8192, name='Fake Flavor'),
-            Dummy(id='f2', ram=8192, name='Unreal Flavor'),
-        ])
         self.images = get_fake_images_list()
         self.client = FakeHTTPClient()
         self.servers = FakeList([])
@@ -151,6 +147,11 @@ class FakeOpenStackCloud(object):
     nova_client = FakeClient()
     _glance_client = FakeGlanceClient()
 
+    flavors = FakeList([
+        Dummy(id='f1', ram=8192, name='Fake Flavor'),
+        Dummy(id='f2', ram=8192, name='Unreal Flavor'),
+    ])
+
     def create_image(self, **kwargs):
         image = self._glance_client.images.create(**kwargs)
         try:
@@ -158,6 +159,9 @@ class FakeOpenStackCloud(object):
         except RuntimeError as e:
             raise shade.OpenStackCloudException(str(e))
         return image
+
+    def get_flavor_by_ram(self, **kwargs):
+        return dict(id='f1')
 
 
 class FakeFile(StringIO.StringIO):
