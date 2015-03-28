@@ -130,38 +130,19 @@ class FakeClient(object):
         self.servers.api = self
 
 
-class FakeGlanceImages(object):
-
-    def create(self, **kwargs):
-        return FakeGlanceImage(**kwargs)
-
-
-class FakeGlanceClient(object):
-    images = FakeGlanceImages()
-
-    def _init__(self, **kwargs):
-        self.kwargs = kwargs
-
-
 class FakeGlanceImage(object):
     def __init__(self, *args, **kwargs):
         self.id = 'fake-glance-id'
 
 
-class FakeServiceCatalog(object):
-    def url_for(self, **kwargs):
-        return 'fake-url'
-
-
-class FakeKeystoneClient(object):
-    def __init__(self, **kwargs):
-        self.service_catalog = FakeServiceCatalog()
-        self.auth_token = 'fake-auth-token'
-
-
 class FakeOpenStackCloud(object):
     nova_client = FakeClient()
-    glance_client = FakeGlanceClient()
+
+    def create_image(self, **kwargs):
+        if kwargs.get('SHOULD_FAIL', '').lower() == 'true':
+            raise RuntimeError('This image has SHOULD_FAIL set to True.')
+        else:
+            return FakeGlanceImage()
 
 
 class FakeFile(StringIO.StringIO):
