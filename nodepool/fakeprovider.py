@@ -53,6 +53,16 @@ def get_fake_images_list():
     return fake_images_list
 
 
+FAKE_CLIENT = None
+
+
+def get_fake_client(**kwargs):
+    global FAKE_CLIENT
+    if FAKE_CLIENT is None:
+        FAKE_CLIENT = FakeOpenStackCloud()
+    return FAKE_CLIENT
+
+
 class FakeList(object):
     def __init__(self, l):
         self._list = l
@@ -144,8 +154,8 @@ class BadClient(FakeClient):
 
 
 class FakeGlanceClient(object):
-    def __init__(self, *args, **kwargs):
-        self.id = 'fake-glance-id'
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
         self.images = get_fake_images_list()
 
 
@@ -158,6 +168,11 @@ class FakeKeystoneClient(object):
     def __init__(self, **kwargs):
         self.service_catalog = FakeServiceCatalog()
         self.auth_token = 'fake-auth-token'
+
+
+class FakeOpenStackCloud(object):
+    nova_client = FakeClient()
+    glance_client = FakeGlanceClient()
 
 
 class FakeFile(StringIO.StringIO):
@@ -237,6 +252,4 @@ class FakeJenkins(object):
                   u'url': u'https://jenkins.example.com/view/test-view/'}]}
         return d
 
-
-FAKE_CLIENT = FakeClient()
 BAD_CLIENT = BadClient()
