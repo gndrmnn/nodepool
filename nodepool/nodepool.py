@@ -1241,6 +1241,9 @@ class NodePool(threading.Thread):
             p.password = provider['password']
             p.project_id = provider['project-id']
             p.auth_url = provider['auth-url']
+            # If there is no clouds.yaml, os-client-config returns a single
+            # cloud named 'openstack' - so it's a very safe default value
+            p.cloud = provider.get('cloud', 'openstack')
             p.service_type = provider.get('service-type')
             p.service_name = provider.get('service-name')
             p.region_name = provider.get('region-name')
