@@ -82,11 +82,6 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         self.useFixture(fixtures.MonkeyPatch('shade.openstack_cloud.'
                                              'openstack_cloud',
                                              fakeprovider.get_fake_client))
-        self.useFixture(fixtures.MonkeyPatch('keystoneclient.v2_0.client.'
-                                             'Client',
-                                             fakeprovider.FakeKeystoneClient))
-        self.useFixture(fixtures.MonkeyPatch('glanceclient.client.Client',
-                                             fakeprovider.FakeGlanceClient))
         self.useFixture(fixtures.MonkeyPatch('novaclient.client.Client',
                                              fakeprovider.FakeClient))
 
