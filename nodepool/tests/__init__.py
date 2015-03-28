@@ -39,8 +39,7 @@ class LoggingPopen(subprocess.Popen):
 
 
 class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
-
-    def setUp(self):
+    def setUp(self, use_fakes=True):
         super(BaseTestCase, self).setUp()
         test_timeout = os.environ.get('OS_TEST_TIMEOUT', 60)
         try:
@@ -76,9 +75,13 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
 
         self.useFixture(fixtures.MonkeyPatch('subprocess.Popen',
                                              LoggingPopenFactory))
-        self.setUpFakes()
+
+        if use_fakes:
+            self.setUpFakes()
 
     def setUpFakes(self):
+        self.useFixture(fixtures.MonkeyPatch('shade.openstack_cloud',
+                                             fakeprovider.get_fake_client))
         self.useFixture(fixtures.MonkeyPatch('keystoneclient.v2_0.client.'
                                              'Client',
                                              fakeprovider.FakeKeystoneClient))
@@ -179,8 +182,8 @@ class MySQLSchemaFixture(fixtures.Fixture):
 
 
 class DBTestCase(BaseTestCase):
-    def setUp(self):
-        super(DBTestCase, self).setUp()
+    def setUp(self, use_fakes=True):
+        super(DBTestCase, self).setUp(use_fakes=use_fakes)
         f = MySQLSchemaFixture()
         self.useFixture(f)
         self.dburi = f.dburi
@@ -226,3 +229,8 @@ class DBTestCase(BaseTestCase):
                     break
                 time.sleep(1)
         self.wait_for_threads()
+
+
+class IntegrationTestCase(DBTestCase):
+    def setUp(self):
+        super(IntegrationTestCase, self).setUp(use_fakes=False)
