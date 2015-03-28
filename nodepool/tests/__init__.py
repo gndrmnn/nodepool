@@ -79,6 +79,9 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         self.setUpFakes()
 
     def setUpFakes(self):
+        self.useFixture(fixtures.MonkeyPatch('shade.openstack_cloud.'
+                                             'openstack_cloud',
+                                             fakeprovider.get_fake_client))
         self.useFixture(fixtures.MonkeyPatch('keystoneclient.v2_0.client.'
                                              'Client',
                                              fakeprovider.FakeKeystoneClient))
