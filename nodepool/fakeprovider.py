@@ -22,6 +22,7 @@ import time
 import uuid
 
 from jenkins import JenkinsException
+import shade
 
 
 class Dummy(object):
@@ -163,20 +164,17 @@ class FakeGlanceClient(object):
         self.images = get_fake_images_list()
 
 
-class FakeServiceCatalog(object):
-    def url_for(self, **kwargs):
-        return 'fake-url'
-
-
-class FakeKeystoneClient(object):
-    def __init__(self, **kwargs):
-        self.service_catalog = FakeServiceCatalog()
-        self.auth_token = 'fake-auth-token'
-
-
 class FakeOpenStackCloud(object):
     nova_client = FakeClient()
-    glance_client = FakeGlanceClient()
+    _glance_client = FakeGlanceClient()
+
+    def create_image(self, **kwargs):
+        image = self._glance_client.images.create(**kwargs)
+        try:
+            image.update('fake data')
+        except RuntimeError as e:
+            raise shade.OpenStackCloudException(str(e))
+        return image
 
 
 class FakeFile(StringIO.StringIO):
