@@ -108,35 +108,19 @@ class FakeClient(object):
         self.servers.api = self
 
 
-class FakeGlanceImages(object):
-
-    def create(self, **kwargs):
-        return FakeGlanceImage(**kwargs)
-
-
-class FakeGlanceClient(object):
-
-    images = FakeGlanceImages()
-
-    def _init__(self, **kwargs):
-        self.kwargs = kwargs
-
-
 class FakeGlanceImage(object):
     def __init__(self, **kwargs):
         self.id = 'fake-glance-id'
-        self.should_fail = kwargs.get('SHOULD_FAIL', '').lower() == 'true'
-
-    def update(self, **kwargs):
-        if self.should_fail:
-            raise RuntimeError('This image has SHOULD_FAIL set to True.')
-        else:
-            return True
 
 
 class FakeOpenStackCloud(object):
     nova_client = FakeClient()
-    glance_client = FakeGlanceClient()
+
+    def create_image(self, **kwargs):
+        if kwargs.get('SHOULD_FAIL', '').lower() == 'true':
+            raise RuntimeError('This image has SHOULD_FAIL set to True.')
+        else:
+            return FakeGlanceImage()
 
 
 class FakeFile(StringIO.StringIO):

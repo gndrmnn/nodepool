@@ -483,21 +483,22 @@ class ProviderManager(TaskManager):
                     meta):
         # configure glance and upload image.  Note the meta flags
         # are provided as custom glance properties
-        # TODO(mordred) the opening of the file is hard to fake - but shade
-        # will change this to passing in the filename, at which point we
-        # should be able to remove this if block
-        if image_name.startswith('fake-'):
-            data = 'fake'
-        else:
-            filename = '%s.%s' % (filename, disk_format)
-            data = open(filename, 'rb')
-        image = self._client.glance_client.images.create(
+        # NOTE: we have wait=True set here. This is not how we normally
+        # do things in nodepool, preferring to poll ourselves thankyouverymuch.
+        # However - two things to note:
+        #  - glance v1 has no aysnc mechanism, so we have to handle it anyway
+        #  - glance v2 waiting is very strange and complex - but we have to
+        #              block for our v1 clouds anyway, so we might as well
+        #              have the interface be the same and treat faking-out
+        #              a shade-level fake-async interface later
+        image = self._client.create_image(
             name=image_name,
+            filename='%s.%s' % (filename, disk_format),
             is_public=False,
             disk_format=disk_format,
             container_format=container_format,
+            wait=True,
             **meta)
-        image.update(data=data)
         return image.id
 
     def listExtensions(self):
