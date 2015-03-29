@@ -28,12 +28,19 @@ class ManagerStoppedException(Exception):
 
 
 class Task(object):
-    def __init__(self, **kw):
+    PRIORITY_HIGH = 1
+    PRIORITY_LOW = 2
+
+    def __init__(self, priority=PRIORITY_LOW, **kw):
         self._wait_event = threading.Event()
         self._exception = None
         self._traceback = None
         self._result = None
+        self.priority = priority
         self.args = kw
+
+    def __cmp__(self, other):
+        return cmp(self.priority, other.priority)
 
     def done(self, result):
         self._result = result
@@ -63,7 +70,7 @@ class TaskManager(threading.Thread):
     def __init__(self, client, name, rate):
         super(TaskManager, self).__init__(name=name)
         self.daemon = True
-        self.queue = Queue.Queue()
+        self.queue = Queue.PriorityQueue()
         self._running = True
         self.name = name
         self.rate = float(rate)

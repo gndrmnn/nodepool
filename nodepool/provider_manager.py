@@ -348,7 +348,7 @@ class ProviderManager(TaskManager):
         return key
 
     def listKeypairs(self):
-        return self.submitTask(ListKeypairsTask())
+        return self.submitTask(ListKeypairsTask(priority=Task.PRIORITY_HIGH))
 
     def deleteKeypair(self, name):
         return self.submitTask(DeleteKeypairTask(name=name))
@@ -522,19 +522,20 @@ class ProviderManager(TaskManager):
         return image.id
 
     def listExtensions(self):
-        return self.submitTask(ListExtensionsTask())
+        return self.submitTask(ListExtensionsTask(priority=Task.PRIORITY_HIGH))
 
     def listImages(self):
-        return self.submitTask(ListImagesTask())
+        return self.submitTask(ListImagesTask(priority=Task.PRIORITY_HIGH))
 
     def listFlavors(self):
-        return self.submitTask(ListFlavorsTask())
+        return self.submitTask(ListFlavorsTask(priority=Task.PRIORITY_HIGH))
 
     def listFloatingIPs(self):
         if time.time() - self._ips_time >= IPS_LIST_AGE:
             if self._ips_lock.acquire(False):
                 try:
-                    self._ips = self.submitTask(ListFloatingIPsTask())
+                    self._ips = self.submitTask(
+                        ListFloatingIPsTask(priority=Task.PRIORITY_HIGH))
                     self._ips_time = time.time()
                 finally:
                     self._ips_lock.release()
@@ -557,7 +558,8 @@ class ProviderManager(TaskManager):
             # data until it succeeds.
             if self._servers_lock.acquire(False):
                 try:
-                    self._servers = self.submitTask(ListServersTask())
+                    self._servers = self.submitTask(
+                        ListServersTask(priority=Task.PRIORITY_HIGH))
                     self._servers_time = time.time()
                 finally:
                     self._servers_lock.release()
