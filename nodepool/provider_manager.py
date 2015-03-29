@@ -296,6 +296,7 @@ class ProviderManager(TaskManager):
             password=self.provider.password,
             project_name=self.provider.project_id,
             auth_url=self.provider.auth_url)
+        kwargs['manager'] = self
         return shade.openstack_cloud.openstack_cloud(**kwargs)
 
     def _getFlavors(self):
