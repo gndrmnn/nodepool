@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_798350cd",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-30T23:53:22Z",
+      "side": 1,
+      "message": "I propose we remove the qemu-img-options and also don\u0027t add image types here, and instead...",
+      "revId": "f24667fc5e789edeb1567fd4842f614e86ba2097",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_59888ce7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-30T23:53:22Z",
+      "side": 1,
+      "message": "...here add:\n\n      image-type: qcow2\n      image-options: \u0027compat\u003d0.10\u0027\n\nand...",
+      "revId": "f24667fc5e789edeb1567fd4842f614e86ba2097",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_396ee82f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-30T23:53:22Z",
+      "side": 1,
+      "message": "...don\u0027t add image-type here.",
+      "revId": "f24667fc5e789edeb1567fd4842f614e86ba2097",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
