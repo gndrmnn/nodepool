@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_2b40dc55",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-03-30T16:36:09Z",
+      "side": 1,
+      "message": "I don\u0027t think this is just a rackspace thing. Keystone hasn\u0027t been super consistent in its terminology. Intead we should say something like:\n\n  Some clouds may refer to the `project-id` as `tenant-id`.\n\nBasically make this less of a rackspace specific example.",
+      "revId": "358d97225a1f388589154fbb04e206c340a781f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
