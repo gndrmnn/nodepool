@@ -16,6 +16,24 @@
       "revId": "358d97225a1f388589154fbb04e206c340a781f1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_0ee52536",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-03-30T17:06:14Z",
+      "side": 1,
+      "message": "I\u0027m not sure what project-id maps to for other providers but my vision is to make this easy and obvious to an end user. I think just saying \"some clouds may refer to ...\" would work if tenant-id is the only other possibility but if we have a provider that calls it yet another name I think it\u0027d be more clear for the end user if we can provide a table mapping each supported provider to what each of them call it internally.\n\nI\u0027m quite new to nodepool though outside of rackspace and hp cloud from what I\u0027ve seen are there any other providers that use this and that this could be a point of confusion? Also what does HP\u0027s cloud call this field? do they just refer to it as project-id?\n\nIf not I\u0027m +1 on just simply stating the \"Some clouds...\" point until there is more providers.",
+      "parentUuid": "da9b358b_2b40dc55",
+      "revId": "358d97225a1f388589154fbb04e206c340a781f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
