@@ -46,3 +46,11 @@ class TestConfigValidation(tests.BaseTestCase):
 
         validator = ConfigValidator(config)
         self.assertRaises(MultipleInvalid, validator.validate)
+
+    def test_invalid_config(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'invalid_cloud_config.yaml')
+
+        validator = ConfigValidator(config)
+        self.assertRaises(AssertionError, validator.validate)
