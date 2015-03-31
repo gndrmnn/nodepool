@@ -761,12 +761,12 @@ class DiskImageBuilder(threading.Thread):
         for k, v in image.env_vars.items():
             env[k] = v
 
-        extra_options = ''
-        if image.qemu_img_options:
-            extra_options = ('--qemu-img-options %s' %
-                             image.qemu_img_options)
         img_elements = image.elements
         img_types = ",".join(image.image_types)
+
+        qemu_img_options = ''
+        if 'qcow2' in img_types:
+            qemu_img_options = "--qemu-img-options 'compat=0.10'"
 
         if 'fake-' in filename:
             dib_cmd = 'nodepool/tests/fake-image-create'
@@ -774,7 +774,7 @@ class DiskImageBuilder(threading.Thread):
             dib_cmd = 'disk-image-create'
 
         cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, extra_options, filename, img_elements))
+               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image_name,))
@@ -1305,7 +1305,6 @@ class NodePool(threading.Thread):
                 # d-i-b, but might be untyped in the yaml and
                 # interpreted as a number (e.g. "21" for fedora)
                 d.release = str(diskimage.get('release', ''))
-                d.qemu_img_options = diskimage.get('qemu-img-options', '')
                 d.env_vars = diskimage.get('env-vars', {})
                 if not isinstance(d.env_vars, dict):
                     self.log.error("%s: ignoring env-vars; "
