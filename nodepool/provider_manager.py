@@ -28,6 +28,10 @@ import glanceclient.client
 import keystoneclient.v2_0.client as ksclient
 import time
 
+# Disable the Rackspace warnings about deprecated certificates. We are aware
+import warnings
+warnings.filterwarnings('ignore', 'Certificate has no `subjectAltName`')
+
 import fakeprovider
 from nodeutils import iterate_timeout
 from task_manager import Task, TaskManager, ManagerStoppedException
