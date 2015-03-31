@@ -16,6 +16,23 @@
       "revId": "5119e7f0fc5d91615b9a0871199f5b7714af0794",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_3019487a",
+        "filename": "requirements.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-03-31T12:06:55Z",
+      "side": 1,
+      "message": "Can we rely on latest version of shade? Shall we force to some version there?",
+      "revId": "5119e7f0fc5d91615b9a0871199f5b7714af0794",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
