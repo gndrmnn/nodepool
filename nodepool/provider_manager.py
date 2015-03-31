@@ -245,8 +245,21 @@ class FindNetworkTask(Task):
         return dict(id=str(network.id))
 
 
+class PollingProviderManager(TaskManager):
+    def __init__(self, client, provider):
+        super(PollingProviderManager, self).__init__(
+            None, provider.name, provider.rate)
+        self.provider = provider
+        self._client = client
+
+
 class ProviderManager(TaskManager):
     log = logging.getLogger("nodepool.ProviderManager")
+
+    def _getPollingProviderManager(self):
+        p = PollingProviderManager(self._client, self.provider)
+        p.start()
+        return p
 
     def __init__(self, provider):
         super(ProviderManager, self).__init__(None, provider.name,
@@ -264,6 +277,7 @@ class ProviderManager(TaskManager):
         self._ips = []
         self._ips_time = 0
         self._ips_lock = threading.Lock()
+        self._polling_provider = self._getPollingProviderManager()
 
     @property
     def _flavors(self):
@@ -325,14 +339,15 @@ class ProviderManager(TaskManager):
     def findImage(self, name):
         if name in self._images:
             return self._images[name]
-        image = self.submitTask(FindImageTask(name=name))
+        image = self._polling_provider.submitTask(FindImageTask(name=name))
         self._images[name] = image
         return image
 
     def findNetwork(self, label):
         if label in self._networks:
             return self._networks[label]
-        network = self.submitTask(FindNetworkTask(label=label))
+        network = self._polling_provider.submitTask(
+            FindNetworkTask(label=label))
         self._networks[label] = network
         return network
 
@@ -348,7 +363,7 @@ class ProviderManager(TaskManager):
         return key
 
     def listKeypairs(self):
-        return self.submitTask(ListKeypairsTask())
+        return self._polling_provider.submitTask(ListKeypairsTask())
 
     def deleteKeypair(self, name):
         return self.submitTask(DeleteKeypairTask(name=name))
@@ -378,10 +393,12 @@ class ProviderManager(TaskManager):
         return self.submitTask(CreateServerTask(**create_args))
 
     def getServer(self, server_id):
-        return self.submitTask(GetServerTask(server_id=server_id))
+        return self._polling_provider.submitTask(
+            GetServerTask(server_id=server_id))
 
     def getFloatingIP(self, ip_id):
-        return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
+        return self._polling_provider.submitTask(
+            GetFloatingIPTask(ip_id=ip_id))
 
     def getServerFromList(self, server_id):
         for s in self.listServers():
@@ -474,7 +491,7 @@ class ProviderManager(TaskManager):
                                                metadata=meta))
 
     def getImage(self, image_id):
-        return self.submitTask(GetImageTask(image=image_id))
+        return self._polling_provider.submitTask(GetImageTask(image=image_id))
 
     def get_glance_client(self, provider):
         keystone_kwargs = {'auth_url': provider.auth_url,
@@ -522,19 +539,20 @@ class ProviderManager(TaskManager):
         return image.id
 
     def listExtensions(self):
-        return self.submitTask(ListExtensionsTask())
+        return self._polling_provider.submitTask(ListExtensionsTask())
 
     def listImages(self):
-        return self.submitTask(ListImagesTask())
+        return self._polling_provider.submitTask(ListImagesTask())
 
     def listFlavors(self):
-        return self.submitTask(ListFlavorsTask())
+        return self._polling_provider.submitTask(ListFlavorsTask())
 
     def listFloatingIPs(self):
         if time.time() - self._ips_time >= IPS_LIST_AGE:
             if self._ips_lock.acquire(False):
                 try:
-                    self._ips = self.submitTask(ListFloatingIPsTask())
+                    self._ips = self._polling_provider.submitTask(
+                        ListFloatingIPsTask())
                     self._ips_time = time.time()
                 finally:
                     self._ips_lock.release()
@@ -557,7 +575,8 @@ class ProviderManager(TaskManager):
             # data until it succeeds.
             if self._servers_lock.acquire(False):
                 try:
-                    self._servers = self.submitTask(ListServersTask())
+                    self._servers = self._polling_provider.submitTask(
+                        ListServersTask())
                     self._servers_time = time.time()
                 finally:
                     self._servers_lock.release()
