@@ -33,8 +33,15 @@ class Dummy(object):
 
 
 class FakeList(object):
-    def __init__(self, l):
+    def __init__(self, l,
+                 create_api_time=0,
+                 delete_api_time=0,
+                 create_time=0.1,
+             ):
         self._list = l
+        self.create_api_time=create_api_time
+        self.delete_api_time=delete_api_time
+        self.create_time=create_time
 
     def list(self):
         return self._list
@@ -57,6 +64,7 @@ class FakeList(object):
         obj.status = status
 
     def delete(self, *args, **kw):
+        time.sleep(self.delete_api_time)
         if 'image' in kw:
             self._list.remove(self.get(kw['image']))
         else:
@@ -67,6 +75,7 @@ class FakeList(object):
                 self._list.remove(self.get(obj))
 
     def create(self, **kw):
+        time.sleep(self.create_api_time)
         s = Dummy(id=uuid.uuid4().hex,
                   name=kw['name'],
                   status='BUILD',
@@ -80,7 +89,7 @@ class FakeList(object):
         self._list.append(s)
         t = threading.Thread(target=self._finish,
                              name='FakeProvider create',
-                             args=(s, 0.1, 'ACTIVE'))
+                             args=(s, self.create_time, 'ACTIVE'))
         t.start()
         return s
 
@@ -104,7 +113,10 @@ class FakeClient(object):
         ])
         self.images = FakeList([Dummy(id='i1', name='Fake Precise')])
         self.client = FakeHTTPClient()
-        self.servers = FakeList([])
+        self.servers = FakeList([],
+                                create_time=300,
+                                create_api_time=30,
+                                delete_api_time=30)
         self.servers.api = self
 
 
