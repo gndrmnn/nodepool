@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_95591801",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-03-31T16:21:52Z",
+      "side": 1,
+      "message": "Remove env vars here.",
+      "revId": "403f3ce1e0d6323d340ea551477a8d597fb9622d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
