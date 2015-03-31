@@ -117,6 +117,13 @@ class ConfigValidator:
         schema = v.Schema(top_level)
         schema(config)
 
+        # providers must have either a cloud or auth information
+        for provider in config['providers']:
+            if 'cloud' not in provider and 'auth-url' not in provider:
+                raise AssertionError('provider %s specifies neither a '
+                                     'cloud nor an auth-url'
+                                     % provider['name'])
+
         # labels must list valid providers
         all_providers = [p['name'] for p in config['providers']]
         for label in config['labels']:
@@ -125,3 +132,4 @@ class ConfigValidator:
                     raise AssertionError('label %s requests '
                                          'non-existent provider %s'
                                          % (label['name'], provider['name']))
+
