@@ -33,6 +33,24 @@
       "revId": "5119e7f0fc5d91615b9a0871199f5b7714af0794",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_9347f91c",
+        "filename": "requirements.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-03-31T14:41:29Z",
+      "side": 1,
+      "message": "We should always require latest shade, at least for now.",
+      "parentUuid": "da9b358b_3019487a",
+      "revId": "5119e7f0fc5d91615b9a0871199f5b7714af0794",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
