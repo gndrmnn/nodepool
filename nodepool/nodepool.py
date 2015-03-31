@@ -761,10 +761,6 @@ class DiskImageBuilder(threading.Thread):
         for k, v in image.env_vars.items():
             env[k] = v
 
-        extra_options = ''
-        if image.qemu_img_options:
-            extra_options = ('--qemu-img-options %s' %
-                             image.qemu_img_options)
         img_elements = image.elements
         img_types = image.image_types
 
@@ -773,8 +769,8 @@ class DiskImageBuilder(threading.Thread):
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, extra_options, filename, img_elements))
+        cmd = ('%s -x -t %s --no-tmpfs -o %s %s' %
+               (dib_cmd, img_types, filename, img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image_name,))
@@ -1310,7 +1306,6 @@ class NodePool(threading.Thread):
                 # d-i-b, but might be untyped in the yaml and
                 # interpreted as a number (e.g. "21" for fedora)
                 d.release = str(diskimage.get('release', ''))
-                d.qemu_img_options = diskimage.get('qemu-img-options', '')
                 d.env_vars = diskimage.get('env-vars', {})
                 if not isinstance(d.env_vars, dict):
                     self.log.error("%s: ignoring env-vars; "
@@ -1318,7 +1313,7 @@ class NodePool(threading.Thread):
                     d.env_vars = {}
                 d.image_types = set()
             # Do this after providers to build the image-types
-            # and qemu-img-options.
+            # and image-env-vars.
             for provider in newconfig.providers.values():
                 for image in provider.images.values():
                     if (image.diskimage and
