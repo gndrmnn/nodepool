@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_624a74ae",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-31T02:57:22Z",
+      "side": 0,
+      "message": "if we remove this bit, i\u0027d like to see a real check in the config validator that one or the other exists",
+      "revId": "ca93de20acbde42d4fe8339f5b612685d09079d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

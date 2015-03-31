@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_02d288d2",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-03-31T02:57:22Z",
+      "side": 1,
+      "message": "since we\u0027ve come this far, can we validate the config file has either \"cloud\" or the authentication parameters, but not both",
+      "revId": "5119e7f0fc5d91615b9a0871199f5b7714af0794",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
