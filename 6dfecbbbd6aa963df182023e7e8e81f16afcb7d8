@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_148fa424",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-04-01T15:02:00Z",
+      "side": 1,
+      "message": "Keys in comments don\u0027t match reality.\nAlso, I think we only need \"nodepool.task.PROVIDER.subkey\".",
+      "revId": "6dfecbbbd6aa963df182023e7e8e81f16afcb7d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
