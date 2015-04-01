@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9b358b_00448047",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-04-01T12:40:47Z",
+      "side": 1,
+      "message": "Should this be default to False since we\u0027re passing a boolean? (granted it probably acts like a false)",
+      "revId": "4107e4a7e1ab4b7e5e30917eea44a2da0b636155",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da9b358b_006b60b8",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-04-01T12:40:47Z",
+      "side": 1,
+      "message": "ditto setting to False here",
+      "revId": "4107e4a7e1ab4b7e5e30917eea44a2da0b636155",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
