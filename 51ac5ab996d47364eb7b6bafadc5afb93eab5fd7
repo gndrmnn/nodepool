@@ -16,6 +16,23 @@
       "revId": "51ac5ab996d47364eb7b6bafadc5afb93eab5fd7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_86bedcfd",
+        "filename": "tools/simulator.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-04-01T21:47:49Z",
+      "side": 1,
+      "message": "Yes, observed over a 4 hour period for our hpcloud-b1 when I wrote the script.",
+      "revId": "51ac5ab996d47364eb7b6bafadc5afb93eab5fd7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
