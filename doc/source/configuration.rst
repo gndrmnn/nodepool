@@ -217,7 +217,7 @@ provider, the Nodepool image types are also defined (see
         - name: trusty
           base-image: 'Trusty'
           min-ram: 8192
-          name-filter: 'something to match'
+          name-filter: 'm1.large'
           setup: prepare_node.sh
           reset: reset_node.sh
           username: jenkins
@@ -294,7 +294,7 @@ Example::
     - name: precise
       base-image: 'Precise'
       min-ram: 8192
-      name-filter: 'something to match'
+      name-filter: 'm1.large'
       setup: prepare_node.sh
       reset: reset_node.sh
       username: jenkins
