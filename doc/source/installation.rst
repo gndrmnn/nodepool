@@ -47,6 +47,14 @@ to send information to statsd.
 Install Nodepool
 ----------------
 
+Install Nodepool prerequisites.
+
+Nodepool requires Python 2.7 or newer.
+
+RHEL 7 / CentOS 7:
+
+  yum install libffi libffi-devel @development python
+
 You may install Nodepool directly from PyPI with pip::
 
   pip install nodepool
