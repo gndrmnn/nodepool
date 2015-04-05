@@ -47,6 +47,15 @@ to send information to statsd.
 Install Nodepool
 ----------------
 
+Install Nodepool prerequisits.
+
+Nodepool requires Python 2.7 or newer.
+
+RHEL 7 / CentOS 7:
+
+  yum install mysql mysql-devel libffi libffi-devel @development python \
+              python-virtualenv python-zmq
+
 You may install Nodepool directly from PyPI with pip::
 
   pip install nodepool
