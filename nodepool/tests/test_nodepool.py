@@ -312,3 +312,18 @@ class TestNodepool(tests.DBTestCase):
 
         with ExpectedException(requests.exceptions.ProxyError):
             manager.listExtensions()
+
+    def test_managers_stopped(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        pool.stop()
+        self.waitForNodes(pool)
+
+        # ensure that no nodes have been created
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 0)
