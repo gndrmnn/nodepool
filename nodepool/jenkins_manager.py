@@ -91,7 +91,7 @@ class JenkinsManager(TaskManager):
     def __init__(self, target):
         super(JenkinsManager, self).__init__(None, target.name, target.rate)
         self.target = target
-        self._client = self._getClient()
+        self.setClient(self._getClient())
 
     def _getClient(self):
         if self.target.jenkins_apikey == 'fake':

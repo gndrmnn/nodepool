@@ -313,9 +313,12 @@ class ProviderManager(TaskManager):
                 # the same way all other Exceptions from the Task object do.
                 # This will move the Exception to the main thread.
                 task.exception(e, sys.exc_info()[2])
+        except Exception as e:
+            self.log.debug('another exception')
+            self.log.debug(str(e))
 
     def resetClient(self):
-        self._client = self._getClient()
+        self.setClient(self._getClient())
 
     def _getFlavors(self):
         flavors = self.listFlavors()
