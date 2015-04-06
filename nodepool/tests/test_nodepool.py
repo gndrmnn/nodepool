@@ -303,7 +303,7 @@ class TestNodepool(tests.DBTestCase):
         # always raises a ProxyError. If our client reset works correctly
         # then we will create a new client object, which in this case would
         # be a new fake client in place of the bad client.
-        manager._client = get_bad_client(manager)
+        manager.setClient(get_bad_client(manager))
 
         # The only implemented function for the fake and bad clients
         # If we don't raise an uncaught exception, we pass
@@ -311,7 +311,7 @@ class TestNodepool(tests.DBTestCase):
 
         # Now let's do it again, but let's prevent the client object from being
         # replaced and then assert that we raised the exception that we expect.
-        manager._client = get_bad_client(manager)
+        manager.setClient(get_bad_client(manager))
         manager._getClient = lambda: get_bad_client(manager)
 
         with ExpectedException(requests.exceptions.ProxyError):
@@ -360,3 +360,18 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+
+    def test_managers_stopped(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        pool.stop()
+        self.waitForNodes(pool)
+
+        # ensure that no nodes have been created
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 0)

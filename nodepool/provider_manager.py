@@ -306,7 +306,7 @@ class ProviderManager(TaskManager):
                 task.exception(e, sys.exc_info()[2])
 
     def resetClient(self):
-        self._client = self._getClient()
+        self.setClient(self._getClient())
 
     def _getFlavors(self):
         flavors = self.listFlavors()
