@@ -30,6 +30,7 @@ class ManagerStoppedException(Exception):
 
 
 class Task(object):
+
     def __init__(self, **kw):
         self._wait_event = threading.Event()
         self._exception = None
@@ -61,17 +62,18 @@ class Task(object):
             self.exception(e, sys.exc_info()[2])
 
 
-class TaskManager(threading.Thread):
-    log = logging.getLogger("nodepool.TaskManager")
+class TaskWorker(threading.Thread):
+    log = logging.getLogger("nodepool.TaskWorker")
 
-    def __init__(self, client, name, rate):
-        super(TaskManager, self).__init__(name=name)
+    def __init__(self, name, stats_name, rate, queue, parent):
+        super(TaskWorker, self).__init__(name=name)
         self.daemon = True
-        self.queue = Queue.Queue()
+        self.queue = queue
         self._running = True
         self.name = name
+        self.stats_name = stats_name
         self.rate = float(rate)
-        self._client = None
+        self.parent = parent
 
     def stop(self):
         self._running = False
@@ -91,18 +93,18 @@ class TaskManager(threading.Thread):
                     if delta >= self.rate:
                         break
                     time.sleep(self.rate - delta)
-                self.log.debug("Manager %s running task %s (queue: %s)" %
+                self.log.debug("Task worker %s running task %s (queue: %s)" %
                                (self.name, task, self.queue.qsize()))
                 start = time.time()
-                self.runTask(task)
+                self.parent.runTask(task)
                 last_ts = time.time()
                 dt = last_ts - start
-                self.log.debug("Manager %s ran task %s in %ss" %
+                self.log.debug("Task worker %s ran task %s in %ss" %
                                (self.name, task, dt))
                 if statsd:
                     #nodepool.task.PROVIDER.subkey
                     subkey = type(task).__name__
-                    key = 'nodepool.task.%s.%s' % (self.name, subkey)
+                    key = 'nodepool.task.%s.%s' % (self.stats_name, subkey)
                     statsd.timing(key, dt)
                     statsd.incr(key)
 
@@ -111,11 +113,48 @@ class TaskManager(threading.Thread):
             self.log.exception("Task manager died.")
             raise
 
+class TaskManager(object):
+    log = logging.getLogger("nodepool.TaskManager")
+
+    def __init__(self, client, name, rate):
+        self.main_queue = Queue.Queue()
+        self.second_queue = Queue.Queue()
+        self._slow_tasks = ['CreateServerTask', 'DeleteServerTask']
+
+        self.main_worker = TaskWorker(
+            name + '_main', name, rate, self.main_queue, self)
+        self.second_worker = TaskWorker(
+            name + '_slow', name, rate, self.second_queue, self)
+        self.name = name
+        self._client = None
+        self.setClient(client)
+
+    def setClient(self, client):
+        self._client = client
+        self.main_worker._client = client
+        self.second_worker._client = client
+
+    def start(self):
+        self.main_worker.start()
+        self.second_worker.start()
+
+    def stop(self):
+        # stop threads and wait for them to finish
+        self.main_worker.stop()
+        self.second_worker.stop()
+        self.main_worker.join()
+        self.second_worker.join()
+
     def submitTask(self, task):
-        if not self._running:
+        if not self.main_worker._running or not self.second_worker._running:
             raise ManagerStoppedException(
-                "Manager %s is no longer running" % self.name)
-        self.queue.put(task)
+                "Task worker(s) for task Manager no longer running")
+
+        # add to queues depending on election
+        if type(task).__name__ in self._slow_tasks:
+            self.second_queue.put(task)
+        else:
+            self.main_queue.put(task)
         return task.wait()
 
     def runTask(self, task):
