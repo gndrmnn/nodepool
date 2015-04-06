@@ -29,11 +29,15 @@ class ManagerStoppedException(Exception):
 
 
 class Task(object):
-    def __init__(self, **kw):
+    QUEUE_MAIN = 1
+    QUEUE_SECOND = 2
+
+    def __init__(self, queue=QUEUE_MAIN, **kw):
         self._wait_event = threading.Event()
         self._exception = None
         self._traceback = None
         self._result = None
+        self._queue = queue
         self.args = kw
 
     def done(self, result):
@@ -58,17 +62,16 @@ class Task(object):
             self.exception(e, sys.exc_info()[2])
 
 
-class TaskManager(threading.Thread):
-    log = logging.getLogger("nodepool.TaskManager")
+class TaskWorker(threading.Thread):
+    log = logging.getLogger("nodepool.TaskWorker")
 
-    def __init__(self, client, name, rate):
-        super(TaskManager, self).__init__(name=name)
+    def __init__(self, name, rate, queue):
+        super(TaskWorker, self).__init__(name=name)
         self.daemon = True
-        self.queue = Queue.Queue()
+        self.queue = queue
         self._running = True
         self.name = name
         self.rate = float(rate)
-        self._client = None
 
     def stop(self):
         self._running = False
@@ -104,9 +107,37 @@ class TaskManager(threading.Thread):
 
             self.queue.task_done()
 
+
+class TaskManager(object):
+    log = logging.getLogger("nodepool.TaskManager")
+
+    def __init__(self, client, name, rate):
+        self.main_queue = Queue.Queue()
+        self.second_queue = Queue.Queue()
+
+        self.main_worker = TaskWorker(
+            name + '_main', rate, self.main_queue)
+        self.second_worker = TaskWorker(
+            name + '_second', rate, self.second_queue)
+        self.name = name
+        self.setClient(client)
+
+    def setClient(self, client):
+        self.main_worker._client = client
+        self.second_worker._client = client
+
+    def start(self):
+        self.main_worker.start()
+        self.second_worker.start()
+
     def submitTask(self, task):
-        if not self._running:
+        if not self.main_worker._running or not self.second_worker._running:
             raise ManagerStoppedException(
                 "Manager %s is no longer running" % self.name)
-        self.queue.put(task)
+
+        # add to queues depending on election
+        if task._queue == Task.QUEUE_SECOND:
+            self.second_queue.put(task)
+        else:
+            self.main_queue.put(task)
         return task.wait()
