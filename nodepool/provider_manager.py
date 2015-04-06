@@ -245,8 +245,21 @@ class FindNetworkTask(Task):
         return dict(id=str(network.id))
 
 
+class SlowProviderManager(TaskManager):
+    def __init__(self, client, provider):
+        super(SlowProviderManager, self).__init__(
+            None, provider.name, provider.rate)
+        self.provider = provider
+        self._client = client
+
+
 class ProviderManager(TaskManager):
     log = logging.getLogger("nodepool.ProviderManager")
+
+    def _getSlowProviderManager(self):
+        p = SlowProviderManager(self._client, self.provider)
+        p.start()
+        return p
 
     def __init__(self, provider):
         super(ProviderManager, self).__init__(None, provider.name,
@@ -264,6 +277,7 @@ class ProviderManager(TaskManager):
         self._ips = []
         self._ips_time = 0
         self._ips_lock = threading.Lock()
+        self._slow_provider = self._getSlowProviderManager()
 
     @property
     def _flavors(self):
@@ -375,7 +389,7 @@ class ProviderManager(TaskManager):
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
 
-        return self.submitTask(CreateServerTask(**create_args))
+        return self._slow_provider.submitTask(CreateServerTask(**create_args))
 
     def getServer(self, server_id):
         return self.submitTask(GetServerTask(server_id=server_id))
@@ -564,7 +578,8 @@ class ProviderManager(TaskManager):
         return self._servers
 
     def deleteServer(self, server_id):
-        return self.submitTask(DeleteServerTask(server_id=server_id))
+        return self._slow_provider.submitTask(
+            DeleteServerTask(server_id=server_id))
 
     def cleanupServer(self, server_id):
         done = False
