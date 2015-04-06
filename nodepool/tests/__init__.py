@@ -95,11 +95,15 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
                      'Gearman client connect',
                      'Gearman client poll',
                      'fake-provider',
+                     'fake-provider_main',
+                     'fake-provider_second',
                      'fake-provider1',
                      'fake-provider2',
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
+                     'fake-target_main',
+                     'fake-target_second',
                      'DiskImageBuilder queue',
                      ]
 
