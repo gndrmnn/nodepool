@@ -251,7 +251,7 @@ class ProviderManager(TaskManager):
         super(ProviderManager, self).__init__(None, provider.name,
                                               provider.rate)
         self.provider = provider
-        self._client = self._getClient()
+        self.setClient(self._getClient())
         self._images = {}
         self._networks = {}
         self._cloud_metadata_read = False
@@ -374,7 +374,8 @@ class ProviderManager(TaskManager):
                     raise Exception("Invalid 'networks' configuration.")
             create_args['nics'] = nics
 
-        return self.submitTask(CreateServerTask(**create_args))
+        return self.submitTask(CreateServerTask(queue=Task.QUEUE_SECOND,
+                               **create_args))
 
     def getServer(self, server_id):
         return self.submitTask(GetServerTask(server_id=server_id))
@@ -559,7 +560,8 @@ class ProviderManager(TaskManager):
         return self._servers
 
     def deleteServer(self, server_id):
-        return self.submitTask(DeleteServerTask(server_id=server_id))
+        return self.submitTask(DeleteServerTask(queue=Task.QUEUE_SECOND,
+                               server_id=server_id))
 
     def cleanupServer(self, server_id):
         done = False
