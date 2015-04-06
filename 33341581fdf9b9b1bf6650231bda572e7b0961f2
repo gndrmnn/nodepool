@@ -33,6 +33,24 @@
       "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_1a87ba10",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-04-06T23:47:28Z",
+      "side": 1,
+      "message": "You\u0027re right virtualenv isn\u0027t required, we install it in one so it was in my list from our usage. I can remove it.\n\nSince nodepool isn\u0027t packaged for CentOS 7 I decided to list python-zmq explicitly so that people know to ensure they get it installed but if we want to trust pip will get everything for us then I can remove it from this list.\n\nOne thing I do want to ensure though but I\u0027m not familiar with nodepool enough is to provide a list of things nodepool depends on for packagers to be able to package this correctly for their distro. Distros cannot rely on \"pip\" as it\u0027s best practice to install things when possible using your official package manager. Is there an easy way for me to extract this list so that we can document it for packagers that may want to package nodepool in their distros?",
+      "parentUuid": "9aa53dc9_06e88a7b",
+      "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
