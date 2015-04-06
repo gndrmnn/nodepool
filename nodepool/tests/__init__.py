@@ -95,11 +95,23 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
                      'Gearman client connect',
                      'Gearman client poll',
                      'fake-provider',
+                     'fake-provider_main',
+                     'fake-provider_second',
                      'fake-provider1',
+                     'fake-provider1_main',
+                     'fake-provider1_second',
                      'fake-provider2',
+                     'fake-provider2_main',
+                     'fake-provider2_second',
                      'fake-dib-provider',
+                     'fake-dib-provider_main',
+                     'fake-dib-provider_second',
                      'fake-jenkins',
+                     'fake-jenkins_main',
+                     'fake-jenkins_second',
                      'fake-target',
+                     'fake-target_main',
+                     'fake-target_second',
                      'DiskImageBuilder queue',
                      ]
 
@@ -107,6 +119,7 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
             done = True
             for t in threading.enumerate():
                 if t.name not in whitelist:
+                    print t.name
                     done = False
             if done:
                 return
