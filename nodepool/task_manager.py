@@ -18,6 +18,7 @@
 
 import sys
 import threading
+from multiprocessing import Pool
 from six.moves import queue as Queue
 import logging
 import time
@@ -64,23 +65,26 @@ class TaskManager(threading.Thread):
     def __init__(self, client, name, rate):
         super(TaskManager, self).__init__(name=name)
         self.daemon = True
-        self.queue = Queue.Queue()
+        self.main_queue = Queue.Queue()
+        self.second_queue = Queue.Queue()
+
         self._running = True
         self.name = name
         self.rate = float(rate)
         self._client = None
+        self._pool = Pool(2)
 
     def stop(self):
         self._running = False
-        self.queue.put(None)
+        self.main_queue.put(None)
+        self.second_queue.put(None)
 
-    def run(self):
-        last_ts = 0
+    def executeTaskInQueue(self, queue):
         while True:
-            task = self.queue.get()
+            task = queue.get()
             if not task:
                 if not self._running:
-                    break
+                   break
                 continue
             while True:
                 delta = time.time() - last_ts
@@ -88,7 +92,7 @@ class TaskManager(threading.Thread):
                     break
                 time.sleep(self.rate - delta)
             self.log.debug("Manager %s running task %s (queue: %s)" %
-                           (self.name, task, self.queue.qsize()))
+                           (self.name, task, queue.qsize()))
             start = time.time()
             task.run(self._client)
             last_ts = time.time()
@@ -102,11 +106,24 @@ class TaskManager(threading.Thread):
                 statsd.timing(key, dt)
                 statsd.incr(key)
 
-            self.queue.task_done()
+            queue.task_done()
+
+    def run(self):
+        last_ts = 0
+
+        # paralellize queue processing
+        self._pool.map(executeTasksInQueue,
+            [self.main_queue, self.second_queue])
 
     def submitTask(self, task):
         if not self._running:
             raise ManagerStoppedException(
                 "Manager %s is no longer running" % self.name)
-        self.queue.put(task)
+
+        # add to queues depending on instance
+        if (isinstance(task, CreateServerTask) or
+                isinstance(task, DeleteServerTask)):
+            self.second_queue.put(task)
+        else:
+            self.main_queue.put(task)
         return task.wait()
