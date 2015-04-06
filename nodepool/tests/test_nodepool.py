@@ -243,3 +243,12 @@ class TestNodepool(tests.DBTestCase):
             # Make sure our old node is in delete state
             self.assertEqual(len(deleted_nodes), 1)
             self.assertEqual(node_id, deleted_nodes[0].id)
+
+    def test_managers_stopped(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        pool.stop()
+
+        # check that everything is stopping
+        self.wait_for_threads()
