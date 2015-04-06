@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_c6dbc2ec",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-06T23:22:47Z",
+      "side": 1,
+      "message": "\"prerequisites\"",
+      "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_06e88a7b",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-06T23:22:47Z",
+      "side": 1,
+      "message": "i\u0027m not sure python-virtualenv is actually required unless you want it in a virtualenv\n\npython-zmq also isn\u0027t required; if you\u0027re installing in a virtualenv that will bring in it\u0027s version.  or maybe it\u0027s part of the work-around discussed below?",
+      "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
