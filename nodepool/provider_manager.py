@@ -251,7 +251,7 @@ class ProviderManager(TaskManager):
         super(ProviderManager, self).__init__(None, provider.name,
                                               provider.rate)
         self.provider = provider
-        self._client = self._getClient()
+        self.setClient(self._getClient())
         self._images = {}
         self._networks = {}
         self._cloud_metadata_read = False
