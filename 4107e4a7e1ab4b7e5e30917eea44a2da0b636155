@@ -33,6 +33,24 @@
       "revId": "4107e4a7e1ab4b7e5e30917eea44a2da0b636155",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_86210cfe",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-04-07T19:49:20Z",
+      "side": 1,
+      "message": "\"None\" is the default in python-novaclient which I believe \"dont\u0027 pass a value\" - which is dfferent than \"true\" or \"false\" since a cloud can have a different default value.",
+      "parentUuid": "da9b358b_006b60b8",
+      "revId": "4107e4a7e1ab4b7e5e30917eea44a2da0b636155",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
