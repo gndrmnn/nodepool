@@ -51,6 +51,24 @@
       "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_7d37e0b0",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-07T00:14:24Z",
+      "side": 1,
+      "message": "the actual dependencies are there in requirements.txt\n\nyou have to differentiate between what is required for the package and what is transitively required for the dependencies ... things like mysql-devel aren\u0027t required by nodepool for example, but by the python mysql bindings that get relied upon.  so it\u0027s not a dependency for nodepool unless you\u0027re trying to bring it up in a virtualenv.",
+      "parentUuid": "9aa53dc9_1a87ba10",
+      "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
