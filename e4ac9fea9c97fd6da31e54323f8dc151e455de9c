@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_14ce3db4",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-04-07T22:50:13Z",
+      "side": 1,
+      "message": "\"login\" is a noun (a credential used to log in), \"log in\" is a verb, in this case you want \"log in\"",
+      "revId": "e4ac9fea9c97fd6da31e54323f8dc151e455de9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_7438e9a0",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-04-07T22:50:13Z",
+      "side": 1,
+      "message": "I think this should be: \"it is used by...\"",
+      "revId": "e4ac9fea9c97fd6da31e54323f8dc151e455de9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_f44cf943",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-04-07T22:50:13Z",
+      "side": 1,
+      "message": "\"log in\" again",
+      "revId": "e4ac9fea9c97fd6da31e54323f8dc151e455de9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
