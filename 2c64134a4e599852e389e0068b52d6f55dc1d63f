@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_7102400d",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 13
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-04-07T20:22:21Z",
+      "side": 1,
+      "message": "I think we need to handle the default case also (no -t specified). IIRC the way DIB acts is if no -t is specified then -o can be either foo.qcow or foo and itll output a foo.qcow in both cases.",
+      "revId": "2c64134a4e599852e389e0068b52d6f55dc1d63f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
