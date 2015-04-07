@@ -1,0 +1,10 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Jenkins
+Code-Review-1: Joshua Hesketh <joshua.hesketh@rackspace.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 07 Apr 2015 19:55:10 +0000
+Reviewed-on: https://review.openstack.org/155770
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
