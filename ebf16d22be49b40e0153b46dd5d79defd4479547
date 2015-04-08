@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9aa53dc9_828798d6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-04-08T13:41:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9aa53dc9_182b0796",
+      "revId": "ebf16d22be49b40e0153b46dd5d79defd4479547",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aa53dc9_38300b01",
         "filename": "doc/source/installation.rst",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-08T07:11:41Z",
       "side": 1,
       "message": "you\u0027ll need python-devel ; i don\u0027t think that\u0027s in @development",
+      "revId": "ebf16d22be49b40e0153b46dd5d79defd4479547",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_c2cb601d",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-04-08T13:41:26Z",
+      "side": 1,
+      "message": "Are you sure?\n\nI did not need python-devel on a fresh machine that I deployed this on.",
+      "parentUuid": "9aa53dc9_38300b01",
       "revId": "ebf16d22be49b40e0153b46dd5d79defd4479547",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
