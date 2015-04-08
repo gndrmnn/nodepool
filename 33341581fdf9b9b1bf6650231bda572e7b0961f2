@@ -69,6 +69,23 @@
       "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_e5e8c5e4",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-04-08T00:41:05Z",
+      "side": 1,
+      "message": "Also note that we just switched nodepool to PyMySQL which is a native python driver so you shoudn\u0027t need mysql or mysql-devel here.",
+      "revId": "33341581fdf9b9b1bf6650231bda572e7b0961f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
