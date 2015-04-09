@@ -16,6 +16,24 @@
       "revId": "da6e91e7eeb471a7e928a18206e357e7a181b5d7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_673eb8db",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-09T12:30:36Z",
+      "side": 1,
+      "message": "hmm, good point; i think introspecting the module defaults is a bit much so i\u0027ll just hard-code it",
+      "parentUuid": "9aa53dc9_64b91679",
+      "revId": "da6e91e7eeb471a7e928a18206e357e7a181b5d7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
