@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_945c317e",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2015-04-09T21:20:17Z",
+      "side": 1,
+      "message": "What I\u0027d really like to see is that content written to a tempfile, loaded, then changed, and then reloaded.",
+      "revId": "7cccb301a64428260b9bd2525f284ed9747d0817",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
