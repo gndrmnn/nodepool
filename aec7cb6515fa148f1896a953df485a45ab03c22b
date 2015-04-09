@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_aaa245fb",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-09T12:40:09Z",
+      "side": 1,
+      "message": "i really don\u0027t think we want to mix processes and threads ... it\u0027s a nightmare",
+      "revId": "aec7cb6515fa148f1896a953df485a45ab03c22b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aa53dc9_6aa8bddb",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-04-09T12:40:09Z",
+      "side": 1,
+      "message": "i think this the wrong place to define the interface; i feel like submitTask should take a priority and put it in either queue.",
+      "revId": "aec7cb6515fa148f1896a953df485a45ab03c22b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
