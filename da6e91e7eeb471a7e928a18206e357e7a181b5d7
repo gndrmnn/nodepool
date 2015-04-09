@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aa53dc9_64b91679",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-04-09T12:05:25Z",
+      "side": 1,
+      "message": "should specify the default port value if not overwritting.",
+      "revId": "da6e91e7eeb471a7e928a18206e357e7a181b5d7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
