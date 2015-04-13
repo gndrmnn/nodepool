@@ -16,6 +16,24 @@
       "revId": "d2f281e18bcbef91e534816ce067fa30058b68fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aaa499b_3721664e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-04-13T11:30:41Z",
+      "side": 1,
+      "message": "I\u0027m ok with you , Joshua, i\u0027d prefer that is not even hardcoded but if it has to be, being a constant is better.",
+      "parentUuid": "7aaa499b_7d9c7a69",
+      "revId": "d2f281e18bcbef91e534816ce067fa30058b68fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
