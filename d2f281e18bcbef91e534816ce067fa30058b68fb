@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aaa499b_7d9c7a69",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-04-13T06:48:21Z",
+      "side": 1,
+      "message": "I\u0027d like to see this hard-coded value stored at the top of the file (as a kind of constant). Either the full options string or at lease a configurable compat version so that it\u0027s easy to find and change in the future.",
+      "revId": "d2f281e18bcbef91e534816ce067fa30058b68fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
