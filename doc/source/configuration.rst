@@ -328,8 +328,7 @@ indicated.  Nodepool expects that user to exist after running the
 script indicated by `setup`. `setup` will be used only when not
 building images using diskimage-builder, in that case settings defined
 in the ``diskimages`` section will be used instead. See :ref:`scripts`
-for setup script details.  See :ref:`scripts` for setup script
-details.
+for setup script details.
 
 The `config-drive` boolean is optional and defines whether config drive
 should be used for the image.
