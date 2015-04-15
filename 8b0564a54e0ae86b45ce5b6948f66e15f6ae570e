@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aa745d1_8665cbe2",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-04-15T23:08:24Z",
+      "side": 1,
+      "message": "You may want to update this message to say something like \"Task worker(s) for task manager no longer running\"",
+      "revId": "8b0564a54e0ae86b45ce5b6948f66e15f6ae570e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
