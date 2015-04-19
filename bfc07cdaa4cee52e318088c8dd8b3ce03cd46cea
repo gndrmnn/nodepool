@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dac4157f_dcba81c0",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-04-19T19:41:15Z",
+      "side": 0,
+      "message": "This bit is important for the fakes to work in the nodepool tests - images uploaded to glance need to be seen by nova.",
+      "revId": "bfc07cdaa4cee52e318088c8dd8b3ce03cd46cea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
