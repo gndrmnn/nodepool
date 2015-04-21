@@ -106,7 +106,7 @@ Example::
     - host: zuul.example.com
       port: 4730
 
-The ``port`` key is optional.
+The ``port`` key is optional (default: 4730).
 
 labels
 ------
@@ -132,25 +132,37 @@ providers or images are used to create them).  Example::
       providers:
         - name: provider1
 
-The `name` and `image` keys are required.  The `providers` list is
-also required if any nodes should actually be created (e.g., the label
-is not currently disabled). The `min-ready` key is optional and
-defaults to 2. If the value is -1 the label is considered disabled.
-``min-ready`` is best-effort based on available capacity and is not a
-guaranteed allocation.
+**required**
 
-The `subnodes` key is used to configure multi-node support.  If a
-`subnodes` key is supplied to an image, it indicates that the specified
-number of additional nodes of the same image type should be created
-and associated with each node for that image.  Only one node from each
-such group will be added to the target, the subnodes are expected to
-communicate directly with each other.  In the example above, for each
-Precise node added to the target system, two additional nodes will be
-created and associated with it.
+  ``name``
+  Unique name used to tie jobs to those instances.
+ 
+  ``image``
+  Refers to providers images, see :ref:`images`. 
+  
+  ``providers`` (list) 
+  Required if any nodes should actually be created (e.g., the label is not
+  currently disabled).
 
-A script specified by `ready-script` can be used to perform any last minute
-changes to a node after it has been launched but before it is put in the READY
-state to receive jobs. For more information, see :ref:`scripts`.
+**optional**
+
+  ``min-ready`` (default: 2)
+  Minimum instances that should be in a ready state. Set to -1 to have the
+  label considered disabled.
+  ``min-ready`` is best-effort based on available capacity and is not a
+  guaranteed allocation.
+
+  ``subnodes`` Used to configure multi-node support.  If a `subnodes` key is
+  supplied to an image, it indicates that the specified number of additional
+  nodes of the same image type should be created and associated with each node
+  for that image.  Only one node from each such group will be added to the
+  target, the subnodes are expected to communicate directly with each other.
+  In the example above, for each Precise node added to the target system, two
+  additional nodes will be created and associated with it.
+
+  ``ready-script`` A script to be used to perform any last minute changes to a
+  node after it has been launched but before it is put in the READY state to
+  receive jobs. For more information, see :ref:`scripts`.
 
 diskimages
 ----------
