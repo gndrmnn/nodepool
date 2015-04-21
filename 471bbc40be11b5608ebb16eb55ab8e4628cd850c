@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dac4157f_3eaebf85",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 6671
+      },
+      "writtenOn": "2015-04-21T15:40:16Z",
+      "side": 1,
+      "message": "having ipv6_preferred set to true doesn\u0027t necessarily guarantee that ipv6 address is allocated to the instance.",
+      "parentUuid": "dac4157f_7002360d",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dac4157f_5b007301",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2015-04-21T09:57:20Z",
       "side": 1,
       "message": "if ipv6 is preferred, ip and ipv6 will be the same. Should get public_v4 again.",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac4157f_de15839b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 6671
+      },
+      "writtenOn": "2015-04-21T15:40:16Z",
+      "side": 1,
+      "message": "we may well log both ipv4 and ipv6 here?",
+      "parentUuid": "dac4157f_5b007301",
       "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
