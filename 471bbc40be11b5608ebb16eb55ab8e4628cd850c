@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dac4157f_42a98d7a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-04-21T18:49:16Z",
+      "side": 1,
+      "message": "True. But if set to true, i will log a warning. Something like:\n\nif self.provider.ipv6_preferred:\n  try:\n    ip \u003d server[\u0027public_v6\u0027]\n  except KeyError:\n    log.warning(\u0027preferred ipv6 not available\u0027)",
+      "parentUuid": "dac4157f_3eaebf85",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dac4157f_5b007301",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 7
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "we may well log both ipv4 and ipv6 here?",
       "parentUuid": "dac4157f_5b007301",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac4157f_c2b7ddf3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-04-21T18:49:16Z",
+      "side": 1,
+      "message": "I will log both. It will be clearer.",
+      "parentUuid": "dac4157f_de15839b",
       "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
