@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dac4157f_7002360d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-04-21T09:57:20Z",
+      "side": 1,
+      "message": "getting the ip v6 twice looks redundant.",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac4157f_5b007301",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1726
+      },
+      "writtenOn": "2015-04-21T09:57:20Z",
+      "side": 1,
+      "message": "if ipv6 is preferred, ip and ipv6 will be the same. Should get public_v4 again.",
+      "revId": "471bbc40be11b5608ebb16eb55ab8e4628cd850c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
