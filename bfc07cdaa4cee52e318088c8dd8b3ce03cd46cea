@@ -16,6 +16,23 @@
       "revId": "bfc07cdaa4cee52e318088c8dd8b3ce03cd46cea",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab921fb_f2ba08c0",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-04-22T19:59:58Z",
+      "side": 0,
+      "message": "We still need to provide a username, password, and project id even if cloud: hpcloud provides the other details.\n\nI know that we are setting a system wide shaderc config with this info for production but it seems odd to leave this out of the \"good\" yaml test file since we aren\u0027t checking that a shaderc exists while testing.",
+      "revId": "bfc07cdaa4cee52e318088c8dd8b3ce03cd46cea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
