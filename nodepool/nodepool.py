@@ -54,10 +54,6 @@ IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
                              # its job.
 
-# HP Cloud requires qemu compat with 0.10. That version works elsewhere,
-# so just hardcode it for all qcow2 building
-DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
-
 
 class LaunchNodepoolException(Exception):
     statsd_key = 'error.nodepool'
@@ -770,17 +766,13 @@ class DiskImageBuilder(threading.Thread):
         img_elements = image.elements
         img_types = ",".join(image.image_types)
 
-        qemu_img_options = ''
-        if 'qcow2' in img_types:
-            qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
-
         if 'fake-' in filename:
             dib_cmd = 'nodepool/tests/fake-image-create'
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
+        cmd = ('%s -x -t %s --no-tmpfs -o %s %s' %
+               (dib_cmd, img_types, filename, img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image_name,))
