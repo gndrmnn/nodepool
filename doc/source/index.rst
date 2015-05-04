@@ -11,10 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   quickstart
    installation
    configuration
    scripts
    operation
+   testing
 
 Indices and tables
 ==================
