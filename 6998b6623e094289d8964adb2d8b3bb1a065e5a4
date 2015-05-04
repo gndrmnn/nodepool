@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3acd31a7_72931f50",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1523,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-04T17:23:06Z",
+      "side": 1,
+      "message": "The corresponding check for the gearman client is here.",
+      "revId": "6998b6623e094289d8964adb2d8b3bb1a065e5a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
