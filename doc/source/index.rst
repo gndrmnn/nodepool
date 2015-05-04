@@ -15,6 +15,7 @@ Contents:
    configuration
    scripts
    operation
+   testing
 
 Indices and tables
 ==================
