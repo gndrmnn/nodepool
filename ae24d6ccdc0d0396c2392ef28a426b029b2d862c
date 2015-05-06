@@ -16,6 +16,24 @@
       "revId": "ae24d6ccdc0d0396c2392ef28a426b029b2d862c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3acd31a7_832761c9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-06T00:04:15Z",
+      "side": 1,
+      "message": "Or it\u0027s just my test env. Will dig in a bit more.",
+      "parentUuid": "3acd31a7_e39bb516",
+      "revId": "ae24d6ccdc0d0396c2392ef28a426b029b2d862c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
