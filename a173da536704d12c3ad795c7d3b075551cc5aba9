@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aca2d91_62980cc1",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-05-07T22:34:56Z",
+      "side": 1,
+      "message": "This is weird with the grants above ^^ why would this be needed?",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_4293d0a3",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-05-07T22:34:56Z",
+      "side": 1,
+      "message": "/path/to/devstack/openrc is /home/stack/openrc, no? I mean, it doesn\u0027t change.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
