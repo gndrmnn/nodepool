@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "1aca2d91_657ed61a",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-07T23:38:25Z",
+      "side": 1,
+      "message": "How about just link to http://docs.openstack.org/developer/devstack/? Its less code here and their docs are more likely to stay up to date.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_c516caa6",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-07T23:38:25Z",
+      "side": 1,
+      "message": "(notaminusone)\nMaybe we should add this config as an example minimal config to the nodepool source, then just refer to that in here? That way we might do a better job of keeping the config up to date.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aca2d91_4293d0a3",
         "filename": "doc/source/testing.rst",
         "patchSetId": 3
@@ -30,6 +64,58 @@
       "writtenOn": "2015-05-07T22:34:56Z",
       "side": 1,
       "message": "/path/to/devstack/openrc is /home/stack/openrc, no? I mean, it doesn\u0027t change.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_8587b2d6",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-07T23:38:25Z",
+      "side": 1,
+      "message": "You could run this as any random user, I believe.",
+      "parentUuid": "1aca2d91_4293d0a3",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_a53ceee2",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-07T23:38:25Z",
+      "side": 1,
+      "message": "/home/jenkins? Doesnt this need to be /home/$USER?",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_c51c8a79",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-07T23:38:25Z",
+      "side": 1,
+      "message": "ditto here and next line",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
