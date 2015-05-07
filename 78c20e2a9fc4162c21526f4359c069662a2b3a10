@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aca2d91_ea3bd8e9",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-07T21:01:35Z",
+      "side": 1,
+      "message": "First they\u0027ll need to source the admin user creds to upload images to the devstack cloud:\n\nsource ~/devstack/accrc/admin/admin\n\n(the demo account created by devstack cannot upload images to glance, but when using --is-public below it can see+use the one that the admin account creates).",
+      "revId": "78c20e2a9fc4162c21526f4359c069662a2b3a10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_0578478e",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-07T21:01:35Z",
+      "side": 1,
+      "message": "glance image-create --name ubuntu --is-public true --disk-format qcow2 --container-format bare --file trusty-server-cloudimg-amd64-disk1.img",
+      "revId": "78c20e2a9fc4162c21526f4359c069662a2b3a10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
