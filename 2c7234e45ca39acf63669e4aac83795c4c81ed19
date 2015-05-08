@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aca2d91_ecf74a89",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-05-08T22:47:27Z",
+      "side": 1,
+      "message": "one too many arguments:\n%s -x -t %s --no-tmpfs -o %s %s",
+      "revId": "2c7234e45ca39acf63669e4aac83795c4c81ed19",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
