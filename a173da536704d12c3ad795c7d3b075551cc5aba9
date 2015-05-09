@@ -107,6 +107,57 @@
     },
     {
       "key": {
+        "uuid": "1aca2d91_a2e27b2d",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-09T00:27:33Z",
+      "side": 1,
+      "message": "The scripts/ and elements/ directories don\u0027t exist in the nodepool repo we pull down",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_e24ab325",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-09T00:27:33Z",
+      "side": 1,
+      "message": "MySQL\u0027s default root password remains unset if running unmodified, default devstack. Not sure how we want to handle this.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_c201f7b0",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-09T00:27:33Z",
+      "side": 1,
+      "message": "These cron lines need to be indented (I learned the hard way!)",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aca2d91_4293d0a3",
         "filename": "doc/source/testing.rst",
         "patchSetId": 3
@@ -154,6 +205,23 @@
       "side": 1,
       "message": "Correct, the location of the openrc has nothing to do with the stack user created by devstack. It is instead determined by the location you have cloned devstack to.",
       "parentUuid": "1aca2d91_8587b2d6",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_02992fc4",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-09T00:27:33Z",
+      "side": 1,
+      "message": "This is where I figured out the scripts/ directory doesn\u0027t exist :)",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -224,6 +292,23 @@
       "side": 1,
       "message": "See above.",
       "parentUuid": "1aca2d91_c51c8a79",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aca2d91_2229cb37",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-09T00:27:33Z",
+      "side": 1,
+      "message": "Before running this, you need to create an empty nodepool database in mysql.",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
