@@ -263,6 +263,23 @@
     },
     {
       "key": {
+        "uuid": "5ad58531_5cc1e97f",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T22:35:39Z",
+      "side": 1,
+      "message": "This command hangs waiting for input, instead use this or similar so it\u0027s non-interactive:\n\nsudo adduser --disabled-password --gecos \"\" jenkins",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aca2d91_a53ceee2",
         "filename": "doc/source/testing.rst",
         "patchSetId": 3
@@ -298,6 +315,23 @@
     },
     {
       "key": {
+        "uuid": "5ad58531_dc2f19f5",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T22:35:39Z",
+      "side": 1,
+      "message": "Oh, pipes with sudo...Permission denied. Need to use something like:\n\nsudo bash -c \"cat \u003e /home/jenkins/.ssh/authorized_keys \u003c\u003c INNEREOF\n\n$PUB_KEY\n\nINNEREOF\"",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aca2d91_c51c8a79",
         "filename": "doc/source/testing.rst",
         "patchSetId": 3
@@ -327,6 +361,23 @@
       "side": 1,
       "message": "See above.",
       "parentUuid": "1aca2d91_c51c8a79",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ad58531_07d0aa52",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T22:35:39Z",
+      "side": 1,
+      "message": "Then maybe we need to make this script executable?\n\nchmod +x /path/to/nodepool/things/scripts/prepare_node_ubuntu.sh\n\n...but this hasn\u0027t actually helped.",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
