@@ -141,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "5ad58531_56f66ad8",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T20:51:35Z",
+      "side": 1,
+      "message": "Actually, it somehow works with no password or a password set during the setup of devstack, so no need to worry about this bit.",
+      "parentUuid": "1aca2d91_e24ab325",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aca2d91_c201f7b0",
         "filename": "doc/source/testing.rst",
         "patchSetId": 3
@@ -152,6 +170,23 @@
       "writtenOn": "2015-05-09T00:27:33Z",
       "side": 1,
       "message": "These cron lines need to be indented (I learned the hard way!)",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ad58531_d64eda95",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T20:51:35Z",
+      "side": 1,
+      "message": "We might need to bump this to 2048.\n\nThe error I get when building this image: \"Flavor\u0027s disk is too small for requested image.\" (grabbed quickly with a `nova show $instance_id` before nodepool killed it):\n\n\"Build of instance 0067e877-f0ec-45f7-9f35-7629b78598c0 aborted: Flavor\u0027s disk is too small for requested image.\"\n\nIndeed, the default flavor with 512M of ram only has a 1G disk:\n\n+----+-----------+-----------+------+-----------+------+-------+-------------+-----------+\n\n| ID | Name      | Memory_MB | Disk | Ephemeral | Swap | VCPUs | RXTX_Factor | Is_Public |\n\n+----+-----------+-----------+------+-----------+------+-------+-------------+-----------+\n\n| 1  | m1.tiny   | 512       | 1    | 0         |      | 1     | 1.0         | True      |\n\n| 2  | m1.small  | 2048      | 20   | 0         |      | 1     | 1.0         | True      |\n\nSo we need either add a flavor with a smaller disk, or to go to the next highest, the m1.small, with the 2048M of RAM.",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -309,6 +344,24 @@
       "writtenOn": "2015-05-09T00:27:33Z",
       "side": 1,
       "message": "Before running this, you need to create an empty nodepool database in mysql.",
+      "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ad58531_96e17201",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-05-11T20:51:35Z",
+      "side": 1,
+      "message": "So you can just add a:\n\nmysql -u root -p -e \"CREATE DATABASE nodepool;\"",
+      "parentUuid": "1aca2d91_2229cb37",
       "revId": "a173da536704d12c3ad795c7d3b075551cc5aba9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
