@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0c5dc1_0773164f",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-12T01:07:59Z",
+      "side": 1,
+      "message": "BAD_CLIENT should be initialized like FAKE_CLIENT.",
+      "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0c5dc1_677c1221",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 1392,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-12T01:07:59Z",
+      "side": 1,
+      "message": "You need to check for the cloud value changing here too.",
+      "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0c5dc1_878706d7",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-12T01:07:59Z",
+      "side": 1,
+      "message": "This is more of a suggestion than a -1, but setUp() is an api defined by unittest/testtools and not us so changing the parameter list seems weird.\n\nInstead we can just define setUpFakes() as appropriate in subclasses to either super call to setup, do their own overridden setup, or pass to do no setup. That keeps the unittest/testtools api clean here.",
+      "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0c5dc1_a7344a4a",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-12T01:07:59Z",
+      "side": 1,
+      "message": "Is the path of this file important? Might be nice to put it in a tmpdir/tmpfile if we can so that even if we really explode the leak isn\u0027t too ugly.",
+      "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
