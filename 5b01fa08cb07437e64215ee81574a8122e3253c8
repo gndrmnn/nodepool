@@ -67,6 +67,24 @@
       "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0c5dc1_dbba45e1",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-12T22:50:55Z",
+      "side": 1,
+      "message": "The path is important. It needs to be in cwd, .config/openstack or /etc/openstack.",
+      "parentUuid": "9a0c5dc1_a7344a4a",
+      "revId": "5b01fa08cb07437e64215ee81574a8122e3253c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
