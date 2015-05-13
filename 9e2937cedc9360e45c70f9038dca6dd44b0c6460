@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0c5dc1_444e6470",
+        "filename": "nodepool/tests/fixtures/node_osc.yaml",
+        "patchSetId": 15
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-05-13T12:26:11Z",
+      "side": 1,
+      "message": "Having settings commented out in a fixture config is misleading and unnecessary. Presumably left over from some manual testing.",
+      "revId": "9e2937cedc9360e45c70f9038dca6dd44b0c6460",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
