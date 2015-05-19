@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a016987_b68e3877",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 4220
+      },
+      "writtenOn": "2015-05-19T00:40:47Z",
+      "side": 1,
+      "message": "If we expect a KeyError if there isn\u0027t a \u0027public_v6\u0027 value in the server object, shouldn\u0027t this be handled differently here?",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a016987_d64ad425",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 4220
+      },
+      "writtenOn": "2015-05-19T00:40:47Z",
+      "side": 1,
+      "message": "Ideally, there should also be test cases for:\n  - asking for ipv6, but there not being an ipv6 available, ensuring we default to the ipv4\n\n  - providing ipv6 and ipv4 values w/o ipv6_preferrred being set, to ensure ipv4 is returned in such a case.  I know this is pedantic and the implementation doesn\u0027t allow for anything else, but it would make tests complete / tests should only verify behavior w/o necessarily knowing implementation details, but I acknowledge this is a nitpicky one.",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
