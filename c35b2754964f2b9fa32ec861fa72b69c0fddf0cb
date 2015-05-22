@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a016987_eb98e579",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-05-22T20:19:34Z",
+      "side": 1,
+      "message": "You are right, this exception won\u0027t catch anything.",
+      "parentUuid": "7a016987_bfd96b24",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a016987_b68e3877",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 10
