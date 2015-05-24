@@ -104,6 +104,24 @@
       "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a016987_79e60145",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 4220
+      },
+      "writtenOn": "2015-05-24T20:58:01Z",
+      "side": 1,
+      "message": "Gotcha and apologies for not having addresses that in my initial comment.\n\nPerhaps altering the fakeprovider.py create() method like so:\nThis retains the current behavior, but allows tests to pass in their own dict of addresses to suit their specific needs.  Just a thought.\ndef create(self, **kw):\n         should_fail \u003d kw.get(\u0027SHOULD_FAIL\u0027, \u0027\u0027).lower() \u003d\u003d \u0027true\u0027\n         # Check if the test passes in a specific set of test\n         # addresses, expecting the test to have provided a \n         # properly formated dict if this is the case\n         addresses \u003d kw.get(\u0027provided_addresses\u0027)\n         if not addresses:\n             addresses\u003ddict(\n                 public\u003d[dict(version\u003d4, addr\u003d\u0027fake\u0027)],\n                 public\u003d[dict(version\u003d4, addr\u003d\u0027fake\u0027),\n                         dict(version\u003d6, addr\u003d\u0027fake_v6\u0027)],\n                 private\u003d[dict(version\u003d4, addr\u003d\u0027fake\u0027)]\n             )\n         s \u003d Dummy(id\u003duuid.uuid4().hex,\n                   name\u003dkw[\u0027name\u0027],\n                   status\u003d\u0027BUILD\u0027,\n                   adminPass\u003d\u0027fake\u0027,\n                   addresses\u003daddresses,\n                   metadata\u003d{},\n                   manager\u003dself,\n                   should_fail\u003dshould_fail)\n                   ...",
+      "parentUuid": "7a016987_36d65628",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
