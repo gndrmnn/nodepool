@@ -86,6 +86,24 @@
       "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a016987_36d65628",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 6671
+      },
+      "writtenOn": "2015-05-24T17:36:23Z",
+      "side": 1,
+      "message": "regarding the first suggestion, the dict population is static right now in https://github.com/openstack-infra/nodepool/blob/master/nodepool/fakeprovider.py#L117. If i want to have positive test case for fake ipv6 address, i have to add one there, so the dict for negative test case can\u0027t be created. do you have any advise?\n\nas for the second, done.\n\nThanks!",
+      "parentUuid": "7a016987_d64ad425",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
