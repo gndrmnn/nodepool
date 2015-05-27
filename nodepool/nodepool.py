@@ -21,6 +21,7 @@ import apscheduler.scheduler
 import gear
 import json
 import logging
+import os_client_config
 import os.path
 import paramiko
 import Queue
@@ -1203,6 +1204,7 @@ class NodePool(threading.Thread):
     def loadConfig(self):
         self.log.debug("Loading configuration")
         config = yaml.load(open(self.configfile))
+        cloud_config = os_client_config.OpenStackConfig()
 
         newconfig = Config()
         newconfig.db = None
@@ -1249,14 +1251,33 @@ class NodePool(threading.Thread):
             p = Provider()
             p.name = provider['name']
             newconfig.providers[p.name] = p
-            p.username = provider.get('username')
-            p.password = provider.get('password')
-            p.project_id = provider.get('project-id')
-            p.auth_url = provider.get('auth-url')
-            p.cloud = provider.get('cloud')
-            p.service_type = provider.get('service-type')
-            p.service_name = provider.get('service-name')
-            p.region_name = provider.get('region-name')
+            cloud_kwargs = {}
+            if 'region_name' in p:
+                cloud_kwargs['region_name'] = p['region-name']
+            if 'api_timeout' in p:
+                cloud_kwargs['api_timeout'] = p['api-timeout']
+            # These are named from back when we only talked to Nova. They're
+            # actually compute service related
+            if 'service_type' in p:
+                cloud_kwargs['compute_service_type'] = p['service-type']
+            if 'service_name' in p:
+                cloud_kwargs['compute_service_name'] = p['service-name']
+            if 'cloud' in p:
+                cloud_kwargs['cloud'] = p['cloud']
+
+            auth_kwargs = {}
+            for auth_key in ('username', 'password', 'auth-url'):
+                if auth_key in p:
+                    auth_key = auth_key.replace('-', '_')
+                    auth_kwargs[auth_attr] = p[auth_key]
+
+            if 'project-id' in p and p is not None:
+                auth_kwargs['project_name'] = p['project-id']
+
+            cloud_kwargs['auth'] = auth_kwargs
+
+            p.cloud_config = cloud_config.get_one_cloud(**cloud_kwargs)
+
             p.max_servers = provider['max-servers']
             p.keypair = provider.get('keypair', None)
             p.pool = provider.get('pool')
@@ -1394,13 +1415,7 @@ class NodePool(threading.Thread):
 
     def _managersEquiv(self, new_pm, old_pm):
         # Check if provider details have changed
-        if (new_pm.username != old_pm.provider.username or
-            new_pm.password != old_pm.provider.password or
-            new_pm.project_id != old_pm.provider.project_id or
-            new_pm.auth_url != old_pm.provider.auth_url or
-            new_pm.cloud != old_pm.provider.cloud or
-            new_pm.service_type != old_pm.provider.service_type or
-            new_pm.service_name != old_pm.provider.service_name or
+        if (ew_pm.cloud_config != old_pm.provider.cloud_config or
             new_pm.max_servers != old_pm.provider.max_servers or
             new_pm.pool != old_pm.provider.pool or
             new_pm.image_type != old_pm.provider.image_type or
