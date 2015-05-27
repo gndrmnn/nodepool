@@ -78,8 +78,12 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         self.setUpFakes()
 
     def setUpFakes(self):
-        self.useFixture(fixtures.MonkeyPatch('shade.openstack_cloud',
-                                             fakeprovider.get_fake_client))
+        self.useFixture(fixtures.MonkeyPatch(
+            'nodepool.provider_manager.ProviderManager._getClient',
+            fakeprovider.get_fake_client))
+        self.useFixture(fixtures.MonkeyPatch(
+            'os_client_config.config.OpenStackConfig._validate_auth',
+            fakeprovider.fake_validate_auth))
         self.useFixture(fixtures.MonkeyPatch('novaclient.client.Client',
                                              fakeprovider.FakeClient))
 
