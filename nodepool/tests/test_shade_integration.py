@@ -12,21 +12,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import os
-
+import fixtures
 import yaml
 
 from nodepool import tests
 
 
 class TestShadeIntegration(tests.IntegrationTestCase):
-    def _cleanup_cloud_config(self):
-        os.remove('clouds.yaml')
-
-    def _use_cloud_config(self, config):
-        with open('clouds.yaml', 'w') as h:
-            yaml.safe_dump(config, h)
-        self.addCleanup(self._cleanup_cloud_config)
 
     def test_nodepool_provider_config(self):
         configfile = self.setup_config('node.yaml')
@@ -40,13 +32,19 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         self.assertEqual(provider_manager._client.auth, auth_data)
 
     def test_nodepool_osc_config(self):
+
         configfile = self.setup_config('node_osc.yaml')
         auth_data = {'username': 'os_fake',
                      'project_name': 'os_fake',
                      'password': 'os_fake',
                      'auth_url': 'os_fake'}
         osc_config = {'clouds': {'fake-cloud': {'auth': auth_data}}}
-        self._use_cloud_config(osc_config)
+
+        def fake_load_config_file(unusued):
+            return yaml.safe_dump(osc_config)
+        self.useFixture(fixtures.MonkeyPatch(
+            'os_client_config.config.OpenStackConfig._load_config_file',
+            fake_load_config_file))
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.updateConfig()
