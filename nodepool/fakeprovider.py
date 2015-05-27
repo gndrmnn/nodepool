@@ -68,7 +68,11 @@ def get_bad_client():
 FAKE_CLIENT = None
 
 
-def get_fake_client(**kwargs):
+def fake_validate_auth(self, config):
+    return config
+
+
+def get_fake_client(*args, **kwargs):
     global FAKE_CLIENT
     if FAKE_CLIENT is None:
         FAKE_CLIENT = FakeOpenStackCloud()
