@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "7a016987_ec051bc2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 6671
+      },
+      "writtenOn": "2015-05-28T03:15:26Z",
+      "side": 1,
+      "message": "public_v6 is initialized already in provider_manager.py, so whether ipv6 is available, the key is there. KeyError wouldn\u0027t be thrown.\nhttps://github.com/openstack-infra/nodepool/blob/master/nodepool/provider_manager.py#L95",
+      "parentUuid": "7a016987_0948902c",
+      "revId": "c35b2754964f2b9fa32ec861fa72b69c0fddf0cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a016987_b68e3877",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 10
