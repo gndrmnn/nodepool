@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a016987_9f434faf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-28T17:10:57Z",
+      "side": 1,
+      "message": "You could probably just monkeypatch oscc\u0027s get_one_cloud instead, but this should be harmless and keeps the monkey patching to this repo.",
+      "revId": "94e4dbd7337d31e7f367f0e06ce75971cc02a673",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
