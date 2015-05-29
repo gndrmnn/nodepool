@@ -426,6 +426,11 @@ class NodeLauncher(threading.Thread):
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive)
+        if server_id is None:
+            raise LaunchNodepoolException(
+                "Unable to build server from image %s in %s" %
+                (self.image.name, self.provider.name))
+
         self.node.external_id = server_id
         session.commit()
 

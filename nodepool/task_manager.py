@@ -30,6 +30,9 @@ class ManagerStoppedException(Exception):
 
 
 class Task(object):
+
+    log = logging.getLogger("nodepool.Task")
+
     def __init__(self, **kw):
         self._wait_event = threading.Event()
         self._exception = None
