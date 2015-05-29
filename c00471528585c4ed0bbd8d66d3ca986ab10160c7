@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a016987_8b7886c5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-05-29T16:26:53Z",
+      "side": 1,
+      "message": "Need to replace new_key here with auth_key.",
+      "revId": "c00471528585c4ed0bbd8d66d3ca986ab10160c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
