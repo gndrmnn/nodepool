@@ -26,6 +26,7 @@ import sys
 
 import shade
 import novaclient
+from novaclient import exceptions as nova_exc
 
 from nodeutils import iterate_timeout
 from task_manager import Task, TaskManager, ManagerStoppedException
@@ -110,8 +111,14 @@ class NotFound(Exception):
 
 class CreateServerTask(Task):
     def main(self, client):
-        server = client.nova_client.servers.create(**self.args)
-        return str(server.id)
+        try:
+            server = client.nova_client.servers.create(**self.args)
+            return str(server.id)
+        except nova_exc.BadRequest as e:
+            self.log.debug("Error creating server: %s" % str(e))
+            for (key, value) in self.args.items():
+                self.log.debug("  %s: %s" % (key, value))
+            return None
 
 
 class GetServerTask(Task):
