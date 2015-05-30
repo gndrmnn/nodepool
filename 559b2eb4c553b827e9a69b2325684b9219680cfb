@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a016987_926c24d1",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-05-30T18:16:41Z",
+      "side": 1,
+      "message": "This is more than a debugging change - were going to lose the stack trace as a result of this. Maybe we should raise here instead of return None?",
+      "revId": "559b2eb4c553b827e9a69b2325684b9219680cfb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
