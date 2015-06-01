@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a016987_0fec82b9",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-01T04:45:49Z",
+      "side": 1,
+      "message": "This is duplicate code with the above if.\n\nYou could just have the for loop and then check if addresses is empty still",
+      "revId": "e79792e5472c80bf792afc0bfc75537ab43ca2d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
