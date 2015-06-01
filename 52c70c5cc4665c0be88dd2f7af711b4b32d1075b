@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5afe65bd_f40426c7",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-06-01T17:29:47Z",
+      "side": 1,
+      "message": "Why not make this:\n\n  self.log.exception(\"Error creating server\") ?",
+      "revId": "52c70c5cc4665c0be88dd2f7af711b4b32d1075b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5afe65bd_942a922b",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-06-01T17:29:47Z",
+      "side": 1,
+      "message": "You can build up a string from these key value pairs and put them in the above exception level log if you want too. I don\u0027t think thats better or worse but associates all the related data at the same log level.",
+      "revId": "52c70c5cc4665c0be88dd2f7af711b4b32d1075b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
