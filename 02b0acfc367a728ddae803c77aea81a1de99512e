@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5afe65bd_7cc12a2e",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-02T04:30:58Z",
+      "side": 1,
+      "message": "(nit) could use kw.get(\u0027nics\u0027, [])",
+      "revId": "02b0acfc367a728ddae803c77aea81a1de99512e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5afe65bd_5cdd4e13",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-02T04:30:58Z",
+      "side": 1,
+      "message": "(nit cont.) then this wouldn\u0027t be necessary",
+      "revId": "02b0acfc367a728ddae803c77aea81a1de99512e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5afe65bd_5c042e7d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-02T04:30:58Z",
+      "side": 1,
+      "message": "(nit) I would add \"falling back to ipv4\" in the comment",
+      "revId": "02b0acfc367a728ddae803c77aea81a1de99512e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5afe65bd_3c097296",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-02T04:30:58Z",
+      "side": 1,
+      "message": "(see above)",
+      "revId": "02b0acfc367a728ddae803c77aea81a1de99512e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
