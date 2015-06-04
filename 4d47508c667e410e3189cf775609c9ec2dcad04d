@@ -16,6 +16,24 @@
       "revId": "4d47508c667e410e3189cf775609c9ec2dcad04d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5afe65bd_ef971aea",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-06-04T17:15:58Z",
+      "side": 1,
+      "message": "Strange, I was able to log into the instance with this configuration previously, but you\u0027re right, it\u0027s now failing with this error.\n\nTesting with a hardcoded path now, if that works I\u0027ll upload another patchset to address this.",
+      "parentUuid": "5afe65bd_0b272acb",
+      "revId": "4d47508c667e410e3189cf775609c9ec2dcad04d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
