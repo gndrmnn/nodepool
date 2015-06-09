@@ -206,6 +206,20 @@ class DBTestCase(BaseTestCase):
         os.close(fd)
         return path
 
+    def setup_secure(self):
+        images_dir = fixtures.TempDir()
+        self.useFixture(images_dir)
+
+        # replace entries in secure.conf
+        configfile = os.path.join(os.path.dirname(__file__),
+                                  'fixtures', 'secure.conf')
+        config = open(configfile).read()
+        (fd, path) = tempfile.mkstemp()
+        os.write(fd, config.format(dburi=self.dburi,
+                                   images_dir=images_dir.path))
+        os.close(fd)
+        return path
+
     def wait_for_config(self, pool):
         for x in range(300):
             if pool.config is not None:
