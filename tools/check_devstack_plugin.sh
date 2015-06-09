@@ -4,7 +4,7 @@
 # at being completed.
 sleep 15m
 
-NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG"
+NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
 # Check that snapshot image built
 $NODEPOOL_CMD image-list | grep ready | grep trusty-server
 # check that dib image built

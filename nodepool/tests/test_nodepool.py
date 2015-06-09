@@ -33,7 +33,8 @@ class TestNodepool(tests.DBTestCase):
     def test_node(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -48,7 +49,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_node(self):
         """Test that a dib image and node are created"""
         configfile = self.setup_config('node_dib.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -63,7 +65,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_node_vhd_image(self):
         """Test that a dib image and node are created vhd image"""
         configfile = self.setup_config('node_dib_vhd.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -78,7 +81,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_node_vhd_and_qcow2(self):
         """Test label provided by vhd and qcow2 images builds"""
         configfile = self.setup_config('node_dib_vhd_and_qcow2.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider1', 'fake-dib-image')
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
@@ -99,7 +103,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_and_snap_label(self):
         """Test that a label with dib and snapshot images build."""
         configfile = self.setup_config('node_dib_and_snap.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider1', 'fake-dib-image')
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
@@ -120,7 +125,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_and_snap_fail(self):
         """Test that snap based nodes build when dib fails."""
         configfile = self.setup_config('node_dib_and_snap_fail.yaml')
-        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.addCleanup(pool.stop)
         # fake-provider1 will fail to build fake-dib-image
@@ -148,7 +154,8 @@ class TestNodepool(tests.DBTestCase):
     def test_dib_upload_fail(self):
         """Test that a dib and snap image upload failure is contained."""
         configfile = self.setup_config('node_dib_and_snap_upload_fail.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -170,7 +177,8 @@ class TestNodepool(tests.DBTestCase):
     def test_subnodes(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('subnodes.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -194,7 +202,8 @@ class TestNodepool(tests.DBTestCase):
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
         configfile = self.setup_config('node_az.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -210,7 +219,8 @@ class TestNodepool(tests.DBTestCase):
     def test_node_ipv6(self):
         """Test that a node is created w/ or w/o ipv6 preferred flag"""
         configfile = self.setup_config('node_ipv6.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider1', 'fake-image')
         self.waitForImage(pool, 'fake-provider2', 'fake-image')
@@ -242,7 +252,8 @@ class TestNodepool(tests.DBTestCase):
 
     def test_node_delete_success(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -283,7 +294,8 @@ class TestNodepool(tests.DBTestCase):
         self.useFixture(fixtures.MonkeyPatch(fake_delete, fail_delete))
 
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -320,7 +332,8 @@ class TestNodepool(tests.DBTestCase):
     def test_proxy_timeout(self):
         """Test that we re-run a task after a ProxyError"""
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForNodes(pool)
 
@@ -353,7 +366,8 @@ class TestNodepool(tests.DBTestCase):
     def test_leaked_node(self):
         """Test that a leaked node is deleted"""
         configfile = self.setup_config('leaked_node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
