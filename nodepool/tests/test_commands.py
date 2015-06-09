@@ -24,7 +24,8 @@ from nodepool import tests
 
 class TestNodepoolCMD(tests.DBTestCase):
     def patch_argv(self, *args):
-        argv = ["nodepool"]
+        securefile = self.setup_secure()
+        argv = ["nodepool", "-s", securefile]
         argv.extend(args)
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
 
