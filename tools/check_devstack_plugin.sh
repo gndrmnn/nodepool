@@ -5,7 +5,8 @@
 sleep 15m
 
 NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
-NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG"
+NODEPOOL_SECURE=${NODEPOOL_SECURE:-/etc/nodepool/secure.conf}
+NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
 # Check that snapshot image built
 $NODEPOOL_CMD image-list | grep ready | grep trusty-server
 # check that dib image built
