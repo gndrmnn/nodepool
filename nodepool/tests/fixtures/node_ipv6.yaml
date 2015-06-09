@@ -1,5 +1,4 @@
 script-dir: .
-dburi: '{dburi}'
 
 cron:
   check: '*/15 * * * *'
@@ -90,7 +89,3 @@ providers:
 
 targets:
   - name: fake-target
-    jenkins:
-      url: https://jenkins.example.org/
-      user: fake
-      apikey: fake
