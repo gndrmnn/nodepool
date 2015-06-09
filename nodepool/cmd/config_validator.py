@@ -84,12 +84,6 @@ class ConfigValidator:
             'name': str,
             'hostname': str,
             'subnode-hostname': str,
-            'jenkins': {
-                'url': str,
-                'user': str,
-                'apikey': str,
-                'credentials-id': str,
-            }
         }
 
         diskimages = {
