@@ -86,6 +86,9 @@ class NodePoolDaemon(object):
         parser.add_argument('-c', dest='config',
                             default='/etc/nodepool/nodepool.yaml',
                             help='path to config file')
+        parser.add_argument('-s', dest='secrets',
+                            default='/etc/nodepool/nodepool.conf',
+                            help='path to secrets file')
         parser.add_argument('-d', dest='nodaemon', action='store_true',
                             help='do not run as a daemon')
         parser.add_argument('-l', dest='logconfig',
@@ -118,7 +121,8 @@ class NodePoolDaemon(object):
     def main(self):
         import nodepool.nodepool
         self.setup_logging()
-        self.pool = nodepool.nodepool.NodePool(self.args.config)
+        self.pool = nodepool.nodepool.NodePool(self.args.secret,
+                                               self.args.config)
 
         signal.signal(signal.SIGUSR1, self.exit_handler)
         signal.signal(signal.SIGUSR2, stack_dump_handler)
