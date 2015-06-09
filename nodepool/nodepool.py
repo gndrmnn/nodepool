@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from six.moves import configparser as ConfigParser
 from statsd import statsd
 import apscheduler.scheduler
 import gear
@@ -1203,8 +1204,10 @@ class DiskImage(ConfigValue):
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
-    def __init__(self, configfile, watermark_sleep=WATERMARK_SLEEP):
+    def __init__(self, secretsfile, configfile,
+                 watermark_sleep=WATERMARK_SLEEP):
         threading.Thread.__init__(self, name='NodePool')
+        self.secretsfile = secretsfile
         self.configfile = configfile
         self.watermark_sleep = watermark_sleep
         self._stopped = False
@@ -1236,6 +1239,11 @@ class NodePool(threading.Thread):
 
     def loadConfig(self):
         self.log.debug("Loading configuration")
+        secrets = ConfigParser.ConfigParser()
+        if not os.path.exists(self.secretsfile):
+            raise IOError("Unable to read config file at %s" %
+                          self.secretsfile)
+        secrets.read(self.secretsfile)
         config = yaml.load(open(self.configfile))
         cloud_config = os_client_config.OpenStackConfig()
 
@@ -1248,7 +1256,7 @@ class NodePool(threading.Thread):
         newconfig.scriptdir = config.get('script-dir')
         newconfig.elementsdir = config.get('elements-dir')
         newconfig.imagesdir = config.get('images-dir')
-        newconfig.dburi = config.get('dburi')
+        newconfig.dburi = secrets.get('database', 'dburi')
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
@@ -1379,23 +1387,31 @@ class NodePool(threading.Thread):
                 l.providers[p.name] = p
 
         for target in config['targets']:
+            # look at secrets file for that section
+            section_name = 'jenkins "%s"' % target['name']
+            if not secrets.has_section(section_name):
+                # target not found in secrets, error
+                raise KeyError(
+                    "Cannot find target %s in secrets" % target['name'])
+
             t = Target()
             t.name = target['name']
             newconfig.targets[t.name] = t
-            jenkins = target.get('jenkins')
             t.online = True
-            if jenkins:
-                t.jenkins_url = jenkins['url']
-                t.jenkins_user = jenkins['user']
-                t.jenkins_apikey = jenkins['apikey']
-                t.jenkins_credentials_id = jenkins.get('credentials-id')
-                t.jenkins_test_job = jenkins.get('test-job')
-            else:
-                t.jenkins_url = None
-                t.jenkins_user = None
-                t.jenkins_apikey = None
+            t.jenkins_url = secrets.get(section_name, 'url')
+            t.jenkins_user = secrets.get(section_name, 'user')
+            t.jenkins_apikey = secrets.get(section_name, 'apikey')
+            try:
+                t.jenkins_credentials_id = secrets.get(
+                    section_name, 'credentials')
+            except:
                 t.jenkins_credentials_id = None
+
+            try:
+                t.jenkins_test_job = secrets.get(section_name, 'test_job')
+            except:
                 t.jenkins_test_job = None
+
             t.rate = target.get('rate', 1.0)
             t.hostname = target.get(
                 'hostname',
