@@ -46,6 +46,9 @@ class NodePoolCmd(object):
         parser.add_argument('-c', dest='config',
                             default='/etc/nodepool/nodepool.yaml',
                             help='path to config file')
+        parser.add_argument('-s', dest='secure',
+                            default='/etc/nodepool/secure.conf',
+                            help='path to secure file')
         parser.add_argument('--version', action='version',
                             version=npc_version_info.version_string(),
                             help='show version')
@@ -348,7 +351,7 @@ class NodePoolCmd(object):
         if self.args.command in ('config-validate'):
             return self.args.func()
 
-        self.pool = nodepool.NodePool(self.args.config)
+        self.pool = nodepool.NodePool(self.args.secure, self.args.config)
         config = self.pool.loadConfig()
         self.pool.reconfigureDatabase(config)
         self.pool.setConfig(config)
