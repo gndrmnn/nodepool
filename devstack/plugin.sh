@@ -77,6 +77,7 @@ EOF
 
 function nodepool_write_config {
     sudo mkdir -p $(dirname $NODEPOOL_CONFIG)
+    sudo mkdir -p $(dirname $NODEPOOL_SECURE)
     local dburi=$(database_connection_url nodepool)
 
     cat > /tmp/logging.conf <<EOF
@@ -111,6 +112,16 @@ EOF
 
     sudo mv /tmp/logging.conf $NODEPOOL_LOGGING
 
+    cat > /tmp/secure.conf << EOF
+[database]
+# The mysql password here may be different depending on your
+# devstack install, you should double check it (the devstack var
+# is MYSQL_PASSWORD and if unset devstack should prompt you for
+# the value).
+dburi: $dburi
+EOF
+    sudo mv /tmp/secure.conf $NODEPOOL_SECURE
+
     cat > /tmp/nodepool.yaml <<EOF
 # You will need to make and populate these two paths as necessary,
 # cloning nodepool does not do this. Further in this doc we have an
@@ -118,11 +129,6 @@ EOF
 script-dir: $(dirname $NODEPOOL_CONFIG)/scripts
 elements-dir: $(dirname $NODEPOOL_CONFIG)/elements
 images-dir: $(dirname $NODEPOOL_CONFIG)/images
-# The mysql password here may be different depending on your
-# devstack install, you should double check it (the devstack var
-# is MYSQL_PASSWORD and if unset devstack should prompt you for
-# the value).
-dburi: '$dburi'
 
 gearman-servers:
   - host: localhost
@@ -243,7 +249,7 @@ function start_nodepool {
     # start gearman server
     run_process geard "geard -p 8991 -d"
 
-    run_process nodepool "nodepoold -c $NODEPOOL_CONFIG -l $NODEPOOL_LOGGING -d"
+    run_process nodepool "nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LOGGING -d"
     :
 }
 
