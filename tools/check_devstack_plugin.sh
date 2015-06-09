@@ -5,12 +5,18 @@
 sleep 15m
 
 NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
-NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG"
+NODEPOOL_SECURE=${NODEPOOL_SECURE:-/etc/nodepool/secure.conf}
+NODEPOOL_CMD="nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
 # Check that snapshot image built
-$NODEPOOL_CMD image-list | grep ready | grep trusty-server
+# Print out the full details to help debugging errors
+IMAGE_LIST=$($NODEPOOL_CMD image-list)
+echo "$IMAGE_LIST" | grep ready | grep trusty-server
 # check that dib image built
-$NODEPOOL_CMD image-list | grep ready | grep ubuntu-dib
+echo "$IMAGE_LIST" | grep ready | grep ubuntu-dib
+
+# Print out the full details to help debugging errors
+LIST=$($NODEPOOL_CMD list)
 # check snapshot image was bootable
-$NODEPOOL_CMD list | grep ready | grep trusty-server
+echo "$LIST" | grep ready | grep trusty-server
 # check dib image was bootable
-$NODEPOOL_CMD list | grep ready | grep ubuntu-dib
+echo "$LIST" | grep ready | grep ubuntu-dib
