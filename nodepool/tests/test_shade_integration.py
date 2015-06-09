@@ -39,7 +39,8 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
     def test_nodepool_provider_config(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        securefile = self.setup_secure()
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.updateConfig()
         provider_manager = pool.config.provider_managers['fake-provider']
         auth_data = {'username': 'fake',
@@ -51,6 +52,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
     def test_nodepool_osc_config(self):
         configfile = self.setup_config('node_osc.yaml')
+        securefile = self.setup_secure()
         auth_data = {'username': 'os_fake',
                      'project_name': 'os_fake',
                      'password': 'os_fake',
@@ -58,13 +60,14 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         osc_config = {'clouds': {'fake-cloud': {'auth': auth_data}}}
         self._use_cloud_config(osc_config)
 
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.updateConfig()
         provider_manager = pool.config.provider_managers['fake-provider']
         self.assertEqual(provider_manager._client.auth, auth_data)
 
     def test_nodepool_osc_config_reload(self):
         configfile = self.setup_config('node_osc.yaml')
+        securefile = self.setup_secure()
         auth_data = {'username': 'os_fake',
                      'project_name': 'os_fake',
                      'password': 'os_fake',
@@ -72,7 +75,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         osc_config = {'clouds': {'fake-cloud': {'auth': auth_data}}}
         self._use_cloud_config(osc_config)
 
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool = self.useNodepool(securefile, configfile, watermark_sleep=1)
         pool.updateConfig()
         provider_manager = pool.config.provider_managers['fake-provider']
         self.assertEqual(provider_manager._client.auth, auth_data)

@@ -50,7 +50,3 @@ providers:
 
 targets:
   - name: fake-jenkins
-    jenkins:
-      url: https://jenkins.example.org/
-      user: fake
-      apikey: fake
