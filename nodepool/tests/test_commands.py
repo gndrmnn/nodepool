@@ -24,9 +24,11 @@ from nodepool import tests
 
 class TestNodepoolCMD(tests.DBTestCase):
     def patch_argv(self, *args):
-        argv = ["nodepool"]
+        securefile = self.setup_secure()
+        argv = ["nodepool", "-s", securefile]
         argv.extend(args)
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
+        return securefile
 
     def assert_images_listed(self, configfile, image_cnt, status="ready"):
         self.patch_argv("-c", configfile, "image-list")
@@ -109,8 +111,8 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_image_delete_snapshot(self):
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "all", "fake-image1")
+        securefile = self.patch_argv("-c", configfile, "image-update",
+                                     "all", "fake-image1")
         nodepoolcmd.main()
         pool = self.useNodepool(configfile, watermark_sleep=1)
         # This gives us a nodepool with a working db but not running which

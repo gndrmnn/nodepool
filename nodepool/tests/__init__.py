@@ -182,6 +182,8 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
             time.sleep(0.1)
 
     def useNodepool(self, *args, **kwargs):
+        securefile = self.setup_secure()
+        args = (securefile,) + args
         pool = nodepool.NodePool(*args, **kwargs)
         self.addCleanup(pool.stop)
         return pool
@@ -265,9 +267,18 @@ class DBTestCase(BaseTestCase):
                                   'fixtures', filename)
         config = open(configfile).read()
         (fd, path) = tempfile.mkstemp()
-        os.write(fd, config.format(dburi=self.dburi,
-                                   images_dir=images_dir.path,
+        os.write(fd, config.format(images_dir=images_dir.path,
                                    gearman_port=self.gearman_server.port))
+        os.close(fd)
+        return path
+
+    def setup_secure(self):
+        # replace entries in secure.conf
+        configfile = os.path.join(os.path.dirname(__file__),
+                                  'fixtures', 'secure.conf')
+        config = open(configfile).read()
+        (fd, path) = tempfile.mkstemp()
+        os.write(fd, config.format(dburi=self.dburi))
         os.close(fd)
         return path
 
