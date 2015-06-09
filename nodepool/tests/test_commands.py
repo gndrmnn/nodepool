@@ -28,8 +28,9 @@ class TestNodepoolCMD(tests.DBTestCase):
         argv.extend(args)
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
 
-    def assert_images_listed(self, configfile, image_cnt, status="ready"):
-        self.patch_argv("-c", configfile, "image-list")
+    def assert_images_listed(self, configfile, secretsfile, image_cnt,
+                             status="ready"):
+        self.patch_argv("-c", configfile, "-s", secretsfile, "image-list")
         with mock.patch('prettytable.PrettyTable.add_row') as m_add_row:
             nodepoolcmd.main()
             images_with_status = 0
@@ -43,70 +44,83 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_snapshot_image_update(self):
         configfile = self.setup_config("node.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "fake-provider", "fake-image")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "fake-provider", "fake-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_images_listed(configfile, secretsfile, 1)
 
     def test_dib_image_update(self):
         configfile = self.setup_config("node_dib.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "fake-dib-provider", "fake-dib-image")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "fake-dib-provider",
+                        "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_images_listed(configfile, secretsfile, 1)
 
     def test_dib_snapshot_image_update(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "fake-provider1", "fake-dib-image")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "fake-provider1",
+                        "fake-dib-image")
         nodepoolcmd.main()
-        self.patch_argv("-c", configfile, "image-update",
-                        "fake-provider2", "fake-dib-image")
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "fake-provider2",
+                        "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 2)
+        self.assert_images_listed(configfile, secretsfile, 2)
 
     def test_dib_snapshot_image_update_all(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "all", "fake-dib-image")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "all", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 2)
+        self.assert_images_listed(configfile, secretsfile, 2)
 
     def test_image_update_all(self):
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "all", "fake-image1")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "all", "fake-image1")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_images_listed(configfile, secretsfile, 1)
 
     def test_image_list_empty(self):
-        self.assert_images_listed(self.setup_config("node_cmd.yaml"), 0)
+        self.assert_images_listed(self.setup_config("node_cmd.yaml"),
+                                  self.setup_secrets(), 0)
 
     def test_image_delete_invalid(self):
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "image-delete", "invalid-image")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-delete", "invalid-image")
         nodepoolcmd.main()
 
     def test_image_delete_snapshot(self):
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "image-update",
-                        "all", "fake-image1")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-update", "all", "fake-image1")
         nodepoolcmd.main()
-        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool = self.useNodepool(secretsfile, configfile, watermark_sleep=1)
         # This gives us a nodepool with a working db but not running which
         # is important so we can control image building
         pool.updateConfig()
         self.waitForImage(pool, 'fake-provider1', 'fake-image1')
 
-        self.patch_argv("-c", configfile, "image-delete", '1')
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "image-delete", '1')
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 0)
+        self.assert_images_listed(configfile, secretsfile, 0)
 
     def test_alien_list_fail(self):
         def fail_list(self):
@@ -115,7 +129,8 @@ class TestNodepoolCMD(tests.DBTestCase):
                                              '.list', fail_list))
 
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "alien-list")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile, "alien-list")
         nodepoolcmd.main()
         self.wait_for_threads()
 
@@ -126,6 +141,8 @@ class TestNodepoolCMD(tests.DBTestCase):
                                              '.list', fail_list))
 
         configfile = self.setup_config("node_cmd.yaml")
-        self.patch_argv("-c", configfile, "alien-image-list")
+        secretsfile = self.setup_secrets()
+        self.patch_argv("-c", configfile, "-s", secretsfile,
+                        "alien-image-list")
         nodepoolcmd.main()
         self.wait_for_threads()
