@@ -124,7 +124,7 @@ class FakeList(object):
                       public=[dict(version=4, addr='fake')],
                       private=[dict(version=4, addr='fake')]
                   ),
-                  metadata={},
+                  metadata=kw.get('meta', {}),
                   manager=self,
                   should_fail=should_fail)
         self._list.append(s)
