@@ -1245,8 +1245,8 @@ class NodePool(threading.Thread):
         newconfig.providers = {}
         newconfig.targets = {}
         newconfig.labels = {}
-        newconfig.scriptdir = config.get('script-dir')
-        newconfig.elementsdir = config.get('elements-dir')
+        newconfig.scriptdir = config.get('script-dir', '')
+        newconfig.elementsdir = config.get('elements-dir', '')
         newconfig.imagesdir = config.get('images-dir')
         newconfig.dburi = config.get('dburi')
         newconfig.provider_managers = {}
