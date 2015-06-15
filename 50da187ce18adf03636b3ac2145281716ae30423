@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_e478eb2d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-06-15T21:51:58Z",
+      "side": 1,
+      "message": "Does it make sense to put this file at `/etc/nodepool/auth.conf`?",
+      "revId": "50da187ce18adf03636b3ac2145281716ae30423",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_84779f39",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-06-15T21:51:58Z",
+      "side": 1,
+      "message": "Let\u0027s call this format \u0027an ini config file\u0027 or \u0027a standard ini config file\u0027 rather than \u0027a standard config file\u0027.",
+      "revId": "50da187ce18adf03636b3ac2145281716ae30423",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
