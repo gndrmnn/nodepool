@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_44365053",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1244,
+      "author": {
+        "id": 8984
+      },
+      "writtenOn": "2015-06-16T17:43:47Z",
+      "side": 1,
+      "message": "Can you replace Exception with IOError.\nIOError would be a better exception to raise.",
+      "revId": "06ed30745a39f046061e3fbd43d2c5a350df63cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_a435dcf7",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 8984
+      },
+      "writtenOn": "2015-06-16T17:43:47Z",
+      "side": 1,
+      "message": "Again here you can replace Exception with KeyError",
+      "revId": "06ed30745a39f046061e3fbd43d2c5a350df63cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
