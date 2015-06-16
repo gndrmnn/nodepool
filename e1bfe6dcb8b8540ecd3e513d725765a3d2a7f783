@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_7a1684a8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 8984
+      },
+      "writtenOn": "2015-06-16T20:01:55Z",
+      "side": 1,
+      "message": "Part \u003d namedtuple(\u0027Part\u0027, [\u0027name\u0027, \u0027num_jobs\u0027, \u0027jobs_building\u0027, \u0027workers\u0027])\n\nparts \u003d Part(x.strip() for x in line.split(\u0027\\t\u0027))\n\nif parts.name.startswith(\u0027build\u0027):\n    ...\n\nThat way, the code can be easier to follow",
+      "revId": "e1bfe6dcb8b8540ecd3e513d725765a3d2a7f783",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
