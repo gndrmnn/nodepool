@@ -2127,45 +2127,60 @@ class NodePool(threading.Thread):
             # Don't write to the session if not needed.
             node.state = nodedb.DELETE
         self.updateStats(session, node.provider_name)
-        provider = self.config.providers[node.provider_name]
-        target = self.config.targets[node.target_name]
+        if node.provider_name in self.config.providers:
+            provider = self.config.providers[node.provider_name]
+        else:
+            self.log.debug("Provider %s not found" % node.provider_name)
+            provider = None
+
+        if node.target_name in self.config.targets:
+            target = self.config.targets[node.target_name]
+        else:
+            self.log.debug("Target %s not found" % node.target_name)
+            target = None
+
         label = self.config.labels.get(node.label_name, None)
         if label:
             image_name = provider.images[label.image].name
         else:
             image_name = None
-        manager = self.getProviderManager(provider)
 
-        if target.jenkins_url and (node.nodename is not None):
+        if provider:
+            manager = self.getProviderManager(provider)
+
+        if target and target.jenkins_url and (node.nodename is not None):
             jenkins = self.getJenkinsManager(target)
             jenkins_name = node.nodename
             if jenkins.nodeExists(jenkins_name):
                 jenkins.deleteNode(jenkins_name)
             self.log.info("Deleted jenkins node id: %s" % node.id)
 
-        for subnode in node.subnodes:
-            if subnode.external_id:
+        if manager:
+            for subnode in node.subnodes:
+                if subnode.external_id:
+                    try:
+                        self.log.debug('Deleting server %s for subnode id: '
+                                       '%s of node id: %s' %
+                                       (subnode.external_id, subnode.id,
+                                        node.id))
+                        manager.cleanupServer(subnode.external_id)
+                    except provider_manager.NotFound:
+                        pass
+
+            if node.external_id:
                 try:
-                    self.log.debug('Deleting server %s for subnode id: '
-                                   '%s of node id: %s' %
-                                   (subnode.external_id, subnode.id, node.id))
-                    manager.cleanupServer(subnode.external_id)
+                    self.log.debug('Deleting server %s for node id: %s' %
+                                   (node.external_id, node.id))
+                    manager.cleanupServer(node.external_id)
+                    manager.waitForServerDeletion(node.external_id)
                 except provider_manager.NotFound:
                     pass
-
-        if node.external_id:
-            try:
-                self.log.debug('Deleting server %s for node id: %s' %
-                               (node.external_id, node.id))
-                manager.cleanupServer(node.external_id)
-                manager.waitForServerDeletion(node.external_id)
-            except provider_manager.NotFound:
-                pass
-            node.external_id = None
+        node.external_id = None
 
         for subnode in node.subnodes:
             if subnode.external_id:
-                manager.waitForServerDeletion(subnode.external_id)
+                if manager:
+                    manager.waitForServerDeletion(subnode.external_id)
                 subnode.delete()
 
         node.delete()
