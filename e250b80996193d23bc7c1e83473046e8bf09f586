@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_fc0e063a",
+        "filename": "nodepool/sshclient.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-06-17T02:13:19Z",
+      "side": 1,
+      "message": "woops, you missed this one",
+      "revId": "e250b80996193d23bc7c1e83473046e8bf09f586",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
