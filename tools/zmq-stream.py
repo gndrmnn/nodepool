@@ -28,7 +28,7 @@ context = zmq.Context()
 socket = context.socket(zmq.SUB)
 event_filter = b""
 socket.setsockopt(zmq.SUBSCRIBE, event_filter)
-socket.connect("tcp://localhost:8888")
+socket.connect("tcp://15.126.142.129:8888")
 
 print('ready')
 while True:
