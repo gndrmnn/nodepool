@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa32b979_362d3efe",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-06-17T19:57:29Z",
+      "side": 1,
+      "message": "why is that relevant to this change?",
+      "revId": "8b76b3dca03bd2fbec1b1723ab4c991a1657fcc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa32b979_3f019905",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 5
