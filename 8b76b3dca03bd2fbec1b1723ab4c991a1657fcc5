@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_3f019905",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-06-17T18:13:04Z",
+      "side": 1,
+      "message": "Can we collapse the check below into this one, or vice versa? Its wierd that we have two different ways of branching out of this loop for performing the same type of check\n\n(notaminusone)",
+      "revId": "8b76b3dca03bd2fbec1b1723ab4c991a1657fcc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
