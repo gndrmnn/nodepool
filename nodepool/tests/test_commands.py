@@ -17,6 +17,7 @@ import sys  # noqa making sure its available for monkey patching
 
 import fixtures
 import mock
+import tempfile
 
 from nodepool.cmd import nodepoolcmd
 from nodepool import tests
@@ -129,3 +130,14 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-image-list")
         nodepoolcmd.main()
         self.wait_for_threads()
+
+    def test_log_config_generator(self):
+        configfile = self.setup_config('node_cmd.yaml')
+        outfile = tempfile.NamedTemporaryFile()
+        self.patch_argv('-c', configfile, 'config-log-generate',
+                        '-o', outfile.name)
+        nodepoolcmd.main()
+        with open(outfile.name) as fd:
+            config = fd.read()
+            self.assertIn('logger_fake-provider1', config)
+            self.assertIn('handler_fake-provider2', config)

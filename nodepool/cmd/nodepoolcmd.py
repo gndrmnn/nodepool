@@ -21,6 +21,7 @@ import time
 
 from nodepool import nodedb
 from nodepool import nodepool
+from nodepool.cmd.generator import generate_log_config
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
@@ -138,6 +139,26 @@ class NodePoolCmd(object):
             'config-validate',
             help='Validate configuration file')
         cmd_config_validate.set_defaults(func=self.config_validate)
+
+        cmd_generate_config = subparsers.add_parser(
+            'config-log-generate',
+            help='Generate configuration file')
+        cmd_generate_config.set_defaults(func=self.config_generate)
+        cmd_generate_config.add_argument('--d', '--debug',
+                                         action='store_true',
+                                         help="Enable debugging")
+        cmd_generate_config.add_argument('-o', '--output',
+                                         default='/etc/nodepool/logging.conf',
+                                         help="Output file (default:"
+                                         " /etc/nodepool/logging.conf)")
+        cmd_generate_config.add_argument('-l', '--log-dir',
+                                         default='/var/log/nodepool',
+                                         help="Output directory for logs "
+                                         "(default: /var/log/nodepool)")
+        cmd_generate_config.add_argument('-i', '--image-log-dir',
+                                         default='/var/log/nodepool/images',
+                                         help="Output directory for image logs "
+                                         "(default: /var/log/nodepool/images)")
 
         self.args = parser.parse_args()
 
@@ -342,6 +363,12 @@ class NodePoolCmd(object):
         validator = ConfigValidator(self.args.config)
         validator.validate()
         log.info("Configuation validation complete")
+
+    def config_generate(self):
+        args = self.args
+        generate_log_config(args.config, args.log_dir, args.image_log_dir,
+                            args.output)
+        log.info("Logging configuration complete")
 
     def main(self):
         # commands which do not need to start-up or parse config
