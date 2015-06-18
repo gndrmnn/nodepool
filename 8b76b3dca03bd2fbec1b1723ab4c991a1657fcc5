@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa32b979_40b9e6ca",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1559,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-06-18T17:28:43Z",
+      "side": 1,
+      "message": "The leaked_node.yaml fixture uses second-granularity timers so that tests using it don\u0027t need to take up to a minute.",
+      "parentUuid": "fa32b979_362d3efe",
+      "revId": "8b76b3dca03bd2fbec1b1723ab4c991a1657fcc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa32b979_3f019905",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 5
