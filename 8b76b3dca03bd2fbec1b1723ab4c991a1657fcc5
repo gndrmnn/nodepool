@@ -51,6 +51,24 @@
       "revId": "8b76b3dca03bd2fbec1b1723ab4c991a1657fcc5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_e06b5a1c",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2015-06-18T17:33:28Z",
+      "side": 1,
+      "message": "I recommend proposing that as a separate change. This one is basically already manually applied in production, so we\u0027d like to go ahead and merge it in something like its current state.",
+      "parentUuid": "fa32b979_3f019905",
+      "revId": "8b76b3dca03bd2fbec1b1723ab4c991a1657fcc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
