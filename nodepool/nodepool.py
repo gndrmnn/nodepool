@@ -824,7 +824,8 @@ class DiskImageBuilder(threading.Thread):
             dib_cmd = 'disk-image-create'
 
         cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
+               [str(x) for x in (dib_cmd, img_types, qemu_img_options,
+                   filename, img_elements)])
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image_name,))
