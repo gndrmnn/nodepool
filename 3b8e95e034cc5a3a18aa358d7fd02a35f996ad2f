@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_71f62d90",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7156
+      },
+      "writtenOn": "2015-06-19T03:12:09Z",
+      "side": 1,
+      "message": "This should be \"\tMySQL Example::\" (note the second colon) for better formatting.\n\nSee the result without the double colons:\nhttps://gist.github.com/anonymous/8886d7628bed8be5f1db",
+      "revId": "3b8e95e034cc5a3a18aa358d7fd02a35f996ad2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
