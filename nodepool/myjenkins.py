@@ -39,7 +39,7 @@ class Jenkins(jenkins.Jenkins):
         if info['offline']:
             return
         self.jenkins_open(
-            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals()))
+            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals(), b''))
 
     def enable_node(self, name):
         '''
@@ -53,7 +53,7 @@ class Jenkins(jenkins.Jenkins):
             return
         msg = ''
         self.jenkins_open(
-            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals()))
+            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals(), b''))
 
     def get_node_config(self, name):
         '''
@@ -130,7 +130,7 @@ class Jenkins(jenkins.Jenkins):
         }
 
         self.jenkins_open(urlrequest.Request(
-            self.server + CREATE_NODE % urlparse.urlencode(params)))
+            self.server + CREATE_NODE % urlparse.urlencode(params), b''))
 
         if not self.node_exists(name):
             raise JenkinsException('create[%s] failed' % (name))
