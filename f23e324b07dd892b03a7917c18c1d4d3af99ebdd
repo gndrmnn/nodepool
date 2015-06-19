@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_51ea09dc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 7156
+      },
+      "writtenOn": "2015-06-19T03:02:57Z",
+      "side": 1,
+      "message": "IMO, this section shouldn\u0027t be named after the database engine (mysql in that case) since others are supported as well.\n\nI suggest to name it \"database\" instead and the config name \"connection\" to be consistent with other OpenStack projects.",
+      "revId": "f23e324b07dd892b03a7917c18c1d4d3af99ebdd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
