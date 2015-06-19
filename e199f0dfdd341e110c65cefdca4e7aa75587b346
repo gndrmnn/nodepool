@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_54e0b728",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7156
+      },
+      "writtenOn": "2015-06-19T03:56:18Z",
+      "side": 1,
+      "message": "You should add a second colon for better formatting:\n\nRHEL 7 / CentOS 7::",
+      "revId": "e199f0dfdd341e110c65cefdca4e7aa75587b346",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
