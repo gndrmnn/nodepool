@@ -39,7 +39,7 @@ class Jenkins(jenkins.Jenkins):
         if info['offline']:
             return
         self.jenkins_open(
-            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals()))
+            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals(), ''))
 
     def enable_node(self, name):
         '''
@@ -53,7 +53,7 @@ class Jenkins(jenkins.Jenkins):
             return
         msg = ''
         self.jenkins_open(
-            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals()))
+            urlrequest.Request(self.server + TOGGLE_OFFLINE % locals(), ''))
 
     def get_node_config(self, name):
         '''
