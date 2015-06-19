@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_b19a7560",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 7156
+      },
+      "writtenOn": "2015-06-19T03:08:00Z",
+      "side": 1,
+      "message": "How about we make the config self-explanatory? I suggest flavor-name-filter which communicates much more its purpose. I thought name-filter was related to image filtering (since we are in the images section).",
+      "revId": "4237395cb75a7c83eed832d99f6f094a5a02d031",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
