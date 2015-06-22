@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_c117ea52",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1697,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-06-22T05:05:49Z",
+      "side": 1,
+      "message": "This seems unrelated to the commit message - im guessing the idea is to not consider nodes in a removed provider in our error calculations, but the commit msg is about fixing deletes for missing providers.\n\nSince changes to our resource error calculations are somewhat risky, maybe this should be a separate commit? If not, it should at least be referenced in the commit msg.",
+      "revId": "4401c8e61168fecf734899f1461533eae9d12200",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
