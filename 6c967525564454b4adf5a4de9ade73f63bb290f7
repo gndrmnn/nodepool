@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_457898c4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-06-22T23:20:26Z",
+      "side": 1,
+      "message": "If the problem is the error message then lets fix that instead of changing behavior (by making a check and a better error message).\n\nIf we actually want to change behavior then I\u0027d like to know why? I can see a use case for one of these two being unset, is there a use case for both being unset? I\u0027d prefer nodepool to fail early with an error if were in a case which cant possibly be useful rather than charging ahead and telling the user nothing...",
+      "revId": "6c967525564454b4adf5a4de9ade73f63bb290f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
