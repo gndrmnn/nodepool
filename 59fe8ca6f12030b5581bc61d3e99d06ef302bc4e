@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_7246cf50",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-06-22T17:50:00Z",
+      "side": 1,
+      "message": "As noted in Icbf19a25a8b555f1289ff9efb368e9e5cd4740ab the nodepool user actually needs access to create databases as well to store information about the systems it creates in their own databases. I\u0027d copy the database creation information from that change.\n\nYou may also note that this MySQL instance should be for nodepool usage only since we\u0027re giving it free rein on the database.",
+      "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
