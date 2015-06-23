@@ -350,9 +350,12 @@ class NodePoolCmd(object):
 
         self.pool = nodepool.NodePool(self.args.config)
         config = self.pool.loadConfig()
+        self.pool.reconfigureGearmanClient(config)
         self.pool.reconfigureDatabase(config)
         self.pool.setConfig(config)
+        self.pool.reconfigureImageBuilder()
         self.args.func()
+        self.pool._image_builder_thread.stop()
 
 
 def main():
