@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa32b979_d243e9ad",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-06-23T15:43:04Z",
+      "side": 1,
+      "message": "Maybe change \u0027sections\u0027 to \u0027settings\u0027 or something similar for clarity.\n\nAlso, it would be good to use the same style both here and later on in the file.  Either use RST sections for everything or the dictionary definitions that are currently used below.",
+      "revId": "16cb8d8725a6d96f5d0f78b00d00908cd0ca3937",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_7213fdb8",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-06-23T15:43:04Z",
+      "side": 1,
+      "message": "nodepool.yaml",
+      "revId": "16cb8d8725a6d96f5d0f78b00d00908cd0ca3937",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
