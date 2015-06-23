@@ -16,6 +16,24 @@
       "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_40aba3d6",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-06-23T01:14:51Z",
+      "side": 1,
+      "message": "If I understood Icbf19a25a8b555f1289ff9efb368e9e5cd4740ab correctly it sounds like the ability to create own databases only applies to testing and is not needed in production. Do we really want to include that kind of detail for the installation doc since I would consider what\u0027s in this installation.rst file  to be recommendations for production setup.\n\nI feel like including test requirements in this section would only serve to confuse users. Let me know if I misunderstood anything.",
+      "parentUuid": "fa32b979_7246cf50",
+      "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
