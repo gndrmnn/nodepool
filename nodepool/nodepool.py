@@ -27,16 +27,16 @@ import paramiko
 import Queue
 import random
 import re
-import shlex
-import subprocess
 import threading
 import time
+from uuid import uuid4
 import yaml
 import zmq
 
 import allocation
 import jenkins_manager
 import nodedb
+import builder
 import nodeutils as utils
 import provider_manager
 
@@ -54,10 +54,6 @@ IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
                              # its job.
-
-# HP Cloud requires qemu compat with 0.10. That version works elsewhere,
-# so just hardcode it for all qcow2 building
-DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
 
 
 def _cloudKwargsFromProvider(provider):
@@ -812,122 +808,6 @@ class ImageDeleter(threading.Thread):
                                self.snap_image_id)
 
 
-class DiskImageBuilder(threading.Thread):
-    log = logging.getLogger("nodepool.DiskImageBuilderThread")
-
-    def __init__(self, nodepool):
-        threading.Thread.__init__(self, name='DiskImageBuilder queue')
-        self.nodepool = nodepool
-        self.queue = nodepool._image_builder_queue
-
-    def run(self):
-        while True:
-            # grabs image id from queue
-            image_id = self.queue.get()
-            try:
-                self.buildImage(image_id)
-            except Exception:
-                self.log.exception("Exception attempting DIB build "
-                                   "for image %s:" % (image_id,))
-            finally:
-                self.queue.task_done()
-
-    def _buildImage(self, image, image_name, filename):
-        env = os.environ.copy()
-
-        env['DIB_RELEASE'] = image.release
-        env['DIB_IMAGE_NAME'] = image_name
-        env['DIB_IMAGE_FILENAME'] = filename
-        # Note we use a reference to the nodepool config here so
-        # that whenever the config is updated we get up to date
-        # values in this thread.
-        env['ELEMENTS_PATH'] = self.nodepool.config.elementsdir
-        env['NODEPOOL_SCRIPTDIR'] = self.nodepool.config.scriptdir
-
-        # send additional env vars if needed
-        for k, v in image.env_vars.items():
-            env[k] = v
-
-        img_elements = image.elements
-        img_types = ",".join(image.image_types)
-
-        qemu_img_options = ''
-        if 'qcow2' in img_types:
-            qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
-
-        if 'fake-' in filename:
-            dib_cmd = 'nodepool/tests/fake-image-create'
-        else:
-            dib_cmd = 'disk-image-create'
-
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
-
-        log = logging.getLogger("nodepool.image.build.%s" %
-                                (image_name,))
-
-        self.log.info('Running %s' % cmd)
-
-        try:
-            p = subprocess.Popen(
-                shlex.split(cmd),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                env=env)
-        except OSError as e:
-            raise Exception("Failed to exec '%s'. Error: '%s'" %
-                            (cmd, e.strerror))
-
-        while True:
-            ln = p.stdout.readline()
-            log.info(ln.strip())
-            if not ln:
-                break
-
-        p.wait()
-        ret = p.returncode
-        if ret:
-            raise Exception("DIB failed creating %s" % (filename,))
-
-    def buildImage(self, image_id):
-        with self.nodepool.getDB().getSession() as session:
-            self.dib_image = session.getDibImage(image_id)
-            self.log.info("Creating image: %s with filename %s" %
-                          (self.dib_image.image_name, self.dib_image.filename))
-
-            start_time = time.time()
-            timestamp = int(start_time)
-            self.dib_image.version = timestamp
-            session.commit()
-
-            # retrieve image details
-            image_details = \
-                self.nodepool.config.diskimages[self.dib_image.image_name]
-            try:
-                self._buildImage(
-                    image_details,
-                    self.dib_image.image_name,
-                    self.dib_image.filename)
-            except Exception:
-                self.log.exception("Exception building DIB image %s:" %
-                                   (image_id,))
-                # DIB should've cleaned up after itself, just remove this
-                # image from the DB.
-                self.dib_image.delete()
-                return
-
-            self.dib_image.state = nodedb.READY
-            session.commit()
-            self.log.info("DIB image %s with file %s is built" % (
-                image_id, self.dib_image.image_name))
-
-            if statsd:
-                dt = int((time.time() - start_time) * 1000)
-                key = 'nodepool.dib_image_build.%s' % self.dib_image.image_name
-                statsd.timing(key, dt)
-                statsd.incr(key)
-
-
 class ImageUpdater(threading.Thread):
     log = logging.getLogger("nodepool.ImageUpdater")
 
@@ -1273,6 +1153,8 @@ class NodePool(threading.Thread):
             self.zmq_context.destroy()
         if self.apsched:
             self.apsched.shutdown()
+        if self._image_builder_thread:
+            self._image_builder_thread.stop()
 
     def waitForBuiltImages(self):
         # wait on the queue until everything has been processed
@@ -1638,7 +1520,7 @@ class NodePool(threading.Thread):
     def reconfigureImageBuilder(self):
         # start disk image builder thread
         if not self._image_builder_thread:
-            self._image_builder_thread = DiskImageBuilder(self)
+            self._image_builder_thread = builder.NodePoolBuilder(self)
             self._image_builder_thread.daemon = True
             self._image_builder_thread.start()
 
@@ -2066,8 +1948,12 @@ class NodePool(threading.Thread):
                     dib_image = session.createDibImage(image_name=image.name,
                                                        filename=filename)
 
-                    # add this build to queue
-                    self._image_builder_queue.put(dib_image.id)
+                    # Submit image-build job
+                    job_uuid = str(uuid4().hex)
+                    job = gear.Job('image-build:%s' % image.name,
+                                   json.dumps({'image_id': dib_image.id}),
+                                   job_uuid)
+                    self.gearman_client.submitJob(job)
                 except Exception:
                     self.log.exception(
                         "Could not build image %s", image.name)
