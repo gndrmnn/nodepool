@@ -20,10 +20,22 @@ import fixtures
 import mock
 
 from nodepool.cmd import nodepoolcmd
-from nodepool import tests
+from nodepool import nodepool, tests
 
 
 class TestNodepoolCMD(tests.DBTestCase):
+    def _useBuilder(self, configfile):
+        # XXX:greghaynes This is a gross hack for while the builder depends on
+        # nodepool because we have a circular dep. Remove this when builder
+        # gets its own config.
+        pool = nodepool.NodePool(self._setup_secure(), configfile,
+                                 run_builder=False)
+        config = pool.loadConfig()
+        pool.reconfigureDatabase(config)
+        pool.setConfig(config)
+        self.builder = tests.BuilderFixture(pool)
+        self.useFixture(self.builder)
+
     def patch_argv(self, *args):
         argv = ["nodepool", "-s", self.secure_conf]
         argv.extend(args)
@@ -57,6 +69,7 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_dib_image_update(self):
         configfile = self.setup_config("node_dib.yaml")
+        self._useBuilder(configfile)
         self.patch_argv("-c", configfile, "image-update",
                         "fake-dib-provider", "fake-dib-image")
         nodepoolcmd.main()
@@ -65,6 +78,7 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_dib_snapshot_image_update(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
+        self._useBuilder(configfile)
         self.patch_argv("-c", configfile, "image-update",
                         "fake-provider1", "fake-dib-image")
         nodepoolcmd.main()
@@ -76,6 +90,7 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_dib_snapshot_image_update_all(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
+        self._useBuilder(configfile)
         self.patch_argv("-c", configfile, "image-update",
                         "all", "fake-dib-image")
         nodepoolcmd.main()
@@ -84,6 +99,7 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_image_update_all(self):
         configfile = self.setup_config("node_cmd.yaml")
+        self._useBuilder(configfile)
         self.patch_argv("-c", configfile, "image-update",
                         "all", "fake-image1")
         nodepoolcmd.main()
