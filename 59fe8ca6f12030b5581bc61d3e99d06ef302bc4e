@@ -34,6 +34,24 @@
       "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa32b979_d58d087d",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2015-06-23T20:08:01Z",
+      "side": 1,
+      "message": "I\u0027ll let others chime in here, but I didn\u0027t think it was required just for testing.",
+      "parentUuid": "fa32b979_40aba3d6",
+      "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
