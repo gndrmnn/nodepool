@@ -156,6 +156,7 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         whitelist = ['APScheduler',
                      'MainThread',
                      'NodePool',
+                     'NodePool Builder',
                      'NodeUpdateListener',
                      'Gearman client connect',
                      'Gearman client poll',
