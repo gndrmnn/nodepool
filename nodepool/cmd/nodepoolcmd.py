@@ -275,9 +275,9 @@ class NodePoolCmd(object):
                                 provider.name, server['id']):
                             t.add_row([provider.name, server['name'],
                                        server['id'], server['public_v4']])
-                except Exception as e:
-                    sys.stderr.write(e.message + '\n')
-                    log.debug("Exception listing aliens", exc_info=True)
+                except Exception:
+                    log.warning("Error connecting to provider: %s"
+                                % provider.name)
         print t
 
     def alien_image_list(self):
@@ -295,9 +295,9 @@ class NodePoolCmd(object):
                 images = []
                 try:
                     images = manager.listImages()
-                except Exception as e:
-                    sys.stderr.write(e.message + '\n')
-                    log.debug("Exception listing alien images", exc_info=True)
+                except Exception:
+                    log.warning("Error connecting to provider: %s"
+                                % provider.name)
 
                 for image in images:
                     if image['metadata'].get('image_type') == 'snapshot':
