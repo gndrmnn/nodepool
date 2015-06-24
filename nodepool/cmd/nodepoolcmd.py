@@ -276,7 +276,7 @@ class NodePoolCmd(object):
                             t.add_row([provider.name, server['name'],
                                        server['id'], server['public_v4']])
                 except Exception as e:
-                    sys.stderr.write(e.message + '\n')
+                    sys.stderr.write(str(e.message) + '\n')
                     log.debug("Exception listing aliens", exc_info=True)
         print t
 
@@ -296,7 +296,7 @@ class NodePoolCmd(object):
                 try:
                     images = manager.listImages()
                 except Exception as e:
-                    sys.stderr.write(e.message + '\n')
+                    sys.stderr.write(str(e.message) + '\n')
                     log.debug("Exception listing alien images", exc_info=True)
 
                 for image in images:
