@@ -14,13 +14,6 @@ gearman-servers:
   - host: localhost
     port: {gearman_port}
 
-labels:
-  - name: fake-label
-    image: fake-image
-    min-ready: 1
-    providers:
-      - name: fake-provider
-
 providers:
   - name: fake-provider
     keypair: 'if-present-use-this-keypair'
@@ -32,15 +25,7 @@ providers:
     pool: 'fake'
     networks:
       - net-id: 'some-uuid'
-    availability-zones:
-      - az1
     rate: 0.0001
-    images:
-      - name: fake-image
-        base-image: 'Fake Precise'
-        min-ram: 8192
-        name-filter: 'Fake'
-        setup: prepare_node_devstack.sh
 
 targets:
   - name: fake-target
