@@ -33,6 +33,24 @@
       "revId": "6c967525564454b4adf5a4de9ade73f63bb290f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3cc151_3cd61cc6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2015-06-29T14:22:56Z",
+      "side": 1,
+      "message": "I assume you are talking about the line below this one. This will get an error without my patch as well and IMO the type of error doesn\u0027t change significantly, so I would tend to just leave it at that.",
+      "parentUuid": "ba3cc151_79ccb635",
+      "revId": "6c967525564454b4adf5a4de9ade73f63bb290f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
