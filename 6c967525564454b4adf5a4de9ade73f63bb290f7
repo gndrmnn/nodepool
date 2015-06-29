@@ -16,6 +16,23 @@
       "revId": "6c967525564454b4adf5a4de9ade73f63bb290f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3cc151_79ccb635",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-06-29T14:06:26Z",
+      "side": 1,
+      "message": "This is going to break if scriptdir is \u0027\u0027",
+      "revId": "6c967525564454b4adf5a4de9ade73f63bb290f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
