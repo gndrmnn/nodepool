@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba3cc151_5fe875e2",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 7979
+      },
+      "writtenOn": "2015-06-30T16:40:10Z",
+      "side": 1,
+      "message": "Are we sure an exception would be caught only for provider connection failure? If not, the error message might be misleading.",
+      "revId": "c42b465512519cd6ce91e754761cc75f0b5d710a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
