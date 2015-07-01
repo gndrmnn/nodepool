@@ -27,6 +27,9 @@ from stats import statsd
 
 import nodedb
 
+MINS = 60
+HOURS = 60 * MINS
+IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
 
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
@@ -39,6 +42,7 @@ class NodePoolBuilder(object):
     def __init__(self, nodepool):
         self.nodepool = nodepool
         self._running = False
+        self._built_image_ids = set()
 
     def start(self):
         with threading.Lock():
@@ -66,7 +70,7 @@ class NodePoolBuilder(object):
         while self._running:
             try:
                 job = self.gearman_worker.getJob()
-                self._handle_job(job)
+                self._handle_job(job, self.gearman_worker)
             except Exception:
                 self.log.exception('Exception while getting job')
 
@@ -84,20 +88,74 @@ class NodePoolBuilder(object):
         for image in images:
             worker.registerFunction('image-build:%s' % image)
 
-    def _handle_job(self, job):
+    def _register_image_id(self, worker, image_id):
+        self.log.debug('registering image %d', image_id)
+        worker.registerFunction('image-upload:%s' % image_id)
+        self._built_image_ids.add(image_id)
+
+    def _handle_job(self, job, gearman_worker):
         try:
+            self.log.debug('got job %s with data %s',
+                           job.name, job.arguments)
             if job.name.startswith('image-build:'):
-                self.log.debug('got job %s with data %s',
-                               job.name, job.arguments)
                 args = json.loads(job.arguments)
                 self.buildImage(args['image_id'])
+
+                # We can now upload this image
+                self._register_image_id(gearman_worker, args['image_id'])
+
                 job.sendWorkComplete()
+            elif (job.name.startswith('image-upload:') and
+                  int(job.name.split(':')[1]) in self._built_image_ids):
+                args = json.loads(job.arguments)
+                image_id = job.name.split(':')[1]
+                external_id = self._upload_image(int(image_id),
+                                                 args['provider'])
+                job.sendWorkComplete(json.dumps({'external-id': external_id}))
             else:
                 self.log.error('Unable to handle job %s', job.name)
                 job.sendWorkFail()
         except Exception:
             self.log.exception('Exception while running job')
             job.sendWorkException(traceback.format_exc())
+
+    def _upload_image(self, image_id, provider_name):
+        with self.nodepool.getDB().getSession() as session:
+            start_time = time.time()
+            timestamp = int(start_time)
+
+            dib_image = session.getDibImage(image_id)
+            provider = self.nodepool.config.providers[provider_name]
+
+            filename = dib_image.filename
+
+            dummy_image = type('obj', (object,),
+                               {'name': dib_image.image_name})
+            image_name = provider.template_hostname.format(
+                provider=provider, image=dummy_image, timestamp=str(timestamp))
+            self.log.info("Uploading dib image id: %s from %s for %s in %s" %
+                          (dib_image.id, filename, image_name, provider.name))
+
+            manager = self.nodepool.getProviderManager(provider)
+            image_meta = provider.images[dib_image.image_name].meta
+            image_id = manager.uploadImage(image_name, filename,
+                                           provider.image_type, 'bare',
+                                           image_meta)
+            self.log.debug("Image id: %s saving image %s" %
+                           (dib_image.id, image_id))
+            # It can take a _very_ long time for Rackspace 1.0 to save an image
+            manager.waitForImage(image_id, IMAGE_TIMEOUT)
+
+            if statsd:
+                dt = int((time.time() - start_time) * 1000)
+                key = 'nodepool.image_update.%s.%s' % (image_name,
+                                                       provider.name)
+                statsd.timing(key, dt)
+                statsd.incr(key)
+
+            self.log.info("Image %s in %s is ready" % (dib_image.image_name,
+                                                       provider.name))
+            return image_id
 
     def _buildImage(self, image, image_name, filename):
         env = os.environ.copy()
