@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba3cc151_91eb1413",
+        "filename": "nodepool/tests/test_myjenkins.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-07-01T16:45:20Z",
+      "side": 1,
+      "message": "pep8 fail from the space after {\n\nThe order of ops here is also not super clear, but not a big problem.",
+      "revId": "8c578caed4dac84087c2b1529c8c9ca7e7c27edc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
