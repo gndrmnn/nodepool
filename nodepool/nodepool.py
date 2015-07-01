@@ -893,58 +893,6 @@ class ImageUpdater(threading.Thread):
                     return
 
 
-class DiskImageUpdater(ImageUpdater):
-
-    log = logging.getLogger("nodepool.DiskImageUpdater")
-
-    def __init__(self, nodepool, provider, image, snap_image_id,
-                 filename, image_type):
-        super(DiskImageUpdater, self).__init__(nodepool, provider, image,
-                                               snap_image_id)
-        self.filename = filename
-        self.image_type = image_type
-        self.image_name = image.name
-
-    def updateImage(self, session):
-        start_time = time.time()
-        timestamp = int(start_time)
-
-        dummy_image = type('obj', (object,), {'name': self.image_name})
-        image_name = self.provider.template_hostname.format(
-            provider=self.provider, image=dummy_image,
-            timestamp=str(timestamp))
-        self.log.info("Uploading dib image id: %s from %s for %s in %s" %
-                      (self.snap_image.id, self.filename, image_name,
-                       self.provider.name))
-
-        # TODO(mordred) abusing the hostname field
-        self.snap_image.hostname = image_name
-        self.snap_image.version = timestamp
-        session.commit()
-
-        image_id = self.manager.uploadImage(image_name, self.filename,
-                                            self.image_type, 'bare',
-                                            self.image.meta)
-        self.snap_image.external_id = image_id
-        session.commit()
-        self.log.debug("Image id: %s saving image %s" %
-                       (self.snap_image.id, image_id))
-        # It can take a _very_ long time for Rackspace 1.0 to save an image
-        self.manager.waitForImage(image_id, IMAGE_TIMEOUT)
-
-        if statsd:
-            dt = int((time.time() - start_time) * 1000)
-            key = 'nodepool.image_update.%s.%s' % (self.image_name,
-                                                   self.provider.name)
-            statsd.timing(key, dt)
-            statsd.incr(key)
-
-        self.snap_image.state = nodedb.READY
-        session.commit()
-        self.log.info("Image %s in %s is ready" % (self.snap_image.hostname,
-                                                   self.provider.name))
-
-
 class SnapshotImageUpdater(ImageUpdater):
 
     log = logging.getLogger("nodepool.SnapshotImageUpdater")
@@ -2007,27 +1955,23 @@ class NodePool(threading.Thread):
             self.gearman_client.submitJob(gearman_job)
 
     def uploadImage(self, session, provider, image_name):
-        images = session.getOrderedReadyDibImages(image_name)
-        if not images:
-            # raise error, no image ready for uploading
-            raise Exception(
-                "No image available for that upload. Please build one first.")
-
         try:
-            filename = images[0].filename
-            provider_entity = self.config.providers[provider]
-            provider_image = provider_entity.images[images[0].image_name]
-            image_type = provider_entity.image_type
             snap_image = session.createSnapshotImage(
                 provider_name=provider, image_name=image_name)
-            t = DiskImageUpdater(self, provider_entity, provider_image,
-                                 snap_image.id, filename, image_type)
-            t.start()
+
+            # Submit image-upload job
+            job_uuid = str(uuid4().hex)
+            gearman_job = gear.Job(
+                'image-upload:%d' % snap_image.id,
+                json.dumps({'provider': provider}),
+                job_uuid)
+
+            if gearman_job is not None:
+                self.gearman_client.submitJob(gearman_job)
 
             # Enough time to give them different timestamps (versions)
             # Just to keep things clearer.
             time.sleep(2)
-            return t
         except Exception:
             self.log.exception(
                 "Could not upload image %s on %s", image_name, provider)
