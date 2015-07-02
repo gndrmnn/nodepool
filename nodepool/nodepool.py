@@ -365,7 +365,7 @@ class GearmanClient(gear.Client):
     def handleWorkComplete(self, packet):
         job = super(GearmanClient, self).handleWorkComplete(packet)
         job_prefix = job.name.split(':', 1)[0]
-        if job_prefix in ('image-build', 'image-upload'):
+        if job_prefix in ('image-build', 'image-upload', 'image-delete'):
             job.onCompleted()
 
 
@@ -2228,18 +2228,16 @@ class NodePool(threading.Thread):
         self.log.info("Deleted image id: %s" % snap_image.id)
 
     def deleteDibImage(self, dib_image):
-        image_config = self.config.diskimages.get(dib_image.image_name)
-        if not image_config:
-            # The config was removed deletion will have to be manual
-            return
-        # Delete a dib image and it's associated file
-        for image_type in image_config.image_types:
-            if os.path.exists(dib_image.filename + '.' + image_type):
-                os.remove(dib_image.filename + '.' + image_type)
-
-        dib_image.state = nodedb.DELETE
-        dib_image.delete()
-        self.log.info("Deleted dib image id: %s" % dib_image.id)
+        try:
+            # Submit image-delete job
+            job_uuid = str(uuid4().hex)
+            gearman_job = WatchableJob('image-delete:%s' % dib_image.id,
+                                       '', job_uuid)
+            self.gearman_client.submitJob(gearman_job)
+            return gearman_job
+        except Exception:
+            self.log.exception('Could not submit delete job for image id %s',
+                               dib_image.id)
 
     def deleteInstance(self, provider_name, external_id):
         key = (provider_name, external_id)
