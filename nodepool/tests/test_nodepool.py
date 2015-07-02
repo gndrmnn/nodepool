@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import fixtures
+import time
 
 from nodepool import tests
 from nodepool import nodedb
@@ -202,9 +203,12 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(len(images), 1)
             pool.deleteDibImage(images[0])
 
-        with pool.getDB().getSession() as session:
-            images = session.getDibImages()
-            self.assertEqual(len(images), 0)
+        while True:
+            with pool.getDB().getSession() as session:
+                images = session.getDibImages()
+                if len(images) == 0:
+                    break
+                time.sleep(.1)
 
     def test_subnodes(self):
         """Test that an image and node are created"""
