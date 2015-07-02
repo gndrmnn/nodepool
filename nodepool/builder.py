@@ -98,7 +98,12 @@ class NodePoolBuilder(object):
     def _register_image_id(self, worker, image_id):
         self.log.debug('registering image %d', image_id)
         worker.registerFunction('image-upload:%s' % image_id)
+        worker.registerFunction('image-delete:%s' % image_id)
         self._built_image_ids.add(image_id)
+
+    def _can_handle_imageid_job(self, job, image_op):
+        return (job.name.startswith(image_op + ':') and
+                int(job.name.split(':')[1]) in self._built_image_ids)
 
     def _handle_job(self, job, gearman_worker):
         try:
@@ -110,21 +115,40 @@ class NodePoolBuilder(object):
 
                 # We can now upload this image
                 self._register_image_id(gearman_worker, args['image_id'])
-
                 job.sendWorkComplete()
-            elif (job.name.startswith('image-upload:') and
-                  int(job.name.split(':')[1]) in self._built_image_ids):
+            elif self._can_handle_imageid_job(job, 'image-upload'):
                 args = json.loads(job.arguments)
                 image_id = job.name.split(':')[1]
                 external_id = self._upload_image(int(image_id),
                                                  args['provider'])
                 job.sendWorkComplete(json.dumps({'external-id': external_id}))
+            elif self._can_handle_imageid_job(job, 'image-delete'):
+                args = json.loads(job.arguments)
+                image_id = job.name.split(':')[1]
+                self._delete_image(int(image_id))
+                job.sendWorkComplete()
             else:
                 self.log.error('Unable to handle job %s', job.name)
                 job.sendWorkFail()
         except Exception:
             self.log.exception('Exception while running job')
             job.sendWorkException(traceback.format_exc())
+
+    def _delete_image(self, image_id):
+        with self.nodepool.getDB().getSession() as session:
+            dib_image = session.getDibImage(image_id)
+            image_config = self.config.diskimages.get(dib_image.image_name)
+            if not image_config:
+                # The config was removed deletion will have to be manual
+                return
+            # Delete a dib image and it's associated file
+            for image_type in image_config.image_types:
+                if os.path.exists(dib_image.filename + '.' + image_type):
+                    os.remove(dib_image.filename + '.' + image_type)
+
+            dib_image.state = nodedb.DELETE
+            dib_image.delete()
+            self.log.info("Deleted dib image id: %s" % dib_image.id)
 
     def _upload_image(self, image_id, provider_name):
         with self.nodepool.getDB().getSession() as session:
