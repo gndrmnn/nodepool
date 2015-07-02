@@ -353,6 +353,7 @@ class NodePoolCmd(object):
         with self.pool.getDB().getSession() as session:
             dib_image = session.getDibImage(self.args.id)
             self.pool.deleteDibImage(dib_image)
+        self._wait_for_dib_image_deleted(self.args.id)
 
     def image_delete(self):
         self.pool.reconfigureManagers(self.pool.config, False)
@@ -367,6 +368,14 @@ class NodePoolCmd(object):
     def _wait_for_threads(self, threads):
         for t in threads:
             t.join()
+
+    def _wait_for_dib_image_deleted(self, image_id):
+        while True:
+            with self.pool.getDB().getSession() as session:
+                image = session.getDibImage(image_id)
+                if image is None:
+                    break
+                time.sleep(.5)
 
     def _wait_for_snap_images(self, job_ids):
             for job_id in job_ids:

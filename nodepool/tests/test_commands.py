@@ -186,8 +186,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Delete the image
         self.patch_argv('-c', configfile, 'dib-image-delete', '1')
         nodepoolcmd.main()
-        self.wait_for_threads()
-        self.waitForJobs()
         # Check the the image is no longer listed
         self.assert_listed(configfile, ['dib-image-list'], 0, 1, 0)
 
