@@ -16,6 +16,24 @@
       "revId": "4237395cb75a7c83eed832d99f6f094a5a02d031",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3cc151_b4db384f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 2475
+      },
+      "writtenOn": "2015-07-03T19:24:56Z",
+      "side": 1,
+      "message": "Yup renaming the config images.name-filter to images.flavor-name-filter will be an enhancement.   I am for now simply updating the doc, trying to not mess with code :-D",
+      "parentUuid": "fa32b979_b19a7560",
+      "revId": "4237395cb75a7c83eed832d99f6f094a5a02d031",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
