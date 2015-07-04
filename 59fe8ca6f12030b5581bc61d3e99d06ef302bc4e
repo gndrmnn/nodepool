@@ -52,6 +52,24 @@
       "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3cc151_354882cc",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-07-04T01:46:45Z",
+      "side": 1,
+      "message": "I believe Thanh is correct - we only create databases as a way to isolate tests. The ability to create them is not needed otherwise.",
+      "parentUuid": "fa32b979_d58d087d",
+      "revId": "59fe8ca6f12030b5581bc61d3e99d06ef302bc4e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
