@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba3cc151_bde8cd17",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-07-06T16:36:43Z",
+      "side": 1,
+      "message": "I have to ask - Is there a reason this config file is INI format while the other is yaml? Seems like having two config files which use two different languages isn\u0027t a great idea.",
+      "revId": "7ec4ecedf5d509c9407e81cb44c20146198c8ee5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
