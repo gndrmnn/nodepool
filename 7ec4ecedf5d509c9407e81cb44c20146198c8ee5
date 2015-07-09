@@ -16,6 +16,23 @@
       "revId": "7ec4ecedf5d509c9407e81cb44c20146198c8ee5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba3cc151_6e289c97",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-07-09T15:31:26Z",
+      "side": 1,
+      "message": "Test job shouldn\u0027t be in the secure file (it\u0027s not secret information, and is related to the types of nodes and jobs in the system, so it belongs in project-config).  It probably makes the most sense to attach it to a label, but if you want to make this change minimal, you could just leave it attached to the target in nodepool.yaml.",
+      "revId": "7ec4ecedf5d509c9407e81cb44c20146198c8ee5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
