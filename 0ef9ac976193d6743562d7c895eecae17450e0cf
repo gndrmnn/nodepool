@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a41bdd9_08907442",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-13T20:30:37Z",
+      "side": 1,
+      "message": "This should be double backticks not double single quotes.",
+      "revId": "0ef9ac976193d6743562d7c895eecae17450e0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a41bdd9_2893f850",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-13T20:30:37Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "0ef9ac976193d6743562d7c895eecae17450e0cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
