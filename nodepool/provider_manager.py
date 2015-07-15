@@ -451,7 +451,17 @@ class ProviderManager(TaskManager):
                         id=resource_id,
                         status=status))
             last_status = status
-            if status in ['ACTIVE', 'ERROR']:
+            if status == 'ERROR':
+                return resource
+            if status == 'ACTIVE':
+                if resource_type != 'server':
+                    return resource
+                if not resource.addresses:
+                    # ACTIVE without addresses is an error. Change the status
+                    # so that we will fail gracefully when we consuem this,
+                    # and also so that we'll get a trackable error message in
+                    # the logs
+                    resource['status'] = 'NOIP'
                 return resource
 
     def waitForServer(self, server_id, timeout=3600):
