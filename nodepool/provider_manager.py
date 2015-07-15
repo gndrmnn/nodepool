@@ -451,8 +451,14 @@ class ProviderManager(TaskManager):
                         id=resource_id,
                         status=status))
             last_status = status
-            if status in ['ACTIVE', 'ERROR']:
+            if status == 'ERROR':
                 return resource
+            if status == 'ACTIVE':
+                if resource_type != 'server':
+                    return resource
+                # spin longer waiting for the addresses fields to be filled in
+                if resource.addresses:
+                    return resource
 
     def waitForServer(self, server_id, timeout=3600):
         return self._waitForResource('server', server_id, timeout)
