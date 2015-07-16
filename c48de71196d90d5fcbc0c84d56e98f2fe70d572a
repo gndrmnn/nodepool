@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a41bdd9_e7fcdbb9",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-07-16T00:42:51Z",
+      "side": 1,
+      "message": "If I make this change it will make the sentence become \"This is is a ...\" I think the original wording is correct or am I missing something?",
+      "parentUuid": "9a41bdd9_e4db2fec",
+      "revId": "c48de71196d90d5fcbc0c84d56e98f2fe70d572a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a41bdd9_a4e527a9",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2015-07-13T01:27:54Z",
       "side": 1,
       "message": "s/are used//",
+      "revId": "c48de71196d90d5fcbc0c84d56e98f2fe70d572a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a41bdd9_a70253b2",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 13807
+      },
+      "writtenOn": "2015-07-16T00:42:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a41bdd9_a4e527a9",
       "revId": "c48de71196d90d5fcbc0c84d56e98f2fe70d572a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
