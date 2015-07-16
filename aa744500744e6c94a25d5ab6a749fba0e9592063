@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a41bdd9_bdb33b97",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-16T05:55:16Z",
+      "side": 0,
+      "message": "see my other comment, but i think it would have been better to split this out into a separate change.\n\nessentially removing this bit is saying \"we\u0027ll pass project-id into osc directly, because that\u0027s what\u0027s in the nodepool configuation file, and we rely on it knowing to map it to project_name internally for us\"?",
+      "revId": "aa744500744e6c94a25d5ab6a749fba0e9592063",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

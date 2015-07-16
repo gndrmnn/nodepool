@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a41bdd9_bddedbda",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-16T05:55:16Z",
+      "side": 1,
+      "message": "I have to admit I found this super-confusing as to what\u0027s going on with this change and why this was required at first.\n\nSo yeah, i see now that the osc maps \"project-id\" to \"project-name\" internally.  This should be \"project-id\" because that\u0027s all nodepool supports in it\u0027s yaml config file.",
+      "revId": "1b30e58848a08e00f19ee40e5cde7fe304d7626e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
