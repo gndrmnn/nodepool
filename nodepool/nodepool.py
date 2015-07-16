@@ -352,7 +352,7 @@ class InstanceDeleter(threading.Thread):
                                           self.external_id)
         except Exception:
             self.log.exception("Exception deleting node %s:" %
-                               self.node_id)
+                               self.external_id)
 
 
 class NodeDeleter(threading.Thread):
