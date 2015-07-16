@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a41bdd9_d7ae202d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2175,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-16T04:32:45Z",
+      "side": 1,
+      "message": "move this up into a single block with getting the target, catch exception and skip if not there",
+      "revId": "48a15d9f504f734ffececb5d37105dc69fd08752",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a41bdd9_57c210ea",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-16T04:32:45Z",
+      "side": 1,
+      "message": "move this into a single block that tries to get the manager, and catches the exception and skips it if not there",
+      "revId": "48a15d9f504f734ffececb5d37105dc69fd08752",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
