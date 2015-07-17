@@ -110,6 +110,7 @@ class NodePoolDaemon(object):
                                        '%(message)s')
 
     def exit_handler(self, signum, frame):
+        signal.signal(signal.SIGUSR1, signal.SIG_IGN)
         self.pool.stop()
 
     def term_handler(self, signum, frame):
@@ -129,6 +130,8 @@ class NodePoolDaemon(object):
         while True:
             try:
                 signal.pause()
+                if self.pool._stopped:
+                    return 0
             except KeyboardInterrupt:
                 return self.exit_handler(signal.SIGINT, None)
 
