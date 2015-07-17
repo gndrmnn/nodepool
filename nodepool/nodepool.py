@@ -864,7 +864,7 @@ class DiskImageBuilder(threading.Thread):
 
         # send additional env vars if needed
         for k, v in image.env_vars.items():
-            env[k] = v
+            env[k] = str(v)
 
         img_elements = image.elements
         img_types = ",".join(image.image_types)
