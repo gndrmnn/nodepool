@@ -835,13 +835,23 @@ class DiskImageBuilder(threading.Thread):
 
     def __init__(self, nodepool):
         threading.Thread.__init__(self, name='DiskImageBuilder queue')
+        self._running = True
         self.nodepool = nodepool
         self.queue = nodepool._image_builder_queue
+
+    def stop(self):
+        self.log.info("Stopping...")
+        self._running = False
+        self.queue.put(None)
 
     def run(self):
         while True:
             # grabs image id from queue
             image_id = self.queue.get()
+            if not image_id:
+                if not self._running:
+                    break
+                continue
             try:
                 self.buildImage(image_id)
             except Exception:
@@ -1289,15 +1299,34 @@ class NodePool(threading.Thread):
         self._image_builder_thread = None
 
     def stop(self):
+        self.log.info("Stopping Nodepool...")
         self._stopped = True
+        self.log.debug("Stopping DiskImageBuilder")
+        self._image_builder_thread.stop()
+
         if self.config:
+            self.log.debug("Stopping zmq publishers")
             for z in self.config.zmq_publishers.values():
                 z.listener.stop()
                 z.listener.join()
+            self.log.debug("Stopping Jenkins managers")
+            for j in self.config.jenkins_managers.values():
+                j.stop()
+            self.log.debug("Stopping cloud providers")
+            for p in self.config.provider_managers.values():
+                p.stop()
+
+        if self.gearman_client:
+            self.log.debug("Stopping Gearman client")
+            self.gearman_client.shutdown()
+            self.gearman_client = None
         if self.zmq_context:
+            self.log.debug("Deleting zmq context")
             self.zmq_context.destroy()
         if self.apsched:
+            self.log.debug("Stopping scheduler")
             self.apsched.shutdown()
+        self.log.info("Nodepool is stopped")
 
     def waitForBuiltImages(self):
         # wait on the queue until everything has been processed

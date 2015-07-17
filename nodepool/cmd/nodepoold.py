@@ -110,6 +110,8 @@ class NodePoolDaemon(object):
                                        '%(message)s')
 
     def exit_handler(self, signum, frame):
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        signal.signal(signal.SIGUSR1, signal.SIG_IGN)
         self.pool.stop()
 
     def term_handler(self, signum, frame):
@@ -131,6 +133,8 @@ class NodePoolDaemon(object):
 
         while True:
             signal.pause()
+            if self.pool._stopped:
+                return 0
 
 
 def main():
