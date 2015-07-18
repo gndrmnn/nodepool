@@ -49,6 +49,14 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.wait_for_threads()
         self.assert_images_listed(configfile, 1)
 
+    def test_dib_image_build(self):
+        configfile = self.setup_config("node_dib.yaml")
+        self.patch_argv("-c", configfile, "image-build",
+                        "fake-dib-image")
+        nodepoolcmd.main()
+        self.wait_for_threads()
+        self.assert_images_listed(configfile, 1)
+
     def test_dib_image_update(self):
         configfile = self.setup_config("node_dib.yaml")
         self.patch_argv("-c", configfile, "image-update",
