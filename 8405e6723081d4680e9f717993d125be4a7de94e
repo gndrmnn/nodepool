@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_adcbe271",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-19T23:57:31Z",
+      "side": 1,
+      "message": "should we be removing this for the cloud.yaml file?  might be a separate change",
+      "revId": "8405e6723081d4680e9f717993d125be4a7de94e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_8dce2682",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-19T23:57:31Z",
+      "side": 1,
+      "message": "this should be removed too?",
+      "revId": "8405e6723081d4680e9f717993d125be4a7de94e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
