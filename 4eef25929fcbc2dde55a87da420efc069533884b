@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_8d7ce621",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2228,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-20T00:13:24Z",
+      "side": 1,
+      "message": "i\u0027d like to see an explicit comment here about why we handle this case and why we keep going (it has been removed, but we want to keep going on to remove the node)",
+      "revId": "4eef25929fcbc2dde55a87da420efc069533884b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_cd98ae6d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2263,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-20T00:13:24Z",
+      "side": 1,
+      "message": "Ok, so this is probably correct in that the node.* fields still have relevant info in them, to make this useful?\n\nbut the key nodepool.delete.None.X.Y doesn\u0027t seem that helpful.  Should we delete that?  or assign it to a special key like \"cleanedup\" or \"orphaned\" or something?\n\ni guess this was the way it was before.  this just makes it much more explicit",
+      "revId": "4eef25929fcbc2dde55a87da420efc069533884b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
