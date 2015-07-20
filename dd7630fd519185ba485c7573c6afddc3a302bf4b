@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_f863c3af",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 16258
+      },
+      "writtenOn": "2015-07-20T16:59:54Z",
+      "side": 1,
+      "message": "why default time for launch-timeout is 1 hr?",
+      "revId": "dd7630fd519185ba485c7573c6afddc3a302bf4b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
