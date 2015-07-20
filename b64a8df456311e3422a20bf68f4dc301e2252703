@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_a83b9bd0",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-07-20T23:46:11Z",
+      "side": 1,
+      "message": "So i still think this shouldn\u0027t be in here now?  am i missing something?",
+      "revId": "b64a8df456311e3422a20bf68f4dc301e2252703",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
