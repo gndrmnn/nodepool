@@ -41,6 +41,7 @@ class ConfigValidator:
             'username': str,
             'private-key': str,
             'config-drive': bool,
+            'user-home': str,
         }
 
         providers = {
@@ -56,6 +57,7 @@ class ConfigValidator:
             'auth-url': str,
             'project-id': str,
             'max-servers': int,
+            'launch-timeout': int,
             'pool': str,
             'image-type': str,
             'networks': [{
