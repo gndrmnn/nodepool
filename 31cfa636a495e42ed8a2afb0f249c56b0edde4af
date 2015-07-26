@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_6534d1fa",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-07-26T11:01:08Z",
+      "side": 1,
+      "message": "While were doing this - we should chang ethat % to a , (using % for logging is an anti-pattern because of possible tempating failures).",
+      "revId": "31cfa636a495e42ed8a2afb0f249c56b0edde4af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
