@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_4e55c61b",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2750
+      },
+      "writtenOn": "2015-07-28T21:14:13Z",
+      "side": 1,
+      "message": "does nodepool *have* to be in a venv?",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_24117a52",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2750
+      },
+      "writtenOn": "2015-07-28T21:14:13Z",
+      "side": 1,
+      "message": "in a devstack, would this really be /opt/stack/nodepool/things/nodepool.yaml ?",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_8e266ecc",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2750
+      },
+      "writtenOn": "2015-07-28T21:14:13Z",
+      "side": 1,
+      "message": "does this need to be admin, or is normal user ok?",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
