@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3a50d1a3_24adfae8",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-28T21:20:09Z",
+      "side": 1,
+      "message": "Nope it was just how I had done it, global install should be fine.",
+      "parentUuid": "3a50d1a3_4e55c61b",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a50d1a3_24117a52",
         "filename": "doc/source/testing.rst",
         "patchSetId": 6
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3a50d1a3_e4b2b248",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-28T21:20:09Z",
+      "side": 1,
+      "message": "Yup.",
+      "parentUuid": "3a50d1a3_24117a52",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a50d1a3_8e266ecc",
         "filename": "doc/source/testing.rst",
         "patchSetId": 6
@@ -47,6 +83,24 @@
       "writtenOn": "2015-07-28T21:14:13Z",
       "side": 1,
       "message": "does this need to be admin, or is normal user ok?",
+      "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_24c2da85",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-28T21:20:09Z",
+      "side": 1,
+      "message": "Normal user is the expectation since nodepool should run off or on cloud not in it and be a normal user/tenant.",
+      "parentUuid": "3a50d1a3_8e266ecc",
       "revId": "b607c3ffe9494a70e818a6bcefbabfeef05f4380",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
