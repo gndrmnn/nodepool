@@ -16,6 +16,40 @@
       "revId": "859bd3674e1b326fb6aca76d6d113a1c023e39d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_d6415aaa",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 16258
+      },
+      "writtenOn": "2015-07-29T06:04:54Z",
+      "side": 1,
+      "message": "Before If, there are two blank spaces. only one is enough.",
+      "revId": "859bd3674e1b326fb6aca76d6d113a1c023e39d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a50d1a3_f63c9630",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 16258
+      },
+      "writtenOn": "2015-07-29T06:04:54Z",
+      "side": 1,
+      "message": "Before If, there are two blank spaces. only one is enough.",
+      "revId": "859bd3674e1b326fb6aca76d6d113a1c023e39d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
