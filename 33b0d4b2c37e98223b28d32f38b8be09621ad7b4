@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_df8f9873",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-07-31T19:45:33Z",
+      "side": 1,
+      "message": "Can you add:\n\n  config-drive: true\n\nhere? Our devstack clouds config drive for reliability reasons and this will force nodepool to use config drive instead of metadata server.",
+      "revId": "33b0d4b2c37e98223b28d32f38b8be09621ad7b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
