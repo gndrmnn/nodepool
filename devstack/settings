@@ -4,4 +4,6 @@ NODEPOOL_IMAGE=$(basename "$NODEPOOL_IMAGE_URL" ".img")
 
 IMAGE_URLS+=",$NODEPOOL_IMAGE_URL"
 
+export OS_AUTH_TYPE=password
+
 enable_service nodepool
