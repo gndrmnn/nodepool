@@ -83,7 +83,7 @@ def _cloudKwargsFromProvider(provider):
             auth_kwargs[new_key] = provider[auth_key]
 
     if 'project-id' in provider:
-        auth_kwargs['project_name'] = provider['project-id']
+        auth_kwargs['tenant_id'] = provider['project-id']
 
     cloud_kwargs['auth'] = auth_kwargs
     return cloud_kwargs
