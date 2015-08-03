@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_e7c900ae",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 18
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-08-03T21:07:57Z",
+      "side": 0,
+      "message": "Let\u0027s keep the documentation for the test-job option.",
+      "revId": "4c6544166654eaf00fb022e4fde5dba124f05baa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
