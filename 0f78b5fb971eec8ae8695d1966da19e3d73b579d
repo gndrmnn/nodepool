@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_551f9e6b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-06T11:36:40Z",
+      "side": 1,
+      "message": "It doesn\u0027t start off True right? we should set this in run() below\n\nFor consistency could use self._stopped",
+      "revId": "0f78b5fb971eec8ae8695d1966da19e3d73b579d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_15159647",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-06T11:36:40Z",
+      "side": 1,
+      "message": "Could be done as the first thing here",
+      "revId": "0f78b5fb971eec8ae8695d1966da19e3d73b579d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
