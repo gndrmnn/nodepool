@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_2ee78541",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2232,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-08-10T18:52:26Z",
+      "side": 1,
+      "message": "It seems like there may be other cases that could lead to this code path. For example, if an exception is raised during manager.cleanupServer(), I don\u0027t think the appropriate action is to assume that no provider was found.",
+      "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_4ee21131",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-08-10T18:52:26Z",
+      "side": 1,
+      "message": "I think that we should continue to remove the node from jenkins before removing the node from nova.",
+      "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
