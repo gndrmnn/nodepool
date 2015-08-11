@@ -56,6 +56,15 @@ EOF
 
     sudo chmod a+x $(dirname $NODEPOOL_CONFIG)/scripts/prepare_node_ubuntu.sh
 
+    sudo mkdir -p $(dirname $NODEPOOL_CONFIG)/elements/install-sshd/install.d
+    cat > /tmp/01-install-sshd-package <<EOF
+sudo apt-get install openssh-server
+EOF
+
+    sudo mv /tmp/01-install-sshd-package \
+        $(dirname $NODEPOOL_CONFIG)/elements/install-sshd/install.d/01-install-sshd-package
+    sudo chmod a+x \
+        $(dirname $NODEPOOL_CONFIG)/elements/install-sshd/install.d/01-install-sshd-package
 }
 
 function nodepool_write_config {
@@ -97,6 +106,11 @@ labels:
     min-ready: 1
     providers:
       - name: devstack
+  - name: ubuntu-dib
+    image: ubuntu-dib
+    min-ready: 1
+    providers:
+      - name: devstack
 
 providers:
   - name: devstack
@@ -123,6 +137,28 @@ providers:
         # Alter below to point to your local user private key
         private-key: $NODEPOOL_KEY
         config-drive: true
+      - name: ubuntu-dib
+        min-ram: 1024
+        diskimage: ubuntu-dib
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true
+
+diskimages:
+  - name: ubuntu-dib
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - install-sshd
+    release: trusty
+    env-vars:
+      TMPDIR: /opt/dib_tmp
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
