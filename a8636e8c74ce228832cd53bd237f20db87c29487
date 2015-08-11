@@ -69,6 +69,24 @@
       "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_cd003005",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-08-11T16:13:49Z",
+      "side": 1,
+      "message": "Before this patch the logic to remove a node from jenkins came before the logic to remove the node from nova, but you are swapping the order of those blocks in this patch. I think we should keep the original order and try to remove the node from jenkins before we try to remove the node from nova. I\u0027ve seen jenkins hang in weird places when it loses its connection to a slave, and I\u0027m afraid that if we delete the nova instance before we delete the jenkins slave that it will probably cause jenkins to be slow and unresponsive as the master tries to connect to the slave and possibly also cause strange errors when the deleted slave doesn\u0027t respond.",
+      "parentUuid": "1a4dcd0f_4cf9a77f",
+      "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
