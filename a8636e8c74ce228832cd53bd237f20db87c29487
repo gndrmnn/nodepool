@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a4dcd0f_6c9fc350",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2232,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-11T06:50:29Z",
+      "side": 1,
+      "message": "ok, i can limit this exception to handle the case where provider manager is not found, with some key not found exception",
+      "parentUuid": "1a4dcd0f_2ee78541",
+      "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a4dcd0f_4ee21131",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2015-08-10T18:52:26Z",
       "side": 1,
       "message": "I think that we should continue to remove the node from jenkins before removing the node from nova.",
+      "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_4cf9a77f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-11T06:50:29Z",
+      "side": 1,
+      "message": "Sorry, i don\u0027t follow that, can you be more clear?",
+      "parentUuid": "1a4dcd0f_4ee21131",
       "revId": "a8636e8c74ce228832cd53bd237f20db87c29487",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
