@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_057adf77",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-08-14T05:15:59Z",
+      "side": 1,
+      "message": "Heh, that was where it started out, before it got moved to system-config I916f3dd9634ca7ac691bef98236f6cf549fb7059",
+      "revId": "6f00e92d3cbdd68e3c7cbcc45a78ab819acc073f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
