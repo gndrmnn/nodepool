@@ -16,6 +16,23 @@
       "revId": "4c6544166654eaf00fb022e4fde5dba124f05baa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_19f1ec01",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-14T02:41:52Z",
+      "side": 0,
+      "message": "before, jenkins wasn\u0027t required as a target. Now it assumes the target name is a jenkins instance. Is this a regression?",
+      "revId": "4c6544166654eaf00fb022e4fde5dba124f05baa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }

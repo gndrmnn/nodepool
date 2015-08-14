@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_967f0bab",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-14T02:41:52Z",
+      "side": 1,
+      "message": "(nit) this section should be indented to make it a code block.",
+      "revId": "23fabc624e3513dd9bad63ed5431b39fa1aa714d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_363e37db",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-14T02:41:52Z",
+      "side": 1,
+      "message": "I\u0027m confused about this. Is this in the right section? It looks like it was copied from the ``test-job`` below.",
+      "revId": "23fabc624e3513dd9bad63ed5431b39fa1aa714d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_7902700b",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-14T02:41:52Z",
+      "side": 1,
+      "message": "if iterating, might be useful to mention the default logging file name.",
+      "revId": "23fabc624e3513dd9bad63ed5431b39fa1aa714d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_99e5fc39",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-14T02:41:52Z",
+      "side": 1,
+      "message": "(nit) why was this changed?",
+      "revId": "23fabc624e3513dd9bad63ed5431b39fa1aa714d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
