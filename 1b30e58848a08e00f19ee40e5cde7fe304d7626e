@@ -16,6 +16,23 @@
       "revId": "1b30e58848a08e00f19ee40e5cde7fe304d7626e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_a84ab725",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-08-14T21:02:31Z",
+      "side": 1,
+      "message": "Ah, yeah.  In my mind this is \"fix all the stuff that\u0027s complicated about arguments\".  It\u0027s a little different from the bulk of the change, but still closely related, and makes sense to me as a logical change: avoid as much translation as possible.",
+      "revId": "1b30e58848a08e00f19ee40e5cde7fe304d7626e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
