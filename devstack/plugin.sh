@@ -60,6 +60,7 @@ EOF
 
 function nodepool_write_config {
     sudo mkdir -p $(dirname $NODEPOOL_CONFIG)
+
     local dburi=$(database_connection_url nodepool)
 
 
@@ -125,7 +126,70 @@ providers:
         config-drive: true
 EOF
 
+    cat > /tmp/logging.conf <<EOF
+[loggers]
+keys=root,nodepool,requests,image
+
+[handlers]
+keys=console,debug,normal,image
+
+[formatters]
+keys=simple
+
+[logger_root]
+level=WARNING
+handlers=console
+
+[logger_requests]
+level=WARNING
+handlers=debug,normal
+qualname=requests
+
+[logger_nodepool]
+level=DEBUG
+handlers=debug,normal
+qualname=nodepool
+
+[logger_image]
+level=INFO
+handlers=image
+qualname=nodepool.image.build
+propagate=0
+
+[handler_console]
+level=WARNING
+class=StreamHandler
+formatter=simple
+args=(sys.stdout,)
+
+[handler_debug]
+level=DEBUG
+class=logging.handlers.TimedRotatingFileHandler
+formatter=simple
+args=('/var/log/nodepool/debug.log', 'H', 8, 30,)
+
+[handler_normal]
+level=INFO
+class=logging.handlers.TimedRotatingFileHandler
+formatter=simple
+args=('/var/log/nodepool/nodepool.log', 'H', 8, 30,)
+
+[handler_image]
+level=INFO
+class=logging.handlers.TimedRotatingFileHandler
+formatter=simple
+args=('/var/log/nodepool/image.log', 'H', 8, 30,)
+
+
+[formatter_simple]
+format=%%(asctime)s %%(levelname)s %%(name)s: %%(message)s
+datefmt=
+EOF
+
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
+    sudo mv /tmp/logging.conf $NODEPOOL_CONFIG
+    sudo mkdir -p /var/log/nodepool
+    sudo chmod 777 /var/log/nodepool
 }
 
 # Initialize database
@@ -162,7 +226,7 @@ function start_nodepool {
              secgroup-add-rule default udp 1 65535 0.0.0.0/0
     fi
 
-    run_process nodepool "nodepoold -c /etc/nodepool/nodepool.yaml -d"
+    run_process nodepool "nodepoold -c /etc/nodepool/nodepool.yaml -l /etc/nodepool/logging.conf -d"
     :
 }
 
@@ -172,7 +236,7 @@ function shutdown_nodepool {
 }
 
 function cleanup_nodepool {
-    :
+    cp /var/log/nodepool/* $WORKSPACE/logs
 }
 
 # check for service enabled
