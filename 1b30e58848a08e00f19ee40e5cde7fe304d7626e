@@ -33,6 +33,23 @@
       "revId": "1b30e58848a08e00f19ee40e5cde7fe304d7626e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_a8a2b798",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-14T21:11:20Z",
+      "side": 1,
+      "message": "This should be auth-url too. I think we should go ahead and update this test just to be on the safe side of catching broken oscc behavior.\nJeblair points out that we are checking the post processed by shade config not the raw config as read from yaml so it really is project_id and auth_url.",
+      "revId": "1b30e58848a08e00f19ee40e5cde7fe304d7626e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
