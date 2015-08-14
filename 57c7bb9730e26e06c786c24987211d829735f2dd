@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_fc8080f9",
+        "filename": "nodepool/tests/fixtures/providers_only.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-14T21:45:53Z",
+      "side": 1,
+      "message": "This file is unused and should be removed.",
+      "revId": "57c7bb9730e26e06c786c24987211d829735f2dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
