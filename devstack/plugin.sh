@@ -34,7 +34,7 @@ function nodepool_create_keypairs {
 }
 
 function nodepool_write_prepare {
-    sudo mkdir -p $(dirname $NODEPOOL_CONFIG)/scripts
+    sudo mkdir -p $NODEPOOL_CONFIG/scripts
     local pub_key=$(cat $NODEPOOL_PUBKEY)
 
     cat > /tmp/prepare_node_ubuntu.sh <<EOF
@@ -52,14 +52,15 @@ sleep 5
 sync
 EOF
     sudo mv /tmp/prepare_node_ubuntu.sh \
-         $(dirname $NODEPOOL_CONFIG)/scripts/prepare_node_ubuntu.sh
+         $NODEPOOL_CONFIG/scripts/prepare_node_ubuntu.sh
 
-    sudo chmod a+x $(dirname $NODEPOOL_CONFIG)/scripts/prepare_node_ubuntu.sh
+    sudo chmod a+x $NODEPOOL_CONFIG/scripts/prepare_node_ubuntu.sh
 
 }
 
 function nodepool_write_config {
-    sudo mkdir -p $(dirname $NODEPOOL_CONFIG)
+    sudo mkdir -p $NODEPOOL_CONFIG
+
     local dburi=$(database_connection_url nodepool)
 
 
@@ -67,9 +68,9 @@ function nodepool_write_config {
 # You will need to make and populate these two paths as necessary,
 # cloning nodepool does not do this. Further in this doc we have an
 # example script for /path/to/nodepool/things/scripts.
-script-dir: $(dirname $NODEPOOL_CONFIG)/scripts
-elements-dir: $(dirname $NODEPOOL_CONFIG)/elements
-cloud-config-path: $(dirname $NODEPOOL_CONFIG)/clouds.yaml
+script-dir: $NODEPOOL_CONFIG/scripts
+elements-dir: $NODEPOOL_CONFIG/elements
+cloud-config-path: $NODEPOOL_CONFIG/clouds.yaml
 # The mysql password here may be different depending on your
 # devstack install, you should double check it (the devstack var
 # is MYSQL_PASSWORD and if unset devstack should prompt you for
@@ -136,7 +137,7 @@ clouds:
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
-    sudo mv /tmp/clouds.yaml $(dirname $NODEPOOL_CONFIG)
+    sudo mv /tmp/clouds.yaml $NODEPOOL_CONFIG
 }
 
 # Initialize database
@@ -176,8 +177,7 @@ function start_nodepool {
     # start gearman server
     run_process geard "geard -p 8991 -d"
 
-    run_process nodepool "nodepoold -c /etc/nodepool/nodepool.yaml -d"
-    :
+    run_process nodepool "nodepoold -c $NODEPOOL_CONFIG/nodepool.yaml -d"
 }
 
 function shutdown_nodepool {
