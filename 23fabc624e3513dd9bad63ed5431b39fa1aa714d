@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1a4dcd0f_1b0f9c89",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-14T07:09:00Z",
+      "side": 1,
+      "message": "wow you are right i totally messed stuff here.",
+      "parentUuid": "1a4dcd0f_363e37db",
+      "revId": "23fabc624e3513dd9bad63ed5431b39fa1aa714d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a4dcd0f_7902700b",
         "filename": "doc/source/installation.rst",
         "patchSetId": 19
