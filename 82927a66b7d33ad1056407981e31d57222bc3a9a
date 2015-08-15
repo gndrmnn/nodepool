@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4dcd0f_054cec9b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 21
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-15T10:23:46Z",
+      "side": 1,
+      "message": "(nit) this section should be indented to make it a code block",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_650b702c",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 21
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-15T10:23:46Z",
+      "side": 1,
+      "message": "if iterating, might be useful to mention the default logging file name.",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_4529949a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-15T10:23:46Z",
+      "side": 1,
+      "message": "(nit) would be better to catch a tighter exception here",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_051aac7c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-15T10:23:46Z",
+      "side": 1,
+      "message": "(-1) I wonder if we should rework this to not have jenkins to just contain one sub-value. eg:\n\n  targets:\n    - name: My Jenkins or something\n      test-job: gate_some_job",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
