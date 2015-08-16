@@ -67,6 +67,24 @@
       "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4dcd0f_e445396f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-16T06:26:00Z",
+      "side": 1,
+      "message": "This is something we should raise on the channel to have more agreement on it. I agree with you.",
+      "parentUuid": "1a4dcd0f_051aac7c",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
