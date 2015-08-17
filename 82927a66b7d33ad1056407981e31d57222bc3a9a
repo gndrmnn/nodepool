@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_0ee20d04",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 21
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-17T16:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a4dcd0f_054cec9b",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a4dcd0f_650b702c",
         "filename": "doc/source/installation.rst",
         "patchSetId": 21
@@ -48,6 +66,24 @@
       "side": 1,
       "message": "What do you mean here, just mention the log file name? or maybe how to generate it?",
       "parentUuid": "1a4dcd0f_650b702c",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_2eba71e2",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 21
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-17T16:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b9901_9aaaed84",
       "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
