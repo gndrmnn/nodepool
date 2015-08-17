@@ -103,6 +103,23 @@
       "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_48eebd23",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-08-17T15:40:17Z",
+      "side": 1,
+      "message": "The rest of this change is about moving the credential information -- this doesn\u0027t seem to be related, and I don\u0027t think it\u0027s necessary.  At any rate, if it does prove to be necessary, we can change it later.\n\nAlso, this would break forward compatability, making the credential move more difficult.",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
