@@ -156,6 +156,24 @@
       "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_d66d7533",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-18T05:04:34Z",
+      "side": 1,
+      "message": "I\u0027m not sure I entirely agree.\n\nYes, it\u0027s not related to credentials, but it is in the same section of config.\n\nIf we think moving it is something we\u0027d like to do in the future, then I think we should do it now. That way it\u0027s only one set of incompatibility changes that operators then have to address rather than two separate painful upgrades.",
+      "parentUuid": "fa1b9901_48eebd23",
+      "revId": "82927a66b7d33ad1056407981e31d57222bc3a9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
