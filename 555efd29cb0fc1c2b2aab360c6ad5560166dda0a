@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_dfbc816e",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:51:16Z",
+      "side": 1,
+      "message": "So I\u0027m ++ on your suggestion to move tool/generate_log_config.py so its useable by this script.  Or just have puppet put the logging.conf somewhere and just use this script to copy it in place.  I dunno.",
+      "revId": "555efd29cb0fc1c2b2aab360c6ad5560166dda0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
