@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b9901_d6478e75",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T19:30:01Z",
+      "side": 1,
+      "message": "I think it would be good to report back what the exception was... and maybe dump the traceback to a debug.log",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_765fa241",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T19:30:01Z",
+      "side": 1,
+      "message": "Got",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_277596f8",
         "filename": "nodepool/tests/test_commands.py",
         "patchSetId": 17
