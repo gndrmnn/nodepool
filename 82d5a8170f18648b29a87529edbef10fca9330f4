@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_6a6b551f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-18T08:35:56Z",
+      "side": 1,
+      "message": "We should drop the image from built_image_ids even if the image isn\u0027t in the database (if it has been requested to be removed).\n\nThen we could also have a periodic job that checks for any foreign images that aren\u0027t in the built_image_ids set and removes them. This way it\u0027ll clean up after itself even if it gets lost.",
+      "revId": "82d5a8170f18648b29a87529edbef10fca9330f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
