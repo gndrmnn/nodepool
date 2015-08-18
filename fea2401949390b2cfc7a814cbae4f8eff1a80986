@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b9901_a4cae09f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:03:49Z",
+      "side": 1,
+      "message": "uploads",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_c4cd94b8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:03:49Z",
+      "side": 1,
+      "message": "This is a little confusing.  Am I suppose to be reading HOURS as \"3600 seconds\" or \"60 hours\".",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_67006e35",
         "filename": "nodepool/builder.py",
         "patchSetId": 16
@@ -13,6 +47,23 @@
       "writtenOn": "2015-08-18T08:32:39Z",
       "side": 1,
       "message": "shouldn\u0027t this debug be a few lines up (above the thread join)?",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_64c5a88c",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:03:49Z",
+      "side": 1,
+      "message": "Maybe for readability\u0027s sake we can just do something like:\n\nelse:\n    name, image_id \u003d job.name.split(\u0027:\u0027)\n    image_id \u003d int(image_id)\n    if (name \u003d\u003d \"image_build\" and image_id in self._build_image_ids):\n        ...",
       "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -47,6 +98,23 @@
       "writtenOn": "2015-08-18T08:32:39Z",
       "side": 1,
       "message": "(nit) You renamed \u0027self.dib_image\u0027 to \u0027image\u0027 in BuildImage in the previous change, but have inconsistently chosen to keep \u0027deb_image\u0027 here.",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_84c0fc7d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:03:49Z",
+      "side": 1,
+      "message": "Format should not require an explicit cast.  One of the many beauties of format().",
       "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
