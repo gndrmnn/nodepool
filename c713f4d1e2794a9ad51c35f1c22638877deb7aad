@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_277596f8",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-18T08:12:12Z",
+      "side": 1,
+      "message": "This is kinda ugly.\n\nWhy not mock out nodepoolcmd and grab a copy of the pool object from there?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
