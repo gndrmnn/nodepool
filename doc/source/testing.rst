@@ -6,28 +6,51 @@ Testing
 Functional Tests
 ----------------
 
-Nodepool comes with a set of functional tests that exercise Nodepool's
-functionality with mocked out clouds. Running these tests is
-straightforward, needing only a mysql database and tox.
+Nodepool's functional test suites check. This is done with mocked out
+clouds. You can either run these tests with minimal setup or against a
+devstack. Before following the steps below, if you haven't already, install and
+run nodepool per the instructions in the README.  # TODO Link?
+
+Minimal Setup
+-------------
+
+# TODO this section needs subsections
+
+The most basic way to run the functional tests requires tox and MySQL.
+# TODO what is tox and where can i learn more?
+# TODO why does tox need the database?
+
+Database Setup
+```````````````
 
 First create the database user (note the user/password must be these
-values)::
+values)
+
+.. code-block:: bash
 
   mysql -e "CREATE USER 'openstack_citest'@'localhost' IDENTIFIED BY 'openstack_citest';"
 
 Next grant the required permissions to the user (note that you likely do
-not want to use a production DB for this)::
+not want to use a production DB for this)
+
+.. code-block:: bash
 
   mysql -e "GRANT ALL ON *.* TO 'openstack_citest'@'localhost' WITH GRANT OPTION;"
 
 These permissions are necessary for the tests to create per test DB
 instances to avoid collisions between tests on the mysql tables.
 
-Final setup step is to create the required database::
+Final setup step is to create the required database
+
+.. code-block:: bash
 
   mysql -e "CREATE DATABASE openstack_citest;"
 
-Now you can run the tests with a simple tox command::
+Run the Tests
+`````````````
+Now you can run the tests with a simple tox command
+
+.. code-block:: bash
 
   tox -e py27
 
@@ -39,38 +62,101 @@ Devstack. This is handy because Devstack installs a mysql for us and
 we can make some assumptions about the config required to talk to
 a Devstack deployed cloud.
 
-First run devstack::
+If you don't already have a devstack installed, follow the installation
+instructions to set one up. # TODO link to devstack instructions
+
+## TODO: verify it works like this, i'm pretty sure it doesn't since you need to
+do something with the config
+
+Set up Devstack
+```````````````
+Run devstack
+
+.. code-block:: bash
 
   git clone https://git.openstack.org/openstack-dev/devstack
   cd devstack
   ./stack.sh
 
-Install nodepool to a virtualenv::
+Configure Nodepool for Devstack
+````````````````````````````````
+If you followed the README #TODO link instructions, you may have created a
+nodepool.yaml config file. If you haven't yet, then create one now. The default
+location for this is ``/etc/nodepool/nodepool.yaml``. Add the sections detailed
+below to your yaml file. The full sample yaml file is available at the end of
+this section.
 
-  git clone https://git.openstack.org/openstack-infra/nodepool
-  virtualenv venv
-  venv/bin/pip install -U ./nodepool
+script-dir and elements-dir
+'''''''''''''''''''''''''''
 
-Write a nodepool configuration file to
-``/path/to/nodepool/things/nodepool.yaml``. A minimal nodepool.yaml
-config file that does not communicate with Jenkins and Gearman would
-look like::
+You will need to make and populate these two paths as necessary, cloning
+nodepool does not do this. Further in this doc we have an example script you'll
+need to copy to /path/to/nodepool/scripts.
 
-  # You will need to make and populate these two paths as necessary,
-  # cloning nodepool does not do this. Further in this doc we have an
-  # example script for /path/to/nodepool/things/scripts.
-  script-dir: /path/to/nodepool/things/scripts
-  elements-dir: /path/to/nodepool/things/elements
-  # The mysql password here may be different depending on your
-  # devstack install, you should double check it (the devstack var
-  # is MYSQL_PASSWORD and if unset devstack should prompt you for
-  # the value).
+.. code-block:: yaml
+
+  script-dir: /etc/nodepool/scripts
+  elements-dir: /etc/nodepool/elements
+
+dburi
+'''''
+
+The mysql password here may be different depending on your devstack install. The
+devstack environment variable is MYSQL_PASSWORD. If this is not set, and
+devstack doesn't prompt you, try the admin password you used when you set up
+devstack (see the devstack config file). # TODO link/location
+
+.. code-block:: yaml
+
+  dburi: 'mysql+pymysql://root:secretmysql@localhost/nodepool'
+
+targets
+'''''''
+
+Need to have at least one target for node allocations, but this does not need to
+be a jenkins target.
+
+.. code-block:: yaml
+
+  targets:
+    - name: dummy
+
+labels
+'''''''
+
+Devstack does not make an Ubuntu image by default. You can grab one from Ubuntu
+and upload it yourself, per the instructions below. Devstack provides a cirrOs_
+image, which is a minimal Linux distribution. Unfortunately, we cannot use
+devstack's cirrOs_ default because cirrOs_ does not support sftp. See Images for
+creating the Ubuntu image. #TODO link
+
+.. _cirrOs: https://launchpad.net/cirros
+
+.. code-block:: yaml
+
+  labels:
+    - name: ubuntu
+      image: ubuntu
+      min-ready: 1
+      providers:
+        - name: devstack
+
+Example Nodepool Config
+'''''''''''''''''''''''
+
+.. code-block:: yaml
+
+  # location to nodepool support items
+  script-dir: /etc/nodepool/scripts
+  elements-dir: /etc/nodepool/elements
+
+  # mysql db info
   dburi: 'mysql+pymysql://root:secretmysql@localhost/nodepool'
 
   gearman-servers: []
   zmq-publishers: []
-  # Need to have at least one target for node allocations, but
-  # this does not need to be a jenkins target.
+
+  # Target for node allocations
   targets:
     - name: dummy
 
@@ -78,11 +164,9 @@ look like::
     cleanup: '*/1 * * * *'
     check: '*/15 * * * *'
     image-update: '14 14 * * *'
+    */ # TODO remove this, something is breaking my syntax highlighting and this fixes it
 
-  # Devstack does not make an Ubuntu image by default. You can
-  # grab one from Ubuntu and upload it yourself. Note that we
-  # cannot use devstack's cirros default because cirros does not
-  # support sftp.
+  # available images
   labels:
     - name: ubuntu
       image: ubuntu
@@ -96,7 +180,7 @@ look like::
       service-type: 'compute'
       username: 'demo'
       project-id: 'demo'
-      password: 'secretadmin'
+      password: 'secretadmin' # your devstack admin password
       auth-url: 'http://127.0.0.1:5000/v2.0'
       api-timeout: 60
       # Long boot timeout to deal with potentially nested virt.
@@ -115,15 +199,34 @@ look like::
           # Alter below to point to your local user private key
           private-key: /home/user/.ssh/id_rsa
 
-We need to upload the ubuntu image to glance::
+Upload Image
+`````````````
+
+Once you've finished your nodepool.yaml config file, upload the ubuntu image to
+glance:
+
+.. code-block:: bash
 
   wget https://cloud-images.ubuntu.com/trusty/current/trusty-server-cloudimg-amd64-disk1.img
   source /path/to/devstack/openrc
   glance image-create --name ubuntu --disk-format qcow2 --container-format bare --file trusty-server-cloudimg-amd64-disk1.img
 
+Check that the image has been uploaded to devstack:
+
+.. code-block:: bash
+
+  # TODO
+
+prepare_node_ubuntu.sh
+```````````````````````
+# TODO better section title
+
+# TODO i thought our config didn't communicate with jenkins??
 We also need to write out our prepare_node_ubuntu.sh script. Its job is
 to give us a jenkins user that allows ssh using the ``$HOME/.ssh/id_rsa``
-key::
+key
+
+.. code-block:: bash
 
   PUB_KEY=$(cat $HOME/.ssh/id_rsa.pub)
   cat > /path/to/nodepool/things/scripts/prepare_node_ubuntu.sh << EOF
@@ -142,8 +245,13 @@ key::
   EOF
   chmod +x /path/to/nodepool/things/scripts/prepare_node_ubuntu.sh
 
+Open Ports
+```````````
+
 To allow connectivity from nodepool to its nodes we also need to open up
-our default security group::
+our default security group
+
+.. code-block:: bash
 
   nova secgroup-add-rule default tcp 1 65535 0.0.0.0/0
   nova secgroup-add-rule default udp 1 65535 0.0.0.0/0
@@ -151,11 +259,31 @@ our default security group::
 Note that this just opens up all the tcp and udp ports but your nodes
 should run iptables if that matters anyways.
 
-Last step before starting nodepool is to make sure the database it needs
-exists in the MySQL server::
-
-  mysql -u root -p -e "CREATE DATABASE nodepool;"
+Run Nodepool With Devstack
+```````````````````````````
 
 Now you can run nodepool in the foreground against your devstack cloud::
 
   venv/bin/nodepoold -c /path/to/nodepool/things/nodepool.yaml -d
+
+# TODO how do i know if it's working??
+
+Troubleshooting
+````````````````
+
+# TODO add troubleshooting tips
+
+Testing a Specific Patch
+`````````````````````````
+
+# TODO where should this go??
+
+To test a specific patch that is already in gerrit, you will also
+want to install git-review and apply that patch while in the nodepool
+repository:
+
+.. code-block:: bash
+
+    cd ~/src/nodepool
+    git review -x XXXXX
+
