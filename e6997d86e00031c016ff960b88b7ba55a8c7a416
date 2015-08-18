@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_9fb4c9f2",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:40:29Z",
+      "side": 1,
+      "message": "consume",
+      "revId": "e6997d86e00031c016ff960b88b7ba55a8c7a416",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
