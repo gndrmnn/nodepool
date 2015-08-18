@@ -1,0 +1,190 @@
+.. _quickstart:
+
+Quickstart
+==========
+
+The goal of this Quickstart document is to get a very barebones Nodepool up and
+running to verify that all dependencies have been met and there are no issues
+with your installation. Each section provides links to resources where you can
+further customize your Nodepool setup.
+
+Setup
+-----
+
+Install dependencies using apt-get. If you are not using a Debian-based
+distribution, you may need to use a different package manager and alternative
+package names.
+
+.. code-block:: bash
+
+    sudo apt-get update
+    sudo apt-get -qy install git mysql-server g++ python-dev\
+                     python-pip libffi-dev libssl-dev qemu-utils
+
+Create a directory to store the source code and clone the nodepool and
+system-config directories from git.openstack.org.
+
+.. code-block:: bash
+
+    mkdir src
+    cd ~/src
+    git clone git://git.openstack.org/openstack-infra/system-config
+    git clone git://git.openstack.org/openstack-infra/nodepool
+
+
+Install Nodepool
+----------------
+
+Nodepool can be installed globally or to a virtualenv. If you're not familiar
+with virtualenv, you can find out more `here <https://pypi.python.org/pypi/virtualenv>`_.
+
+If you're not using virtualenv, install Nodepool globally using pip:
+
+.. code-block:: bash
+
+    cd ~/src/nodepool
+    sudo pip install -U -r requirements.txt
+    sudo pip install -e .
+
+If you are using virtualenv, create "venv" and install Nodepool to it:
+
+.. code-block:: bash
+
+    cd ~/src
+    virtualenv venv
+    venv/bin/pip install -U ./nodepool
+
+Configuration
+-------------
+
+Nodepool requires a configuration file in order to run. Here is a barebones
+nodepool.yaml file that will let you launch nodepool and verify that your
+installation worked. See :ref:`configuration` for more information on
+available sections. Links to additional example configuration files are provided
+below.
+
+.. code-block:: yaml
+
+  # mysql db info
+  dburi: 'mysql+pymysql://nodepool@localhost/nodepool'
+
+  zmq-publishers: []
+  providers: []
+  labels: []
+  targets: []
+
+An example Nodepool configuration file is available in the tools directory of
+the Nodepool repository, called fake.yaml. Additionally, infra/system-config_
+contains several. For a production example, see nodepool.yaml.erb_ in
+the infra/system-config_ tree (under
+modules/openstack_project/templates/nodepool). If you plan on setting up
+Nodepool for testing against a DevStack, see :ref:`testing` for more configuration
+specifics.
+
+Save the nodepool.yaml file to ``/etc/nodepool/nodepool.yaml``. This is the
+default location for any supporting files such as configuration files and
+scripts. If you want to use a Nodepool config file in a different location,
+specify the path following the -c command when running nodepoold. See `Launch
+Nodepool`_.
+
+If the cloud being used has no default_floating_pool defined in nova.conf,
+you will need to define a pool name using the Nodepool yaml file to use
+floating ips.
+
+.. _system-config: https://git.openstack.org/cgit/openstack-infra/system-config/tree/modules/openstack_project/templates/nodepool/
+.. _nodepool.yaml.erb: https://git.openstack.org/cgit/openstack-infra/system-config/tree/modules/openstack_project/templates/nodepool/nodepool.yaml.erb
+
+Database
+--------
+
+Nodepool uses the database to store metadata and status information about its
+nodes. This example uses MySQL, but other options are also supported. For more
+information about Nodepool's database usage and requirements, see :ref:`installation`.
+For more information about the specific database fields, see :file:`nodepool/nodedb.py` where the
+database fields are mapped to Python classes.
+
+Create the nodepool user:
+
+.. code-block:: bash
+
+  mysql -e "CREATE USER 'nodepool'@'localhost' IDENTIFIED BY 'nodepool';"
+
+Create a database called nodepool:
+
+.. code-block:: bash
+
+    mysql -u root
+
+    mysql> create database nodepool;
+    mysql> GRANT ALL ON nodepool.* TO 'nodepool'@'localhost';
+    mysql> flush privileges;
+
+To set up the database for testing against a DevStack, see :ref:`testing`.
+
+SSH Key
+--------
+
+Export the variable NODEPOOL_SSH_KEY for your ssh key so you can log into the created instances:
+
+.. code-block:: bash
+
+    export NODEPOOL_SSH_KEY=`cat ~/.ssh/id_rsa.pub | awk '{print $2}'`
+
+Launch Nodepool
+---------------
+
+Start Nodepool, specify the debug flag to turn on debug level logging, and
+provide the nodepool.yaml file you created in the previous steps:
+
+.. code-block:: bash
+
+    nodepoold -d
+
+If you are using a config file somewhere other than
+``/etc/nodepool/nodepool.yaml``, use the -c command to provide the path:
+
+.. code-block:: bash
+
+  cd nodepool
+  nodepool -d -c tools/fake.yaml
+
+If you used a virtualenv and haven't added its path to your environment, make
+sure you specify the full path to the nodepoold in the venv bin directory
+(``~/src/venv/bin/nodepoold``)
+
+When you launch nodepoold, all logging ends up in stdout by default. You can change this by providing a
+logging configuration file with the -l argument when running nodepoold. For more
+details, see :ref:`installation`.
+
+Verify
+------
+
+Check that Nodepool is running by getting the version number:
+
+.. code-block:: bash
+
+  nodepool --version
+
+This should return the current version number.
+
+List images to check the database connection:
+
+.. code-block:: bash
+
+  nodepool image-list
+
+If you just followed the barebones config, you won't get any images back.
+
+If you used a virtualenv and haven't added its path to your environment, make
+sure you specify the full path to Nodepool in the venv bin directory
+(``~/src/venv/bin/nodepool``)
+
+Additional Steps
+----------------
+
+To see a list of available commands, either type nodepool -h or see :ref:`operation`.
+Some of these commands may fail with the barebones configuration provided in
+this Quickstart document. See the `Configuration`_ section in this document for
+more information.
+
+To set up Nodepool to work with a Devstack and build images, see :ref:`testing`.
