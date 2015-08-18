@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b9901_44c0a42a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-18T20:14:07Z",
+      "side": 1,
+      "message": "Should this statement be put into the log?",
+      "revId": "82d5a8170f18648b29a87529edbef10fca9330f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_6a6b551f",
         "filename": "nodepool/builder.py",
         "patchSetId": 11
