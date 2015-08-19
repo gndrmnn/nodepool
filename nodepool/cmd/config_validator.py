@@ -104,6 +104,7 @@ class ConfigValidator:
             'script-dir': str,
             'elements-dir': str,
             'images-dir': str,
+            'cloud-config': str,
             'dburi': str,
             'zmq-publishers': [str],
             'gearman-servers': [{

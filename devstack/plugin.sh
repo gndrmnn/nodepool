@@ -69,6 +69,7 @@ function nodepool_write_config {
 # example script for /path/to/nodepool/things/scripts.
 script-dir: $(dirname $NODEPOOL_CONFIG)/scripts
 elements-dir: $(dirname $NODEPOOL_CONFIG)/elements
+cloud-config-path: $(dirname $NODEPOOL_CONFIG)/clouds.yaml
 # The mysql password here may be different depending on your
 # devstack install, you should double check it (the devstack var
 # is MYSQL_PASSWORD and if unset devstack should prompt you for
@@ -104,10 +105,7 @@ providers:
   - name: devstack
     region-name: '$REGION_NAME'
     service-type: 'compute'
-    username: 'demo'
-    project-name: 'demo'
-    password: '$ADMIN_PASSWORD'
-    auth-url: '$KEYSTONE_AUTH_URI/v$IDENTITY_API_VERSION'
+    cloud: nodepool
     api-timeout: 60
     # Long boot timeout to deal with potentially nested virt.
     boot-timeout: 600
@@ -127,7 +125,18 @@ providers:
         config-drive: true
 EOF
 
+    cat > /tmp/clouds.yaml <<EOF
+clouds:
+  nodepool:
+    auth:
+      username: 'demo'
+      project-name: 'demo'
+      password: '$ADMIN_PASSWORD'
+      auth-url: '$KEYSTONE_AUTH_URI/v$IDENTITY_API_VERSION'
+EOF
+
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
+    sudo mv /tmp/clouds.yaml $(dirname $NODEPOOL_CONFIG)
 }
 
 # Initialize database
