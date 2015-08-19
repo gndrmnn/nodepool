@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_6ba6d054",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T00:11:56Z",
+      "side": 1,
+      "message": "This should always log an exception traceback at ERROR level.",
+      "parentUuid": "fa1b9901_d6478e75",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_765fa241",
         "filename": "nodepool/builder.py",
         "patchSetId": 17
@@ -47,6 +65,24 @@
       "writtenOn": "2015-08-18T08:12:12Z",
       "side": 1,
       "message": "This is kinda ugly.\n\nWhy not mock out nodepoolcmd and grab a copy of the pool object from there?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_6b2b3095",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T00:11:56Z",
+      "side": 1,
+      "message": "Because we instantiate nodepoolcmd and destroy it multiple times within a single run (every time we assert the list-images output which may happen multiple times in a single test, for example). The behavior of instantiating a builder on your own isn\u0027t actually that odd - we are going to expect this to be the end way we run it in prod, even.",
+      "parentUuid": "fa1b9901_277596f8",
       "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
