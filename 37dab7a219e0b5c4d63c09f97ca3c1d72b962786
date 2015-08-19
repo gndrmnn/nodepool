@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_6765751c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-08-19T18:02:22Z",
+      "side": 1,
+      "message": "Spelling: variable",
+      "revId": "37dab7a219e0b5c4d63c09f97ca3c1d72b962786",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
