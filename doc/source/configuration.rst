@@ -312,6 +312,22 @@ provider, the Nodepool image types are also defined (see
 
   ``name``
 
+  ``max-servers``
+    Maximum number of servers spawnable on this provider.
+
+**either-or**
+
+A provider must have either cloud credentials or a named cloud that refers
+to an entry in ``clouds.yaml``.
+
+**either**
+
+  ``cloud``
+
+  Name of the cloud to use from ``clouds.yaml``
+
+**or**
+
   ``username``
 
   ``password``
@@ -322,9 +338,6 @@ provider, the Nodepool image types are also defined (see
 
   ``auth-url``
     Keystone URL.
-
-  ``max-servers``
-    Maximum number of servers spawnable on this provider.
 
 **optional**
 
