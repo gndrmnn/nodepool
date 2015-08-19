@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_300fc089",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T15:44:17Z",
+      "side": 1,
+      "message": "This isnt a new bit of code - just a straight copy from what we had.",
+      "parentUuid": "fa1b9901_c4cd94b8",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_67006e35",
         "filename": "nodepool/builder.py",
         "patchSetId": 16
@@ -155,6 +173,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_709c580f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 2000,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T15:44:17Z",
+      "side": 1,
+      "message": "hrmm, that is an interesting question. I would say no because the previous behavior does not and I am trying to preserve that as much as possible right now. I do think that would be a good enhancement though.",
+      "parentUuid": "fa1b9901_4a96914d",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_4aa451a5",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 16
@@ -172,6 +208,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_d0b20494",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T15:44:17Z",
+      "side": 1,
+      "message": "I havent hit this once so I don\u0027t think it is necessary -we do a lot of work in between noticing that there are no jobs and asserting state (we run nodepoolcmd which creates a whole new nodepool and runs list-images, for example) so were mostly ok.",
+      "parentUuid": "fa1b9901_4aa451a5",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_eabbe5c2",
         "filename": "nodepool/tests/test_commands.py",
         "patchSetId": 16
@@ -183,6 +237,24 @@
       "writtenOn": "2015-08-18T08:32:39Z",
       "side": 1,
       "message": "left over from debugging?",
+      "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_90a80c22",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-19T15:44:17Z",
+      "side": 1,
+      "message": "ah, yes!",
+      "parentUuid": "fa1b9901_eabbe5c2",
       "revId": "fea2401949390b2cfc7a814cbae4f8eff1a80986",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
