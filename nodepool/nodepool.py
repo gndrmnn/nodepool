@@ -1301,7 +1301,6 @@ class NodePool(threading.Thread):
     def loadConfig(self):
         self.log.debug("Loading configuration")
         config = yaml.load(open(self.configfile))
-        cloud_config = os_client_config.OpenStackConfig()
 
         newconfig = Config()
         newconfig.db = None
@@ -1311,6 +1310,7 @@ class NodePool(threading.Thread):
         newconfig.labels = {}
         newconfig.scriptdir = config.get('script-dir')
         newconfig.elementsdir = config.get('elements-dir')
+        newconfig.cloud_config_path = config.get('cloud-config-path')
         newconfig.imagesdir = config.get('images-dir')
         newconfig.dburi = config.get('dburi')
         newconfig.provider_managers = {}
@@ -1319,6 +1319,14 @@ class NodePool(threading.Thread):
         newconfig.gearman_servers = {}
         newconfig.diskimages = {}
         newconfig.crons = {}
+
+        # config_files takes a list or None
+        if newconfig.cloud_config:
+            cloud_config_path = [newconfig.cloud_config_path]
+        else:
+            cloud_config_path = None
+        cloud_config = os_client_config.OpenStackConfig(
+            config_files=cloud_config_path)
 
         for name, default in [
             ('image-update', '14 2 * * *'),

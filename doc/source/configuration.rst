@@ -49,6 +49,19 @@ Example::
 
   elements-dir: /path/to/elements/dir
 
+cloud-config-path
+-----------------
+
+This section is optional.
+
+``os-client-config`` normally looks in ``~/.config/openstack/clouds.yaml``
+for cloud configuration. However, there are times when you might need to
+put the configuation somewhere else.
+
+Example::
+
+  cloud-config-path: /path/to/clouds.yaml
+
 images-dir
 ----------
 
