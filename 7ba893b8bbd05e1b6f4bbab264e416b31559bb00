@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_8719a9d9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-08-19T17:56:03Z",
+      "side": 1,
+      "message": "Why is this needed?",
+      "revId": "7ba893b8bbd05e1b6f4bbab264e416b31559bb00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_2733fd63",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-08-19T17:56:03Z",
+      "side": 1,
+      "message": "extra parens at the end?",
+      "revId": "7ba893b8bbd05e1b6f4bbab264e416b31559bb00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
