@@ -16,6 +16,23 @@
       "revId": "e6997d86e00031c016ff960b88b7ba55a8c7a416",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_fa6a57ec",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-20T12:05:56Z",
+      "side": 1,
+      "message": "I think rather than checking the resource type is a server this logic should be done in here",
+      "revId": "e6997d86e00031c016ff960b88b7ba55a8c7a416",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
