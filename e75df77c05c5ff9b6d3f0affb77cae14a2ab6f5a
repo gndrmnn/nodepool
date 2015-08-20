@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_c0544eff",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-20T07:32:46Z",
+      "side": 1,
+      "message": "buit\u003dbuilt, is that a typo?",
+      "revId": "e75df77c05c5ff9b6d3f0affb77cae14a2ab6f5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_8043b641",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-20T07:32:46Z",
+      "side": 1,
+      "message": "unRegisterFunction",
+      "revId": "e75df77c05c5ff9b6d3f0affb77cae14a2ab6f5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
