@@ -167,6 +167,25 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 2)
 
+    def test_dib_delete(self):
+        """Test that a dib image can be deleted."""
+        configfile = self.setup_config('node_dib.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            snapshot_images = session.getSnapshotImages()
+            self.assertEqual(len(snapshot_images), 1)
+            pool.deleteImage(snapshot_images[0].id)
+
+        self.wait_for_threads()
+
+        with pool.getDB().getSession() as session:
+            snapshot_images = session.getSnapshotImages()
+            self.assertEqual(len(snapshot_images), 0)
+
     def test_subnodes(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('subnodes.yaml')
