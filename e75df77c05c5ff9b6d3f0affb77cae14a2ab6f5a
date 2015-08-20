@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b9901_b4d07620",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-20T11:17:28Z",
+      "side": 1,
+      "message": "as long as you\u0027re fixing typos here, should this be deregister?",
+      "revId": "e75df77c05c5ff9b6d3f0affb77cae14a2ab6f5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_c0544eff",
         "filename": "nodepool/builder.py",
         "patchSetId": 13
