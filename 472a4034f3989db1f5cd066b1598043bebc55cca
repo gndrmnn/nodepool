@@ -16,6 +16,24 @@
       "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_c876a9d6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 2233,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2015-08-20T12:45:33Z",
+      "side": 1,
+      "message": "IIUC the node may have been deleted externally, say by some admin doing \"nova delete\", but it will still be in the database. So we want to catch this exception and continue to the \"remove from database\" part below instead of failing.\n\nAlso note this code part is not new with this patch, just shuffled around a bit.",
+      "parentUuid": "fa1b9901_9d9a356d",
+      "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
