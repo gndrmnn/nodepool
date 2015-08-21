@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b9901_80211ab7",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-21T16:32:46Z",
+      "side": 1,
+      "message": "Why? I cant think of any reason one way or the other, and gearman is unregister (for example).",
+      "parentUuid": "fa1b9901_28b293e5",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_08e6afe7",
         "filename": "nodepool/builder.py",
         "patchSetId": 15
