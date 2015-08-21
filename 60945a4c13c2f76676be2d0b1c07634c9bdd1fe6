@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b9901_149b3067",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-08-21T07:03:59Z",
+      "side": 1,
+      "message": "why are you  adding an sleep here? was that giving problems?",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
