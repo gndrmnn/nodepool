@@ -33,6 +33,23 @@
       "revId": "e6997d86e00031c016ff960b88b7ba55a8c7a416",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_e43ee3d9",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-21T19:17:31Z",
+      "side": 1,
+      "message": "I like this suggestion. Will make the code easier to read and follow.",
+      "revId": "e6997d86e00031c016ff960b88b7ba55a8c7a416",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
