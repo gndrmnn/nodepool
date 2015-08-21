@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b9901_28b293e5",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-21T08:15:35Z",
+      "side": 1,
+      "message": "(nit) this should be deregister if you\u0027re iterating",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_08e6afe7",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-21T08:15:35Z",
+      "side": 1,
+      "message": "(nit) This line doesn\u0027t serve any purpose",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_149b3067",
         "filename": "nodepool/tests/test_nodepool.py",
         "patchSetId": 15
@@ -13,6 +47,24 @@
       "writtenOn": "2015-08-21T07:03:59Z",
       "side": 1,
       "message": "why are you  adding an sleep here? was that giving problems?",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_48bfc760",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-08-21T08:15:35Z",
+      "side": 1,
+      "message": "The sleep is so the test doesn\u0027t lock up during a while True.\n\nIf the node fails to be deleted this test will wait until the test execution time is exceeded before failing. I\u0027d prefer to see this check on a timer of what would be reasonable to expect the node to be deleted. Or better yet written in a way that doesn\u0027t involve any loop checking like this.",
+      "parentUuid": "fa1b9901_149b3067",
       "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
