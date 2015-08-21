@@ -86,6 +86,24 @@
       "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b9901_a3078817",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-08-21T16:33:48Z",
+      "side": 1,
+      "message": "Yea, this is a polling loop and the sleep keeps this from being a spinlock and instead a poll.",
+      "parentUuid": "fa1b9901_48bfc760",
+      "revId": "60945a4c13c2f76676be2d0b1c07634c9bdd1fe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
