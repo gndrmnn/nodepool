@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da20952f_90a71c4f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-26T22:57:48Z",
+      "side": 1,
+      "message": "This commit actually does more than what the subject describes.  Maybe something a little more generic like\n\n\"Updating root level documentation\" with the specifics listed in the body of the commit message?",
+      "revId": "0f54b6f23c995c303fba2f83afd7f59c49dc7772",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_d05b5453",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-26T22:57:48Z",
+      "side": 1,
+      "message": "CONTRIBUTING",
+      "revId": "0f54b6f23c995c303fba2f83afd7f59c49dc7772",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

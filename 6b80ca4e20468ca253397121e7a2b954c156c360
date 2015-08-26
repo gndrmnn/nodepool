@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da20952f_709368fb",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2015-08-26T22:57:48Z",
+      "side": 0,
+      "message": "How are these redundant?  I checked http://docs.openstack.org/infra/nodepool and didn\u0027t see those there nor I see any other file in tree that reproduces this documentation..",
+      "revId": "6b80ca4e20468ca253397121e7a2b954c156c360",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
