@@ -1452,12 +1452,14 @@ class NodePool(threading.Thread):
                 t.jenkins_url = jenkins['url']
                 t.jenkins_user = jenkins['user']
                 t.jenkins_apikey = jenkins['apikey']
+                t.jenkins_timeout = jenkins.get('timeout', 120)
                 t.jenkins_credentials_id = jenkins.get('credentials-id')
                 t.jenkins_test_job = jenkins.get('test-job')
             else:
                 t.jenkins_url = None
                 t.jenkins_user = None
                 t.jenkins_apikey = None
+                t.jenkins_timeout = None
                 t.jenkins_credentials_id = None
                 t.jenkins_test_job = None
             t.rate = target.get('rate', 1.0)
@@ -1548,7 +1550,9 @@ class NodePool(threading.Thread):
                 if oldmanager:
                     if (t.jenkins_url != oldmanager.target.jenkins_url or
                         t.jenkins_user != oldmanager.target.jenkins_user or
-                        t.jenkins_apikey != oldmanager.target.jenkins_apikey):
+                        t.jenkins_apikey != oldmanager.target.jenkins_apikey or
+                        t.jenkins_timeout !=
+                        oldmanager.target.jenkins_timeout):
                         stop_managers.append(oldmanager)
                         oldmanager = None
                 if oldmanager:
