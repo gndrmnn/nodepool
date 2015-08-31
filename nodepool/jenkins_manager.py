@@ -98,7 +98,8 @@ class JenkinsManager(TaskManager):
             return fakeprovider.FakeJenkins(self.target.jenkins_user)
         return myjenkins.Jenkins(self.target.jenkins_url,
                                  self.target.jenkins_user,
-                                 self.target.jenkins_apikey)
+                                 self.target.jenkins_apikey,
+                                 self.target.jenkins_timeout)
 
     def createNode(self, name, host, description, executors, root, labels=[],
                    credentials_id=None, username=None, private_key=None):

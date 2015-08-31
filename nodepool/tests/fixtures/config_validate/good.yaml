@@ -947,6 +947,7 @@ targets:
       url: 'https://jenkins01.openstack.org/'
       user: '<%= jenkins_api_user %>'
       apikey: '<%= jenkins_api_key %>'
+      timeout: 60
       credentials-id: '<%= jenkins_credentials_id %>'
   - name: jenkins02
     jenkins:

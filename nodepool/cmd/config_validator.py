@@ -89,6 +89,7 @@ class ConfigValidator:
                 'url': str,
                 'user': str,
                 'apikey': str,
+                'timeout': int,
                 'credentials-id': str,
             }
         }
