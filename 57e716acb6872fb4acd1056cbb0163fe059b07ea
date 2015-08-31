@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da20952f_44990b7b",
+        "filename": "doc/source/quickstart.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "We use pymysql now so shouldn\u0027t need libmysqlclient-dev any longer. I do think we need g++/build-essential for pyzmq and the ssl compile though.",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_24d657f1",
+        "filename": "doc/source/quickstart.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "You also need to create the nodepool user.",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_8482c3c6",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "These tests don\u0027t run against devstack. They use completely mocked out resources.",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_248e57d0",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "The tests should be cleaning up. Likely a bug in the database fixture(s). We can fix that separately though.",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_8443a36b",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "You really should do git review -d instead otherwise you are cherry picking onto whatever your current state is which can result in testing code that is very different than what was proposed.",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_7f405a07",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-08-31T16:41:57Z",
+      "side": 1,
+      "message": "If using vim the lexer/parser for yaml is super buggy and I have seen it segfault even. In general though I think it gets confused over nested things like in rst and doesn\u0027t understand this is yaml in rst and treats it like rst? In any case I think you can remove that and blame vim. If not using vim then ignore everything I just said :)",
+      "revId": "57e716acb6872fb4acd1056cbb0163fe059b07ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
