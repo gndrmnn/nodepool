@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "da20952f_c6d02c56",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 2228,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-03T07:34:02Z",
+      "side": 1,
+      "message": "that is not related with my change, maybe we leave for a followup patch?",
+      "parentUuid": "da20952f_6f290889",
+      "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_9d9a356d",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 10
@@ -106,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "da20952f_e6d3f05d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 2238,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-03T07:34:02Z",
+      "side": 1,
+      "message": "same here",
+      "parentUuid": "da20952f_0f208c9a",
+      "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da20952f_2f2310a9",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 10
@@ -117,6 +153,24 @@
       "writtenOn": "2015-09-02T20:49:26Z",
       "side": 1,
       "message": "This can potentially create a key with a None image_name, do we want to only update statsd if we have a valid image_name?",
+      "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_e63a1098",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 2264,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-03T07:34:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da20952f_2f2310a9",
       "revId": "472a4034f3989db1f5cd066b1598043bebc55cca",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
