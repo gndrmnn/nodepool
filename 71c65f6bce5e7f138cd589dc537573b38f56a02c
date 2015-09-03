@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "da20952f_66912052",
+        "filename": "doc/source/quickstart.rst",
+        "patchSetId": 18
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-03T07:45:22Z",
+      "side": 1,
+      "message": "i would reverse a bit this sentence \"an example nodepool configuration file, called fake.yaml, is avaialble in the tools directory...\"",
+      "revId": "71c65f6bce5e7f138cd589dc537573b38f56a02c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_c6882c25",
+        "filename": "doc/source/quickstart.rst",
+        "patchSetId": 18
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-03T07:45:22Z",
+      "side": 1,
+      "message": "several sample configuration files",
+      "revId": "71c65f6bce5e7f138cd589dc537573b38f56a02c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da20952f_39a2824c",
         "filename": "doc/source/testing.rst",
         "patchSetId": 18
