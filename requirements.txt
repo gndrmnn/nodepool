@@ -21,3 +21,4 @@ os-client-config>=1.2.0
 shade>=0.7.0
 diskimage-builder
 voluptuous
+MySQL-python
