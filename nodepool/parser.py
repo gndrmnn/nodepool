@@ -12,10 +12,20 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import os
 import yaml
 
 
 class YamlParser(object):
+
+    def __init__(self):
+        yaml.add_constructor('!include', self._include_tag)
+
+    def _include_tag(self, loader, node):
+        filename = os.path.join(os.path.dirname(loader.name), node.value)
+
+        with file(filename) as inputfile:
+            return yaml.load(inputfile)
 
     def load(self, path):
         return yaml.load(open(path))
