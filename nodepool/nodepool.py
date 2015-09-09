@@ -31,13 +31,13 @@ import shlex
 import subprocess
 import threading
 import time
-import yaml
 import zmq
 
 import allocation
 import jenkins_manager
 import nodedb
 import nodeutils as utils
+from parser import YamlParser
 import provider_manager
 from stats import statsd
 
@@ -1300,7 +1300,8 @@ class NodePool(threading.Thread):
 
     def loadConfig(self):
         self.log.debug("Loading configuration")
-        config = yaml.load(open(self.configfile))
+        yaml = YamlParser()
+        config = yaml.load(self.configfile)
         cloud_config = os_client_config.OpenStackConfig()
 
         newconfig = Config()

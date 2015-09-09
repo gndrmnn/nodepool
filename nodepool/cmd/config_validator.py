@@ -12,7 +12,8 @@
 
 import logging
 import voluptuous as v
-import yaml
+
+from nodepool.parser import YamlParser
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +119,8 @@ class ConfigValidator:
         }
 
         log.info("validating %s" % self.config_file)
-        config = yaml.load(open(self.config_file))
+        yaml = YamlParser()
+        config = yaml.load(self.config_file)
 
         # validate the overall schema
         schema = v.Schema(top_level)
