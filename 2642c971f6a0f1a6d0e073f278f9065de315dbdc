@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da20952f_d4af8d29",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 1456,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2015-09-09T19:41:28Z",
+      "side": 1,
+      "message": "You are actually changing the functionality here.  I don\u0027t think you need to raise a keyerror, because before this patch, defining:\n\n  target:\n    name: jenkins1\n\nwas valid.  We simply set the other values to None. To keep backwards compat, you\u0027ll need to do the same here.",
+      "revId": "2642c971f6a0f1a6d0e073f278f9065de315dbdc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da20952f_54493d8d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 1465,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2015-09-09T19:41:28Z",
+      "side": 1,
+      "message": "You\u0027ll need to do the following:\n\n  secure.get(section_name, \u0027url\u0027, None)\n\nTo keep backwards compat. Same for below.",
+      "revId": "2642c971f6a0f1a6d0e073f278f9065de315dbdc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
