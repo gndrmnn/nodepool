@@ -32,6 +32,13 @@ class TestConfigValidation(tests.BaseTestCase):
         validator = ConfigValidator(config)
         validator.validate()
 
+    def test_include_config(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate', 'include.yaml')
+
+        validator = ConfigValidator(config)
+        validator.validate()
+
     def test_yaml_error(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate', 'yaml_error.yaml')

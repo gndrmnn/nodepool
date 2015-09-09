@@ -22,6 +22,10 @@ full configuration file may have the ``labels``, ``providers``, and
 The following sections are available.  All are required unless
 otherwise indicated.
 
+The tag ``!include`` will treat the following string as a file which
+should be parsed as yaml configuration data. See ``zmq-publishers``
+section for an example.
+
 script-dir
 ----------
 When creating an image to use when launching new nodes, Nodepool will
@@ -96,6 +100,10 @@ or are complete and nodes may be deleted.  Example::
   zmq-publishers:
     - tcp://jenkins1.example.com:8888
     - tcp://jenkins2.example.com:8888
+
+Or using the ``!include`` statement::
+
+  zmq-publishers: !include zmq-publishers.yaml
 
 gearman-servers
 ---------------
