@@ -87,6 +87,15 @@ schedule for these tasks and also indicates their default values::
     cleanup: '27 */6 * * *'
     check: '*/15 * * * *'
 
+statsd
+------
+This section is optional.
+
+Adjust metrics being reported to Statsd if configured::
+
+  statsd:
+    report_jobs: true
+
 zmq-publishers
 --------------
 Lists the ZeroMQ endpoints for the Jenkins masters.  Nodepool uses

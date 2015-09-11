@@ -155,7 +155,10 @@ class NodeCompleteThread(threading.Thread):
             self.log.info("Node id: %s failed acceptance test, deleting" %
                           node.id)
 
-        if statsd and self.result == 'SUCCESS':
+        if(statsd
+           and self.result == 'SUCCESS'
+           and self.nodepool.config.statsd.get('report_jobs', True)):
+
             start = node.state_time
             dt = int((time.time() - start) * 1000)
 
@@ -1315,6 +1318,7 @@ class NodePool(threading.Thread):
         newconfig.dburi = config.get('dburi')
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
+        newconfig.statsd = {}
         newconfig.zmq_publishers = {}
         newconfig.gearman_servers = {}
         newconfig.diskimages = {}
