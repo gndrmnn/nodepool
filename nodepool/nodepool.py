@@ -1196,6 +1196,8 @@ class SnapshotImageUpdater(ImageUpdater):
             if not os.path.isfile(path):
                 continue
             host.scp(path, 'scripts/%s' % fname)
+        host.ssh("make opt dir",
+                 "sudo mkdir -p /opt/nodepool-scripts")
         host.ssh("move scripts to opt",
                  "sudo mv scripts /opt/nodepool-scripts")
         host.ssh("set scripts permissions",
