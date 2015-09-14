@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_8c992971",
+        "filename": "README.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-09-14T19:22:26Z",
+      "side": 0,
+      "message": "Rather than remove this section completely from the README, I think we should keep the heading and and refer to the quickstart and testing docs.",
+      "revId": "0bada9ece712f27954fc4e88101400c801e6e3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
