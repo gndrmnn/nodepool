@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_899d37be",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-16T17:23:14Z",
+      "side": 1,
+      "message": "Yep, this was kind of cargo\u0027d from elsewhere (zuul\u0027s git deal IIRC) but there is a nice thing I noticed so I kept it - because were using our own start before we spawn a thread we can verify gearman connections in the calling thread and fail there if there is an issue. This makes debugging a lot nicer.",
+      "parentUuid": "ba15a1d1_4e6e6902",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_cee6f9b3",
         "filename": "nodepool/builder.py",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2015-09-16T00:03:16Z",
       "side": 1,
       "message": "This will return a new lock every time it is called, don\u0027t you need a 1:1 relationship between thread object and lock? I think you likely want to call threading.Lock() in __init__ then use that lock here.",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_2edbd1ed",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-16T17:23:14Z",
+      "side": 1,
+      "message": "yep",
+      "parentUuid": "ba15a1d1_cee6f9b3",
       "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -116,6 +152,24 @@
       "writtenOn": "2015-09-16T00:03:16Z",
       "side": 1,
       "message": "Considering the length of time an image build needs generally (on the order of minutes), maybe we should sleep for longer than 1/5th of a second?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_2e8991c9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-16T17:23:14Z",
+      "side": 1,
+      "message": "Sure, this loop doesnt do a lot of work and should block on network traffic (it has to poll gearman server) so probably not a huge deal, how about half a second?",
+      "parentUuid": "ba15a1d1_8eea410e",
       "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
