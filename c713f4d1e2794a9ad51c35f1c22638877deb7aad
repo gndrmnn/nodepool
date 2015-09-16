@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "ba15a1d1_4e6e6902",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "One thing that is odd to me is that this objects manages a thread object rather than subclassing thread and using run() to run. Either way works but this way you have a bit more overhead into what is needed to start the run() method.",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_cee6f9b3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "This will return a new lock every time it is called, don\u0027t you need a 1:1 relationship between thread object and lock? I think you likely want to call threading.Lock() in __init__ then use that lock here.",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_d6478e75",
         "filename": "nodepool/builder.py",
         "patchSetId": 17
@@ -37,6 +71,23 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_d1ba1823",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "This seems like very paranoid error checking. Can\u0027t we rely on gear to give us jobs we have registered?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b9901_765fa241",
         "filename": "nodepool/builder.py",
         "patchSetId": 17
@@ -48,6 +99,40 @@
       "writtenOn": "2015-08-18T19:30:01Z",
       "side": 1,
       "message": "Got",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_8eea410e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "Considering the length of time an image build needs generally (on the order of minutes), maybe we should sleep for longer than 1/5th of a second?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_ce56f9d1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "Should this if block be moved up to line 1998ish so that it isn\u0027t a condition and failure to submit the job will log the exception properly?",
       "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -83,6 +168,91 @@
       "side": 1,
       "message": "Because we instantiate nodepoolcmd and destroy it multiple times within a single run (every time we assert the list-images output which may happen multiple times in a single test, for example). The behavior of instantiating a builder on your own isn\u0027t actually that odd - we are going to expect this to be the end way we run it in prod, even.",
       "parentUuid": "fa1b9901_277596f8",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_2ef53582",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "You only need this builder if building a dib image not snapshot images right?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_0ed39105",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "You only need this builder if building an image right?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_ae086592",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "You only need this builder if building an image right?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_6e39ed40",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "You only need this builder if building an image right?",
+      "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_ce4a79c5",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:03:16Z",
+      "side": 1,
+      "message": "You only need this builder if building an image right?",
       "revId": "c713f4d1e2794a9ad51c35f1c22638877deb7aad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
