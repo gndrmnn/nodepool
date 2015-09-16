@@ -55,7 +55,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
                      'project_name': 'os_fake',
                      'password': 'os_fake',
                      'auth_url': 'os_fake'}
-        osc_config = {'clouds': {'fake-cloud': {'auth': auth_data}}}
+        osc_config = {'clouds': {'fake-cloud': auth_data}}
         self._use_cloud_config(osc_config)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
