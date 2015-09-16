@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_71ec6c8f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "re: my previous change comment. I think you ended up doing what  Isuggested just didn\u0027t use it here.",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_944ece6d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 1918,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "This call to createSnapshotImage() isn\u0027t passing a uuid becuase there is no gearman job for actual snapshot images. Does that just default to NULL with the DB? Is that acceptable?",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_14b15e47",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "This looks almost identical to the GearmanClient in nodepool.py, can\u0027t we just use that client and get coverage for it instead of rewriting it?",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_54f4b6f0",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "Similar to before, do we need to do special gearman things unless uploading or building an image?",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_74f77af5",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "Similar to before, do we need to do special gearman things unless uploading or building an image?",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_34da6279",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-16T00:27:06Z",
+      "side": 1,
+      "message": "Similar to before, do we need to do special gearman things unless uploading or building an image?",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
