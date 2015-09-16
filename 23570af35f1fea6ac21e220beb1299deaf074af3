@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_af54bbfe",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 1918,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-16T18:08:00Z",
+      "side": 1,
+      "message": "Yep, should be fine on both mysql and postgres (having a uinique and nullable column).",
+      "parentUuid": "ba15a1d1_944ece6d",
+      "revId": "23570af35f1fea6ac21e220beb1299deaf074af3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_14b15e47",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 17
