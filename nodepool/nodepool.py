@@ -1929,7 +1929,7 @@ class NodePool(threading.Thread):
     def checkForMissingDiskImage(self, session, provider, image):
         found = False
         for dib_image in session.getDibImages():
-            if dib_image.image_name != image.name:
+            if dib_image.image_name != image.diskimage:
                 continue
             if dib_image.state != nodedb.READY:
                 # This is either building or in an error state
@@ -1971,7 +1971,7 @@ class NodePool(threading.Thread):
                 self.log.warning("Missing image %s on %s" %
                                  (image.name, provider.name))
                 self.uploadImage(session, provider.name,
-                                 image.name)
+                                 image.diskimage)
 
     def checkForMissingImage(self, session, provider, image):
         if image.name in self.config.images_in_use:
@@ -2101,10 +2101,18 @@ class NodePool(threading.Thread):
         try:
             filename = images[0].filename
             provider_entity = self.config.providers[provider]
-            provider_image = provider_entity.images[images[0].image_name]
+            provider_image = None
+            for p_image_name, p_image in provider_entity.images.items():
+                if p_image.diskimage == image_name:
+                    provider_image = p_image
+            if provider_image is None:
+                raise Exception(
+                    "Could not find provider image config for diskimage %s" %
+                    image_name)
+
             image_type = provider_entity.image_type
             snap_image = session.createSnapshotImage(
-                provider_name=provider, image_name=image_name)
+                provider_name=provider, image_name=provider_image.name)
             t = DiskImageUpdater(self, provider_entity, provider_image,
                                  snap_image.id, filename, image_type)
             t.start()
