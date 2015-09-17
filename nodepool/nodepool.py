@@ -1929,7 +1929,7 @@ class NodePool(threading.Thread):
     def checkForMissingDiskImage(self, session, provider, image):
         found = False
         for dib_image in session.getDibImages():
-            if dib_image.image_name != image.name:
+            if dib_image.image_name != image.diskimage.name:
                 continue
             if dib_image.state != nodedb.READY:
                 # This is either building or in an error state
@@ -1956,7 +1956,7 @@ class NodePool(threading.Thread):
                 break
         if not found:
             # only build the image, we'll recheck again
-            self.log.warning("Missing disk image %s" % image.name)
+            self.log.warning("Missing disk image %s" % image.diskimage.name)
             self.buildImage(self.config.diskimages[image.diskimage])
         else:
             found = False
