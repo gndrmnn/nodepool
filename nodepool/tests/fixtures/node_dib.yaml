@@ -18,7 +18,7 @@ gearman-servers:
 
 labels:
   - name: fake-dib-label
-    image: fake-dib-image
+    image: fake-dib-provider-image
     min-ready: 1
     providers:
       - name: fake-dib-provider
@@ -36,7 +36,7 @@ providers:
       - net-id: 'some-uuid'
     rate: 0.0001
     images:
-      - name: fake-dib-image
+      - name: fake-dib-provider-image
         base-image: 'Fake Precise'
         min-ram: 8192
         diskimage: fake-dib-image
