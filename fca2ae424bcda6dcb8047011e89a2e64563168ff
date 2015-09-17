@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_280e29e5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-17T18:59:49Z",
+      "side": 1,
+      "message": "Shouldnt this be image.diskimage? image is the provider image: block, so diskimage is a str.",
+      "revId": "fca2ae424bcda6dcb8047011e89a2e64563168ff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
