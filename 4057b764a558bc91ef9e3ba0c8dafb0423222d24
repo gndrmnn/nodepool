@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_9cbd3304",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2095,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-17T21:35:37Z",
+      "side": 1,
+      "message": "While this line expects the diskimage as passed on line 1974 the code below doesn\u0027t allow us to share a diskimage between multiple provider images.\n\nWhat I think we want to do is pass the provider image name, then use that to lookup the diskimage which we retrieve from the DB here. Or maybe pass a tuple for provider and diskimage names and use that.",
+      "revId": "4057b764a558bc91ef9e3ba0c8dafb0423222d24",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
