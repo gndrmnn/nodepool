@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_5eaf652b",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-09-18T21:22:55Z",
+      "side": 1,
+      "message": "mixed tabs/spaces",
+      "revId": "f0e4da36610e33a60cc94b89e4dc6c439431ec7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_9e109d5b",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-09-18T21:22:55Z",
+      "side": 1,
+      "message": "Rather than continuing to copy these over, why not just do a nodepool [image-]list after finished waiting?\n\nOtherwise you could append to the file and keep $name in the filename so that we can see what was going on while waiting.",
+      "revId": "f0e4da36610e33a60cc94b89e4dc6c439431ec7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
