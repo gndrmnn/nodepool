@@ -524,7 +524,6 @@ class ProviderManager(TaskManager):
         image = self._client.create_image(
             name=image_name,
             filename='%s.%s' % (filename, disk_format),
-            is_public=False,
             disk_format=disk_format,
             container_format=container_format,
             wait=True,
