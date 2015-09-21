@@ -30,6 +30,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         pool = nodepool.NodePool(configfile, run_builder=False)
         config = pool.loadConfig()
         pool.reconfigureDatabase(config)
+        pool.reconfigureManagers(config)
         pool.setConfig(config)
         self.builder = tests.BuilderFixture(pool)
         self.useFixture(self.builder)
@@ -82,6 +83,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "fake-dib-provider", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
         self.assert_images_listed(configfile, 1)
 
     def test_dib_snapshot_image_update(self):
@@ -94,6 +96,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "fake-provider2", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
         self.assert_images_listed(configfile, 2)
 
     def test_dib_snapshot_image_update_all(self):
@@ -103,6 +106,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "all", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
         self.assert_images_listed(configfile, 2)
 
     def test_image_update_all(self):
@@ -112,6 +116,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "all", "fake-image1")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
         self.assert_images_listed(configfile, 1)
 
     def test_image_list_empty(self):
@@ -136,6 +141,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "image-delete", '1')
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
         self.assert_images_listed(configfile, 0)
 
     def test_alien_list_fail(self):
@@ -148,6 +154,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-list")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
 
     def test_alien_image_list_fail(self):
         def fail_list(self):
@@ -159,6 +166,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-image-list")
         nodepoolcmd.main()
         self.wait_for_threads()
+        self.waitForJobs()
 
     def test_list_nodes(self):
         configfile = self.setup_config('node.yaml')
@@ -167,3 +175,4 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
         self.assert_nodes_listed(configfile, 1)
+        self.waitForJobs()
