@@ -17,7 +17,6 @@ import logging
 import time
 
 import fixtures
-import time
 
 from nodepool import tests
 from nodepool import nodedb
