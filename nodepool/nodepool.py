@@ -20,7 +20,6 @@ import apscheduler.scheduler
 import gear
 import json
 import logging
-import os_client_config
 import os.path
 import paramiko
 import pprint
@@ -338,6 +337,8 @@ class GearmanClient(gear.Client):
     def handleWorkComplete(self, packet):
         job = super(GearmanClient, self).handleWorkComplete(packet)
         job_prefix = job.name.split(':', 1)[0]
+        self.__log.debug("Got job completed packet for job name %s",
+                         job.name)
         if job_prefix in ('image-build', 'image-upload', 'image-delete'):
             job.onCompleted()
 
@@ -1107,8 +1108,7 @@ class NodePool(threading.Thread):
 
     def loadConfig(self):
         self.log.debug("Loading configuration")
-        return loadConfig(self.securefile, self.configfile,
-                          os_client_config.OpenStackConfig())
+        return loadConfig(self.securefile, self.configfile)
 
     def reconfigureDatabase(self, config):
         if (not self.config) or config.dburi != self.config.dburi:
@@ -1287,7 +1287,8 @@ class NodePool(threading.Thread):
     def reconfigureImageBuilder(self):
         # start disk image builder thread
         if not self._image_builder_thread and self.run_builder:
-            self._image_builder_thread = builder.NodePoolBuilder(self)
+            self._image_builder_thread = builder.NodePoolBuilder(
+                self.configfile, self)
             self._image_builder_thread.start()
 
     def setConfig(self, config):
@@ -1558,35 +1559,17 @@ class NodePool(threading.Thread):
     def checkForMissingDiskImage(self, session, provider, image):
         found = False
         for dib_image in session.getDibImages():
-            if dib_image.image_name != image.diskimage:
+            if dib_image.image_name != image.name:
                 continue
             if dib_image.state != nodedb.READY:
                 # This is either building or in an error state
                 # that will be handled by periodic cleanup
                 return
-            types_found = True
-            diskimage = self.config.diskimages[image.diskimage]
-            for image_type in diskimage.image_types:
-                if (not os.path.exists(
-                        dib_image.filename + '.' + image_type) and
-                    not 'fake-dib-image' in dib_image.filename):
-                    # if image is in ready state, check if image
-                    # file exists in directory, otherwise we need
-                    # to rebuild and delete this buggy image
-                    types_found = False
-                    self.log.warning("Image filename %s does not "
-                                     "exist. Removing image" %
-                                     dib_image.filename)
-                    self.deleteDibImage(dib_image)
-                    break
-            if types_found:
-                # Found a matching image that is READY and has a file
-                found = True
-                break
+            found = True
         if not found:
             # only build the image, we'll recheck again
             self.log.warning("Missing disk image %s" % image.name)
-            self.buildImage(self.config.diskimages[image.diskimage])
+            self.buildImage(image.name, image.diskimage)
         else:
             found = False
             for snap_image in session.getSnapshotImages():
@@ -1693,15 +1676,15 @@ class NodePool(threading.Thread):
         time.sleep(2)
         return t
 
-    def buildImage(self, image):
+    def buildImage(self, image_name, diskimage_name):
         gearman_job = None
 
         # check if we already have this item in the queue
         with self.getDB().getSession() as session:
-            queued_images = session.getBuildingDibImagesByName(image.name)
+            queued_images = session.getBuildingDibImagesByName(image_name)
             if queued_images:
                 self.log.error('Image %s is already being built' %
-                               image.name)
+                               image_name)
                 return
             else:
                 try:
@@ -1710,33 +1693,35 @@ class NodePool(threading.Thread):
 
                     filename = os.path.join(self.config.imagesdir,
                                             '%s-%s' %
-                                            (image.name, str(timestamp)))
+                                            (image_name, str(timestamp)))
+                    job_uuid = str(uuid4().hex)
 
-                    self.log.debug("Queued image building task for %s" %
-                                   image.name)
-                    dib_image = session.createDibImage(image_name=image.name,
-                                                       filename=filename)
-                    session.commit()
+                    dib_image = session.createDibImage(image_name=image_name,
+                                                       filename=filename,
+                                                       version=timestamp)
+                    self.log.debug("Created DibImage record %s with state %s",
+                                   dib_image.image_name, dib_image.state)
 
                     # Submit image-build job
-                    job_uuid = str(uuid4().hex)
                     gearman_job = WatchableJob(
-                        'image-build:%s' % image.name,
-                        json.dumps({'image_id': dib_image.id}),
-                        job_uuid)
+                        'image-build:%s' % diskimage_name, '{}', job_uuid)
                     self._image_build_jobs.addJob(gearman_job)
+                    gearman_job.addCompletionHandler(
+                        self.handleImageBuildComplete, image_id=dib_image.id)
 
                     self.gearman_client.submitJob(gearman_job)
+                    self.log.debug("Queued image building task for %s" %
+                                   image_name)
                 except Exception:
                     self.log.exception(
-                        "Could not build image %s", image.name)
+                        "Could not build image %s", image_name)
 
     def uploadImage(self, session, provider, image_name):
         try:
             provider_entity = self.config.providers[provider]
             provider_image = provider_entity.images[image_name]
-            images = session.getOrderedReadyDibImages(provider_image.diskimage)
-            image_id = images[0].id
+            images = session.getOrderedReadyDibImages(provider_image.name)
+            image_id = images[0].builder_image_id
             timestamp = int(time.time())
             job_uuid = str(uuid4().hex)
 
@@ -1751,14 +1736,14 @@ class NodePool(threading.Thread):
 
             # Submit image-upload job
             gearman_job = WatchableJob(
-                'image-upload:%d' % image_id,
+                'image-upload:%s' % image_id,
                 json.dumps({'provider': provider}),
                 job_uuid)
             self._image_upload_jobs.addJob(gearman_job)
             gearman_job.addCompletionHandler(self.handleImageUploadComplete,
                                              snap_image_id=snap_image.id)
-
-            self.log.debug('Submitting image-upload job for %d', image_id)
+            self.log.debug('Submitting image-upload job for %s (%s)',
+                           image_id, images[0].builder_image_id)
             self.gearman_client.submitJob(gearman_job)
 
             return gearman_job
@@ -1784,6 +1769,30 @@ class NodePool(threading.Thread):
             session.commit()
             self.log.debug('Image %s is ready with external_id %s',
                            snap_image_id, external_id)
+
+    def handleImageBuildComplete(self, job, image_id):
+        job_data = json.loads(job.data[0])
+        builder_image_id = job_data['image-id']
+        with self.getDB().getSession() as session:
+            dib_image = session.getDibImage(image_id)
+            if dib_image is None:
+                self.log.error(
+                    'Unable to find matching dib_image for image_id %s',
+                    image_id)
+                return
+            dib_image.state = nodedb.READY
+            dib_image.builder_image_id = builder_image_id
+            session.commit()
+            self.log.debug('DIB Image %s (id %d) is ready',
+                           job.name.split(':', 1)[0], image_id)
+
+    def handleImageDeleteComplete(self, job, image_id):
+        with self.getDB().getSession() as session:
+            dib_image = session.getDibImage(image_id)
+
+            # Remove image from the nodedb
+            dib_image.state = nodedb.DELETE
+            dib_image.delete()
 
     def launchNode(self, session, provider, label, target):
         try:
@@ -1970,8 +1979,12 @@ class NodePool(threading.Thread):
         try:
             # Submit image-delete job
             job_uuid = str(uuid4().hex)
-            gearman_job = WatchableJob('image-delete:%s' % dib_image.id,
-                                       '', job_uuid)
+            gearman_job = WatchableJob(
+                'image-delete:%s' % dib_image.builder_image_id,
+                '', job_uuid
+            )
+            gearman_job.addCompletionHandler(self.handleImageDeleteComplete,
+                                             image_id=dib_image.id)
             self.gearman_client.submitJob(gearman_job)
             return gearman_job
         except Exception:
