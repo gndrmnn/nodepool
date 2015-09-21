@@ -79,6 +79,7 @@ snapshot_image_table = Table(
     Column('state', Integer),
     # Time of last state change
     Column('state_time', Integer),
+    Column('job_id', String(255), index=True, unique=True),
     mysql_engine='InnoDB',
     )
 node_table = Table(
@@ -153,7 +154,8 @@ class DibImage(object):
 
 class SnapshotImage(object):
     def __init__(self, provider_name, image_name, hostname=None, version=None,
-                 external_id=None, server_external_id=None, state=BUILDING):
+                 external_id=None, server_external_id=None, state=BUILDING,
+                 job_id=None):
         self.provider_name = provider_name
         self.image_name = image_name
         self.hostname = hostname
@@ -161,6 +163,7 @@ class SnapshotImage(object):
         self.external_id = external_id
         self.server_external_id = server_external_id
         self.state = state
+        self.job_id = job_id
 
     def delete(self):
         session = Session.object_session(self)
@@ -353,6 +356,13 @@ class NodeDatabaseSession(object):
         images = self.session().query(SnapshotImage).filter_by(
             provider_name=provider_name,
             external_id=external_id).all()
+        if not images:
+            return None
+        return images[0]
+
+    def getSnapshotImageByJobId(self, job_id):
+        images = self.session().query(SnapshotImage).filter_by(
+            job_id=job_id).all()
         if not images:
             return None
         return images[0]

@@ -197,6 +197,7 @@ class NodePoolCmd(object):
 
     def image_update(self):
         threads = []
+        job_ids = []
 
         with self.pool.getDB().getSession() as session:
             self.pool.reconfigureManagers(self.pool.config)
@@ -212,7 +213,7 @@ class NodePoolCmd(object):
                         if image.diskimage not in dib_images_built:
                             self.image_build(image.diskimage)
                             dib_images_built.add(image.diskimage)
-                        threads.append(self.pool.uploadImage(
+                        job_ids.append(self.pool.uploadImage(
                             session, provider.name, image.name))
                     elif image:
                         threads.append(self.pool.updateImage(
@@ -225,7 +226,7 @@ class NodePoolCmd(object):
                 image = provider.images.get(self.args.image)
                 if image and image.diskimage:
                     self.image_build(image.diskimage)
-                    threads.append(self.pool.uploadImage(
+                    job_ids.append(self.pool.uploadImage(
                         session, provider.name, image.name))
                 elif image:
                     threads.append(self.pool.updateImage(
@@ -235,6 +236,7 @@ class NodePoolCmd(object):
                                     % (self.args.image, self.args.provider))
 
         self._wait_for_threads(threads)
+        self._wait_for_snap_images(job_ids)
 
     def image_build(self, diskimage=None):
         diskimage = diskimage or self.args.image
@@ -250,7 +252,7 @@ class NodePoolCmd(object):
     def image_upload(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
-        threads = []
+        job_ids = []
 
         with self.pool.getDB().getSession() as session:
             if self.args.provider == 'all':
@@ -262,7 +264,7 @@ class NodePoolCmd(object):
                                          "disk-image-builder image: %s",
                                          self.args.image)
                     else:
-                        threads.append(self.pool.uploadImage(
+                        job_ids.append(self.pool.uploadImage(
                             session, provider.name, self.args.image))
             else:
                 provider = self.pool.config.providers[self.args.provider]
@@ -270,10 +272,10 @@ class NodePoolCmd(object):
                     raise Exception("Trying to upload a non "
                                     "disk-image-builder image: %s",
                                     self.args.image)
-                threads.append(self.pool.uploadImage(
+                job_ids.append(self.pool.uploadImage(
                     session, self.args.provider, self.args.image))
 
-        self._wait_for_threads(threads)
+        self._wait_for_snap_images(job_ids)
 
     def alien_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
@@ -365,6 +367,15 @@ class NodePoolCmd(object):
     def _wait_for_threads(self, threads):
         for t in threads:
             t.join()
+
+    def _wait_for_snap_images(self, job_ids):
+            for job_id in job_ids:
+                while True:
+                    with self.pool.getDB().getSession() as session:
+                        image = session.getSnapshotImageByJobId(job_id)
+                        if image.state == nodedb.READY:
+                            break
+                    time.sleep(.5)
 
     def main(self):
         # commands which do not need to start-up or parse config
