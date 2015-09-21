@@ -153,7 +153,8 @@ class DibImage(object):
 
 class SnapshotImage(object):
     def __init__(self, provider_name, image_name, hostname=None, version=None,
-                 external_id=None, server_external_id=None, state=BUILDING):
+                 external_id=None, server_external_id=None, state=BUILDING,
+                 job_id=None):
         self.provider_name = provider_name
         self.image_name = image_name
         self.hostname = hostname
@@ -161,6 +162,7 @@ class SnapshotImage(object):
         self.external_id = external_id
         self.server_external_id = server_external_id
         self.state = state
+        self.job_id = job_id
 
     def delete(self):
         session = Session.object_session(self)
