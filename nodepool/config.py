@@ -1,3 +1,4 @@
+import os_client_config
 from six.moves import configparser as ConfigParser
 import yaml
 
@@ -46,12 +47,13 @@ class DiskImage(ConfigValue):
     pass
 
 
-def loadConfig(secure_config_path, config_path, cloud_config):
+def loadConfig(secure_config_path, config_path):
     secure = None
     if secure_config_path:
         secure = ConfigParser.ConfigParser()
         secure.readfp(open(secure_config_path))
     config = yaml.load(open(config_path))
+    cloud_config = os_client_config.OpenStackConfig()
 
     newconfig = Config()
     newconfig.db = None

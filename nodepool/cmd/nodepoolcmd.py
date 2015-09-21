@@ -246,7 +246,8 @@ class NodePoolCmd(object):
                             "image: %s" % diskimage)
 
         self.pool.reconfigureImageBuilder()
-        self.pool.buildImage(self.pool.config.diskimages[diskimage])
+        self.pool.buildImage(self.args.image,
+                             diskimage)
         self.pool.waitForBuiltImages()
 
     def image_upload(self):
