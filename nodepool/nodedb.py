@@ -127,11 +127,12 @@ subnode_table = Table(
 
 class DibImage(object):
     def __init__(self, image_name, filename=None, version=None,
-                 state=BUILDING):
+                 state=BUILDING, builder_image_id=None):
         self.image_name = image_name
         self.filename = filename
         self.version = version
         self.state = state
+        self.builder_image_id = builder_image_id
 
     def delete(self):
         session = Session.object_session(self)
@@ -343,6 +344,20 @@ class NodeDatabaseSession(object):
         if not images:
             return None
         return images
+
+    def getDibImageByJobId(self, job_id):
+        images = self.session().query(DibImage).filter_by(
+            job_id=job_id).all()
+        if not images:
+            return None
+        return images[0]
+
+    def getDibImageByBuilderId(self, builder_id):
+        images = self.session().query(DibImage).filter_by(
+            builder_image_id=builder_id).all()
+        if not images:
+            return None
+        return images[0]
 
     def getSnapshotImage(self, image_id):
         images = self.session().query(SnapshotImage).filter_by(
