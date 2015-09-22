@@ -927,18 +927,27 @@ class DiskImageBuilder(threading.Thread):
                 # DIB should've cleaned up after itself, just remove this
                 # image from the DB.
                 self.dib_image.delete()
+                self._reportBuildImage(self.dib_image.image_name, 'FAILURE')
                 return
 
             self.dib_image.state = nodedb.READY
             session.commit()
             self.log.info("DIB image %s with file %s is built" % (
                 image_id, self.dib_image.image_name))
+            self._reportBuildImage(
+                self.dib_image.image_name, 'SUCCESS', start_time)
 
-            if statsd:
+    def _reportBuildImage(self, image_name, result, start_time=None):
+        if statsd:
+            key = 'nodepool.dib_image_build.%s' % image_name
+            # NOTE(pabelanger): We only have a start_time is we are successful,
+            # might be worth adding it for failures too.
+            if start_time:
                 dt = int((time.time() - start_time) * 1000)
-                key = 'nodepool.dib_image_build.%s' % self.dib_image.image_name
                 statsd.timing(key, dt)
                 statsd.incr(key)
+            key = '%s.%s' % key result
+            statsd.incr(key)
 
 
 class ImageUpdater(threading.Thread):

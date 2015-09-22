@@ -20,6 +20,8 @@ import os
 import pymysql
 import random
 import re
+import select
+import socket
 import string
 import subprocess
 import threading
@@ -28,6 +30,7 @@ import time
 
 import fixtures
 import gear
+import statsd
 import testresources
 import testtools
 
@@ -88,6 +91,35 @@ class FakeGearmanServer(gear.Server):
         self.log.debug("done releasing queued jobs %s (%s)" % (regex, qlen))
 
 
+class FakeStatsd(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.bind(('', 0))
+        self.port = self.sock.getsockname()[1]
+        self.wake_read, self.wake_write = os.pipe()
+        self.stats = []
+
+    def run(self):
+        while True:
+            poll = select.poll()
+            poll.register(self.sock, select.POLLIN)
+            poll.register(self.wake_read, select.POLLIN)
+            ret = poll.poll()
+            for (fd, event) in ret:
+                if fd == self.sock.fileno():
+                    data = self.sock.recvfrom(1024)
+                    if not data:
+                        return
+                    self.stats.append(data[0])
+                if fd == self.wake_read:
+                    return
+
+    def stop(self):
+        os.write(self.wake_write, '1\n')
+
+
 class GearmanServerFixture(fixtures.Fixture):
     def setUp(self):
         super(GearmanServerFixture, self).setUp()
@@ -135,6 +167,13 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
 
         self.useFixture(fixtures.MonkeyPatch('subprocess.Popen',
                                              LoggingPopenFactory))
+        self.statsd = FakeStatsd()
+        os.environ['STATSD_HOST'] = 'localhost'
+        os.environ['STATSD_PORT'] = str(self.statsd.port)
+        self.statsd.start()
+        # the statsd client object is configured in the statsd module import
+        reload(statsd)
+
         self.setUpFakes()
 
     def setUpFakes(self):
@@ -151,6 +190,10 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         self.useFixture(fixtures.MonkeyPatch(
             'nodepool.nodepool._get_one_cloud',
             fakeprovider.fake_get_one_cloud))
+
+    def shutdown(self):
+        self.statsd.stop()
+        self.statsd.join()
 
     def wait_for_threads(self):
         whitelist = ['APScheduler',
