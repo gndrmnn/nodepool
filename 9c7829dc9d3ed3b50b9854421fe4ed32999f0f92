@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_d11d3867",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 19
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T17:44:56Z",
+      "side": 1,
+      "message": "^ remove",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_f1187c77",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T17:44:56Z",
+      "side": 1,
+      "message": "I see where the lock is used, but I don\u0027t understand what problem it\u0027s solving.",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_9126e0b8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T17:44:56Z",
+      "side": 1,
+      "message": "Why is the worker becoming an argument?",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_b129a48b",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T17:44:56Z",
+      "side": 1,
+      "message": "This table now has 2 unique keys; why?",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
