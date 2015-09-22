@@ -33,6 +33,23 @@
       "revId": "f0e4da36610e33a60cc94b89e4dc6c439431ec7e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_6715b999",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T00:17:41Z",
+      "side": 1,
+      "message": "Because if this fails we will hit the jenkins timeout, after which it is impossible to perform any further debugging actions.",
+      "revId": "f0e4da36610e33a60cc94b89e4dc6c439431ec7e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
