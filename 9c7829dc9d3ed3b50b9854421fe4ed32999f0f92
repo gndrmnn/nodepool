@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_77121c0b",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-22T18:34:48Z",
+      "side": 1,
+      "message": "This lock ensures any running jobs complete before stopping the worker.",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_319fd451",
         "filename": "nodepool/builder.py",
         "patchSetId": 19
@@ -70,6 +87,23 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_57f3580a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-22T18:34:48Z",
+      "side": 1,
+      "message": "gearman_worker is used here to register the job. I suppose it can get that via self.gearman_worker instead.",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_b129a48b",
         "filename": "nodepool/nodedb.py",
         "patchSetId": 19
@@ -81,6 +115,24 @@
       "writtenOn": "2015-09-22T17:44:56Z",
       "side": 1,
       "message": "This table now has 2 unique keys; why?",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_77445c1a",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-22T18:34:48Z",
+      "side": 1,
+      "message": "Jobs should be unique I guess this is just extra belts and suspenders having the db enforce it.",
+      "parentUuid": "ba15a1d1_b129a48b",
       "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
