@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_f4b4ea35",
+        "filename": "nodepool/tests/fixtures/config_validate/invalid_cloud_config.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-22T18:09:28Z",
+      "side": 1,
+      "message": "Does this file need to be so large?",
+      "revId": "8a5477fadbf53c95cd1d12bd319847f7ae49c0d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
