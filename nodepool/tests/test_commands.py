@@ -28,18 +28,18 @@ class TestNodepoolCMD(tests.DBTestCase):
         argv.extend(args)
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
 
-    def assert_images_listed(self, configfile, image_cnt, status="ready"):
-        self.patch_argv("-c", configfile, "image-list")
+    def assert_listed(self, configfile, cnt, cmd, status="ready"):
+        self.patch_argv("-c", configfile, cmd)
         with mock.patch('prettytable.PrettyTable.add_row') as m_add_row:
             nodepoolcmd.main()
-            images_with_status = 0
+            items_with_status = 0
             # Find add_rows with the status were looking for
             for args, kwargs in m_add_row.call_args_list:
                 row = args[0]
                 status_column = 7
                 if row[status_column] == status:
-                    images_with_status += 1
-            self.assertEquals(images_with_status, image_cnt)
+                    items_with_status += 1
+            self.assertEquals(items_with_status, cnt)
 
     def test_snapshot_image_update(self):
         configfile = self.setup_config("node.yaml")
@@ -47,7 +47,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "fake-provider", "fake-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_listed(configfile, 1, 'image-list')
 
     def test_dib_image_update(self):
         configfile = self.setup_config("node_dib.yaml")
@@ -55,7 +55,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "fake-dib-provider", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_listed(configfile, 1, 'image-list')
 
     def test_dib_snapshot_image_update(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
@@ -66,7 +66,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "fake-provider2", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 2)
+        self.assert_listed(configfile, 2, 'image-list')
 
     def test_dib_snapshot_image_update_all(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
@@ -74,7 +74,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "all", "fake-dib-image")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 2)
+        self.assert_listed(configfile, 2, 'image-list')
 
     def test_image_update_all(self):
         configfile = self.setup_config("node_cmd.yaml")
@@ -82,10 +82,11 @@ class TestNodepoolCMD(tests.DBTestCase):
                         "all", "fake-image1")
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 1)
+        self.assert_listed(configfile, 1, 'image-list')
 
     def test_image_list_empty(self):
-        self.assert_images_listed(self.setup_config("node_cmd.yaml"), 0)
+        self.assert_listed(self.setup_config("node_cmd.yaml"), 0,
+                'image-list')
 
     def test_image_delete_invalid(self):
         configfile = self.setup_config("node_cmd.yaml")
@@ -106,7 +107,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "image-delete", '1')
         nodepoolcmd.main()
         self.wait_for_threads()
-        self.assert_images_listed(configfile, 0)
+        self.assert_listed(configfile, 0, 'image-list')
 
     def test_alien_list_fail(self):
         def fail_list(self):
@@ -129,3 +130,11 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-image-list")
         nodepoolcmd.main()
         self.wait_for_threads()
+
+    def test_list_nodes(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+        self.assert_listed(configfile, 1, 'list')
