@@ -463,7 +463,7 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.node.external_id = server_id
         session.commit()
 
@@ -484,9 +484,6 @@ class NodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
@@ -756,7 +753,7 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.subnode.external_id = server_id
         session.commit()
 
@@ -779,9 +776,6 @@ class SubNodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -895,14 +889,15 @@ class SnapshotImageUpdater(ImageUpdater):
             key_name = self.provider.keypair
             key = None
             use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
         else:
-            key_name = None
-            key = None
-            use_password = True
+            try:
+                key_name = hostname.split('.')[0]
+                key = self.manager.addKeypair(key_name)
+                use_password = False
+            except Exception:
+                key_name = None
+                key = None
+                use_password = True
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -917,16 +912,12 @@ class SnapshotImageUpdater(ImageUpdater):
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
-                nodepool_snapshot_image_id=self.snap_image.id)
+                nodepool_snapshot_image_id=self.snap_image.id)['id']
         except Exception:
-            if (self.manager.hasExtension('os-keypairs') and
-                not self.provider.keypair):
-                for kp in self.manager.listKeypairs():
-                    if kp['name'] == key_name:
-                        self.log.debug(
-                            'Deleting keypair for failed image build %s' %
-                            self.snap_image.id)
-                        self.manager.deleteKeypair(kp['name'])
+            if not self.manager.deleteKeypair(key_name):
+                self.log.debug(
+                    'Deleted keypair for failed image build %s' %
+                    self.snap_image.id)
             raise
 
         self.snap_image.hostname = hostname
@@ -949,9 +940,6 @@ class SnapshotImageUpdater(ImageUpdater):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
         server['public_ip'] = ip
@@ -959,7 +947,7 @@ class SnapshotImageUpdater(ImageUpdater):
         self.bootstrapServer(server, key, use_password=use_password)
 
         image_id = self.manager.createImage(server_id, hostname,
-                                            self.image.meta)
+                                            self.image.meta)['id']
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
