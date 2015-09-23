@@ -1391,7 +1391,7 @@ class NodePool(threading.Thread):
                 # custom properties when the image is uploaded.
                 i.meta = image.get('meta', {})
                 # 5 elements, and no key or value can be > 255 chars
-                # per novaclient.servers.create() rules
+                # per Nova API rules
                 if i.meta:
                     if len(i.meta) > 5 or \
                        any([len(k) > 255 or len(v) > 255
