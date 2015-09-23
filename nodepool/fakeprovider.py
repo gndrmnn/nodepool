@@ -24,6 +24,7 @@ import uuid
 
 from jenkins import JenkinsException
 import shade
+from shade import exc
 
 
 class Dummy(object):
@@ -43,6 +44,9 @@ class Dummy(object):
             args.append('%s=%s' % (k, getattr(self, k)))
         args = ' '.join(args)
         return '<%s %s %s>' % (self.__kind, id(self), args)
+
+    def __getitem__(self, key):
+        return self.__kw[key]
 
     def delete(self):
         self.manager.delete(self)
@@ -191,6 +195,8 @@ class FakeGlanceClient(object):
 
 
 class FakeOpenStackCloud(object):
+    log = logging.getLogger("nodepool.FakeOpenStackCloud")
+
     def __init__(self, images=None):
         if images is None:
             images = FakeList([Dummy(Dummy.IMAGE,
@@ -200,11 +206,78 @@ class FakeOpenStackCloud(object):
                                      metadata={})])
         self.nova_client = FakeClient(images)
         self._glance_client = FakeGlanceClient(images)
+        self._list = []
 
     def create_image(self, **kwargs):
         image = self._glance_client.images.create(**kwargs)
         image.update('fake data')
         return image
+
+    def get_openstack_vars(self, server):
+        return server
+
+    def create_server(self, **kw):
+        should_fail = kw.get('SHOULD_FAIL', '').lower() == 'true'
+        nics = kw.get('nics', [])
+        addresses = None
+        # if keyword 'ipv6-uuid' is found in provider config,
+        # ipv6 address will be available in public addr dict.
+        for nic in nics:
+            if 'ipv6-uuid' not in nic['net-id']:
+                continue
+            addresses = dict(
+                public=[dict(version=4, addr='fake'),
+                        dict(version=6, addr='fake_v6')],
+                private=[dict(version=4, addr='fake')]
+            )
+            break
+        if not addresses:
+            addresses = dict(
+                public=[dict(version=4, addr='fake')],
+                private=[dict(version=4, addr='fake')]
+            )
+        s = Dummy(Dummy.INSTANCE,
+                  id=uuid.uuid4().hex,
+                  name=kw['name'],
+                  status='BUILD',
+                  adminPass='fake',
+                  addresses=addresses,
+                  metadata=kw.get('meta', {}),
+                  manager=self,
+                  public_v4='fake',
+                  private_v4='fake',
+                  should_fail=should_fail)
+        self._list.append(s)
+        t = threading.Thread(target=self._finish,
+                             name='FakeProvider create',
+                             args=(s, 0.1, 'ACTIVE'))
+        t.start()
+        return s
+
+    def get_server(self, image=None):
+        if image:
+            id = image
+        self.log.debug("Get %s in %s" % (id, repr(self._list)))
+        for x in self._list:
+            if x.id == id:
+                return x
+        raise exc.OpenStackCloudException()
+
+    def _finish(self, obj, delay, status):
+        time.sleep(delay)
+        obj.status = status
+
+    def delete_server(self, *args, **kw):
+        self.log.debug("Delete from %s" % repr(self._list))
+        if 'image' in kw:
+            self._list.remove(self.get(kw['image']))
+        else:
+            obj = args[0]
+            if hasattr(obj, 'id'):
+                self._list.remove(obj)
+            else:
+                self._list.remove(self.get(obj))
+        self.log.debug("Deleted from %s" % repr(self._list))
 
 
 class FakeFile(StringIO.StringIO):

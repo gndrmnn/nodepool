@@ -459,7 +459,7 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.node.external_id = server_id
         session.commit()
 
@@ -751,7 +751,7 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.subnode.external_id = server_id
         session.commit()
 
@@ -1080,7 +1080,7 @@ class SnapshotImageUpdater(ImageUpdater):
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
-                nodepool_snapshot_image_id=self.snap_image.id)
+                nodepool_snapshot_image_id=self.snap_image.id)['id']
         except Exception:
             if (self.manager.hasExtension('os-keypairs') and
                 not self.provider.keypair):
@@ -1391,7 +1391,7 @@ class NodePool(threading.Thread):
                 # custom properties when the image is uploaded.
                 i.meta = image.get('meta', {})
                 # 5 elements, and no key or value can be > 255 chars
-                # per novaclient.servers.create() rules
+                # per Nova API rules
                 if i.meta:
                     if len(i.meta) > 5 or \
                        any([len(k) > 255 or len(v) > 255
