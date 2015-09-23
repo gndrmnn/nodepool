@@ -129,13 +129,6 @@ class GetImageTask(Task):
         return make_image_dict(image)
 
 
-class ListFlavorsTask(Task):
-    def main(self, client):
-        flavors = client.nova_client.flavors.list()
-        return [dict(id=str(flavor.id), ram=flavor.ram, name=flavor.name)
-                for flavor in flavors]
-
-
 class ListImagesTask(Task):
     def main(self, client):
         images = client.nova_client.images.list()
@@ -408,7 +401,7 @@ class ProviderManager(TaskManager):
         return self.submitTask(ListImagesTask())
 
     def listFlavors(self):
-        return self.submitTask(ListFlavorsTask())
+        return self._client.list_flavors()
 
     def listServers(self, cache=True):
         if (not cache or
