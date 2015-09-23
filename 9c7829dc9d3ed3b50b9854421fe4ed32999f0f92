@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_514ef66f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:34:47Z",
+      "side": 1,
+      "message": "Clarkb got it - if we shutdown the builder while were currently executing a job bad things can happen if we don\u0027t wait for the task to complete (we need to reply with a success/fail, etc).",
+      "parentUuid": "ba15a1d1_f1187c77",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_77121c0b",
         "filename": "nodepool/builder.py",
         "patchSetId": 19
@@ -70,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_d142063e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:34:47Z",
+      "side": 1,
+      "message": "Ah, yep, missed that.",
+      "parentUuid": "ba15a1d1_319fd451",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_9126e0b8",
         "filename": "nodepool/builder.py",
         "patchSetId": 19
@@ -81,6 +117,24 @@
       "writtenOn": "2015-09-22T17:44:56Z",
       "side": 1,
       "message": "Why is the worker becoming an argument?",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_717a1a8a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:34:47Z",
+      "side": 1,
+      "message": "Unsure what the question is, if you mean instead of an instance var its just a style thing - I tend to use args by default when its easy since this means your methods are easier to test / more well defined but not a big deal either way.",
+      "parentUuid": "ba15a1d1_9126e0b8",
       "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -133,6 +187,24 @@
       "side": 1,
       "message": "Jobs should be unique I guess this is just extra belts and suspenders having the db enforce it.",
       "parentUuid": "ba15a1d1_b129a48b",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_d1de866c",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:34:47Z",
+      "side": 1,
+      "message": "Yep - having constraints is generally a good thing, especially if were going to be relying on these constraints in the code.",
+      "parentUuid": "ba15a1d1_77445c1a",
       "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
