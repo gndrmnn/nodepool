@@ -16,7 +16,6 @@
 
 import StringIO
 import logging
-import novaclient
 import requests.exceptions
 import threading
 import time
@@ -30,12 +29,19 @@ class Dummy(object):
     IMAGE = 'Image'
     INSTANCE = 'Instance'
     FLAVOR = 'Flavor'
+    KEYPAIR = 'Keypair'
 
     def __init__(self, kind, **kw):
         self.__kind = kind
         self.__kw = kw
         for k, v in kw.items():
             setattr(self, k, v)
+        try:
+            if self.should_fail:
+                raise shade.OpenStackCloudException('This image has '
+                                                    'SHOULD_FAIL set to True.')
+        except AttributeError:
+            pass
 
     def __repr__(self):
         args = []
@@ -44,16 +50,13 @@ class Dummy(object):
         args = ' '.join(args)
         return '<%s %s %s>' % (self.__kind, id(self), args)
 
-    def delete(self):
-        self.manager.delete(self)
+    def __getitem__(self, key):
+        return getattr(self, key)
 
-    def update(self, data):
-        try:
-            if self.should_fail:
-                raise shade.OpenStackCloudException('This image has '
-                                                    'SHOULD_FAIL set to True.')
-        except AttributeError:
-            pass
+    def get(self, key, default=None):
+        if hasattr(self, key):
+            return getattr(self, key)
+        return default
 
 
 def fake_get_one_cloud(cloud_config, cloud_kwargs):
@@ -61,47 +64,38 @@ def fake_get_one_cloud(cloud_config, cloud_kwargs):
     return cloud_config.get_one_cloud(**cloud_kwargs)
 
 
-class FakeList(object):
-    log = logging.getLogger("nodepool.FakeList")
 
-    def __init__(self, l):
-        self._list = l
+class FakeOpenStackCloud(object):
+    log = logging.getLogger("nodepool.FakeOpenStackCloud")
 
-    def list(self):
-        self.log.debug("List %s" % repr(self._list))
-        return self._list
+    def __init__(self, images=None):
+        self._image_list = images
+        if self._image_list is None:
+            self._image_list = [
+                Dummy(
+                    Dummy.IMAGE,
+                    id='fake-image-id',
+                    status='READY',
+                    name='Fake Precise',
+                    metadata={})
+            ]
+        self._flavor_list = [
+            Dummy(Dummy.FLAVOR, id='f1', ram=8192, name='Fake Flavor'),
+            Dummy(Dummy.FLAVOR, id='f2', ram=8192, name='Unreal Flavor'),
+        ]
+        self._server_list = []
+        self._keypair_list = []
 
-    def find(self, name):
-        for x in self._list:
-            if x.name == name:
-                return x
+    def _get(self, name_or_id, instance_list):
+        self.log.debug("Get %s in %s" % (name_or_id, repr(instance_list)))
+        for instance in instance_list:
+            if instance.name == name_or_id or instance.id == name_or_id:
+                return instance
+        return None
 
-    def get(self, image=None):
-        if image:
-            id = image
-        self.log.debug("Get %s in %s" % (id, repr(self._list)))
-        for x in self._list:
-            if x.id == id:
-                return x
-        raise novaclient.exceptions.NotFound(404)
-
-    def _finish(self, obj, delay, status):
-        time.sleep(delay)
-        obj.status = status
-
-    def delete(self, *args, **kw):
-        self.log.debug("Delete from %s" % repr(self._list))
-        if 'image' in kw:
-            self._list.remove(self.get(kw['image']))
-        else:
-            obj = args[0]
-            if hasattr(obj, 'id'):
-                self._list.remove(obj)
-            else:
-                self._list.remove(self.get(obj))
-        self.log.debug("Deleted from %s" % repr(self._list))
-
-    def create(self, **kw):
+    def _create(
+            self, instance_list, instance_type=Dummy.INSTANCE,
+            done_status='ACTIVE', **kw):
         should_fail = kw.get('SHOULD_FAIL', '').lower() == 'true'
         nics = kw.get('nics', [])
         addresses = None
@@ -121,7 +115,7 @@ class FakeList(object):
                 public=[dict(version=4, addr='fake')],
                 private=[dict(version=4, addr='fake')]
             )
-        s = Dummy(Dummy.INSTANCE,
+        s = Dummy(instance_type,
                   id=uuid.uuid4().hex,
                   name=kw['name'],
                   status='BUILD',
@@ -129,82 +123,80 @@ class FakeList(object):
                   addresses=addresses,
                   metadata=kw.get('meta', {}),
                   manager=self,
+                  key_name=kw.get('key_name', None),
                   should_fail=should_fail)
-        self._list.append(s)
+        instance_list.append(s)
         t = threading.Thread(target=self._finish,
                              name='FakeProvider create',
-                             args=(s, 0.1, 'ACTIVE'))
+                             args=(s, 0.1, done_status))
         t.start()
         return s
 
-    def create_image(self, server, image_name, metadata):
-        # XXX : validate metadata?
-        x = self.api.images.create(name=image_name)
-        return x.id
+    def _delete(self, name_or_id, instance_list):
+        self.log.debug("Delete from %s" % repr(instance_list))
+        instance = None
+        for maybe in instance_list:
+            if maybe.name == name_or_id or maybe.id == name_or_id:
+                instance = maybe
+        if instance:
+            instance_list.remove(instance)
+        self.log.debug("Deleted from %s" % repr(instance_list))
 
-
-class FakeHTTPClient(object):
-    def get(self, path):
-        if path == '/extensions':
-            return None, dict(extensions=dict())
-
-
-class BadHTTPClient(object):
-    '''Always raises a ProxyError'''
-    def get(self, path):
-        raise requests.exceptions.ProxyError
-
-
-class FakeClient(object):
-    def __init__(self, images, *args, **kwargs):
-        self.flavors = FakeList([
-            Dummy(Dummy.FLAVOR, id='f1', ram=8192, name='Fake Flavor'),
-            Dummy(Dummy.FLAVOR, id='f2', ram=8192, name='Unreal Flavor'),
-        ])
-        self.images = images
-        self.client = FakeHTTPClient()
-        self.servers = FakeList([])
-        self.servers.api = self
-
-
-class BadClient(FakeClient):
-    def __init__(self, images):
-        super(BadClient, self).__init__(images)
-        self.client = BadHTTPClient()
-
-
-class BadOpenstackCloud(object):
-    def __init__(self, images=None):
-        if images is None:
-            images = FakeList([Dummy(Dummy.IMAGE,
-                                     id='fake-image-id',
-                                     status='READY',
-                                     name='Fake Precise',
-                                     metadata={})])
-        self.nova_client = BadClient(images)
-
-
-class FakeGlanceClient(object):
-    def __init__(self, images, **kwargs):
-        self.kwargs = kwargs
-        self.images = images
-
-
-class FakeOpenStackCloud(object):
-    def __init__(self, images=None):
-        if images is None:
-            images = FakeList([Dummy(Dummy.IMAGE,
-                                     id='fake-image-id',
-                                     status='READY',
-                                     name='Fake Precise',
-                                     metadata={})])
-        self.nova_client = FakeClient(images)
-        self._glance_client = FakeGlanceClient(images)
+    def _finish(self, obj, delay, status):
+        time.sleep(delay)
+        obj.status = status
 
     def create_image(self, **kwargs):
-        image = self._glance_client.images.create(**kwargs)
-        image.update('fake data')
-        return image
+        return self._create(
+            self._image_list, instance_type=Dummy.IMAGE,
+            done_status='READY', **kwargs)
+
+    def get_image(self, name_or_id):
+        return self._get(name_or_id, self._image_list)
+
+    def list_images(self):
+        return self._image_list
+
+    def delete_image(self, name_or_id):
+        self._delete(name_or_id, self._image_list)
+
+    def create_image_snapshot(self, name, **metadata):
+        # XXX : validate metadata?
+        return self._create(
+            self._image_list, instance_type=Dummy.IMAGE,
+            name=name, **metadata)
+
+    def list_flavors(self):
+        return self._flavor_list
+
+    def create_keypair(self, name, public_key):
+        return self._create(
+            self._image_list, instance_type=Dummy.KEYPAIR,
+            name=name, public_key=public_key)
+
+    def list_keypairs(self):
+        return self._keypair_list
+
+    def delete_keypair(self, name_or_id):
+        self._delete(name_or_id, self._keypair_list)
+
+    def get_openstack_vars(self, server):
+        server.public_v4 = 'fake'
+        server.public_v6 = 'fake_v6'
+        server.private_v4 = 'fake'
+        return server
+
+    def create_server(self, **kw):
+        return self._create(self._server_list, **kw)
+
+    def get_server(self, name_or_id):
+        return self._get(name_or_id, self._server_list)
+
+    def list_servers(self):
+        return self._server_list
+
+    def delete_server(self, name_or_id):
+        self._delete(name_or_id, self._server_list)
 
 
 class FakeFile(StringIO.StringIO):
