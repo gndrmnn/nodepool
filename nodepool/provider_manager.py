@@ -80,25 +80,6 @@ def get_private_ip(server):
     return ret[0]
 
 
-def make_server_dict(server):
-    d = dict(id=str(server.id),
-             name=server.name,
-             status=server.status,
-             addresses=server.addresses)
-    if hasattr(server, 'adminPass'):
-        d['admin_pass'] = server.adminPass
-    if hasattr(server, 'key_name'):
-        d['key_name'] = server.key_name
-    if hasattr(server, 'progress'):
-        d['progress'] = server.progress
-    if hasattr(server, 'metadata'):
-        d['metadata'] = server.metadata
-    d['public_v4'] = get_public_ip(server)
-    d['private_v4'] = get_private_ip(server)
-    d['public_v6'] = get_public_ip(server, version=6)
-    return d
-
-
 def make_image_dict(image):
     d = dict(id=str(image.id), name=image.name, status=image.status,
              metadata=image.metadata)
@@ -109,32 +90,6 @@ def make_image_dict(image):
 
 class NotFound(Exception):
     pass
-
-
-class CreateServerTask(Task):
-    def main(self, client):
-        server = client.nova_client.servers.create(**self.args)
-        return str(server.id)
-
-
-class GetServerTask(Task):
-    def main(self, client):
-        try:
-            server = client.nova_client.servers.get(self.args['server_id'])
-        except novaclient.exceptions.NotFound:
-            raise NotFound()
-        return make_server_dict(server)
-
-
-class DeleteServerTask(Task):
-    def main(self, client):
-        client.nova_client.servers.delete(self.args['server_id'])
-
-
-class ListServersTask(Task):
-    def main(self, client):
-        servers = client.nova_client.servers.list()
-        return [make_server_dict(server) for server in servers]
 
 
 class AddKeypairTask(Task):
@@ -288,6 +243,7 @@ class ProviderManager(TaskManager):
     def _getClient(self):
         return shade.OpenStackCloud(
             cloud_config=self.provider.cloud_config,
+            manager=self,
             **self.provider.cloud_config.config)
 
     def runTask(self, task):
@@ -406,10 +362,13 @@ class ProviderManager(TaskManager):
             nodepool=json.dumps(nodepool_meta)
         )
 
-        return self.submitTask(CreateServerTask(**create_args))
+        # TODO(mordred): shade has auto_ip - but we need to remove our use
+        # of floating ip management.
+        return self._client.get_openstack_vars(self._client.create_server(
+            wait=False, auto_ip=False, **create_args))
 
     def getServer(self, server_id):
-        return self.submitTask(GetServerTask(server_id=server_id))
+        return self._client.get_server(server_id)
 
     def getFloatingIP(self, ip_id):
         return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
@@ -568,14 +527,17 @@ class ProviderManager(TaskManager):
             # data until it succeeds.
             if self._servers_lock.acquire(False):
                 try:
-                    self._servers = self.submitTask(ListServersTask())
+                    self._servers = [
+                        self._client.get_openstack_vars(server) for server in
+                        self._client.list_servers()
+                    ]
                     self._servers_time = time.time()
                 finally:
                     self._servers_lock.release()
         return self._servers
 
     def deleteServer(self, server_id):
-        return self.submitTask(DeleteServerTask(server_id=server_id))
+        return self._client.delete_server(server_id)
 
     def cleanupServer(self, server_id):
         done = False
