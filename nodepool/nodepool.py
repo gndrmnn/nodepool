@@ -1052,14 +1052,15 @@ class SnapshotImageUpdater(ImageUpdater):
             key_name = self.provider.keypair
             key = None
             use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
         else:
-            key_name = None
-            key = None
-            use_password = True
+            try:
+                key_name = hostname.split('.')[0]
+                key = self.manager.addKeypair(key_name)
+                use_password = False
+            except Exception:
+                key_name = None
+                key = None
+                use_password = True
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -1076,14 +1077,10 @@ class SnapshotImageUpdater(ImageUpdater):
                 image_id=image_id, config_drive=self.image.config_drive,
                 nodepool_snapshot_image_id=self.snap_image.id)
         except Exception:
-            if (self.manager.hasExtension('os-keypairs') and
-                not self.provider.keypair):
-                for kp in self.manager.listKeypairs():
-                    if kp['name'] == key_name:
-                        self.log.debug(
-                            'Deleting keypair for failed image build %s' %
-                            self.snap_image.id)
-                        self.manager.deleteKeypair(kp['name'])
+            if self.manager.deleteKeypair(key_name):
+                self.log.debug(
+                        'Deleted keypair for failed image build %s' %
+                        self.snap_image.id)
             raise
 
         self.snap_image.hostname = hostname

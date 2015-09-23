@@ -111,23 +111,6 @@ class NotFound(Exception):
     pass
 
 
-class AddKeypairTask(Task):
-    def main(self, client):
-        client.nova_client.keypairs.create(**self.args)
-
-
-class ListKeypairsTask(Task):
-    def main(self, client):
-        keys = client.nova_client.keypairs.list()
-        return [dict(id=str(key.id), name=key.name) for
-                key in keys]
-
-
-class DeleteKeypairTask(Task):
-    def main(self, client):
-        client.nova_client.keypairs.delete(self.args['name'])
-
-
 class CreateImageTask(Task):
     def main(self, client):
         # This returns an id
@@ -144,16 +127,6 @@ class GetImageTask(Task):
         if image.status == 'DELETED':
             raise NotFound()
         return make_image_dict(image)
-
-
-class ListExtensionsTask(Task):
-    def main(self, client):
-        try:
-            resp, body = client.nova_client.client.get('/extensions')
-            return [x['alias'] for x in body['extensions']]
-        except novaclient.exceptions.NotFound:
-            # No extensions present.
-            return []
 
 
 class ListFlavorsTask(Task):
@@ -221,7 +194,6 @@ class ProviderManager(TaskManager):
 
     def _getCloudMetadata(self):
         self.__flavors = self._getFlavors()
-        self.__extensions = self.listExtensions()
         self._cloud_metadata_read = True
 
     def _getClient(self):
@@ -252,13 +224,6 @@ class ProviderManager(TaskManager):
         flavors = self.listFlavors()
         flavors.sort(lambda a, b: cmp(a['ram'], b['ram']))
         return flavors
-
-    def hasExtension(self, extension):
-        # Note: this will throw an error if the provider is offline
-        # but all the callers are in threads so the mainloop won't be affected.
-        if extension in self._extensions:
-            return True
-        return False
 
     def findFlavor(self, min_ram, name_filter=None):
         # Note: this will throw an error if the provider is offline
@@ -292,14 +257,14 @@ class ProviderManager(TaskManager):
     def addKeypair(self, name):
         key = paramiko.RSAKey.generate(2048)
         public_key = key.get_name() + ' ' + key.get_base64()
-        self.submitTask(AddKeypairTask(name=name, public_key=public_key))
+        self._client.add_keypair(name=name, public_key=public_key)
         return key
 
     def listKeypairs(self):
-        return self.submitTask(ListKeypairsTask())
+        return self._client.list_keypairs()
 
     def deleteKeypair(self, name):
-        return self.submitTask(DeleteKeypairTask(name=name))
+        return self._client.delete_keypair(name_or_id=name)
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
                      az=None, key_name=None, name_filter=None,
@@ -439,9 +404,6 @@ class ProviderManager(TaskManager):
             **meta)
         return image.id
 
-    def listExtensions(self):
-        return self.submitTask(ListExtensionsTask())
-
     def listImages(self):
         return self.submitTask(ListImagesTask())
 
@@ -488,13 +450,7 @@ class ProviderManager(TaskManager):
         # This will either get the server or raise an exception
         server = self.getServerFromList(server_id)
 
-        if (self.hasExtension('os-keypairs') and
-                server['key_name'] != self.provider.keypair):
-            for kp in self.listKeypairs():
-                if kp['name'] == server['key_name']:
-                    self.log.debug('Deleting keypair for server %s' %
-                                   server_id)
-                    self.deleteKeypair(kp['name'])
+        self._client.delete_keypair(server['key_name'])
 
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
