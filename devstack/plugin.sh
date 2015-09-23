@@ -262,8 +262,13 @@ function start_nodepool {
     # start gearman server
     run_process geard "geard -p 8991 -d"
 
+    # this isn't really that useful, but ensure we're testing the path
+    # through the code with statsd enabled
+    export STATSD_HOST=localhost
+    export STATSD_PORT=8125
+    run_process statsd "socat -u udp-recv:$STATSD_PORT -"
+
     run_process nodepool "nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LOGGING -d"
-    :
 }
 
 function shutdown_nodepool {
