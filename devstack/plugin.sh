@@ -84,7 +84,7 @@ function nodepool_write_config {
 keys=simple
 
 [loggers]
-keys=root,nodepool
+keys=root,nodepool,shade
 
 [handlers]
 keys=console
@@ -97,6 +97,13 @@ handlers=console
 level=DEBUG
 handlers=console
 qualname=nodepool
+propagate=0
+
+[logger_shade]
+level=DEBUG
+handlers=console
+qualname=shade
+propagate=0
 
 [handler_console]
 level=DEBUG
