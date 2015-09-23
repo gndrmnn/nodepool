@@ -110,13 +110,6 @@ class NotFound(Exception):
     pass
 
 
-class FindNetworkTask(Task):
-    def main(self, client):
-        for network in client.neutron_client.list_networks()['networks']:
-            if self.args['label'] == network['name']:
-                return dict(id=str(network['id']))
-
-
 class ProviderManager(TaskManager):
     log = logging.getLogger("nodepool.ProviderManager")
 
@@ -202,7 +195,7 @@ class ProviderManager(TaskManager):
     def findNetwork(self, label):
         if label in self._networks:
             return self._networks[label]
-        network = self.submitTask(FindNetworkTask(label=label))
+        network = self._client.get_network(label)
         self._networks[label] = network
         return network
 
