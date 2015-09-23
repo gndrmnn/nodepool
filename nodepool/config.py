@@ -171,7 +171,8 @@ def loadConfig(config_path):
             'template-hostname',
             'template-{image.name}-{timestamp}'
         )
-        p.image_type = provider.get('image-type', 'qcow2')
+        p.image_type = provider.get(
+            'image-type', p.cloud_config.config['image_format'])
         p.images = {}
         for image in provider['images']:
             i = ProviderImage()

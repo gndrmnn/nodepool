@@ -270,12 +270,7 @@ provider, the Nodepool image types are also defined (see
 
   providers:
     - name: provider1
-      username: 'username'
-      password: 'password'
-      auth-url: 'http://auth.provider1.example.com/'
-      project-id: 'project'
-      service-type: 'compute'
-      service-name: 'compute'
+      cloud: example
       region-name: 'region1'
       max-servers: 96
       rate: 1.0
@@ -285,7 +280,6 @@ provider, the Nodepool image types are also defined (see
       launch-timeout: 900
       template-hostname: 'template-{image.name}-{timestamp}'
       pool: 'public'
-      image-type: qcow2
       ipv6-preferred: False
       networks:
         - name: 'some-network-name'
@@ -337,9 +331,21 @@ provider, the Nodepool image types are also defined (see
               key: value
               key2: value
 
-**required**
+**cloud configuration***
 
-  ``name``
+**preferred**
+
+  ``cloud``
+  There are two methods supported for configuring cloud entries. The preferred
+  method is to create an ``~/.config/openstack/clouds.yaml`` file containing
+  your cloud configuration information. Then, use ``cloud`` to refer to a
+  named entry in that file.
+
+**compatabliity**
+
+  For backwards compatibility reasons, you can also just directly include
+  portions of the cloud configuration directly in ``nodepool.yaml``. Not all
+  of the options settable via ``clouds.yaml`` are available.
 
   ``username``
 
@@ -351,6 +357,18 @@ provider, the Nodepool image types are also defined (see
 
   ``auth-url``
     Keystone URL.
+
+  ``image-type``
+    Specifies the image type supported by this provider.  The disk images built
+    by diskimage-builder will output an image for each ``image-type`` specified
+    by a provider using that particular diskimage.
+
+    By default, ``image-type`` is set to the value returned from
+    ``os-client-config`` and can be omitted in most cases.
+
+**required**
+
+  ``name``
 
   ``max-servers``
     Maximum number of servers spawnable on this provider.
@@ -381,14 +399,6 @@ provider, the Nodepool image types are also defined (see
 
     In seconds. Default 3600.
 
-  ``image-type``
-    Specifies the image type supported by this provider.  The disk images built
-    by diskimage-builder will output an image for each ``image-type`` specified
-    by a provider using that particular diskimage.
-
-    The default value is ``qcow2``, and values of ``vhd``, ``raw`` are also
-    expected to be valid if you have a sufficiently new diskimage-builder.
-
   ``keypair``
     Default None
 
@@ -409,7 +419,7 @@ provider, the Nodepool image types are also defined (see
     or undesirable.
 
   ``api_timeout``
-    Timeout for the Nova client in seconds.
+    Timeout for the OpenStack API calls client in seconds.
 
   ``service-type``
 
