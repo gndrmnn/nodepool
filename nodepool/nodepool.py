@@ -1110,7 +1110,7 @@ class SnapshotImageUpdater(ImageUpdater):
         self.bootstrapServer(server, key, use_password=use_password)
 
         image_id = self.manager.createImage(server_id, hostname,
-                                            self.image.meta)
+                                            self.image.meta)['id']
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %

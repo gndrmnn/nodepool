@@ -16,7 +16,6 @@
 
 import StringIO
 import logging
-import novaclient
 import requests.exceptions
 import threading
 import time
@@ -83,7 +82,7 @@ class FakeList(object):
         for x in self._list:
             if x.id == id:
                 return x
-        raise novaclient.exceptions.NotFound(404)
+        raise None
 
     def _finish(self, obj, delay, status):
         time.sleep(delay)

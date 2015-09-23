@@ -26,7 +26,6 @@ import requests.exceptions
 import sys
 
 import shade
-import novaclient
 
 from nodeutils import iterate_timeout
 from task_manager import Task, TaskManager, ManagerStoppedException
@@ -109,41 +108,6 @@ def make_image_dict(image):
 
 class NotFound(Exception):
     pass
-
-
-class CreateImageTask(Task):
-    def main(self, client):
-        # This returns an id
-        return str(client.nova_client.servers.create_image(**self.args))
-
-
-class GetImageTask(Task):
-    def main(self, client):
-        try:
-            image = client.nova_client.images.get(**self.args)
-        except novaclient.exceptions.NotFound:
-            raise NotFound()
-        # HP returns 404, rackspace can return a 'DELETED' image.
-        if image.status == 'DELETED':
-            raise NotFound()
-        return make_image_dict(image)
-
-
-class ListImagesTask(Task):
-    def main(self, client):
-        images = client.nova_client.images.list()
-        return [make_image_dict(image) for image in images]
-
-
-class FindImageTask(Task):
-    def main(self, client):
-        image = client.nova_client.images.find(**self.args)
-        return dict(id=str(image.id))
-
-
-class DeleteImageTask(Task):
-    def main(self, client):
-        client.nova_client.images.delete(**self.args)
 
 
 class FindNetworkTask(Task):
@@ -231,7 +195,7 @@ class ProviderManager(TaskManager):
     def findImage(self, name):
         if name in self._images:
             return self._images[name]
-        image = self.submitTask(FindImageTask(name=name))
+        image = self._client.get_image(name)
         self._images[name] = image
         return image
 
@@ -245,7 +209,7 @@ class ProviderManager(TaskManager):
     def deleteImage(self, name):
         if name in self._images:
             del self._images[name]
-        return self.submitTask(DeleteImageTask(image=name))
+        return self.client.delete_image(name)
 
     def addKeypair(self, name):
         key = paramiko.RSAKey.generate(2048)
@@ -368,12 +332,11 @@ class ProviderManager(TaskManager):
         return self._waitForResource('image', image_id, timeout)
 
     def createImage(self, server_id, image_name, meta):
-        return self.submitTask(CreateImageTask(server=server_id,
-                                               image_name=image_name,
-                                               metadata=meta))
+        return self._client.create_image_snapshot(
+            name=image_name, server=server_id, metadata=meta)
 
     def getImage(self, image_id):
-        return self.submitTask(GetImageTask(image=image_id))
+        return self._client.get_image(image_id)
 
     def uploadImage(self, image_name, filename, disk_format, container_format,
                     meta):
@@ -398,7 +361,7 @@ class ProviderManager(TaskManager):
         return image.id
 
     def listImages(self):
-        return self.submitTask(ListImagesTask())
+        return self._client.list_images()
 
     def listFlavors(self):
         return self._client.list_flavors()
