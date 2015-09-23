@@ -470,18 +470,19 @@ class NodeLauncher(threading.Thread):
         self.log.info("Creating server with hostname %s in %s from image %s "
                       "for node id: %s" % (hostname, self.provider.name,
                                            self.image.name, self.node_id))
-        server_id = self.manager.createServer(
+        server = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
             nodepool_image_name=self.image.name)
+        server_id = server['id']
         self.node.external_id = server_id
         session.commit()
 
         self.log.debug("Waiting for server %s for node id: %s" %
                        (server_id, self.node.id))
-        server = self.manager.waitForServer(server_id, self.launch_timeout)
+        server = self.manager.waitForServer(server, self.launch_timeout)
         if server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for node id: %s "
                                         "status: %s" %
@@ -496,9 +497,6 @@ class NodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
@@ -763,19 +761,20 @@ class SubNodeLauncher(threading.Thread):
                       "for subnode id: %s for node id: %s"
                       % (hostname, self.provider.name,
                          self.image.name, self.subnode_id, self.node_id))
-        server_id = self.manager.createServer(
+        server = self.manager.createServer(
             hostname, self.image.min_ram, snap_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
             nodepool_image_name=self.image.name)
+        server_id = server['id']
         self.subnode.external_id = server_id
         session.commit()
 
         self.log.debug("Waiting for server %s for subnode id: %s for "
                        "node id: %s" %
                        (server_id, self.subnode_id, self.node_id))
-        server = self.manager.waitForServer(server_id, self.launch_timeout)
+        server = self.manager.waitForServer(server, self.launch_timeout)
         if server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for subnode id: "
                                         "%s for node id: %s "
@@ -791,9 +790,6 @@ class SubNodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -908,14 +904,15 @@ class SnapshotImageUpdater(ImageUpdater):
             key_name = self.provider.keypair
             key = None
             use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
         else:
-            key_name = None
-            key = None
-            use_password = True
+            try:
+                key_name = hostname.split('.')[0]
+                key = self.manager.addKeypair(key_name)
+                use_password = False
+            except Exception:
+                key_name = None
+                key = None
+                use_password = True
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -926,20 +923,17 @@ class SnapshotImageUpdater(ImageUpdater):
             image_name = self.image.base_image
             image_id = None
         try:
-            server_id = self.manager.createServer(
+            server = self.manager.createServer(
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
                 nodepool_snapshot_image_id=self.snap_image.id)
+            server_id = server['id']
         except Exception:
-            if (self.manager.hasExtension('os-keypairs') and
-                not self.provider.keypair):
-                for kp in self.manager.listKeypairs():
-                    if kp['name'] == key_name:
-                        self.log.debug(
-                            'Deleting keypair for failed image build %s' %
-                            self.snap_image.id)
-                        self.manager.deleteKeypair(kp['name'])
+            if not self.manager.deleteKeypair(key_name):
+                self.log.debug(
+                    'Deleted keypair for failed image build %s' %
+                    self.snap_image.id)
             raise
 
         self.snap_image.hostname = hostname
@@ -949,10 +943,11 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.log.debug("Image id: %s waiting for server %s" %
                        (self.snap_image.id, server_id))
-        server = self.manager.waitForServer(server_id)
+        server = self.manager.waitForServer(server)
         if server['status'] != 'ACTIVE':
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))
+        self.log.warning(vars(server))
 
         ip = server.get('public_v4')
         ip_v6 = server.get('public_v6')
@@ -962,9 +957,6 @@ class SnapshotImageUpdater(ImageUpdater):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
         server['public_ip'] = ip
@@ -972,13 +964,15 @@ class SnapshotImageUpdater(ImageUpdater):
         self.bootstrapServer(server, key, use_password=use_password)
 
         image_id = self.manager.createImage(server_id, hostname,
-                                            self.image.meta)
+                                            self.image.meta)['id']
         self.snap_image.external_id = image_id
         session.commit()
         self.log.debug("Image id: %s building image %s" %
                        (self.snap_image.id, image_id))
         # It can take a _very_ long time for Rackspace 1.0 to save an image
         image = self.manager.waitForImage(image_id, IMAGE_TIMEOUT)
+        # Throw exception here and not in waitForImage so that we can log
+        # the snap_image.id as well, which waitForImage does not know
         if image['status'] != 'ACTIVE':
             raise Exception("Image %s for image id: %s status: %s" %
                             (image_id, self.snap_image.id, image['status']))
@@ -1875,13 +1869,13 @@ class NodePool(threading.Thread):
                                  snap_image.server_external_id)
 
         if snap_image.external_id:
-            try:
-                remote_image = manager.getImage(snap_image.external_id)
-                self.log.debug('Deleting image %s' % remote_image['id'])
-                manager.deleteImage(remote_image['id'])
-            except provider_manager.NotFound:
+            remote_image = manager.getImage(snap_image.external_id)
+            if remote_image is None:
                 self.log.warning('Image id %s not found' %
                                  snap_image.external_id)
+            else:
+                self.log.debug('Deleting image %s' % remote_image['id'])
+                manager.deleteImage(remote_image['id'])
 
         snap_image.delete()
         self.log.info("Deleted image id: %s" % snap_image.id)
