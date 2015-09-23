@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba15a1d1_c25c761b",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-23T07:05:23Z",
+      "side": 1,
+      "message": "if you define statsd_port to 8125, why not use that setting instead of hardcoding the port?",
+      "revId": "83b2e4f836bfa5d369b41af86d8141b7c5e5d360",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
