@@ -381,10 +381,8 @@ class ProviderManager(TaskManager):
             nodepool=json.dumps(nodepool_meta)
         )
 
-        # TODO(mordred): shade has auto_ip - but we need to remove our use
-        # of floating ip management.
         return self._client.create_server(
-            wait=False, auto_ip=False, **create_args)
+            wait=False, auto_ip=True, pool=self.provider.pool, **create_args)
 
     def getServer(self, server_id):
         return self._client.get_server(server_id)

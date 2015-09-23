@@ -480,9 +480,6 @@ class NodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
@@ -774,9 +771,6 @@ class SubNodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -1112,9 +1106,6 @@ class SnapshotImageUpdater(ImageUpdater):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
         server['public_ip'] = ip
@@ -1354,7 +1345,7 @@ class NodePool(threading.Thread):
             p.region_name = provider.get('region-name')
             p.max_servers = provider['max-servers']
             p.keypair = provider.get('keypair', None)
-            p.pool = provider.get('pool')
+            p.pool = provider.get('pool', None)
             p.rate = provider.get('rate', 1.0)
             p.api_timeout = provider.get('api-timeout')
             p.boot_timeout = provider.get('boot-timeout', 60)
