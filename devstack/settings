@@ -6,4 +6,5 @@ NODEPOOL_IMAGE=$(basename "$NODEPOOL_IMAGE_URL" ".img")
 IMAGE_URLS+=",$NODEPOOL_IMAGE_URL"
 
 enable_service geard
+enable_service statsd
 enable_service nodepool
