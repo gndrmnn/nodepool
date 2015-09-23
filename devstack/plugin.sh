@@ -16,6 +16,7 @@
 
 NODEPOOL_KEY=$HOME/.ssh/id_nodepool
 NODEPOOL_PUBKEY=$HOME/.ssh/id_nodepool.pub
+NODEPOOL_SHADE_CACHE=$HOME/.cache/shade
 
 # Install nodepool code
 function install_nodepool {
@@ -84,7 +85,7 @@ function nodepool_write_config {
 keys=simple
 
 [loggers]
-keys=root,nodepool
+keys=root,nodepool,shade
 
 [handlers]
 keys=console
@@ -97,6 +98,13 @@ handlers=console
 level=DEBUG
 handlers=console
 qualname=nodepool
+propagate=0
+
+[logger_shade]
+level=DEBUG
+handlers=console
+qualname=shade
+propagate=0
 
 [handler_console]
 level=DEBUG
@@ -204,6 +212,14 @@ diskimages:
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
+    mkdir -p $NODEPOOL_SHADE_CACHE
+    cat >> $HOME/.config/openstack/clouds.yaml <<EOF
+cache:
+  class: dogpile.cache.dbm
+  arguments:
+    filename: $NODEPOOL_SHADE_CACHE/shade.dbm
+EOF
+
 }
 
 # Initialize database
