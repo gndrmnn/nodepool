@@ -459,7 +459,7 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.node.external_id = server_id
         session.commit()
 
@@ -480,9 +480,6 @@ class NodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
@@ -751,7 +748,7 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name)['id']
         self.subnode.external_id = server_id
         session.commit()
 
@@ -774,9 +771,6 @@ class SubNodeLauncher(threading.Thread):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -1058,14 +1052,15 @@ class SnapshotImageUpdater(ImageUpdater):
             key_name = self.provider.keypair
             key = None
             use_password = False
-        elif self.manager.hasExtension('os-keypairs'):
-            key_name = hostname.split('.')[0]
-            key = self.manager.addKeypair(key_name)
-            use_password = False
         else:
-            key_name = None
-            key = None
-            use_password = True
+            try:
+                key_name = hostname.split('.')[0]
+                key = self.manager.addKeypair(key_name)
+                use_password = False
+            except Exception:
+                key_name = None
+                key = None
+                use_password = True
 
         uuid_pattern = 'hex{8}-(hex{4}-){3}hex{12}'.replace('hex',
                                                             '[0-9a-fA-F]')
@@ -1080,16 +1075,12 @@ class SnapshotImageUpdater(ImageUpdater):
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
-                nodepool_snapshot_image_id=self.snap_image.id)
+                nodepool_snapshot_image_id=self.snap_image.id)['id']
         except Exception:
-            if (self.manager.hasExtension('os-keypairs') and
-                not self.provider.keypair):
-                for kp in self.manager.listKeypairs():
-                    if kp['name'] == key_name:
-                        self.log.debug(
-                            'Deleting keypair for failed image build %s' %
-                            self.snap_image.id)
-                        self.manager.deleteKeypair(kp['name'])
+            if not self.manager.deleteKeypair(key_name):
+                self.log.debug(
+                    'Deleted keypair for failed image build %s' %
+                    self.snap_image.id)
             raise
 
         self.snap_image.hostname = hostname
@@ -1112,14 +1103,10 @@ class SnapshotImageUpdater(ImageUpdater):
             else:
                 self.log.warning('Preferred ipv6 not available, '
                                  'falling back to ipv4.')
-        if not ip and self.manager.hasExtension('os-floating-ips'):
-            ip = self.manager.addPublicIP(server_id,
-                                          pool=self.provider.pool)
         if not ip:
             raise Exception("Unable to find public IP of server")
-        server['public_ip'] = ip
 
-        self.bootstrapServer(server, key, use_password=use_password)
+        self.bootstrapServer(server, ip, key, use_password=use_password)
 
         image_id = self.manager.createImage(server_id, hostname,
                                             self.image.meta)
@@ -1155,7 +1142,7 @@ class SnapshotImageUpdater(ImageUpdater):
                                " %s for image id: %s" %
                                (server_id, self.snap_image.id))
 
-    def bootstrapServer(self, server, key, use_password=False):
+    def bootstrapServer(self, server, ip, key, use_password=False):
         log = logging.getLogger("nodepool.image.build.%s.%s" %
                                 (self.provider.name, self.image.name))
 
@@ -1165,7 +1152,7 @@ class SnapshotImageUpdater(ImageUpdater):
         else:
             ssh_kwargs['password'] = server['admin_pass']
 
-        host = utils.ssh_connect(server['public_ip'], 'root', ssh_kwargs,
+        host = utils.ssh_connect(ip, 'root', ssh_kwargs,
                                  timeout=CONNECT_TIMEOUT)
 
         if not host:
@@ -1174,7 +1161,7 @@ class SnapshotImageUpdater(ImageUpdater):
             # didn't occur), we can connect with a very sort timeout.
             for username in ['ubuntu', 'fedora', 'cloud-user', 'centos']:
                 try:
-                    host = utils.ssh_connect(server['public_ip'], username,
+                    host = utils.ssh_connect(ip, username,
                                              ssh_kwargs,
                                              timeout=10)
                     if host:
@@ -1354,7 +1341,7 @@ class NodePool(threading.Thread):
             p.region_name = provider.get('region-name')
             p.max_servers = provider['max-servers']
             p.keypair = provider.get('keypair', None)
-            p.pool = provider.get('pool')
+            p.pool = provider.get('pool', None)
             p.rate = provider.get('rate', 1.0)
             p.api_timeout = provider.get('api-timeout')
             p.boot_timeout = provider.get('boot-timeout', 60)
@@ -1391,7 +1378,7 @@ class NodePool(threading.Thread):
                 # custom properties when the image is uploaded.
                 i.meta = image.get('meta', {})
                 # 5 elements, and no key or value can be > 255 chars
-                # per novaclient.servers.create() rules
+                # per Nova API rules
                 if i.meta:
                     if len(i.meta) > 5 or \
                        any([len(k) > 255 or len(v) > 255
@@ -2276,14 +2263,14 @@ class NodePool(threading.Thread):
         manager = self.getProviderManager(provider)
 
         if snap_image.server_external_id:
-            try:
-                server = manager.getServer(snap_image.server_external_id)
+            server = manager.getServer(snap_image.server_external_id)
+            if server:
                 self.log.debug('Deleting server %s for image id: %s' %
                                (snap_image.server_external_id,
                                 snap_image.id))
                 manager.cleanupServer(server['id'])
                 manager.waitForServerDeletion(server['id'])
-            except provider_manager.NotFound:
+            else:
                 self.log.warning('Image server id %s not found' %
                                  snap_image.server_external_id)
 
