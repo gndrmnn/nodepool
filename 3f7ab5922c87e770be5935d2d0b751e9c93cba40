@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba15a1d1_f1494a32",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:40:08Z",
+      "side": 1,
+      "message": "Yep - I should loop here and wait for the db delete to go through.",
+      "parentUuid": "ba15a1d1_71122c0b",
+      "revId": "3f7ab5922c87e770be5935d2d0b751e9c93cba40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_11fad0bd",
         "filename": "nodepool/tests/test_nodepool.py",
         "patchSetId": 7
@@ -47,6 +65,24 @@
       "writtenOn": "2015-09-22T17:50:31Z",
       "side": 1,
       "message": "even if not required would a wait_for_threads here be good for safety?",
+      "revId": "3f7ab5922c87e770be5935d2d0b751e9c93cba40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba15a1d1_d1fa06bd",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-09-23T03:40:08Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "ba15a1d1_31f594ca",
       "revId": "3f7ab5922c87e770be5935d2d0b751e9c93cba40",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
