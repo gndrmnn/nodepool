@@ -128,41 +128,6 @@ class DeleteKeypairTask(Task):
         client.nova_client.keypairs.delete(self.args['name'])
 
 
-class CreateFloatingIPTask(Task):
-    def main(self, client):
-        ip = client.nova_client.floating_ips.create(**self.args)
-        return dict(id=str(ip.id), ip=ip.ip)
-
-
-class AddFloatingIPTask(Task):
-    def main(self, client):
-        client.nova_client.servers.add_floating_ip(**self.args)
-
-
-class GetFloatingIPTask(Task):
-    def main(self, client):
-        ip = client.nova_client.floating_ips.get(self.args['ip_id'])
-        return dict(id=str(ip.id), ip=ip.ip, instance_id=str(ip.instance_id))
-
-
-class ListFloatingIPsTask(Task):
-    def main(self, client):
-        ips = client.nova_client.floating_ips.list()
-        return [dict(id=str(ip.id), ip=ip.ip,
-                     instance_id=str(ip.instance_id)) for
-                ip in ips]
-
-
-class RemoveFloatingIPTask(Task):
-    def main(self, client):
-        client.nova_client.servers.remove_floating_ip(**self.args)
-
-
-class DeleteFloatingIPTask(Task):
-    def main(self, client):
-        client.nova_client.floating_ips.delete(self.args['ip_id'])
-
-
 class CreateImageTask(Task):
     def main(self, client):
         # This returns an id
@@ -387,9 +352,6 @@ class ProviderManager(TaskManager):
     def getServer(self, server_id):
         return self._client.get_server(server_id)
 
-    def getFloatingIP(self, ip_id):
-        return self.submitTask(GetFloatingIPTask(ip_id=ip_id))
-
     def getServerFromList(self, server_id):
         for s in self.listServers():
             if s['id'] == server_id:
@@ -447,36 +409,6 @@ class ProviderManager(TaskManager):
             return True
         return self._waitForResource('image', image_id, timeout)
 
-    def createFloatingIP(self, pool=None):
-        return self.submitTask(CreateFloatingIPTask(pool=pool))
-
-    def addFloatingIP(self, server_id, address):
-        self.submitTask(AddFloatingIPTask(server=server_id,
-                                          address=address))
-
-    def addPublicIP(self, server_id, pool=None):
-        ip = self.createFloatingIP(pool)
-        try:
-            self.addFloatingIP(server_id, ip['ip'])
-        except novaclient.exceptions.ClientException:
-            # Delete the floating IP here as cleanupServer will not
-            # have access to the ip -> server mapping preventing it
-            # from removing this IP.
-            self.deleteFloatingIP(ip['id'])
-            raise
-        for count in iterate_timeout(600, "ip to be added to %s in %s" %
-                                     (server_id, self.provider.name)):
-            try:
-                newip = self.getFloatingIP(ip['id'])
-            except ManagerStoppedException:
-                raise
-            except Exception:
-                self.log.exception('Unable to get IP details for server %s, '
-                                   'will retry' % (server_id))
-                continue
-            if newip['instance_id'] == server_id:
-                return newip['ip']
-
     def createImage(self, server_id, image_name, meta):
         return self.submitTask(CreateImageTask(server=server_id,
                                                image_name=image_name,
@@ -515,23 +447,6 @@ class ProviderManager(TaskManager):
 
     def listFlavors(self):
         return self.submitTask(ListFlavorsTask())
-
-    def listFloatingIPs(self):
-        if time.time() - self._ips_time >= IPS_LIST_AGE:
-            if self._ips_lock.acquire(False):
-                try:
-                    self._ips = self.submitTask(ListFloatingIPsTask())
-                    self._ips_time = time.time()
-                finally:
-                    self._ips_lock.release()
-        return self._ips
-
-    def removeFloatingIP(self, server_id, address):
-        return self.submitTask(RemoveFloatingIPTask(server=server_id,
-                                                    address=address))
-
-    def deleteFloatingIP(self, ip_id):
-        return self.submitTask(DeleteFloatingIPTask(ip_id=ip_id))
 
     def listServers(self, cache=True):
         if (not cache or
@@ -572,13 +487,6 @@ class ProviderManager(TaskManager):
 
         # This will either get the server or raise an exception
         server = self.getServerFromList(server_id)
-
-        if self.hasExtension('os-floating-ips'):
-            for ip in self.listFloatingIPs():
-                if ip['instance_id'] == server_id:
-                    self.log.debug('Deleting floating ip for server %s' %
-                                   server_id)
-                    self.deleteFloatingIP(ip['id'])
 
         if (self.hasExtension('os-keypairs') and
                 server['key_name'] != self.provider.keypair):
