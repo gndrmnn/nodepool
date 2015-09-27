@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_74279c12",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2015-09-27T07:47:32Z",
+      "side": 1,
+      "message": "i don\u0027t understand this comment. We have start_time var available either for success or failures, why can\u0027t you add it on failure?",
+      "revId": "a04e72bf8056c6e35b70776cf05bb0d35952b1dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
