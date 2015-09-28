@@ -16,6 +16,24 @@
       "revId": "a04e72bf8056c6e35b70776cf05bb0d35952b1dd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_00c05adf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2015-09-28T00:45:44Z",
+      "side": 1,
+      "message": "I think the point is that \"nodepool.dib_image_build.FOO\" start time is implied as a successful build -- because otherwise it would have bailed out\n\nso it might confuse some consumers if we were to modify that to be the start time of failing builds.",
+      "parentUuid": "9a1a9d01_74279c12",
+      "revId": "a04e72bf8056c6e35b70776cf05bb0d35952b1dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
