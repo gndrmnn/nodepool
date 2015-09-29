@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_60745f67",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-09-29T17:45:11Z",
+      "side": 1,
+      "message": "I\u0027m guessing these can go?",
+      "revId": "09a5b10b89b1b58685ef1a65d417822c1f27c04f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
