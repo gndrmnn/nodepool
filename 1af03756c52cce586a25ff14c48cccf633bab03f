@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_ddeaf773",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2015-09-29T15:54:13Z",
+      "side": 1,
+      "message": "Shade returns True from delete operations on success. False is failure (i.e., not found). And raises exception on something really bad. So need to use \u0027if not\u0027 here, at least.",
+      "revId": "1af03756c52cce586a25ff14c48cccf633bab03f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
