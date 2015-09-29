@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_a59b6965",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-09-29T17:30:59Z",
+      "side": 0,
+      "message": "It hasn\u0027t been needed in a long time (this removal was in the final patch of the series and made more sense bundled with those changes - it was the \"just trust occ\" patch.) Basically, dib always sets this now, so nodepool knowing anything about it is not needed.",
+      "parentUuid": "9a1a9d01_ace916b9",
+      "revId": "787e592c64fc0fb3fb9bf9380728912c82a358b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_4cd39a04",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 14
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_65a2319b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-09-29T17:30:59Z",
+      "side": 0,
+      "message": "Same reason.",
+      "parentUuid": "9a1a9d01_4cd39a04",
+      "revId": "787e592c64fc0fb3fb9bf9380728912c82a358b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_6cd0def6",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 14
@@ -47,6 +83,24 @@
       "writtenOn": "2015-09-29T16:26:46Z",
       "side": 0,
       "message": "And this changing?",
+      "revId": "787e592c64fc0fb3fb9bf9380728912c82a358b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_25a8b976",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-09-29T17:30:59Z",
+      "side": 0,
+      "message": "Same reason",
+      "parentUuid": "9a1a9d01_6cd0def6",
       "revId": "787e592c64fc0fb3fb9bf9380728912c82a358b7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
