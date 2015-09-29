@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_96e459e0",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "Don\u0027t we want shade\u0027s get_openstack_vars() to set these non nested items like public_v6 and public_v4?",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_f631155b",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_56dd61de",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_51980bc0",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "Will this raise an exception as above if the cloud does not support keypairs? or will it return falsey values always?",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_91f0e3fe",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 1351,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "This really should be external to the squash since it isn\u0027t related to shade (but its a nice addition).",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_711f4f08",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "It may be worth documenting in nodepool how the taskmanager integration with shade works. This runTask method is just sort of hanging out here and isn\u0027t really clear on why it exists. AIUI it is because shade is using these task managers to execute its tasks.",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_b143a712",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "If we are removing the test for this shouldn\u0027t we just remove it?",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_761f4508",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T18:50:18Z",
+      "side": 1,
+      "message": "This should list images not servers.",
+      "revId": "a38deac321a2f5a9d7951fd1eab03c8624d06482",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
