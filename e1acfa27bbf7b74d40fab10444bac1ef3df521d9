@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_af8b3bc2",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T21:56:40Z",
+      "side": 1,
+      "message": "This var isn\u0027t required at all now right? I intended on deleting it completely.",
+      "revId": "e1acfa27bbf7b74d40fab10444bac1ef3df521d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_cf88efc7",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T21:56:40Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "e1acfa27bbf7b74d40fab10444bac1ef3df521d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_4fc37fed",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-09-29T21:56:40Z",
+      "side": 1,
+      "message": "Based on the address dict we use elsewhere I think this should be \u003d \u0027fake_v6\u0027.",
+      "revId": "e1acfa27bbf7b74d40fab10444bac1ef3df521d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
