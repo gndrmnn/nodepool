@@ -188,3 +188,34 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         # Check that two images are ready for it now.
         self.assert_images_listed(configfile, 2)
+
+    def test_hold(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+        # Assert one node exists and it is node 1 in a ready state.
+        self.assert_listed(configfile, 'list', 0, 1, 1)
+        self.assert_listed(configfile, 'list', 9, 'ready', 1)
+        # Hold node 1
+        self.patch_argv('-c', configfile, 'hold', '1')
+        nodepoolcmd.main()
+        # Assert the state changed to HOLD
+        self.assert_listed(configfile, 'list', 0, 1, 1)
+        self.assert_listed(configfile, 'list', 9, 'hold', 1)
+
+    def test_delete(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+        # Assert one node exists and it is node 1 in a ready state.
+        self.assert_listed(configfile, 'list', 0, 1, 1)
+        self.assert_listed(configfile, 'list', 9, 'ready', 1)
+        # Delete node 1
+        self.patch_argv('-c', configfile, 'delete', '--now', '1')
+        nodepoolcmd.main()
+        # Assert the node is gone
+        self.assert_listed(configfile, 'list', 0, 1, 0)
