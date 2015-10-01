@@ -279,7 +279,9 @@ class ProviderManager(TaskManager):
                 return resource
 
     def waitForServer(self, server_id, timeout=3600):
-        server = self._waitForResource('server', server_id, timeout)
+        return self._waitForResource('server', server_id, timeout)
+
+    def ensureNetwork(self, server, timeout):
         server_with_ip = self._client.add_ips_to_server(
             server, wait=True, timeout=timeout)
         return self._client.get_openstack_vars(server_with_ip)

@@ -471,6 +471,7 @@ class NodeLauncher(threading.Thread):
                                         "status: %s" %
                                         (server_id, self.node.id,
                                          server['status']))
+        server = self.manager.ensureNetwork(server, self.launch_timeout)
 
         ip = server.get('public_v4')
         ip_v6 = server.get('public_v6')
@@ -762,6 +763,7 @@ class SubNodeLauncher(threading.Thread):
                                         "status: %s" %
                                         (server_id, self.subnode_id,
                                          self.node_id, server['status']))
+        server = self.manager.ensureNetwork(server, self.launch_timeout)
 
         ip = server.get('public_v4')
         ip_v6 = server.get('public_v6')
@@ -1094,6 +1096,7 @@ class SnapshotImageUpdater(ImageUpdater):
         if server['status'] != 'ACTIVE':
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))
+        server = self.manager.ensureNetwork(server, self.launch_timeout)
 
         ip = server.get('public_v4')
         ip_v6 = server.get('public_v6')
