@@ -403,3 +403,52 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+
+    def test_job_start_event(self):
+        """Test that job start marks node used"""
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        msg_obj = {'name': 'fake-job',
+                   'build': {'node_name': 'fake-label-1'}}
+        json_string = json.outs(msg_obj)
+        start_msg = "onStarted " + json_string
+        self.zmq_publisher.socket.send(start_msg)
+
+        # Yield
+        time.sleep(0)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.USED)
+            self.assertEqual(len(nodes), 1)
+
+
+    def test_job_end_event(self):
+        """Test that job end marks node delete"""
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        msg_obj = {'name': 'fake-job',
+                   'build': {'node_name': 'fake-label-1'}}
+        json_string = json.outs(msg_obj)
+        end_msg = "onFinalized " + json_string
+        self.zmq_publisher.socket.send(end_msg)
+
+        # Yield
+        time.sleep(0)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.DELETE)
+            self.assertEqual(len(nodes), 1)
