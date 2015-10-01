@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_b21c9fc2",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 18158
+      },
+      "writtenOn": "2015-10-01T20:24:20Z",
+      "side": 1,
+      "message": "I think it would be interesting to test the node element, to see if it is the one expected.\n\nIf there is a None on the list, like on the job end scenario, this test will give a false positive.",
+      "revId": "200cc2c747e719e24e1eacdc3307d8e43b588a49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
