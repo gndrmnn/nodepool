@@ -25,6 +25,7 @@ import subprocess
 import threading
 import tempfile
 import time
+import zmq
 
 import fixtures
 import gear
@@ -97,6 +98,15 @@ class GearmanServerFixture(fixtures.Fixture):
     def shutdownGearman(self):
         self.gearman_server.shutdown()
 
+class ZMQPublisherFixture(fixtures.Fixture):
+    def setUp(self):
+        super(ZMQPublisherFixture, self).setUp()
+        self.zmq_context = zmq.Context()
+        self.addCleanup(self.zmq_context.destroy)
+        self.socket = self.zmq_context.socket(zmq.PUB)
+        self.addCleanup(self.socket.close)
+        self.port = self.socket.bind_to_random_port('tcp://localhost')
+        self.addCleanup(self.socket.unbind, 'tcp://localhost')
 
 class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
     def setUp(self):
@@ -258,6 +268,9 @@ class DBTestCase(BaseTestCase):
         self.useFixture(gearman_fixture)
         self.gearman_server = gearman_fixture.gearman_server
 
+        self.zmq_publisher = ZMQPublisherFixture()
+        self.useFixture(self.zmq_publisher)
+
     def setup_config(self, filename):
         images_dir = fixtures.TempDir()
         self.useFixture(images_dir)
@@ -267,7 +280,8 @@ class DBTestCase(BaseTestCase):
         (fd, path) = tempfile.mkstemp()
         os.write(fd, config.format(dburi=self.dburi,
                                    images_dir=images_dir.path,
-                                   gearman_port=self.gearman_server.port))
+                                   gearman_port=self.gearman_server.port,
+                                   zmq_port=self.zmq_publisher.port))
         os.close(fd)
         return path
 
