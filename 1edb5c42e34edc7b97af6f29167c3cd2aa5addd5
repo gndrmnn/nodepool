@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_9cbaca09",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 31
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_83b59432",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_a3dc5875",
         "filename": "doc/source/installation.rst",
         "patchSetId": 31
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-01T19:35:14Z",
       "side": 1,
       "message": "It might be good to describe what these two required config files are for. Previously it was all in one place so not having an explanation of why they are different now may confuse users.",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_f578c12d",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 31
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_a3dc5875",
       "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_fc3f4685",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_c3694c27",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_58576726",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 31
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_75f27171",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "TODO added.",
+      "parentUuid": "9a1a9d01_58576726",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_a31f7808",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 31
@@ -81,6 +153,24 @@
       "writtenOn": "2015-10-01T19:35:14Z",
       "side": 1,
       "message": "FWIW this could be rewriteen as secure.readfp(open(self.securefile)) and the above error checking would not be necessary. But this can be cleaned up in a future change if we want.",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_6851380e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_a31f7808",
       "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_4881d44c",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_78f82b4a",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_18948fe6",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 31
@@ -132,6 +240,24 @@
       "writtenOn": "2015-10-01T19:35:14Z",
       "side": 1,
       "message": "images_dir shouldn\u0027t be needed here.",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_68edb824",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_18948fe6",
       "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_abf8aa4a",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_788fcbcc",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_98af3f2b",
         "filename": "nodepool/tests/test_nodepool.py",
         "patchSetId": 31
@@ -172,6 +316,24 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_e1fec337",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_98af3f2b",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_f870bbde",
         "filename": "nodepool/tests/test_shade_integration.py",
         "patchSetId": 31
@@ -183,6 +345,24 @@
       "writtenOn": "2015-10-01T19:35:14Z",
       "side": 1,
       "message": "See comment in test_nodepool.py",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a1a9d01_81fb4747",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2015-10-01T23:05:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a1a9d01_f870bbde",
       "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
