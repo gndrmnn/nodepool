@@ -194,6 +194,23 @@
     },
     {
       "key": {
+        "uuid": "9a1a9d01_c52046b3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-02T17:18:12Z",
+      "side": 1,
+      "message": "Yes, and I expressed it in a message on patch set 29.  I think the minimal amount of information is in secure.conf -- url, user, apikey.  That\u0027s the authentication information, which is the purview of the system administrators (ie, system-config).  What job to run for testing is the purview of the system configurators (ie, project-config).  It _is_ in the wrong place currently, but as I said in PS 29, we should move it to associate it with a label.",
+      "revId": "1edb5c42e34edc7b97af6f29167c3cd2aa5addd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a1a9d01_78f82b4a",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 31
