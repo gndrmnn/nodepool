@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a1a9d01_9862b615",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-02T15:58:17Z",
+      "side": 1,
+      "message": "This is no longer required and should be removed. Follow-up change is fine.",
+      "revId": "a058a7a3d88d714e98db4baf1787cd476d2a6802",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
