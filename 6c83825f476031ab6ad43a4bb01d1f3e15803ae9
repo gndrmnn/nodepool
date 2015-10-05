@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_4058df56",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 1974,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-05T17:27:24Z",
+      "side": 1,
+      "message": "This re-introduces a bug we just fixed",
+      "revId": "6c83825f476031ab6ad43a4bb01d1f3e15803ae9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
