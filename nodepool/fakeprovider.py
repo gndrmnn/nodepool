@@ -21,6 +21,7 @@ import time
 import uuid
 
 import exceptions
+
 from jenkins import JenkinsException
 import shade
 
@@ -53,12 +54,18 @@ class Dummy(object):
     def __getitem__(self, key):
         return getattr(self, key)
 
-    def get(self, key):
-        return getattr(self, key)
+    def __setitem__(self, key, value):
+        return setattr(self, key, value)
+
+    def get(self, key, default=None):
+        if hasattr(self, key):
+            return getattr(self, key)
+        return default
 
 
 def fake_get_one_cloud(cloud_config, cloud_kwargs):
     cloud_kwargs['validate'] = False
+    cloud_kwargs['image_format'] = 'qcow2'
     return cloud_config.get_one_cloud(**cloud_kwargs)
 
 
@@ -126,6 +133,8 @@ class FakeOpenStackCloud(object):
                   status='BUILD',
                   adminPass='fake',
                   addresses=addresses,
+                  public_v4='fake',
+                  private_v4='fake',
                   public_v6=public_v6,
                   metadata=kw.get('meta', {}),
                   manager=self,
@@ -166,11 +175,11 @@ class FakeOpenStackCloud(object):
     def delete_image(self, name_or_id):
         self._delete(name_or_id, self._image_list)
 
-    def create_image_snapshot(self, server, image_name, metadata):
+    def create_image_snapshot(self, name, server, metadata):
         # XXX : validate metadata?
         return self._create(
             self._image_list, instance_type=Dummy.IMAGE,
-            name=image_name, **metadata)
+            name=name, **metadata)
 
     def list_flavors(self):
         return self._flavor_list

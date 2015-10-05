@@ -22,6 +22,7 @@ import paramiko
 import shade
 
 import exceptions
+import fakeprovider
 from nodeutils import iterate_timeout
 from task_manager import TaskManager, ManagerStoppedException
 
@@ -94,6 +95,13 @@ class NotFound(Exception):
     pass
 
 
+def get_provider_manager(provider):
+    if (provider.cloud_config.get_auth_args().get('auth_url') == 'fake'):
+        return FakeProviderManager(provider)
+    else:
+        return ProviderManager(provider)
+
+
 class ProviderManager(TaskManager):
     log = logging.getLogger("nodepool.ProviderManager")
 
@@ -112,7 +120,8 @@ class ProviderManager(TaskManager):
             else:
                 ProviderManager.log.debug("Creating new ProviderManager object"
                                           " for %s" % p.name)
-                new_config.provider_managers[p.name] = ProviderManager(p)
+                new_config.provider_managers[p.name] = \
+                    get_provider_manager(p)
                 new_config.provider_managers[p.name].start()
 
         for stop_manager in stop_managers:
@@ -343,3 +352,12 @@ class ProviderManager(TaskManager):
 
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
+
+
+class FakeProviderManager(ProviderManager):
+    def __init__(self, provider):
+        self.__client = fakeprovider.FakeOpenStackCloud()
+        super(FakeProviderManager, self).__init__(provider)
+
+    def _getClient(self):
+        return self.__client
