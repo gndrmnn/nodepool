@@ -20,6 +20,7 @@ import json
 import logging
 import paramiko
 
+import fakeprovider
 import threading
 import time
 import requests.exceptions
@@ -85,6 +86,13 @@ def make_image_dict(image):
     if hasattr(image, 'progress'):
         d['progress'] = image.progress
     return d
+
+
+def get_provider_manager(provider):
+    if (provider.cloud_config.get_auth_args().get('auth_url') == 'fake'):
+        return fakeprovider.FakeProviderManager(provider)
+    else:
+        return ProviderManager(provider)
 
 
 class ProviderManager(TaskManager):

@@ -21,6 +21,8 @@ import threading
 import time
 import uuid
 
+import provider_manager
+
 from jenkins import JenkinsException
 import shade
 
@@ -62,7 +64,6 @@ class Dummy(object):
 def fake_get_one_cloud(cloud_config, cloud_kwargs):
     cloud_kwargs['validate'] = False
     return cloud_config.get_one_cloud(**cloud_kwargs)
-
 
 
 class FakeOpenStackCloud(object):
@@ -286,3 +287,12 @@ class FakeJenkins(object):
                  {u'name': u'test-view',
                   u'url': u'https://jenkins.example.com/view/test-view/'}]}
         return d
+
+
+class FakeProviderManager(provider_manager.ProviderManager):
+    def __init__(self, provider):
+        self.__client = FakeOpenStackCloud()
+        super(FakeProviderManager, self).__init__(provider)
+
+    def _getClient(self):
+        return self.__client

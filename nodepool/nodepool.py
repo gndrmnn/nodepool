@@ -35,6 +35,7 @@ import yaml
 import zmq
 
 import allocation
+import fakeprovider
 import jenkins_manager
 import nodedb
 import nodeutils as utils
@@ -86,6 +87,8 @@ def _cloudKwargsFromProvider(provider):
 
 def _get_one_cloud(cloud_config, cloud_kwargs):
     '''This is a function to allow for overriding it in tests.'''
+    if cloud_kwargs.get('auth', {}).get('auth-url', '') == 'fake':
+        return fakeprovider.fake_get_one_cloud(cloud_config, cloud_kwargs)
     return cloud_config.get_one_cloud(**cloud_kwargs)
 
 
@@ -1523,7 +1526,7 @@ class NodePool(threading.Thread):
                 self.log.debug("Creating new ProviderManager object for %s" %
                                p.name)
                 config.provider_managers[p.name] = \
-                    provider_manager.ProviderManager(p)
+                    provider_manager.get_provider_manager(p)
                 config.provider_managers[p.name].start()
 
         # only do it if we need to check for targets

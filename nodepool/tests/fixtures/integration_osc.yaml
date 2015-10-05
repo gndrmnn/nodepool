@@ -15,26 +15,26 @@ gearman-servers:
     port: {gearman_port}
 
 labels:
-  - name: fake-label
-    image: fake-image
+  - name: real-label
+    image: real-image
     min-ready: 1
     providers:
-      - name: fake-provider
+      - name: real-provider
 
 providers:
-  - name: fake-provider
-    cloud: fake-cloud
+  - name: real-provider
+    cloud: real-cloud
     keypair: 'if-present-use-this-keypair'
     max-servers: 96
-    pool: 'fake'
+    pool: 'real'
     networks:
       - net-id: 'some-uuid'
     rate: 0.0001
     images:
-      - name: fake-image
-        base-image: 'Fake Precise'
+      - name: real-image
+        base-image: 'Real Precise'
         min-ram: 8192
-        name-filter: 'Fake'
+        name-filter: 'Real'
         meta:
           key: value
           key2: value
