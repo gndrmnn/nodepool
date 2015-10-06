@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_99bab422",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-06T23:55:02Z",
+      "side": 1,
+      "message": "So this is a tricky ish problem. Reality is a dib image could be used by multiple provider images to allow for different flavors or different checks or different users. We don\u0027t use them this way today but it should be possible.\n\nThis means that instead of only looking at the 0th index we really need to upload the dib image for each of the logical provider images. Aside: we can also fix this by having provider images understand that they may share an existing glance image but I don\u0027t think that is the way the model works today and changing that is likely super painful so incremental changes ftw.\n\nIts possible that the upload image jobs need to happen where the unique key is provider image + dib image and not just dib image. Or uploading a dib image to a provider implies all possible uploads should happen.",
+      "revId": "8fac1804857835d462776c8bafe609f530d3ad46",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a2fa921_7978f88f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-06T23:55:02Z",
+      "side": 1,
+      "message": "This overloads image_id, previously it is used as the dib image id and now it is used as the provider image id. We should use differnet names for these two things to avoid confusion. dib_image_id and provider_image_id or something.",
+      "revId": "8fac1804857835d462776c8bafe609f530d3ad46",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
