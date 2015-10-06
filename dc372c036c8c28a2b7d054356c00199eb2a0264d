@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_991e3462",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-06T23:46:25Z",
+      "side": 1,
+      "message": "Per comment on ps17 this should move up into the try except a few lines above.",
+      "revId": "dc372c036c8c28a2b7d054356c00199eb2a0264d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
