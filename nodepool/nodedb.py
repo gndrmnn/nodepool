@@ -315,6 +315,11 @@ class NodeDatabaseSession(object):
         return self.session().query(DibImage).order_by(
             dib_image_table.c.image_name).all()
 
+    def getNotStaleDibImages(self, image_name):
+        return self.session().query(DibImage).filter(
+            dib_image_table.c.image_name == image_name,
+            dib_image_table.c.state == READY).all()
+
     def getImages(self, provider_name):
         return [
             x.image_name for x in
