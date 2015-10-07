@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_199a2464",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-07T00:15:04Z",
+      "side": 1,
+      "message": "We should flip the order of operations here so that we unregister after we are done deleting. Otherwise a deletion fail would force the sysadmin to clean up manually. May even want to unregister after the send work complete happens below.",
+      "revId": "148a84497fdaaa130af82902d6c6b399824dd62a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a2fa921_99c5d43d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-07T00:15:04Z",
+      "side": 1,
+      "message": "Slightly better error message might say \"Cannot delete image from disk without a configuration\" to be specific about removing from the db vs removing from disk.",
+      "revId": "148a84497fdaaa130af82902d6c6b399824dd62a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
