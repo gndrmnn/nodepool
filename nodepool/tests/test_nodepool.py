@@ -54,6 +54,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a dib image and node are created"""
         configfile = self.setup_config('node_dib.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -69,6 +70,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a dib image and node are created vhd image"""
         configfile = self.setup_config('node_dib_vhd.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -84,6 +86,7 @@ class TestNodepool(tests.DBTestCase):
         """Test label provided by vhd and qcow2 images builds"""
         configfile = self.setup_config('node_dib_vhd_and_qcow2.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-provider1', 'fake-dib-image')
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
@@ -105,6 +108,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a label with dib and snapshot images build."""
         configfile = self.setup_config('node_dib_and_snap.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-provider1', 'fake-dib-image')
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
@@ -126,6 +130,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that snap based nodes build when dib fails."""
         configfile = self.setup_config('node_dib_and_snap_fail.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.addCleanup(pool.stop)
         # fake-provider1 will fail to build fake-dib-image
@@ -154,6 +159,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a dib and snap image upload failure is contained."""
         configfile = self.setup_config('node_dib_and_snap_upload_fail.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-provider2', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -176,6 +182,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a dib image (snapshot) can be deleted."""
         configfile = self.setup_config('node_dib.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
@@ -200,6 +207,7 @@ class TestNodepool(tests.DBTestCase):
         """Test that a dib image (snapshot) can be deleted."""
         configfile = self.setup_config('node_dib.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
         self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
