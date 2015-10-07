@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_994e0d6e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1543,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-07T17:10:57Z",
+      "side": 1,
+      "message": "Need to reset stop_managers to empty list here.\n\nMight also want to split contents of this function into two functions that are called from here.",
+      "revId": "4cc01550a349943c2723aae554ed5ab0a81338ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
