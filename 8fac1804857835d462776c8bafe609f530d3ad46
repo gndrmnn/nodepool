@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a2fa921_59de5c12",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-07T00:12:45Z",
+      "side": 1,
+      "message": "You are correct that this is a bug, but it is an existing bug in nodepool (this is mostly just a cody copy out of nodepool.py) so I think we should solve it separately / after this patch series.",
+      "parentUuid": "7a2fa921_99bab422",
+      "revId": "8fac1804857835d462776c8bafe609f530d3ad46",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a2fa921_7978f88f",
         "filename": "nodepool/builder.py",
         "patchSetId": 23
@@ -30,6 +48,24 @@
       "writtenOn": "2015-10-06T23:55:02Z",
       "side": 1,
       "message": "This overloads image_id, previously it is used as the dib image id and now it is used as the provider image id. We should use differnet names for these two things to avoid confusion. dib_image_id and provider_image_id or something.",
+      "revId": "8fac1804857835d462776c8bafe609f530d3ad46",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a2fa921_39eb60b2",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-07T00:12:45Z",
+      "side": 1,
+      "message": "Agreed",
+      "parentUuid": "7a2fa921_7978f88f",
       "revId": "8fac1804857835d462776c8bafe609f530d3ad46",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
