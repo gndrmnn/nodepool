@@ -1539,7 +1539,10 @@ class NodePool(threading.Thread):
                     provider_manager.ProviderManager(p)
                 config.provider_managers[p.name].start()
 
-        # only do it if we need to check for targets
+        for stop_manager in stop_managers:
+            stop_manager.stop()
+
+        # Dont touch jenkins managers for cmdline, etc
         if check_targets:
             for t in config.targets.values():
                 oldmanager = None
@@ -1559,8 +1562,9 @@ class NodePool(threading.Thread):
                     config.jenkins_managers[t.name] = \
                         jenkins_manager.JenkinsManager(t)
                     config.jenkins_managers[t.name].start()
-            for oldmanager in stop_managers:
-                oldmanager.stop()
+
+            for stop_manager in stop_managers:
+                stop_manager.stop()
 
             for t in config.targets.values():
                 if t.jenkins_url:
