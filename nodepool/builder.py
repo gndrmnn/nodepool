@@ -86,6 +86,7 @@ class NodePoolBuilder(object):
 
     def start(self):
         self.load_config(self._config_path)
+        self._validate_config()
 
         with self._start_lock:
             if self._running:
@@ -99,6 +100,7 @@ class NodePoolBuilder(object):
         self._register_existing_image_uploads(self.gearman_worker)
         self.thread = threading.Thread(target=self._run,
                                        name='NodePool Builder')
+        self.thread.daemon = True
         self.thread.start()
 
     def stop(self):
@@ -116,6 +118,13 @@ class NodePoolBuilder(object):
         provider_manager.ProviderManager.reconfigure(
             self._config, config)
         self._config = config
+
+    def _validate_config(self):
+        if not self._config.gearman_servers.values():
+            raise RuntimeError('No gearman servers specified in config.')
+
+        if not self._config.imagesdir:
+            raise RuntimeError('No images-dir specified in config.')
 
     def _run(self):
         self.log.debug('Starting listener for build jobs')
