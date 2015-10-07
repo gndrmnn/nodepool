@@ -120,7 +120,7 @@ def loadConfig(secure_config_path, config_path):
         c.job = None
         c.timespec = config.get('cron', {}).get(name, default)
 
-    for addr in config['zmq-publishers']:
+    for addr in config.get('zmq-publishers', []):
         z = ZMQPublisher()
         z.name = addr
         z.listener = None
@@ -133,7 +133,7 @@ def loadConfig(secure_config_path, config_path):
         g.name = g.host + '_' + str(g.port)
         newconfig.gearman_servers[g.name] = g
 
-    for provider in config['providers']:
+    for provider in config.get('providers', []):
         p = Provider()
         p.name = provider['name']
         newconfig.providers[p.name] = p
@@ -217,7 +217,7 @@ def loadConfig(secure_config_path, config_path):
                     diskimage = newconfig.diskimages[image.diskimage]
                     diskimage.image_types.add(provider.image_type)
 
-    for label in config['labels']:
+    for label in config.get('labels', []):
         l = Label()
         l.name = label['name']
         newconfig.labels[l.name] = l
@@ -231,8 +231,7 @@ def loadConfig(secure_config_path, config_path):
             p.name = provider['name']
             l.providers[p.name] = p
 
-    for target in config['targets']:
-        # look at secure file for that section
+    for target in config.get('targets', []):
         section_name = 'jenkins "%s"' % target['name']
         t = Target()
         t.name = target['name']
