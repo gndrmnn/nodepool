@@ -39,7 +39,7 @@ import nodeutils as utils
 import provider_manager
 from stats import statsd
 
-from config import loadConfig
+from config import loadConfig, loadSecureConfig
 
 
 MINS = 60
@@ -1110,8 +1110,10 @@ class NodePool(threading.Thread):
 
     def loadConfig(self):
         self.log.debug("Loading configuration")
-        return loadConfig(self.securefile, self.configfile,
-                          os_client_config.OpenStackConfig())
+        config = loadConfig(self.configfile,
+                            os_client_config.OpenStackConfig())
+        loadSecureConfig(config, self.securefile)
+        return config
 
     def reconfigureDatabase(self, config):
         if (not self.config) or config.dburi != self.config.dburi:
