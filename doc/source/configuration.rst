@@ -3,10 +3,11 @@
 Configuration
 =============
 
-Nodepool reads its secure configuration from ``/etc/nodepool/secure.conf``
-by default. The secure file is a standard ini config file, with
-one section for database, and another section for the jenkins
-secrets for each target::
+Nodepool can read its secure configuration from a separate configuration file.
+This file overrides any coresponding configuration set in the normal nodepool
+configuration file. The secure file is a standard ini config file, with one
+section for database, and another section for the jenkins secrets for each
+target::
 
   [database]
   dburi={dburi}
