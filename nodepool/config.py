@@ -47,8 +47,10 @@ class DiskImage(ConfigValue):
 
 
 def loadConfig(secure_config_path, config_path, cloud_config):
-    secure = ConfigParser.ConfigParser()
-    secure.readfp(open(secure_config_path))
+    secure = None
+    if secure_config_path:
+        secure = ConfigParser.ConfigParser()
+        secure.readfp(open(secure_config_path))
     config = yaml.load(open(config_path))
 
     newconfig = Config()
@@ -60,7 +62,9 @@ def loadConfig(secure_config_path, config_path, cloud_config):
     newconfig.scriptdir = config.get('script-dir')
     newconfig.elementsdir = config.get('elements-dir')
     newconfig.imagesdir = config.get('images-dir')
-    newconfig.dburi = secure.get('database', 'dburi')
+    newconfig.dburi = config.get('dburi')
+    if secure:
+        newconfig.dburi = secure.get('database', 'dburi')
     newconfig.provider_managers = {}
     newconfig.jenkins_managers = {}
     newconfig.zmq_publishers = {}
@@ -196,29 +200,25 @@ def loadConfig(secure_config_path, config_path, cloud_config):
         t = Target()
         t.name = target['name']
         newconfig.targets[t.name] = t
+        jenkins = target.get('jenkins', {})
         t.online = True
+        t.rate = target.get('rate', 1.0)
+        t.jenkins_url = jenkins.get('url')
+        t.jenkins_user = jenkins.get('user')
+        t.jenkins_apikey = jenkins.get('apikey')
+        t.jenkins_credentials_id = jenkins.get('credentials-id')
+        t.jenkins_test_job = jenkins.get('test-job')
 
-        if secure.has_section(section_name):
+        if secure and secure.has_section(section_name):
             t.jenkins_url = secure.get(section_name, 'url')
             t.jenkins_user = secure.get(section_name, 'user')
             t.jenkins_apikey = secure.get(section_name, 'apikey')
-        else:
-            t.jenkins_url = None
-            t.jenkins_user = None
-            t.jenkins_apikey = None
 
-        t.rate = target.get('rate', 1.0)
-        try:
-            t.jenkins_credentials_id = secure.get(
-                section_name, 'credentials')
-        except:
-            t.jenkins_credentials_id = None
-
-        jenkins = target.get('jenkins')
-        if jenkins:
-            t.jenkins_test_job = jenkins.get('test-job', None)
-        else:
-            t.jenkins_test_job = None
+            try:
+                t.jenkins_credentials_id = secure.get(
+                    section_name, 'credentials')
+            except:
+                pass
 
         t.hostname = target.get(
             'hostname',
