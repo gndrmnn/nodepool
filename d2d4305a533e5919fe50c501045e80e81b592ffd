@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_b9a11496",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-09T19:20:41Z",
+      "side": 0,
+      "message": "Note: this change is equivalent to changing \u0027return\u0027 to \u0027continue\u0027 here, which may be helpful when following the logic.\n\nIf there is a ready and building image, the return would protect us from building a second one (good!) but would prevent us from uploading the ready image to a provider that was missing it (bad!).\n\nWith this change, it means that iff there is at least one ready image file, \u0027found\u0027 will be true.",
+      "revId": "d2d4305a533e5919fe50c501045e80e81b592ffd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a2fa921_59ac808b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1957,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-09T19:20:41Z",
+      "side": 0,
+      "message": "Imagine the case that a new image has just been added -- there will be no ready files, and found will be false.  We have lost the protection against rebuilding mentioned above, and so now every time this method is called, this will run and spawn a new build.\n\nI believe the actual logic we want is: if we are missing a file for an image, we need to build the image; if there is no image in building state we need to launch a build.\n\nIn short, I think this condition needs to be \"if (not found) and (not image_currently_building):\"",
+      "revId": "d2d4305a533e5919fe50c501045e80e81b592ffd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

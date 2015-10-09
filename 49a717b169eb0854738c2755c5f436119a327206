@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_99a698ac",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-09T19:20:41Z",
+      "side": 1,
+      "message": "This is borderline nit, but this is pretty close to a double negative (since I read \"stale\" as \"not ready\" it comes out as \"get images that are not not ready\").  A perhaps more clear version would be \"getReadyDibImages\", which jives with other similarly named methods.  However, for reasons mentioned on the other side of the page, we may not actually want this -- I think the method will need to consider both ready and building images, so the only filter left is name.  You could add an optional name filter to getDibImages...",
+      "revId": "49a717b169eb0854738c2755c5f436119a327206",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
