@@ -63,6 +63,7 @@ class ConfigValidator:
                 'net-id': str,
                 'net-label': str,
             }],
+            'ipv6-preferred': bool,
             'boot-timeout': int,
             'api-timeout': int,
             'rate': float,
