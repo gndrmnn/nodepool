@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a2fa921_076d40cb",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-09T18:43:20Z",
+      "side": 1,
+      "message": "Do we want to also assert that the delete succeded (the image is missing?)",
+      "revId": "eb3939fde9bc83ef685316dd052f34ba86d95d41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
