@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_93ff1801",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 29
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-10-13T22:28:36Z",
+      "side": 1,
+      "message": "If we are already within an exclusive execution block due to _start_lock why would we need this additional lock around the shutdown? This should be unnecessary and extra locks present extra opportunity for deadlock.",
+      "revId": "db21ae364e26d4c71b8ed02a192c118c5bec9273",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
