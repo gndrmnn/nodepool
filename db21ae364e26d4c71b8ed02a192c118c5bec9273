@@ -34,6 +34,24 @@
       "revId": "db21ae364e26d4c71b8ed02a192c118c5bec9273",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_d70c6996",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 29
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-14T21:59:33Z",
+      "side": 1,
+      "message": "Actually, there used to be a lock around job handling which is why this was here. I reworked it a bit so we tell gearman to stop listening for jobs and then join the thread so it is was no longer needed but forgot to remove this.",
+      "parentUuid": "5a2ca52d_b336d401",
+      "revId": "db21ae364e26d4c71b8ed02a192c118c5bec9273",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
