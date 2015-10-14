@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_967378b1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 1990,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-10-14T08:01:10Z",
+      "side": 1,
+      "message": "I should have noted this earlier, but why not use the snapshot_image id as the job_uuid (prepended by \u0027shapshot\u0027 or something) to save creating a new column?",
+      "revId": "4ac6b12e3a17ff731e43c2a978243d8f65e45ff1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_d62b3081",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-10-14T08:01:10Z",
+      "side": 1,
+      "message": "nit: why not \"NOTE(greghaynes)?\"",
+      "revId": "4ac6b12e3a17ff731e43c2a978243d8f65e45ff1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
