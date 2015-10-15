@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a2ca52d_b8565ed0",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:09:22Z",
+      "side": 1,
+      "message": "This lock is not used in this change.",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a2ca52d_d8479a49",
         "filename": "nodepool/builder.py",
         "patchSetId": 30
