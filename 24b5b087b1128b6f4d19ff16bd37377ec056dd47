@@ -104,6 +104,23 @@
     },
     {
       "key": {
+        "uuid": "5a2ca52d_0e094831",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:46:33Z",
+      "side": 1,
+      "message": "On second thought -- in looking at the next change, I think we\u0027re going to want to subclass gear.Job anyway, so I\u0027m going to abandon the gear change.  Instead, I think we should do more or less what it did within nodepool.  See the change for reference though.",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a2ca52d_f86936bf",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 30
