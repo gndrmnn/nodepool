@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_6e4b1c88",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "With the refactoring around the start lock, I don\u0027t think this lock is necessary anymore.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_8e4eb894",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "I responded on the other patchset, but I\u0027ll repeat here since it was a while ago.  I don\u0027t think this should be an argument since we do not expect anything other than self.gearman_worker to be passed in here.  Making it an argument suggests that some other gearman_worker could be passed in, which might work, but it\u0027s a code path that we don\u0027t ever expect to use, so it\u0027s difficult to reason about.  Let\u0027s keep it simple and use the OOP paradigm.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_2e45246f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "Let\u0027s wait on the jobs themselves, rather than indirectly checking the database.\n\nLet\u0027s subclass gear.Job so we have an UploadImageJob, then in the handle* methods below, update the database then set an event on the UploadImageJob.  Wait for the event here.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_ce7d90b2",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "We should not need this column since in other comments I describe how we don\u0027t need to look up the db record by job id.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_4e48a087",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "You should probably also handle WorkFail and WorkException in order to take the db record out of BUILDING state.\n\nInstead of passing in the job uuid, just pass the image id.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_ee5f2c3f",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "You shouldn\u0027t need this with the suggested changes.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_0e5b8855",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:45:31Z",
+      "side": 1,
+      "message": "This should be solved by the suggested changes.",
+      "revId": "912a6713ae55bdc77901e313ef6a30c2c69ae415",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
