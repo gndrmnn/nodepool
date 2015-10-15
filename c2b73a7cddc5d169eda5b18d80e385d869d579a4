@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_cc735814",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T14:12:53Z",
+      "side": 1,
+      "message": "You should not need to store the job_id in the db.  See comments on previous changes.",
+      "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_6c61e438",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T14:12:53Z",
+      "side": 1,
+      "message": "I also don\u0027t think we need another unique id for the image (image.id itself is already unique).",
+      "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
