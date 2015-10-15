@@ -141,6 +141,23 @@
     },
     {
       "key": {
+        "uuid": "5a2ca52d_78052678",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:14:37Z",
+      "side": 1,
+      "message": "Yes, that was the question.  It\u0027s more than a style thing though -- it suggests that it might be okay to pass in a gearman_worker other than self.gearman_worker, which is not at all what it is designed for.  If it were merely style, I wouldn\u0027t object, but this is presenting a confusing interface, so I think we should avoid it.",
+      "revId": "9c7829dc9d3ed3b50b9854421fe4ed32999f0f92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba15a1d1_57f3580a",
         "filename": "nodepool/builder.py",
         "patchSetId": 19
