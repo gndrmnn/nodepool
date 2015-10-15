@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_d8479a49",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "You might use the symbolic name from the errno module here: errno.EBADF.\n\nAlso, do we need to update gear to handle this?",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_78752696",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_98784291",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "I know this sounds nit-picky, but the prevailing style in nodepool (apart from tests and methods implementing command line functions) is camelCase for method names.  Would you mind keeping with that style?",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_386faec6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "Status calls are expensive, and we should not need to do this since we have all the information locally.  More details below.",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_5872aaae",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 1207,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "Instead of this, just iterate over all of the gearman jobs we have submitted and wait until they are complete.\n\n(Gear could make this easier by having a complete event on the job set by default, then we could just call job.wait() instead of busy-waiting (we could set up events ourselves here, but that\u0027s a lot of work).  I15e535fdfcdcb43df86f06a86884f3c551fd857b implements this in gear.  Feel free to TODO(jeblair) me on switching to that when it lands.)",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_f86936bf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 2020,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:06:39Z",
+      "side": 1,
+      "message": "Add gearman_job to a list of running image build jobs here.",
+      "revId": "24b5b087b1128b6f4d19ff16bd37377ec056dd47",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
