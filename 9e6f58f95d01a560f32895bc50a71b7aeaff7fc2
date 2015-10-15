@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_f155d14f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:57:56Z",
+      "side": 1,
+      "message": "typo: diskwithout (aminusone)",
+      "revId": "9e6f58f95d01a560f32895bc50a71b7aeaff7fc2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_11516d62",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:57:56Z",
+      "side": 1,
+      "message": "typo: it\u0027s -\u003e its (notaminusone)",
+      "revId": "9e6f58f95d01a560f32895bc50a71b7aeaff7fc2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_b14f59bc",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 27
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T13:57:56Z",
+      "side": 1,
+      "message": "The usual thing about waiting for a gearman job applies here.  See previous 2 changes in series.",
+      "revId": "9e6f58f95d01a560f32895bc50a71b7aeaff7fc2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
