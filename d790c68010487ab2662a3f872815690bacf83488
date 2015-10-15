@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_c7ffb3a8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T14:21:14Z",
+      "side": 1,
+      "message": "Why not remove the thread?  Perhaps you want to run it as a thread in tests, but we can spawn it as such in the test fixtures.  There\u0027s no nead to spawn a thread when running as a daemon.  The stop semantics will even still be the same.",
+      "revId": "d790c68010487ab2662a3f872815690bacf83488",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
