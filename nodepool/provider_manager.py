@@ -475,7 +475,14 @@ class ProviderManager(TaskManager):
         return self._waitForResource('image', image_id, timeout)
 
     def createFloatingIP(self, pool=None):
-        return self.submitTask(CreateFloatingIPTask(pool=pool))
+        for count in iterate_timeout(
+                600, "Creating floating IP on %s" % (self.provider.name)):
+            try:
+                return self.submitTask(CreateFloatingIPTask(pool=pool))
+            except novaclient.exceptions.ClientException:
+                self.log.exception('Unable to create floating IP on %s, '
+                                   'will retry' % (self.provider.name))
+                continue
 
     def addFloatingIP(self, server_id, address):
         self.submitTask(AddFloatingIPTask(server=server_id,
