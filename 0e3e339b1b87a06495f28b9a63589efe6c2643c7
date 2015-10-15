@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a2ca52d_2c21ac9f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T14:03:44Z",
+      "side": 1,
+      "message": "Keeping with the prevailing style, since this is a module-level function, it should actually be underscores instead of camelcase.",
+      "revId": "0e3e339b1b87a06495f28b9a63589efe6c2643c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a2ca52d_4c2428ae",
+        "filename": "nodepool/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-15T14:03:44Z",
+      "side": 1,
+      "message": "This should have been too, but we missed it the first time.",
+      "revId": "0e3e339b1b87a06495f28b9a63589efe6c2643c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
