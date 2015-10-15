@@ -597,9 +597,8 @@ class ProviderManager(TaskManager):
                 else:
                     done = True
 
-        # This will either get the server or raise an exception
-        server = self.getServerFromList(server_id)
-
+        # Make sure the floating IP and keypair are deleted even if the server
+        # itself is no longer running and thus not listed
         if self.hasExtension('os-floating-ips'):
             for ip in self.listFloatingIPs():
                 if ip['instance_id'] == server_id:
@@ -614,6 +613,9 @@ class ProviderManager(TaskManager):
                     self.log.debug('Deleting keypair for server %s' %
                                    server_id)
                     self.deleteKeypair(kp['name'])
+
+        # This will either get the server or raise an exception
+        server = self.getServerFromList(server_id)
 
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
