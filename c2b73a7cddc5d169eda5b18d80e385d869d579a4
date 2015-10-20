@@ -33,6 +33,24 @@
       "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a29b11f_3104d0be",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-20T03:59:32Z",
+      "side": 1,
+      "message": "It is, but the builders do not know of the image.id because they do not talk to the database. We could have nodepool send the ID in as part of the build request (image-build:someimage with data image-id X) but I do not think that is what we want. Builders do not have a local database and need to maintain a mapping between image names and ID\u0027s. If we allow ID\u0027s to be arbitrary input data then this will require more smarts on the builder side (we probably want some kind of DB/on disk metadata to maintain this mapping). If instead builders choose the ID\u0027s then they can pick ID\u0027s in a format which encode well in to the on disk path and the mapping gets maintained by nodepool in a DB (which is much better suited to the task).",
+      "parentUuid": "5a2ca52d_6c61e438",
+      "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
