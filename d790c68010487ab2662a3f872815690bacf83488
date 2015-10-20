@@ -16,6 +16,24 @@
       "revId": "d790c68010487ab2662a3f872815690bacf83488",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a29b11f_44607ea5",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-10-20T21:53:10Z",
+      "side": 1,
+      "message": "Best. idea. ever.",
+      "parentUuid": "5a2ca52d_c7ffb3a8",
+      "revId": "d790c68010487ab2662a3f872815690bacf83488",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
