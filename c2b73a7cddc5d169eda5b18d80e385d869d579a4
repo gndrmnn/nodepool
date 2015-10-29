@@ -51,6 +51,23 @@
       "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_37705572",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-10-29T01:21:54Z",
+      "side": 1,
+      "message": "We chatted in Tokyo: we can use image.id as the filename, and then pass that and any other information from this table (such as image name) to the builder over gearman.",
+      "revId": "c2b73a7cddc5d169eda5b18d80e385d869d579a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
