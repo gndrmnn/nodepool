@@ -1,0 +1,14 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Jenkins
+Code-Review+1: Paul Belanger <pabelanger@redhat.com>
+Code-Review+2: yolanda.robla <info@ysoft.biz>
+Code-Review+1: Craige McWhirter <craige@mcwhirter.io>
+Code-Review+1: Jens Rosenboom <j.rosenboom@x-ion.de>
+Code-Review+1: Clint Adams <clint@gcfm.net>
+Code-Review+1: Bruno Tavares <btavare@thoughtworks.com>
+Submitted-by: Jenkins
+Submitted-at: Thu, 29 Oct 2015 01:31:41 +0000
+Reviewed-on: https://review.openstack.org/229651
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
