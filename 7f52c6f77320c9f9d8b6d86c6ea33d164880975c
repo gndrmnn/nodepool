@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a26ad4f_04bd7bb6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "This block and the else block can be replaced with server_id \u003d server_id or hostname (we set node.external_id below).",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_a4ada785",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_c4b223e5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "Ditto",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_64cc6f6a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "Is this possible with the above changes? It seems like this is guarding for the case of we create a node, get a 500, the manager reports that the server is missing, but we still try to delete it?",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_84c98b5b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2125,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "This is unrelated, but we should probably be logging here.",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_24c2f734",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2137,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "Can we log here?",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a26ad4f_44bff3a9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2146,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-02T18:55:25Z",
+      "side": 1,
+      "message": "This bug existed already, but we need to guard this with provider_manager.NotFound so we still try and delete other subnodes.",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
