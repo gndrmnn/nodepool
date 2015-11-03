@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa80f949_ef2a2b2c",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 8984
+      },
+      "writtenOn": "2015-11-03T17:04:02Z",
+      "side": 1,
+      "message": "Do you really need the continue statement?",
+      "revId": "a24314f078deac219833e2cee6100e51e90588a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
