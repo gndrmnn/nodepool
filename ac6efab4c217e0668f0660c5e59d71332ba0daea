@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa80f949_8632130f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-05T14:31:57Z",
+      "side": 1,
+      "message": "This just means that the same bug exists, but now in the form of \u0027if the FIP is missing or fails to delete we will not delete the server\u0027.\n\nWhy not maintain the same order, catch the possible exception, and attempt to delete the fip and keypair even if the exception is thrown.",
+      "revId": "ac6efab4c217e0668f0660c5e59d71332ba0daea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
