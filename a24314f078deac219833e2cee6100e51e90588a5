@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa80f949_52b145e0",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-11-05T16:00:46Z",
+      "side": 1,
+      "message": "WELL - once we move to shade, the logic changes, in that floatingip create will be a neutron call that takes a port-id so that it either succeeds-and-attaches or does not",
+      "parentUuid": "fa80f949_41517561",
+      "revId": "a24314f078deac219833e2cee6100e51e90588a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa80f949_ef2a2b2c",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 1
