@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa80f949_41517561",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-05T14:44:40Z",
+      "side": 1,
+      "message": "Rather than blocking on FIP creation until it succeeds (which has implications for our rate limiting), maybe we should change the workflow so that FIP creation happens before node creation. This would allow us to fail fast and return control to the main nodepool loop where we will reschedule a FIP attempt later.\n\nI\u0027d like to hear what one of the nodepool cores think about this...",
+      "revId": "a24314f078deac219833e2cee6100e51e90588a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa80f949_ef2a2b2c",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 1
@@ -13,6 +30,23 @@
       "writtenOn": "2015-11-03T17:04:02Z",
       "side": 1,
       "message": "Do you really need the continue statement?",
+      "revId": "a24314f078deac219833e2cee6100e51e90588a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa80f949_e14f49bb",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-05T14:44:40Z",
+      "side": 1,
+      "message": "You dont. :)",
       "revId": "a24314f078deac219833e2cee6100e51e90588a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
