@@ -1350,12 +1350,19 @@ class NodePool(threading.Thread):
             newconfig.gearman_servers[g.name] = g
 
         for provider in config['providers']:
+            cloud_kwargs = _cloudKwargsFromProvider(provider)
+            try:
+                cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+            except os_client_config.OpenStackConfigException:
+                self.log.exception("Exception loading configuration for %s" %
+                                   provider['name'])
+                continue
+
             p = Provider()
             p.name = provider['name']
             newconfig.providers[p.name] = p
 
-            cloud_kwargs = _cloudKwargsFromProvider(provider)
-            p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+            p.cloud_config = cloud_config
             p.region_name = provider.get('region-name')
             p.max_servers = provider['max-servers']
             p.keypair = provider.get('keypair', None)
