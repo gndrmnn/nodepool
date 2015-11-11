@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da85f559_e084f00b",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-11-11T11:14:42Z",
+      "side": 1,
+      "message": "You missed feedback from ps27. \"disk without\"",
+      "revId": "90c520db3d01f2a91027e0e093915123e9d5af02",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da85f559_807e4417",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 30
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2015-11-11T11:14:42Z",
+      "side": 1,
+      "message": "(nit) its",
+      "revId": "90c520db3d01f2a91027e0e093915123e9d5af02",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
