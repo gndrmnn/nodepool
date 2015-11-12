@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da85f559_51de95dd",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1356,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-12T19:12:23Z",
+      "side": 1,
+      "message": "This needs to be os_client_config.exception.CloudConfigException",
+      "revId": "2453df2e23f8eaaa8c68d3e81f45e9422af1cf3b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
