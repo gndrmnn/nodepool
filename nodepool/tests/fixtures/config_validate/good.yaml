@@ -2,6 +2,9 @@ script-dir: /etc/nodepool/scripts
 elements-dir: /etc/nodepool/elements
 images-dir: /opt/nodepool_dib
 
+nodepoold:
+    delete-delay: 600
+
 cron:
   cleanup: '*/1 * * * *'
   check: '*/15 * * * *'
