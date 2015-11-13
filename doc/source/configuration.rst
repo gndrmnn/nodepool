@@ -17,7 +17,7 @@ secrets for each target::
   credentials={credentials}
   url={url}
 
-Following settings are available::
+Following settings are available:
 
 **required**
 
@@ -110,6 +110,20 @@ write them.
 Example::
 
   images-dir: /path/to/images/dir
+
+nodepoold
+---------
+This section is optional.
+
+Parameters to alter the global Nodepool behavior.
+
+  ``delete-delay`` (int)
+  Time to wait before deleting a node that has completed its job. After
+  a job is complete, you might have to keep available to gather
+  informations after the build is complete.  An example is retrieving
+  the Jenkins build console. Set it to 0 to have nodes to be immediately
+  scheduled for deletion which speed up the pool refilling.
+  In seconds. Default ``60``.
 
 cron
 ----
