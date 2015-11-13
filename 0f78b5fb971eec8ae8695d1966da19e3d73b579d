@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "da85f559_2e1cbe76",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-11-13T00:47:43Z",
+      "side": 1,
+      "message": "I agree, this should be set in run()",
+      "revId": "0f78b5fb971eec8ae8695d1966da19e3d73b579d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a4dcd0f_15159647",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
