@@ -53,8 +53,6 @@ NODE_CLEANUP = 8 * HOURS     # When to start deleting a node that is not
 TEST_CLEANUP = 5 * MINS      # When to start deleting a node that is in TEST
 IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
-DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
-                             # its job.
 
 
 class LaunchNodepoolException(Exception):
@@ -148,7 +146,8 @@ class NodeCompleteThread(threading.Thread):
             self.statsd.timing(key + '.runtime', dt)
             self.statsd.incr(key + '.builds')
 
-        time.sleep(DELETE_DELAY)
+        time.sleep(self.nodepool.config.delete_delay)
+
         self.nodepool.deleteNode(node.id)
 
 

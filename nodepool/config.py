@@ -104,6 +104,8 @@ def loadConfig(config_path):
     newconfig.elementsdir = config.get('elements-dir')
     newconfig.imagesdir = config.get('images-dir')
     newconfig.dburi = None
+    newconfig.delete_delay = (config.get('nodepoold', {})
+                              .get('delete-delay', 60))  # seconds
     newconfig.provider_managers = {}
     newconfig.jenkins_managers = {}
     newconfig.zmq_publishers = {}

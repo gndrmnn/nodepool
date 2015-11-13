@@ -53,6 +53,10 @@ class ConfigValidator:
             'public': bool,
         }
 
+        nodepoold = {
+            'delete-delay': int,
+        }
+
         providers = {
             'name': str,
             'region-name': str,
@@ -121,6 +125,7 @@ class ConfigValidator:
                 'port': int,
             }],
             'cron': cron,
+            'nodepoold': nodepoold,
             'providers': [providers],
             'labels': [labels],
             'targets': [targets],
