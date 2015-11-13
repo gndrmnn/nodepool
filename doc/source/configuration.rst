@@ -17,7 +17,7 @@ secrets for each target::
   credentials={credentials}
   url={url}
 
-Following settings are available::
+Following settings are available:
 
 **required**
 
@@ -110,6 +110,16 @@ write them.
 Example::
 
   images-dir: /path/to/images/dir
+
+nodepoold
+---------
+This section is optional.
+
+Parameters to alter the global Nodepool behavior.
+
+  ``delete-delay`` (int)
+  Time to wait before deleting a node that has completed its job.
+  In seconds. Default 60.
 
 cron
 ----

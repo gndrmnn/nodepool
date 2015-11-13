@@ -55,7 +55,8 @@ TEST_CLEANUP = 5 * MINS      # When to start deleting a node that is in TEST
 IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
-                             # its job.
+                             # its job. Configurable via nodepool.yaml key
+                             # nodepoold.delete-delay
 
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
@@ -180,7 +181,8 @@ class NodeCompleteThread(threading.Thread):
             statsd.timing(key + '.runtime', dt)
             statsd.incr(key + '.builds')
 
-        time.sleep(DELETE_DELAY)
+        time.sleep(self.nodepool.config.nodepoold.get('delete-delay',
+                                                      DELETE_DELAY))
         self.nodepool.deleteNode(node.id)
 
 
@@ -1318,6 +1320,7 @@ class NodePool(threading.Thread):
         newconfig.elementsdir = config.get('elements-dir')
         newconfig.imagesdir = config.get('images-dir')
         newconfig.dburi = secure.get('database', 'dburi')
+        newconfig.nodepoold = config.get('nodepoold', {})
         newconfig.provider_managers = {}
         newconfig.jenkins_managers = {}
         newconfig.zmq_publishers = {}
