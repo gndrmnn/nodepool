@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da85f559_66cce661",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 2227,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-11-15T13:57:58Z",
+      "side": 1,
+      "message": "self.config.providers.get(node.provider_name, None) would have been less verbose",
+      "revId": "63397f1fe5172b1da876a9ede3cfbfe1218da077",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
