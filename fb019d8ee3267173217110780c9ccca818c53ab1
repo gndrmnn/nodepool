@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "da85f559_a6b2cee3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2015-11-15T13:57:10Z",
+      "side": 1,
+      "message": "Yeah - I think I agree - there is no real need to not report even if we don\u0027t have the provider anymore.",
+      "revId": "fb019d8ee3267173217110780c9ccca818c53ab1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da20952f_34ae2d99",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 12
