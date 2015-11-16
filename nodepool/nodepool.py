@@ -1408,6 +1408,20 @@ class NodePool(threading.Thread):
                            (label.name, demand,
                             start_demand, label.min_ready, ready, capacity))
 
+            if self.statsd:
+                #nodepool.allocation.LABEL.deficit
+                #nodepool.allocation.LABEL.minimum
+                #nodepool.allocation.LABEL.ready
+                #nodepool.allocation.LABEL.capacity
+                self.statsd.gauge("nodepool.allocation.%s.deficit" % 
+                                  label.name, demand)
+                self.statsd.gauge("nodepool.allocation.%s.minimum" %
+                                  label.name, label.min_ready)
+                self.statsd.gauge("nodepool.allocation.%s.ready" %
+                                  label.name, ready)
+                self.statsd.gauge("nodepool.allocation.%s.capacity" %
+                                  label.name, capacity)
+
         # "Target-Label-Provider" -- the triplet of info that identifies
         # the source and location of each node.  The mapping is
         # AllocationGrantTarget -> TargetLabelProvider, because
