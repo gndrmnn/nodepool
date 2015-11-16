@@ -1784,6 +1784,23 @@ class NodePool(threading.Thread):
                            (label.name, demand,
                             start_demand, label.min_ready, ready, capacity))
 
+            if statsd:
+                #nodepool.demand.LABEL.demand
+                #nodepool.demand.LABEL.start_demand
+                #nodepool.demand.LABEL.min_ready
+                #nodepool.demand.LABEL.ready
+                #nodepool.demand.LABEL.capacity
+                statsd.gauge("nodepool.demand.%s.start_demand" % label.name,
+                             start_demand)
+                statsd.gauge("nodepool.demand.%s.demand" % label.name,
+                             demand)
+                statsd.gauge("nodepool.demand.%s.min_ready" % label.name,
+                             label.min_ready)
+                statsd.gauge("nodepool.demand.%s.ready" % label.name,
+                             ready)
+                statsd.gauge("nodepool.demand.%s.capacity" % label.name,
+                             capacity)
+
         # "Target-Label-Provider" -- the triplet of info that identifies
         # the source and location of each node.  The mapping is
         # AllocationGrantTarget -> TargetLabelProvider, because
