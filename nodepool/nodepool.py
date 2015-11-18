@@ -67,6 +67,8 @@ def _cloudKwargsFromProvider(provider):
     for arg in ['region-name', 'api-timeout', 'cloud']:
         if arg in provider:
             cloud_kwargs[arg] = provider[arg]
+    if 'cloud' not in cloud_kwargs:
+        cloud_kwargs['cloud'] = provider['name']
 
     # These are named from back when we only talked to Nova. They're
     # actually compute service related
@@ -623,6 +625,7 @@ class NodeLauncher(threading.Thread):
             # Provider information for this node set
             f = ftp.open('/etc/nodepool/provider', 'w')
             f.write('NODEPOOL_PROVIDER=%s\n' % self.provider.name)
+            f.write('NODEPOOL_CLOUD=%s\n' % self.provider.cloud_config.name)
             f.write('NODEPOOL_REGION=%s\n' % (
                 self.provider.region_name or '',))
             f.write('NODEPOOL_AZ=%s\n' % (self.node.az or '',))
