@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba8a016a_b494a18a",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-19T23:16:44Z",
+      "side": 1,
+      "message": "This default should not be removed as many commands still need to talk to the DB.",
+      "revId": "f03171707160cbd6929722beedec16529b0c156f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
