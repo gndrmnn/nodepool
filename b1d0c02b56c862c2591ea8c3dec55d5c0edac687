@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba8a016a_718acb65",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 1114,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-19T22:53:24Z",
+      "side": 1,
+      "message": "Slight preference for not pulling loadConfig into the current local space and instead namespacing so its clear how the two loadConfigs are different but not worth a -1.",
+      "revId": "b1d0c02b56c862c2591ea8c3dec55d5c0edac687",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
