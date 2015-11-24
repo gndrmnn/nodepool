@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_7787df61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-24T22:43:01Z",
+      "side": 1,
+      "message": "Can we put this at top-level (like the other nodepoold config options)? Seems unnecesary to make a new section for a single config option.",
+      "revId": "d6f8ebb793d35fe799ea74ffa4334a621cf2bfbd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_177c5371",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-24T22:43:01Z",
+      "side": 1,
+      "message": "Since this is no longer a constant, how about we remove this altogether and just read in the default in loadConfig if nothing is specified? That removes the need for code reading the config to do any default argument interpretation.",
+      "revId": "d6f8ebb793d35fe799ea74ffa4334a621cf2bfbd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
