@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_543c2393",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 33
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-24T20:23:10Z",
+      "side": 1,
+      "message": "Future improvement, this should be rewritable as:\n\n  return [x for x in DibImageFile.from_images_dir if x.image_id \u003d\u003d image_id]",
+      "revId": "f445d21906608a08bf8226d6776a3e4de1dc8301",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_ef0ea2e4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 33
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-24T20:23:10Z",
+      "side": 1,
+      "message": "Future improvement, this can be simplified to:\n\n  return self._config.diskimages.get(name)",
+      "revId": "f445d21906608a08bf8226d6776a3e4de1dc8301",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_8f9cb66a",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 33
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-24T20:23:10Z",
+      "side": 1,
+      "message": "I think this method must not be used since there is no job_id attribute on DibImage class above but tests don\u0027t fail.",
+      "revId": "f445d21906608a08bf8226d6776a3e4de1dc8301",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
