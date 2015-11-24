@@ -22,6 +22,7 @@ from nodepool import nodedb
 import nodepool.fakeprovider
 import nodepool.nodepool
 
+import os_client_config
 import requests.exceptions
 from testtools import ExpectedException
 
@@ -403,3 +404,18 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+
+    def test_occ_provider_exception(self):
+        def patch_get_one_cloud(*args, **kwargs):
+            raise os_client_config.exceptions.OpenStackConfigException(
+                "Monkeypatch"
+            )
+        self.useFixture(fixtures.MonkeyPatch(
+            'os_client_config.OpenStackConfig.get_one_cloud',
+            patch_get_one_cloud)
+        )
+
+        configfile = self.setup_config("node.yaml")
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.loadConfig()
+
