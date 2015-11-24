@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "9a8ffd7b_43d0ef53",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-24T17:49:47Z",
+      "side": 1,
+      "message": "+1. This is usually just \u0027error\u0027 in control loop lingo but deficit is similar enough.",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba8a016a_50293636",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -36,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "9a8ffd7b_63d5f341",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1789,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-24T17:49:47Z",
+      "side": 1,
+      "message": "I think this is called \u0027setpoint\u0027 typically if I understand the code correctly.",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba8a016a_f0206a4b",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -47,6 +81,23 @@
       "writtenOn": "2015-11-24T01:18:58Z",
       "side": 1,
       "message": "Unfortunately, this is much more complicated than its name would suggest.  Do you have a use in mind for this?",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_03cae7a1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1791,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2015-11-24T17:49:47Z",
+      "side": 1,
+      "message": "Likewise, \u0027measured process variable\u0027. That is a pretty horrible name for statsd, so I dont have any great ideas ;).",
       "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
