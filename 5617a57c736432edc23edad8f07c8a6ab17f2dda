@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba8a016a_3026f268",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-11-24T01:18:58Z",
+      "side": 1,
+      "message": "What about \u0027deficit\u0027 instead of demand?  I think this most accurately describes and conveys the thing you mentioned in the commit message.",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba8a016a_50293636",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1789,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-11-24T01:18:58Z",
+      "side": 1,
+      "message": "I think demand is the most useful of these two.  I would suggest omitting start_demand, or if you really want to have it, just call it \u0027demand\u0027 (which makes sense if you call the previous \u0027deficit\u0027).",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba8a016a_f0206a4b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1791,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-11-24T01:18:58Z",
+      "side": 1,
+      "message": "Unfortunately, this is much more complicated than its name would suggest.  Do you have a use in mind for this?",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba8a016a_101c0e12",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-11-24T01:18:58Z",
+      "side": 1,
+      "message": "This is nice and not available anywhere else (though still very complex to understand -- add up all the capacity and you\u0027ll have a number much larger than your quota).",
+      "revId": "5617a57c736432edc23edad8f07c8a6ab17f2dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
