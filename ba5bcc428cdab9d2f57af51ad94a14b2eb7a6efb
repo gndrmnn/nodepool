@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_b420eaf8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-11-24T20:32:47Z",
+      "side": 1,
+      "message": "Because this raise in the outer try block it will send a work exception not a work fail. I beleve that is correct behavior but commit message implies the separation of exceptions was needed to make this a fail? In any case I think this is fine as is.",
+      "revId": "ba5bcc428cdab9d2f57af51ad94a14b2eb7a6efb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
