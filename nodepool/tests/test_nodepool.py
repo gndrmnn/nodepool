@@ -403,3 +403,14 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
+
+    def test_occ_provider_exception(self):
+        def patch_get_one_cloud(*args, **kwargs):
+            raise os_client_config.OpenStackConfigException("Monkeypatch")
+        self.useFixture(fixtures.MonkeyPatch('os_client_config.get_one_cloud',
+                                             patch_get_one_cloud))
+
+        configfile = self.setup_config("node.yaml")
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.loadConfig()
+
