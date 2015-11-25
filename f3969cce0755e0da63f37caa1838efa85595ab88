@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_a2baa7be",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-11-25T22:48:12Z",
+      "side": 1,
+      "message": "(nit) s/ImageidJob/ImageIdJob/",
+      "revId": "f3969cce0755e0da63f37caa1838efa85595ab88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
