@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_82d1a359",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-11-25T22:36:34Z",
+      "side": 1,
+      "message": "Shouldn\u0027t all of this function be inside the _start_lock with block?",
+      "revId": "4867b11f7627c7db459a180b79493062dc667017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
