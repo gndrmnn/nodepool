@@ -16,6 +16,57 @@
       "revId": "4867b11f7627c7db459a180b79493062dc667017",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_be78497f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T19:33:37Z",
+      "side": 1,
+      "message": "Probably so -- otherwise start and stop can race.",
+      "revId": "4867b11f7627c7db459a180b79493062dc667017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_de7d0d6e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T19:33:37Z",
+      "side": 1,
+      "message": "I don\u0027t think any of the exception handlers should be necessary.  If they are, let\u0027s fix it in gear.  In the mean time, let\u0027s remove them from here.",
+      "revId": "4867b11f7627c7db459a180b79493062dc667017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_7e974190",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T19:33:37Z",
+      "side": 1,
+      "message": "Can we just say we\u0027ll only submit watchable jobs and therefore omit this check?  (This is my preference.)\n\nIf we can\u0027t, then I think we should change this check to an isinstance (or duck-type it with hasattr) so it\u0027s a future-proof singleton.",
+      "revId": "4867b11f7627c7db459a180b79493062dc667017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
