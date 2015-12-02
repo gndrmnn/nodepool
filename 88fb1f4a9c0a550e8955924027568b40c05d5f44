@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_2748c95b",
+        "filename": "nodepool/config.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:10:02Z",
+      "side": 1,
+      "message": "Putting the dburi in the normal config is not supported, so this should be None.",
+      "revId": "88fb1f4a9c0a550e8955924027568b40c05d5f44",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_4745cd40",
+        "filename": "nodepool/config.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:10:02Z",
+      "side": 1,
+      "message": "The jenkins credentials are not supported in the main config file.",
+      "revId": "88fb1f4a9c0a550e8955924027568b40c05d5f44",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
