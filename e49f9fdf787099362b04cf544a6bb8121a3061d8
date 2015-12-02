@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_af98501c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-12-02T01:19:20Z",
+      "side": 1,
+      "message": "Since yaml is whitespace sensitive this tab should be removed. (Even if sphinx renders it away properly anyone copying form the source can have trouble).",
+      "revId": "e49f9fdf787099362b04cf544a6bb8121a3061d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_4f6d2403",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-12-02T01:19:20Z",
+      "side": 1,
+      "message": "\"and if the network is routable from the nodepool server, set the boolean ``public`` to true\" may be clearer to our users that don\u0027t have Internet access.",
+      "revId": "e49f9fdf787099362b04cf544a6bb8121a3061d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
