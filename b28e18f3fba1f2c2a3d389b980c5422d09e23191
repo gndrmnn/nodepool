@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_e704017f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:22:32Z",
+      "side": 1,
+      "message": "What about the simpler approach in https://review.openstack.org/252000 ?",
+      "revId": "b28e18f3fba1f2c2a3d389b980c5422d09e23191",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
