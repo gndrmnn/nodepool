@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_877ad522",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:20:00Z",
+      "side": 1,
+      "message": "No changes in this file are necessary.",
+      "revId": "31ccf6cdc6fdf5268e15b7f496b8aaf9959391c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_2773e94f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:20:00Z",
+      "side": 1,
+      "message": "This is logged by gear at debug level; we can probably omit it here.",
+      "revId": "31ccf6cdc6fdf5268e15b7f496b8aaf9959391c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_47706d40",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 1803,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:20:00Z",
+      "side": 1,
+      "message": "This seems to be the wrong place to set the state field.",
+      "revId": "31ccf6cdc6fdf5268e15b7f496b8aaf9959391c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
