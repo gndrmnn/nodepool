@@ -16,6 +16,40 @@
       "revId": "f3969cce0755e0da63f37caa1838efa85595ab88",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_24e207a1",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:02:58Z",
+      "side": 1,
+      "message": "I\u0027m not sure why we set the image state to delete here since it won\u0027t ever be visible as such in the db -- the row will be removed or the transaction rolled back if something fails.  It might make more sense to set it elsewhere; but we can probably fix that later. (-0)",
+      "revId": "f3969cce0755e0da63f37caa1838efa85595ab88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_44df0bd6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T22:02:58Z",
+      "side": 1,
+      "message": "This is what I mean about not needing to change this.  (-1)",
+      "revId": "f3969cce0755e0da63f37caa1838efa85595ab88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
