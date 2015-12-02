@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_9838353f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-12-02T00:07:52Z",
+      "side": 1,
+      "message": "Should init self._stop_running here too.",
+      "revId": "4029c5063247f4570a2069dd76d445f36e3aaffe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_f84e21c0",
+        "filename": "nodepool/cmd/builder.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-12-02T00:07:52Z",
+      "side": 1,
+      "message": "NodePoolBuilder.start() was renamed NodePoolBuilder.runForever() in this change. It doesn\u0027t appear to be a thread object either. I don\u0027t see how start() works here. I believe ti should be runForever() instead. Also the signal.pause() shouldn\u0027t be necessary since we aren\u0027t spawning a thread which runs most of the work.",
+      "revId": "4029c5063247f4570a2069dd76d445f36e3aaffe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_f89381f8",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2015-12-02T00:07:52Z",
+      "side": 1,
+      "message": "This is a bit more what I expect.",
+      "revId": "4029c5063247f4570a2069dd76d445f36e3aaffe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
