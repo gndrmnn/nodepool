@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a8ffd7b_24ee87ed",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "This still assumes that all image builds are present, but will change later when the daemon is split, so OK.",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_44eb8bdc",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "job_id not necessary",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_e4babfe0",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_04c0234f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "Can you use an event rather than a poll?",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_a4b037fe",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "I don\u0027t see where nodepool is used.",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a8ffd7b_c4b53bed",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-02T21:56:43Z",
+      "side": 1,
+      "message": "As mentioned in previous patchset, omitting this check would be fine.",
+      "revId": "af1a984df319e2edb8ff91cdbef5cf020a2f5882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
