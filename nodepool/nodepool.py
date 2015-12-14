@@ -834,11 +834,16 @@ class DiskImageBuilder(threading.Thread):
         threading.Thread.__init__(self, name='DiskImageBuilder queue')
         self.nodepool = nodepool
         self.queue = nodepool._image_builder_queue
+        self._running = True
 
     def run(self):
         while True:
             # grabs image id from queue
             image_id = self.queue.get()
+            if not image_id:
+                if not self._running:
+                    break
+                continue
             try:
                 self.buildImage(image_id)
             except Exception:
@@ -846,6 +851,10 @@ class DiskImageBuilder(threading.Thread):
                                    "for image %s:" % (image_id,))
             finally:
                 self.queue.task_done()
+
+    def stop(self):
+        self._running = False
+        self.queue.put(None)
 
     def _buildImage(self, image, image_name, filename):
         env = os.environ.copy()
@@ -1299,6 +1308,20 @@ class NodePool(threading.Thread):
             for z in self.config.zmq_publishers.values():
                 z.listener.stop()
                 z.listener.join()
+
+            for j in self.config.jenkins_managers.values():
+                j.stop()
+                j.join()
+
+            for p in self.config.provider_managers.values():
+                p.stop()
+                p.join()
+
+        if self._image_builder_thread:
+            self._image_builder_thread.stop()
+            self._image_builder_thread.join()
+        if self.gearman_client:
+            self.gearman_client.shutdown()
         if self.zmq_context:
             self.zmq_context.destroy()
         if self.apsched:
