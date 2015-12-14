@@ -41,6 +41,7 @@ import nodedb
 import nodeutils as utils
 import provider_manager
 from stats import statsd
+import shade
 
 MINS = 60
 HOURS = 60 * MINS
@@ -1108,7 +1109,11 @@ class SnapshotImageUpdater(ImageUpdater):
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))
 
-        ip = server.get('public_v4')
+        server['accessIPv4'] = False
+        cloud = shade.openstack_cloud(name=self.provider.name)
+        ip = shade.meta.get_server_external_ipv4(cloud, server)
+        if ip is None:
+            ip = server.get('public_v4')
         ip_v6 = server.get('public_v6')
         if self.provider.ipv6_preferred:
             if ip_v6:
