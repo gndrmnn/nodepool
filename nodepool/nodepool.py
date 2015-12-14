@@ -1299,6 +1299,19 @@ class NodePool(threading.Thread):
             for z in self.config.zmq_publishers.values():
                 z.listener.stop()
                 z.listener.join()
+
+            for j in self.config.jenkins_managers.values():
+                j.stop()
+                j.join()
+
+            for p in self.config.provider_managers.values():
+                p.stop()
+                p.join()
+
+            for g in self.config.gearman_servers.values():
+                g.stop()
+                g.join()
+
         if self.zmq_context:
             self.zmq_context.destroy()
         if self.apsched:
