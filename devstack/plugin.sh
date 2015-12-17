@@ -108,7 +108,6 @@ handlers=console
 
 [logger_nodepool]
 level=DEBUG
-handlers=console
 qualname=nodepool
 
 [handler_console]
