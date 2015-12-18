@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a7e1126_267231ae",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2015-12-18T13:20:37Z",
+      "side": 1,
+      "message": "I think you should expand the tab to spaces here in order to stay consistent.",
+      "revId": "c3813e632c8db1dfcbe902d844edc0e7cf4598c5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
