@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a7e1126_775690cf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-18T17:42:54Z",
+      "side": 1,
+      "message": "You can simplify this by using threading.Event().",
+      "revId": "9cb882f30a224e0f8459721262c6fc5aa16d8b67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a7e1126_975bfcf5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-18T17:42:54Z",
+      "side": 1,
+      "message": "self._event.set()",
+      "revId": "9cb882f30a224e0f8459721262c6fc5aa16d8b67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a7e1126_37756863",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2015-12-18T17:42:54Z",
+      "side": 1,
+      "message": "self._event.wait()",
+      "revId": "9cb882f30a224e0f8459721262c6fc5aa16d8b67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
