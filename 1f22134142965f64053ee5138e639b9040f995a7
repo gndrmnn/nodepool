@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a7e1126_007b0429",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-12-21T16:28:08Z",
+      "side": 1,
+      "message": "Can you add a comment that the failure mode is to run forever?",
+      "revId": "1f22134142965f64053ee5138e639b9040f995a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a7e1126_a0755032",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2015-12-21T16:28:08Z",
+      "side": 1,
+      "message": "This isn\u0027t a snapshot",
+      "revId": "1f22134142965f64053ee5138e639b9040f995a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
