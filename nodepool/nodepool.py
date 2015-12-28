@@ -17,7 +17,8 @@
 # limitations under the License.
 
 from six.moves import configparser as ConfigParser
-import apscheduler.scheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 import gear
 import json
 import logging
@@ -1301,7 +1302,7 @@ class NodePool(threading.Thread):
                 z.listener.join()
         if self.zmq_context:
             self.zmq_context.destroy()
-        if self.apsched:
+        if self.apsched and self.apsched.running:
             self.apsched.shutdown()
 
     def waitForBuiltImages(self):
@@ -1607,27 +1608,24 @@ class NodePool(threading.Thread):
             }
 
         if not self.apsched:
-            self.apsched = apscheduler.scheduler.Scheduler()
+            self.apsched = BackgroundScheduler()
             self.apsched.start()
 
         for c in config.crons.values():
             if ((not self.config) or
                 c.timespec != self.config.crons[c.name].timespec):
                 if self.config and self.config.crons[c.name].job:
-                    self.apsched.unschedule_job(self.config.crons[c.name].job)
+                    self.config.crons[c.name].job.remove()
                 parts = c.timespec.split()
                 if len(parts) > 5:
                     second = parts[5]
                 else:
                     second = None
                 minute, hour, dom, month, dow = parts[:5]
-                c.job = self.apsched.add_cron_job(
-                    cron_map[c.name],
-                    day=dom,
-                    day_of_week=dow,
-                    hour=hour,
-                    minute=minute,
-                    second=second)
+                trigger = CronTrigger(day=dom, day_of_week=dow, hour=hour,
+                                      minute=minute, second=second)
+                c.job = self.apsched.add_job(
+                    cron_map[c.name], trigger=trigger)
             else:
                 c.job = self.config.crons[c.name].job
 
