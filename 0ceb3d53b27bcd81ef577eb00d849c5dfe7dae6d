@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa69d971_8ae3b9a3",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 10980
+      },
+      "writtenOn": "2016-01-05T20:40:38Z",
+      "side": 1,
+      "message": "I don\u0027t think name is required to be unique. Why is id not an option?",
+      "range": {
+        "startLine": 53,
+        "startChar": 13,
+        "endLine": 53,
+        "endChar": 19
+      },
+      "revId": "0ceb3d53b27bcd81ef577eb00d849c5dfe7dae6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
