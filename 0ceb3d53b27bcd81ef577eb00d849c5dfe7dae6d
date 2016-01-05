@@ -22,6 +22,23 @@
       "revId": "0ceb3d53b27bcd81ef577eb00d849c5dfe7dae6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa69d971_189c035c",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-05T21:30:00Z",
+      "side": 1,
+      "message": "It\u0027s not possible to perform the matching needed based on id without extra API calls.  The commit message notes its removal.",
+      "revId": "0ceb3d53b27bcd81ef577eb00d849c5dfe7dae6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
