@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da6ed579_b698561d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-01-14T22:20:25Z",
+      "side": 1,
+      "message": "To be consistent with the style of this file and because each of these items is only used once can we avoid importing them directly into this namespace and qualify them instead?",
+      "revId": "b4bf2696d6c8d3b028d788c5f6c11efcf95df342",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
