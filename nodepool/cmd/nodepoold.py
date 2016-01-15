@@ -31,6 +31,7 @@ import traceback
 import threading
 
 from nodepool import builder
+import nodepool.cmd
 
 # No nodepool imports here because they pull in paramiko which must not be
 # imported until after the daemonization.
@@ -79,9 +80,7 @@ def is_pidfile_stale(pidfile):
     return result
 
 
-class NodePoolDaemon(object):
-    def __init__(self):
-        self.args = None
+class NodePoolDaemon(nodepool.cmd.NodepoolApp):
 
     def parse_arguments(self):
         parser = argparse.ArgumentParser(description='Node pool.')
@@ -103,18 +102,6 @@ class NodePoolDaemon(object):
         parser.add_argument('--version', dest='version', action='store_true',
                             help='show version')
         self.args = parser.parse_args()
-
-    def setup_logging(self):
-        if self.args.logconfig:
-            fp = os.path.expanduser(self.args.logconfig)
-            if not os.path.exists(fp):
-                raise Exception("Unable to read logging config file at %s" %
-                                fp)
-            logging.config.fileConfig(fp)
-        else:
-            logging.basicConfig(level=logging.DEBUG,
-                                format='%(asctime)s %(levelname)s %(name)s: '
-                                       '%(message)s')
 
     def exit_handler(self, signum, frame):
         self.pool.stop()
