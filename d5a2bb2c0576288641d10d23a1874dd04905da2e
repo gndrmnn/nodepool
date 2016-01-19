@@ -34,6 +34,24 @@
       "revId": "d5a2bb2c0576288641d10d23a1874dd04905da2e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba63e191_cf815ffd",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-01-19T02:02:54Z",
+      "side": 1,
+      "message": "I didnt realize that worked, SGTM",
+      "parentUuid": "ba63e191_6f9cf369",
+      "revId": "d5a2bb2c0576288641d10d23a1874dd04905da2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
