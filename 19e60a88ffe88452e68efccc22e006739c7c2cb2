@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba63e191_2f311ba3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-01-19T01:59:00Z",
+      "side": 1,
+      "message": "This should be handleWorkFail?\nhttps://git.openstack.org/cgit/openstack-infra/gear/tree/gear/__init__.py#n1500",
+      "range": {
+        "startLine": 351,
+        "startChar": 41,
+        "endLine": 351,
+        "endChar": 59
+      },
+      "revId": "19e60a88ffe88452e68efccc22e006739c7c2cb2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
