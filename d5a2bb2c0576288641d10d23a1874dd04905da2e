@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba63e191_897cc721",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-01-19T00:57:18Z",
+      "side": 1,
+      "message": "This is a slight logic change - before we were doing if statsd_args[\u0027host\u0027] which IMO is a bit better (or even better, require both host and port).",
+      "revId": "d5a2bb2c0576288641d10d23a1874dd04905da2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
