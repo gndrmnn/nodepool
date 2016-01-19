@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba63e191_ae48b12e",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-01-19T00:19:03Z",
+      "side": 1,
+      "message": "can probably remove if we go back around on this",
+      "revId": "0c57e681d9848c65dcfa1820a47fb9ffc5e3f492",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
