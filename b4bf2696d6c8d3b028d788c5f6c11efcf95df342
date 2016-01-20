@@ -16,6 +16,24 @@
       "revId": "b4bf2696d6c8d3b028d788c5f6c11efcf95df342",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba63e191_38aefc85",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 8190
+      },
+      "writtenOn": "2016-01-20T02:25:21Z",
+      "side": 1,
+      "message": "This actually causes issues with the import.  For some reason, it could not see the schedulers package underneath.\n\nI am proposing a new revision that hopefully strikes a good middle ground to keep style consistency, but also gets through the unit tests.",
+      "parentUuid": "da6ed579_b698561d",
+      "revId": "b4bf2696d6c8d3b028d788c5f6c11efcf95df342",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
