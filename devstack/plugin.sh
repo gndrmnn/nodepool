@@ -177,6 +177,12 @@ labels:
     min-ready: 1
     providers:
       - name: devstack
+  - name: ubuntu-dib-2
+    image: ubuntu-dib-2
+    min-ready: 1
+    providers:
+      - name: devstack
+
 
 providers:
   - name: devstack
@@ -185,7 +191,7 @@ providers:
     api-timeout: 60
     # Long boot timeout to deal with potentially nested virt.
     boot-timeout: 600
-    max-servers: 2
+    max-servers: 3
     rate: 0.25
     images:
       - name: $NODEPOOL_IMAGE
@@ -205,6 +211,13 @@ providers:
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
+      - name: ubuntu-dib-2
+        min-ram: 1024
+        diskimage: ubuntu-dib-2
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true
+
 
 diskimages:
   - name: ubuntu-dib
@@ -221,6 +234,22 @@ diskimages:
       DIB_APT_LOCAL_CACHE: '0'
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+
+  - name: ubuntu-dib-2
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - nodepool-setup
+    release: trusty
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
