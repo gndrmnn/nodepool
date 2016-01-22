@@ -111,6 +111,25 @@ dib-image-delete
 .. program-output:: nodepool dib-image-delete --help
    :nostderr:
 
+dib-dump-command
+^^^^^^^^^^^^^^^^
+
+This command dumps a `diskimage-builder` command-line suitable to
+replicate the build of an image, including environment and postitional
+arguments.  The `image_name` is given in `config.yaml` under
+`diskimages` (see :ref:`configuration`).
+
+This can be useful for replicating builds during debugging.  The extra
+environment variable `break=after-error` can also be a useful
+addtition to the provided command and will provision a shell within
+`diskimage-builder` after any failures.  See the `diskimage-builder
+documentation
+<http://docs.openstack.org/developer/diskimage-builder/>`__ for
+further details.
+
+.. program-output:: nodepool dib-dump-command --help
+   :nostderr:
+
 image-delete
 ^^^^^^^^^^^^
 .. program-output:: nodepool image-delete --help
