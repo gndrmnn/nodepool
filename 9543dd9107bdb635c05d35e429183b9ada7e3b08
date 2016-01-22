@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a68dd71_c37f89a9",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T14:37:45Z",
+      "side": 1,
+      "message": "is this new? otherwise I thought it was nodepool.yaml",
+      "revId": "9543dd9107bdb635c05d35e429183b9ada7e3b08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a68dd71_560cb53a",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T14:37:45Z",
+      "side": 1,
+      "message": "the other one worth mentioning here is DIB_OFFLINE\u003dtrue",
+      "revId": "9543dd9107bdb635c05d35e429183b9ada7e3b08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a68dd71_03612105",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T14:37:45Z",
+      "side": 1,
+      "message": "typo: addition",
+      "revId": "9543dd9107bdb635c05d35e429183b9ada7e3b08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a68dd71_769779ec",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T14:37:45Z",
+      "side": 1,
+      "message": "Still find \u0027output\u0027 to be unintuitive: http://docs-draft.openstack.org/10/271110/4/check/gate-nodepool-docs/9bc8a45//doc/build/html/operation.html#dib-dump-command",
+      "revId": "9543dd9107bdb635c05d35e429183b9ada7e3b08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
