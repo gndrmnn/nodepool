@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a68dd71_ad786090",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T01:34:05Z",
+      "side": 1,
+      "message": "i don\u0027t see filename being used.",
+      "revId": "085811bdfb354c500dc930fab57846f581adce9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a68dd71_8d279cb5",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T01:34:05Z",
+      "side": 1,
+      "message": "this should be optional. Actually I don\u0027t quite understand what it\u0027s used for. Which output filename? The one to hold the dib_dump_command?",
+      "revId": "085811bdfb354c500dc930fab57846f581adce9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
