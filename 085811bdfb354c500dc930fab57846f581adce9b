@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a68dd71_cde6f4b3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-01-22T01:54:43Z",
+      "side": 1,
+      "message": "oops, sorry, \"git add\" failure\n\nit\u0027s the image file name to output to in the dib command",
+      "parentUuid": "9a68dd71_ad786090",
+      "revId": "085811bdfb354c500dc930fab57846f581adce9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a68dd71_8d279cb5",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 1
