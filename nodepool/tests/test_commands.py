@@ -155,6 +155,13 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForNodes(pool)
         self.assert_listed(configfile, ['dib-image-list'], 4, 'ready', 1)
 
+    def test_dib_dump_command(self):
+        configfile = self.setup_config('node_dib.yaml')
+        self.patch_argv('-c', configfile, "dib-dump-command",
+                        "fake-dib-diskimage", "output.qcow2")
+        # just that this doesn't raise an exception is enough
+        nodepoolcmd.main()
+
     def test_dib_image_delete(self):
         configfile = self.setup_config('node_dib.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

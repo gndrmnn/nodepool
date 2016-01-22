@@ -21,6 +21,7 @@ import time
 
 from nodepool import nodedb
 from nodepool import nodepool
+from nodepool import builder
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
@@ -85,6 +86,13 @@ class NodePoolCmd(object):
             help='build image using diskimage-builder')
         cmd_image_build.add_argument('image', help='image name')
         cmd_image_build.set_defaults(func=self.image_build)
+
+        cmd_dib_dump_command = subparsers.add_parser(
+            'dib-dump-command',
+            help='dump the command to build an image to aid with debugging')
+        cmd_dib_dump_command.set_defaults(func=self.dib_dump_command)
+        cmd_dib_dump_command.add_argument('image_name', help='image name')
+        cmd_dib_dump_command.add_argument('output', help='output filename')
 
         cmd_alien_list = subparsers.add_parser(
             'alien-list',
@@ -181,6 +189,20 @@ class NodePoolCmd(object):
                            nodedb.STATE_NAMES[image.state],
                            NodePoolCmd._age(image.state_time)])
             print t
+
+    def dib_dump_command(self):
+        nb = builder.NodePoolBuilder(self.args.config)
+        nb.load_config(self.args.config)
+        cmd = nb.get_command(self.args.image_name, self.args.output)
+
+        if not cmd:
+            raise Exception("Can not find image %s" % self.args.image_name)
+
+        env_str = ""
+        for k,v in cmd['env'].iteritems():
+            env_str += "%s='%s' " % (k, v)
+
+        print "%s %s" % (env_str, cmd['command'])
 
     def image_list(self):
         t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
@@ -380,6 +402,11 @@ class NodePoolCmd(object):
 
         self.pool = nodepool.NodePool(self.args.secure, self.args.config)
         config = self.pool.loadConfig()
+
+        # commands that want config, but no connection
+        if self.args.command in ('dib-dump-command'):
+            return self.args.func()
+
         self.pool.reconfigureGearmanClient(config)
         self.pool.reconfigureDatabase(config)
         self.pool.setConfig(config)

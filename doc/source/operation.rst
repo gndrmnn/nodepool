@@ -111,6 +111,12 @@ dib-image-delete
 .. program-output:: nodepool dib-image-delete --help
    :nostderr:
 
+dib-dump-command
+^^^^^^^^^^^^^^^^
+
+.. program-output:: nodepool dib-dump-command --help
+   :nostderr:
+
 image-delete
 ^^^^^^^^^^^^
 .. program-output:: nodepool image-delete --help

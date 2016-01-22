@@ -152,6 +152,20 @@ class NodePoolBuilder(object):
             self._config, config)
         self._config = config
 
+    def get_command(self, image_name, filename):
+        """Return the dib command-line to replicate a build for IMAGE_NAME
+        with output to FILENAME.  Returns a dict with environment
+        variables in "env" and the command in "command", or None if
+        the image is not found
+        """
+        self.log.debug("Dumping dib command line for %s" % image_name)
+        image = self._getDiskimageByName(image_name)
+        if image:
+            return self._buildDibCommand(image, 'output')
+        else:
+            self.log.debug("Disk image %s not found to dump" % image_name)
+            return None
+
     def _validate_config(self):
         if not self._config.gearman_servers.values():
             raise RuntimeError('No gearman servers specified in config.')
@@ -319,8 +333,11 @@ class NodePoolBuilder(object):
                                                        provider.name))
         return external_id
 
-    def _runDibForImage(self, image, filename):
-        env = os.environ.copy()
+    def _buildDibCommand(self, image, filename):
+        """Build the DIB command.
+        Returns a dict with the environment variables and command string"""
+
+        env = {}
 
         env['DIB_RELEASE'] = image.release
         env['DIB_IMAGE_NAME'] = image.name
@@ -352,21 +369,33 @@ class NodePoolBuilder(object):
         cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
                (dib_cmd, img_types, qemu_img_options, filename, img_elements))
 
+        return {
+            'env': env,
+            'command': cmd
+        }
+
+    def _runDibForImage(self, image, filename):
+
+        cmd = self._buildDibCommand(image, filename)
+
+        env = os.environ.copy()
+        env.update(cmd['env'])
+
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image.name,))
 
-        self.log.info('Running %s' % cmd)
+        self.log.info('Running %s' % cmd['command'])
 
         try:
             p = subprocess.Popen(
-                shlex.split(cmd),
+                shlex.split(cmd['command']),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 env=env)
         except OSError as e:
             raise exceptions.BuilderError(
-                "Failed to exec '%s'. Error: '%s'" % (cmd, e.strerror)
-            )
+                "Failed to exec '%s'. Error: '%s'" % (cmd['command'],
+                                                      e.strerror))
 
         while True:
             ln = p.stdout.readline()
