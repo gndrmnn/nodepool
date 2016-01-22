@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a68dd71_6827b664",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T02:20:57Z",
+      "side": 1,
+      "message": "I think \u0027output\u0027 is too generic. Also we need to make it clear the image_name from nodepool.yaml and the user\u0027s chosen dib filename for the resulting image.",
+      "revId": "8b0a27d6ea24281316abe3a65d33d56037590c04",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a68dd71_48e4320c",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 9624
+      },
+      "writtenOn": "2016-01-22T02:20:57Z",
+      "side": 1,
+      "message": "looking at this line i would expect to see something more like self.args.target_image_file_name",
+      "revId": "8b0a27d6ea24281316abe3a65d33d56037590c04",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
