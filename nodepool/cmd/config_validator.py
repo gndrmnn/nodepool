@@ -69,6 +69,7 @@ class ConfigValidator:
             'max-servers': int,
             'pool': str,
             'image-type': str,
+            'image-api-use-tasks': bool,
             'networks': [v.Any(old_network, network)],
             'boot-timeout': int,
             'api-timeout': int,
