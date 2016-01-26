@@ -153,9 +153,6 @@ class NodePoolBuilder(object):
         self._config = config
 
     def _validate_config(self):
-        if not self._config.gearman_servers.values():
-            raise RuntimeError('No gearman servers specified in config.')
-
         if not self._config.imagesdir:
             raise RuntimeError('No images-dir specified in config.')
 
