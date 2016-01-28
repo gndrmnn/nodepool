@@ -1,0 +1,191 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a5de9d1_17350df6",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "The _completed flag is not necessary (see waitForCompletion).",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_b73bd9ea",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_d73e95d9",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "The conditional is not necessary, once the event is set, it will continue to return True immediately.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_7726c1cf",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Why do we need to call deleteDibImage only if the job has started?  If it aborted halfway through the build, is the builder going to register the delete function?\n\nI confess, I\u0027d be more comfortable if this didn\u0027t depend on knowing the state.  I\u0027d much rather simply be able to call \"deleteDibImage\" at any time, and in any state, and have _it_ do the right thing.  If you agree, we can drop the record_only flag, as well as the job_started flag.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_9721fdb6",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "This should all probably be in a try/except so that the super gets called, otherwise the JobTracker will wait forever.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_37304901",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_572b8594",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_f7187186",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "I don\u0027t think you need the commit here, that\u0027s about to happen as soon as you exit the context manager.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_171c2d76",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Same thing about try/except so that super gets called.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_b712f960",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_d7153549",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-01-28T18:49:48Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
