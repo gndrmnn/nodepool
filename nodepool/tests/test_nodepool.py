@@ -485,6 +485,25 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
 
+    def test_handle_dib_build_gear_disconnect(self):
+        """Test that a disconnect waiting for a build is handled properly"""
+        configfile = self.setup_config('node_dib.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.updateConfig()
+
+        # build an image without a builder running so the job remains queued
+        # then shutdown the gearman server to simulate a disconnect
+        pool.buildImage(pool.config.diskimages['fake-dib-diskimage'])
+        time.sleep(5)
+        self.gearman_server.shutdown()
+
+        new_geard = self.useFixture(
+            tests.GearmanServerFixture(self.gearman_server.port))
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
+        self.waitForNodes(pool)
+
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):

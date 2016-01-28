@@ -1637,7 +1637,16 @@ class NodePool(threading.Thread):
                     gearman_job = jobs.ImageBuildJob(image.name, dib_image.id,
                                                      self)
                     self._image_build_jobs.addJob(gearman_job)
-                    self.gearman_client.submitJob(gearman_job)
+
+                    try:
+                        self.gearman_client.submitJob(gearman_job)
+                    except gear.GearmanError:
+                        self.log.exception("Unable to submit gearman job.")
+                        self.log.warning("Deleting DibImage record %s with id "
+                                         "%d", dib_image.image_name,
+                                         dib_image.id)
+                        dib_image.delete()
+
                     self.log.debug("Queued image building task for %s" %
                                    image.name)
                 except Exception:
