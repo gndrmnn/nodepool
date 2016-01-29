@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a5de9d1_ed63b2da",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-01-29T00:51:17Z",
+      "side": 1,
+      "message": "This can go away now",
+      "revId": "e078dcdef415c9998682248104d015b603ec58b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_0d5f2e0f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-01-29T00:51:17Z",
+      "side": 1,
+      "message": "same",
+      "revId": "e078dcdef415c9998682248104d015b603ec58b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_8dcebeb2",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-01-29T00:51:17Z",
+      "side": 1,
+      "message": "I think this will never be set to false, now. We can remove this.\n\nI also wonder if we should .join() on each of the workers? This could allow us to log that we are waiting for workers to complete (which may be a bit of they are building) and then log when they are done.",
+      "revId": "e078dcdef415c9998682248104d015b603ec58b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
