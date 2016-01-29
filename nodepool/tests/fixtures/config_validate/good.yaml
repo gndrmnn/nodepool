@@ -445,6 +445,7 @@ providers:
     api-timeout: 60
     boot-timeout: 120
     max-servers: 100
+    ipv6-preferred: False
     networks:
       - net-id: b6596f90-914a-41e9-b01a-223d90b86e8d
     availability-zones:
