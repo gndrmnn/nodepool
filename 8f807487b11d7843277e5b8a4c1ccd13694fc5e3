@@ -16,6 +16,23 @@
       "revId": "8f807487b11d7843277e5b8a4c1ccd13694fc5e3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a5de9d1_24f5aa82",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1865,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-02-02T20:18:30Z",
+      "side": 1,
+      "message": "so previously this called handleImageDeleteComplete() which set the state to DELETE and then deleted ... i don\u0027t see that happening any more?",
+      "revId": "8f807487b11d7843277e5b8a4c1ccd13694fc5e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
