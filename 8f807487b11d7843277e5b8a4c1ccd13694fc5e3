@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a5de9d1_0a6f5f93",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-02-02T17:42:05Z",
+      "side": 1,
+      "message": "We have removed the *Handler functions and directly handle events with specific subclass override implementations. The only thing we are using this for is the waitForCompletion implementation. Maybe we should simplify this class to reflect that?\n\nWould be ok to do this in a follow up change as this is largely just a refactor move for this class.",
+      "revId": "8f807487b11d7843277e5b8a4c1ccd13694fc5e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
