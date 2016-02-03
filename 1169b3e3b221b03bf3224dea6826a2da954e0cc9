@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a5ae5dd_a222feb7",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2016-02-03T10:05:41Z",
+      "side": 1,
+      "message": "you are missing the mkstemp file creation here, where you get the fd descriptor",
+      "range": {
+        "startLine": 265,
+        "startChar": 15,
+        "endLine": 265,
+        "endChar": 20
+      },
+      "revId": "1169b3e3b221b03bf3224dea6826a2da954e0cc9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_0218b283",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2016-02-03T10:05:41Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "1169b3e3b221b03bf3224dea6826a2da954e0cc9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
