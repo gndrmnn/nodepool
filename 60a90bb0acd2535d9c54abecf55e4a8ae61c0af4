@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_7386c714",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-04T16:56:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_17350df6",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_b73bd9ea",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2016-01-28T18:49:48Z",
       "side": 1,
       "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_f372b748",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-04T16:56:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_b73bd9ea",
       "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_b393df4e",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-04T16:56:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_d73e95d9",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_7726c1cf",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2016-01-28T18:49:48Z",
       "side": 1,
       "message": "Why do we need to call deleteDibImage only if the job has started?  If it aborted halfway through the build, is the builder going to register the delete function?\n\nI confess, I\u0027d be more comfortable if this didn\u0027t depend on knowing the state.  I\u0027d much rather simply be able to call \"deleteDibImage\" at any time, and in any state, and have _it_ do the right thing.  If you agree, we can drop the record_only flag, as well as the job_started flag.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_4e519e61",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-04T16:56:31Z",
+      "side": 1,
+      "message": "Ah, so the flag is what I missed.\n\nI agree with the notion that deleteDibImage should try to make a best effort at doing the right thing. That means in scenarios where we lack sufficient state tracking it will do the conservative thing (not submit a delete job) and rely an a periodic cleanup (when that is implemented). Because we do not yet have periodic cleanup we decided (in irc a while back) for deleteDibImage to err on the side of submitting a delete job even though it may not exist.\n\nFor this specific case though, we know we do not want to submit a delete job, and we know deleteDibImage will (until we implement periodic cleanup). It seems silly to me for us to hit our own known resource leak (jobs which will never be serviced) at the cost of this bit of code... so how about we add a todo of removing this once deleteDibImage is smart enough to not submit a delete job?",
+      "parentUuid": "7a5de9d1_7726c1cf",
       "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
