@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_699d5dbb",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:08Z",
+      "side": 1,
+      "message": "We still use the handler registering stuff in one place - JobTracker which is used by waitForBuiltImages in nodepool. We could (and I think should) rework some of the control flow to not need that method, but not now IMO.",
+      "parentUuid": "7a5de9d1_0a6f5f93",
+      "revId": "8f807487b11d7843277e5b8a4c1ccd13694fc5e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_24f5aa82",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 7
