@@ -187,6 +187,8 @@ providers:
     boot-timeout: 600
     max-servers: 2
     rate: 0.25
+    networks:
+      - name: $PRIVATE_NETWORK_NAME
     images:
       - name: $NODEPOOL_IMAGE
         base-image: '$NODEPOOL_IMAGE'
