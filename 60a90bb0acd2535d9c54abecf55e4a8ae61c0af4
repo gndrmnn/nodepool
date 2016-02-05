@@ -159,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_a98ef576",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_9721fdb6",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_37304901",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -170,6 +188,24 @@
       "writtenOn": "2016-01-28T18:49:48Z",
       "side": 1,
       "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_497f4166",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_37304901",
       "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -193,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_e9986dc2",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_572b8594",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_f7187186",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -204,6 +258,24 @@
       "writtenOn": "2016-01-28T18:49:48Z",
       "side": 1,
       "message": "I don\u0027t think you need the commit here, that\u0027s about to happen as soon as you exit the context manager.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_c98b3167",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_f7187186",
       "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -227,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_69eb1d14",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_171c2d76",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_b712f960",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -244,6 +334,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_89f0d9ff",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_b712f960",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a5de9d1_d7153549",
         "filename": "nodepool/jobs.py",
         "patchSetId": 5
@@ -255,6 +363,24 @@
       "writtenOn": "2016-01-28T18:49:48Z",
       "side": 1,
       "message": "Ditto.",
+      "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_49f661fa",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T03:31:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5de9d1_d7153549",
       "revId": "60a90bb0acd2535d9c54abecf55e4a8ae61c0af4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
