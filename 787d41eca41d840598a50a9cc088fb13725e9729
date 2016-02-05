@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a5ae5dd_ad67c1e7",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T16:58:17Z",
+      "side": 1,
+      "message": "Yep",
+      "parentUuid": "5a5ae5dd_8878e090",
+      "revId": "787d41eca41d840598a50a9cc088fb13725e9729",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a5ae5dd_48af4894",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2016-02-04T21:30:25Z",
       "side": 1,
       "message": "So here, we\u0027ve failed to submit the image-delete job that gets picked up by the builder, that actually deletes the image.\n\nSo we set the state to nodedb.DELETE which will then get picked up during the periodic clean below?\n\nEven if the image isn\u0027t too old, if it is in state nodedb.DELETE during periodic cleanup we will now therefore re-submit the delete job\n\nMaybe this should have another state that nodedb.DELETE?  nodedb.RETRY_DELETE or something?",
+      "revId": "787d41eca41d840598a50a9cc088fb13725e9729",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a5ae5dd_8db1a549",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-05T16:58:17Z",
+      "side": 1,
+      "message": "eh, I am not crazy about adding states unless we need to - DELETE is used elsewhere (for snapshot images) for this same purpose so it seems like a good fit.",
+      "parentUuid": "5a5ae5dd_48af4894",
       "revId": "787d41eca41d840598a50a9cc088fb13725e9729",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
