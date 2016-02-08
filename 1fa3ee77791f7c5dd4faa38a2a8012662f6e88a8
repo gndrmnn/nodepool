@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a5ae5dd_b893335a",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-08T18:04:48Z",
+      "side": 1,
+      "message": "Commit isn\u0027t necessary.",
+      "revId": "1fa3ee77791f7c5dd4faa38a2a8012662f6e88a8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
