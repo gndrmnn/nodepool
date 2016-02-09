@@ -268,6 +268,7 @@ class JobTracker(object):
     def addJob(self, job):
         self._running_jobs.add(job)
         job.addCompletionHandler(self._running_jobs.remove)
+        job.addFailureHandler(self._running_jobs.remove)
 
 
 class GearmanClient(gear.Client):
