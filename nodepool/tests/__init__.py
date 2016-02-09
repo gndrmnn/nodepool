@@ -279,6 +279,8 @@ class MySQLSchemaFixture(fixtures.Fixture):
                              passwd="openstack_citest",
                              db="openstack_citest")
         cur = db.cursor()
+        # Dump transaction state to debug failed db drops.
+        cur.execute("show engine innodb status" % self.name)
         cur.execute("drop database %s" % self.name)
 
 
