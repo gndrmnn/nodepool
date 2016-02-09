@@ -279,6 +279,24 @@ class MySQLSchemaFixture(fixtures.Fixture):
                              passwd="openstack_citest",
                              db="openstack_citest")
         cur = db.cursor()
+        print("dropping database %s" % self.name)
+        # Dump transaction state to debug failed db drops.
+        cur.execute("show engine innodb status")
+        print(cur.fetchone()[2])
+        cur.execute("show open tables")
+        print("show open tables")
+        print("================")
+        print("Database Table In_use Name_locked")
+        for row in cur.fetchall():
+            print(row)
+        print()
+        cur.execute("show full processlist")
+        print("show full processlist")
+        print("=====================")
+        print("Id User Host DB Command Time State Info")
+        for row in cur.fetchall():
+            print(row)
+        print()
         cur.execute("drop database %s" % self.name)
 
 
