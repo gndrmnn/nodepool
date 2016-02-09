@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a5ae5dd_60cb8273",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-02-09T16:37:01Z",
+      "side": 1,
+      "message": "This should be onFailed()",
+      "revId": "ca3d95774bd67621061c05bf151219bae39ba1b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
