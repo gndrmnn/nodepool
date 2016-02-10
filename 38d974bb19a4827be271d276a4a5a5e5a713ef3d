@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3a57f1b5_95d26eff",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-02-10T18:41:57Z",
+      "side": 1,
+      "message": "This should probably link out to openstack client config docs that explain what a clouds.yaml is, where it can reside, and what the format of its contents should be.\n\nAlso cloud here refers to a profile in clouds.yaml.",
+      "revId": "38d974bb19a4827be271d276a4a5a5e5a713ef3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a57f1b5_862b2deb",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -42,6 +59,23 @@
         "endLine": 346,
         "endChar": 65
       },
+      "revId": "38d974bb19a4827be271d276a4a5a5e5a713ef3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a57f1b5_1590be42",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-02-10T18:41:57Z",
+      "side": 1,
+      "message": "This is actually a nodepool specific setting and changing it in clouds.yaml won\u0027t affect how nodepool operates.",
       "revId": "38d974bb19a4827be271d276a4a5a5e5a713ef3d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
