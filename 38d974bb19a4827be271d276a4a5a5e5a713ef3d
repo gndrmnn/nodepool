@@ -22,6 +22,29 @@
       "revId": "38d974bb19a4827be271d276a4a5a5e5a713ef3d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a57f1b5_8631ed0d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 7979
+      },
+      "writtenOn": "2016-02-10T17:32:00Z",
+      "side": 1,
+      "message": "would sound better if \u0027just directly\u0027 if removed, there is another \u0027directly\u0027 later.",
+      "range": {
+        "startLine": 346,
+        "startChar": 51,
+        "endLine": 346,
+        "endChar": 65
+      },
+      "revId": "38d974bb19a4827be271d276a4a5a5e5a713ef3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
