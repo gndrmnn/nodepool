@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a57f1b5_666dca97",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-10T19:34:57Z",
+      "side": 1,
+      "message": "We could probably do some things here to catch errors before the timeout, like asserting that the number of images is \u003c\u003d1, and that images[0] is not ready.  But none of that is strictly necessary.",
+      "revId": "352ce8efc1d16e2a7d7b31f86c121e32e60181c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
