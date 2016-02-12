@@ -289,10 +289,10 @@ def loadSecureConfig(config, secure_config_path):
         section_name = 'jenkins "%s"' % target.name
         if secure.has_section(section_name):
             target.jenkins_url = secure.get(section_name, 'url')
-            target.jenkins_user = secure.get(section_name, 'user')
-            target.jenkins_apikey = secure.get(section_name, 'apikey')
 
         try:
+            target.jenkins_user = secure.get(section_name, 'user')
+            target.jenkins_apikey = secure.get(section_name, 'apikey')
             target.jenkins_credentials_id = secure.get(
                 section_name, 'credentials')
         except:
