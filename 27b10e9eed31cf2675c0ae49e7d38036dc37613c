@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dae33548_7248782e",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-02-15T02:45:42Z",
+      "side": 1,
+      "message": "It\u0027s not clear if you want this merged, or it\u0027s testing or WIP?\n\nI\u0027m guessing you\u0027re just trying this out because that should be using log functions",
+      "revId": "27b10e9eed31cf2675c0ae49e7d38036dc37613c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
