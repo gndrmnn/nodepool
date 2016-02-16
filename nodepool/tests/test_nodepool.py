@@ -528,6 +528,42 @@ class TestNodepool(tests.DBTestCase):
             # should be second image built.
             self.assertEqual(images[0].id, 2)
 
+    def test_building_node_cleanup_on_start(self):
+        """Test that a building node is deleted on start"""
+        configfile = self.setup_config('node.yaml')
+        pool = nodepool.nodepool.NodePool(configfile, watermark_sleep=1)
+        try:
+            pool.start()
+            self.waitForImage(pool, 'fake-provider', 'fake-image')
+            self.waitForNodes(pool)
+        finally:
+            # Stop nodepool instance so that it can be restarted.
+            pool.stop()
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+            # Set the state to building to force cleanup on restart
+            nodes[0].state = nodedb.BUILDING
+
+        # Start nodepool instance which should delete our old node.
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+            # should be second node built.
+            self.assertEqual(nodes[0].id, 2)
+
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):
