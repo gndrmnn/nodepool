@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dae33548_f2f54dcb",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-02-16T17:35:13Z",
+      "side": 1,
+      "message": "I would use the existing boot timeout less some overhead for fip attach and state change for your timeout on adding an fip. That way you can control it as a user and don\u0027t have to spin for 10 minutes if something else is wrong.",
+      "revId": "43ea2de8282b3e2e33ff5a427fe2c3077df77b74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
