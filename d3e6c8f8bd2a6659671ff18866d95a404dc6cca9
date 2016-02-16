@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dae33548_4330a89e",
+        "filename": "nodepool/jobs.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-16T18:56:00Z",
+      "side": 1,
+      "message": "This will log the database delete action.",
+      "revId": "d3e6c8f8bd2a6659671ff18866d95a404dc6cca9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dae33548_a327f462",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 1650,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-16T18:56:00Z",
+      "side": 1,
+      "message": "onFailed will call dib_image.delete, which will also log this info.  Why not just remove the gear.GearmanError handler and instead just leave the generic Exception handler below?",
+      "revId": "d3e6c8f8bd2a6659671ff18866d95a404dc6cca9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dae33548_832ab02a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-16T18:56:00Z",
+      "side": 1,
+      "message": "Leave this handler.",
+      "revId": "d3e6c8f8bd2a6659671ff18866d95a404dc6cca9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dae33548_e321fc4e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 1658,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-16T18:56:00Z",
+      "side": 1,
+      "message": "This one will log the exception message.",
+      "revId": "d3e6c8f8bd2a6659671ff18866d95a404dc6cca9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
