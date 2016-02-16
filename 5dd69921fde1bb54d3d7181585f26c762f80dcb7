@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dae33548_c8597600",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-02-16T18:12:59Z",
+      "side": 1,
+      "message": "If we can\u0027t submit the build job, should we also remove it from the image_build_jobs list... or, better yet, just call onFailed on it (which will then call dib_image.delete())?",
+      "revId": "5dd69921fde1bb54d3d7181585f26c762f80dcb7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
