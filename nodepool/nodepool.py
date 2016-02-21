@@ -26,6 +26,7 @@ import paramiko
 import pprint
 import random
 import re
+import runansible
 import threading
 import time
 from uuid import uuid4
@@ -56,6 +57,15 @@ IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
                              # READY or is not the current or previous image
 DELETE_DELAY = 1 * MINS      # Delay before deleting a node that has completed
                              # its job.
+
+
+def _ansible_nodelist(nodelist):
+    """Takes a list of tuples of the form (role, host) and returns
+       a list of tuples of the form (host, [role], [])"""
+    new_list = []
+    for role, host in nodelist:
+        new_list.append((host, [role], []))
+    return new_list
 
 
 class LaunchNodepoolException(Exception):
@@ -533,10 +543,12 @@ class NodeLauncher(threading.Thread):
 
         nodelist = []
         for subnode in self.node.subnodes:
-            nodelist.append(('sub', subnode))
+            nodelist.append(('subnodes', subnode))
         nodelist.append(('primary', self.node))
 
         self.writeNodepoolInfo(nodelist)
+        if self.label.playbook:
+            self.runPlaybook(nodelist)
         if self.label.ready_script:
             self.runReadyScript(nodelist)
 
@@ -701,6 +713,12 @@ class NodeLauncher(threading.Thread):
                      "cd /opt/nodepool-scripts && %s ./%s %s" %
                      (env_vars, self.label.ready_script, n.hostname),
                      output=True)
+
+    def runPlaybook(self, nodelist):
+        with runansible.AnsibleRunner() as runner:
+            runner.prepare_files(_ansible_nodelist(nodelist))
+            runner.copy_playbook(self.label.playbook)
+            runner.run()
 
 
 class SubNodeLauncher(threading.Thread):
