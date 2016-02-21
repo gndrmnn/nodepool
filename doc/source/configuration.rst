@@ -188,6 +188,12 @@ providers or images are used to create them).  Example::
     has been launched but before it is put in the READY state to receive jobs.
     For more information, see :ref:`scripts`.
 
+  ``playbook``
+    An ansible playbook to be used to perform any last minute changes to a node
+    after it has been launched but before it is put in the READY state to
+    receive jobs. Playbooks will be referenced by filename from `script-dir`.
+    For more information, see :ref:`scripts`.
+
 .. _diskimages:
 
 diskimages
