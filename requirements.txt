@@ -19,3 +19,4 @@ voluptuous
 kazoo
 Paste
 WebOb>=1.2.3
+git+https://github.com/pabelanger/runansible.git#egg=runansible
