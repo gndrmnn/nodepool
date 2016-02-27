@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aed3d3a_0b9cf767",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 6223
+      },
+      "writtenOn": "2016-02-27T23:26:07Z",
+      "side": 1,
+      "message": "Would probably be helpful to say something in the log if we do not find the server.",
+      "revId": "340adaf6b73911d71e4876e2b53a6de60749c1c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9aed3d3a_6b894326",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 6223
+      },
+      "writtenOn": "2016-02-27T23:26:07Z",
+      "side": 1,
+      "message": "This will throw an exception if server is {}. Should we just let it happen? I would argue KeyError might be confusing.",
+      "revId": "340adaf6b73911d71e4876e2b53a6de60749c1c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
