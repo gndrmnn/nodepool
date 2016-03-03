@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7af24918_cd8132fd",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-03-03T19:53:56Z",
+      "side": 1,
+      "message": "duplicated from nodepool.exceptions?  not clear why",
+      "revId": "6271308c57adb8e6b7b0b3c2813eca71a9f7e135",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7af24918_0da79aaa",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-03-03T19:53:56Z",
+      "side": 1,
+      "message": "nodepool.exceptions.TimeoutException",
+      "revId": "6271308c57adb8e6b7b0b3c2813eca71a9f7e135",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
