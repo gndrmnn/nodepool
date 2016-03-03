@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7af24918_6712cb58",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-03T15:38:22Z",
+      "side": 1,
+      "message": "% resource_type",
+      "revId": "9060b672830efa43da77df5d28bec30e669f7063",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7af24918_c71bdf71",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-03T15:38:22Z",
+      "side": 1,
+      "message": "the english is badder here.  (\"Timeout waiting for ip added to X\").  can we go back to \"to be added to\" ?",
+      "revId": "9060b672830efa43da77df5d28bec30e669f7063",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
