@@ -25,21 +25,26 @@ from sshclient import SSHClient
 import fakeprovider
 import paramiko
 
+import nodepool.exceptions
+
 log = logging.getLogger("nodepool.utils")
 
 
 ITERATE_INTERVAL = 2  # How long to sleep while waiting for something
                       # in a loop
 
+class TimeoutException(Exception):
+    pass
 
-def iterate_timeout(max_seconds, purpose):
+
+def iterate_timeout(max_seconds, exc, purpose):
     start = time.time()
     count = 0
     while (time.time() < start + max_seconds):
         count += 1
         yield count
         time.sleep(ITERATE_INTERVAL)
-    raise Exception("Timeout waiting for %s" % purpose)
+    raise exc("Timeout waiting for %s" % purpose)
 
 
 def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
@@ -47,7 +52,8 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
         return fakeprovider.FakeSSHClient()
     # HPcloud may return ECONNREFUSED or EHOSTUNREACH
     # for about 30 seconds after adding the IP
-    for count in iterate_timeout(timeout, "ssh access"):
+    for count in iterate_timeout(
+            timeout, nodepool.exceptions.SSHTimeoutException, "ssh access"):
         try:
             client = SSHClient(ip, username, **connect_kwargs)
             break
