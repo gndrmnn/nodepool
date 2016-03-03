@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7af24918_2e6a8cee",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-03-03T01:35:45Z",
+      "side": 1,
+      "message": "Whoops, this should have reason\u003d appended.",
+      "revId": "e4e5ad7dfd35292bddc0f23f9428704a50f5c2d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
