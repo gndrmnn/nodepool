@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7af24918_d8aeaee6",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-03-06T23:46:05Z",
+      "side": 1,
+      "message": "it might be nice to put some of the commit message in here to make it discoverable about why you might want to use this; or why we set it to 60 for default upstream (for jenkins to pull the console) but otherwise you might like to turn it to 0 to increase performance.",
+      "revId": "916ddc821b5cdee64ad743845603fcf754583e2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7af24918_589a9ec6",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-03-06T23:46:05Z",
+      "side": 1,
+      "message": "so i don\u0027t really think it makes sense to have it under it\u0027s own section and then put it in to the global space like this (it\u0027s not under a dict called .nodepoold\n\nI don\u0027t think there\u0027s really that many globals that we need the section",
+      "revId": "916ddc821b5cdee64ad743845603fcf754583e2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
