@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3afc51ec_b4d8261f",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 54
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 14119
+      },
+      "writtenOn": "2016-03-11T16:22:44Z",
+      "side": 1,
+      "message": "technically this doesnt mean its set to True, just set to something that doesnt eval as False",
+      "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3afc51ec_94f88a7e",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 54
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 14119
+      },
+      "writtenOn": "2016-03-11T16:22:44Z",
+      "side": 1,
+      "message": "too many new lines",
+      "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3afc51ec_9489aacd",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 54
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 14119
+      },
+      "writtenOn": "2016-03-11T16:22:44Z",
+      "side": 1,
+      "message": "sending messages to log should use c-style vars passed with a comment not \"%s\" % mesg. This avoids an annoying and horrible to track down bug. But what you ahve fits current coding, it should be changed everywhere else.\n\n    log.debug(\"%s\", mesg)",
+      "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
