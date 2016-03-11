@@ -67,6 +67,24 @@
       "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3afc51ec_f8dbbc19",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 54
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 14119
+      },
+      "writtenOn": "2016-03-11T18:36:59Z",
+      "side": 1,
+      "message": "I happen to agree with the consistency arguement, however I disagree it is equally safe for all cases, just for a few cases what you purpose is solved as well using c-style variable passing.\n\nusing \u0027%\u0027 or .format() will result in an exception being raised if the string interpolation fails for some reason (unicode or bad variable or whatever reason) for example:\n\n    log.debug(\u0027%s %s\u0027 % var1)\n\nbreaks the program whereas using \n\n    log.debug(\u0027%s %s\u0027, var1)\n\n_wont_ block and fail the program, it will just report the error in the log",
+      "parentUuid": "3afc51ec_82a32c9e",
+      "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
