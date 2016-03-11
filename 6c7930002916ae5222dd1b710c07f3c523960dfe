@@ -50,6 +50,23 @@
       "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3afc51ec_82a32c9e",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 54
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-11T16:52:10Z",
+      "side": 1,
+      "message": "That is one solution, however, under the prevailing style in nodepool it would actually be:\n\n\"Delete from %s\" % (repr(instance_list),)\n\nWhich is equally safe as the other approach.  So I do think this should be changed -- but only to match everywhere else.",
+      "revId": "6c7930002916ae5222dd1b710c07f3c523960dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
