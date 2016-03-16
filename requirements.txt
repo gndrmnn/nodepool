@@ -18,3 +18,5 @@ os-client-config>=1.2.0
 shade>=1.8.0
 diskimage-builder
 voluptuous
+Paste
+WebOb>=1.2.3
