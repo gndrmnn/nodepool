@@ -33,6 +33,24 @@
       "revId": "340adaf6b73911d71e4876e2b53a6de60749c1c0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1af94dfe_8b276263",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1106
+      },
+      "writtenOn": "2016-03-17T09:52:18Z",
+      "side": 1,
+      "message": "Agreed, in case server is empty this will fail.\nYou better  move this block to the below \u0027if server\u0027 on line 660 ?",
+      "parentUuid": "9aed3d3a_6b894326",
+      "revId": "340adaf6b73911d71e4876e2b53a6de60749c1c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
