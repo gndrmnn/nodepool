@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1af94dfe_fd0f9636",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-03-18T05:09:00Z",
+      "side": 1,
+      "message": "An exception may be raised before these are set. In particular see line 116.\n\nWe probably need to check if these variables exist before logging them. We can\u0027t place them outside of the try block as we want to catch this exception for when the arguments aren\u0027t set properly on the job (for example).\n\nWe could set them to None outside of the try loop and reorder line 120 to get the image_name before validating the image_id.",
+      "range": {
+        "startLine": 136,
+        "startChar": 34,
+        "endLine": 136,
+        "endChar": 44
+      },
+      "revId": "82d83c4443d10d9dcbb65592aa86ac9393d2927d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1af94dfe_dd145a4e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-03-18T05:09:00Z",
+      "side": 1,
+      "message": "This is prone to the same problems as above.",
+      "range": {
+        "startLine": 173,
+        "startChar": 52,
+        "endLine": 173,
+        "endChar": 62
+      },
+      "revId": "82d83c4443d10d9dcbb65592aa86ac9393d2927d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
