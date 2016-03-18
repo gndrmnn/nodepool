@@ -129,6 +129,18 @@ schedule for these tasks and also indicates their default values::
     cleanup: '27 */6 * * *'
     check: '*/15 * * * *'
 
+image-builders
+--------------
+This section is optional.
+
+Nodepool-builder uses this section to control the amount of workers used for
+building and uploading images. The following illustrates how to change and
+indicates their default values::
+
+  image-builders:
+    build-workers: 1
+    upload-workers: 4
+
 zmq-publishers
 --------------
 Lists the ZeroMQ endpoints for the Jenkins masters.  Nodepool uses

@@ -74,6 +74,10 @@ class Cron(ConfigValue):
     pass
 
 
+class ImageBuilders(ConfigValue):
+    pass
+
+
 class ZMQPublisher(ConfigValue):
     pass
 
@@ -110,6 +114,7 @@ def loadConfig(config_path):
     newconfig.gearman_servers = {}
     newconfig.diskimages = {}
     newconfig.crons = {}
+    newconfig.image_builders = {}
 
     for name, default in [
         ('image-update', '14 2 * * *'),
@@ -121,6 +126,15 @@ def loadConfig(config_path):
         newconfig.crons[c.name] = c
         c.job = None
         c.timespec = config.get('cron', {}).get(name, default)
+
+    for name, default in [
+        ('build-workers', 1),
+        ('upload-workers', 4),
+        ]:
+        ib = ImageBuilders()
+        ib.name = name
+        newconfig.image_builders[ib.name] = ib
+        ib.count = config.get('image-builders', {}).get(name, default)
 
     for addr in config.get('zmq-publishers', []):
         z = ZMQPublisher()

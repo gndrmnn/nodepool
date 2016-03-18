@@ -19,6 +19,10 @@ zmq-publishers:
 gearman-servers:
   - host: zuul.openstack.org
 
+image-builders:
+  build-workers: 1
+  upload-workers: 4
+
 labels:
   - name: devstack-precise
     image: devstack-precise
