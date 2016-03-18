@@ -131,7 +131,9 @@ class BuildWorker(BaseWorker):
                 self.nplog.error('Unable to handle job %s', job.name)
                 job.sendWorkFail()
         except Exception:
-            self.nplog.exception('Exception while running job')
+            self.nplog.exception('Exception while running build job for '
+                                 'image name %s, image id %s' %
+                                 (image_name, image_id))
             job.sendWorkException(traceback.format_exc())
 
 
@@ -166,7 +168,9 @@ class UploadWorker(BaseWorker):
                 self.nplog.error('Unable to handle job %s', job.name)
                 job.sendWorkFail()
         except Exception:
-            self.nplog.exception('Exception while running job')
+            self.nplog.exception('Exception while running upload job for '
+                                 'provider %s, image name %s,  image id %s' %
+                                 (args['provider'], image_name, image_id))
             job.sendWorkException(traceback.format_exc())
 
 
