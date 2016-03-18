@@ -43,6 +43,11 @@ class ConfigValidator:
             'config-drive': bool,
         }
 
+        image_builders = {
+            'build-workers': int,
+            'upload-workers': int,
+        }
+
         old_network = {
             'net-id': str,
             'net-label': str,
@@ -121,6 +126,7 @@ class ConfigValidator:
                 'port': int,
             }],
             'cron': cron,
+            'image-builders': image_builders,
             'providers': [providers],
             'labels': [labels],
             'targets': [targets],
