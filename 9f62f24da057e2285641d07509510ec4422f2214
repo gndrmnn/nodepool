@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa0719c6_6407ec1c",
+        "filename": "nodepool/webapp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-03-21T17:56:40Z",
+      "side": 1,
+      "message": "Nodepool?",
+      "revId": "9f62f24da057e2285641d07509510ec4422f2214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
