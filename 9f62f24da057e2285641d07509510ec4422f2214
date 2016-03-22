@@ -16,6 +16,23 @@
       "revId": "9f62f24da057e2285641d07509510ec4422f2214",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa0719c6_612796b6",
+        "filename": "nodepool/webapp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-22T22:08:02Z",
+      "side": 1,
+      "message": "Yes.  Well, I mean, it\u0027s not *wrong*, it\u0027s just not relevant.  :)",
+      "revId": "9f62f24da057e2285641d07509510ec4422f2214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
