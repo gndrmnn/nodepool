@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa0719c6_f9088c2f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 61
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-22T18:14:44Z",
+      "side": 1,
+      "message": "Why are we making this change from PS 60?  Don\u0027t we want to get the server ID here ASAP and store it in the database, then wait for the server to come online?",
+      "revId": "eea51ac1b54d4c8419d677942f404daa1d76a729",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
