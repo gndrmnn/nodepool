@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa0719c6_d4d2add1",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 62
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-22T18:29:35Z",
+      "side": 1,
+      "message": "capital S -\u003e lowercase",
+      "revId": "5bcb60cd8fc7af28b391938a60a0f1ad8798fb01",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
