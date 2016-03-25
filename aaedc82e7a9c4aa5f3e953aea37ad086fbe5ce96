@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da0c15f0_61918e52",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 90
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-03-25T23:46:13Z",
+      "side": 1,
+      "message": "deleteKeypair should return True when it successfully deletes a key. This means this if block only fires when delete fails but here we are logging a successful keydeletion.\n\nTo fix this I think you need to remove the not in the condition and possibly add an else case to say \"failed to delete keypair for failed image build\".",
+      "revId": "aaedc82e7a9c4aa5f3e953aea37ad086fbe5ce96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
