@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da0c15f0_524a7184",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_324ffd93",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_92440975",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "Remove.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_7249758b",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "In patchset 62, thas was just \"return self._get...\".  No idea why it was changed.  Certainly didn\u0027t need to be.  Notaminusone, just weird.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_d25e8144",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "Nothing about the metadata handling here should change in this patch.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_f27e25ad",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 83
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-03-25T14:39:21Z",
+      "side": 1,
+      "message": "You can return from inside a context manager; the temporary variable assignment is not necessary.",
+      "revId": "1b1293ba96012bfcff38f9f13706069f8cee48e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
