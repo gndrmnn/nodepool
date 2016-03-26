@@ -1996,23 +1996,34 @@ class NodePool(threading.Thread):
             servers = manager.listServers()
             with self.getDB().getSession() as session:
                 for server in servers:
-                    meta = server.get('metadata', {}).get('nodepool')
-                    if not meta:
+                    meta = server.get('metadata', {})
+                    if 'nodepool_provider_name' in meta:
+                        # Current metadata scheme
+                        provider_key = 'nodepool_provider_name'
+                        snapshot_key = 'nodepool_snapshot_image_id'
+                        node_id_key = 'nodepool_node_id'
+                    elif 'nodepool' in meta:
+                        # Previous nodepool metadata schema. Support reading
+                        # for transition
+                        meta = json.loads(meta['nodepool'])
+                        provider_key = 'provider_name'
+                        snapshot_key = 'snapshot_image_id'
+                        node_id_key = 'node_id'
+                    else:
                         self.log.debug("Instance %s (%s) in %s has no "
                                        "nodepool metadata" % (
                                            server['name'], server['id'],
                                            provider.name))
                         continue
-                    meta = json.loads(meta)
-                    if meta['provider_name'] not in known_providers:
+                    if meta[provider_key] not in known_providers:
                         self.log.debug("Instance %s (%s) in %s "
                                        "lists unknown provider %s" % (
                                            server['name'], server['id'],
                                            provider.name,
-                                           meta['provider_name']))
+                                           meta[provider_key]))
                         continue
-                    snap_image_id = meta.get('snapshot_image_id')
-                    node_id = meta.get('node_id')
+                    snap_image_id = meta.get(snapshot_key)
+                    node_id = meta.get(node_id_key)
                     if snap_image_id:
                         if session.getSnapshotImage(snap_image_id):
                             continue
