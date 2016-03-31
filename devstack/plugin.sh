@@ -231,6 +231,19 @@ diskimages:
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
+    cp /etc/openstack/clouds.yaml /tmp
+    cat >>/tmp/clouds.yaml <<EOF
+cache:
+  max_age: 3600
+  class: dogpile.cache.dbm
+  arguments:
+    filename: $HOME/.cache/openstack/shade.dbm
+  expiration:
+    server: 5
+    port: 5
+EOF
+    sudo mv /tmp/clouds.yaml /etc/openstack/clouds.yaml
+    mkdir -p $HOME/.cache/openstack/
 }
 
 # Initialize database
