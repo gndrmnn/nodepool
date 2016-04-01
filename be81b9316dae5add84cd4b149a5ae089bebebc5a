@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba0121b8_3ba6eaad",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2016-04-01T16:35:30Z",
+      "side": 1,
+      "message": "why do you need this debug entry here? i don\u0027t think is representative. I\u0027d rather move the log entry and i\u0027d add the image size into the log as well",
+      "range": {
+        "startLine": 456,
+        "startChar": 16,
+        "endLine": 456,
+        "endChar": 20
+      },
+      "revId": "be81b9316dae5add84cd4b149a5ae089bebebc5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
