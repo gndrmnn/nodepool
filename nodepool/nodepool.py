@@ -561,9 +561,14 @@ class NodeLauncher(threading.Thread):
     def createJenkinsNode(self):
         jenkins = self.nodepool.getJenkinsManager(self.target)
 
+        description = dict(nodepool_provider_name=self.provider.name,
+                           nodepool_cloud_name=self.provider.cloud_config.name,
+                           nodepool_region_name=self.provider.region_name)
+        description = json.dumps(description)
+
         args = dict(name=self.node.nodename,
                     host=self.node.ip,
-                    description='Dynamic single use %s node' % self.label.name,
+                    description=description,
                     executors=1,
                     root=self.image.user_home)
         if not self.target.jenkins_test_job:
