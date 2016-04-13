@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_be2434af",
+        "filename": "nodepool/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-04-13T16:22:16Z",
+      "side": 1,
+      "message": "This does not appear to be used.",
+      "revId": "451c3c16333bbbccf7782c220e42d2c171f5629f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
