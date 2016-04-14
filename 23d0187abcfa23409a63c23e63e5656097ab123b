@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_f1f7e356",
+        "filename": "nodepool/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 6133
+      },
+      "writtenOn": "2016-04-14T07:38:10Z",
+      "side": 1,
+      "message": "that\u0027s left from debugging?",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 14
+      },
+      "revId": "23d0187abcfa23409a63c23e63e5656097ab123b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
