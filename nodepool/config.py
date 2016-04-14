@@ -139,8 +139,17 @@ def loadConfig(config_path):
         p.name = provider['name']
         newconfig.providers[p.name] = p
 
+        import pprint
+        print p.name
+        print "cloud_config"
+        pprint.pprint(cloud_config)
         cloud_kwargs = _cloudKwargsFromProvider(provider)
+        print "cloud_kwargs"
+        pprint.pprint(cloud_kwargs)
         p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+        print "config"
+        pprint.pprint(p.cloud_config.config)
+
         p.region_name = provider.get('region-name')
         p.max_servers = provider['max-servers']
         p.keypair = provider.get('keypair', None)
