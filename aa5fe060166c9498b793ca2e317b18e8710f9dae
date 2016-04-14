@@ -16,6 +16,23 @@
       "revId": "aa5fe060166c9498b793ca2e317b18e8710f9dae",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a18252c_f105f610",
+        "filename": "nodepool/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-04-14T18:24:20Z",
+      "side": 1,
+      "message": "Ideally you use the read information here as well but I think we are pulling straight from the yaml parsed dict instead?",
+      "revId": "aa5fe060166c9498b793ca2e317b18e8710f9dae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
