@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_66f76a8b",
+        "filename": "nodepool/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-04-14T18:18:30Z",
+      "side": 0,
+      "message": "You actually don\u0027t want to remove this beacuse these attributes are used in the equality method above which is used to know if new configs require new clients.\n\nIn this case if a network changes its public attribute or changes its nat_destination attribute we will need new clients so should be included here.",
+      "revId": "df45798508520378e75a3c63110ae74a9c7c0afd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
