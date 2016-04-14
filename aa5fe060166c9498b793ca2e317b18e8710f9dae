@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_06331615",
+        "filename": "nodepool/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-04-14T18:23:11Z",
+      "side": 1,
+      "message": "Sorry that my comment on the previous patchset wasn\u0027t super clear. You will need to also add n.nat_destination \u003d network.get(\u0027nat_destination\u0027, False) here for bookkeeping as well.",
+      "revId": "aa5fe060166c9498b793ca2e317b18e8710f9dae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
