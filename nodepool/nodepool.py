@@ -2051,6 +2051,7 @@ class NodePool(threading.Thread):
                                              server['name'], server['id'],
                                              provider.name))
                         continue
+            manager.cleanupLeakedFloaters()
 
     def cleanupOneNode(self, session, node):
         now = time.time()
