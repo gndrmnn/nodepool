@@ -312,7 +312,8 @@ class ProviderManager(TaskManager):
 
     def deleteServer(self, server_id):
         with shade_inner_exceptions():
-            return self._client.delete_server(server_id, delete_ips=True)
+            return self._client.delete_server(
+                server_id, delete_ips=True, wait=True)
 
     def cleanupServer(self, server_id):
         server = self.getServer(server_id)
