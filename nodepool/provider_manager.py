@@ -326,3 +326,10 @@ class ProviderManager(TaskManager):
 
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
+
+    def cleanupLeakedFloaters(self):
+        if self._client.cloud_config.config['floating_ip_source'] == 'neutron':
+            with shade_inner_exceptions():
+                for ip in self._client.list_floating_ips():
+                    if ip['attached'] == False:
+                        self._client.delete_floating_ip(ip['id'])
