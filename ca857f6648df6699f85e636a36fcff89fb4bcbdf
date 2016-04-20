@@ -16,6 +16,24 @@
       "revId": "ca857f6648df6699f85e636a36fcff89fb4bcbdf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_78cc226a",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2016-04-20T10:09:51Z",
+      "side": 1,
+      "message": "Right, looks like there was also some indentation missing.",
+      "parentUuid": "1a122d0e_70e56d36",
+      "revId": "ca857f6648df6699f85e636a36fcff89fb4bcbdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
