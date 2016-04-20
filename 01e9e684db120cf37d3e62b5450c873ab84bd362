@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_ac0f8535",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2016-04-20T17:44:44Z",
+      "side": 1,
+      "message": "Failed with lack of pep8, which I then manually installed with pip to continue.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 43
+      },
+      "revId": "01e9e684db120cf37d3e62b5450c873ab84bd362",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_52ada899",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 6609
+      },
+      "writtenOn": "2016-04-20T17:44:44Z",
+      "side": 1,
+      "message": "Trying to run, got...\n\n    ImportError: No module named positional\n\nSo I pip installed positional\n\n    ImportError: No module named iso8601\n\nSo I pip installed pip installed iso8601\n\n    ImportError: No module named stevedore\n\nSo I pip installed stevedore\n\n    from dogpile.core import Lock, NeedRegenerationException\n\n    ImportError: No module named core\n\nSo I pip installed dogpile.core\n\n    from dogpile import cache\n    ImportError: cannot import name cache\n\nSo I pip installed dogpile.cache\n\n    from oslo_utils import timeutils\n    ImportError: No module named oslo_utils\n\nSo I pip installed oslo.utils\n\n    ImportError: No module named oslo_serialization\n\nSo I pip installed oslo.serialization\n\n    ImportError: No module named oslo_config\n\nSo I pip installed oslo.config\n\n    ImportError: No module named simplejson\n\nSo I pip installed simplejson\n\n    ImportError: No module named jsonpointer\n\nSo I pip installed jsonpointer\n\nFinally running!\n\n    IOError: [Errno 2] No such file or directory: \u0027/etc/nodepool/secure.conf\u0027\n\nSo we\u0027ll need tools/fake-secure.conf as well and add -s tools/fake-secure.conf, I think all that needs is:\n\n    [database]\n\n    dburi\u003dmysql+pymysql://nodepool@localhost/nodepool\n\nTrying again... gear problems.\n\nhttp://paste.openstack.org/show/494862/",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 35
+      },
+      "revId": "01e9e684db120cf37d3e62b5450c873ab84bd362",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
