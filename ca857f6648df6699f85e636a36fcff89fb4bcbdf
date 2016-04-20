@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_70e56d36",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-04-20T02:11:37Z",
+      "side": 1,
+      "message": "This line needs to be:\n\n  self._client.delete_floating_ip(ip[\u0027id\u0027])\n\nI believe the test are failing on this uding the wrong var name here (id instead of ip).",
+      "revId": "ca857f6648df6699f85e636a36fcff89fb4bcbdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
