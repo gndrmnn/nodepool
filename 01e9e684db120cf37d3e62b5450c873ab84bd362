@@ -42,6 +42,23 @@
     },
     {
       "key": {
+        "uuid": "1a122d0e_c6d6e726",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-04-21T15:36:17Z",
+      "side": 1,
+      "message": "I don\u0027t understand why pep8 is needed.",
+      "revId": "01e9e684db120cf37d3e62b5450c873ab84bd362",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a122d0e_52ada899",
         "filename": "doc/source/testing.rst",
         "patchSetId": 8
@@ -77,6 +94,23 @@
       "side": 1,
       "message": "Looks like this is missing the command to run the fake servers. Try running\n\npython tools/fake-servers.py\n\nin a second shell. Next up then is shade complaining about missing endpoints, though.",
       "parentUuid": "1a122d0e_52ada899",
+      "revId": "01e9e684db120cf37d3e62b5450c873ab84bd362",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_26dcfb45",
+        "filename": "doc/source/testing.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-04-21T15:36:17Z",
+      "side": 1,
+      "message": "Liz, this looks like it didn\u0027t install shade\u0027s dependencies; any chance this was an older virtualenv or something?\n\nThe rest of the comments from you and Jens seem correct.",
       "revId": "01e9e684db120cf37d3e62b5450c873ab84bd362",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
