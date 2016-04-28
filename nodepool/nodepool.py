@@ -481,7 +481,8 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            nodepool_namespace=self.nodepool.config.namespace)
         server_id = server['id']
         self.node.external_id = server_id
         session.commit()
@@ -802,7 +803,8 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            nodepool_namespace=self.nodepool.config.namespace)
         server_id = server['id']
         self.subnode.external_id = server_id
         session.commit()
@@ -1532,6 +1534,14 @@ class NodePool(threading.Thread):
                                            provider.name))
                         continue
                     meta = json.loads(meta)
+                    nodepool_name = meta.get('namespace')
+                    if nodepool_name != self.config.namespace:
+                        self.log.debug("Instance %s (%s) in %s "
+                                       "doesn't belong to this "
+                                       "nodepool's namespace." % (
+                                           server['name'], server['id'],
+                                           provider.name))
+                        continue
                     if meta['provider_name'] not in known_providers:
                         self.log.debug("Instance %s (%s) in %s "
                                        "lists unknown provider %s" % (

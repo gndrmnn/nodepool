@@ -115,6 +115,7 @@ class ConfigValidator:
 
         top_level = {
             'elements-dir': str,
+            'namespace': str,
             'images-dir': str,
             'dburi': str,
             'zmq-publishers': [str],
