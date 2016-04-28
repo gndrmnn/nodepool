@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_ff13d8fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-04-28T19:43:07Z",
+      "side": 1,
+      "message": "part?",
+      "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_5fd5ac19",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-04-28T19:43:07Z",
+      "side": 1,
+      "message": "We need to manually add this column before restarting, yes? Or also merge Ie7d6276c7c975489106c089f6aa7446d347827e4 first?",
+      "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
