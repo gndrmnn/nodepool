@@ -187,7 +187,8 @@ class ProviderManager(object):
                      az=None, key_name=None, name_filter=None,
                      config_drive=None, nodepool_node_id=None,
                      nodepool_image_name=None,
-                     nodepool_snapshot_image_id=None):
+                     nodepool_snapshot_image_id=None,
+                     nodepool_namespace=None):
         if image_name:
             image = self.findImage(image_name)
         else:
@@ -218,7 +219,8 @@ class ProviderManager(object):
         # Also list each of those values directly so that non-ansible
         # consumption programs don't need to play a game of knowing that
         # groups[0] is the image name or anything silly like that.
-        nodepool_meta = dict(provider_name=self.provider.name)
+        nodepool_meta = dict(namespace=nodepool_namespace,
+                             provider_name=self.provider.name)
         groups_meta = [self.provider.name]
         if nodepool_node_id:
             nodepool_meta['node_id'] = nodepool_node_id
