@@ -1,3 +1,4 @@
+namespace: fake-namespace
 script-dir: .
 images-dir: '{images_dir}'
 
