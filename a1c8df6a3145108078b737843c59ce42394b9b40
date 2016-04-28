@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_9a0ab277",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-04-28T20:32:51Z",
+      "side": 1,
+      "message": "(nit) Consider using ``ansible-playbook`` instead for clarity.",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 12
+      },
+      "revId": "a1c8df6a3145108078b737843c59ce42394b9b40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_da56ea5a",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-04-28T20:32:51Z",
+      "side": 1,
+      "message": "(nit) In this case I suggest re-ordering in configuration.rst",
+      "range": {
+        "startLine": 47,
+        "startChar": 23,
+        "endLine": 47,
+        "endChar": 35
+      },
+      "revId": "a1c8df6a3145108078b737843c59ce42394b9b40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_7aa07642",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-04-28T20:32:51Z",
+      "side": 1,
+      "message": "(-1) The docs said to expect \u0027sub\u0027 not \u0027subnodes\u0027.",
+      "range": {
+        "startLine": 546,
+        "startChar": 30,
+        "endLine": 546,
+        "endChar": 38
+      },
+      "revId": "a1c8df6a3145108078b737843c59ce42394b9b40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
