@@ -33,6 +33,23 @@
       "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_df0edc39",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-04-28T20:19:21Z",
+      "side": 1,
+      "message": "I wonder if it would be possible to keep the node around for reassignment on the next set of demand rather than raising an exception and cleaning this node up here.",
+      "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
