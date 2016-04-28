@@ -50,6 +50,23 @@
       "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_7ae876b3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-04-28T20:26:26Z",
+      "side": 1,
+      "message": "Probably so, but would require some more careful accounting here -- this will only happen if something is really wrong with gearman, so we\u0027d have to wait for whatever problem caused this to be corrected.",
+      "revId": "e0f65825b0a38f8370017a08dd6f6012704d8db6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
