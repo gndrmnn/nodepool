@@ -72,6 +72,21 @@ full configuration file may have the ``diskimages``, ``labels``,
 The following sections are available.  All are required unless
 otherwise indicated.
 
+namespace
+----------
+This parameter defines the namespace in the provider for the VM
+instances created by this running instance of nodepool, so that it
+ensures each nodepool instance can distinguish its owned VM instances.
+e.g. the running nodepool only deletes the instances belong to it when
+clean leaked instances. This is required if there are multiple
+instances of nodepool sharing a single provider. If this parameter is
+not specified in the configure file, it will use the hostname as the
+namespace's value by default.
+
+Example::
+
+  namespace: myNodepoolNameSpace
+
 .. _elements-dir:
 
 elements-dir
