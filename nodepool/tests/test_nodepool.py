@@ -14,6 +14,8 @@
 # limitations under the License.
 
 import logging
+import json
+import shutil
 import threading
 import time
 
@@ -422,15 +424,15 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(len(nodes), 1)
             # Delete the node from the db, but leave the instance
             # so it is leaked.
-            self.log.debug("Delete node db record so instance is leaked...")
-            for node in nodes:
-                node.delete()
-            self.log.debug("...deleted node db so instance is leaked.")
-            nodes = session.getNodes(provider_name='fake-provider',
-                                     label_name='fake-label',
-                                     target_name='fake-target',
-                                     state=nodedb.READY)
-            self.assertEqual(len(nodes), 0)
+#            self.log.debug("Delete node db record so instance is leaked...")
+#            for node in nodes:
+#                node.delete()
+#            self.log.debug("...deleted node db so instance is leaked.")
+#            nodes = session.getNodes(provider_name='fake-provider',
+#                                     label_name='fake-label',
+#                                     target_name='fake-target',
+#                                     state=nodedb.READY)
+#            self.assertEqual(len(nodes), 0)
 
         # Wait for nodepool to replace it, which should be enough
         # time for it to also delete the leaked node
@@ -441,6 +443,84 @@ class TestNodepool(tests.DBTestCase):
         # Make sure we end up with only one server (the replacement)
         servers = manager.listServers()
         self.assertEqual(len(servers), 1)
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+
+    def test_node_namespace(self):
+        """Test that the instance has namespace in the metadata"""
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.log.debug("Waiting for initial pool...")
+        self.waitForNodes(pool) 
+        self.log.debug("...done waiting for initial pool.")
+
+        # Make sure we have a node built and the namespace is correctly
+        provider = pool.config.providers['fake-provider']
+        manager = pool.getProviderManager(provider)
+        servers = manager.listServers()
+        self.assertEqual(len(servers), 1)
+        # Make sure the namespace is set correctly
+        meta = servers[0].get('metadata', {}).get('nodepool')
+        meta = json.loads(meta)
+        self.assertEqual(meta.get('namespace'), 'fake-namespace')
+
+    def test_leaked_node_skip_other_namespace(self):
+        """Test that nodepool not delete the node not belong to the
+        same namespace"""
+
+        # create pool with original namespace
+        configfile1 = self.setup_config('leaked_node.yaml')
+        pool = self.useNodepool(configfile1, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for initial pool...")
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+        self.log.debug("...done waiting for initial pool.")
+
+        # Make sure we have one node built
+        provider = pool.config.providers['fake-provider']
+        manager = pool.getProviderManager(provider)
+        servers = manager.listServers()
+        self.assertEqual(len(servers), 1)
+
+        # change the nodepool's configure to have a different namespace
+        configfile2 = self.setup_config('leaked_node_2.yaml')
+        shutil.copy2(configfile2, configfile1)
+        pool.updateConfig()
+
+        # Delete the node from the db, but leave the instance
+        # so it is leaked.
+        with pool.getDB().getSession() as session:
+            self.log.debug("Delete node db record so instance is leaked...")
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 1)
+            for node in nodes:
+                node.delete()
+            self.log.debug("...deleted node db so instance is leaked.")
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 0)
+
+        # Wait for nodepool replacement, it should recreate a new node
+        self.log.debug("Waiting for replacement pool...")
+        self.waitForNodes(pool)
+        self.log.debug("...done waiting for replacement pool.")
+
+        # Make sure there are 2 nodes now - the old node still exists.
+        servers = manager.listServers()
+        self.assertEqual(len(servers), 2)
         with pool.getDB().getSession() as session:
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',

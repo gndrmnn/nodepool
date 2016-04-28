@@ -73,6 +73,19 @@ full configuration file may have the ``labels``, ``providers``, and
 The following sections are available.  All are required unless
 otherwise indicated.
 
+namespace
+----------
+This parameter defines the namespace in the provider for the VM
+instances created by this running instance of nodepool, so that it
+ensures each nodepool instance can distinguish its owned VM instances.
+e.g. the running nodepool only deletes the instances belong to it when
+clean leaked instances. This is required if there are multiple
+instances of nodepool sharing a single provider.
+
+Example::
+
+  namespace: myNodepoolNameSpace
+
 script-dir
 ----------
 When creating an image to use when launching new nodes, Nodepool will

@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import os_client_config
 from six.moves import configparser as ConfigParser
 import yaml
@@ -114,6 +115,8 @@ def loadConfig(config_path):
     cloud_config = os_client_config.OpenStackConfig()
 
     newconfig = Config()
+    hostname = os.uname()[1]
+    newconfig.namespace = config.get('namespace', hostname)
     newconfig.db = None
     newconfig.dburi = None
     newconfig.providers = {}
@@ -156,6 +159,7 @@ def loadConfig(config_path):
 
     for provider in config.get('providers', []):
         p = Provider()
+        p.namespace = newconfig.namespace
         p.name = provider['name']
         newconfig.providers[p.name] = p
 

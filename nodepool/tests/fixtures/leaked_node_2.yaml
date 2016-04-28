@@ -1,6 +1,6 @@
 script-dir: .
 images-dir: '{images_dir}'
-namespace: fake-namespace
+namespace: fake-namespace-2
 
 cron:
   check: '*/15 * * * *'
