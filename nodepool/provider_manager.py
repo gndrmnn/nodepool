@@ -208,7 +208,8 @@ class ProviderManager(TaskManager):
         # Also list each of those values directly so that non-ansible
         # consumption programs don't need to play a game of knowing that
         # groups[0] is the image name or anything silly like that.
-        nodepool_meta = dict(provider_name=self.provider.name)
+        nodepool_meta = dict(name=self.provider.nodepool_name,
+                             provider_name=self.provider.name)
         groups_meta = [self.provider.name]
         if nodepool_node_id:
             nodepool_meta['node_id'] = nodepool_node_id

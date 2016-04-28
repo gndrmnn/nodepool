@@ -2051,6 +2051,13 @@ class NodePool(threading.Thread):
                                            provider.name))
                         continue
                     meta = json.loads(meta)
+                    nodepool_name = meta.get('name')
+                    if nodepool_name != provider.nodepool_name:
+                        self.log.debug("Ignore as instance %s (%s) in %s "
+                                       "doesn't belong to this nodepool." % (
+                                           server['name'], server['id'],
+                                           provider.name))
+                        continue
                     if meta['provider_name'] not in known_providers:
                         self.log.debug("Instance %s (%s) in %s "
                                        "lists unknown provider %s" % (
