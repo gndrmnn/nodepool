@@ -1,5 +1,5 @@
 elements-dir: .
-namespace: fake-namespace
+namespace: fake-namespace-2
 images-dir: '{images_dir}'
 
 cron:
