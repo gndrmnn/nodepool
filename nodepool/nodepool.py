@@ -475,7 +475,8 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            nodepool_namespace=self.nodepool.config.namespace)
         server_id = server['id']
         self.node.external_id = server_id
         session.commit()
@@ -793,7 +794,8 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            nodepool_namespace=self.nodepool.config.namespace)
         server_id = server['id']
         self.subnode.external_id = server_id
         session.commit()
@@ -959,7 +961,8 @@ class SnapshotImageUpdater(ImageUpdater):
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
-                nodepool_snapshot_image_id=self.snap_image.id)
+                nodepool_snapshot_image_id=self.snap_image.id,
+                nodepool_namespace=self.nodepool.config.namespace)
             server_id = server['id']
         except Exception:
             if self.manager.deleteKeypair(key_name):
@@ -2051,6 +2054,14 @@ class NodePool(threading.Thread):
                                            provider.name))
                         continue
                     meta = json.loads(meta)
+                    nodepool_name = meta.get('namespace')
+                    if nodepool_name != self.config.namespace:
+                        self.log.debug("Instance %s (%s) in %s "
+                                       "doesn't belong to this "
+                                       "nodepool's namespace." % (
+                                           server['name'], server['id'],
+                                           provider.name))
+                        continue
                     if meta['provider_name'] not in known_providers:
                         self.log.debug("Instance %s (%s) in %s "
                                        "lists unknown provider %s" % (
