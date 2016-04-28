@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_3a31dea2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2007,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-04-28T20:25:23Z",
+      "side": 1,
+      "message": "(nit) consider TODO to remove this legacy support in the future",
+      "range": {
+        "startLine": 2007,
+        "startChar": 30,
+        "endLine": 2007,
+        "endChar": 40
+      },
+      "revId": "2f63aee65320ad193ab856b00f28a09447e06cfd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
