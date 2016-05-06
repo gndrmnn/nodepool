@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dab17558_cd68a5bd",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 17920
+      },
+      "writtenOn": "2016-05-06T14:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab17558_c12cf7ad",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dab17558_e155bbc6",
         "filename": "nodepool/config.py",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2016-05-06T11:54:02Z",
       "side": 1,
       "message": "I don\u0027t like this; the namespace _should_ be a global thing.  Adding it to the provider feels like a hack.",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_4d9b15ca",
+        "filename": "nodepool/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 17920
+      },
+      "writtenOn": "2016-05-06T14:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab17558_e155bbc6",
       "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dab17558_10300601",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2056,
+      "author": {
+        "id": 17920
+      },
+      "writtenOn": "2016-05-06T14:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab17558_dc1dfe67",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dab17558_e103fbb6",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 6
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "dab17558_3036ea03",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 17920
+      },
+      "writtenOn": "2016-05-06T14:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab17558_e103fbb6",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dab17558_7c37b2e3",
         "filename": "nodepool/tests/fixtures/node.yaml",
         "patchSetId": 6
@@ -81,6 +153,24 @@
       "writtenOn": "2016-05-06T11:54:02Z",
       "side": 1,
       "message": "Should be consistent in where you add it - i.e. below images-dir",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_f31aac6d",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 17920
+      },
+      "writtenOn": "2016-05-06T14:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab17558_7c37b2e3",
       "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
