@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab17558_c12cf7ad",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "Document the default of the hostname",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_e155bbc6",
+        "filename": "nodepool/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "I don\u0027t like this; the namespace _should_ be a global thing.  Adding it to the provider feels like a hack.",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_dc1dfe67",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2056,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "Please use same format for message as other messages:\n\u0027Instance %s (%s) in %s belongs to a different namespace\u0027",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_e103fbb6",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "Can the namespace be passed in here?\nI think it would be much cleaner.  Is it much extra code?",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_7c37b2e3",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "Should be consistent in where you add it - i.e. below images-dir",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_bcb63a3b",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "# Change nodepool\u0027s namespace.  This simulates the node having been created by a different nodepool instance.",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_fc9f22b2",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 6735
+      },
+      "writtenOn": "2016-05-06T11:54:02Z",
+      "side": 1,
+      "message": "Add a comment here that says that we only know about 1 node.",
+      "revId": "25dd2cdd881de29019bf4a692bd91d729ad2006c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
