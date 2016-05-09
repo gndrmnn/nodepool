@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab17558_e2ee02b3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1642,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-09T22:05:51Z",
+      "side": 1,
+      "message": "This check does not concern providers and can be moved to the outer loop to save a few cycles going through all the providers and continuing.",
+      "revId": "de51e32bd99a4a54f552d6eaf77bc6d29364c1da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
