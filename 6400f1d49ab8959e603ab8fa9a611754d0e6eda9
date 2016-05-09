@@ -16,6 +16,24 @@
       "revId": "6400f1d49ab8959e603ab8fa9a611754d0e6eda9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_622a122e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1647,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-09T21:55:58Z",
+      "side": 1,
+      "message": "If you read uploadImage that method actually looks up the disk image name based on the image name. This isn\u0027t a bug I don\u0027t think and you should go back to _image.name.",
+      "parentUuid": "dab17558_38f4c484",
+      "revId": "6400f1d49ab8959e603ab8fa9a611754d0e6eda9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
