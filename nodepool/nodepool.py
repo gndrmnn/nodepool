@@ -1636,7 +1636,7 @@ class NodePool(threading.Thread):
 
         # We want to group our uploads together by image type, so we don't
         # overwhelm our clouds image service.
-        for label in self.config.labels.values():
+        for label in sorted(self.config.labels.values(), key='image'):
             if label.image not in self.config.images_in_use:
                 continue
             for provider in label.providers.values():
