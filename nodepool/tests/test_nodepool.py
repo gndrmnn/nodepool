@@ -177,6 +177,25 @@ class TestNodepool(tests.DBTestCase):
                     break
                 time.sleep(.2)
 
+    def test_dib_upload_multi_provider_and_images(self):
+        """Test that dib uploads are grouped by image name"""
+        configfile = self.setup_config(
+            'node_dib_upload_multi_provider_and_images.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider1', 'fake-label1')
+        self.waitForImage(pool, 'fake-provider1', 'fake-image2')
+        self.waitForImage(pool, 'fake-provider1', 'fake-image3')
+        self.waitForImage(pool, 'fake-provider2', 'fake-label1')
+        self.waitForImage(pool, 'fake-provider2', 'fake-image2')
+        self.waitForImage(pool, 'fake-provider2', 'fake-image3')
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(state=nodedb.READY)
+            self.assertEqual(nodes, '1234')
+
     def test_dib_upload_fail(self):
         """Test that a dib and snap image upload failure is contained."""
         configfile = self.setup_config('node_dib_and_snap_upload_fail.yaml')
