@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab17558_38f4c484",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1647,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-05-09T18:52:12Z",
+      "side": 1,
+      "message": "this was actually a bug I noticed.  Since it is possible to have a different name for \u0027image.name\u0027 and \u0027image.diskimage\u0027.\n\nI can move this to another patchset if needed.",
+      "revId": "6400f1d49ab8959e603ab8fa9a611754d0e6eda9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
