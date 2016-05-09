@@ -1636,10 +1636,12 @@ class NodePool(threading.Thread):
 
         # We want to group our uploads together by image type, so we don't
         # overwhelm our clouds image service.
-        for label in self.config.labels.values():
+        for label in sorted(self.config.labels.values(), key='image'):
+            self.log.debug('111111111111111 = %s' % label.image)
             if label.image not in self.config.images_in_use:
                 continue
-            for provider in label.providers.values():
+            for provider in sorted(label.providers.values(), key='name'):
+                self.log.debug('2222222222222 = %s' % provider.name)
                 _provider = self.config.providers[provider.name]
                 _image = _provider.images[label.image]
                 if not _image.diskimage:
@@ -1733,7 +1735,7 @@ class NodePool(threading.Thread):
                 provider_name=provider, image_name=provider_image.name)
             self.log.debug('Created snapshot image id: %s for upload of '
                            'DIB image id: %s with job uuid: %s ' %
-                           (snap_image.id, image_id, job_uuid))
+                           (snap_image.id, image_name, provider))
 
             # TODO(mordred) abusing the hostname field
             snap_image.hostname = image_name
