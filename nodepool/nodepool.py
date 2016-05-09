@@ -1594,14 +1594,16 @@ class NodePool(threading.Thread):
         # outside of its schedule.
         self.log.debug("Checking missing images.")
 
-        # this is sorted so we can have a deterministic pass on providers
-        # (very useful for testing/debugging)
-        providers = sorted(self.config.providers.values(),
-                           key=lambda x: x.name)
-        for provider in providers:
-            for image in provider.images.values():
+        # We want to group our uploads together by image type, so we don't
+        # overwhelm our clouds image service.
+        for label in self.config.labels.values():
+            self.log.debug('11111 = %s' % label.image)
+            for provider in label.providers.values():
+                self.log.debug('2222 = %s' % provider.name)
+                _provider = self.config.providers[provider.name]
+                _image = _provider.images[label.image]
                 try:
-                    self.checkForMissingImage(session, provider, image)
+                    self.checkForMissingImage(session, _provider, _image)
                 except Exception:
                     self.log.exception("Exception in missing image check:")
 
@@ -1634,13 +1636,17 @@ class NodePool(threading.Thread):
             # wait for all builds to finish, to have updated images to upload
             self.waitForBuiltImages()
 
-        for provider in self.config.providers.values():
-            for image in provider.images.values():
-                if image.name not in self.config.images_in_use:
+        # We want to group our uploads together by image type, so we don't
+        # overwhelm our clouds image service.
+        for label in self.config.labels.values():
+            if label.image not in self.config.images_in_use:
+                continue
+            for provider in label.providers.values():
+                _provider = self.config.providers[provider.name]
+                _image = _provider.images[label.image]
+                if not _image.diskimage:
                     continue
-                if not image.diskimage:
-                    continue
-                self.uploadImage(session, provider.name, image.name)
+                self.uploadImage(session, _provider.name, _image.name)
 
     def updateImage(self, session, provider_name, image_name):
         try:
