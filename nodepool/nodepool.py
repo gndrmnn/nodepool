@@ -1596,12 +1596,20 @@ class NodePool(threading.Thread):
 
         # this is sorted so we can have a deterministic pass on providers
         # (very useful for testing/debugging)
-        providers = sorted(self.config.providers.values(),
-                           key=lambda x: x.name)
-        for provider in providers:
-            for image in provider.images.values():
+        sorted_labels = sorted(self.config.labels.values(),
+                               key=lambda x: x.image)
+        # We want to group our uploads together by image type, so we don't
+        # overwhelm our clouds image service.
+        for label in sorted_labels:
+            # this is sorted so we can have a deterministic pass on providers
+            # (very useful for testing/debugging)
+            sorted_providers = sorted(label.providers.values(),
+                                      key=lambda x: x.name)
+            for provider in sorted_providers:
+                _provider = self.config.providers[provider.name]
+                _image = _provider.images[label.image]
                 try:
-                    self.checkForMissingImage(session, provider, image)
+                    self.checkForMissingImage(session, _provider, _image)
                 except Exception:
                     self.log.exception("Exception in missing image check:")
 
@@ -1634,13 +1642,25 @@ class NodePool(threading.Thread):
             # wait for all builds to finish, to have updated images to upload
             self.waitForBuiltImages()
 
-        for provider in self.config.providers.values():
-            for image in provider.images.values():
-                if image.name not in self.config.images_in_use:
+        # this is sorted so we can have a deterministic pass on providers
+        # (very useful for testing/debugging)
+        sorted_labels = sorted(self.config.labels.values(),
+                               key=lambda x: x.image)
+        # We want to group our uploads together by image type, so we don't
+        # overwhelm our clouds image service.
+        for label in sorted_labels:
+            if label.image not in self.config.images_in_use:
+                continue
+            # this is sorted so we can have a deterministic pass on providers
+            # (very useful for testing/debugging)
+            sorted_providers = sorted(label.providers.values(),
+                                      key=lambda x: x.name)
+            for provider in sorted_providers:
+                _provider = self.config.providers[provider.name]
+                _image = _provider.images[label.image]
+                if not _image.diskimage:
                     continue
-                if not image.diskimage:
-                    continue
-                self.uploadImage(session, provider.name, image.name)
+                self.uploadImage(session, _provider.name, _image.name)
 
     def updateImage(self, session, provider_name, image_name):
         try:
@@ -1729,7 +1749,7 @@ class NodePool(threading.Thread):
                 provider_name=provider, image_name=provider_image.name)
             self.log.debug('Created snapshot image id: %s for upload of '
                            'DIB image id: %s with job uuid: %s ' %
-                           (snap_image.id, image_id, job_uuid))
+                           (snap_image.id, image_name, provider))
 
             # TODO(mordred) abusing the hostname field
             snap_image.hostname = image_name
