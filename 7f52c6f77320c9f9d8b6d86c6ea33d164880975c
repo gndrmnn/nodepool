@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "dab17558_2e83e299",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-05-09T16:24:07Z",
+      "side": 1,
+      "message": "@greghaynes: do we want the session.commit() in both cases though? The current logic eliminates the .commit() in the case of server_id\u003dhostname. based upon the code below, the session.commit() looks correct in both cases.",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a26ad4f_a4ada785",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
@@ -36,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "dab17558_0e7edead",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-05-09T16:24:07Z",
+      "side": 1,
+      "message": "Same as above",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a26ad4f_c4b223e5",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
@@ -47,6 +81,23 @@
       "writtenOn": "2015-11-02T18:55:25Z",
       "side": 1,
       "message": "Ditto",
+      "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_6e4b2a88",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-05-09T16:24:07Z",
+      "side": 1,
+      "message": "this one could be easily converted because no .commit() called",
       "revId": "7f52c6f77320c9f9d8b6d86c6ea33d164880975c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
