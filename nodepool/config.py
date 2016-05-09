@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
 import os_client_config
 from six.moves import configparser as ConfigParser
 import yaml
@@ -118,7 +119,7 @@ def loadConfig(config_path):
     newconfig.dburi = None
     newconfig.providers = {}
     newconfig.targets = {}
-    newconfig.labels = {}
+    newconfig.labels = collections.OrderedDict()
     newconfig.scriptdir = config.get('script-dir')
     newconfig.elementsdir = config.get('elements-dir')
     newconfig.imagesdir = config.get('images-dir')
@@ -259,7 +260,7 @@ def loadConfig(config_path):
         l.min_ready = label.get('min-ready', 2)
         l.subnodes = label.get('subnodes', 0)
         l.ready_script = label.get('ready-script')
-        l.providers = {}
+        l.providers = collections.OrderedDict()
         for provider in label['providers']:
             p = LabelProvider()
             p.name = provider['name']
