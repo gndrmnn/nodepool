@@ -1634,13 +1634,17 @@ class NodePool(threading.Thread):
             # wait for all builds to finish, to have updated images to upload
             self.waitForBuiltImages()
 
-        for provider in self.config.providers.values():
-            for image in provider.images.values():
-                if image.name not in self.config.images_in_use:
+        # We want to group our uploads together by image type, so we don't
+        # overwhelm our clouds image service.
+        for label in self.config.labels.values():
+            for provider in label.providers.values():
+                if label.image not in self.config.images_in_use:
                     continue
-                if not image.diskimage:
+                _provider = self.config.providers[provider.name]
+                _image = _provider.images[label.image]
+                if not _image.diskimage:
                     continue
-                self.uploadImage(session, provider.name, image.name)
+                self.uploadImage(session, _provider.name, _image.diskimage)
 
     def updateImage(self, session, provider_name, image_name):
         try:
