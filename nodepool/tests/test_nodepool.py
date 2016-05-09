@@ -177,6 +177,36 @@ class TestNodepool(tests.DBTestCase):
                     break
                 time.sleep(.2)
 
+    def test_dib_upload_multi_provider_and_images(self):
+        """Test that dib uploads are grouped by image name"""
+        configfile = self.setup_config(
+            'node_dib_upload_multi_provider_and_images.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        results = [
+            { 'image': 'fake-dib-image1', 'provider': 'fake-provider1' },
+            { 'image': 'fake-dib-image1', 'provider': 'fake-provider2' },
+            { 'image': 'fake-dib-image1', 'provider': 'fake-provider3' },
+            { 'image': 'fake-dib-image2', 'provider': 'fake-provider1' },
+            { 'image': 'fake-dib-image2', 'provider': 'fake-provider2' },
+            { 'image': 'fake-dib-image3', 'provider': 'fake-provider1' },
+            { 'image': 'fake-dib-image3', 'provider': 'fake-provider3' },
+        ]
+
+        pool.start()
+        for count in range(1, len(results)):
+            self.waitForImage(
+                pool, results[count - 1]['provider'],
+                results[count -1]['image'])
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            for count in range(1, len(results)):
+                image = session.getgetSnapshotImage(count)
+                self.assertEqual(image.image_name, results[count - 1]['image']
+                self.assertEqual(
+                    image.provider_name, results[count -1]['provider']
+
     def test_dib_upload_fail(self):
         """Test that a dib and snap image upload failure is contained."""
         configfile = self.setup_config('node_dib_and_snap_upload_fail.yaml')
