@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab17558_37e5bcdb",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:56:48Z",
+      "side": 1,
+      "message": "Sorry I had also meant that these count - 1\u0027s could get the same treatment as the previous ones. You just have to update line 204 to use count + 1.",
+      "revId": "252395be15889ac7f6a852a953e1cf7ec46892ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
