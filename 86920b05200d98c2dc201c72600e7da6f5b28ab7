@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dab17558_b14c1cc9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1600,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be necessary because labels and the providers per label are lists in yaml which will preserve order.",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_11eb6879",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_91f75858",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_d19ba016",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1657,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_91b91818",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "Why are we changing image_name here? the log message still says DIB image id:",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dab17558_515df045",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-05-10T15:35:16Z",
+      "side": 1,
+      "message": "Small nit here, if you do range(len(results)) then all the count -1 becomes count and is easier to read. Then you just have to count + 1 in the one place that count is used alone.",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
