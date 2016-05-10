@@ -87,6 +87,24 @@
     },
     {
       "key": {
+        "uuid": "dab17558_ac8e7f76",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-05-10T15:39:50Z",
+      "side": 1,
+      "message": "cruff from testing; removed.",
+      "parentUuid": "dab17558_91b91818",
+      "revId": "86920b05200d98c2dc201c72600e7da6f5b28ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dab17558_515df045",
         "filename": "nodepool/tests/test_nodepool.py",
         "patchSetId": 5
