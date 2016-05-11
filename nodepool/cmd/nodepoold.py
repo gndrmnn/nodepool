@@ -23,6 +23,7 @@ import extras
 # instead it depends on lockfile-0.9.1 which uses pidfile.
 pid_file_module = extras.try_imports(['daemon.pidlockfile', 'daemon.pidfile'])
 
+import logging
 import logging.config
 import os
 import sys
@@ -115,27 +116,31 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
 
     def main(self):
         self.setup_logging()
-        self.pool = nodepool.nodepool.NodePool(self.args.secure,
-                                               self.args.config)
-        if self.args.builder:
-            self.builder = nodepool.builder.NodePoolBuilder(
-                self.args.config, self.args.build_workers,
-                self.args.upload_workers)
+        try:
+            self.pool = nodepool.nodepool.NodePool(self.args.secure,
+                                                   self.args.config)
+            if self.args.builder:
+                self.builder = nodepool.builder.NodePoolBuilder(
+                    self.args.config, self.args.build_workers,
+                    self.args.upload_workers)
 
-        signal.signal(signal.SIGINT, self.exit_handler)
-        # For back compatibility:
-        signal.signal(signal.SIGUSR1, self.exit_handler)
+            signal.signal(signal.SIGINT, self.exit_handler)
+            # For back compatibility:
+            signal.signal(signal.SIGUSR1, self.exit_handler)
 
-        signal.signal(signal.SIGUSR2, stack_dump_handler)
-        signal.signal(signal.SIGTERM, self.term_handler)
+            signal.signal(signal.SIGUSR2, stack_dump_handler)
+            signal.signal(signal.SIGTERM, self.term_handler)
 
-        self.pool.start()
-        if self.args.builder:
-            nb_thread = threading.Thread(target=self.builder.runForever)
-            nb_thread.start()
+            self.pool.start()
+            if self.args.builder:
+                nb_thread = threading.Thread(target=self.builder.runForever)
+                nb_thread.start()
 
-        while True:
-            signal.pause()
+            while True:
+                signal.pause()
+        except:
+            logging.exception("main() died. Have a nice day.")
+            raise
 
 
 def main():
