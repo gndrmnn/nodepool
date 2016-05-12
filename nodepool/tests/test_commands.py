@@ -62,6 +62,24 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         self.assert_images_listed(configfile, 1)
 
+    def test_dib_image_update_multiple_build_workers(self):
+        configfile = self.setup_config("node_dib.yaml")
+        self._useBuilder(configfile)
+        self.patch_argv("-c", configfile, "image-update",
+                        "fake-dib-provider", "fake-dib-image",
+                        "--builder-workers", "2")
+        nodepoolcmd.main()
+        self.assert_images_listed(configfile, 1)
+
+    def test_dib_image_update_multiple_upload_workers(self):
+        configfile = self.setup_config("node_dib.yaml")
+        self._useBuilder(configfile)
+        self.patch_argv("-c", configfile, "image-update",
+                        "fake-dib-provider", "fake-dib-image",
+                        "--upload-workers", "2")
+        nodepoolcmd.main()
+        self.assert_images_listed(configfile, 1)
+
     def test_dib_snapshot_image_update(self):
         configfile = self.setup_config("node_dib_and_snap.yaml")
         self._useBuilder(configfile)
