@@ -475,14 +475,16 @@ class NodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node.az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            ip_pool=self.provider.pool)
         server_id = server['id']
         self.node.external_id = server_id
         session.commit()
 
         self.log.debug("Waiting for server %s for node id: %s" %
                        (server_id, self.node.id))
-        server = self.manager.waitForServer(server, self.launch_timeout)
+        server = self.manager.waitForServer(
+            server, self.provider.pool, self.launch_timeout)
         if server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for node id: %s "
                                         "status: %s" %
@@ -793,7 +795,8 @@ class SubNodeLauncher(threading.Thread):
             name_filter=self.image.name_filter, az=self.node_az,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            ip_pool=self.provider.pool)
         server_id = server['id']
         self.subnode.external_id = server_id
         session.commit()
@@ -801,7 +804,8 @@ class SubNodeLauncher(threading.Thread):
         self.log.debug("Waiting for server %s for subnode id: %s for "
                        "node id: %s" %
                        (server_id, self.subnode_id, self.node_id))
-        server = self.manager.waitForServer(server, self.launch_timeout)
+        server = self.manager.waitForServer(
+            server, self.provider.pool, self.launch_timeout)
         if server['status'] != 'ACTIVE':
             raise LaunchStatusException("Server %s for subnode id: "
                                         "%s for node id: %s "
@@ -959,7 +963,8 @@ class SnapshotImageUpdater(ImageUpdater):
                 hostname, self.image.min_ram, image_name=image_name,
                 key_name=key_name, name_filter=self.image.name_filter,
                 image_id=image_id, config_drive=self.image.config_drive,
-                nodepool_snapshot_image_id=self.snap_image.id)
+                nodepool_snapshot_image_id=self.snap_image.id,
+                ip_pool=self.provider.pool)
             server_id = server['id']
         except Exception:
             if self.manager.deleteKeypair(key_name):
@@ -976,7 +981,7 @@ class SnapshotImageUpdater(ImageUpdater):
 
         self.log.debug("Image id: %s waiting for server %s" %
                        (self.snap_image.id, server_id))
-        server = self.manager.waitForServer(server)
+        server = self.manager.waitForServer(server, self.provider.pool)
         if server['status'] != 'ACTIVE':
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))

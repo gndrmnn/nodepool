@@ -181,12 +181,13 @@ class ProviderManager(TaskManager):
                      az=None, key_name=None, name_filter=None,
                      config_drive=None, nodepool_node_id=None,
                      nodepool_image_name=None,
-                     nodepool_snapshot_image_id=None):
+                     nodepool_snapshot_image_id=None,
+                     ip_pool=None):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
         create_args = dict(name=name, image=image_id, flavor=flavor['id'],
-                           config_drive=config_drive)
+                           config_drive=config_drive, ip_pool=ip_pool)
         if key_name:
             create_args['key_name'] = key_name
         if az:
@@ -229,10 +230,10 @@ class ProviderManager(TaskManager):
         with shade_inner_exceptions():
             return self._client.get_server(server_id)
 
-    def waitForServer(self, server, timeout=3600):
+    def waitForServer(self, server, ip_pool=None, timeout=3600):
         with shade_inner_exceptions():
             return self._client.wait_for_server(
-                server=server, auto_ip=True, reuse=False,
+                server=server, auto_ip=True, ip_pool=ip_pool, reuse=False,
                 timeout=timeout)
 
     def waitForServerDeletion(self, server_id, timeout=600):
