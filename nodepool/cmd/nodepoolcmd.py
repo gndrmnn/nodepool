@@ -19,8 +19,8 @@ import logging.config
 import sys
 import time
 
-from nodepool import nodedb
 from nodepool import nodepool
+from nodepool.nodestore import nodedb
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable

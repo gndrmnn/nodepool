@@ -21,9 +21,9 @@ import fixtures
 
 from nodepool import jobs
 from nodepool import tests
-from nodepool import nodedb
 import nodepool.fakeprovider
 import nodepool.nodepool
+from nodepool.nodestore import nodedb
 
 
 class TestNodepool(tests.DBTestCase):

@@ -32,7 +32,8 @@ import gear
 import testresources
 import testtools
 
-from nodepool import allocation, builder, fakeprovider, nodepool, nodedb
+from nodepool import allocation, builder, fakeprovider, nodepool
+from nodepool.nodestore import nodedb
 
 TRUE_VALUES = ('true', '1', 'yes')
 

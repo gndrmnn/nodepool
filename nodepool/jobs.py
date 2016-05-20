@@ -18,7 +18,7 @@ import threading
 
 import gear
 
-import nodedb
+from nodestore import nodedb
 
 
 class WatchableJob(gear.Job):
