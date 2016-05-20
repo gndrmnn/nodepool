@@ -33,7 +33,7 @@ import zmq
 
 import allocation
 import jenkins_manager
-import nodedb
+from nodestore import nodedb
 import exceptions
 import nodeutils as utils
 import provider_manager

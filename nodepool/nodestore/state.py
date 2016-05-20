@@ -10,4 +10,28 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from nodepool.nodestore.state import *  # noqa
+# States:
+# The cloud provider is building this machine.  We have an ID, but it's
+# not ready for use.
+BUILDING = 1
+# The machine is ready for use.
+READY = 2
+# This can mean in-use, or used but complete.
+USED = 3
+# Delete this machine immediately.
+DELETE = 4
+# Keep this machine indefinitely.
+HOLD = 5
+# Acceptance testing (pre-ready)
+TEST = 6
+
+
+STATE_NAMES = {
+    BUILDING: 'building',
+    READY: 'ready',
+    USED: 'used',
+    DELETE: 'delete',
+    HOLD: 'hold',
+    TEST: 'test',
+    }
+
