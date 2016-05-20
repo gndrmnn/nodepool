@@ -18,7 +18,7 @@ import threading
 
 import gear
 
-from nodestore import nodedb
+from nodepool import nodestore
 
 
 class WatchableJob(gear.Job):
@@ -80,7 +80,7 @@ class ImageBuildJob(NodepoolJob):
             # a gear thread and therefore cannot submit a gear delete job
             # without racing the gear poll loop processing
             if not record_only:
-                dib_image.state = nodedb.DELETE
+                dib_image.state = nodestore.DELETE
             else:
                 dib_image.delete()
 
@@ -93,7 +93,7 @@ class ImageBuildJob(NodepoolJob):
                         'Unable to find matching dib_image for image_id %s',
                         self.image_id)
                     return
-                dib_image.state = nodedb.READY
+                dib_image.state = nodestore.READY
                 self.log.debug('DIB Image %s (id %d) is ready',
                                self.name.split(':', 1)[0], self.image_id)
         finally:
@@ -144,7 +144,7 @@ class ImageUploadJob(NodepoolJob):
                     return
 
                 snap_image.external_id = external_id
-                snap_image.state = nodedb.READY
+                snap_image.state = nodestore.READY
                 self.log.debug('Image %s is ready with external_id %s',
                                self.snap_image_id, external_id)
         finally:

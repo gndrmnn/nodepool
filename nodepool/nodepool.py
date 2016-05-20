@@ -33,7 +33,8 @@ import zmq
 
 import allocation
 import jenkins_manager
-from nodestore import nodedb
+from nodestore import core as nodestore_core
+import nodestore
 import exceptions
 import nodeutils as utils
 import provider_manager
@@ -102,7 +103,7 @@ class NodeCompleteThread(threading.Thread):
                            self.nodename)
             return
 
-        if node.state == nodedb.HOLD:
+        if node.state == nodestore.HOLD:
             self.log.info("Node id: %s is complete but in HOLD state" %
                           node.id)
             return
@@ -118,7 +119,7 @@ class NodeCompleteThread(threading.Thread):
                     old = '[unlabeled]'
                 self.log.info("Relabeled jenkins node id: %s from %s to %s" %
                               (node.id, old, node.image_name))
-                node.state = nodedb.READY
+                node.state = nodestore.READY
                 self.log.info("Node id: %s is ready" % node.id)
                 self.nodepool.updateStats(session, node.provider_name)
                 return
@@ -219,9 +220,9 @@ class NodeUpdateListener(threading.Thread):
                 return
 
             # Preserve the HOLD state even if a job starts on the node.
-            if node.state != nodedb.HOLD:
+            if node.state != nodestore.HOLD:
                 self.log.info("Setting node id: %s to USED" % node.id)
-                node.state = nodedb.USED
+                node.state = nodestore.USED
             self.nodepool.updateStats(session, node.provider_name)
 
     def handleCompletePhase(self, nodename, jobname, result, branch):
@@ -531,7 +532,7 @@ class NodeLauncher(threading.Thread):
             while ((time.time() - start_time) < (NODE_CLEANUP - 60)):
                 session.commit()
                 ready_subnodes = [n for n in self.node.subnodes
-                                  if n.state == nodedb.READY]
+                                  if n.state == nodestore.READY]
                 if len(ready_subnodes) == self.label.subnodes:
                     break
                 time.sleep(5)
@@ -549,10 +550,10 @@ class NodeLauncher(threading.Thread):
         # Jenkins might immediately use the node before we've updated
         # the state:
         if self.target.jenkins_test_job:
-            self.node.state = nodedb.TEST
+            self.node.state = nodestore.TEST
             self.log.info("Node id: %s is in testing" % self.node.id)
         else:
-            self.node.state = nodedb.READY
+            self.node.state = nodestore.READY
             self.log.info("Node id: %s is ready" % self.node.id)
         self.nodepool.updateStats(session, self.provider.name)
 
@@ -843,7 +844,7 @@ class SubNodeLauncher(threading.Thread):
         # Save the elapsed time for statsd
         dt = int((time.time() - start_time) * 1000)
 
-        self.subnode.state = nodedb.READY
+        self.subnode.state = nodestore.READY
         self.log.info("Subnode id: %s for node id: %s is ready"
                       % (self.subnode_id, self.node_id))
         self.nodepool.updateStats(session, self.provider.name)
@@ -1018,7 +1019,7 @@ class SnapshotImageUpdater(ImageUpdater):
             self.statsd.timing(key, dt)
             self.statsd.incr(key)
 
-        self.snap_image.state = nodedb.READY
+        self.snap_image.state = nodestore.READY
         session.commit()
         self.log.info("Image %s in %s is ready" % (hostname,
                                                    self.provider.name))
@@ -1156,7 +1157,7 @@ class NodePool(threading.Thread):
 
     def reconfigureDatabase(self, config):
         if (not self.config) or config.dburi != self.config.dburi:
-            config.db = nodedb.NodeDatabase(config.dburi)
+            config.db = nodestore_core.NodeStore(uri=config.dburi)
         else:
             config.db = self.config.db
 
@@ -1347,10 +1348,10 @@ class NodePool(threading.Thread):
         # used for a job in demand.
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
-            n_ready = count_nodes(label.name, nodedb.READY)
-            n_building = count_nodes(label.name, nodedb.BUILDING)
-            n_used = count_nodes(label.name, nodedb.USED)
-            n_test = count_nodes(label.name, nodedb.TEST)
+            n_ready = count_nodes(label.name, nodestore.READY)
+            n_building = count_nodes(label.name, nodestore.BUILDING)
+            n_used = count_nodes(label.name, nodestore.USED)
+            n_test = count_nodes(label.name, nodestore.TEST)
             ready = n_ready + n_building + n_used + n_test
 
             capacity = 0
@@ -1455,7 +1456,7 @@ class NodePool(threading.Thread):
                 expected_subnodes = \
                     self.config.labels[node.label_name].subnodes
                 active_subnodes = len([n for n in node.subnodes
-                                       if n.state != nodedb.DELETE])
+                                       if n.state != nodestore.DELETE])
                 deficit = max(expected_subnodes - active_subnodes, 0)
                 if deficit:
                     nodes_to_launch.append((node, deficit))
@@ -1477,20 +1478,20 @@ class NodePool(threading.Thread):
         # after a restart.  To clean up, mark all building node and
         # images for deletion when the daemon starts.
         with self.getDB().getSession() as session:
-            for node in session.getNodes(state=nodedb.BUILDING):
+            for node in session.getNodes(state=nodestore.BUILDING):
                 self.log.info("Setting building node id: %s to delete "
                               "on startup" % node.id)
-                node.state = nodedb.DELETE
+                node.state = nodestore.DELETE
 
-            for image in session.getSnapshotImages(state=nodedb.BUILDING):
+            for image in session.getSnapshotImages(state=nodestore.BUILDING):
                 self.log.info("Setting building image id: %s to delete "
                               "on startup" % image.id)
-                image.state = nodedb.DELETE
+                image.state = nodestore.DELETE
 
-            for dib_image in session.getDibImages(state=nodedb.BUILDING):
+            for dib_image in session.getDibImages(state=nodestore.BUILDING):
                 self.log.info("Setting building dib image id: %s to delete "
                               "on startup" % dib_image.id)
-                dib_image.state = nodedb.DELETE
+                dib_image.state = nodestore.DELETE
 
     def run(self):
         try:
@@ -1545,8 +1546,8 @@ class NodePool(threading.Thread):
         for snap_image in session.getSnapshotImages():
             if (snap_image.provider_name == provider.name and
                 snap_image.image_name == image.name and
-                snap_image.state in [nodedb.READY,
-                                     nodedb.BUILDING]):
+                snap_image.state in [nodestore.READY,
+                                     nodestore.BUILDING]):
                 found = True
         if not found:
             self.log.warning("Missing image %s on %s" %
@@ -1558,7 +1559,7 @@ class NodePool(threading.Thread):
         for dib_image in session.getDibImages():
             if dib_image.image_name != image.diskimage:
                 continue
-            if dib_image.state != nodedb.READY:
+            if dib_image.state != nodestore.READY:
                 # This is either building or in an error state
                 # that will be handled by periodic cleanup
                 return
@@ -1572,8 +1573,8 @@ class NodePool(threading.Thread):
             for snap_image in session.getSnapshotImages():
                 if (snap_image.provider_name == provider.name and
                     snap_image.image_name == image.name and
-                    snap_image.state in [nodedb.READY,
-                                         nodedb.BUILDING]):
+                    snap_image.state in [nodestore.READY,
+                                         nodestore.BUILDING]):
                     found = True
                     break
             if not found:
@@ -1817,12 +1818,12 @@ class NodePool(threading.Thread):
     def _deleteNode(self, session, node):
         self.log.debug("Deleting node id: %s which has been in %s "
                        "state for %s hours" %
-                       (node.id, nodedb.STATE_NAMES[node.state],
+                       (node.id, nodestore.STATE_NAMES[node.state],
                         (time.time() - node.state_time) / (60 * 60)))
         # Delete a node
-        if node.state != nodedb.DELETE:
+        if node.state != nodestore.DELETE:
             # Don't write to the session if not needed.
-            node.state = nodedb.DELETE
+            node.state = nodestore.DELETE
         self.updateStats(session, node.provider_name)
         provider = self.config.providers[node.provider_name]
         target = self.config.targets[node.target_name]
@@ -1901,7 +1902,7 @@ class NodePool(threading.Thread):
 
     def _deleteImage(self, session, snap_image):
         # Delete an image (and its associated server)
-        snap_image.state = nodedb.DELETE
+        snap_image.state = nodestore.DELETE
         provider = self.config.providers[snap_image.provider_name]
         manager = self.getProviderManager(provider)
 
@@ -2089,12 +2090,12 @@ class NodePool(threading.Thread):
     def cleanupOneNode(self, session, node):
         now = time.time()
         time_in_state = now - node.state_time
-        if (node.state in [nodedb.READY, nodedb.HOLD]):
+        if (node.state in [nodestore.READY, nodestore.HOLD]):
             return
         delete = False
-        if (node.state == nodedb.DELETE):
+        if (node.state == nodestore.DELETE):
             delete = True
-        elif (node.state == nodedb.TEST and
+        elif (node.state == nodestore.TEST and
               time_in_state > TEST_CLEANUP):
             delete = True
         elif time_in_state > NODE_CLEANUP:
@@ -2121,7 +2122,7 @@ class NodePool(threading.Thread):
             delete = True
             self.log.info("Deleting image id: %s which has no current "
                           "base image" % image.id)
-        elif (image.state == nodedb.DELETE):
+        elif (image.state == nodestore.DELETE):
             delete = True
             self.log.info("Deleting image id: %s which is in delete state "
                           % image.id)
@@ -2169,7 +2170,7 @@ class NodePool(threading.Thread):
                               (image.id,
                                (now - image.state_time) / (60 * 60)))
                 delete = True
-            if image.state == nodedb.DELETE:
+            if image.state == nodestore.DELETE:
                 delete = True
         if delete:
             try:
@@ -2191,7 +2192,7 @@ class NodePool(threading.Thread):
 
         self.log.debug("Starting periodic check")
         for node in session.getNodes():
-            if node.state != nodedb.READY:
+            if node.state != nodestore.READY:
                 continue
             provider = self.config.providers[node.provider_name]
             if node.label_name in self.config.labels:
@@ -2222,7 +2223,7 @@ class NodePool(threading.Thread):
         #nodepool.target.TARGET.nodes.STATE
         #nodepool.label.LABEL.nodes.STATE
         #nodepool.provider.PROVIDER.nodes.STATE
-        for state in nodedb.STATE_NAMES.values():
+        for state in nodestore.STATE_NAMES.values():
             key = 'nodepool.nodes.%s' % state
             states[key] = 0
             for target in self.config.targets.values():
@@ -2239,9 +2240,9 @@ class NodePool(threading.Thread):
                 states[key] = 0
 
         for node in session.getNodes():
-            if node.state not in nodedb.STATE_NAMES:
+            if node.state not in nodestore.STATE_NAMES:
                 continue
-            state = nodedb.STATE_NAMES[node.state]
+            state = nodestore.STATE_NAMES[node.state]
             key = 'nodepool.nodes.%s' % state
             states[key] += 1
 

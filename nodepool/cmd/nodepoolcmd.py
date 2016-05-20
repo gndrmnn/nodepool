@@ -20,7 +20,7 @@ import sys
 import time
 
 from nodepool import nodepool
-from nodepool.nodestore import nodedb
+from nodepool import nodestore
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
@@ -167,7 +167,7 @@ class NodePoolCmd(object):
                            node.label_name, node.target_name,
                            node.manager_name, node.hostname,
                            node.nodename, node.external_id, node.ip,
-                           nodedb.STATE_NAMES[node.state],
+                           nodestore.STATE_NAMES[node.state],
                            NodePoolCmd._age(node.state_time)])
             print t
 
@@ -179,7 +179,7 @@ class NodePoolCmd(object):
             for image in session.getDibImages():
                 t.add_row([image.id, image.image_name,
                            image.filename, image.version,
-                           nodedb.STATE_NAMES[image.state],
+                           nodestore.STATE_NAMES[image.state],
                            NodePoolCmd._age(image.state_time)])
             print t
 
@@ -192,7 +192,7 @@ class NodePoolCmd(object):
                 t.add_row([image.id, image.provider_name, image.image_name,
                            image.hostname, image.version,
                            image.external_id, image.server_external_id,
-                           nodedb.STATE_NAMES[image.state],
+                           nodestore.STATE_NAMES[image.state],
                            NodePoolCmd._age(image.state_time)])
             print t
 
@@ -333,7 +333,7 @@ class NodePoolCmd(object):
         node_id = None
         with self.pool.getDB().getSession() as session:
             node = session.getNode(self.args.id)
-            node.state = nodedb.HOLD
+            node.state = nodestore.HOLD
             node_id = node.id
         self.list(node_id=node_id)
 
@@ -347,7 +347,7 @@ class NodePoolCmd(object):
             elif self.args.now:
                 self.pool._deleteNode(session, node)
             else:
-                node.state = nodedb.DELETE
+                node.state = nodestore.DELETE
                 self.list(node_id=node.id)
 
     def dib_image_delete(self):

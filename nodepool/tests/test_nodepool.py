@@ -23,14 +23,15 @@ from nodepool import jobs
 from nodepool import tests
 import nodepool.fakeprovider
 import nodepool.nodepool
-from nodepool.nodestore import nodedb
+from nodepool import nodestore
+from nodepool.nodestore import core as nodestore_core
 
 
 class TestNodepool(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestNodepool")
 
     def test_db(self):
-        db = nodedb.NodeDatabase(self.dburi)
+        db = nodestore_core.NodeStore(uri=self.dburi)
         with db.getSession() as session:
             session.getNodes()
 
@@ -46,7 +47,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
 
     def test_node_net_name(self):
@@ -61,7 +62,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
 
     def test_dib_node(self):
@@ -77,7 +78,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-dib-provider',
                                      label_name='fake-dib-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
         self.assertEqual(len(nodes), 1)
 
     def test_dib_node_vhd_image(self):
@@ -93,7 +94,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-dib-provider',
                                      label_name='fake-dib-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
         self.assertEqual(len(nodes), 1)
 
     def test_dib_node_vhd_and_qcow2(self):
@@ -110,12 +111,12 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider1',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             nodes = session.getNodes(provider_name='fake-provider2',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
 
     def test_dib_and_snap_label(self):
@@ -132,12 +133,12 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider1',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             nodes = session.getNodes(provider_name='fake-provider2',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
 
     def test_dib_and_snap_fail(self):
@@ -155,13 +156,13 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider1',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 0)
             # fake-provider2 uses snapshots.
             nodes = session.getNodes(provider_name='fake-provider2',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 2)
         # The fake disk image create script will return 127 with
         # SHOULD_FAIL flag set to true.
@@ -191,13 +192,13 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider1',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 0)
             # fake-provider2 uses snapshots.
             nodes = session.getNodes(provider_name='fake-provider2',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 2)
 
     def test_dib_snapimage_delete(self):
@@ -260,17 +261,17 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 2)
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='multi-fake',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 2)
             for node in nodes:
                 self.assertEqual(len(node.subnodes), 2)
                 for subnode in node.subnodes:
-                    self.assertEqual(subnode.state, nodedb.READY)
+                    self.assertEqual(subnode.state, nodestore.READY)
 
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
@@ -284,7 +285,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].az, 'az1')
 
@@ -303,21 +304,21 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider1',
                                      label_name='fake-label1',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].ip, 'fake_v6')
             # ipv6 preferred unspecified and ipv6 address available
             nodes = session.getNodes(provider_name='fake-provider2',
                                      label_name='fake-label2',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].ip, 'fake')
             # ipv6 preferred set to true but ipv6 address unavailable
             nodes = session.getNodes(provider_name='fake-provider3',
                                      label_name='fake-label3',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             self.assertEqual(nodes[0].ip, 'fake')
 
@@ -332,7 +333,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             node_id = nodes[0].id
 
@@ -344,11 +345,11 @@ class TestNodepool(tests.DBTestCase):
             ready_nodes = session.getNodes(provider_name='fake-provider',
                                            label_name='fake-label',
                                            target_name='fake-target',
-                                           state=nodedb.READY)
+                                           state=nodestore.READY)
             deleted_nodes = session.getNodes(provider_name='fake-provider',
                                              label_name='fake-label',
                                              target_name='fake-target',
-                                             state=nodedb.DELETE)
+                                             state=nodestore.DELETE)
             # Make sure we have one node which is a new node
             self.assertEqual(len(ready_nodes), 1)
             self.assertNotEqual(node_id, ready_nodes[0].id)
@@ -373,7 +374,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             node_id = nodes[0].id
 
@@ -385,11 +386,11 @@ class TestNodepool(tests.DBTestCase):
             ready_nodes = session.getNodes(provider_name='fake-provider',
                                            label_name='fake-label',
                                            target_name='fake-target',
-                                           state=nodedb.READY)
+                                           state=nodestore.READY)
             deleted_nodes = session.getNodes(provider_name='fake-provider',
                                              label_name='fake-label',
                                              target_name='fake-target',
-                                             state=nodedb.DELETE)
+                                             state=nodestore.DELETE)
             # Make sure we have one node which is a new node
             self.assertEqual(len(ready_nodes), 1)
             self.assertNotEqual(node_id, ready_nodes[0].id)
@@ -418,7 +419,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
             # Delete the node from the db, but leave the instance
             # so it is leaked.
@@ -429,7 +430,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 0)
 
         # Wait for nodepool to replace it, which should be enough
@@ -445,7 +446,7 @@ class TestNodepool(tests.DBTestCase):
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='fake-label',
                                      target_name='fake-target',
-                                     state=nodedb.READY)
+                                     state=nodestore.READY)
             self.assertEqual(len(nodes), 1)
 
     def test_building_image_cleanup_on_start(self):
@@ -464,8 +465,8 @@ class TestNodepool(tests.DBTestCase):
         with pool.getDB().getSession() as session:
             images = session.getSnapshotImages()
             self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
+            self.assertEqual(images[0].state, nodestore.READY)
+            images[0].state = nodestore.BUILDING
 
         # Start nodepool instance which should delete our old image.
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -477,7 +478,7 @@ class TestNodepool(tests.DBTestCase):
         # will act on.
         while True:
             with pool.getDB().getSession() as session:
-                if session.getSnapshotImages()[0].state != nodedb.BUILDING:
+                if session.getSnapshotImages()[0].state != nodestore.BUILDING:
                     break
                 time.sleep(0)
         # Necessary to force cleanup to happen within the test timeframe
@@ -488,7 +489,7 @@ class TestNodepool(tests.DBTestCase):
         with pool.getDB().getSession() as session:
             images = session.getSnapshotImages()
             self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
+            self.assertEqual(images[0].state, nodestore.READY)
             # should be second image built.
             self.assertEqual(images[0].id, 2)
 
@@ -512,12 +513,12 @@ class TestNodepool(tests.DBTestCase):
             # the image that was in the snapshot table.
             images = session.getSnapshotImages()
             self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
+            self.assertEqual(images[0].state, nodestore.READY)
+            images[0].state = nodestore.BUILDING
             images = session.getDibImages()
             self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
+            self.assertEqual(images[0].state, nodestore.READY)
+            images[0].state = nodestore.BUILDING
 
         # Start nodepool instance which should delete our old image.
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -529,7 +530,7 @@ class TestNodepool(tests.DBTestCase):
         # will act on.
         while True:
             with pool.getDB().getSession() as session:
-                if session.getDibImages()[0].state != nodedb.BUILDING:
+                if session.getDibImages()[0].state != nodestore.BUILDING:
                     break
                 time.sleep(0)
         # Necessary to force cleanup to happen within the test timeframe
@@ -540,7 +541,7 @@ class TestNodepool(tests.DBTestCase):
         with pool.getDB().getSession() as session:
             images = session.getDibImages()
             self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
+            self.assertEqual(images[0].state, nodestore.READY)
             # should be second image built.
             self.assertEqual(images[0].id, 2)
 

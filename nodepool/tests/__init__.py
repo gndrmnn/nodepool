@@ -33,7 +33,7 @@ import testresources
 import testtools
 
 from nodepool import allocation, builder, fakeprovider, nodepool
-from nodepool.nodestore import nodedb
+from nodepool import nodestore
 
 TRUE_VALUES = ('true', '1', 'yes')
 
@@ -368,7 +368,7 @@ class DBTestCase(BaseTestCase):
             with pool.getDB().getSession() as session:
                 needed = pool.getNeededNodes(session, allocation_history)
                 if not needed:
-                    nodes = session.getNodes(state=nodedb.BUILDING)
+                    nodes = session.getNodes(state=nodestore.BUILDING)
                     if not nodes:
                         break
             time.sleep(1)
