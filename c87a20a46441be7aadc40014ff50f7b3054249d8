@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bab6814e_43b708d8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-05-25T19:56:04Z",
+      "side": 1,
+      "message": "As a point - if the image is a sparse file in anyform, getsize will show the apparant (max size) not the \"real used\" size. To get the real used size, you need to use os.statvfs(path) and pull out the \"used\" element from the named tuple.\n\nI am not sure we are creating sparse files here off the top of my head, but want to highlight this before we choose to land it.",
+      "revId": "c87a20a46441be7aadc40014ff50f7b3054249d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
