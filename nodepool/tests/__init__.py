@@ -232,7 +232,7 @@ class AllocatorTestCase(object):
 
     def test_allocator(self):
         for i, amount in enumerate(self.results):
-            print self.agt[i]
+            print(self.agt[i])
         for i, amount in enumerate(self.results):
             self.assertEqual(self.agt[i].amount, amount,
                              'Error at pos %d, '

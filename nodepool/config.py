@@ -16,11 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import os_client_config
 from six.moves import configparser as ConfigParser
 import yaml
 
-import fakeprovider
+from nodepool import fakeprovider
 
 
 class ConfigValue(object):

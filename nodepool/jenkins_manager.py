@@ -16,12 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import logging
 import re
 
-import myjenkins
-import fakeprovider
-from task_manager import Task, TaskManager
+from nodepool import myjenkins
+from nodepool import fakeprovider
+from nodepool.task_manager import Task, TaskManager
 
 
 class CreateNodeTask(Task):

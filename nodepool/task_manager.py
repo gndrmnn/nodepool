@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import sys
 import threading
 from six.moves import queue as Queue
@@ -23,7 +25,7 @@ import logging
 import time
 import requests.exceptions
 
-import stats
+from nodepool import stats
 
 class ManagerStoppedException(Exception):
     pass

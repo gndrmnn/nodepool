@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import apscheduler.schedulers.background
 import apscheduler.triggers.cron
 import gear
@@ -31,16 +33,16 @@ import time
 from uuid import uuid4
 import zmq
 
-import allocation
-import jenkins_manager
-import nodedb
-import exceptions
-import nodeutils as utils
-import provider_manager
-import stats
-import config as nodepool_config
+from nodepool import allocation
+from nodepool import jenkins_manager
+from nodepool import nodedb
+from nodepool import exceptions
+from nodepool import nodeutils as utils
+from nodepool import provider_manager
+from nodepool import stats
+from nodepool import config as nodepool_config
 
-import jobs
+from nodepool import jobs
 
 MINS = 60
 HOURS = 60 * MINS
