@@ -12,6 +12,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from __future__ import absolute_import
 
 import errno
 import json
@@ -25,10 +26,10 @@ import traceback
 import gear
 import shlex
 
-import config as nodepool_config
-import exceptions
-import provider_manager
-import stats
+from nodepool import config as nodepool_config
+from nodepool import exceptions
+from nodepool import provider_manager
+from nodepool import stats
 
 MINS = 60
 HOURS = 60 * MINS

@@ -14,6 +14,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from __future__ import absolute_import
+
 import StringIO
 import logging
 import threading
@@ -23,7 +25,7 @@ import uuid
 from jenkins import JenkinsException
 import shade
 
-import exceptions
+from nodepool import exceptions
 
 
 class Dummy(object):
@@ -243,8 +245,8 @@ class FakeFile(StringIO.StringIO):
         self.__path = path
 
     def close(self):
-        print "Wrote to %s:" % self.__path
-        print self.getvalue()
+        print("Wrote to %s:" % self.__path)
+        print(self.getvalue())
         StringIO.StringIO.close(self)
 
 

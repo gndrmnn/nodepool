@@ -22,7 +22,7 @@ import time
 from nodepool import nodedb
 from nodepool import nodepool
 from nodepool.version import version_info as npc_version_info
-from config_validator import ConfigValidator
+from nodepool.cmd.config_validator import ConfigValidator
 from prettytable import PrettyTable
 
 log = logging.getLogger(__name__)
@@ -169,7 +169,7 @@ class NodePoolCmd(object):
                            node.nodename, node.external_id, node.ip,
                            nodedb.STATE_NAMES[node.state],
                            NodePoolCmd._age(node.state_time)])
-            print t
+            print(t)
 
     def dib_image_list(self):
         t = PrettyTable(["ID", "Image", "Filename", "Version",
@@ -181,7 +181,7 @@ class NodePoolCmd(object):
                            image.filename, image.version,
                            nodedb.STATE_NAMES[image.state],
                            NodePoolCmd._age(image.state_time)])
-            print t
+            print(t)
 
     def image_list(self):
         t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
@@ -194,7 +194,7 @@ class NodePoolCmd(object):
                            image.external_id, image.server_external_id,
                            nodedb.STATE_NAMES[image.state],
                            NodePoolCmd._age(image.state_time)])
-            print t
+            print(t)
 
     def image_update(self):
         threads = []
@@ -300,7 +300,7 @@ class NodePoolCmd(object):
                 except Exception as e:
                     log.warning("Exception listing aliens for %s: %s"
                                 % (provider.name, str(e.message)))
-        print t
+        print(t)
 
     def alien_image_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
@@ -327,7 +327,7 @@ class NodePoolCmd(object):
                                 provider.name, image['id']):
                             t.add_row([provider.name, image['name'],
                                        image['id']])
-        print t
+        print(t)
 
     def hold(self):
         node_id = None
@@ -343,7 +343,7 @@ class NodePoolCmd(object):
         with self.pool.getDB().getSession() as session:
             node = session.getNode(self.args.id)
             if not node:
-                print "Node %s not found." % self.args.id
+                print("Node %s not found." % self.args.id)
             elif self.args.now:
                 self.pool._deleteNode(session, node)
             else:

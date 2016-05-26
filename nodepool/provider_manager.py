@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import json
 import logging
 import paramiko
@@ -23,10 +25,10 @@ from contextlib import contextmanager
 
 import shade
 
-import exceptions
-import fakeprovider
-from nodeutils import iterate_timeout
-from task_manager import TaskManager, ManagerStoppedException
+from nodepool import exceptions
+from nodepool import fakeprovider
+from nodepool.nodeutils import iterate_timeout
+from nodepool.task_manager import TaskManager, ManagerStoppedException
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list

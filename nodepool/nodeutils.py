@@ -16,16 +16,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import errno
 import time
 import socket
 import logging
-from sshclient import SSHClient
+from nodepool.sshclient import SSHClient
 
-import fakeprovider
+from nodepool import fakeprovider
 import paramiko
 
-import exceptions
+from nodepool import exceptions
 
 log = logging.getLogger("nodepool.utils")
 
