@@ -21,6 +21,7 @@ import time
 
 from nodepool import nodedb
 from nodepool import nodepool
+from nodepool import cmd
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
@@ -28,9 +29,7 @@ from prettytable import PrettyTable
 log = logging.getLogger(__name__)
 
 
-class NodePoolCmd(object):
-    def __init__(self):
-        self.args = None
+class NodePoolCmd(cmd.NodepoolApp):
 
     @staticmethod
     def _age(timestamp):
@@ -49,6 +48,8 @@ class NodePoolCmd(object):
         parser.add_argument('-s', dest='secure',
                             default='/etc/nodepool/secure.conf',
                             help='path to secure file')
+        parser.add_argument('-l', dest='logconfig',
+                            help='path to log config file')
         parser.add_argument('--version', action='version',
                             version=npc_version_info.version_string(),
                             help='show version')
@@ -143,16 +144,6 @@ class NodePoolCmd(object):
         cmd_config_validate.set_defaults(func=self.config_validate)
 
         self.args = parser.parse_args()
-
-    def setup_logging(self):
-        if self.args.debug:
-            logging.basicConfig(level=logging.DEBUG,
-                                format='%(asctime)s %(levelname)s %(name)s: '
-                                       '%(message)s')
-        else:
-            logging.basicConfig(level=logging.INFO,
-                                format='%(asctime)s %(levelname)s %(name)s: '
-                                       '%(message)s')
 
     def list(self, node_id=None):
         t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target", "Manager",
