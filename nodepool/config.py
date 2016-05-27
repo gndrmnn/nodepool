@@ -19,6 +19,7 @@
 from __future__ import absolute_import
 
 import os_client_config
+import six
 from six.moves import configparser as ConfigParser
 import yaml
 
@@ -222,7 +223,7 @@ def loadConfig(config_path):
             if i.meta:
                 if len(i.meta) > 5 or \
                    any([len(k) > 255 or len(v) > 255
-                        for k, v in i.meta.iteritems()]):
+                        for k, v in six.iteritems(i.meta)]):
                     # soft-fail
                     #self.log.error("Invalid metadata for %s; ignored"
                     #               % i.name)
