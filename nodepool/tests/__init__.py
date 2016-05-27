@@ -323,8 +323,12 @@ class DBTestCase(BaseTestCase):
         (fd, path) = tempfile.mkstemp()
         with open(configfile) as conf_fd:
             config = conf_fd.read()
-            os.write(fd, config.format(images_dir=images_dir.path,
-                                       gearman_port=self.gearman_server.port))
+            os.write(
+                fd,
+                config.format(
+                    images_dir=images_dir.path,
+                    gearman_port=self.gearman_server.port
+                ).encode('utf-8'))
         os.close(fd)
         return path
 
@@ -335,7 +339,9 @@ class DBTestCase(BaseTestCase):
         (fd, path) = tempfile.mkstemp()
         with open(configfile) as conf_fd:
             config = conf_fd.read()
-            os.write(fd, config.format(dburi=self.dburi))
+            os.write(
+                fd,
+                config.format(dburi=self.dburi).encode('utf-8'))
         os.close(fd)
         return path
 
