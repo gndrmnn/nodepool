@@ -125,7 +125,7 @@ class ProviderManager(TaskManager):
 
     def _getFlavors(self):
         flavors = self.listFlavors()
-        flavors.sort(lambda a, b: cmp(a['ram'], b['ram']))
+        flavors.sort(key=lambda f: f['ram'])
         return flavors
 
     def findFlavor(self, min_ram, name_filter=None):

@@ -182,7 +182,7 @@ class AllocationProvider(object):
         # specific requests first (e.g., if this provider is the only
         # one that can supply foo nodes, then it should focus on
         # supplying them and leave bar nodes to other providers).
-        reqs.sort(lambda a, b: cmp(a.getPriority(), b.getPriority()))
+        reqs.sort(key=lambda r: r.getPriority())
 
         for req in reqs:
             total_requested = 0.0
