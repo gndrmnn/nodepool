@@ -1978,15 +1978,15 @@ class NodePool(threading.Thread):
 
         self.log.debug("Starting periodic cleanup")
 
-        for k, t in self._delete_threads.items()[:]:
+        for k, t in list(self._delete_threads.items())[:]:
             if not t.isAlive():
                 del self._delete_threads[k]
 
-        for k, t in self._image_delete_threads.items()[:]:
+        for k, t in list(self._image_delete_threads.items())[:]:
             if not t.isAlive():
                 del self._image_delete_threads[k]
 
-        for k, t in self._instance_delete_threads.items()[:]:
+        for k, t in list(self._instance_delete_threads.items())[:]:
             if not t.isAlive():
                 del self._instance_delete_threads[k]
 
