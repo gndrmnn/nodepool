@@ -20,6 +20,7 @@ from __future__ import absolute_import
 
 import sys
 import threading
+import six
 from six.moves import queue as Queue
 import logging
 import time
@@ -34,8 +35,7 @@ class ManagerStoppedException(Exception):
 class Task(object):
     def __init__(self, **kw):
         self._wait_event = threading.Event()
-        self._exception = None
-        self._traceback = None
+        self._exc_info = None
         self._result = None
         self.args = kw
 
@@ -43,15 +43,14 @@ class Task(object):
         self._result = result
         self._wait_event.set()
 
-    def exception(self, e, tb):
-        self._exception = e
-        self._traceback = tb
+    def exception(self, exc_info):
+        self._exc_info = exc_info
         self._wait_event.set()
 
     def wait(self):
         self._wait_event.wait()
-        if self._exception:
-            raise self._exception, None, self._traceback
+        if self._exc_info:
+            six.reraise(*self._exc_info)
         return self._result
 
     def run(self, client):
@@ -60,7 +59,7 @@ class Task(object):
         except requests.exceptions.ProxyError as e:
             raise e
         except Exception as e:
-            self.exception(e, sys.exc_info()[2])
+            self.exception(sys.exc_info())
 
 
 class TaskManager(threading.Thread):
