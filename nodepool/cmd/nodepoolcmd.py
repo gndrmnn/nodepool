@@ -16,11 +16,13 @@
 
 import argparse
 import logging.config
+import os
 import sys
 import time
 
 from nodepool import nodedb
 from nodepool import nodepool
+from nodepool.cmd import NodepoolApp
 from nodepool.version import version_info as npc_version_info
 from config_validator import ConfigValidator
 from prettytable import PrettyTable
@@ -28,10 +30,7 @@ from prettytable import PrettyTable
 log = logging.getLogger(__name__)
 
 
-class NodePoolCmd(object):
-    def __init__(self):
-        self.args = None
-
+class NodePoolCmd(NodepoolApp):
     @staticmethod
     def _age(timestamp):
         now = time.time()
@@ -54,6 +53,9 @@ class NodePoolCmd(object):
                             help='show version')
         parser.add_argument('--debug', dest='debug', action='store_true',
                             help='show DEBUG level logging')
+        parser.add_argument('-l', dest='logconfig',
+                            default='/etc/nodepool/logging.conf',
+                            help='path to log config file')
 
         subparsers = parser.add_subparsers(title='commands',
                                            description='valid commands',
@@ -145,7 +147,9 @@ class NodePoolCmd(object):
         self.args = parser.parse_args()
 
     def setup_logging(self):
-        if self.args.debug:
+        if self.args.logconfig and os.path.exists(self.args.logconfig):
+            NodepoolApp.setup_logging(self)
+        elif self.args.debug:
             logging.basicConfig(level=logging.DEBUG,
                                 format='%(asctime)s %(levelname)s %(name)s: '
                                        '%(message)s')
