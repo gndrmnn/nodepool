@@ -51,7 +51,7 @@ class Task(object):
     def wait(self):
         self._wait_event.wait()
         if self._exception:
-            raise self._exception, None, self._traceback
+            raise self._exception(None, self._traceback)
         return self._result
 
     def run(self, client):
