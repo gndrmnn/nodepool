@@ -125,8 +125,8 @@ class GearmanClient(gear.Client):
                 self.__log.exception("Exception while listing functions")
                 self._lostConnection(connection)
                 continue
-            for line in req.response.split('\n'):
-                parts = [x.strip() for x in line.split('\t')]
+            for line in req.response.split(b'\n'):
+                parts = [x.strip() for x in line.split(b'\t')]
                 # parts[0] - function name
                 # parts[1] - total jobs queued (including building)
                 # parts[2] - jobs building

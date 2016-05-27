@@ -262,8 +262,8 @@ class GearmanClient(gear.Client):
                 self.__log.exception("Exception while listing functions")
                 self._lostConnection(connection)
                 continue
-            for line in req.response.split('\n'):
-                parts = [x.strip() for x in line.split('\t')]
+            for line in req.response.split(b'\n'):
+                parts = [x.strip() for x in line.split(b'\t')]
                 # parts[0] - function name
                 # parts[1] - total jobs queued (including building)
                 # parts[2] - jobs building
@@ -627,33 +627,33 @@ class NodeLauncher(threading.Thread):
 
             # The Role of this node
             f = ftp.open('/etc/nodepool/role', 'w')
-            f.write(role + '\n')
+            f.write(role + b'\n')
             f.close()
             # The IP of this node
             f = ftp.open('/etc/nodepool/node', 'w')
-            f.write(n.ip + '\n')
+            f.write(n.ip + b'\n')
             f.close()
             # The private IP of this node
             f = ftp.open('/etc/nodepool/node_private', 'w')
-            f.write(n.ip_private + '\n')
+            f.write(n.ip_private + b'\n')
             f.close()
             # The IP of the primary node of this node set
             f = ftp.open('/etc/nodepool/primary_node', 'w')
-            f.write(self.node.ip + '\n')
+            f.write(self.node.ip + b'\n')
             f.close()
             # The private IP of the primary node of this node set
             f = ftp.open('/etc/nodepool/primary_node_private', 'w')
-            f.write(self.node.ip_private + '\n')
+            f.write(self.node.ip_private + b'\n')
             f.close()
             # The IPs of all sub nodes in this node set
             f = ftp.open('/etc/nodepool/sub_nodes', 'w')
             for subnode in self.node.subnodes:
-                f.write(subnode.ip + '\n')
+                f.write(subnode.ip + b'\n')
             f.close()
             # The private IPs of all sub nodes in this node set
             f = ftp.open('/etc/nodepool/sub_nodes_private', 'w')
             for subnode in self.node.subnodes:
-                f.write(subnode.ip_private + '\n')
+                f.write(subnode.ip_private + b'\n')
             f.close()
             # The SSH key for this node set
             f = ftp.open('/etc/nodepool/id_rsa', 'w')
@@ -672,7 +672,7 @@ class NodeLauncher(threading.Thread):
             f.close()
             # The instance UUID for this node
             f = ftp.open('/etc/nodepool/uuid', 'w')
-            f.write(n.external_id + '\n')
+            f.write(n.external_id + b'\n')
             f.close()
 
             ftp.close()
