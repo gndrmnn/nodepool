@@ -16,11 +16,12 @@
 
 from __future__ import absolute_import
 
-import StringIO
 import logging
 import threading
 import time
 import uuid
+
+import six
 
 from jenkins import JenkinsException
 import shade
@@ -239,15 +240,15 @@ class FakeUploadFailCloud(FakeOpenStackCloud):
         raise exceptions.BuilderError("Test fail image upload.")
 
 
-class FakeFile(StringIO.StringIO):
+class FakeFile(six.BytesIO):
     def __init__(self, path):
-        StringIO.StringIO.__init__(self)
+        six.BytesIO.__init__(self)
         self.__path = path
 
     def close(self):
         print("Wrote to %s:" % self.__path)
         print(self.getvalue())
-        StringIO.StringIO.close(self)
+        six.BytesIO.close(self)
 
 
 class FakeSFTPClient(object):
