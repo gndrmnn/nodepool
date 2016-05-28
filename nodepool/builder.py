@@ -101,7 +101,11 @@ class BuildWorker(BaseWorker):
         try:
             self.nplog.debug('Got job %s with data %s',
                              job.name, job.arguments)
-            if job.name.startswith('image-build:'):
+            # NOTE(notmorgan): gear proto requires everything to be
+            # in bytes or bytearrays. Ensure types match for
+            # calls to .startswith, in py2 b'' and '' where in py3
+            # these are two distinct types that must match.
+            if job.name.startswith(b'image-build:'):
                 args = json.loads(job.arguments)
                 image_id = args['image-id']
                 if '/' in image_id:
@@ -137,7 +141,7 @@ class UploadWorker(BaseWorker):
             if self.builder.canHandleImageIdJob(job, 'image-upload'):
                 args = json.loads(job.arguments)
                 image_name = args['image-name']
-                image_id = job.name.split(':')[1]
+                image_id = job.name.decode('utf-8').split(':')[1]
                 try:
                     external_id = self.builder.uploadImage(image_id,
                                                            args['provider'],
@@ -147,10 +151,11 @@ class UploadWorker(BaseWorker):
                     job.sendWorkFail()
                 else:
                     job.sendWorkComplete(
-                        json.dumps({'external-id': external_id})
+                        json.dumps(
+                            {'external-id': external_id}).encode('utf-8')
                     )
             elif self.builder.canHandleImageIdJob(job, 'image-delete'):
-                image_id = job.name.split(':')[1]
+                image_id = job.name.decode('utf-8').split(':')[1]
                 self.builder.deleteImage(image_id)
                 self.builder.unregisterImageId(image_id)
                 job.sendWorkComplete()

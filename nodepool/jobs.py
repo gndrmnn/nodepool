@@ -19,6 +19,7 @@ import uuid
 import threading
 
 import gear
+import six
 
 from nodepool import nodedb
 
@@ -55,8 +56,14 @@ class WatchableJob(gear.Job):
 
 class NodepoolJob(WatchableJob):
     def __init__(self, job_name, job_data_obj, nodepool):
-        job_uuid = str(uuid.uuid4().hex)
-        job_data = json.dumps(job_data_obj)
+        job_uuid = uuid.uuid4().hex.encode('utf-8')
+        job_data = json.dumps(job_data_obj).encode('utf-8')
+        # NOTE(notmorgan): Ensure that only bytes/bytearray types are passed
+        # down through gear (protocol requires bytes/bytearray) when in py3. In
+        # py2 the default string_type is a byte_string so this encode can be
+        # safely skipped.
+        if six.PY3 and not isinstance(job_name, six.binary_type):
+            job_name = job_name.encode('utf-8')
         super(NodepoolJob, self).__init__(job_name, job_data, job_uuid)
         self.nodepool = nodepool
 
@@ -69,14 +76,15 @@ class ImageBuildJob(NodepoolJob):
 
     def __init__(self, image_name, image_id, nodepool):
         self.image_id = image_id
-        job_data = {'image-id': str(image_id)}
+        job_data = {'image-id': str(image_id) }
         job_name = 'image-build:%s' % image_name
         super(ImageBuildJob, self).__init__(job_name, job_data, nodepool)
 
     def _deleteImage(self, record_only=False):
         with self.getDbSession() as session:
-            self.log.debug('Deleting Image %s (id %d).',
-                           self.name.split(':', 1)[0], self.image_id)
+            self.log.debug(
+                'Deleting Image %s (id %d).',
+                self.name.decode('utf-8').split(':', 1)[0], self.image_id)
             dib_image = session.getDibImage(self.image_id)
             # We soft delete the dib image here because we are currently in
             # a gear thread and therefore cannot submit a gear delete job
@@ -96,23 +104,27 @@ class ImageBuildJob(NodepoolJob):
                         self.image_id)
                     return
                 dib_image.state = nodedb.READY
-                self.log.debug('DIB Image %s (id %d) is ready',
-                               self.name.split(':', 1)[0], self.image_id)
+                self.log.debug(
+                    'DIB Image %s (id %d) is ready',
+                    self.name.decode('utf-8').split(':', 1)[0], self.image_id)
         finally:
             super(ImageBuildJob, self).onCompleted()
 
     def onFailed(self):
         try:
             self.log.error('DIB Image %s (id %d) failed to build. Deleting.',
-                           self.name.split(':', 1)[0], self.image_id)
+                           self.name.decode('utf-8').split(':', 1)[0],
+                           self.image_id)
             self._deleteImage(True)
         finally:
             super(ImageBuildJob, self).onFailed()
 
     def onDisconnect(self):
         try:
-            self.log.error('DIB Image %s (id %d) failed due to gear disconnect.',
-                           self.name.split(':', 1)[0], self.image_id)
+            self.log.error(
+                'DIB Image %s (id %d) failed due to gear disconnect.',
+                self.name.decode('utf-8').split(':', 1)[0],
+                self.image_id)
             self._deleteImage()
         finally:
             super(ImageBuildJob, self).onDisconnect()
