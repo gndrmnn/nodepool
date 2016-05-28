@@ -579,7 +579,7 @@ class TestNodepool(tests.DBTestCase):
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):
-        wj = jobs.WatchableJob('test', 'test', 'test')
+        wj = jobs.WatchableJob(b'test', b'test', b'test')
 
         def call_on_completed():
             time.sleep(.2)
@@ -603,7 +603,7 @@ class TestGearClient(tests.DBTestCase):
         client.addServer('localhost', self.gearman_server.port)
         client.waitForServer()
 
-        job = MyJob('test-job', '', '')
+        job = MyJob(b'test-job', b'', b'')
         client.submitJob(job)
 
         self.gearman_server.shutdown()

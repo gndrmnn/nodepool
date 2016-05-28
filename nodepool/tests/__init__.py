@@ -29,6 +29,7 @@ import time
 
 import fixtures
 import gear
+import six
 import testresources
 import testtools
 
@@ -50,7 +51,11 @@ class FakeGearmanServer(gear.Server):
         for queue in [self.high_queue, self.normal_queue, self.low_queue]:
             for job in queue:
                 if not hasattr(job, 'waiting'):
-                    if job.name.startswith('build:'):
+                    # NOTE(notmorgan): gear proto requires everything to be
+                    # in bytes or bytearrays. Ensure types match for
+                    # calls to .startswith, in py2 b'' and '' where in py3
+                    # these are two distinct types that must match.
+                    if job.name.startswith(b'build:'):
                         job.waiting = self.hold_jobs_in_queue
                     else:
                         job.waiting = False
@@ -125,7 +130,10 @@ class GearmanClient(gear.Client):
                 self.__log.exception("Exception while listing functions")
                 self._lostConnection(connection)
                 continue
-            for line in req.response.split('\n'):
+            resp = req.response
+            if six.PY3 and isinstance(resp, six.binary_type):
+                resp = resp.decode('utf-8')
+            for line in resp.split('\n'):
                 parts = [x.strip() for x in line.split('\t')]
                 # parts[0] - function name
                 # parts[1] - total jobs queued (including building)
