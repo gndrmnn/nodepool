@@ -33,6 +33,8 @@ import time
 from uuid import uuid4
 import zmq
 
+import six
+
 from nodepool import allocation
 from nodepool import jenkins_manager
 from nodepool import nodedb
@@ -262,7 +264,10 @@ class GearmanClient(gear.Client):
                 self.__log.exception("Exception while listing functions")
                 self._lostConnection(connection)
                 continue
-            for line in req.response.split('\n'):
+            resp = req.response
+            if six.PY3 and isinstance(resp, six.binary_type):
+                resp = resp.decode('utf-8')
+            for line in resp.split('\n'):
                 parts = [x.strip() for x in line.split('\t')]
                 # parts[0] - function name
                 # parts[1] - total jobs queued (including building)

@@ -25,6 +25,7 @@ import traceback
 
 import gear
 import shlex
+import six
 
 from nodepool import config as nodepool_config
 from nodepool import exceptions
@@ -101,15 +102,22 @@ class BuildWorker(BaseWorker):
         try:
             self.nplog.debug('Got job %s with data %s',
                              job.name, job.arguments)
-            if job.name.startswith('image-build:'):
-                args = json.loads(job.arguments)
+            # NOTE(notmorgan): gear proto requires everything to be
+            # in bytes or bytearrays. Ensure types match for
+            # calls to .startswith, in py2 b'' and '' where in py3
+            # these are two distinct types that must match.
+            if job.name.startswith(b'image-build:'):
+                arguments = job.arguments
+                if six.PY3 and isinstance(arguments, six.binary_type):
+                    arguments = arguments.decode('utf-8')
+                args = json.loads(arguments)
                 image_id = args['image-id']
                 if '/' in image_id:
                     raise exceptions.BuilderInvalidCommandError(
                         'Invalid image-id specified'
                     )
 
-                image_name = job.name.split(':', 1)[1]
+                image_name = job.name.decode('utf-8').split(':', 1)[1]
                 try:
                     self.builder.buildImage(image_name, image_id)
                 except exceptions.BuilderError:
@@ -118,7 +126,8 @@ class BuildWorker(BaseWorker):
                 else:
                     # We can now upload this image
                     self.builder.registerImageId(image_id)
-                    job.sendWorkComplete(json.dumps({'image-id': image_id}))
+                    job.sendWorkComplete(
+                        json.dumps({'image-id': image_id}).encode('utf-8'))
             else:
                 self.nplog.error('Unable to handle job %s', job.name)
                 job.sendWorkFail()
@@ -134,10 +143,12 @@ class UploadWorker(BaseWorker):
         try:
             self.nplog.debug('Got job %s with data %s',
                              job.name, job.arguments)
+            job_name = job.name.decode('utf-8')
             if self.builder.canHandleImageIdJob(job, 'image-upload'):
-                args = json.loads(job.arguments)
+                arguments = job.arguments.decode('utf-8')
+                args = json.loads(arguments)
                 image_name = args['image-name']
-                image_id = job.name.split(':')[1]
+                image_id = job_name.split(':')[1]
                 try:
                     external_id = self.builder.uploadImage(image_id,
                                                            args['provider'],
@@ -147,10 +158,11 @@ class UploadWorker(BaseWorker):
                     job.sendWorkFail()
                 else:
                     job.sendWorkComplete(
-                        json.dumps({'external-id': external_id})
+                        json.dumps(
+                            {'external-id': external_id}).encode('utf-8')
                     )
             elif self.builder.canHandleImageIdJob(job, 'image-delete'):
-                image_id = job.name.split(':')[1]
+                image_id = job_name.split(':')[1]
                 self.builder.deleteImage(image_id)
                 self.builder.unregisterImageId(image_id)
                 job.sendWorkComplete()
@@ -159,7 +171,7 @@ class UploadWorker(BaseWorker):
                 job.sendWorkFail()
         except Exception:
             self.nplog.exception('Exception while running job')
-            job.sendWorkException(traceback.format_exc())
+            job.sendWorkException(traceback.format_exc().encode('utf-8'))
 
 
 class NodePoolBuilder(object):
@@ -299,8 +311,9 @@ class NodePoolBuilder(object):
                              'found', image_id)
 
     def canHandleImageIdJob(self, job, image_op):
-        return (job.name.startswith(image_op + ':') and
-                job.name.split(':')[1]) in self._built_image_ids
+        job_name = job.name.decode('utf-8')
+        return (job_name.startswith(image_op + ':') and
+                job_name.split(':')[1]) in self._built_image_ids
 
     def deleteImage(self, image_id):
         image_files = DibImageFile.from_image_id(self._config.imagesdir,
