@@ -171,8 +171,8 @@ class TestNodepool(tests.DBTestCase):
         with pool.getDB().getSession() as session:
             while True:
                 dib_images = session.getDibImages()
-                images = filter(lambda x: x.image_name == 'fake-dib-image',
-                                dib_images)
+                images = list(filter(
+                    lambda x: x.image_name == 'fake-dib-image', dib_images))
                 if len(images) == 0:
                     break
                 time.sleep(.2)
