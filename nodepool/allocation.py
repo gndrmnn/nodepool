@@ -53,6 +53,7 @@ The algorithm is:
     that label.
 """
 
+import decimal
 import functools
 
 # History allocation tracking
@@ -197,8 +198,20 @@ class AllocationProvider(object):
             else:
                 ratio = 0.0
 
-            grant = int(round(req.amount))
-            grant = min(grant, int(round(self.available * ratio)))
+            # NOTE(notmorgan): Python 2 and Python 3 handle rounding
+            # in a different manner. Python 2 rounds half up, Python 3 rounds
+            # half down. Instead of relyng on the round() function for
+            # consistent calculations, use decimal and quantize the result
+            # explicitly asking for a ROUND_HALF_UP. This is casted to an
+            # explicit int() to ensure no edge cases are introduced.
+            grant = int(
+                decimal.Decimal(req.amount).quantize(
+                    decimal.Decimal('1'),
+                    rounding=decimal.ROUND_HALF_UP))
+            grant = min(
+                grant,
+                int(decimal.Decimal(self.available * ratio).quantize(
+                    decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP)))
             # This adjusts our availability as well as the values of
             # other requests, so values will be correct the next time
             # through the loop.
