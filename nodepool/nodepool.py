@@ -1666,6 +1666,10 @@ class NodePool(threading.Thread):
             provider_name=provider.name,
             image_name=image_name)
 
+        self.log.warning(
+            "Snapshot images are now deprecated. This functionality will "
+            "be removed in the near future. Please migrate to using "
+            "diskimages for your provider images.")
         t = SnapshotImageUpdater(self, provider, image, snap_image.id)
         t.start()
         # Enough time to give them different timestamps (versions)
