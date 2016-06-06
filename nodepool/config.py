@@ -240,6 +240,7 @@ def loadConfig(config_path):
             # interpreted as a number (e.g. "21" for fedora)
             d.release = str(diskimage.get('release', ''))
             d.env_vars = diskimage.get('env-vars', {})
+            d.packages = diskimage.get('packages', {})
             if not isinstance(d.env_vars, dict):
                 #self.log.error("%s: ignoring env-vars; "
                 #               "should be a dict" % d.name)

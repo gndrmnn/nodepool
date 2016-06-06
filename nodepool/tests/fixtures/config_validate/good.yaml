@@ -1058,3 +1058,23 @@ diskimages:
       DIB_CLOUD_IMAGES: https://download.fedoraproject.org/pub/fedora/linux/releases/21/Cloud/Images/x86_64/Fedora-Cloud-Base-20141203-21.x86_64.qcow2
       BASE_IMAGE_FILE: Fedora-Cloud-Base-20141203-21.x86_64.qcow2
       QEMU_IMG_OPTIONS: compat=0.10
+  - name: centos-image-with-packages
+    elements:
+      - centos7
+      - vm
+      - simple-init
+      - openstack-repos
+      - nodepool-base
+      - prepare-node
+      - puppet
+      - cache-bindep
+      - growroot
+      - infra-package-needs
+      - stackviz
+    packages:
+      - python-psutil
+      - sos
+    env-vars:
+      TMPDIR: /opt/dib_tmp
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      QEMU_IMG_OPTIONS: compat=0.10

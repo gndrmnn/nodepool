@@ -393,6 +393,8 @@ class NodePoolBuilder(object):
         for k, v in image.env_vars.items():
             env[k] = v
 
+        packages = ','.join(image.packages)
+
         img_elements = image.elements
         img_types = ",".join(image.image_types)
 
@@ -405,8 +407,9 @@ class NodePoolBuilder(object):
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
+        cmd = ('%s -x -t %s --no-tmpfs %s -p %s -o %s %s' %
+               (dib_cmd, img_types, qemu_img_options, packages, filename,
+                img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (image.name,))

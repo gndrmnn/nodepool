@@ -237,6 +237,9 @@ will be built using the provider snapshot approach::
     env-vars:
         DIB_DISTRIBUTION_MIRROR: http://archive.ubuntu.com
         DIB_IMAGE_CACHE: /opt/dib_cache
+    packages:
+      - sos
+      - hiera
 
 
 **required**
@@ -258,6 +261,9 @@ will be built using the provider snapshot approach::
   ``env-vars`` (dict)
     Arbitrary environment variables that will be available in the spawned
     diskimage-builder child process.
+
+  ``packages`` (list)
+    List of packages that will additionally be installed on the image.
 
 .. _provider:
 
