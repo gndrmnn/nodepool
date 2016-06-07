@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_18544dc8",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-06-07T16:11:21Z",
+      "side": 1,
+      "message": "This needs to drop the extra args.",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 39
+      },
+      "revId": "1a313d4019ea6b46b4a6d0442af08239b0ffebe1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
