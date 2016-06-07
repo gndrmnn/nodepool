@@ -16,7 +16,6 @@
 
 from __future__ import absolute_import
 
-import StringIO
 import logging
 import threading
 import time
@@ -24,6 +23,7 @@ import uuid
 
 from jenkins import JenkinsException
 import shade
+import six
 
 from nodepool import exceptions
 
@@ -239,15 +239,15 @@ class FakeUploadFailCloud(FakeOpenStackCloud):
         raise exceptions.BuilderError("Test fail image upload.")
 
 
-class FakeFile(StringIO.StringIO):
+class FakeFile(six.StringIO):
     def __init__(self, path):
-        StringIO.StringIO.__init__(self)
+        six.StringIO.__init__(self)
         self.__path = path
 
     def close(self):
         print("Wrote to %s:" % self.__path)
         print(self.getvalue())
-        StringIO.StringIO.close(self)
+        six.StringIO.close(self)
 
 
 class FakeSFTPClient(object):
