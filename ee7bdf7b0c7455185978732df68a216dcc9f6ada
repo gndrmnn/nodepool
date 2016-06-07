@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_7be0e8fa",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-06-07T17:05:12Z",
+      "side": 1,
+      "message": "pep8 failure.",
+      "range": {
+        "startLine": 61,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 30
+      },
+      "revId": "ee7bdf7b0c7455185978732df68a216dcc9f6ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
