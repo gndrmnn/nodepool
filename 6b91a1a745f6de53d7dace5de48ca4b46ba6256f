@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_9947001d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2264,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-06-09T20:54:06Z",
+      "side": 1,
+      "message": "The main reason to use set is that you no longer need the conditional here.  You can just use \u0027add\u0027 every time.",
+      "revId": "6b91a1a745f6de53d7dace5de48ca4b46ba6256f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
