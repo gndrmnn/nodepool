@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_ac555bfb",
+        "filename": "nodepool/webapp.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-06-15T18:42:59Z",
+      "side": 1,
+      "message": "Nit: docstring still incorrectly mentions Zuul here.",
+      "revId": "32d958a4211889175def1a7002c3f2e12aa44b96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
