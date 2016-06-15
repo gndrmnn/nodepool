@@ -27,7 +27,7 @@ class SSHClient(object):
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.WarningPolicy())
         client.connect(ip, username=username, password=password, pkey=pkey,
-                       key_filename=key_filename)
+                       key_filename=key_filename, timeout=300)
         self.client = client
         self.log = log
 
@@ -36,7 +36,7 @@ class SSHClient(object):
             self.log.debug("*** START to %s" % action)
             self.log.debug("executing: %s" % command)
         stdin, stdout, stderr = self.client.exec_command(
-            command, get_pty=get_pty)
+            command, get_pty=get_pty, timeout=300)
         out = ''
         err = ''
         for line in stdout:
