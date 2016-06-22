@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aaa91ec_59b56d2f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-06-22T19:44:31Z",
+      "side": 1,
+      "message": "Is this double job_list() intentional? should be sufficient to print these out once I think.",
+      "revId": "55249d449743cda782058507dd0d33c9e8062ac1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aaa91ec_f9b419f3",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-06-22T19:44:31Z",
+      "side": 1,
+      "message": "You can drop the None from the assert since assertIsNone implies a compraison to None already.",
+      "revId": "55249d449743cda782058507dd0d33c9e8062ac1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
