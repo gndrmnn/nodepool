@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aaa91ec_2acec862",
+        "filename": "nodepool/migration/alembic_migrations/versions/bf07a01f16eb_initial_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-06-24T19:49:00Z",
+      "side": 1,
+      "message": "NOTE for reviewers:\n\nAll of these creations etc are automatically generated from the models. Explicit unique\u003dFalse etc is expected even if it is the default.",
+      "revId": "d3a03abf6dbe8f6218688014b873b0899abad32e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
