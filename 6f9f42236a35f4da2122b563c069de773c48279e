@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3aaa91ec_2632ae5e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 6554
+      },
+      "writtenOn": "2016-06-29T23:43:51Z",
+      "side": 1,
+      "message": "I think maybe \u0027take\u0027 here is meant to be \u0027put\u0027",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3aaa91ec_06433214",
         "filename": "nodepool/migration/README",
         "patchSetId": 7
