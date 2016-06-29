@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aaa91ec_06433214",
+        "filename": "nodepool/migration/README",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-06-29T22:49:27Z",
+      "side": 1,
+      "message": "See other comment about downgrades in the initial migration file.",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aaa91ec_263e2e8b",
+        "filename": "nodepool/migration/alembic_migrations/versions/bf07a01f16eb_initial_schema.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-06-29T22:49:27Z",
+      "side": 1,
+      "message": "I doubt we want to ensure that downgrades actually work properly (I hear there be dragons doing this). Does it make sense to pass on downgrade to make that explicit?",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aaa91ec_a6697e8e",
+        "filename": "nodepool/nodedb.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-06-29T22:49:27Z",
+      "side": 1,
+      "message": "We should maybe write up a short blurb in the docs on how to do this?\n\nLikely just stop nodepool, delete all the resources, drop db, start nodepool.",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
