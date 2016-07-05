@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1aa78d24_4716fb55",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-07-05T21:57:26Z",
+      "side": 1,
+      "message": "\"bring\" is the correct word.",
+      "parentUuid": "3aaa91ec_2632ae5e",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3aaa91ec_06433214",
         "filename": "nodepool/migration/README",
         "patchSetId": 7
@@ -47,6 +65,24 @@
       "writtenOn": "2016-06-29T22:49:27Z",
       "side": 1,
       "message": "I doubt we want to ensure that downgrades actually work properly (I hear there be dragons doing this). Does it make sense to pass on downgrade to make that explicit?",
+      "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aaa91ec_46525a68",
+        "filename": "nodepool/migration/alembic_migrations/versions/bf07a01f16eb_initial_schema.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-07-05T21:57:26Z",
+      "side": 1,
+      "message": "correct we shouldn\u0027t. I\u0027ll remove this.",
+      "parentUuid": "3aaa91ec_263e2e8b",
       "revId": "6f9f42236a35f4da2122b563c069de773c48279e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
