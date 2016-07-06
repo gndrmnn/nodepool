@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_6f7f8966",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-07-06T00:34:26Z",
+      "side": 1,
+      "message": "This needs a lot more work. bah.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 58
+      },
+      "revId": "ee66e6a0b74639be6c2c94907d82287dbf98ffde",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
