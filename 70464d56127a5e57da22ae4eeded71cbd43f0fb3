@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_1c5081d3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-07-06T23:32:26Z",
+      "side": 1,
+      "message": "The worker here is the gearman connection client-id. ie, it is unique to each worker. It is not the node type that the job_worker_map is expecting.",
+      "range": {
+        "startLine": 268,
+        "startChar": 37,
+        "endLine": 268,
+        "endChar": 43
+      },
+      "revId": "70464d56127a5e57da22ae4eeded71cbd43f0fb3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_bc57adc8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-07-06T23:32:26Z",
+      "side": 1,
+      "message": "This is different",
+      "range": {
+        "startLine": 315,
+        "startChar": 20,
+        "endLine": 315,
+        "endChar": 26
+      },
+      "revId": "70464d56127a5e57da22ae4eeded71cbd43f0fb3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
