@@ -266,11 +266,34 @@ class GearmanClient(gear.Client):
         super(GearmanClient, self).__init__(client_id='nodepool')
         self.__log = logging.getLogger("nodepool.GearmanClient")
 
-    def getNeededWorkers(self):
+    def getNeededWorkers(self, session):
         needed_workers = {}
         job_worker_map = {}
-        unspecified_jobs = {}
         for connection in self.active_connections:
+            try:
+                req = gear.WorkersAdminRequest()
+                connection.sendAdminRequest(req, timeout=300)
+            except Exception:
+                self.__log.exception("Exception while listing workers")
+                self._lostConnection(connection)
+                continue
+            # Populate job_workers_map here
+            for line in req.response.split('\n'):
+                parts = [x.strip() for x in line.split(':', 1)]
+                # parts[0] - Connection details
+                # parts[1] - Jobs that remote connection can execute
+                if len(parts) < 2 or not parts[0] or parts[0] == '.':
+                    # Skip if end of response or if no jobs list.
+                    continue
+                (conn_fd, remote_ip, nodename) = parts[0].split(None, 2)
+                jobs = [x[len('build:'):]
+                        for x in parts[1].split() if x.startswith('build:')]
+                for job in jobs:
+                    worker = session.getNodeByNodename(nodename).label_name
+                    workers = job_worker_map.get(job, set())
+                    # TODO(clarkb) determine if this mapping is already correct
+                    workers.add(worker)
+                    job_worker_map[job] = workers
             try:
                 req = gear.StatusAdminRequest()
                 connection.sendAdminRequest(req, timeout=300)
@@ -308,27 +331,28 @@ class GearmanClient(gear.Client):
                                                                   queued))
                 if ':' in function:
                     fparts = function.split(':')
-                    # fparts[0] - function name
-                    # fparts[1] - target node [type]
+                    # fparts[-2] - function name
+                    # fparts[-1] - target node [type]
                     job = fparts[-2]
+                    # Belts and suspenders but should be populated already by
+                    # workers admin status parsing.
                     worker = fparts[-1]
-                    workers = job_worker_map.get(job, [])
-                    workers.append(worker)
+                    workers = job_worker_map.get(job, set())
+                    workers.add(worker)
                     job_worker_map[job] = workers
-                    if queued > 0:
-                        needed_workers[worker] = (
-                            needed_workers.get(worker, 0) + queued)
-                elif queued > 0:
+                else:
                     job = function
-                    unspecified_jobs[job] = (unspecified_jobs.get(job, 0) +
-                                             queued)
-        for job, queued in unspecified_jobs.items():
-            workers = job_worker_map.get(job)
-            if not workers:
-                continue
-            worker = workers[0]
-            needed_workers[worker] = (needed_workers.get(worker, 0) +
-                                      queued)
+                    workers = job_worker_map.get(job, set())
+                    # We assume worker was populated by job_worker_map
+                    # fillout above in the workers status parsing.
+                    if not workers:
+                        continue
+                    worker = workers.pop()
+                    workers.add(worker)
+                    job_worker_map[job] = workers
+                if queued > 0:
+                    needed_workers[worker] = (
+                        needed_workers.get(worker, 0) + queued)
         return needed_workers
 
     def handleWorkComplete(self, packet):
@@ -1320,7 +1344,7 @@ class NodePool(threading.Thread):
         self.log.debug("Beginning node launch calculation")
         # Get the current demand for nodes.
         if self.gearman_client:
-            label_demand = self.gearman_client.getNeededWorkers()
+            label_demand = self.gearman_client.getNeededWorkers(session)
         else:
             label_demand = {}
 
