@@ -254,6 +254,25 @@ class GearmanClient(gear.Client):
         unspecified_jobs = {}
         for connection in self.active_connections:
             try:
+                req = gear.WorkersAdminRequest()
+                connection.sendAdminRequest(req, timeout=300)
+            except Exception:
+                self.__log.exception("Exception while listing workers")
+                self._lostConnection(connection)
+                continue
+            # Populate job_workers_map here
+            for line in req.response.split('\n'):
+                parts = [x.strip() for x in line.split(':', 1)]
+                # parts[0] - Connection details
+                # parts[1] - Jobs that remote connection can execute
+                (conn_fd, remote_ip, worker) = parts[0].split()
+                jobs = parts[1].split()
+                for job in jobs:
+                    workers = job_worker_map.get(job, [])
+                    # TODO(clarkb) determine if this mapping is already correct
+                    workers.append(worker)
+                    job_worker_map[job] = workers
+            try:
                 req = gear.StatusAdminRequest()
                 connection.sendAdminRequest(req, timeout=300)
             except Exception:
