@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_2bcdf986",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:53:26Z",
+      "side": 1,
+      "message": "This might be a good use of .setdefault()",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_0bcabd6e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:53:26Z",
+      "side": 1,
+      "message": "I\u0027m not sure what this TODO means.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_6bc70165",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:53:26Z",
+      "side": 1,
+      "message": "I wonder why the code switched from 0 referenced to -1.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_4bc4c55e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:53:26Z",
+      "side": 1,
+      "message": "If we\u0027re making the assumption below, let\u0027s just remove this.  (Because if the assumption below doesn\u0027t hold, this won\u0027t have worked.)  In other words, we can simplify this by just ignoring the node-type suffix on the job name and only look at what\u0027s after \"build:\".  The rest will fall into place.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_ab9f2964",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:53:26Z",
+      "side": 1,
+      "message": "I\u0027m missing the point of this bit of code.  It looks like it is removing something and then adding it back.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
