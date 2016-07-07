@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1aa78d24_ae99f7d2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T21:15:19Z",
+      "side": 1,
+      "message": "This todo was already done I can just remove it. Basically it was figure out what mapping I had to do to go from gearman nodename to nodepool label.",
+      "parentUuid": "1aa78d24_0bcabd6e",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aa78d24_6bc70165",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
@@ -47,6 +65,24 @@
       "writtenOn": "2016-07-07T20:53:26Z",
       "side": 1,
       "message": "I wonder why the code switched from 0 referenced to -1.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_8e9ebbb6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T21:15:19Z",
+      "side": 1,
+      "message": "I do not know but it bugged me that the numbers were wrong when I was editing this function so I fixed it.",
+      "parentUuid": "1aa78d24_6bc70165",
       "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "1aa78d24_ae773707",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T21:15:19Z",
+      "side": 1,
+      "message": "Gotcha will address.",
+      "parentUuid": "1aa78d24_4bc4c55e",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aa78d24_ab9f2964",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
@@ -81,6 +135,24 @@
       "writtenOn": "2016-07-07T20:53:26Z",
       "side": 1,
       "message": "I\u0027m missing the point of this bit of code.  It looks like it is removing something and then adding it back.",
+      "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_0e22cb01",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T21:15:19Z",
+      "side": 1,
+      "message": "When you pop from a set you remove the entry. We need to get an arbitrary element of that set in order to satisfy the demand for that function so we pop it off, removing it, then add it back.",
+      "parentUuid": "1aa78d24_ab9f2964",
       "revId": "c49267a6de65777760a35fb656a8e5bb56160b38",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
