@@ -93,6 +93,30 @@
       "revId": "eb9336515646fa9c7573e78e2c2ae36094c00461",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_c5b41ed6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-07-07T23:47:48Z",
+      "side": 1,
+      "message": "Yep, just wondering if we should look for a better way. Perhaps evenly spread the demand across the workers for a function?",
+      "parentUuid": "1aa78d24_4512ee59",
+      "range": {
+        "startLine": 338,
+        "startChar": 33,
+        "endLine": 338,
+        "endChar": 36
+      },
+      "revId": "eb9336515646fa9c7573e78e2c2ae36094c00461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
