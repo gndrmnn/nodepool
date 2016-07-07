@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_37055d45",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-07T20:40:42Z",
+      "side": 1,
+      "message": "You might have called this self.zookeeper_chroot or .zookeeper_path or something... /bikeshed",
+      "revId": "a0dca6ae128ea85213917e9141e1d4af52490711",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
