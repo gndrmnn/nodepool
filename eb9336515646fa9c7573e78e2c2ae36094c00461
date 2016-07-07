@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1aa78d24_9a1b9180",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T23:18:54Z",
+      "side": 1,
+      "message": "Yes it should. Will update.",
+      "parentUuid": "1aa78d24_3a6c1d36",
+      "range": {
+        "startLine": 293,
+        "startChar": 20,
+        "endLine": 293,
+        "endChar": 26
+      },
+      "revId": "eb9336515646fa9c7573e78e2c2ae36094c00461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aa78d24_9a4d519c",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-07T23:14:52Z",
       "side": 1,
       "message": "What about where other workers can do this function? We\u0027ll only increase demand for the one type.",
+      "range": {
+        "startLine": 338,
+        "startChar": 33,
+        "endLine": 338,
+        "endChar": 36
+      },
+      "revId": "eb9336515646fa9c7573e78e2c2ae36094c00461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_4512ee59",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-07T23:18:54Z",
+      "side": 1,
+      "message": "Correct, but this isn\u0027t actually a regression. The old code did the same thing with unspecified_jobs it just used the first one in the list.\n\nBecause we only drop the build: prefix from the function names now that means any explicit label registrations will still get the correct demand. This will only be an issue when asking to run function foo without a label. In which case we will supply sufficient resources to run the queued jobs on one of the valid labels.",
+      "parentUuid": "1aa78d24_9a4d519c",
       "range": {
         "startLine": 338,
         "startChar": 33,
