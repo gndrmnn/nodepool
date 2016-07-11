@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_f411b705",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-07-11T02:08:29Z",
+      "side": 1,
+      "message": "Just a nit but this is technically mapping labels to functions. We could add in the whole node (instead of node.label_name) and pull it out later, or rename the dict.",
+      "range": {
+        "startLine": 299,
+        "startChar": 38,
+        "endLine": 299,
+        "endChar": 57
+      },
+      "revId": "50934c865474d67dd2f0139559210e65e1da0136",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
