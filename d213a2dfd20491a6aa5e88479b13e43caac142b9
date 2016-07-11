@@ -33,6 +33,24 @@
       "revId": "d213a2dfd20491a6aa5e88479b13e43caac142b9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_5eea4175",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-07-11T17:26:55Z",
+      "side": 1,
+      "message": "The default openstack_citest user/password is still there. We randomize the db etc, this is also guaranteeing we are using an isolated user (which seems to be the intent of randomizing the user) not accidentally utilizing a \"previous\" user.\n\nThe alternative would be to use openstack_citest or a single user for all of the opportunistic tests. We could also simply use self.name again.",
+      "parentUuid": "1aa78d24_749ae76f",
+      "revId": "d213a2dfd20491a6aa5e88479b13e43caac142b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
