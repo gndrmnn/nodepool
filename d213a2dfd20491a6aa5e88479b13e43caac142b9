@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_54208b49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-07-11T02:18:08Z",
+      "side": 1,
+      "message": "how would you know the password?",
+      "revId": "d213a2dfd20491a6aa5e88479b13e43caac142b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1aa78d24_749ae76f",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-07-11T02:18:08Z",
+      "side": 1,
+      "message": "is it really worth randomising this?  since the only time you\u0027re going to care about this is when something has gone wrong and you\u0027re debugging maybe at the db level, it seems like just one extra hoop to jump through.",
+      "revId": "d213a2dfd20491a6aa5e88479b13e43caac142b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
