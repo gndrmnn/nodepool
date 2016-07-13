@@ -175,6 +175,9 @@ class ZookeeperServerFixture(fixtures.Fixture):
 
         found_port = False
 
+        self.zookeeper_process = None
+        self.addCleanup(self.shutdownZookeeper)
+
         # Try a random port in the local port range one at a time
         # until we find one that's available.
         while not found_port:
@@ -188,6 +191,8 @@ class ZookeeperServerFixture(fixtures.Fixture):
 
             # Run zookeeper.
             p = subprocess.Popen(args)
+            self.zookeeper_port = port
+            self.zookeeper_process = p
 
             # Wait up to 30 seconds to figure out if it has started.
             for x in range(30):
@@ -202,11 +207,8 @@ class ZookeeperServerFixture(fixtures.Fixture):
             if not found_port:
                 p.kill()
                 p.wait()
-
-        if found_port:
-            self.zookeeper_port = port
-            self.zookeeper_process = p
-            self.addCleanup(self.shutdownZookeeper)
+                if os.path.exists(log_path):
+                    os.unlink(log_path)
 
     def _checkZKLog(self, path):
         if not os.path.exists(path):
@@ -220,8 +222,12 @@ class ZookeeperServerFixture(fixtures.Fixture):
         return None
 
     def shutdownZookeeper(self):
-        self.zookeeper_process.kill()
-        self.zookeeper_process.wait()
+        if self.zookeeper_process:
+            try:
+                self.zookeeper_process.kill()
+                self.zookeeper_process.wait()
+            except OSError:
+                pass
 
 
 class GearmanClient(gear.Client):
