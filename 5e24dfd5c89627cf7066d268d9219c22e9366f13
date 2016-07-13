@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_0838f63c",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-13T21:28:37Z",
+      "side": 1,
+      "message": "Fixtures says (https://pypi.python.org/pypi/fixtures) that we shouldn\u0027t override setUp() and should instead prefer _setUp() to help prevent leaks.\n\nI have tested this change as is and it doesn\u0027t prevent the zk process leak. If I update this to use _setUp() and drop the super then it does. I think we shoudl go ahead and do what fixtures suggests so we can handle that.",
+      "revId": "5e24dfd5c89627cf7066d268d9219c22e9366f13",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
