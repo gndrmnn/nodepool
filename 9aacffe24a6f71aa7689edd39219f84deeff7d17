@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aa78d24_0c30ce06",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-07-14T22:19:00Z",
+      "side": 1,
+      "message": "This is now dead code I think but can be removed in a followup.",
+      "revId": "9aacffe24a6f71aa7689edd39219f84deeff7d17",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
