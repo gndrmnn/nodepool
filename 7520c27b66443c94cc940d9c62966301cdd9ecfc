@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_e4901398",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-18T16:15:25Z",
+      "side": 1,
+      "message": "Maybe these two can be done without mock by grabbing two locks?",
+      "revId": "7520c27b66443c94cc940d9c62966301cdd9ecfc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
