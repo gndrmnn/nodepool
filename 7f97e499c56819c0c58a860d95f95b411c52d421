@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_67c1bce4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-18T20:03:12Z",
+      "side": 1,
+      "message": "The abs seems extraneous (or perhaps it would be better placed in the config reading code?) unless I\u0027m missing something?",
+      "revId": "7f97e499c56819c0c58a860d95f95b411c52d421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
