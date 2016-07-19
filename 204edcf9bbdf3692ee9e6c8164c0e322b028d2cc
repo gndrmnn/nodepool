@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_9e595f01",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-07-19T19:42:47Z",
+      "side": 1,
+      "message": "this appears to keep the status quo (by retrying after building the map on 350 on the first time through) and handles the documented behaviour of -1 disabling caching so LGTM",
+      "revId": "204edcf9bbdf3692ee9e6c8164c0e322b028d2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
