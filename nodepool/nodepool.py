@@ -293,12 +293,18 @@ class GearmanClient(gear.Client):
                          if x.startswith('build:')]
             if functions:
                 node = session.getNodeByNodename(nodename)
-                if node:
-                    worker = node.label_name
-                    for function in functions:
-                        workers = self.function_worker_map.setdefault(function,
-                                                                      set())
-                        workers.add(worker)
+                for function in functions:
+                    # Set to empty set signifying we saw the function in
+                    # a workers output but didn't identify the responsible
+                    # label. Likely means function is handled by non nodepool
+                    # worker.
+                    # This means any lookup against the map that returns None
+                    # is for a function that hasn't been seen and we should
+                    # rerun this function.
+                    workers = self.function_worker_map.setdefault(function,
+                                                                  set())
+                    if node:
+                        workers.add(node.label_name)
 
     def getNeededWorkers(self, session):
         needed_workers = {}
@@ -330,28 +336,39 @@ class GearmanClient(gear.Client):
                 # foreign worker this may be desired.
                 try:
                     queued = int(parts[1])
+                    worker_count = int(parts[3])
                 except ValueError as e:
                     self.__log.warn(
                         'Server returned non-integer value in status. (%s)' %
                         str(e))
                     queued = 0
+                    worker_count = 0
                 if queued > 0:
                     self.__log.debug("Function: %s queued: %s" % (function,
                                                                   queued))
+                if worker_count < 1:
+                    # No workers for this so workers listing won't map it
+                    # for us. We skip it as jobs can't run anyways.
+                    continue
+
                 workers = self.function_worker_map.get(function)
                 # If we don't know what workers are required to handle this
                 # function reload our mapping. Also update the values if
                 # the TTL has been exceeded.
                 time_now = time.time()
-                if not workers or time_now > self.next_worker_update:
+                # Workers is None means function not seen meaning we should
+                # try loading data again. Workers being empty set implies
+                # the workers for that function are managed outside of nodepool
+                if workers is None or time_now > self.next_worker_update:
                     self._mapFuncsToWorkers(connection, session)
                     self.next_worker_update = \
                         time_now + self.worker_map_ttl
                     workers = self.function_worker_map.get(function)
-                    # We assume worker was populated by function_worker_map
-                    # fillout above if not try again later.
-                    if not workers:
-                        continue
+                # We still don't know what workers can run this function.
+                # Either its not owned by nodepool or we need to try again
+                # next time.
+                if not workers:
+                    continue
                 # Get worker for use in populating needed_workers.
                 # Set pop removes entries so we add it back in after popping.
                 worker = workers.pop()
