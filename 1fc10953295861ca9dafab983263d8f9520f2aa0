@@ -130,6 +130,23 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_d88e0778",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T23:26:43Z",
+      "side": 1,
+      "message": "Yes, though to be clear, I\u0027m not suggesting that we deal with the kazoo exceptions directly outside of the facade, but rather am suggesting that in the case where we are not actually handling them, that we let them remain as-is so that they arrive at our general exception handlers in unmodified form.\n\nAs an operator of a service like this, I have never wanted less information in an exception.  On the contrary, there are many times where we have needed more.  Some day there may be a problem with our ZK cluster and we may need the full traceback to diagnose it (just as in the past there have been problems with clouds we talk to and we need the full traceback to understand what went wrong there).  Or equally the problem may be in Nodepool yet we might not have the information needed to fix it.\n\nExceptions should only be caught at the place where they are handled.  Here they are not being handled (no actual alternate program flow is happening) so this handler is adding not adding value to the system, it only serves to hide information from the caller and operator.\n\nIn a case like this, I would expect this to popagate up to a general exception handler inside the image build routine where it would be caught along with any other exceptions which caused the image to fail to build, logged (in its entirety), and then the image builder would exit (likely to be called again for another attempt in the future).\n\nThe only exception from this I would expect to explicitly handle would be the one corresponding to \"someone else holds the lock\" since after all, that\u0027s a perfectly ordinary condition.  Is that the LockTimeout?  If so, that\u0027s fine -- I don\u0027t think it is subject to my objection here.  I would then expect the builder to handle that exception specially and quietly log that it was unable to acquire the lock and try again later (or whatever is appropriate).",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_68f75259",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
