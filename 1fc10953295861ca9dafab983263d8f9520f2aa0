@@ -95,6 +95,23 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_92747068",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T22:23:22Z",
+      "side": 1,
+      "message": "This second handler looks like it would mask most kazoo exceptions.  Is there a reason to do that?  In general, I\u0027d prefer to let exceptions propagate up in their original form to where they can be handled.\n\n(The first handler it could be argued is actually handling the exception, though that\u0027s somewhat predicated on the idea that in some calling context we would handle a timeout from this differently than we would handle any other exception; I\u0027m not sure that will be the case, but it might be, and I don\u0027t anticipate the same loss of debugging context that I do with the second handler.)",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_68f75259",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
@@ -158,6 +175,40 @@
         "endLine": 290,
         "endChar": 41
       },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_7271fc75",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T22:23:22Z",
+      "side": 1,
+      "message": "Masked exception.",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_d26a6880",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T22:23:22Z",
+      "side": 1,
+      "message": "Masked exception.",
       "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
