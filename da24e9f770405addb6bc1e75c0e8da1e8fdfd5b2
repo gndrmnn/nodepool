@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_1806df85",
+        "filename": "README.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T23:39:29Z",
+      "side": 1,
+      "message": "We don\u0027t actually need this because it will create the database when it starts, right?",
+      "revId": "da24e9f770405addb6bc1e75c0e8da1e8fdfd5b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
