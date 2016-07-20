@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_3e948141",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T15:58:55Z",
+      "side": 1,
+      "message": "I think there\u0027s a problem here -- imagine that we have previously had some trusty workers, so their functions are in the map.  Then they all get deleted.  Then we launch a bunch of jobs that need trusty workers.  We hit this point and worker_count will be 0, so nodepool won\u0027t see the demand for the workers.\n\nI think we want to do this check elsewhere.\n\nHowever, this point would be a good place to \u0027continue\u0027 if queued is 0 (we can \u0027else\u0027 the above conditional) -- there\u0027s no demand for this function, so no further processing of it is necessary.",
+      "revId": "317e5b0bfdb330ed079f0afb46ce23dd3be80472",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_9e9dad68",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-20T15:58:55Z",
+      "side": 1,
+      "message": "This would be a better place for the worker_count check:\n\n  if (workers is None and worker_count \u003e 0) or [ttl timeout]:",
+      "revId": "317e5b0bfdb330ed079f0afb46ce23dd3be80472",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
