@@ -112,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_f20a0c89",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-20T22:32:20Z",
+      "side": 1,
+      "message": "Yes, the masking is intentional. If this facade is dealing with all of the kazoo API interactions for the caller, it makes sense to me that those exceptions should be dealt with here as well and something more along the lines of a normal nodepool-defined exception be returned instead. All details of the kazoo API (including exceptions) should be hidden, and the caller never need worry about the kazoo API changing from underneath it.\n\nIs there some reason you\u0027d rather deal directly with the kazoo exceptions? I see no advantage to that off hand.",
+      "parentUuid": "dada55a8_92747068",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_68f75259",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
