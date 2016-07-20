@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_038159c3",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2903
+      },
+      "writtenOn": "2016-07-20T20:03:20Z",
+      "side": 1,
+      "message": "No need to change for this, just a question.",
+      "parentUuid": "dada55a8_436a31b4",
+      "range": {
+        "startLine": 34,
+        "startChar": 14,
+        "endLine": 34,
+        "endChar": 65
+      },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_08421668",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
