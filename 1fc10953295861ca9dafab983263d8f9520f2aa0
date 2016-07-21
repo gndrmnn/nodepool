@@ -147,6 +147,24 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_9e5c5b4c",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T12:59:07Z",
+      "side": 1,
+      "message": "Ok, great. Thanks for the explanation. As long as we aren\u0027t directly trying to handle the kazoo exceptions, I can totally get onboard with what you want here. Let me rework it.",
+      "parentUuid": "dada55a8_d88e0778",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_68f75259",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
