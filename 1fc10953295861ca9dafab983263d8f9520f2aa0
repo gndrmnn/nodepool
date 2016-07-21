@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_bc75d432",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "We could do it that way, sure. I prefer this way as it leaves formatting up to the function, but if others want the URI way, we can change it.",
+      "parentUuid": "dada55a8_038159c3",
+      "range": {
+        "startLine": 34,
+        "startChar": 14,
+        "endLine": 34,
+        "endChar": 65
+      },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_08421668",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
@@ -60,6 +84,30 @@
       "writtenOn": "2016-07-20T20:01:23Z",
       "side": 1,
       "message": "is the chroot (based on your convo w/ josh harlow) the right wa you want to go or would a simple prefix make more sense? I honestly don\u0027t know the pros/cons of either implementation. I tend to err on the side of prefixes since chroots were.. odd when I was looking at this.\n\nThis is more of curiosity than a negative in the current impl.\n\nWe may also want to support a known prefix option as well vs an actual chroot.\n\nprefix\u003d\u0027/junk\u0027, chroot\u003dTrue) or some such.",
+      "range": {
+        "startLine": 47,
+        "startChar": 34,
+        "endLine": 47,
+        "endChar": 44
+      },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_bc9e7460",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "The chroot is optional as all of our paths (for the builder, at least) are already defined under a common prefix as defined in the spec. The chroot is VERY useful for the tests. We can consider adding support for a common prefix as well, but so far I have not seen the need. It can be added later, too.",
+      "parentUuid": "dada55a8_08421668",
       "range": {
         "startLine": 47,
         "startChar": 34,
@@ -165,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_9ca4504b",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dada55a8_9e5c5b4c",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_68f75259",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
@@ -211,6 +277,30 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_dc36c801",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dada55a8_c3de2110",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 41
+      },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_23d0ddf5",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
@@ -222,6 +312,30 @@
       "writtenOn": "2016-07-20T20:01:23Z",
       "side": 1,
       "message": "same as above.",
+      "range": {
+        "startLine": 287,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 41
+      },
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_bc2e74a2",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dada55a8_23d0ddf5",
       "range": {
         "startLine": 287,
         "startChar": 0,
@@ -251,6 +365,24 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_fcbe2c63",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dada55a8_7271fc75",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dada55a8_d26a6880",
         "filename": "nodepool/zk.py",
         "patchSetId": 12
@@ -262,6 +394,24 @@
       "writtenOn": "2016-07-20T22:23:22Z",
       "side": 1,
       "message": "Masked exception.",
+      "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_7f44ee48",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-07-21T18:46:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dada55a8_d26a6880",
       "revId": "1fc10953295861ca9dafab983263d8f9520f2aa0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
