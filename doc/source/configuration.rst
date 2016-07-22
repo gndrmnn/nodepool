@@ -75,12 +75,13 @@ otherwise indicated.
 
 script-dir
 ----------
-When creating an image to use when launching new nodes, Nodepool will
-run a script that is expected to prepare the machine before the
-snapshot image is created.  The ``script-dir`` parameter indicates a
-directory that holds all of the scripts needed to accomplish this.
-Nodepool will copy the entire directory to the machine before invoking
-the appropriate script for the image being created.
+
+Scripts in this directory will be made available on the new node and
+will be invoked by nodepool during setup (``setup``, :ref:`images`)
+and before making the node available (see ``ready-script``,
+:ref:`labels`).
+
+For details see :ref:`scripts`.
 
 Example::
 
@@ -495,19 +496,29 @@ Example::
   ``setup``
      Script to run to prepare the instance.
 
-     Used only when not building images using diskimage-builder, in that case
-     settings defined in the ``diskimages`` section will be used instead. See
-     :ref:`scripts` for setup script details.
+     Used only when *not* building images using diskimage-builder.
+
+     This script will be run on the freshly booted ``base-image`` when
+     creating a snapshot image.
+
+     The hostname will be passed in as the first parameter and there
+     are a range of environment variables available.  See
+     :ref:`scripts` for more details.
 
   ``diskimages``
      See :ref:`diskimages`.
 
   ``username``
-    Nodepool expects that user to exist after running the script indicated by
-    ``setup``. Default ``jenkins``
+    Nodepool expects this user to exist on the booted node.  For
+    snapshot builds, note this user will not be used until *after*
+    running the script indicated by ``setup`` (i.e. that script can be
+    used to configure this user).  Default ``jenkins``
 
   ``private-key``
-    Default ``/var/lib/jenkins/.ssh/id_rsa``
+    Default ``/var/lib/jenkins/.ssh/id_rsa``.  The private key used to
+    log-into the host and run the `ready-script`.  Thus the public
+    portion of this key must be in the `authorized_keys` for the
+    `username` specified above.
 
   ``config-drive`` (boolean)
     Whether config drive should be used for the image.
