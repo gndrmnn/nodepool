@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dada55a8_e37f8e64",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 2475
+      },
+      "writtenOn": "2016-07-22T09:00:17Z",
+      "side": 1,
+      "message": "\"not\" ends up in italic, maybe you wanted bold and hence: \"**not**\"",
+      "revId": "39b32b9ce2100b32e5e252ff0ad2716520acd017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_a392b649",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 2475
+      },
+      "writtenOn": "2016-07-22T09:00:17Z",
+      "side": 1,
+      "message": "I have been using diskimage-builder \u0027devuser\u0027 element for that with:\n\n export DIB_DEV_USER_USERNAME\u003d\u0027jenkins\u0027\n export DIB_DEV_USER_AUTHORIZED_KEYS\u003d\u0027dib_jenkins_id_rsa.pub\u0027\n export DIB_DEV_USER_SHELL\u003d\u0027/bin/bash\u0027\n\nMaybe worth pointing at \u0027devuser\u0027?",
+      "revId": "39b32b9ce2100b32e5e252ff0ad2716520acd017",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
