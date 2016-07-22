@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dada55a8_5e9bd172",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 2475
+      },
+      "writtenOn": "2016-07-22T09:17:49Z",
+      "side": 1,
+      "message": "Slightly copy pasted from the commit message. Thanks!",
+      "parentUuid": "7af24918_d8aeaee6",
+      "revId": "916ddc821b5cdee64ad743845603fcf754583e2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7af24918_589a9ec6",
         "filename": "nodepool/config.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2016-03-06T23:46:05Z",
       "side": 1,
       "message": "so i don\u0027t really think it makes sense to have it under it\u0027s own section and then put it in to the global space like this (it\u0027s not under a dict called .nodepoold\n\nI don\u0027t think there\u0027s really that many globals that we need the section",
+      "revId": "916ddc821b5cdee64ad743845603fcf754583e2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dada55a8_1ecdd95d",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 2475
+      },
+      "writtenOn": "2016-07-22T09:17:49Z",
+      "side": 1,
+      "message": "My intention would be to make all the hardcoded settings from nodepool/nodepool.py to be configurable.  Eg:\n\n WATERMARK_SLEEP \u003d 10         # Interval between checking if new servers needed\n IMAGE_TIMEOUT \u003d 6 * HOURS    # How long to wait for an image save\n CONNECT_TIMEOUT \u003d 10 * MINS  # How long to try to connect after a server\n                              # is ACTIVE\n NODE_CLEANUP \u003d 8 * HOURS     # When to start deleting a node that is not\n                              # READY or HOLD\n TEST_CLEANUP \u003d 5 * MINS      # When to start deleting a node that is in TEST\n IMAGE_CLEANUP \u003d 8 * HOURS    # When to start deleting an image that is not\n                              # READY or is not the current or previous image\n\nAnd I thought it would be a good thing to have them under a \u0027nodepoold\u0027 namespace.\n\n\nShould I amend this change and add the rest of those settings? That would clarify the use case for a \u0027nodepoold\u0027 section.",
+      "parentUuid": "7af24918_589a9ec6",
       "revId": "916ddc821b5cdee64ad743845603fcf754583e2c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
