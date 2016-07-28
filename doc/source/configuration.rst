@@ -506,6 +506,10 @@ Example::
     Nodepool expects that user to exist after running the script indicated by
     ``setup``. Default ``jenkins``
 
+  ``user-home``
+    Path to the home directory of the user specified by ``username``.
+    Default ``/home/jenkins``
+
   ``private-key``
     Default ``/var/lib/jenkins/.ssh/id_rsa``
 
