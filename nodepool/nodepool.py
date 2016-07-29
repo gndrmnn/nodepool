@@ -2277,34 +2277,35 @@ class NodePool(threading.Thread):
 
         managers = set()
 
-        for node in session.getNodes():
-            if node.state not in nodedb.STATE_NAMES:
-                continue
-            state = nodedb.STATE_NAMES[node.state]
-            key = 'nodepool.nodes.%s' % state
-            states[key] += 1
+        for table in session.getNodes(), session.getSubNodes():
+            for node in table:
+                if node.state not in nodedb.STATE_NAMES:
+                    continue
+                state = nodedb.STATE_NAMES[node.state]
+                key = 'nodepool.nodes.%s' % state
+                states[key] += 1
 
-            # NOTE(pabelanger): Check if we assign nodes via Gearman if so, use
-            # the manager name.
-            #nodepool.manager.MANAGER.nodes.STATE
-            if node.manager_name:
-                key = 'nodepool.manager.%s.nodes.%s' % (
-                    node.manager_name, state)
-                if key not in states:
-                    states[key] = 0
-                managers.add(node.manager_name)
-            else:
-                key = 'nodepool.target.%s.nodes.%s' % (
-                    node.target_name, state)
-            states[key] += 1
+                # NOTE(pabelanger): Check if we assign nodes via Gearman if
+                # so, us the manager name.
+                #nodepool.manager.MANAGER.nodes.STATE
+                if node.manager_name:
+                    key = 'nodepool.manager.%s.nodes.%s' % (
+                        node.manager_name, state)
+                    if key not in states:
+                        states[key] = 0
+                    managers.add(node.manager_name)
+                else:
+                    key = 'nodepool.target.%s.nodes.%s' % (
+                        node.target_name, state)
+                states[key] += 1
 
-            key = 'nodepool.label.%s.nodes.%s' % (
-                node.label_name, state)
-            states[key] += 1
+                key = 'nodepool.label.%s.nodes.%s' % (
+                    node.label_name, state)
+                states[key] += 1
 
-            key = 'nodepool.provider.%s.nodes.%s' % (
-                node.provider_name, state)
-            states[key] += 1
+                key = 'nodepool.provider.%s.nodes.%s' % (
+                    node.provider_name, state)
+                states[key] += 1
 
         # NOTE(pabelanger): Initialize other state values to zero if missed
         # above.
