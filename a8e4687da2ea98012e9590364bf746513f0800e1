@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bacf61ea_7e7607a5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2291,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-07-30T00:15:58Z",
+      "side": 1,
+      "message": "subnodes don\u0027t have a manager.  instead of performing this loop for each table, you might consider incrementing by 1 + len(node.subnodes).",
+      "revId": "a8e4687da2ea98012e9590364bf746513f0800e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
