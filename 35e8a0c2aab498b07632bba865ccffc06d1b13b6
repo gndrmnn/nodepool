@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bacf61ea_532baa33",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2285,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-08-03T00:20:26Z",
+      "side": 1,
+      "message": "I hesitate because this is borderline style preference, but I think the maintenance risk is worth it here -- could we set a local variable once and use it for all 4 assignments?",
+      "revId": "35e8a0c2aab498b07632bba865ccffc06d1b13b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
