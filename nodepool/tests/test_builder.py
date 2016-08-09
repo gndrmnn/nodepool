@@ -90,7 +90,7 @@ class TestNodepoolBuilder(tests.DBTestCase):
     def test_start_stop(self):
         config = self.setup_config('node_dib.yaml')
         nb = builder.NodePoolBuilder(config)
-        nb_thread = threading.Thread(target=nb.runForever)
+        nb_thread = threading.Thread(target=nb.run)
         nb_thread.daemon = True
 
         nb_thread.start()
