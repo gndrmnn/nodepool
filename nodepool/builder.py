@@ -30,6 +30,7 @@ import exceptions
 import provider_manager
 import stats
 
+
 MINS = 60
 HOURS = 60 * MINS
 IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
@@ -75,26 +76,47 @@ class DibImageFile(object):
         return my_path
 
 
-class BaseWorker(gear.Worker):
+class BaseWorker(object):
     nplog = logging.getLogger("nodepool.builder.BaseWorker")
 
     def __init__(self, *args, **kw):
+        super(BaseWorker, self).__init__()
         self.builder = kw.pop('builder')
-        super(BaseWorker, self).__init__(*args, **kw)
+        self.images = []
+        self._running = False
+
+    def assignImage(self, image):
+        '''
+        Assign an images to this worker.
+
+        Multiple images may be assigned with multiple calls.
+
+        :param images: An image this worker should handle.
+        '''
+        self.images.append(image)
+
+    def imageNames(self):
+        '''
+        Return a list of names of the images this worker is assigned.
+        '''
+        return [i.name for i in self.images]
 
     def run(self):
-        while self.running:
-            try:
-                job = self.getJob()
-                self._handleJob(job)
-            except gear.InterruptedError:
-                pass
-            except Exception:
-                self.nplog.exception('Exception while getting job')
+        self._running = True
+        while self._running:
+            self.work()
+
+    def shutdown(self):
+        self._running = False
 
 
 class BuildWorker(BaseWorker):
     nplog = logging.getLogger("nodepool.builder.BuildWorker")
+
+    def work(self):
+        #TODO: Actually do something useful
+        self.nplog.debug("BuildWorker images: %s" % self.imageNames())
+        time.sleep(5)
 
     def _handleJob(self, job):
         try:
@@ -129,6 +151,11 @@ class BuildWorker(BaseWorker):
 class UploadWorker(BaseWorker):
     nplog = logging.getLogger("nodepool.builder.UploadWorker")
 
+    def work(self):
+        #TODO: Actually do something useful
+        self.nplog.debug("UploadWorker images: %s" % self.imageNames())
+        time.sleep(5)
+
     def _handleJob(self, job):
         try:
             self.nplog.debug('Got job %s with data %s',
@@ -162,7 +189,7 @@ class UploadWorker(BaseWorker):
 
 
 class NodePoolBuilder(object):
-    log = logging.getLogger("nodepool.builder")
+    log = logging.getLogger("nodepool.builder.NodePoolBuilder")
 
     def __init__(self, config_path, build_workers=1, upload_workers=4):
         self._config_path = config_path
@@ -188,21 +215,39 @@ class NodePoolBuilder(object):
 
             self.build_workers = []
             self.upload_workers = []
+
+            images = self._config.diskimages.values()
+
+            # We don't need more build or upload workers than images we
+            # actually build or maintain. Reduce it to a 1-to-1 ratio.
+            if self._build_workers > len(images):
+                self.log.info(
+                    "Requested %s build workers, but only %d needed" % (
+                        self._build_workers, len(images)))
+                self._build_workers = len(images)
+
+            if self._upload_workers > len(images):
+                self.log.info(
+                    "Requested %s upload workers, but only %d needed" % (
+                        self._upload_workers, len(images)))
+                self._upload_workers = len(images)
+
             for i in range(self._build_workers):
                 w = BuildWorker('Nodepool Builder Build Worker %s' % (i+1,),
                                 builder=self)
-                self._initializeGearmanWorker(w,
-                    self._config.gearman_servers.values())
                 self.build_workers.append(w)
+
             for i in range(self._upload_workers):
                 w = UploadWorker('Nodepool Builder Upload Worker %s' % (i+1,),
                                  builder=self)
-                self._initializeGearmanWorker(w,
-                    self._config.gearman_servers.values())
                 self.upload_workers.append(w)
 
-            self._registerGearmanFunctions(self._config.diskimages.values())
-            self._registerExistingImageUploads()
+            # Assign each worker a set of images to own in a round-robin
+            for i in range(len(images)):
+                builder = i % self._build_workers
+                uploader = i % self._upload_workers
+                self.build_workers[builder].assignImage(images[i])
+                self.upload_workers[uploader].assignImage(images[i])
 
             self.log.debug('Starting listener for build jobs')
 
@@ -228,15 +273,7 @@ class NodePoolBuilder(object):
                 return
 
             for worker in self.build_workers + self.upload_workers:
-                try:
-                    worker.shutdown()
-                except OSError as e:
-                    if e.errno == errno.EBADF:
-                        # The connection has been lost already
-                        self.log.debug("Gearman connection lost when "
-                                       "attempting to shutdown; ignoring")
-                    else:
-                        raise
+                worker.shutdown()
 
             self.log.debug('Waiting for jobs to complete')
             # Wait for the builder to complete any currently running jobs
@@ -254,48 +291,11 @@ class NodePoolBuilder(object):
         self._config = config
 
     def _validate_config(self):
-        if not self._config.gearman_servers.values():
-            raise RuntimeError('No gearman servers specified in config.')
+        if not self._config.zookeeper_servers.values():
+            raise RuntimeError('No ZooKeeper servers specified in config.')
 
         if not self._config.imagesdir:
             raise RuntimeError('No images-dir specified in config.')
-
-    def _initializeGearmanWorker(self, worker, servers):
-        for server in servers:
-            worker.addServer(server.host, server.port)
-
-        self.log.debug('Waiting for gearman server')
-        worker.waitForServer()
-
-    def _registerGearmanFunctions(self, images):
-        self.log.debug('Registering gearman functions')
-        for worker in self.build_workers:
-            for image in images:
-                worker.registerFunction(
-                    'image-build:%s' % image.name)
-
-    def _registerExistingImageUploads(self):
-        images = DibImageFile.from_images_dir(self._config.imagesdir)
-        for image in images:
-            self.registerImageId(image.image_id)
-
-    def registerImageId(self, image_id):
-        self.log.info('Registering image id: %s', image_id)
-        for worker in self.upload_workers:
-            worker.registerFunction('image-upload:%s' % image_id)
-            worker.registerFunction('image-delete:%s' % image_id)
-        self._built_image_ids.add(image_id)
-
-    def unregisterImageId(self, image_id):
-        if image_id in self._built_image_ids:
-            self.log.info('Unregistering image id: %s', image_id)
-            for worker in self.upload_workers:
-                worker.unRegisterFunction('image-upload:%s' % image_id)
-                worker.unRegisterFunction('image-delete:%s' % image_id)
-            self._built_image_ids.remove(image_id)
-        else:
-            self.log.warning('Attempting to remove image %d but image not '
-                             'found', image_id)
 
     def canHandleImageIdJob(self, job, image_op):
         return (job.name.startswith(image_op + ':') and
