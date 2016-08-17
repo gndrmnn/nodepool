@@ -236,7 +236,10 @@ class BuilderScheduler(object):
 
 class NodePoolBuilder(object):
     '''
-    Class used to control the builder functionality.
+    Class used to control the builder start and stop actions.
+
+    An instance of this class is used to start the builder threads
+    and also to terminate all threads of execution.
     '''
     log = logging.getLogger("nodepool.builder.NodePoolBuilder")
 
@@ -254,7 +257,7 @@ class NodePoolBuilder(object):
     def running(self):
         return self._running
 
-    def run(self):
+    def start(self):
         '''
         Start the builder.
 
