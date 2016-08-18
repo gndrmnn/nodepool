@@ -16,6 +16,7 @@ import testtools
 from nodepool import exceptions as npe
 from nodepool import tests
 from nodepool import zk
+import nodepool.config
 
 
 class TestZooKeeper(tests.ZKTestCase):
@@ -25,16 +26,18 @@ class TestZooKeeper(tests.ZKTestCase):
         self.zk = zk.ZooKeeper(self.zkclient)
 
     def test_buildZooKeeperHosts_single(self):
+        Zks = nodepool.config.ZooKeeperServer
         hosts = [
-            dict(host='127.0.0.1', port=2181, chroot='/test1')
+            Zks(dict(host='127.0.0.1', port=2181, chroot='/test1'))
         ]
         self.assertEqual('127.0.0.1:2181/test1',
                          zk.buildZooKeeperHosts(hosts))
 
     def test_buildZooKeeperHosts_multiple(self):
+        Zks = nodepool.config.ZooKeeperServer
         hosts = [
-            dict(host='127.0.0.1', port=2181, chroot='/test1'),
-            dict(host='127.0.0.2', port=2182, chroot='/test2')
+            Zks(dict(host='127.0.0.1', port=2181, chroot='/test1')),
+            Zks(dict(host='127.0.0.2', port=2182, chroot='/test2'))
         ]
         self.assertEqual('127.0.0.1:2181/test1,127.0.0.2:2182/test2',
                          zk.buildZooKeeperHosts(hosts))
@@ -89,9 +92,10 @@ class TestZooKeeper(tests.ZKTestCase):
 
     def test_imageBuildLock_exception_nonblocking(self):
         zk2 = zk.ZooKeeper()
-        zk2.connect([{'host': self.zookeeper_host,
-                      'port': self.zookeeper_port,
-                      'chroot': self.chroot_path}])
+        Zks = nodepool.config.ZooKeeperServer
+        zk2.connect([Zks({'host': self.zookeeper_host,
+                          'port': self.zookeeper_port,
+                          'chroot': self.chroot_path})])
         with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
             with testtools.ExpectedException(npe.ZKLockException):
                 with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
@@ -100,9 +104,10 @@ class TestZooKeeper(tests.ZKTestCase):
 
     def test_imageBuildLock_exception_blocking(self):
         zk2 = zk.ZooKeeper()
-        zk2.connect([{'host': self.zookeeper_host,
-                      'port': self.zookeeper_port,
-                      'chroot': self.chroot_path}])
+        Zks = nodepool.config.ZooKeeperServer
+        zk2.connect([Zks({'host': self.zookeeper_host,
+                          'port': self.zookeeper_port,
+                          'chroot': self.chroot_path})])
         with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
             with testtools.ExpectedException(npe.TimeoutException):
                 with self.zk.imageBuildLock("ubuntu-trusty",

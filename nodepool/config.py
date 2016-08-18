@@ -103,7 +103,11 @@ class GearmanServer(ConfigValue):
 
 
 class ZooKeeperServer(ConfigValue):
-    pass
+    def __init__(self, data):
+        self.host = data['host']
+        self.port = data.get('port', 2181)
+        self.chroot = data.get('chroot', '')
+        self.name = self.host + '_' + str(self.port)
 
 
 class DiskImage(ConfigValue):
@@ -161,11 +165,7 @@ def loadConfig(config_path):
         newconfig.gearman_servers[g.name] = g
 
     for server in config.get('zookeeper-servers', []):
-        z = ZooKeeperServer()
-        z.host = server['host']
-        z.port = server.get('port', 2181)
-        z.chroot = server.get('chroot', '')
-        z.name = z.host + '_' + str(z.port)
+        z = ZooKeeperServer(server)
         newconfig.zookeeper_servers[z.name] = z
 
     for provider in config.get('providers', []):
