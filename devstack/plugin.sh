@@ -264,6 +264,7 @@ providers:
   - name: devstack
     region-name: '$REGION_NAME'
     cloud: devstack
+    console-log: True
     api-timeout: 60
     # Long boot timeout to deal with potentially nested virt.
     boot-timeout: 600
