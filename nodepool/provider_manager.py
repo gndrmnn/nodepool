@@ -229,6 +229,10 @@ class ProviderManager(TaskManager):
         with shade_inner_exceptions():
             return self._client.get_server(server_id)
 
+    def getServerConsole(self, server_id):
+        with shade_inner_exceptions():
+            return self._client.get_server_console(server_id)
+
     def waitForServer(self, server, timeout=3600):
         with shade_inner_exceptions():
             return self._client.wait_for_server(

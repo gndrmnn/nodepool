@@ -563,7 +563,15 @@ class NodeLauncher(threading.Thread):
 
         self.writeNodepoolInfo(nodelist)
         if self.label.ready_script:
-            self.runReadyScript(nodelist)
+            try:
+                self.runReadyScript(nodelist)
+            except Exception:
+                if self.label.console_log:
+                    self.log.debug('Console log from hostname %s:' % hostname)
+                    console = self.manager.getServerConsole(server_id)
+                    for line in console:
+                        self.log.debug(line.rstrip())
+                raise
 
         # Do this before adding to jenkins to avoid a race where
         # Jenkins might immediately use the node before we've updated

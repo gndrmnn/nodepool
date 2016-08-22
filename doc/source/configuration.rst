@@ -190,6 +190,7 @@ providers or images are used to create them).  Example::
       subnodes: 2
       min-ready: 2
       ready-script: setup_multinode.sh
+      console-log: True
       providers:
         - name: provider1
 
@@ -227,6 +228,10 @@ providers or images are used to create them).  Example::
     A script to be used to perform any last minute changes to a node after it
     has been launched but before it is put in the READY state to receive jobs.
     For more information, see :ref:`scripts`.
+
+  ``console-log`` (default: False)
+    On the failure of `ready-script`, download the server console log to aid in
+    debuging the problem.
 
 .. _diskimages:
 
