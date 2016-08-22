@@ -237,26 +237,31 @@ labels:
   - name: centos-7
     image: centos-7
     min-ready: 1
+    console-log: True
     providers:
       - name: devstack
   - name: fedora-25
     image: fedora-25
     min-ready: 1
+    console-log: True
     providers:
       - name: devstack
   - name: ubuntu-precise
     image: ubuntu-precise
     min-ready: 1
+    console-log: True
     providers:
       - name: devstack
   - name: ubuntu-trusty
     image: ubuntu-trusty
     min-ready: 1
+    console-log: True
     providers:
       - name: devstack
   - name: ubuntu-xenial
     image: ubuntu-xenial
     min-ready: 1
+    console-log: True
     providers:
       - name: devstack
 
