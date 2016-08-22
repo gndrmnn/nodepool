@@ -116,12 +116,12 @@ class TaskManager(threading.Thread):
             self.log.exception("Task manager died.")
             raise
 
-    def submitTask(self, task):
+    def submitTask(self, task, raw=False):
         if not self._running:
             raise ManagerStoppedException(
                 "Manager %s is no longer running" % self.name)
         self.queue.put(task)
-        return task.wait()
+        return task.wait(raw=raw)
 
     def runTask(self, task):
         task.run(self._client)
