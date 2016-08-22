@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ac06dbe_3e61423a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-08-22T16:59:01Z",
+      "side": 1,
+      "message": "This needs to be in its own try/except log section.",
+      "revId": "3bc56db8fd5fff8174b0cb620fdaffb314850f3b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
