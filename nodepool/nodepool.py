@@ -454,6 +454,15 @@ class NodeLauncher(threading.Thread):
                     self.log.exception("Exception deleting node id: %s:" %
                                        self.node_id)
 
+    def logConsole(self, server_id, hostname):
+        if not self.label.console_log:
+            return
+        console = self.manager.getServerConsole(server_id)
+        if console:
+            self.log.debug('Console log from hostname %s:' % hostname)
+            for line in console.splitlines():
+                self.log.debug(line.rstrip())
+
     def launchNode(self, session):
         start_time = time.time()
         timestamp = int(start_time)
@@ -523,10 +532,15 @@ class NodeLauncher(threading.Thread):
         self.log.debug("Node id: %s testing ssh at ip: %s" %
                        (self.node.id, ip))
         connect_kwargs = dict(key_filename=self.image.private_key)
-        if not utils.ssh_connect(ip, self.image.username,
-                                 connect_kwargs=connect_kwargs,
-                                 timeout=self.timeout):
-            raise LaunchAuthException("Unable to connect via ssh")
+        try:
+            if not utils.ssh_connect(ip, self.image.username,
+                                     connect_kwargs=connect_kwargs,
+                                     timeout=self.timeout):
+                self.logConsole(server_id, hostname)
+                raise LaunchAuthException("Unable to connect via ssh")
+        except exceptions.SSHTimeoutException:
+            self.logConsole(server_id, hostname)
+            raise
 
         # Save the elapsed time for statsd
         dt = int((time.time() - start_time) * 1000)
