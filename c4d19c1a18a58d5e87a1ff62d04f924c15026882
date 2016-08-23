@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ac06dbe_ad0ad723",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 11610
+      },
+      "writtenOn": "2016-08-23T18:15:08Z",
+      "side": 1,
+      "message": "Should the actual error also be logged too?",
+      "revId": "c4d19c1a18a58d5e87a1ff62d04f924c15026882",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
