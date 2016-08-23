@@ -25,7 +25,7 @@ function install_shade {
         GITDIR["shade"]=$DEST/shade
         GITBRANCH["shade"]=$SHADE_REPO_REF
         git_clone_by_name "shade"
-        setup_dev_lib "shade"
+        pip install -U -e $DEST/shade
     fi
 }
 
@@ -44,7 +44,7 @@ function install_nodepool {
     install_shade
     install_diskimage_builder
 
-    setup_develop $DEST/nodepool
+    pip install -e $DEST/nodepool
 }
 
 # requires some globals from devstack, which *might* not be stable api
