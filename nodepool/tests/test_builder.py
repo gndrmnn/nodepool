@@ -90,9 +90,6 @@ class TestBuilderScheduler(tests.DBTestCase):
         nb = builder.BuilderScheduler(config)
         nb.startBuilder()
 
-        while not nb.running:
-            time.sleep(.5)
-
         nb.stopBuilder()
 
     def test_image_upload_fail(self):
