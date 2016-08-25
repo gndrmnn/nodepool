@@ -124,6 +124,7 @@ class FakeOpenStackCloud(object):
                         dict(version=6, addr='fake_v6')],
                 private=[dict(version=4, addr='fake')]
             )
+            interface_ip = 'fake_v6'
             public_v6 = 'fake_v6'
             public_v4 = 'fake'
             private_v4 = 'fake'
@@ -133,6 +134,7 @@ class FakeOpenStackCloud(object):
                 public=[dict(version=4, addr='fake')],
                 private=[dict(version=4, addr='fake')]
             )
+            interface_ip = 'fake'
             public_v6 = ''
             public_v4 = 'fake'
             private_v4 = 'fake'
@@ -146,6 +148,7 @@ class FakeOpenStackCloud(object):
                   public_v4=public_v4,
                   public_v6=public_v6,
                   private_v4=private_v4,
+                  interface_ip=interface_ip,
                   metadata=kw.get('meta', {}),
                   manager=self,
                   key_name=kw.get('key_name', None),
@@ -204,12 +207,6 @@ class FakeOpenStackCloud(object):
 
     def delete_keypair(self, name):
         self._delete(name, self._keypair_list)
-
-    def get_openstack_vars(self, server):
-        server.public_v4 = 'fake'
-        server.public_v6 = 'fake'
-        server.private_v4 = 'fake'
-        return server
 
     def create_server(self, **kw):
         return self._create(self._server_list, **kw)

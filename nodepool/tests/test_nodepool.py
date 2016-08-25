@@ -313,7 +313,7 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
-            self.assertEqual(nodes[0].ip, 'fake')
+            self.assertEqual(nodes[0].ip, 'fake_v6')
             # ipv6 preferred set to true but ipv6 address unavailable
             nodes = session.getNodes(provider_name='fake-provider3',
                                      label_name='fake-label3',
