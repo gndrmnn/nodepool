@@ -215,6 +215,7 @@ providers:
     launch-timeout: 900
     max-servers: 2
     rate: 0.25
+    ipv6-preferred: False
     images:
       - name: $NODEPOOL_IMAGE
         base-image: '$NODEPOOL_IMAGE'
