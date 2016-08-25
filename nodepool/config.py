@@ -366,6 +366,8 @@ def _cloudKwargsFromProvider(provider):
         if auth_key in provider:
             auth_kwargs[auth_key] = provider[auth_key]
 
+    if 'ipv6-preferred' in provider:
+        cloud_kwargs['force_ipv4'] = not provider['ipv6-preferred']
     cloud_kwargs['auth'] = auth_kwargs
     return cloud_kwargs
 
