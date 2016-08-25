@@ -203,10 +203,11 @@ labels:
     image: ubuntu-dib
     min-ready: 1
     providers:
-      - name: devstack
+      - name: devstack-fixed
+      - name: devstack-float
 
 providers:
-  - name: devstack
+  - name: devstack-fixed
     region-name: '$REGION_NAME'
     cloud: devstack
     api-timeout: 60
@@ -215,7 +216,7 @@ providers:
     launch-timeout: 900
     max-servers: 2
     rate: 0.25
-    ipv6-preferred: False
+    ipv6-preferred: True
     images:
       - name: $NODEPOOL_IMAGE
         base-image: '$NODEPOOL_IMAGE'
@@ -228,6 +229,27 @@ providers:
         # Alter below to point to your local user private key
         private-key: $NODEPOOL_KEY
         config-drive: true
+      - name: ubuntu-dib
+        min-ram: 1024
+        diskimage: ubuntu-dib
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true
+  # With the devstack provider set to ipv6-preferred: True, we will no longer
+  # be allocating a floating ip, which means we lose testing of that codepath.
+  # This provider forces ipv4 so that the floating ip code path will be
+  # exercised
+  - name: devstack-float
+    region-name: '$REGION_NAME'
+    cloud: devstack
+    api-timeout: 60
+    # Long boot timeout to deal with potentially nested virt.
+    boot-timeout: 600
+    launch-timeout: 900
+    max-servers: 1
+    rate: 0.25
+    ipv6-preferred: False
+    images:
       - name: ubuntu-dib
         min-ram: 1024
         diskimage: ubuntu-dib
