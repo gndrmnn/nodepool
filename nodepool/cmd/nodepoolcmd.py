@@ -276,7 +276,7 @@ class NodePoolCmd(NodepoolApp):
                         if not session.getNodeByExternalID(
                                 provider.name, server['id']):
                             t.add_row([provider.name, server['name'],
-                                       server['id'], server['public_v4']])
+                                       server['id'], server['interface_ip']])
                 except Exception as e:
                     log.warning("Exception listing aliens for %s: %s"
                                 % (provider.name, str(e.message)))
