@@ -509,14 +509,7 @@ class NodeLauncher(threading.Thread):
                                         (server_id, self.node.id,
                                          server['status']))
 
-        ip = server.get('public_v4')
-        ip_v6 = server.get('public_v6')
-        if self.provider.ipv6_preferred:
-            if ip_v6:
-                ip = ip_v6
-            else:
-                self.log.warning('Preferred ipv6 not available, '
-                                 'falling back to ipv4.')
+        ip = server.get('interface_ip')
         if not ip:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
@@ -832,14 +825,7 @@ class SubNodeLauncher(threading.Thread):
                                         (server_id, self.subnode_id,
                                          self.node_id, server['status']))
 
-        ip = server.get('public_v4')
-        ip_v6 = server.get('public_v6')
-        if self.provider.ipv6_preferred:
-            if ip_v6:
-                ip = ip_v6
-            else:
-                self.log.warning('Preferred ipv6 not available, '
-                                 'falling back to ipv4.')
+        ip = server.get('interface_ip')
         if not ip:
             raise LaunchNetworkException("Unable to find public IP of server")
 
@@ -1004,14 +990,7 @@ class SnapshotImageUpdater(ImageUpdater):
             raise Exception("Server %s for image id: %s status: %s" %
                             (server_id, self.snap_image.id, server['status']))
 
-        ip = server.get('public_v4')
-        ip_v6 = server.get('public_v6')
-        if self.provider.ipv6_preferred:
-            if ip_v6:
-                ip = ip_v6
-            else:
-                self.log.warning('Preferred ipv6 not available, '
-                                 'falling back to ipv4.')
+        ip = server.get('interface_ip')
         if not ip:
             self.log.error("Server dict {server}".format(
                 server=pprint.pformat(dict(server))))
