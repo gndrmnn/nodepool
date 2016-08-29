@@ -28,6 +28,11 @@ import exceptions
 import provider_manager
 import stats
 
+try:
+    from Queue import PriorityQueue
+except ImportError:
+    from queue import PriorityQueue
+
 
 MINS = 60
 HOURS = 60 * MINS
@@ -77,27 +82,31 @@ class DibImageFile(object):
 class BaseWorker(object):
     nplog = logging.getLogger("nodepool.builder.BaseWorker")
 
-    def __init__(self, *args, **kw):
-        super(BaseWorker, self).__init__()
-        self.builder = kw.pop('builder')
-        self.images = []
+    def __init__(self, queue):
         self._running = False
+        self._queue = queue
 
     def run(self):
-        self._running = True
-        while self._running:
-            self.work()
+        '''
+        Runs the worker thread.
 
-    def shutdown(self):
-        self._running = False
+        The thread will block until an item is put on its queue. Termination
+        is handled with putting a priority item at the front of the queue.
+        '''
+        while True:
+            (prio, tstamp, job) = self._queue.get()
+            if job == "SHUTDOWN":
+                self._queue.task_done()
+                break
+            self.work(job)
+            self._queue.task_done()
 
 
 class BuildWorker(BaseWorker):
     nplog = logging.getLogger("nodepool.builder.BuildWorker")
 
-    def work(self):
-        #TODO: Actually do something useful
-        time.sleep(0.1)
+    def work(self, job):
+        self.nplog.debug("BuildWorker received job %s" % job)
 
     def _handleJob(self, job):
         try:
@@ -132,9 +141,8 @@ class BuildWorker(BaseWorker):
 class UploadWorker(BaseWorker):
     nplog = logging.getLogger("nodepool.builder.UploadWorker")
 
-    def work(self):
-        #TODO: Actually do something useful
-        time.sleep(0.1)
+    def work(self, job):
+        self.nplog.debug("UploadWorker received job %s" % job)
 
     def _handleJob(self, job):
         try:
@@ -199,6 +207,10 @@ class NodePoolBuilder(object):
         self._threads = []
         self._running = False
 
+        # Queues used to assign jobs to the workers
+        self._build_queue = PriorityQueue()
+        self._upload_queue = PriorityQueue()
+
         # This lock is needed because the run() method is started in a
         # separate thread of control, which can return before the scheduler
         # has completed startup. We need to avoid shutting down before the
@@ -249,13 +261,11 @@ class NodePoolBuilder(object):
 
             # Create build and upload worker objects
             for i in range(self._num_builders):
-                w = BuildWorker('Nodepool Builder Build Worker %s' % (i+1,),
-                                builder=self)
+                w = BuildWorker(self._build_queue)
                 self._build_workers.append(w)
 
             for i in range(self._num_uploaders):
-                w = UploadWorker('Nodepool Builder Upload Worker %s' % (i+1,),
-                                 builder=self)
+                w = UploadWorker(self._upload_queue)
                 self._upload_workers.append(w)
 
             self.log.debug('Starting listener for build jobs')
@@ -282,8 +292,14 @@ class NodePoolBuilder(object):
         '''
         with self._start_lock:
             self.log.debug("Stopping. NodePoolBuilder shutting down workers")
-            for worker in (self._build_workers + self._upload_workers):
-                worker.shutdown()
+
+            # Workers are shutdown by putting a special job in to the front
+            # of their queue that will serve as the flag to shutdown. One per
+            # worker.
+            for count in range(self._num_builders):
+                self._build_queue.put((1, time.time(), "SHUTDOWN"))
+            for count in range(self._num_uploaders):
+                self._upload_queue.put((1, time.time(), "SHUTDOWN"))
 
         # Setting _running to False will trigger the watch thread to stop.
         self._running = False
