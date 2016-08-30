@@ -28,6 +28,9 @@ import exceptions
 import provider_manager
 import stats
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 
 MINS = 60
 HOURS = 60 * MINS
@@ -167,7 +170,6 @@ class UploadWorker(BaseWorker):
             self.nplog.exception('Exception while running job')
             job.sendWorkException(traceback.format_exc())
 
-
 class NodePoolBuilder(object):
     '''
     Main class for the Nodepool Builder.
@@ -199,6 +201,13 @@ class NodePoolBuilder(object):
         self._threads = []
         self._running = False
 
+        # Attributes for periodic tasks
+        self._apsched = None          # APScheduler object
+        self._periodic_thd = None     # Thread object for periodic tasks
+        self._periodic_wake_cond = threading.Condition()
+        # TODO(Shrews): Make this configurable?
+        self._watermark_sleep = 0.1
+
         # This lock is needed because the run() method is started in a
         # separate thread of control, which can return before the scheduler
         # has completed startup. We need to avoid shutting down before the
@@ -209,22 +218,93 @@ class NodePoolBuilder(object):
     # Private methods
     #=======================================================================
 
-    def _load_config(self, config_path):
-        config = nodepool_config.loadConfig(config_path)
-        provider_manager.ProviderManager.reconfigure(
-            self._config, config)
-        self._config = config
-
-    def _validate_config(self):
-        if not self._config.zookeeper_servers.values():
+    def _getAndValidateConfig(self):
+        config = nodepool_config.loadConfig(self._config_path)
+        if not config.zookeeper_servers.values():
             raise RuntimeError('No ZooKeeper servers specified in config.')
-
-        if not self._config.imagesdir:
+        if not config.imagesdir:
             raise RuntimeError('No images-dir specified in config.')
+        return config
 
-    def _registerWatches(self):
+    def _doUpdateImages(self):
+        self.log.debug("Periodic image update")
+
+    def _doCleanup(self):
+        self.log.debug("Periodic clean up")
+
+    def _doCheck(self):
+        # NOTE(Shrews): This might not be needed for the builder.
+        self.log.debug("Periodic check")
+
+    def _reconfigureCrons(self, new_config):
+        '''
+        Reschedule any changed cron jobs.
+
+        Check the config file for changes and if any are found, unschedule
+        the changed jobs and reschedule them using the new time specs.
+
+        .. note:: The self._config attribute must be None when this method
+            is first called, otherwise the jobs will never be started.
+        '''
+        cron_map = {
+            'image-update': self._doUpdateImages,
+            'cleanup': self._doCleanup,
+            'check': self._doCheck,
+        }
+
+        if not self._apsched:
+            self._apsched = BackgroundScheduler()
+            self._apsched.start()
+
+        for c in new_config.crons.values():
+            if (not self._config
+                or c.timespec != self._config.crons[c.name].timespec
+            ):
+                # If the timespec changed in the config, remove current job
+                # from the schedule.
+                if self._config and self._config.crons[c.name].job:
+                    self._config.crons[c.name].job.remove()
+
+                # Parse the timespec for the new job
+                parts = c.timespec.split()
+                if len(parts) > 5:
+                    second = parts[5]
+                else:
+                    second = None
+                minute, hour, dom, month, dow = parts[:5]
+
+                # Schedule the updated job
+                trigger = CronTrigger(day=dom, day_of_week=dow, hour=hour,
+                                      minute=minute, second=second)
+                c.job = self._apsched.add_job(cron_map[c.name],
+                                              trigger=trigger)
+            else:
+                c.job = self._config.crons[c.name].job
+
+    def _doPeriodic(self, new_config):
+        # TODO(Shrews): If this is all we end up doing, remove this method.
+        self._reconfigureCrons(new_config)
+
+    def _runPeriodic(self):
         while self._running:
-            time.sleep(0.1)
+            new_config = self._getAndValidateConfig()
+            self._doPeriodic(new_config)
+            self._config = new_config
+
+            # NOTE(Shrews): This will reconfigure the provider managers and
+            # restart them on each iteration. Do we want to do that? We might
+            # need a check to see if there were any changes.
+
+            #provider_manager.ProviderManager.reconfigure(self._config,
+            #                                             new_config)
+
+            self._periodic_wake_cond.acquire()
+            self._periodic_wake_cond.wait(self._watermark_sleep)
+            self._periodic_wake_cond.release()
+
+        if self._apsched and self._apsched.running:
+            self._apsched.shutdown()
+        self.log.debug("Periodic thread shutdown")
 
     #=======================================================================
     # Public methods
@@ -242,9 +322,7 @@ class NodePoolBuilder(object):
             if self._running:
                 raise exceptions.BuilderError('Cannot start, already running.')
 
-            self._load_config(self._config_path)
-            self._validate_config()
-
+            self._getAndValidateConfig()
             self._running = True
 
             # Create build and upload worker objects
@@ -266,11 +344,11 @@ class NodePoolBuilder(object):
                 t.start()
                 self._threads.append(t)
 
-            # Start our watch thread to handle ZK watch notifications
-            watch_thread = threading.Thread(target=self._registerWatches)
-            watch_thread.daemon = True
-            watch_thread.start()
-            self._threads.append(watch_thread)
+            # Start our periodic thread
+            self._periodic_thd = threading.Thread(target=self._runPeriodic)
+            self._periodic_thd.daemon = True
+            self._periodic_thd.start()
+            self._threads.append(self._periodic_thd)
 
     def stop(self):
         '''
@@ -285,8 +363,11 @@ class NodePoolBuilder(object):
             for worker in (self._build_workers + self._upload_workers):
                 worker.shutdown()
 
-        # Setting _running to False will trigger the watch thread to stop.
+        # Stop the periodic thread
         self._running = False
+        self._periodic_wake_cond.acquire()
+        self._periodic_wake_cond.notify()
+        self._periodic_wake_cond.release()
 
         self.log.debug('Waiting for jobs to complete')
 
