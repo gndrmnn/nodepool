@@ -79,8 +79,6 @@ class BaseWorker(object):
 
     def __init__(self, *args, **kw):
         super(BaseWorker, self).__init__()
-        self.builder = kw.pop('builder')
-        self.images = []
         self._running = False
 
     def run(self):
@@ -199,6 +197,11 @@ class NodePoolBuilder(object):
         self._threads = []
         self._running = False
 
+        # Attributes for periodic tasks
+        self._periodic_thd = None     # Thread object for periodic tasks
+        self._periodic_wake_cond = threading.Condition()
+        self._watermark_sleep = 0.1
+
         # This lock is needed because the run() method is started in a
         # separate thread of control, which can return before the scheduler
         # has completed startup. We need to avoid shutting down before the
@@ -209,22 +212,50 @@ class NodePoolBuilder(object):
     # Private methods
     #=======================================================================
 
-    def _load_config(self, config_path):
-        config = nodepool_config.loadConfig(config_path)
-        provider_manager.ProviderManager.reconfigure(
-            self._config, config)
-        self._config = config
-
-    def _validate_config(self):
-        if not self._config.zookeeper_servers.values():
+    def _getAndValidateConfig(self):
+        config = nodepool_config.loadConfig(self._config_path)
+        if not config.zookeeper_servers.values():
             raise RuntimeError('No ZooKeeper servers specified in config.')
-
-        if not self._config.imagesdir:
+        if not config.imagesdir:
             raise RuntimeError('No images-dir specified in config.')
+        return config
 
-    def _registerWatches(self):
+    def _checkForUpdatedConfig(self, new_config):
+        '''
+        Check for new DIB images or providers in the config file.
+        '''
+        #provider_manager.ProviderManager.reconfigure(self._config, new_config) 
+        pass
+
+    def _checkForScheduledImageUpdates(self):
+        '''
+        Check every DIB image to see if it has aged out and needs rebuilt.
+        '''
+        for name, image in self._config.diskimages.items():
+            # TODO(Shrews): rebuild based on image.rebuild_age
+            pass
+
+    def _checkForManualBuildRequest(self):
+        '''
+        Query ZooKeeper for any manual image build requests.
+        '''
+        pass
+
+    def _runPeriodic(self):
         while self._running:
-            time.sleep(0.1)
+            # NOTE: For the first iteration, we expect self._config to be None
+            new_config = self._getAndValidateConfig()
+            self._checkForUpdatedConfig(new_config)
+            self._config = new_config
+
+            self._checkForScheduledImageUpdates()
+            self._checkForManualBuildRequest()
+
+            self._periodic_wake_cond.acquire()
+            self._periodic_wake_cond.wait(self._watermark_sleep)
+            self._periodic_wake_cond.release()
+
+        self.log.debug("Periodic thread shutdown")
 
     #=======================================================================
     # Public methods
@@ -242,20 +273,16 @@ class NodePoolBuilder(object):
             if self._running:
                 raise exceptions.BuilderError('Cannot start, already running.')
 
-            self._load_config(self._config_path)
-            self._validate_config()
-
+            self._getAndValidateConfig()
             self._running = True
 
             # Create build and upload worker objects
             for i in range(self._num_builders):
-                w = BuildWorker('Nodepool Builder Build Worker %s' % (i+1,),
-                                builder=self)
+                w = BuildWorker()
                 self._build_workers.append(w)
 
             for i in range(self._num_uploaders):
-                w = UploadWorker('Nodepool Builder Upload Worker %s' % (i+1,),
-                                 builder=self)
+                w = UploadWorker()
                 self._upload_workers.append(w)
 
             self.log.debug('Starting listener for build jobs')
@@ -266,11 +293,11 @@ class NodePoolBuilder(object):
                 t.start()
                 self._threads.append(t)
 
-            # Start our watch thread to handle ZK watch notifications
-            watch_thread = threading.Thread(target=self._registerWatches)
-            watch_thread.daemon = True
-            watch_thread.start()
-            self._threads.append(watch_thread)
+            # Start our periodic thread
+            self._periodic_thd = threading.Thread(target=self._runPeriodic)
+            self._periodic_thd.daemon = True
+            self._periodic_thd.start()
+            self._threads.append(self._periodic_thd)
 
     def stop(self):
         '''
@@ -285,8 +312,11 @@ class NodePoolBuilder(object):
             for worker in (self._build_workers + self._upload_workers):
                 worker.shutdown()
 
-        # Setting _running to False will trigger the watch thread to stop.
+        # Stop the periodic thread
         self._running = False
+        self._periodic_wake_cond.acquire()
+        self._periodic_wake_cond.notify()
+        self._periodic_wake_cond.release()
 
         self.log.debug('Waiting for jobs to complete')
 
@@ -294,9 +324,10 @@ class NodePoolBuilder(object):
         for thd in self._threads:
             thd.join()
 
-        self.log.debug('Stopping providers')
-        provider_manager.ProviderManager.stopProviders(self._config)
-        self.log.debug('Finished stopping')
+        if self._config:
+            self.log.debug('Stopping providers')
+            provider_manager.ProviderManager.stopProviders(self._config)
+            self.log.debug('Finished stopping')
 
 
 class OldNodePoolBuilder(object):
