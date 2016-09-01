@@ -185,7 +185,12 @@ class ProviderManager(TaskManager):
         if image_name:
             image_id = self.findImage(image_name)['id']
         flavor = self.findFlavor(min_ram, name_filter)
-        create_args = dict(name=name, image=image_id, flavor=flavor['id'],
+        # We know we have image and flavor ids. To avoid shade thinking it
+        # needs to do a search for image and flavor, pass them in as dicts
+        # with an id key.
+        create_args = dict(name=name,
+                           image={'id': image_id},
+                           flavor={'id': flavor['id']},
                            config_drive=config_drive)
         if key_name:
             create_args['key_name'] = key_name
