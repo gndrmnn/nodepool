@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa7ab95a_cd96aa4b",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-09-01T20:13:56Z",
+      "side": 1,
+      "message": "looks like this is mising a \", count\"",
+      "revId": "f496839bc95e6d33820c7f1472fcd49140209141",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
