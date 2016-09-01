@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa7ab95a_d89035f0",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-01T16:53:02Z",
+      "side": 1,
+      "message": "Let\u0027s log EOFError separately, and with a traceback, for now at least, so we can track this.",
+      "revId": "2865171030b7c682cc3c35694884f2e31d542a6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
