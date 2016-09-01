@@ -54,6 +54,12 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
         try:
             client = SSHClient(ip, username, **connect_kwargs)
             break
+        except EOFError as e:
+            # If the ssh connection is closed, we want to log the exception and
+            # try again.
+            log.exception(
+                'SSH connection closed for %s@%s. Try number %i...' %
+                (username, ip, count))
         except paramiko.AuthenticationException as e:
             # This covers the case where the cloud user is created
             # after sshd is up (Fedora for example)
