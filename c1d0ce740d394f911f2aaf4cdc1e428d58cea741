@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7fb54a_8a5faf0d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-02T16:02:59Z",
+      "side": 1,
+      "message": "time.sleep(0) would probably be good here -- I understand that will yield to other threads.",
+      "revId": "c1d0ce740d394f911f2aaf4cdc1e428d58cea741",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
