@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7fb54a_9573544d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-02T16:21:11Z",
+      "side": 1,
+      "message": "I\u0027m not certain a new image check is needed (a newly adedd image would also appear as an image that has \u0027aged out\u0027).  But if it is needed, I\u0027m not certain that it needs to be run with an empty config file (those won\u0027t really be \u0027new\u0027 images -- most of them will be fine and won\u0027t need to be updated).  But then again, maybe that\u0027s harmless?  However, maybe there\u0027s a good reason to do this that I don\u0027t see yet.",
+      "revId": "a9c0b4172e4fca284630e94c7eabfc9dc9da3587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
