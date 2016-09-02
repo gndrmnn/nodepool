@@ -25,6 +25,7 @@ import config as nodepool_config
 import exceptions
 import provider_manager
 import stats
+import zk
 
 
 MINS = 60
@@ -96,10 +97,28 @@ class BuildWorker(BaseWorker):
         super(BuildWorker, self).__init__()
         self._config = None
         self._config_path = config_path
+        self._zk = None
 
-    def _checkForUpdatedConfig(self, new_config):
+    def _checkForZooKeeperChanges(self, new_config):
         '''
-        Check for changes to the config file (new images, etc).
+        Connect to ZooKeeper cluster.
+
+        Makes the initial connection to the ZooKeeper cluster. If the defined
+        set of ZooKeeper servers changes, the connection will be reestablished
+        using the new server set.
+        '''
+        if self._zk is None:
+            self.log.debug("Connecting to ZooKeeper servers")
+            self._zk = zk.ZooKeeper()
+            self._zk.connect(new_config.zookeeper_servers.values())
+        elif self._config.zookeeper_servers != new_config.zookeeper_servers:
+            self.log.debug("Detected ZooKeeper server changes")
+            self._zk.disconnect()
+            self._zk.connect(new_config.zookeeper_servers.values())
+
+    def _checkForNewImages(self, new_config):
+        '''
+        Check for new DIB images in the config file.
         '''
         pass
 
@@ -121,7 +140,8 @@ class BuildWorker(BaseWorker):
         while self._running:
             # NOTE: For the first iteration, we expect self._config to be None
             new_config = nodepool_config.loadConfig(self._config_path)
-            self._checkForUpdatedConfig(new_config)
+            self._checkForZooKeeperChanges(new_config)
+            self._checkForNewImages(new_config)
             self._config = new_config
 
             self._checkForScheduledImageUpdates()
@@ -130,6 +150,10 @@ class BuildWorker(BaseWorker):
             # TODO: Make this configurable
             time.sleep(0.1)
 
+        # NOTE(Shrews): Ideally we'd disconnect from ZooKeeper here. But
+        # there seems to be a race in the kazoo library if you try to
+        # connect/disconnect too quickly (e.g., the test_start_stop test
+        # in TestNodePoolBuilder).
 
 class UploadWorker(BaseWorker):
     log = logging.getLogger("nodepool.builder.UploadWorker")
