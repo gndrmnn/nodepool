@@ -133,7 +133,75 @@ class BuildWorker(BaseWorker):
         '''
         Query ZooKeeper for any manual image build requests.
         '''
-        pass
+        for image in self._config.diskimages.values():
+            if not self._zk.hasBuildRequest(image.name):
+                continue
+            try:
+                with self._zk.imageBuildLock(
+                    image.name, blocking=False
+                ) as build_number:
+                    # Make sure that the request is still valid now that we
+                    # have obtained the lock. Otherwise it is a bit racey since
+                    # another builder could have removed it and released the
+                    # lock *just* before we acquired the lock.
+                    if not self._zk.hasBuildRequest(image.name):
+                        return
+                    data = self._buildImage(image)
+                    self._zk.storeBuild(image.name, build_number, data)
+                    self._zk.removeBuildRequest(image.name)
+            except exceptions.ZKLockException:
+                # Lock is already held. Skip it.
+                pass
+
+    def _buildImage(self, image):
+        '''
+        Run the external command to build the image.
+
+        :param image: The image as retrieved from our config file.
+
+        :returns: A dict of build-related data.
+
+        :raises: DibFailedError if the image failed to build. BuilderError
+            if we failed to execute the build command.
+        '''
+        build_data = {}
+        env = os.environ.copy()
+        cmd = 'sleep 10'
+
+        self.log.info("Creating image %s" % image.name)
+        self.log.info('Running %s' % cmd)
+
+        try:
+            p = subprocess.Popen(
+                shlex.split(cmd),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                env=env)
+        except OSError as e:
+            raise exceptions.BuilderError(
+                "Failed to exec '%s'. Error: '%s'" % (cmd, e.strerror)
+            )
+
+        # We need to poll the subprocess rather than wait for it because
+        # we have to keep the ZooKeeper connection alive in order to maintain
+        # our build lock.
+        while p.poll() is None:
+            self._zk.sendHeartbeat()
+            time.sleep(1)
+
+        if p.returncode:
+            raise exceptions.DibFailedError(
+                "DIB failed creating %s" % image.name
+            )
+
+        self.log.info("DIB image %s is built" % image.name)
+
+        build_data['builder'] = ''
+        build_data['filename'] = ''
+        build_data['state'] = 'ready'
+        build_data['state_time'] = int(time.time())
+
+        return build_data
 
     def run(self):
         self._running = True
