@@ -407,9 +407,11 @@ class MySQLSchemaFixture(fixtures.Fixture):
         cur = db.cursor()
         cur.execute("create database %s" % self.name)
         cur.execute(
-            "grant all on %s.* to '%s'@'localhost' identified by '%s'" %
-            (self.name, self.name, self.passwd))
-        cur.execute("flush privileges")
+            "create user '%s'@'localhost' identified by '%s'" %
+            (self.name, self.passwd))
+        cur.execute(
+            "grant all privileges on %s.* to '%s'@'localhost'" %
+            (self.name, self.name))
 
         self.dburi = 'mysql+pymysql://%s:%s@localhost/%s' % (self.name,
                                                              self.passwd,
@@ -425,7 +427,6 @@ class MySQLSchemaFixture(fixtures.Fixture):
         cur = db.cursor()
         cur.execute("drop database %s" % self.name)
         cur.execute("drop user '%s'@'localhost'" % self.name)
-        cur.execute("flush privileges")
 
 
 class BuilderFixture(fixtures.Fixture):

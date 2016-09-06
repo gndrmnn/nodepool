@@ -47,18 +47,18 @@ Set up database for interactive testing:
 
     mysql -u root
 
-    mysql> create database nodepool;
-    mysql> GRANT ALL ON nodepool.* TO 'nodepool'@'localhost';
-    mysql> flush privileges;
+    mysql> CREATE DATABASE nodepool;
+    mysql> CREATE USER 'nodepool'@'localhost';
+    mysql> GRANT ALL PRIVILEGES ON nodepool.* TO 'nodepool'@'localhost';
 
 Set up database for unit tests:
 
 .. code-block:: bash
 
     mysql -u root
-    mysql> grant all privileges on *.* to 'openstack_citest'@'localhost' identified by 'openstack_citest' with grant option;
-    mysql> flush privileges;
-    mysql> create database openstack_citest;
+    mysql> CREATE USER 'openstack_citest'@'localhost' IDENTIFIED BY 'openstack_citest';
+    mysql> GRANT ALL PRIVILEGES ON *.* TO 'openstack_citest'@'localhost' WITH GRANT OPTION;
+    mysql> CREATE DATABASE openstack_citest;
 
 Export variable for your ssh key so you can log into the created instances:
 
