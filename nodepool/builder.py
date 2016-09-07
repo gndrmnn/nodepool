@@ -131,19 +131,27 @@ class BuildWorker(BaseWorker):
             self._zk.disconnect()
             self._zk.connect(new_config.zookeeper_servers.values())
 
-    def _checkForNewImages(self, new_config):
-        '''
-        Check for new DIB images in the config file.
-        '''
-        pass
-
     def _checkForScheduledImageUpdates(self):
         '''
         Check every DIB image to see if it has aged out and needs rebuilt.
         '''
         for name, image in self._config.diskimages.items():
-            # TODO(Shrews): rebuild based on image.rebuild_age
-            pass
+            build = self._zk.getMostRecentBuild(name, 'ready')
+            now = int(time.time())
+
+            if not build or (now - build['state_time']) >= image.rebuild_age:
+                # No build data recorded for this image, or it has aged out.
+                try:
+                    with self._zk.imageBuildLock(
+                        image.name, blocking=False
+                    ) as build_number:
+                        self.log.debug(
+                            "Rebuild age exceeded for image %s" % name)
+                        data = self._buildImage(image)
+                        self._zk.storeBuild(image.name, build_number, data)
+                except exceptions.ZKLockException:
+                    # Lock is already held. Skip it.
+                    pass
 
     def _checkForManualBuildRequest(self):
         '''
@@ -164,6 +172,8 @@ class BuildWorker(BaseWorker):
                         self._zk.storeBuild(image.name, build_number,
                                             self._makeStateData('unused'))
                         continue
+                    self.log.debug(
+                        "Manual build request for image %s" % image.name)
                     data = self._buildImage(image)
                     self._zk.storeBuild(image.name, build_number, data)
                     self._zk.removeBuildRequest(image.name)
@@ -183,7 +193,7 @@ class BuildWorker(BaseWorker):
             if we failed to execute the build command.
         '''
         env = os.environ.copy()
-        cmd = 'sleep 10'
+        cmd = 'sleep 5'
 
         self.log.info("Creating image %s" % image.name)
         self.log.info('Running %s' % cmd)
@@ -224,7 +234,6 @@ class BuildWorker(BaseWorker):
             # NOTE: For the first iteration, we expect self._config to be None
             new_config = nodepool_config.loadConfig(self._config_path)
             self._checkForZooKeeperChanges(new_config)
-            self._checkForNewImages(new_config)
             self._config = new_config
 
             self._checkForScheduledImageUpdates()
