@@ -291,7 +291,7 @@ class ZooKeeper(object):
         upload. This method gets the highest numbered znode.
 
         :param str image: The image name.
-        :param int build_number: The image build number.
+        :param str build_number: The image build number.
         :param str provider: The provider name owning the image.
 
         :returns: An int value for the max existing image upload number, or
@@ -380,7 +380,7 @@ class ZooKeeper(object):
         Retrieve the image build data.
 
         :param str image: The image name.
-        :param int build_number: The image build number.
+        :param str build_number: The image build number.
 
         :returns: The dictionary of build data, or None if not found.
         '''
@@ -392,6 +392,36 @@ class ZooKeeper(object):
         data, stat = self.client.get(path)
         return self._strToDict(data)
 
+    def getBuildsWithStates(self, image, states):
+        '''
+        Retrieve all image build data matching the given states.
+
+        :param str image: The image name.
+        :param list states: A list of build state values to match against.
+            An empty string ('') will match states with no state recorded.
+
+        :returns: A dictionary of dictionaries of build data, keyed by
+            build number, or None if not found.
+        '''
+        path = self._imageBuildsPath(image)
+
+        if not self.client.exists(path):
+            return None
+
+        matches = {}
+        builds = self.client.get_children(path)
+        if builds:
+            for build in builds:
+                if build == 'lock':   # skip the build lock node
+                    continue
+                data = self.getBuild(image, build)
+                if data.get('state', '') in states:
+                    matches[build] = data
+
+        if not matches:
+            return None
+        return matches
+
     def getMostRecentBuild(self, image, state="ready"):
         '''
         Retrieve the most recent image build data with the given state.
@@ -402,25 +432,36 @@ class ZooKeeper(object):
         :returns: The most recent dictionary of build data matching the
             given state, or None if there was no build matching the state.
         '''
-        path = self._imageBuildsPath(image)
+        builds = self.getBuildsWithStates(image, [state])
 
-        if not self.client.exists(path):
+        if not builds:
             return None
 
         recent = None
-        builds = self.client.get_children(path)
         if builds:
-            for build in builds:
-                if build == 'lock':   # skip the build lock node
-                    continue
-                data = self.getBuild(image, build)
-                if data.get('state', '') != state:
-                    continue
-                elif (recent is None or
-                      recent['state_time'] < data.get('state_time', 0)
+            for data in builds.values():
+                if (recent is None or
+                    recent['state_time'] < data.get('state_time', 0)
                 ):
                     recent = data
         return recent
+
+    def deleteBuild(self, image, build_number):
+        '''
+        Delete the znode of a given image build.
+
+        :param str image: The image name.
+        :param str build_number: The image build number.
+
+        This method will not consider a delete attempt of a non-existing
+        build an error. So it should be safe for simultaneous delete attempts
+        of a given build.
+        '''
+        path = self._imageBuildsPath(image) + "/%s" % build_number
+        try:
+            self.client.delete(path, recursive=True)
+        except kze.NoNodeError:
+            pass
 
     def storeBuild(self, image, build_number, build_data):
         '''
@@ -432,7 +473,7 @@ class ZooKeeper(object):
         contain any data, as appropriate.
 
         :param str image: The image name for which we have data.
-        :param int build_number: The image build number.
+        :param str build_number: The image build number.
         :param dict build_data: The build data.
 
         :raises: ZKException if the build znode does not exist (it is created
@@ -453,9 +494,9 @@ class ZooKeeper(object):
         Retrieve the image upload data.
 
         :param str image: The image name.
-        :param int build_number: The image build number.
+        :param str build_number: The image build number.
         :param str provider: The provider name owning the image.
-        :param int build_number: The image upload number. If this is None,
+        :param str upload_number: The image upload number. If this is None,
             the most recent upload data is returned.
 
         :returns: A dict of upload data.
@@ -484,7 +525,7 @@ class ZooKeeper(object):
         Store the built image's upload data for the given provider.
 
         :param str image: The image name for which we have data.
-        :param int build_number: The image build number.
+        :param str build_number: The image build number.
         :param str provider: The provider name owning the image.
         :param dict image_data: The image data we want to store.
 
@@ -564,3 +605,14 @@ class ZooKeeper(object):
         to keep the session alive.
         '''
         self.client.server_version()
+
+    def getImages(self):
+        '''
+        Return a list of all registered image names.
+
+        :returns: A list with image names, or None if none are found.
+        '''
+        images = self.client.get_children(self.IMAGE_ROOT)
+        if not images:
+            return None
+        return images
