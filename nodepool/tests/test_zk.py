@@ -235,3 +235,46 @@ class TestZooKeeper(tests.ZKTestCase):
         # v2 should be the most recent 'ready' build
         data = self.zk.getMostRecentBuild(image, 'ready')
         self.assertEqual(data, v2)
+
+    def test_getBuildsWithStates(self):
+        image = "ubuntu-trusty"
+        path = self.zk._imageBuildsPath(image)
+        v1 = {'state': ''}
+        v2 = {'state': 'ready'}
+        v3 = {'state': 'unused'}
+        v4 = {'state': 'failed'}
+        v5 = {'state': 'deleted'}
+        v6 = {}
+        self.zk.client.create(path + "/1", value=self.zk._dictToStr(v1),
+                              makepath=True)
+        self.zk.client.create(path + "/2", value=self.zk._dictToStr(v2),
+                              makepath=True)
+        self.zk.client.create(path + "/3", value=self.zk._dictToStr(v3),
+                              makepath=True)
+        self.zk.client.create(path + "/4", value=self.zk._dictToStr(v4),
+                              makepath=True)
+        self.zk.client.create(path + "/5", value=self.zk._dictToStr(v5),
+                              makepath=True)
+        self.zk.client.create(path + "/6", value=self.zk._dictToStr(v6),
+                              makepath=True)
+
+        matches = self.zk.getBuildsWithStates(image, ['', 'deleted', 'failed'])
+
+        expected = {'1': v1, '4': v4, '5': v5, '6': v6}
+        self.assertEqual(expected, matches)
+
+    def test_deleteBuild(self):
+        test_root = self.zk._imageBuildsPath("ubuntu-trusty")
+        self.zk.client.create(test_root, makepath=True)
+        self.zk.client.create(test_root + "/10")
+
+        path = test_root + "/10"
+        self.assertTrue(self.zk.client.exists(path))
+        self.zk.deleteBuild("ubuntu-trusty", 10)
+        self.assertFalse(self.zk.client.exists(path))
+
+    def test_getImages(self):
+        root = self.zk.IMAGE_ROOT
+        self.zk.client.create(root + "/image1", makepath=True)
+        self.zk.client.create(root + "/image2", makepath=True)
+        self.assertItemsEqual(["image1", "image2"], self.zk.getImages())
