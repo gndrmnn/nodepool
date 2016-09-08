@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_80232bbc",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-08T14:25:00Z",
+      "side": 1,
+      "message": "This might warrant an INFO level.",
+      "revId": "933cc4897ce4e0d2c4ec4a8f31b6ff5df886da10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a89bdaa_a02e6fa2",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-08T14:25:00Z",
+      "side": 1,
+      "message": "INFO?",
+      "revId": "933cc4897ce4e0d2c4ec4a8f31b6ff5df886da10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
