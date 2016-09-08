@@ -32,6 +32,8 @@ import zk
 MINS = 60
 HOURS = 60 * MINS
 IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
+IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
+                             # READY or is not the current or previous image
 
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
@@ -230,6 +232,105 @@ class BuildWorker(BaseWorker):
         build_data['filename'] = ''
         return build_data
 
+    def _deleteLocalBuild(self):
+        # TODO(Shrews): implement this
+        pass
+
+    def _checkForCleanup(self):
+        '''
+        Perform any local or ZooKeeper cleanup tasks.
+
+        If a build is marked as 'delete' and it was built on this host, then
+        we clean up the local build and delete the znode. We don't touch
+        those that were NOT built on this host.
+        '''
+        for image in self._config.diskimages.keys():
+            chosen = self._zk.getBuildsWithStates(image,
+                                                  ['delete', 'unused', ''])
+            if not chosen:
+                continue
+
+            for build_num, data in chosen.items():
+                state = data.get('state', '')
+                builder = data.get('builder', '')
+                if state == 'delete' and builder == self._hostname:
+                    self.log.info(
+                        "Deleting local build %s for image" % (build_num,
+                                                               image))
+                    self._deleteLocalBuild()
+                    self._zk.deleteBuild(image, build_num)
+                elif state in ('unused', ''):
+                    self.log.info(
+                        "Deleting data for build %s for image %s" % (build_num,
+                                                                     image))
+                    self._zk.deleteBuild(image, build_num)
+
+    def _expireOldBuilds(self):
+        '''
+        Find builds that have expired and mark for deletion.
+
+        A build is considered "expired" when it is not the current build
+        or the previous build (a backup) and when it is older than 8 hours.
+        A "failed" build is marked for "delete" after this same time period.
+
+        We get the list of images from ZooKeeper itself rather than from
+        the config to account for the case where an image may have been
+        totally removed from the config.
+        '''
+        images = self._zk.getImages()
+        if not images:
+            return
+
+        for image in images:
+            #--------------------------------------------------------------
+            # Mark failed builds past expiration time for deletion
+            #--------------------------------------------------------------
+            fail_list = self._zk.getBuildsWithStates(image, ['failed'])
+            if fail_list:
+                for bnum, data in fail_list:
+                    now = int(time.time())
+                    if (now - data['state_time']) > IMAGE_CLEANUP:
+                        data['state'] = 'delete'
+                        data['state_time'] = int(time.time())
+                        try:
+                            with self._zk.imageBuildLock(
+                                image, blocking=False
+                            ):
+                                self.log.info(
+                                    "Marking %s:%s for delete" % (image, bnum))
+                                self._zk.storeBuild(image, bnum, data)
+                        except exceptions.ZKLockException:
+                            pass
+
+            #--------------------------------------------------------------
+            # Mark ready builds past expiration time for deletion, keeping
+            # the current and previous builds, no matter how old.
+            #--------------------------------------------------------------
+            ready_list = self._zk.getBuildsWithStates(image, ['ready'])
+
+            # Skip if no ready images or only have a current and previous
+            if not ready_list or len(ready_list) < 3:
+                continue
+
+            ordered_keys = sorted(ready_list,
+                                  key=lambda key: int(key),
+                                  reverse=True)
+
+            # Skip over the first two (the current and previous)
+            for key in ordered_keys[2:]:
+                now = int(time.time())
+                data = ready_list[key]
+                if (now - data['state_time']) > IMAGE_CLEANUP:
+                    data['state'] = 'delete'
+                    data['state_time'] = int(time.time())
+                    try:
+                        with self._zk.imageBuildLock(image, blocking=False):
+                            self.log.info(
+                                "Marking %s:%s for delete" % (image, key))
+                            self._zk.storeBuild(image, key, data)
+                    except exceptions.ZKLockException:
+                        pass
+
     def run(self):
         self._running = True
         while self._running:
@@ -238,6 +339,8 @@ class BuildWorker(BaseWorker):
             self._checkForZooKeeperChanges(new_config)
             self._config = new_config
 
+            self._expireOldBuilds()
+            self._checkForCleanup()
             self._checkForScheduledImageUpdates()
             self._checkForManualBuildRequest()
 
