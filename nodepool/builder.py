@@ -230,6 +230,39 @@ class BuildWorker(BaseWorker):
         build_data['filename'] = ''
         return build_data
 
+    def _deleteLocalBuild(self):
+        # TODO(Shrews): implement this
+        pass
+
+    def _checkForCleanup(self):
+        '''
+        Perform any local or ZooKeeper cleanup tasks.
+
+        If a build is marked as 'delete' and it was built on this host, then
+        we clean up the local build and delete the znode. We don't touch
+        those that were NOT built on this host.
+        '''
+        for image in self._config.diskimages.keys():
+            chosen = self._zk.getBuildsWithStates(image,
+                                                  ['delete', 'unused', ''])
+            if not chosen:
+                continue
+
+            for build_num, data in chosen.items():
+                state = data.get('state', '')
+                builder = data.get('builder', '')
+                if state == 'delete' and builder == self._hostname:
+                    self.log.info(
+                        "Deleting local build %s for image" % (build_num,
+                                                               image))
+                    self._deleteLocalBuild()
+                    self._zk.deleteBuild(image, build_num)
+                elif state in ('unused', ''):
+                    self.log.info(
+                        "Deleting data for build %s for image %s" % (build_num,
+                                                                     image))
+                    self._zk.deleteBuild(image, build_num)
+
     def run(self):
         self._running = True
         while self._running:
@@ -238,6 +271,7 @@ class BuildWorker(BaseWorker):
             self._checkForZooKeeperChanges(new_config)
             self._config = new_config
 
+            self._checkForCleanup()
             self._checkForScheduledImageUpdates()
             self._checkForManualBuildRequest()
 
