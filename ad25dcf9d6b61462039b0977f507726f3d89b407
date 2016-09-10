@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_4082a701",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-09-10T00:55:01Z",
+      "side": 1,
+      "message": "if not builds: return recent? to reduce indentation below?",
+      "revId": "ad25dcf9d6b61462039b0977f507726f3d89b407",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
