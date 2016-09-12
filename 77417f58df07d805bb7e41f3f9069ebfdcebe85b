@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_ea00a868",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-09-12T22:23:46Z",
+      "side": 1,
+      "message": "Specifically, I think the only race condition (with no locks) is this:\n\n1. worker A starts a new image build\n2. worker B decides the image is old\n3. worker A completes the image build and it becomes ready\n4. worker B builds the image (unecessarily)\n\nThe lock prevents step 2 from happening since both workers need the lock for all of those items.\n\nI can think of some ways to avoid the lock during the check phase, but I\u0027m not happy enough with any of them to suggest them here.  :)\n\nI do wonder if we should get a little more sophisticated and use a shared read lock for this (and possibly similar things in the future).  https://zookeeper.apache.org/doc/r3.1.2/recipes.html#Shared+Locks\n\nBut I think we can make that change later if we want.",
+      "revId": "77417f58df07d805bb7e41f3f9069ebfdcebe85b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
