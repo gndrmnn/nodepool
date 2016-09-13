@@ -16,6 +16,23 @@
       "revId": "4f63c3e2c86391e84f58ddd5291715532480fb6b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_b3114ab2",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1297
+      },
+      "writtenOn": "2016-09-13T19:56:39Z",
+      "side": 1,
+      "message": "Hmmm, this isn\u0027t supposed to be required (since the heartbeater runs in a different thread); where are u guys (gals) seeing the need to do this?",
+      "revId": "4f63c3e2c86391e84f58ddd5291715532480fb6b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
