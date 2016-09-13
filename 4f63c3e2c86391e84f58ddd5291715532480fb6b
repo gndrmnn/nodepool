@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a8ec9b2_b3dcea19",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1297
+      },
+      "writtenOn": "2016-09-13T19:54:57Z",
+      "side": 1,
+      "message": "Hmmm, what\u0027s this??\n\nCan this just be gotten from the znode itself?\n\n    \u003e\u003e\u003e from kazoo import client\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client \u003d client.KazooClient()\n    \u003e\u003e\u003e client.start()\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client.create(\"junk\", \"{}\")\n    u\u0027/junk\u0027\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e data, stat \u003d client.get(\"junk\")\n    \u003e\u003e\u003e stat.ctime\n    1473796282975\n    \u003e\u003e\u003e stat.mtime\n    1473796312935",
+      "revId": "4f63c3e2c86391e84f58ddd5291715532480fb6b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
