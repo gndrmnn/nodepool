@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_14cc06ba",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1788,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-13T05:51:13Z",
+      "side": 1,
+      "message": "why not call it demand?",
+      "range": {
+        "startLine": 1788,
+        "startChar": 43,
+        "endLine": 1788,
+        "endChar": 50
+      },
+      "revId": "3ed9733e286a418dde1e96d25474627fe6fa8b3e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
