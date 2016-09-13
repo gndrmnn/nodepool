@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a8ec9b2_b304eac6",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1297
+      },
+      "writtenOn": "2016-09-13T19:49:49Z",
+      "side": 1,
+      "message": "Probably want to think about using sequence support for this, because the exists then create u have below isn\u0027t actually atomic.\n\n    \u003e\u003e\u003e from kazoo import client\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client \u003d client.KazooClient()\n    \u003e\u003e\u003e client.start()\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client.create(\"/b\", sequence\u003dTrue)\n    u\u0027/b0000000018\u0027\n    \u003e\u003e\u003e client.create(\"/b\", sequence\u003dTrue)\n    u\u0027/b0000000019\u0027\n\n^ Example (that is atomic).",
+      "revId": "b226a94ac4200c97c962dd19e562d58f05b20cbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
