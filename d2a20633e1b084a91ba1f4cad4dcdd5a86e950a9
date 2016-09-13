@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_5f66a7ed",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-13T06:23:25Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 131,
+        "startChar": 44,
+        "endLine": 131,
+        "endChar": 47
+      },
+      "revId": "d2a20633e1b084a91ba1f4cad4dcdd5a86e950a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
