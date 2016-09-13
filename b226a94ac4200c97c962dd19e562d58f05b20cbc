@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7a8ec9b2_13b03ef4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1297
+      },
+      "writtenOn": "2016-09-13T19:53:14Z",
+      "side": 1,
+      "message": "Is this a read/update locally/store?\n\nIf so u probably want to use the node version to ensure u aren\u0027t writing over someone elses data.\n\n    \u003e\u003e\u003e from kazoo import client\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client \u003d client.KazooClient()\n    \u003e\u003e\u003e client.start()\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client.create(\"junk\", \"{}\")\n    u\u0027/junk\u0027\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e old \u003d client.get(\"junk\")\n    \u003e\u003e\u003e old\n    (\u0027{}\u0027, ZnodeStat(czxid\u003d106, mzxid\u003d106, ctime\u003d1473796282975, mtime\u003d1473796282975, version\u003d0, cversion\u003d0, aversion\u003d0, ephemeralOwner\u003d0, dataLength\u003d2, numChildren\u003d0, pzxid\u003d106))\n    \u003e\u003e\u003e client.set(\"junk\", \"{newstuffhere}\", version\u003dold[1].version)\n    ZnodeStat(czxid\u003d106, mzxid\u003d107, ctime\u003d1473796282975, mtime\u003d1473796312935, version\u003d1, cversion\u003d0, aversion\u003d0, ephemeralOwner\u003d0, dataLength\u003d14, numChildren\u003d0, pzxid\u003d106)\n\nThe above will not \u0027set\u0027 if the version on the server is different than what it was when \u0027get\u0027 happened (if it changed then someone else did a \u0027set\u0027 already and u may have to resolve the conflicts or retry or other...)",
+      "revId": "b226a94ac4200c97c962dd19e562d58f05b20cbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a8ec9b2_b304eac6",
         "filename": "nodepool/zk.py",
         "patchSetId": 1
