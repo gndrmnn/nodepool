@@ -16,6 +16,24 @@
       "revId": "27b0ef0cb007d6c5dc8ac52e17fe222bec99a7d3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_793035e9",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-14T23:14:41Z",
+      "side": 1,
+      "message": "It really more of testing that *our* storeBuild() API increments correctly, and functions in a manner that we can depend on, regardless of the implementation behind the scenes.",
+      "parentUuid": "7a8ec9b2_1e0d573e",
+      "revId": "27b0ef0cb007d6c5dc8ac52e17fe222bec99a7d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
