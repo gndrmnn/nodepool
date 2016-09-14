@@ -249,20 +249,18 @@ class TestNodepool(tests.DBTestCase):
                     break
                 time.sleep(.1)
 
-    def test_subnodes(self):
-        """Test that an image and node are created"""
+    def test_subnode_deletion_success(self):
+        """Test that subnodes are deleted with parent node"""
         configfile = self.setup_config('subnodes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
 
+        subnode_ids = []
+        node_ids = []
+
         with pool.getDB().getSession() as session:
-            nodes = session.getNodes(provider_name='fake-provider',
-                                     label_name='fake-label',
-                                     target_name='fake-target',
-                                     state=nodedb.READY)
-            self.assertEqual(len(nodes), 2)
             nodes = session.getNodes(provider_name='fake-provider',
                                      label_name='multi-fake',
                                      target_name='fake-target',
@@ -272,6 +270,19 @@ class TestNodepool(tests.DBTestCase):
                 self.assertEqual(len(node.subnodes), 2)
                 for subnode in node.subnodes:
                     self.assertEqual(subnode.state, nodedb.READY)
+                    subnode_ids.append(subnode.id)
+                node_ids.append(node.id)
+
+        for node_id in node_ids:
+            pool.deleteNode(node_id)
+
+        self.wait_for_threads()
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            for subnode_id in subnode_ids:
+                s = session.getSubNode(subnode_id)
+                self.assertIsNone(s)
 
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
