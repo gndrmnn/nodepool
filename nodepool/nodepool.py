@@ -1902,6 +1902,11 @@ class NodePool(threading.Thread):
                 except provider_manager.NotFound:
                     pass
 
+        for subnode in node.subnodes:
+            if subnode.external_id:
+                manager.waitForServerDeletion(subnode.external_id)
+            subnode.delete()
+
         if node.external_id:
             try:
                 self.log.debug('Deleting server %s for node id: %s' %
@@ -1911,11 +1916,6 @@ class NodePool(threading.Thread):
             except provider_manager.NotFound:
                 pass
             node.external_id = None
-
-        for subnode in node.subnodes:
-            if subnode.external_id:
-                manager.waitForServerDeletion(subnode.external_id)
-                subnode.delete()
 
         node.delete()
         self.log.info("Deleted node id: %s" % node.id)
