@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "7a8ec9b2_400d478f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-14T18:07:26Z",
+      "side": 1,
+      "message": "This bit is removed in review https://review.openstack.org/370350",
+      "parentUuid": "7a8ec9b2_4eee7423",
+      "revId": "4f63c3e2c86391e84f58ddd5291715532480fb6b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a8ec9b2_b35f8a74",
         "filename": "nodepool/zk.py",
         "patchSetId": 4
