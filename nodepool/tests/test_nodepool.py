@@ -251,11 +251,19 @@ class TestNodepool(tests.DBTestCase):
 
     def test_subnodes(self):
         """Test that an image and node are created"""
+        def fail_delete(self, name):
+            raise RuntimeError('Fake Error')
+
+        fake_delete = 'nodepool.fakeprovider.FakeJenkins.delete_node'
+        self.useFixture(fixtures.MonkeyPatch(fake_delete, fail_delete))
+
         configfile = self.setup_config('subnodes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage(pool, 'fake-provider', 'fake-image')
         self.waitForNodes(pool)
+
+        subnodes = []
 
         with pool.getDB().getSession() as session:
             nodes = session.getNodes(provider_name='fake-provider',
@@ -272,6 +280,19 @@ class TestNodepool(tests.DBTestCase):
                 self.assertEqual(len(node.subnodes), 2)
                 for subnode in node.subnodes:
                     self.assertEqual(subnode.state, nodedb.READY)
+                    subnodes.append(subnode)
+
+                pool.deleteNode(node.id)
+
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='multi-fake',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 0)
+
+            for subnode in subnodes:
+                s = session.getSubNode(subnode.id)
+                self.assertEmpty(s)
 
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
