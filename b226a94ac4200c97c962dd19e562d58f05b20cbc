@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a8ec9b2_f3772b00",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-14T12:21:51Z",
+      "side": 1,
+      "message": "This section is protected by a ZK lock, so the znode should not get changed out from under it.",
+      "parentUuid": "7a8ec9b2_13b03ef4",
+      "revId": "b226a94ac4200c97c962dd19e562d58f05b20cbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a8ec9b2_b304eac6",
         "filename": "nodepool/zk.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-13T19:49:49Z",
       "side": 1,
       "message": "Probably want to think about using sequence support for this, because the exists then create u have below isn\u0027t actually atomic.\n\n    \u003e\u003e\u003e from kazoo import client\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client \u003d client.KazooClient()\n    \u003e\u003e\u003e client.start()\n    \u003e\u003e\u003e \n    \u003e\u003e\u003e client.create(\"/b\", sequence\u003dTrue)\n    u\u0027/b0000000018\u0027\n    \u003e\u003e\u003e client.create(\"/b\", sequence\u003dTrue)\n    u\u0027/b0000000019\u0027\n\n^ Example (that is atomic).",
+      "revId": "b226a94ac4200c97c962dd19e562d58f05b20cbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_d3adcf32",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-14T12:21:51Z",
+      "side": 1,
+      "message": "It\u0027s expected that calls to this method should be protected by a lock, so this should be ok. However, now that I know about sequences, I like that solution much better will likely be putting up a separate review to change to using them.",
+      "parentUuid": "7a8ec9b2_b304eac6",
       "revId": "b226a94ac4200c97c962dd19e562d58f05b20cbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
