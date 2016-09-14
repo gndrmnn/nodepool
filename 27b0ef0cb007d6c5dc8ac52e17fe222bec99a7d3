@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a8ec9b2_1e0d573e",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1297
+      },
+      "writtenOn": "2016-09-14T23:09:13Z",
+      "side": 1,
+      "message": "Just my thoughts, but this seems like a zookeeper test; not a nodepool one. I mean I get the test, but not exactly sure it adds much of any value (besides verifying zookeeper works, which probably/hopefully already is a prerequisite).",
+      "revId": "27b0ef0cb007d6c5dc8ac52e17fe222bec99a7d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
