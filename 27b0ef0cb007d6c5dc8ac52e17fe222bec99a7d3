@@ -52,6 +52,24 @@
       "revId": "27b0ef0cb007d6c5dc8ac52e17fe222bec99a7d3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_3d83d957",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-15T13:49:17Z",
+      "side": 1,
+      "message": "Hrm, you\u0027re right. I should just be using two calls to storeBuild(). That\u0027s a better test.\n\nFixed in the next patch set. Thanks!",
+      "parentUuid": "7a8ec9b2_a4e1ad9c",
+      "revId": "27b0ef0cb007d6c5dc8ac52e17fe222bec99a7d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
