@@ -201,6 +201,29 @@ class TestNodepool(tests.DBTestCase):
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 2)
 
+    def test_dib_upload_disabled(self):
+        """Test that a dib image upload is disabled."""
+        configfile = self.setup_config('node_dib_provider_disabled.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-dib-image')
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            # fake-provider1 uploaded images.
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 2)
+            # fake-dib-provider-disabled does not upload images.
+            nodes = session.getNodes(provider_name='fake-dib-provider-disabled',
+                                     label_name='fake-label',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 0)
+
     def test_dib_snapimage_delete(self):
         """Test that a dib image (snapshot) can be deleted."""
         configfile = self.setup_config('node_dib.yaml')
