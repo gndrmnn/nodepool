@@ -1622,6 +1622,10 @@ class NodePool(threading.Thread):
         providers = sorted(self.config.providers.values(),
                            key=lambda x: x.name)
         for provider in providers:
+            # If the provider is disabled, don't bother checking for missing
+            # images.
+            if provider.max_servers < 0:
+                continue
             for image in provider.images.values():
                 try:
                     self.checkForMissingImage(session, provider, image)
@@ -1742,6 +1746,11 @@ class NodePool(threading.Thread):
     def uploadImage(self, session, provider, image_name):
         try:
             provider_entity = self.config.providers[provider]
+
+            # If max-servers is set to -1, don't both uploading images.
+            if provider_entity.max_servers < 0:
+                return
+
             provider_image = provider_entity.images[image_name]
             images = session.getOrderedReadyDibImages(provider_image.diskimage)
             image_id = images[0].id
