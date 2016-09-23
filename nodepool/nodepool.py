@@ -1742,6 +1742,11 @@ class NodePool(threading.Thread):
     def uploadImage(self, session, provider, image_name):
         try:
             provider_entity = self.config.providers[provider]
+
+            # If max-servers is set to -1, don't both uploading images.
+            if provider_entity.max_servers < 0:
+                return
+
             provider_image = provider_entity.images[image_name]
             images = session.getOrderedReadyDibImages(provider_image.diskimage)
             image_id = images[0].id
