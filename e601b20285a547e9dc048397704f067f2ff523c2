@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a8bc5a2_c64e746e",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-26T12:47:18Z",
+      "side": 1,
+      "message": "(nit) this isn\u0027t consistent with the camelCasing of other tests",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 26
+      },
+      "revId": "e601b20285a547e9dc048397704f067f2ff523c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
