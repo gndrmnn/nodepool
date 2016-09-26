@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a8bc5a2_5d9dd264",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-26T13:18:39Z",
+      "side": 1,
+      "message": "All 3 values seem arbitrary to me. I chose 30 to try to avoid tons of log messages, but I\u0027m not set on this value if another works better.",
+      "parentUuid": "5a8bc5a2_dd6ba2b7",
+      "range": {
+        "startLine": 35,
+        "startChar": 20,
+        "endLine": 35,
+        "endChar": 22
+      },
+      "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a8bc5a2_5d3232f3",
         "filename": "nodepool/builder.py",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-26T13:13:10Z",
       "side": 1,
       "message": "won\u0027t this get stuck here if the connection has actually been lost?",
+      "range": {
+        "startLine": 233,
+        "startChar": 45,
+        "endLine": 233,
+        "endChar": 49
+      },
+      "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a8bc5a2_3df806c3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-09-26T13:18:39Z",
+      "side": 1,
+      "message": "Yes, but the kazoo client (as much as I\u0027ve been able to discern from reading the source code) will attempt to reconnect forever by default. You will only see the LOST state once it reconnects and it determines that it actually still isn\u0027t SUSPENDED and we lost our session.",
+      "parentUuid": "5a8bc5a2_5d3232f3",
       "range": {
         "startLine": 233,
         "startChar": 45,
