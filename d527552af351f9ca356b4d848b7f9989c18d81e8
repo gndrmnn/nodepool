@@ -93,6 +93,30 @@
       "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a8bc5a2_d3446ab8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-26T16:08:11Z",
+      "side": 1,
+      "message": "Ah, okay, I see.",
+      "parentUuid": "5a8bc5a2_3df806c3",
+      "range": {
+        "startLine": 233,
+        "startChar": 45,
+        "endLine": 233,
+        "endChar": 49
+      },
+      "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
