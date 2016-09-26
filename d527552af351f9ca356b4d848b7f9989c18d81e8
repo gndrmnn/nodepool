@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a8bc5a2_dd6ba2b7",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-26T13:13:10Z",
+      "side": 1,
+      "message": "(nit) This seems like a long time. I would have thought 10 or 15 seconds?",
+      "range": {
+        "startLine": 35,
+        "startChar": 20,
+        "endLine": 35,
+        "endChar": 22
+      },
+      "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a8bc5a2_5d3232f3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-09-26T13:13:10Z",
+      "side": 1,
+      "message": "won\u0027t this get stuck here if the connection has actually been lost?",
+      "range": {
+        "startLine": 233,
+        "startChar": 45,
+        "endLine": 233,
+        "endChar": 49
+      },
+      "revId": "d527552af351f9ca356b4d848b7f9989c18d81e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
