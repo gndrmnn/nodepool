@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a98d1f4_00c9aa78",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-09-28T21:13:47Z",
+      "side": 1,
+      "message": "Need to use \u003e\u003e not \u003e as this will overwrite the rest of the config as is.",
+      "revId": "650be22741ac3e9cc2494e89ebe80b260476e7c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
