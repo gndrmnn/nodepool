@@ -249,6 +249,7 @@ diskimages:
       DIB_APT_LOCAL_CACHE: '0'
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      DIB_REPOLOCATION_pip_and_virtualenv: /home/jenkins/cache/files/get-pip.py
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
