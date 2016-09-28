@@ -250,6 +250,11 @@ diskimages:
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
 EOF
+    if [ -f /home/jenkins/cache/files/get-pip.py ] ; then
+        cat >> /tmp/nodepool.yaml <<EOF
+      DIB_REPOLOCATION_pip_and_virtualenv: /home/jenkins/cache/files/get-pip.py
+EOF
+    fi
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
     cp /etc/openstack/clouds.yaml /tmp
