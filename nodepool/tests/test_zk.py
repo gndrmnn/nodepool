@@ -178,7 +178,8 @@ class TestZooKeeper(tests.ZKTestCase):
         self.zk.storeBuild(image, v3)
 
         # v2 should be the most recent 'ready' build
-        data = self.zk.getMostRecentBuild(image, 'ready')
+        (bnum, data) = self.zk.getMostRecentBuild(image, 'ready')
+        self.assertIsNotNone(bnum)
         self.assertEqual(data, v2)
 
     def test_getMostRecentImageUpload(self):
@@ -195,6 +196,8 @@ class TestZooKeeper(tests.ZKTestCase):
         self.zk.storeImageUpload(image, bnum, provider, up3)
 
         # up2 should be the most recent 'ready' upload
-        data = self.zk.getMostRecentImageUpload(image, bnum, provider, 'ready')
+        (upnum, data) = self.zk.getMostRecentImageUpload(image, bnum,
+                                                         provider, 'ready')
+        self.assertIsNotNone(upnum)
         self.assertEqual(data, up2)
 
