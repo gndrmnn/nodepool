@@ -280,8 +280,81 @@ class UploadWorker(BaseWorker):
     def __init__(self, config_path):
         super(UploadWorker, self).__init__(config_path)
 
+    def _makeStateData(self, state):
+        '''
+        Create an upload state dict with minimal, common state information.
+
+        :param str state: The upload state you want.
+        '''
+        data = {}
+        data['state'] = state
+        data['state_time'] = int(time.time())
+        return data
+
+    def _uploadImage(self, provider, build_data):
+        '''
+        Upload a local DIB image build to a provider.
+
+        :param provider: The provider from the parsed config file.
+        :param dict build_data: The build data from ZooKeeper.
+        '''
+        data = self._makeStateData('ready')
+        data['external_id'] = ''
+        return data
+
     def _checkForProviderUploads(self):
-        pass
+        '''
+        Check for any image builds that need to be uploaded to providers.
+        '''
+        for provider in self._config.providers.values():
+            for image in provider.images.values():
+                # Check if we've been told to shutdown
+                # or if ZK connection is suspended
+                if not self.running or self._zk.suspended or self._zk.lost:
+                    return
+
+                if image.name not in self._config.images_in_use:
+                    continue
+                if not image.diskimage:
+                    continue
+
+                # Search for the most recent 'ready' image build
+                build = self._zk.getMostRecentBuild(image.diskimage)
+                if (build is None
+                    or build[1]['builder'] != self._hostname
+                ):
+                    continue
+
+                upload = self._zk.getMostRecentImageUpload(
+                    image.diskimage, build[0], provider.name)
+
+                # If we haven't yet tried to upload this image, or we have
+                # and it isn't 'ready' (it may have failed), try to upload.
+                if (upload is None or upload[1]['state'] != 'ready'):
+                    try:
+                        with self._zk.imageUploadLock(
+                            image.diskimage, build[0], provider.name,
+                            blocking=False
+                        ):
+                            self.log.info(
+                                "Uploading %s:%s to %s" % (image.diskimage,
+                                                           build[0],
+                                                           provider.name))
+
+                            # New upload number with initial state 'uploading'
+                            upnum = self._zk.storeImageUpload(
+                                image.diskimage, build[0], provider.name,
+                                self._makeStateData('uploading'))
+
+                            data = self._uploadImage(provider, build[1])
+
+                            # Set final state
+                            self._zk.storeImageUpload(
+                                image.diskimage, build[0], provider.name,
+                                data, upnum)
+                    except exceptions.ZKLockException:
+                        # Lock is already held. Skip it.
+                        pass
 
     def run(self):
         '''
