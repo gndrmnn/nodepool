@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a98d1f4_225ae34f",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 11628
+      },
+      "writtenOn": "2016-09-30T00:09:40Z",
+      "side": 1,
+      "message": "This needs to be a file:// URL",
+      "range": {
+        "startLine": 256,
+        "startChar": 43,
+        "endLine": 256,
+        "endChar": 66
+      },
+      "revId": "bfbeaf6835b1ceaa02b7f1cb3ce6217eece0798d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
