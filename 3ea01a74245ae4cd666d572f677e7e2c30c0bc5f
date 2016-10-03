@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3a98d1f4_c2daa216",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-03T20:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a98d1f4_c85692cd",
+      "revId": "3ea01a74245ae4cd666d572f677e7e2c30c0bc5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a98d1f4_e85b4ef4",
         "filename": "nodepool/builder.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-30T16:46:36Z",
       "side": 1,
       "message": "getMostRecentImageUpload will (by default and in this case) return only the most recent \u0027ready\u0027 image.  I think that\u0027s exactly what we want, and we should remove the duplicate ready check here and adjust the comment to match.",
+      "revId": "3ea01a74245ae4cd666d572f677e7e2c30c0bc5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a98d1f4_e2d5dee4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-03T20:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a98d1f4_e85b4ef4",
       "revId": "3ea01a74245ae4cd666d572f677e7e2c30c0bc5f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
