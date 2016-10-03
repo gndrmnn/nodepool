@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a98d1f4_62370e4d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-03T20:26:04Z",
+      "side": 1,
+      "message": "Need an \u0027image_name\u0027 defined here. Doh!",
+      "revId": "831bfad605b75cd1903926891072dea614bb96db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
