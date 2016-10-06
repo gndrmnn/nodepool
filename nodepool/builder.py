@@ -351,8 +351,7 @@ class BuildWorker(BaseWorker):
             self._checkForScheduledImageUpdates()
             self._checkForManualBuildRequest()
 
-            # TODO: Make this configurable
-            time.sleep(0.1)
+            time.sleep(10)
 
         if self._zk:
             self._zk.disconnect()
