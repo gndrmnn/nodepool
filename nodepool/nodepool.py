@@ -678,7 +678,7 @@ class NodeLauncher(threading.Thread):
             key.write_private_key(f)
             f.close()
             f = ftp.open('/etc/nodepool/id_rsa.pub', 'w')
-            f.write(public_key)
+            f.write("%s\n" % public_key)
             f.close()
             # Provider information for this node set
             f = ftp.open('/etc/nodepool/provider', 'w')
