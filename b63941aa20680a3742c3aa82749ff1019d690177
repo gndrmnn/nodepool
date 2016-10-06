@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a95cdbc_b48b71c2",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-06T21:12:07Z",
+      "side": 1,
+      "message": "Rather than doing the exists() check, let\u0027s just catch kze.NoNodeError and return [] in that case. That way we only need the single ZK call.",
+      "revId": "b63941aa20680a3742c3aa82749ff1019d690177",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a95cdbc_b4b29192",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-06T21:12:07Z",
+      "side": 1,
+      "message": "Same comment as above about using exists().",
+      "revId": "b63941aa20680a3742c3aa82749ff1019d690177",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
