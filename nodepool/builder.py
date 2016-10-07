@@ -40,9 +40,13 @@ DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
 
 
 class DibImageFile(object):
+    log = logging.getLogger("nodepool.builder.DibImageFile")
+
     def __init__(self, image_id, extension=None):
         self.image_id = image_id
         self.extension = extension
+        self.md5 = None
+        self.sha256 = None
 
     @staticmethod
     def from_path(path):
@@ -72,7 +76,24 @@ class DibImageFile(object):
                     'Cannot specify image extension of None'
                 )
             my_path += '.' + self.extension
+
+        md5 = self._checksum(my_path, 'md5')
+        if md5:
+            self.md5 = md5[0:32]
+
+        sha256 = self._checksum(my_path, 'sha256')
+        if sha256:
+            self.sha256 = md5[0:64]
+
         return my_path
+
+    def _checksum(self, filename, hash_name):
+        checksum = '%s.%s' % (filename, hash_name)
+        if not os.path.isfile(checksum):
+            return None
+        with open(checksum, 'r') as f:
+            data = f.read()
+        return data
 
 
 class BaseWorker(gear.Worker):
@@ -363,7 +384,9 @@ class NodePoolBuilder(object):
         external_id = manager.uploadImage(
             ext_image_name, filename,
             image_type=image_file.extension,
-            meta=image_meta)
+            meta=image_meta,
+            md5=image_file.md5,
+            sha256=image_file.sha256)
 
         if self.statsd:
             dt = int((time.time() - start_time) * 1000)
