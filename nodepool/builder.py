@@ -478,7 +478,7 @@ class UploadWorker(BaseWorker):
                     continue
 
                 # See if this image has already been uploaded
-                upload = self._zk.getMostRecentImageUpload(
+                upload = self._zk.getMostRecentBuildImageUpload(
                     image.diskimage, build_id, provider.name)
                 if upload is not None:
                     continue
