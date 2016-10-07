@@ -460,33 +460,48 @@ class ZooKeeper(object):
             return None
         return matches
 
-    def getMostRecentBuild(self, image, state="ready"):
+    def getMostRecentBuilds(self, count, image, state="ready"):
         '''
         Retrieve the most recent image build data with the given state.
 
+        :param int count: A count of the most recent builds to return.
         :param str image: The image name.
         :param str state: The build state to match on.
 
-        :returns: A tuple with the most recent build number and dictionary of
-            build data matching the given state, or None if there was no build
-            matching the state.
+        :returns: A list of tuples with the most recent build number and
+            dictionary of build data matching the given state, or an empty
+            list if there was no builds matching the state. You may get
+            less than 'count' entries if there were not enough matching
+            builds.
         '''
-        recent_data = None
-        recent_bnum = None
+        def descending_sort_by_state_time(builds):
+            ret = []
+            for b_id, b_data in builds:
+                if ret:
+                    for i in range(len(ret)):
+                        inserted = False
+                        b_time = b_data.get('state_time', 0)
+                        r_time = ret[i][1].get('state_time', 0)
+                        if b_time >= r_time and ret[0] != b_id:
+                            ret.insert(i, (b_id, b_data))
+                            inserted = True
+                            break
+                    if not inserted:
+                        # append to end
+                        ret.append((b_id, b_data))
+                else:
+                    ret.append((b_id, b_data))
+            return ret
+
+        matches = []
         for build in self.getBuildNumbers(image):
             data = self.getBuild(image, build)
             if data.get('state', '') != state:
                 continue
-            elif (recent_data is None or
-                  recent_data['state_time'] < data.get('state_time', 0)
-            ):
-                recent_bnum = build
-                recent_data = data
+            matches.append((build, data))
 
-        if recent_bnum is None and recent_data is None:
-            return None
-
-        return (recent_bnum, recent_data)
+        matches = descending_sort_by_state_time(matches)
+        return matches[:count]
 
     def storeBuild(self, image, build_data, build_number=None):
         '''
