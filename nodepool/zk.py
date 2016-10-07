@@ -550,8 +550,8 @@ class ZooKeeper(object):
 
         return self._strToDict(data)
 
-    def getMostRecentImageUpload(self, image, build_number, provider,
-                                 state="ready"):
+    def getMostRecentBuildImageUpload(self, image, build_number, provider,
+                                      state="ready"):
         '''
         Retrieve the most recent image upload data with the given state.
 
@@ -586,6 +586,47 @@ class ZooKeeper(object):
             ):
                 recent_upnum = upload
                 recent_data = data
+
+        if recent_upnum is None and recent_data is None:
+            return None
+
+        return (recent_upnum, recent_data)
+
+    def getMostRecentImageUpload(self, image, provider,
+                                 state="ready"):
+        '''
+        Retrieve the most recent image upload data with the given state.
+
+        :param str image: The image name.
+        :param str provider: The provider name owning the image.
+        :param str state: The image upload state to match on.
+
+        :returns: A tuple with the most recent upload number and dictionary of
+            upload data matching the given state, or None if there was no
+            upload matching the state.
+        '''
+
+        recent_upnum = None
+        recent_data = None
+        for build_number in self.getBuildNumbers(image):
+            path = self._imageUploadPath(image, build_number, provider)
+
+            try:
+                uploads = self.client.get_children(path)
+            except kze.NoNodeError:
+                uploads = []
+
+            for upload in uploads:
+                if upload == 'lock':   # skip the upload lock node
+                    continue
+                data = self.getImageUpload(image, build_number, provider, upload)
+                if data.get('state', '') != state:
+                    continue
+                elif (recent_data is None or
+                      recent_data['state_time'] < data.get('state_time', 0)
+                ):
+                    recent_upnum = upload
+                    recent_data = data
 
         if recent_upnum is None and recent_data is None:
             return None
