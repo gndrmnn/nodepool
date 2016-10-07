@@ -243,7 +243,7 @@ class TestZooKeeper(tests.ZKTestCase):
         self.assertEqual(matches[0][1], v3)
         self.assertEqual(matches[1][1], v2)
 
-    def test_getMostRecentImageUpload(self):
+    def test_getMostRecentBuildImageUpload(self):
         image = "ubuntu-trusty"
         provider = "rax"
         build = {'state': 'ready', 'state_time': int(time.time())}
@@ -257,7 +257,8 @@ class TestZooKeeper(tests.ZKTestCase):
         self.zk.storeImageUpload(image, bnum, provider, up3)
 
         # up2 should be the most recent 'ready' upload
-        data = self.zk.getMostRecentImageUpload(image, bnum, provider, 'ready')
+        data = self.zk.getMostRecentBuildImageUpload(image, bnum, provider,
+                                                     'ready')
         self.assertIsNotNone(data)
         self.assertEqual(data[1], up2)
 
