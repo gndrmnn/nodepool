@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a95cdbc_6d748e67",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-10-07T21:44:08Z",
+      "side": 1,
+      "message": "Can this become:\n\nbuilds.sort(lambda a,b: cmp(a[1].get(\u0027state_time\u0027, 0), b[1].get(\u0027state_time\u0027, 0)))\n\nTo avoid thinking about sorting algorithms?",
+      "revId": "27ae1fdbb30d0598ce7af53ad45218072e419488",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
