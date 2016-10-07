@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a95cdbc_4db7d2f4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-10-07T21:50:17Z",
+      "side": 1,
+      "message": "On the fence here, not sure we need to validate our images before we upload them. We could, but still a lot of overhead for each provider that uses it.",
+      "revId": "1ab34da77bad053410fd419fc7c3569d37129154",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
