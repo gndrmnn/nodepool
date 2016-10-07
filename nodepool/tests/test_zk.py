@@ -24,7 +24,6 @@ class TestZooKeeper(tests.ZKTestCase):
 
     def setUp(self):
         super(TestZooKeeper, self).setUp()
-        self.zk = zk.ZooKeeper(self.zkclient)
 
     def test_buildZooKeeperHosts_single(self):
         hosts = [
@@ -55,7 +54,7 @@ class TestZooKeeper(tests.ZKTestCase):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
                                                   port=self.zookeeper_port,
-                                                  chroot=self.chroot_path)])
+                                                  chroot=self.zookeeper_chroot)])
         with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
             with testtools.ExpectedException(npe.ZKLockException):
                 with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
@@ -66,7 +65,7 @@ class TestZooKeeper(tests.ZKTestCase):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
                                                   port=self.zookeeper_port,
-                                                  chroot=self.chroot_path)])
+                                                  chroot=self.zookeeper_chroot)])
         with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
             with testtools.ExpectedException(npe.TimeoutException):
                 with self.zk.imageBuildLock("ubuntu-trusty",
@@ -87,7 +86,7 @@ class TestZooKeeper(tests.ZKTestCase):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
                                                   port=self.zookeeper_port,
-                                                  chroot=self.chroot_path)])
+                                                  chroot=self.zookeeper_chroot)])
         with zk2.imageUploadLock("ubuntu-trusty", "0000", "prov1",
                                 blocking=False):
             with testtools.ExpectedException(npe.ZKLockException):
@@ -100,7 +99,7 @@ class TestZooKeeper(tests.ZKTestCase):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
                                                   port=self.zookeeper_port,
-                                                  chroot=self.chroot_path)])
+                                                  chroot=self.zookeeper_chroot)])
         with zk2.imageUploadLock("ubuntu-trusty", "0000", "prov1",
                                  blocking=False):
             with testtools.ExpectedException(npe.TimeoutException):
@@ -199,7 +198,7 @@ class TestZooKeeper(tests.ZKTestCase):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
                                                   self.zookeeper_port,
-                                                  self.chroot_path)])
+                                                  self.zookeeper_chroot)])
 
         # First client registers the watch
         self.zk.registerBuildRequestWatch(image, func)

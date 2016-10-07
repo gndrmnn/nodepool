@@ -34,6 +34,7 @@ import kazoo.client
 import testtools
 
 from nodepool import allocation, builder, fakeprovider, nodepool, nodedb, webapp
+from nodepool import zk
 
 TRUE_VALUES = ('true', '1', 'yes')
 
@@ -456,6 +457,8 @@ class DBTestCase(BaseTestCase):
         self.useFixture(gearman_fixture)
         self.gearman_server = gearman_fixture.gearman_server
 
+        self.setupZK()
+
     def setup_config(self, filename):
         images_dir = fixtures.TempDir()
         self.useFixture(images_dir)
@@ -540,15 +543,7 @@ class DBTestCase(BaseTestCase):
     def _useBuilder(self, configfile):
         self.useFixture(BuilderFixture(configfile))
 
-
-class IntegrationTestCase(DBTestCase):
-    def setUpFakes(self):
-        pass
-
-
-class ZKTestCase(BaseTestCase):
-    def setUp(self):
-        super(ZKTestCase, self).setUp()
+    def setupZK(self):
         f = ZookeeperServerFixture()
         self.useFixture(f)
         self.zookeeper_host = f.zookeeper_host
@@ -558,7 +553,7 @@ class ZKTestCase(BaseTestCase):
                                             string.ascii_uppercase)
                               for x in range(8))
         rand_test_path = '%s_%s' % (random_bits, os.getpid())
-        self.chroot_path = "/nodepool_test/%s" % rand_test_path
+        self.zookeeper_chroot = "/nodepool_test/%s" % rand_test_path
 
         # Ensure the chroot path exists and clean up an pre-existing znodes.
         # Allow extra time for the very first connection because we might
@@ -569,23 +564,24 @@ class ZKTestCase(BaseTestCase):
             timeout=60)
         _tmp_client.start()
 
-        if _tmp_client.exists(self.chroot_path):
-            _tmp_client.delete(self.chroot_path, recursive=True)
+        if _tmp_client.exists(self.zookeeper_chroot):
+            _tmp_client.delete(self.zookeeper_chroot, recursive=True)
 
-        _tmp_client.ensure_path(self.chroot_path)
+        _tmp_client.ensure_path(self.zookeeper_chroot)
         _tmp_client.stop()
 
         # Create a chroot'ed client
         self.zkclient = kazoo.client.KazooClient(
             hosts='%s:%s%s' % (self.zookeeper_host,
                                self.zookeeper_port,
-                               self.chroot_path)
+                               self.zookeeper_chroot)
         )
         self.zkclient.start()
+        self.zk = zk.ZooKeeper(self.zkclient)
 
-        self.addCleanup(self._cleanup)
+        self.addCleanup(self._cleanupZK)
 
-    def _cleanup(self):
+    def _cleanupZK(self):
         '''Stop the client and remove the chroot path.'''
         self.zkclient.stop()
 
@@ -593,5 +589,10 @@ class ZKTestCase(BaseTestCase):
         _tmp_client = kazoo.client.KazooClient(
             hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port))
         _tmp_client.start()
-        _tmp_client.delete(self.chroot_path, recursive=True)
+        _tmp_client.delete(self.zookeeper_chroot, recursive=True)
         _tmp_client.stop()
+
+
+class IntegrationTestCase(DBTestCase):
+    def setUpFakes(self):
+        pass
