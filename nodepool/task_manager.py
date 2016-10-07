@@ -93,17 +93,17 @@ class TaskManager(threading.Thread):
                         break
                     time.sleep(self.rate - delta)
                 self.log.debug("Manager %s running task %s (queue: %s)" %
-                               (self.name, type(task).__name__,
+                               (self.name, task.name,
                                 self.queue.qsize()))
                 start = time.time()
                 self.runTask(task)
                 last_ts = time.time()
                 dt = last_ts - start
                 self.log.debug("Manager %s ran task %s in %ss" %
-                               (self.name, type(task).__name__, dt))
+                               (self.name, task.name, dt))
                 if self.statsd:
                     #nodepool.task.PROVIDER.subkey
-                    subkey = type(task).__name__
+                    subkey = task.name
                     key = 'nodepool.task.%s.%s' % (self.name, subkey)
                     self.statsd.timing(key, int(dt * 1000))
                     self.statsd.incr(key)
