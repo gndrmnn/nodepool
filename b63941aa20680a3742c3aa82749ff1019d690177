@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "1a95cdbc_a27a2fef",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-10-07T16:44:36Z",
+      "side": 1,
+      "message": "Good idea!",
+      "revId": "b63941aa20680a3742c3aa82749ff1019d690177",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a95cdbc_b4b29192",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
