@@ -16,6 +16,24 @@
       "revId": "1ab34da77bad053410fd419fc7c3569d37129154",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a95cdbc_7129b389",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-10-09T13:04:37Z",
+      "side": 1,
+      "message": "I could also take this or leave it. It doesn\u0027t bother me, but it not being here also wouldn\u0027t bother me.",
+      "parentUuid": "1a95cdbc_4db7d2f4",
+      "revId": "1ab34da77bad053410fd419fc7c3569d37129154",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
