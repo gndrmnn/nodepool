@@ -1542,9 +1542,9 @@ class NodePool(threading.Thread):
             self._wake_condition.release()
 
     def _run(self, session, allocation_history):
+        self.checkForMissingImages(session)
         if self.no_launches:
             return
-        self.checkForMissingImages(session)
 
         # Make up the subnode deficit first to make sure that an
         # already allocated node has priority in filling its subnodes
