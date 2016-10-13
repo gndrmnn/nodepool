@@ -16,6 +16,24 @@
       "revId": "3cf189e7886f5190e6d6852fa3ca39ea24e85acc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6399be_02ea19db",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-13T16:36:16Z",
+      "side": 1,
+      "message": "I have considered that. There is a later change that brings this method and getMostRecentImageUploads more closely in alignment in how they work. It leaves count where it is, but I think a good follow up change would be to move it as you suggest. Didn\u0027t want to do it there since so much changes already.",
+      "parentUuid": "fa6399be_e2cd25b8",
+      "revId": "3cf189e7886f5190e6d6852fa3ca39ea24e85acc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
