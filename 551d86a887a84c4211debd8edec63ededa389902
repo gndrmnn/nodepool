@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_8c368950",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-10-13T16:01:15Z",
+      "side": 1,
+      "message": "I think this can become (since were already using the pattern of reusing path methods):\n\n %s/%s/images % (self._imageProviderPath(image, build_number), provider)",
+      "revId": "551d86a887a84c4211debd8edec63ededa389902",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
