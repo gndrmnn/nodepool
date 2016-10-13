@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_e2cd25b8",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-10-13T16:33:39Z",
+      "side": 1,
+      "message": "Nitpick, but since you\u0027re effectively creating a sane default value for count (None) its probably better to argument order as (self, image, count\u003dNone, state\u003d\"ready\")",
+      "revId": "3cf189e7886f5190e6d6852fa3ca39ea24e85acc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
