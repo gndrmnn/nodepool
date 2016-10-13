@@ -15,6 +15,7 @@
 
 import logging
 import os
+import shutil
 import socket
 import subprocess
 import threading
@@ -32,6 +33,8 @@ import zk
 MINS = 60
 HOURS = 60 * MINS
 IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
+IMAGE_CLEANUP = 8 * HOURS    # When to start deleting an image that is not
+                             # READY or is not the current or previous image
 SUSPEND_WAIT_TIME = 30       # How long to wait between checks for
                              # ZooKeeper connectivity if it disappears.
 
@@ -333,6 +336,117 @@ class BuildWorker(BaseWorker):
 
         return build_data
 
+    def _deleteLocalBuild(self, image, build_id):
+        '''
+        Remove expired image build from local disk and mark deleted in ZK.
+
+        :param str image: Name of the image whose build we are deleting.
+        :param str build_id: ID of the build we want to delete.
+        '''
+        base = "-".join([image, build_id])
+        files = DibImageFile.from_image_id(self._config.imagesdir, base)
+        if not files:
+            return
+
+        self.log.info("Doing cleanup for %s:%s" % (image, build_id))
+
+        # There should not be any need to lock this particular build
+        data = self._makeStateData('deleted')
+        self._zk.storeBuild(image, data, build_id)
+
+        manifest_dir = None
+
+        for f in files:
+            filename = f.to_path(self._config.imagesdir, True)
+            if not manifest_dir:
+                path, ext = filename.rsplit('.', 1)
+                manifest_dir = path + ".d"
+
+            try:
+                os.remove(filename)
+                self.log.info("Removed DIB file %s" % filename)
+            except OSError as e:
+                if e.errno != 2:    # No such file or directory
+                    raise e
+
+        try:
+            shutil.rmtree(manifest_dir)
+            self.log.info("Removed DIB manifest %s" % manifest_dir)
+        except OSError as e:
+            if e.errno != 2:    # No such file or directory
+                raise e
+
+    def _cleanUp(self):
+        '''
+        Identify expired image builds and remove them.
+        '''
+        image_names = self._zk.getImageNames()
+        for image in image_names:
+            all_builds = self._zk.getMostRecentBuilds(None, image)
+            # Always keep the 2 most recent builds
+            keepers = self._zk.getMostRecentBuilds(2, image)
+
+            # Find all builds that aren't in the 2 most recent
+            candidates = []
+            keeper_ids = [k[0] for k in keepers]
+            for b in all_builds:
+                if b[0] not in keeper_ids:
+                    candidates.append(b)
+
+            now = int(time.time())
+            for c_id, c_data in candidates:
+                state = c_data['state']
+                if state == 'deleted':
+                    continue
+                if (now - c_data['state_time']) > IMAGE_CLEANUP:
+                    # If the state is 'building', then the fact that we have
+                    # 2 more recent builds means that it should be a failed
+                    # build and safe to delete. And unless the state is
+                    # 'ready', we won't have any uploading in progress.
+                    if state == 'building' or state != 'ready':
+                        self._deleteLocalBuild(image, c_id)
+
+                    else:
+
+                        # We've got a 'ready' build, so we need to check all
+                        # of the providers to see if any uploads are still in
+                        # progress. Prevent other builders from trying the
+                        # same thing with a build number lock since we test
+                        # upload locks here.
+
+                        with self._zk.imageBuildNumberLock(image, c_id):
+
+                            providers = self._zk.getBuildProviders(image, c_id)
+                            safe_to_delete = True
+
+                            for provider in providers:
+                                if not safe_to_delete:
+                                    break
+
+                                recent = self._zk.getMostRecentImageUploads(
+                                    1, image, c_id, provider, state=None)
+                                if not recent:
+                                    continue
+                                if recent[0][1]['state'] != 'uploading':
+                                    continue
+
+                                try:
+                                    # See if we are really still 'uploading'
+                                    with self._zk.imageUploadLock(
+                                        image, c_id, provider, blocking=False
+                                    ):
+                                        pass
+                                except exceptions.ZKLockException:
+                                    self.log.info(
+                                        "Cannot delete expired build %s:%s "
+                                        "Upload to %s is still in progress." %
+                                        (image, c_id, provider)
+                                    )
+                                    safe_to_delete = False
+
+                            if safe_to_delete:
+                                self._deleteLocalBuild(image, c_id)
+
     def run(self):
         '''
         Start point for the BuildWorker thread.
@@ -349,6 +463,7 @@ class BuildWorker(BaseWorker):
             self._checkForZooKeeperChanges(new_config)
             self._config = new_config
 
+            self._cleanUp()
             self._checkForScheduledImageUpdates()
             self._checkForManualBuildRequest()
 
