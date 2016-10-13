@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_d01d3d63",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-10-13T23:58:45Z",
+      "side": 1,
+      "message": "This should be self.sha256 \u003d sha256[0:64]",
+      "revId": "467ec5826edc91ce3b2613aa403bbe75a79c16a4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
