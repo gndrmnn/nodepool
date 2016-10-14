@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_a8667c4e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-10-14T17:53:15Z",
+      "side": 1,
+      "message": "This would be the same as keepers\u003dall_builds[:2].\n\nThis could include a \u0027building\u0027 build.  Imagine all_builds is:\n\n[building, ready, ready].  Our keepers would be [building, ready].  However, we want to keep all three.\n\nMaybe this needs state\u003dready?",
+      "revId": "aa3643bbfcf017f04171933fdf970f46ee205a1e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6399be_c859f08f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-10-14T17:53:15Z",
+      "side": 1,
+      "message": "This is the same as \"state !\u003d \u0027ready\u0027\".  If the most current build is \u0027building\u0027, then this will delete it (regardless of whether we make the change to state\u003dready mentioned above).",
+      "revId": "aa3643bbfcf017f04171933fdf970f46ee205a1e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
