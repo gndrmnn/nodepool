@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_97543b22",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-10-17T17:25:15Z",
+      "side": 1,
+      "message": "Go ahead and make this a real fixture by having this be setUp and then calling the super setUp",
+      "revId": "89734f09f18fcac3f6350c2d1152eb15aaa64283",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6399be_d734f3fc",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-10-17T17:25:15Z",
+      "side": 1,
+      "message": "Not needed since it\u0027s a fixture.",
+      "revId": "89734f09f18fcac3f6350c2d1152eb15aaa64283",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa6399be_173f4bd7",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-10-17T17:25:15Z",
+      "side": 1,
+      "message": "Make it public so it just works.",
+      "revId": "89734f09f18fcac3f6350c2d1152eb15aaa64283",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
