@@ -120,6 +120,130 @@ class BaseWorker(threading.Thread):
         self._running = False
 
 
+class CleanupWorker(BaseWorker):
+    '''
+    The janitor of nodepool-builder that will remove images from providers
+    and any local DIB builds.
+    '''
+    log = logging.getLogger("nodepool.builder.CleanupWorker")
+
+    def _makeStateData(self, state):
+        data = {}
+        data['state'] = state
+        data['state_time'] = int(time.time())
+        return data
+
+    def _inProgressUpload(self, upload_id, upload_data, image, provider):
+        if upload_data['state'] != 'uploading':
+            return False
+        try:
+            with self._zk.imageUploadLock(image, upload_id,
+                                          provider, blocking=False):
+                pass
+        except exceptions.ZKLockException:
+            return True
+        return False
+
+    def _cleanupProvider(self, provider, image, build_id):
+        all_uploads = self._zk.getUploads(image, build_id, provider.name)
+        keepers = self._zk.getMostRecentImageUploads(2, image, build_id,
+                                                     provider.name, 'ready')
+
+        if not all_uploads:
+            data = self._makeStateData('deleted')
+            self._zk.storeBuild(image, data, build_id)
+            # TODO: delete on-disk images
+            self._zk.deleteBuild(image, build_id)
+
+        for upload_id, upload_data in all_uploads:
+            deleted = False
+
+            if upload_data['state'] != 'delete':
+                if (upload_id not in keepers.keys()
+                    and not self._inProgressUpload(upload_id, upload_data,
+                                                   image, provider.name)
+                ):
+                    data = self._makeStateData('deleted')
+                    self._zk.storeImageUpload(image, build_id, provider,
+                                              data, upload_id)
+                    deleted = True
+
+            if upload_data['state'] == 'delete' or deleted:
+                manager = self._config.provider_managers[provider.name]
+                try:
+                    manager.deleteImage(upload_data['external_name'])
+                except Exception as e:
+                    self.log.error(
+                        "Unable to delete image %s from %s: %s" %
+                        (upload_data['external_name'], provider.name, e)
+                    )
+                else:
+                    self._zk.deleteUpload(image, build_id,
+                                          provider.name, upload_id)
+
+    def _cleanup(self):
+        '''
+        for each build:
+            if build state is not delete:
+                if this is one of the builds we should keep
+                    continue
+            for each if this build's uploads:
+                if upload state is not delete:
+                    if this is not one of the 2 most recent ready uploads for
+                    this provider-image, and the upload is not in progress:
+                        set upload state to delete
+                if upload state is delete:
+                    delete the upload from glance
+                    if that succeeded
+                        delete the znode
+            if there are no uploads:
+                set state to delete
+                delete the file from disk
+                if that succeeded
+                    delete the znode
+        '''
+        known_providers = self._config.providers.values()
+        image_names = self._zk.getImageNames()
+
+        for image in image_names:
+            keepers = self._zk.getMostRecentBuilds(2, image, 'ready')
+            all_builds = self._zk.getBuilds(image)
+
+            for build_id, build_data in all_builds:
+                if build_data['state'] != 'delete':
+                    if build_id in keepers.keys():
+                        continue
+
+                for provider in known_providers:
+                    self._cleanupProvider(provider, image, build_id)
+
+    def run(self):
+        '''
+        Start point for the UploadWorker thread.
+        '''
+        self._running = True
+        while self._running:
+            # Don't do work if we've lost communication with the ZK cluster
+            while self._zk and (self._zk.suspended or self._zk.lost):
+                self.log.info("ZooKeeper suspended. Waiting")
+                time.sleep(SUSPEND_WAIT_TIME)
+
+            new_config = nodepool_config.loadConfig(self._config_path)
+            self._checkForZooKeeperChanges(new_config)
+            provider_manager.ProviderManager.reconfigure(self._config, new_config)
+            self._config = new_config
+
+            self._cleanup()
+
+            # TODO: Make this configurable
+            time.sleep(0.1)
+
+        if self._zk:
+            self._zk.disconnect()
+
+        provider_manager.ProviderManager.stopProviders(self._config)
+
+
 class BuildWorker(BaseWorker):
     log = logging.getLogger("nodepool.builder.BuildWorker")
 
@@ -563,6 +687,7 @@ class NodePoolBuilder(object):
         self._build_workers = []
         self._num_uploaders = num_uploaders
         self._upload_workers = []
+        self._janitor = None
         self._running = False
 
         # This lock is needed because the run() method is started in a
@@ -615,11 +740,15 @@ class NodePoolBuilder(object):
                 w.start()
                 self._upload_workers.append(w)
 
+            self._janitor = CleanupWorker(self._config_path)
+
             # Wait until all threads are running. Otherwise, we have a race
             # on the worker _running attribute if shutdown() is called before
             # run() actually begins.
             while not all([
-                x.running for x in (self._build_workers + self._upload_workers)
+                x.running for x in (self._build_workers
+                                    + self._upload_workers
+                                    + [self._janitor])
             ]):
                 time.sleep(0)
 
@@ -633,7 +762,10 @@ class NodePoolBuilder(object):
         '''
         with self._start_lock:
             self.log.debug("Stopping. NodePoolBuilder shutting down workers")
-            for worker in (self._build_workers + self._upload_workers):
+            for worker in (self._build_workers
+                           + self._upload_workers
+                           + [self._janitor]
+            ):
                 worker.shutdown()
 
         self._running = False
@@ -641,7 +773,10 @@ class NodePoolBuilder(object):
         self.log.debug('Waiting for jobs to complete')
 
         # Do not exit until all of our owned threads exit.
-        for worker in (self._build_workers + self._upload_workers):
+        for worker in (self._build_workers
+                       + self._upload_workers
+                       + [self._janitor]
+        ):
             worker.join()
 
         self.log.debug('Stopping providers')
