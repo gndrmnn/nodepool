@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa6399be_419c6f69",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-10-18T17:10:36Z",
+      "side": 1,
+      "message": "I\u0027d rather not introduce this as an env variable.  I think it would be better to have the test class pass through a parameter to the NodePoolBuilder for this, and have it default to 60.  I don\u0027t think we should expose it on the command line or in a config file because I don\u0027t think it\u0027s useful for an operator to tune (but if we decide to in the future, we can).",
+      "revId": "def6358e317356c3ac34947f9df7f9188146f7a3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
