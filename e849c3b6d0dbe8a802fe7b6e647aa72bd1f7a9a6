@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da6895a0_0e5c9724",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-10-20T21:54:01Z",
+      "side": 1,
+      "message": "I dont understand what the reasoning is for storing these locks / raising on exception on re-acquiring them. Is the goal to create a deadlock check because we know a single thread should never acquire one of these twice? It\u0027d be nice to have a comment to that effect if so.\n\n\nI\u0027m also curious if this is the whole cause for the comment above about only use this class from a single thread? If so, a random thought for the future is to just store these vars inside of threading.local and the thread-unsafe issue would go away...\n\n\nNeither of these are -1 worthy, but we could add some comments in a later change.",
+      "revId": "e849c3b6d0dbe8a802fe7b6e647aa72bd1f7a9a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
