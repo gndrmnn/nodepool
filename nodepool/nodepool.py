@@ -985,11 +985,12 @@ class SnapshotImageUpdater(ImageUpdater):
                 nodepool_snapshot_image_id=self.snap_image.id)
             server_id = server['id']
         except Exception:
-            if self.manager.deleteKeypair(key_name):
-                # Only log success - failure is logged inside of shade
-                self.log.debug(
-                    'Deleted keypair for failed image build %s' %
-                    self.snap_image.id)
+            if not self.provider.keypair:
+                if self.manager.deleteKeypair(key_name):
+                    # Only log success - failure is logged inside of shade
+                    self.log.debug(
+                        'Deleted keypair for failed image build %s' %
+                        self.snap_image.id)
             raise
 
         self.snap_image.hostname = hostname
