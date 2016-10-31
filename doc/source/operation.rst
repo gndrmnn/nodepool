@@ -27,8 +27,9 @@ Daemon usage
 
 To start Nodepool daemon, run **nodepoold**:
 
-.. program-output:: nodepoold --help
-   :nostderr:
+.. runblock:: console
+
+    $ nodepoold --help
 
 If you send a SIGINT to the nodepoold process, Nodepool will wait for
 diskimages to finish building (if any) and disconnect all its internal
@@ -76,62 +77,83 @@ Usage
 -----
 The general options that apply to all subcommands are:
 
-.. program-output:: nodepool --help
-   :nostderr:
+.. runblock:: console
+
+    $ nodepool --help
 
 The following subcommands deal with nodepool images:
 
 dib-image-list
 ^^^^^^^^^^^^^^
-.. program-output:: nodepool dib-image-list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool dib-image-list --help
 
 image-list
 ^^^^^^^^^^
-.. program-output:: nodepool image-list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool image-list --help
 
 image-build
 ^^^^^^^^^^^
-.. program-output:: nodepool image-build --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool image-build --help
 
 image-update
 ^^^^^^^^^^^^
-.. program-output:: nodepool image-update --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool image-update --help
 
 image-upload
 ^^^^^^^^^^^^
-.. program-output:: nodepool image-upload --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool image-upload --help
 
 dib-image-delete
 ^^^^^^^^^^^^^^^^
-.. program-output:: nodepool dib-image-delete --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool dib-image-delete --help
 
 image-delete
 ^^^^^^^^^^^^
-.. program-output:: nodepool image-delete --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool image-delete --help
 
 The following subcommands deal with nodepool nodes:
 
 list
 ^^^^
-.. program-output:: nodepool list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool list --help
 
 hold
 ^^^^
-.. program-output:: nodepool hold --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool hold --help
 
 delete
 ^^^^^^
-.. program-output:: nodepool delete --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool delete --help
 
 If Nodepool's database gets out of sync with reality, the following
 commands can help identify compute instances or images that are
@@ -139,13 +161,17 @@ unknown to Nodepool:
 
 alien-list
 ^^^^^^^^^^
-.. program-output:: nodepool alien-list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool alien-list --help
 
 alien-image-list
 ^^^^^^^^^^^^^^^^
-.. program-output:: nodepool alien-image-list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool alien-image-list --help
 
 In the case that a job is randomly failing for an unknown cause, it
 may be necessary to instruct nodepool to automatically hold a node on
@@ -156,18 +182,24 @@ feature.
 
 job-create
 ^^^^^^^^^^
-.. program-output:: nodepool job-create --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool job-create --help
 
 job-list
 ^^^^^^^^
-.. program-output:: nodepool job-list --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool job-list --help
 
 job-delete
 ^^^^^^^^^^
-.. program-output:: nodepool job-delete --help
-   :nostderr:
+
+.. runblock:: console
+
+    $ nodepool job-delete --help
 
 Removing a Provider
 ===================
