@@ -16,6 +16,24 @@
       "revId": "e849c3b6d0dbe8a802fe7b6e647aa72bd1f7a9a6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5da102_cd48828a",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-10-31T19:47:49Z",
+      "side": 1,
+      "message": "Well, not only should a single thread not acquire these locks twice, but we also want to prevent other builder processes (possibly running on different nodes) from running the same critical section of code (remember, these are ZooKeeper locks, not thread locks).\n\nAs for the comment, the ZooKeeper object/API should not be shared among threads. One thread gets one ZooKeeper object.\n\nWe probably could clean up the comments/docs a bit in a follow up change.",
+      "parentUuid": "da6895a0_0e5c9724",
+      "revId": "e849c3b6d0dbe8a802fe7b6e647aa72bd1f7a9a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
