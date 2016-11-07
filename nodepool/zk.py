@@ -91,6 +91,65 @@ class ZooKeeperWatchEvent(object):
         self.image = image
 
 
+class BaseBuilderModel(self):
+    STATES = ['building', 'ready', 'deleted']
+
+    def __init__(self, o_id):
+        self.id = o_id
+        self._state = None
+        self.state_time = None
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        if not isinstance(value, six.string_types):
+            raise TypeError("'id' attribute must be a string type")
+        self._id = value
+
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, value):
+        if value not in self.STATES:
+            raise TypeError("'%s' is not a valid state" % value)
+        self._state = value
+        self.state_time = int(time.time())
+
+    def toDict(self):
+
+
+class ImageBuild(BaseBuilderModel):
+    def __init__(self, build_id):
+        super(ImageBuild, self).__init___(build_id)
+        self.builder = None          # Builder hostname
+
+
+class ImageUpload(BaseBuilderModel):
+    def __init__(self, upload_id):
+        super(ImageUpload, self).__init___(upload_id)
+        self._formats = []
+        self.external_id = None      # Provider ID of the image
+        self.external_name = None    # Provider name of the image
+
+    @property
+    def formats(self):
+        return self._formats
+
+    @formats.setter
+    def formats(self, value):
+        if not isinstance(value, list):
+            raise TypeError("'formats' attribute must be a list type")
+        self._formats = value.copy()
+
+    def addFormat(self, fmt):
+        self._formats.append(fmt)
+
+
 class ZooKeeper(object):
     '''
     Class implementing the ZooKeeper interface.
