@@ -138,6 +138,9 @@ class UploadWorker(BaseWorker):
                 image_name = args['image-name']
                 image_id = job.name.split(':')[1]
                 try:
+                    self.nplog.info("Uploading dib image id:%s provider:%s "
+                                    "name:%s" % (image_id, args['provider'],
+                                                 image_name))
                     external_id = self.builder.uploadImage(image_id,
                                                            args['provider'],
                                                            image_name)
@@ -316,6 +319,10 @@ class NodePoolBuilder(object):
         self.log.info("Deleted dib image id: %s" % image_id)
 
     def uploadImage(self, image_id, provider_name, image_name):
+
+        log = logging.getLogger("nodepool.image.upload.%s" %
+                                (provider_name,))
+
         start_time = time.time()
         timestamp = int(start_time)
 
@@ -360,10 +367,16 @@ class NodePoolBuilder(object):
             )
         image_meta = provider_image.meta
         # uploadImage is synchronous
-        external_id = manager.uploadImage(
-            ext_image_name, filename,
-            image_type=image_file.extension,
-            meta=image_meta)
+        try:
+            external_id = manager.uploadImage(
+                ext_image_name, filename,
+                image_type=image_file.extension,
+                meta=image_meta)
+        except exceptions.BuilderError:
+            # note this is intended duplication with UploadWorker, as
+            # self.log here likely redirected to it's own file.
+            self.log.exception('Exception while uploading image')
+            raise
 
         if self.statsd:
             dt = int((time.time() - start_time) * 1000)
