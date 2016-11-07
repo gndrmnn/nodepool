@@ -698,12 +698,16 @@ class UploadWorker(BaseWorker):
                             image.diskimage, build_id, provider.name,
                             self._makeStateData('uploading'))
 
-                        data = self._uploadImage(build_id, image.diskimage,
-                                                 local_images, provider)
-
-                        # Set final state
-                        self._zk.storeImageUpload(image.diskimage, build_id,
-                                                  provider.name, data, upnum)
+                        try:
+                            data = self._uploadImage(build_id, image.diskimage,
+                                                     local_images, provider)
+                        except exceptions.BuilderError:
+                            self.logger.exception("Image creation failed")
+                        else:
+                            # Set final state
+                            self._zk.storeImageUpload(image.diskimage, build_id,
+                                                      provider.name, data,
+                                                      upnum)
                 except exceptions.ZKLockException:
                     # Lock is already held. Skip it.
                     pass
