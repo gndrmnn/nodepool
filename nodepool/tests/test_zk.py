@@ -476,3 +476,84 @@ class TestZooKeeper(tests.ZKTestCase):
         self.zk.client.create(path, makepath=True)
         self.zk.deleteUpload("trusty", "000", "rax", "000001")
         self.assertIsNone(self.zk.client.exists(path))
+
+
+class TestZKModel(tests.BaseTestCase):
+
+    def setUp(self):
+        super(TestZKModel, self).setUp()
+
+    def test_BaseBuilderModel_bad_id(self):
+        with testtools.ExpectedException(
+            TypeError, "'id' attribute must be a string type"
+        ):
+            zk.BaseBuilderModel(123)
+
+    def test_BaseBuilderModel_bad_state(self):
+        with testtools.ExpectedException(
+            TypeError, "'blah' is not a valid state"
+        ):
+            o = zk.BaseBuilderModel('0001')
+            o.state = 'blah'
+
+    def test_BaseBuilderModel_toDict(self):
+        o = zk.BaseBuilderModel('0001')
+        o.state = 'building'
+        d = o.toDict()
+        self.assertNotIn('id', d)
+        self.assertEqual(o.state, d['state'])
+        self.assertIsNotNone(d['state_time'])
+
+    def test_ImageBuild_toDict(self):
+        o = zk.ImageBuild('0001')
+        o.builder = 'localhost'
+
+        d = o.toDict()
+        self.assertNotIn('id', d)
+        self.assertEqual(o.builder, d['builder'])
+
+    def test_ImageBuild_fromDict(self):
+        now = int(time.time())
+        d_id = '0001'
+        d = {
+            'builder': 'localhost',
+            'state': 'building',
+            'state_time': now
+        }
+
+        o = zk.ImageBuild.fromDict(d, d_id)
+        self.assertEqual(o.id, d_id)
+        self.assertEqual(o.state, d['state'])
+        self.assertEqual(o.state_time, d['state_time'])
+        self.assertEqual(o.builder, d['builder'])
+
+    def test_ImageUpload_toDict(self):
+        o = zk.ImageUpload('0001')
+        o.formats = ['qemu', 'raw']
+        o.external_id = 'DEADBEEF'
+        o.external_name = 'trusty'
+
+        d = o.toDict()
+        self.assertNotIn('id', d)
+        self.assertEqual(','.join(o.formats), d['formats'])
+        self.assertEqual(o.external_id, d['external_id'])
+        self.assertEqual(o.external_name, d['external_name'])
+
+    def test_ImageUpload_fromDict(self):
+        now = int(time.time())
+        d_id = '0001'
+        d = {
+            'formats': 'qemu,raw',
+            'external_id': 'DEADBEEF',
+            'external_name': 'trusty',
+            'state': 'ready',
+            'state_time': now
+        }
+
+        o = zk.ImageUpload.fromDict(d, d_id)
+        self.assertEqual(o.id, d_id)
+        self.assertEqual(o.state, d['state'])
+        self.assertEqual(o.state_time, d['state_time'])
+        self.assertEqual(o.formats, d['formats'].split(','))
+        self.assertEqual(o.external_id, d['external_id'])
+        self.assertEqual(o.external_name, d['external_name'])

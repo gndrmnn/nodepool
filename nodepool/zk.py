@@ -13,9 +13,11 @@
 # under the License.
 
 from contextlib import contextmanager
+from copy import copy
 import json
 import logging
 import six
+import time
 from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
 from kazoo.recipe.lock import Lock
@@ -89,6 +91,144 @@ class ZooKeeperWatchEvent(object):
         self.path = e_path
         # Pass image name so callback func doesn't need to parse from the path
         self.image = image
+
+
+class BaseBuilderModel(object):
+    STATES = ['building', 'ready', 'deleted']
+
+    def __init__(self, o_id):
+        self.id = o_id
+        self._state = None
+        self.state_time = None
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        if not isinstance(value, six.string_types):
+            raise TypeError("'id' attribute must be a string type")
+        self._id = value
+
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, value):
+        if value not in self.STATES:
+            raise TypeError("'%s' is not a valid state" % value)
+        self._state = value
+        self.state_time = int(time.time())
+
+    def toDict(self):
+        '''
+        Convert a BaseBuilderModel object's attributes to a dictionary.
+        '''
+        d = {}
+        d['state'] = self.state
+        d['state_time'] = self.state_time
+        return d
+
+    def fromDict(self, d):
+        '''
+        Set base attributes based on the given dict.
+
+        Unlike the derived classes, this should NOT return an object as it
+        assumes self has already been instantiated.
+        '''
+        if 'state' in d:
+            self.state = d['state']
+        if 'state_time' in d:
+            self.state_time = d['state_time']
+
+
+class ImageBuild(BaseBuilderModel):
+    '''
+    Class representing a DIB image build within the ZooKeeper cluster.
+    '''
+
+    def __init__(self, build_id):
+        super(ImageBuild, self).__init__(build_id)
+        self.builder = None          # Builder hostname
+
+    def toDict(self):
+        '''
+        Convert an ImageBuild object's attributes to a dictionary.
+        '''
+        d = super(ImageBuild, self).toDict()
+        d['builder'] = self.builder
+        return d
+
+    @staticmethod
+    def fromDict(d, o_id):
+        '''
+        Create an ImageBuild object from a dictionary.
+
+        :param dict d: The dictionary.
+        :param str o_id: The object ID.
+
+        :returns: An initialized ImageBuild object.
+        '''
+        o = ImageBuild(o_id)
+        super(ImageBuild, o).fromDict(d)
+        o.builder = d.get('builder')
+        return o
+
+
+class ImageUpload(BaseBuilderModel):
+    '''
+    Class representing a provider image upload within the ZooKeeper cluster.
+    '''
+
+    def __init__(self, upload_id):
+        super(ImageUpload, self).__init__(upload_id)
+        self._formats = []
+        self.external_id = None      # Provider ID of the image
+        self.external_name = None    # Provider name of the image
+
+    @property
+    def formats(self):
+        return self._formats
+
+    @formats.setter
+    def formats(self, value):
+        if not isinstance(value, list):
+            raise TypeError("'formats' attribute must be a list type")
+        self._formats = copy(value)
+
+    def addFormat(self, fmt):
+        self._formats.append(fmt)
+
+    def toDict(self):
+        '''
+        Convert an ImageUpload object's attributes to a dictionary.
+        '''
+        d = super(ImageUpload, self).toDict()
+        d['formats'] = ','.join(self.formats)
+        d['external_id'] = self.external_id
+        d['external_name'] = self.external_name
+        return d
+
+    @staticmethod
+    def fromDict(d, o_id):
+        '''
+        Create an ImageUpload object from a dictionary.
+
+        :param dict d: The dictionary.
+        :param str o_id: The object ID.
+
+        :returns: An initialized ImageUpload object.
+        '''
+        o = ImageUpload(o_id)
+        super(ImageUpload, o).fromDict(d)
+        o.external_id = d.get('external_id')
+        o.external_name = d.get('external_name')
+        # Only attempt the split on non-empty string
+        if d.get('formats', ''):
+            o.formats = d.get('formats', '').split(',')
+        return o
 
 
 class ZooKeeper(object):
