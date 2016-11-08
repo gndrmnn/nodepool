@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a629dbe_a9027209",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 1908,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-08T22:42:25Z",
+      "side": 1,
+      "message": "Having done more research on this digging in logs and the subnodes db table I think this leaking may happen due to a couple subtle issues.\n\nThe first is if we are building the subnodes and restart nodepool the subnode may never get an external id so we never call subnode.delete() on it, but do delete the actual node which means we never try to delete the subnode again.\n\nThe other issue is that there is a race between deciding we want to delete the primary node and the subnode getting an external_id and being properly deleted as a result.\n\nHow do we fix this? I think we can just move the subnode.delete() up an indentation level so that we delete it regardless of external_id. At this point we will have either properly deleted the subnode instance from the cloud because it had an external id and from the db because we do that unconditioanlly here or we will leak in the cloud and remove from our db. But leaking in the cloud is OK because the cleanupLeakedInstances() method will trigger periodically and remove the leaked instances from the cloud.",
+      "revId": "685b9636b8fb12ed5a2dcae679aaf8103fce3c63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a629dbe_d331150d",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-08T22:42:25Z",
+      "side": 1,
+      "message": "I think this test case lgtm, but we should also keep the old test case. Makes it easier to debug if we break only half of the lifecycle for subnodes. Just make this a distinct new test case and keep the old test_subnodes case as well.",
+      "revId": "685b9636b8fb12ed5a2dcae679aaf8103fce3c63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
