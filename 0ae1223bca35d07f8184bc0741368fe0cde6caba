@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a629dbe_4efeceae",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-10T23:57:02Z",
+      "side": 1,
+      "message": "I mentioned this on IRC, its a ltitle weird to me that we wouldn\u0027t allow specifying any state somehow to get the most recent upload of any state. But This solves the immediate problem and this isn\u0027t library code to be consumed externally so is fine as is.",
+      "revId": "0ae1223bca35d07f8184bc0741368fe0cde6caba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
