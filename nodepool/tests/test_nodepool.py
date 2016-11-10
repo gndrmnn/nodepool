@@ -215,7 +215,7 @@ class TestNodepool(tests.DBTestCase):
             snapshot_images = session.getSnapshotImages()
             self.assertEqual(len(snapshot_images), 1)
             snap_id = snapshot_images[0].id
-            pool.deleteImage(snap_id)
+            pool.deleteImage(snap_id, force=False)
 
         self.wait_for_threads()
 
