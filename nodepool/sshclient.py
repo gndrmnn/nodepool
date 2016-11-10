@@ -21,6 +21,8 @@
 import paramiko
 
 
+SSH_TIMEOUT = 300
+
 class SSHClient(object):
     def __init__(self, ip, username, password=None, pkey=None,
                  key_filename=None, log=None, look_for_keys=False,
@@ -38,7 +40,7 @@ class SSHClient(object):
             self.log.debug("*** START to %s" % action)
             self.log.debug("executing: %s" % command)
         stdin, stdout, stderr = self.client.exec_command(
-            command, get_pty=get_pty)
+            command, get_pty=get_pty, timeout=SSH_TIMEOUT)
         out = ''
         err = ''
         for line in stdout:
