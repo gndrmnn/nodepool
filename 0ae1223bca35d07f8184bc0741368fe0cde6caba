@@ -16,6 +16,23 @@
       "revId": "0ae1223bca35d07f8184bc0741368fe0cde6caba",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a629dbe_7470a572",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-11T17:00:26Z",
+      "side": 1,
+      "message": "TBH, I\u0027m not sure we will every specify anything other than \u0027ready\u0027 to this method.",
+      "revId": "0ae1223bca35d07f8184bc0741368fe0cde6caba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
