@@ -584,6 +584,11 @@ class UploadWorker(BaseWorker):
             that available for uploading.
         :param provider: The provider from the parsed config file.
         '''
+
+        # we use a separate logger so we can filter this into
+        # individual log files per provider
+        log = logging.getLogger("nodepool.image.upload.%s" %
+                                provider.name)
         start_time = time.time()
         timestamp = int(start_time)
 
@@ -599,8 +604,8 @@ class UploadWorker(BaseWorker):
                 (provider.image_type, build_id)
             )
 
-        self.log.debug("Found image file of type %s for image id: %s" %
-                       (image.extension, image.image_id))
+        log.debug("Found image file of type %s for image id: %s" %
+                  (image.extension, image.image_id))
 
         filename = image.to_path(self._config.imagesdir, with_extension=True)
 
@@ -611,8 +616,8 @@ class UploadWorker(BaseWorker):
             timestamp=str(timestamp)
         )
 
-        self.log.info("Uploading DIB image build %s from %s to %s" %
-                      (build_id, filename, provider.name))
+        log.info("Uploading DIB image build %s from %s to %s" %
+                 (build_id, filename, provider.name))
 
         manager = self._config.provider_managers[provider.name]
         try:
@@ -622,11 +627,17 @@ class UploadWorker(BaseWorker):
                 "Could not find matching provider image for %s" % image_name
             )
 
-        external_id = manager.uploadImage(
-            ext_image_name, filename,
-            image_type=image.extension,
-            meta=provider_image.meta
-        )
+        try:
+            external_id = manager.uploadImage(
+                ext_image_name, filename,
+                image_type=image.extension,
+                meta=provider_image.meta
+            )
+        except exceptions.BuilderError:
+            # note intended duplication with UploadWorker, as
+            # logs here likely redirected to its own file
+            log.exception('Exception while uploading image')
+            raise
 
         if self._statsd:
             dt = int((time.time() - start_time) * 1000)
@@ -635,8 +646,8 @@ class UploadWorker(BaseWorker):
             self._statsd.timing(key, dt)
             self._statsd.incr(key)
 
-        self.log.info("Image build %s in %s is ready" %
-                      (build_id, provider.name))
+        log.info("Image build %s in %s is ready" %
+                 (build_id, provider.name))
 
         data = self._makeStateData('ready')
         data['external_id'] = external_id
