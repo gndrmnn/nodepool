@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a629dbe_91d6474d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-11T00:41:48Z",
+      "side": 1,
+      "message": "I don\u0027t think this method will produce this exception.  I think you probably either want a plain old \"except Exception\" here.",
+      "revId": "a846de0765ef5ab36b634b11fdd35e47a6f9d45e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
