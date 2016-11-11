@@ -1346,7 +1346,7 @@ class NodePool(threading.Thread):
     def checkForMissingDiskImage(self, session, provider, image):
         found = False
         for dib_image in session.getDibImages():
-            if dib_image.image_name != image.diskimage:
+            if dib_image.image_name != image.name:
                 continue
             if dib_image.state != nodedb.READY:
                 # This is either building or in an error state
@@ -1356,7 +1356,7 @@ class NodePool(threading.Thread):
         if not found:
             # only build the image, we'll recheck again
             self.log.warning("Missing disk image %s" % image.name)
-            self.buildImage(self.config.diskimages[image.diskimage])
+            self.buildImage(self.config.diskimages[image.name])
         else:
             found = False
             for snap_image in session.getSnapshotImages():
@@ -1418,8 +1418,6 @@ class NodePool(threading.Thread):
             for image in provider.images.values():
                 if image.name not in self.config.images_in_use:
                     continue
-                if not image.diskimage:
-                    continue
                 self.uploadImage(session, provider.name, image.name)
 
     def buildImage(self, image):
@@ -1469,7 +1467,7 @@ class NodePool(threading.Thread):
         try:
             provider_entity = self.config.providers[provider]
             provider_image = provider_entity.images[image_name]
-            images = session.getOrderedReadyDibImages(provider_image.diskimage)
+            images = session.getOrderedReadyDibImages(provider_image.name)
             image_id = images[0].id
             timestamp = int(time.time())
             job_uuid = str(uuid4().hex)
