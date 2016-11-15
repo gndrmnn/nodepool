@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_bcf3b709",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "Random thing I noticed here, this needs to be indented another level to be parsed properly by yaml.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_1c002b34",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "Another random note, if _buildImage() fails (which appears to be a valid data return below, then we won\u0027t clean up the build request. And the build request will remain in zk and we will not be able to build this image again until something manually clears out the failed build request? (this is based on my reading of code and not of testing).\n\nHaving a test for this specific case (not sure if we do or not) would probably be a good thing.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_17a1e494",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "I think this may be another case of needing to check results (and possibly catch exceptions) in order to properly update state post error.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_77c77812",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "Just noting that this session should go away and I think uploadImage() needs to be changed below.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_57e35ca3",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "See above comment.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_9736d401",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "Just noting that this needs to be updated to talk to zk. And possibly the entire function is no longer required as this is all handled builder side?",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_626094cf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "I think this method may also end up going away too.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_62bc1406",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T17:56:36Z",
+      "side": 1,
+      "message": "And this one.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
