@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_63bc136d",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T20:45:58Z",
+      "side": 1,
+      "message": "We can remove postgres -- we don\u0027t support or test it.",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
