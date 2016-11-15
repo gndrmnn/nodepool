@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_e572eb7b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T19:44:02Z",
+      "side": 1,
+      "message": "this can be delete too",
+      "revId": "d408eba08aa0f414e6ba76a8e425634516a93d14",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
