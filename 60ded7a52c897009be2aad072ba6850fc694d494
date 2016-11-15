@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_a36d4b06",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T20:49:27Z",
+      "side": 1,
+      "message": "This was done so we can pass thru the zookeeper fixture for testing.",
+      "revId": "60ded7a52c897009be2aad072ba6850fc694d494",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_6331730b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T20:49:27Z",
+      "side": 1,
+      "message": "This can be removed in a previous patch",
+      "revId": "60ded7a52c897009be2aad072ba6850fc694d494",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_fe37dce0",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1433,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T20:49:27Z",
+      "side": 1,
+      "message": "We don\u0027t actually have an image.id yet, is this needed any more?",
+      "revId": "60ded7a52c897009be2aad072ba6850fc694d494",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_1e4c986f",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T20:49:27Z",
+      "side": 1,
+      "message": "this can be removed, I was trying to limit kazoo.client debug output.",
+      "revId": "60ded7a52c897009be2aad072ba6850fc694d494",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_de6860bd",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T20:49:27Z",
+      "side": 1,
+      "message": "can be removed",
+      "revId": "60ded7a52c897009be2aad072ba6850fc694d494",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
