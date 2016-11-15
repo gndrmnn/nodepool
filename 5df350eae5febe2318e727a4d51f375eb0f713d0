@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_74092b95",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1513,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T21:57:40Z",
+      "side": 1,
+      "message": "_image_delete_threads can be removed (everywhere)",
+      "revId": "5df350eae5febe2318e727a4d51f375eb0f713d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
