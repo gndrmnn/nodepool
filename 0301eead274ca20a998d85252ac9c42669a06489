@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "7a77a97e_797e86e5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-15T21:35:53Z",
+      "side": 1,
+      "message": "Can we drop image_id here?",
+      "revId": "0301eead274ca20a998d85252ac9c42669a06489",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a77a97e_799a0616",
         "filename": "nodepool/tests/fixtures/node.yaml",
         "patchSetId": 2
