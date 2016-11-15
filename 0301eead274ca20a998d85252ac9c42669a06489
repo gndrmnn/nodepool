@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_999fe202",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T21:33:52Z",
+      "side": 1,
+      "message": "This method should be removed.",
+      "revId": "0301eead274ca20a998d85252ac9c42669a06489",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_b9a49e57",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1405,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T21:33:52Z",
+      "side": 1,
+      "message": "This doesn\u0027t apply any more.",
+      "revId": "0301eead274ca20a998d85252ac9c42669a06489",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_799a0616",
+        "filename": "nodepool/tests/fixtures/node.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T21:33:52Z",
+      "side": 1,
+      "message": "Is this all necessary?",
+      "revId": "0301eead274ca20a998d85252ac9c42669a06489",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
