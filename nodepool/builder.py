@@ -86,13 +86,13 @@ class DibImageFile(object):
 class BaseWorker(threading.Thread):
     log = logging.getLogger("nodepool.builder.BaseWorker")
 
-    def __init__(self, config_path):
+    def __init__(self, config_path, zookeeper=None):
         super(BaseWorker, self).__init__()
         self.daemon = True
         self._running = False
         self._config = None
         self._config_path = config_path
-        self._zk = None
+        self._zk = zookeeper
         self._hostname = socket.gethostname()
         self._statsd = stats.get_client()
 
@@ -108,10 +108,10 @@ class BaseWorker(threading.Thread):
             self.log.debug("Connecting to ZooKeeper servers")
             self._zk = zk.ZooKeeper()
             self._zk.connect(new_config.zookeeper_servers.values())
-        elif self._config.zookeeper_servers != new_config.zookeeper_servers:
-            self.log.debug("Detected ZooKeeper server changes")
-            self._zk.disconnect()
-            self._zk.connect(new_config.zookeeper_servers.values())
+#        elif self._config.zookeeper_servers != new_config.zookeeper_servers:
+#            self.log.debug("Detected ZooKeeper server changes")
+#            self._zk.disconnect()
+#            self._zk.connect(new_config.zookeeper_servers.values())
 
     @property
     def running(self):
@@ -323,8 +323,8 @@ class CleanupWorker(BaseWorker):
 class BuildWorker(BaseWorker):
     log = logging.getLogger("nodepool.builder.BuildWorker")
 
-    def __init__(self, config_path):
-        super(BuildWorker, self).__init__(config_path)
+    def __init__(self, config_path, zookeeper):
+        super(BuildWorker, self).__init__(config_path, zookeeper)
 
 
     def _checkForScheduledImageUpdates(self):
@@ -558,8 +558,8 @@ class BuildWorker(BaseWorker):
 class UploadWorker(BaseWorker):
     log = logging.getLogger("nodepool.builder.UploadWorker")
 
-    def __init__(self, config_path):
-        super(UploadWorker, self).__init__(config_path)
+    def __init__(self, config_path, zookeeper):
+        super(UploadWorker, self).__init__(config_path, zookeeper)
 
 
     def _uploadImage(self, build_id, image_name, images, provider):
@@ -734,7 +734,8 @@ class NodePoolBuilder(object):
     '''
     log = logging.getLogger("nodepool.builder.NodePoolBuilder")
 
-    def __init__(self, config_path, num_builders=1, num_uploaders=4):
+    def __init__(
+        self, config_path, num_builders=1, num_uploaders=4, zookeeper=None):
         '''
         Initialize the NodePoolBuilder object.
 
@@ -751,6 +752,7 @@ class NodePoolBuilder(object):
         self._janitor = None
         self._running = False
         self.cleanup_interval = 60
+        self._zk = zookeeper
 
         # This lock is needed because the run() method is started in a
         # separate thread of control, which can return before the scheduler
@@ -793,12 +795,12 @@ class NodePoolBuilder(object):
 
             # Create build and upload worker objects
             for i in range(self._num_builders):
-                w = BuildWorker(self._config_path)
+                w = BuildWorker(self._config_path, self._zk)
                 w.start()
                 self._build_workers.append(w)
 
             for i in range(self._num_uploaders):
-                w = UploadWorker(self._config_path)
+                w = UploadWorker(self._config_path, self._zk)
                 w.start()
                 self._upload_workers.append(w)
 

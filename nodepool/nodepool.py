@@ -40,6 +40,7 @@ import stats
 import config as nodepool_config
 
 import jobs
+import zk
 
 MINS = 60
 HOURS = 60 * MINS
@@ -478,8 +479,8 @@ class NodeLauncher(threading.Thread):
         self.node.nodename = hostname.split('.')[0]
         self.node.target_name = self.target.name
 
-        snap_image = session.getCurrentSnapshotImage(
-            self.provider.name, self.image.name)
+        snap_image = self.nodepool.zookeeper_client.getMostRecentImageUpload(
+            self.image.name, self.provider.name)
         if not snap_image:
             raise LaunchNodepoolException("Unable to find current snapshot "
                                           "image %s in %s" %
@@ -584,6 +585,7 @@ class NodeLauncher(threading.Thread):
             self.log.info("Node id: %s assigning via gearman" % self.node.id)
             self.assignViaGearman()
 
+        print 'DDDDDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOONNNNNNNNNNNNNNN'
         return dt
 
     def createJenkinsNode(self):
@@ -906,6 +908,7 @@ class NodePool(threading.Thread):
         self.zmq_context = None
         self.gearman_client = None
         self.apsched = None
+        self.zookeeper_client = None
         self.statsd = stats.get_client()
         self._delete_threads = {}
         self._delete_threads_lock = threading.Lock()
@@ -932,6 +935,8 @@ class NodePool(threading.Thread):
             self.apsched.shutdown()
         if self.gearman_client:
             self.gearman_client.shutdown()
+#        if self.zookeeper_client:
+#            self.zookeeper_client.shutdown()
         self.log.debug("finished stopping")
 
     def waitForBuiltImages(self):
@@ -1068,6 +1073,11 @@ class NodePool(threading.Thread):
                 self.gearman_client.addServer(g.host, g.port)
             self.gearman_client.waitForServer()
 
+    def reconfigureZooKeeper(self, config):
+        if not self.zookeeper_client:
+            self.zookeeper_client = zk.ZooKeeper()
+            self.zookeeper_client.connect(config.zookeeper_servers.values())
+
     def setConfig(self, config):
         self.config = config
 
@@ -1093,7 +1103,7 @@ class NodePool(threading.Thread):
             label_demand = {}
 
         for name, demand in label_demand.items():
-            self.log.debug("  Demand from gearman: %s: %s" % (name, demand))
+            self.log.info("  Demand from gearman: %s: %s" % (name, demand))
 
         online_targets = set()
         for target in self.config.targets.values():
@@ -1197,8 +1207,10 @@ class NodePool(threading.Thread):
                 allocation_requests[label.name] = ar
                 ar.addTarget(at, len(nodes))
                 for provider in label.providers.values():
-                    image = session.getCurrentSnapshotImage(
-                        provider.name, label.image)
+                    print '333333333333333333333333333333333333333'
+                    image = self.zookeeper_client.getMostRecentImageUpload(
+                        label.image, provider.name)
+                    print image
                     if image:
                         # This request may be supplied by this provider
                         # (and nodes from this provider supplying this
@@ -1255,6 +1267,7 @@ class NodePool(threading.Thread):
     def updateConfig(self):
         config = self.loadConfig()
         self.reconfigureDatabase(config)
+        self.reconfigureZooKeeper(config)
         self.reconfigureManagers(config)
         self.reconfigureUpdateListeners(config)
         self.reconfigureGearmanClient(config)
@@ -1301,12 +1314,14 @@ class NodePool(threading.Thread):
             self._wake_condition.release()
 
     def _run(self, session, allocation_history):
-        self.checkForMissingImages(session)
+#        self.checkForMissingImages(session)
 
         # Make up the subnode deficit first to make sure that an
         # already allocated node has priority in filling its subnodes
         # ahead of new nodes.
         subnodes_to_launch = self.getNeededSubNodes(session)
+        print '11111111111111111111111111111'
+        print subnodes_to_launch
         for (node, num_to_launch) in subnodes_to_launch:
             self.log.info("Need to launch %s subnodes for node id: %s" %
                           (num_to_launch, node.id))
@@ -1314,6 +1329,8 @@ class NodePool(threading.Thread):
                 self.launchSubNode(session, node)
 
         nodes_to_launch = self.getNeededNodes(session, allocation_history)
+        print '222222222222222222222222222'
+        print nodes_to_launch
 
         for (tlp, num_to_launch) in nodes_to_launch:
             (target, label, provider) = tlp
@@ -1323,8 +1340,8 @@ class NodePool(threading.Thread):
                           (num_to_launch, label.name,
                            target.name, provider.name))
             for i in range(num_to_launch):
-                snap_image = session.getCurrentSnapshotImage(
-                    provider.name, label.image)
+                snap_image = self.zookeeper_client.getMostRecentImageUpload(
+                    label.image, provider.name)
                 if not snap_image:
                     self.log.debug("No current image for %s on %s"
                                    % (label.image, provider.name))
@@ -1343,12 +1360,15 @@ class NodePool(threading.Thread):
             self.log.warning("Missing image %s on %s" %
                              (image.name, provider.name))
 
-    def checkForMissingDiskImage(self, session, provider, image):
+    def checkForMissingDiskImage(self, image):
         found = False
-        for dib_image in session.getDibImages():
-            if dib_image.image_name != image.name:
-                continue
-            if dib_image.state != nodedb.READY:
+        print image.name
+        for dib_image in self.zookeeper_client.getBuilds(image.name):
+            print 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+            print dib_image.__dict__
+#            if dib_image.image_name != image.name:
+#                continue
+            if dib_image.state != 'ready':
                 # This is either building or in an error state
                 # that will be handled by periodic cleanup
                 return
@@ -1357,24 +1377,10 @@ class NodePool(threading.Thread):
             # only build the image, we'll recheck again
             self.log.warning("Missing disk image %s" % image.name)
             self.buildImage(self.config.diskimages[image.name])
-        else:
-            found = False
-            for snap_image in session.getSnapshotImages():
-                if (snap_image.provider_name == provider.name and
-                    snap_image.image_name == image.name and
-                    snap_image.state in [nodedb.READY,
-                                         nodedb.BUILDING]):
-                    found = True
-                    break
-            if not found:
-                self.log.warning("Missing image %s on %s" %
-                                 (image.name, provider.name))
-                self.uploadImage(session, provider.name,
-                                 image.name)
 
-    def checkForMissingImage(self, session, provider, image):
+    def checkForMissingImage(self, image):
         if image.name in self.config.images_in_use:
-            self.checkForMissingDiskImage(session, provider, image)
+            self.checkForMissingDiskImage(image)
 
     def checkForMissingImages(self, session):
         # If we are missing an image, run the image update function
@@ -1388,7 +1394,7 @@ class NodePool(threading.Thread):
         for provider in providers:
             for image in provider.images.values():
                 try:
-                    self.checkForMissingImage(session, provider, image)
+                    self.checkForMissingImage(image)
                 except Exception:
                     self.log.exception("Exception in missing image check:")
 
@@ -1422,46 +1428,25 @@ class NodePool(threading.Thread):
 
     def buildImage(self, image):
         # check if we already have this item in the queue
-        with self.getDB().getSession() as session:
-            queued_images = session.getBuildingDibImagesByName(image.name)
-            if queued_images:
-                self.log.error('Image %s is already being built' %
-                               image.name)
-                return
+        try:
+            # Submit image-build job
+            gearman_job = jobs.ImageBuildJob(image.name, '111', self)
+            self._image_build_jobs.addJob(gearman_job)
+
+            try:
+                self.gearman_client.submitJob(gearman_job, timeout=300)
+            except Exception:
+                self.log.warning("Failed to submit build job with "
+                                 "id %d", image.name)
+                # Remove job from _image_build_jobs
+                gearman_job.onFailed()
+                raise
             else:
-                try:
-                    start_time = time.time()
-                    timestamp = int(start_time)
-
-                    filename = os.path.join(self.config.imagesdir,
-                                            '%s-%s' %
-                                            (image.name, str(timestamp)))
-                    dib_image = session.createDibImage(image_name=image.name,
-                                                       filename=filename,
-                                                       version=timestamp)
-                    self.log.debug("Created DibImage record %s with state %s",
-                                   dib_image.image_name, dib_image.state)
-
-                    # Submit image-build job
-                    gearman_job = jobs.ImageBuildJob(image.name, dib_image.id,
-                                                     self)
-                    self._image_build_jobs.addJob(gearman_job)
-
-                    try:
-                        self.gearman_client.submitJob(gearman_job, timeout=300)
-                    except Exception:
-                        self.log.warning("Failed to submit build job for "
-                                         "DibImage record %s with id %d",
-                                         dib_image.image_name, dib_image.id)
-                        # Remove job from _image_build_jobs
-                        gearman_job.onFailed()
-                        raise
-                    else:
-                        self.log.debug("Queued image building task for %s" %
-                                       image.name)
-                except Exception:
-                    self.log.exception(
-                        "Could not build image %s", image.name)
+                self.log.debug("Queued image building task for %s" %
+                               image.name)
+        except Exception:
+            self.log.exception(
+                "Could not build image %s", image.name)
 
     def uploadImage(self, session, provider, image_name):
         try:

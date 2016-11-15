@@ -38,6 +38,9 @@ from nodepool import zk
 
 TRUE_VALUES = ('true', '1', 'yes')
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-32s '
+                    '%(levelname)-8s %(message)s')
 
 class LoggingPopen(subprocess.Popen):
     pass
@@ -351,8 +354,30 @@ class BaseTestCase(testtools.TestCase):
             fs = '%(levelname)s [%(name)s] %(message)s'
             self.useFixture(fixtures.FakeLogger(level=logging.DEBUG,
                                                 format=fs))
-        else:
-            logging.basicConfig(level=logging.DEBUG)
+            # NOTE(notmorgan): Extract logging overrides for specific libraries
+            # from the OS_LOG_DEFAULTS env and create FakeLogger fixtures for
+            # each. This is used to limit the output during test runs from
+            # libraries that zuul depends on such as gear.
+            log_defaults_from_env = os.environ.get('OS_LOG_DEFAULTS')
+
+            if log_defaults_from_env:
+                for default in log_defaults_from_env.split(','):
+                    try:
+                        name, level_str = default.split('=', 1)
+                        level = getattr(logging, level_str, logging.DEBUG)
+                        self.useFixture(fixtures.FakeLogger(
+                            name=name,
+                            level=level,
+                            format='%(asctime)s %(name)-32s '
+                                   '%(levelname)-8s %(message)s'))
+                    except ValueError:
+                        # NOTE(notmorgan): Invalid format of the log default,
+                        # skip and don't try and apply a logger for the
+                        # specified module
+                        pass
+
+#        else:
+#            logging.basicConfig(level=logging.)
         self.useFixture(fixtures.NestedTempfile())
 
         self.subprocesses = []
@@ -482,14 +507,15 @@ class MySQLSchemaFixture(fixtures.Fixture):
 
 
 class BuilderFixture(fixtures.Fixture):
-    def __init__(self, configfile):
+    def __init__(self, configfile, zk):
         super(BuilderFixture, self).__init__()
         self.configfile = configfile
+        self.zk = zk
         self.builder = None
 
     def setUp(self):
         super(BuilderFixture, self).setUp()
-        self.builder = builder.NodePoolBuilder(self.configfile)
+        self.builder = builder.NodePoolBuilder(self.configfile, zookeeper=self.zk)
         self.builder.cleanup_interval = .5
         self.builder.start()
         self.addCleanup(self.cleanup)
@@ -561,10 +587,15 @@ class DBTestCase(BaseTestCase):
             self.wait_for_threads()
             with pool.getDB().getSession() as session:
                 needed = pool.getNeededNodes(session, allocation_history)
+                print '77777777777777777777777777777777777777'
+                print needed
                 if not needed:
                     nodes = session.getNodes(state=nodedb.BUILDING)
+                    print '6666666666666666666666666666666'
+                    print nodes
                     if not nodes:
                         break
+                        #pass
             time.sleep(1)
         self.wait_for_threads()
 
@@ -592,7 +623,7 @@ class DBTestCase(BaseTestCase):
         return app
 
     def _useBuilder(self, configfile):
-        self.useFixture(BuilderFixture(configfile))
+        self.useFixture(BuilderFixture(configfile, self.zk))
 
     def setupZK(self):
         f = ZookeeperServerFixture()
@@ -606,6 +637,9 @@ class DBTestCase(BaseTestCase):
         self.zkclient = kz_fxtr.zkclient
         self.zk = zk.ZooKeeper(self.zkclient)
         self.zookeeper_chroot = kz_fxtr.chroot_path
+
+        logger = logging.getLogger('kazoo.client')
+        logger.setLevel(logging.INFO)
 
 
 class IntegrationTestCase(DBTestCase):
