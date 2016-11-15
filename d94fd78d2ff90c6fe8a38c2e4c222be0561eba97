@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "7a77a97e_22f69c8f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-15T18:10:05Z",
+      "side": 1,
+      "message": "On the next iteration of the scheduled checks, it will attempt to build it again (which generates a new build sequence number) until it is successfully built. There is no need to send another build request.",
+      "parentUuid": "7a77a97e_1c002b34",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a77a97e_17a1e494",
         "filename": "nodepool/builder.py",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "7a77a97e_c26de805",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-15T18:10:05Z",
+      "side": 1,
+      "message": "Not entirely sure I catch what you mean here. Any exceptions bubbled up are the same as in the old builder. That being said, this portion of code is REALLY untested so I\u0027m certain there is much to be improved on in later reviews as we get some testing done on it.",
+      "parentUuid": "7a77a97e_17a1e494",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a77a97e_77c77812",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2016-11-15T17:56:36Z",
       "side": 1,
       "message": "Just noting that this session should go away and I think uploadImage() needs to be changed below.",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_824a1082",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-15T18:10:05Z",
+      "side": 1,
+      "message": "Will be done as we update tests.",
+      "parentUuid": "7a77a97e_77c77812",
       "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -98,6 +152,24 @@
       "writtenOn": "2016-11-15T17:56:36Z",
       "side": 1,
       "message": "Just noting that this needs to be updated to talk to zk. And possibly the entire function is no longer required as this is all handled builder side?",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_e2402459",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-15T18:10:05Z",
+      "side": 1,
+      "message": "Yes, there is code here to be cleaned up. It will likely be done as we do the next phase of the zuul-nodepool protocol spec.",
+      "parentUuid": "7a77a97e_9736d401",
       "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
