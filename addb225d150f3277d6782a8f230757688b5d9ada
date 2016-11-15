@@ -16,6 +16,24 @@
       "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_f99376a1",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6547
+      },
+      "writtenOn": "2016-11-15T21:16:37Z",
+      "side": 1,
+      "message": "we could add a comment that those are only needed by OpenStack CI - we always setup both mysql and postgres. If postgres is not here, then the setup of the database in the python27-db job will fail.",
+      "parentUuid": "7a77a97e_63bc136d",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
