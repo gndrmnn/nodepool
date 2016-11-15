@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7a77a97e_7d9bd9c9",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T18:17:12Z",
+      "side": 1,
+      "message": "You will not be able to run a second manual build request if I am reading this correctly because there will be an outstanding manual build request that failed. This is the case due to the checks on lines 390 and 396.\n\nIt can possibly be even trickier if things fail in a way that doesn\u0027t update the build request (thinking exception from subprocess or similar) and so you think there is still a build in progress until you go and run ps on the builder host.",
+      "parentUuid": "7a77a97e_22f69c8f",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a77a97e_17a1e494",
         "filename": "nodepool/builder.py",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "Not entirely sure I catch what you mean here. Any exceptions bubbled up are the same as in the old builder. That being said, this portion of code is REALLY untested so I\u0027m certain there is much to be improved on in later reviews as we get some testing done on it.",
       "parentUuid": "7a77a97e_17a1e494",
+      "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_3de88110",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-15T18:17:12Z",
+      "side": 1,
+      "message": "Uploading images is error prone, it is common for us to fail at a rate of greater than 50% of daily images. It is probably desireable to be able to reupload after failure, but if I am reading thigns correctly the storeImageUpload above will set things to uploading, then we try to upload, raise exception, don\u0027t update, or set final state below. So we end up with tools thinking we have an upload in progress. Ideally we would catch that here, set the state to failed. Then we know we can retry again later.\n\nHope this clarifies things.",
+      "parentUuid": "7a77a97e_c26de805",
       "revId": "d94fd78d2ff90c6fe8a38c2e4c222be0561eba97",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
