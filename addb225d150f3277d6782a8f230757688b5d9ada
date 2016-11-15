@@ -34,6 +34,23 @@
       "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_f9f53683",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-15T21:28:04Z",
+      "side": 1,
+      "message": "I feel pretty strongly we should not merge something that says we require postgres (and I think it reduces the utility of the bindep file for us to have to put a comment in it -- it means people can\u0027t trust it to install only the necessary packages).\n\nIf we make a change to the macros to only perform db init if the db is installed, then we can make the change I suggest.  If that doesn\u0027t happen soon, well, we plan on removing db support from nodepool entirely eventually.",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
