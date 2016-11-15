@@ -607,7 +607,6 @@ class DBTestCase(BaseTestCase):
         self.zk = zk.ZooKeeper(self.zkclient)
         self.zookeeper_chroot = kz_fxtr.chroot_path
 
-
 class IntegrationTestCase(DBTestCase):
     def setUpFakes(self):
         pass
