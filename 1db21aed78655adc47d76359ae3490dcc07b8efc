@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_6b6f4cc5",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-16T22:34:48Z",
+      "side": 1,
+      "message": "This should be removed in the v3 branch.",
+      "revId": "1db21aed78655adc47d76359ae3490dcc07b8efc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
