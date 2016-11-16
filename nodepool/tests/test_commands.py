@@ -263,7 +263,6 @@ class TestNodepoolCMD(tests.DBTestCase):
                           [':'.join([image.build_id, image.id])])
         self.assert_listed(configfile, ['dib-image-list'], 4, 'ready', 2)
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_job_create(self):
         configfile = self.setup_config('node.yaml')
         self.patch_argv("-c", configfile, "job-create", "fake-job",
@@ -271,7 +270,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         self.assert_listed(configfile, ['job-list'], 2, 1, 1)
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_job_delete(self):
         configfile = self.setup_config('node.yaml')
         self.patch_argv("-c", configfile, "job-create", "fake-job",
