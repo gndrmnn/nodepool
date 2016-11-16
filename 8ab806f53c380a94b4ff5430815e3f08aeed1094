@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_ba69b4c0",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-16T21:23:44Z",
+      "side": 1,
+      "message": "The \u0027:\u0027 join is kind of awkward -- can we just pass in the image object itself and handle this internally?  Or even define __eq__ on the model objects and do a straight \u0027if image in ignore_list\u0027?",
+      "revId": "8ab806f53c380a94b4ff5430815e3f08aeed1094",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
