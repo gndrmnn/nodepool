@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_05088a2b",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-11-16T20:47:27Z",
+      "side": 1,
+      "message": "The signature is build_id, upload_id",
+      "revId": "694d70dd11bdb04fe827e37ed9c29ebfd627ba8f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
