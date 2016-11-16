@@ -148,22 +148,22 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForImage('fake-dib-provider', 'fake-dib-image')
         self.assert_listed(configfile, ['dib-image-list'], 4, 'ready', 1)
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_dib_image_delete(self):
         configfile = self.setup_config('node_dib.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
         pool.start()
-        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
+        self.waitForImage('fake-dib-provider', 'fake-dib-image')
         self.waitForNodes(pool)
         # Check the image exists
-        self.assert_listed(configfile, ['dib-image-list'], 0, 1, 1)
         self.assert_listed(configfile, ['dib-image-list'], 4, 'ready', 1)
+        builds = self.zk.getMostRecentBuilds(1, 'fake-dib-image', 'ready')
         # Delete the image
-        self.patch_argv('-c', configfile, 'dib-image-delete', '1')
+        self.patch_argv('-c', configfile, 'dib-image-delete',
+                        'fake-dib-image-%s' % (builds[0].id))
         nodepoolcmd.main()
-        # Check the the image is no longer listed
-        self.assert_listed(configfile, ['dib-image-list'], 0, 1, 0)
+        # Check the the image is marked for deletion
+        self.assert_listed(configfile, ['dib-image-list'], 4, 'deleted', 1)
 
     @skip("Skipping until ZooKeeper is enabled")
     def test_image_upload(self):
