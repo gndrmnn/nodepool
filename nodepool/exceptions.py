@@ -13,6 +13,13 @@
 # under the License.
 
 
+class StopProcessingException(Exception):
+    '''Used to gracefully exit processing when a stop condition (exit or
+    disconnect) is encountered.
+    '''
+    pass
+
+
 class BuilderError(RuntimeError):
     pass
 
