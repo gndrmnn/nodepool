@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_ee3b78cf",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T17:27:15Z",
+      "side": 1,
+      "message": "More future code cleanup food for thought. We should really rename snap_image as it doesn\u0027t reflect what it is anymore. Maybe \"cloud_image\" or \"glance_image\" etc.",
+      "revId": "41269097a2d9c6d8e2ce84c6c8d5f2dc6b7f9350",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_ee42983d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T17:27:15Z",
+      "side": 1,
+      "message": "Is this comparison correct? we are only comparing the 0th element of the zk servers but on line 1090 where we connect we use the entire values() list. Perhaps we should be comparing the lists directly (maybe in an unordered manner, could likely convert to a set for that.).",
+      "revId": "41269097a2d9c6d8e2ce84c6c8d5f2dc6b7f9350",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
