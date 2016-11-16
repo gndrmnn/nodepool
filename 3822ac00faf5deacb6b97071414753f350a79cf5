@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_8d2a002b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T21:56:05Z",
+      "side": 1,
+      "message": "This will do an ordered comparison which is likely not strictly necessary, but if you use different orders things will just reconnect and that is fine.",
+      "revId": "3822ac00faf5deacb6b97071414753f350a79cf5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
