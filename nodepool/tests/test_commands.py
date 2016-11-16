@@ -246,13 +246,13 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Assert the node is gone
         self.assert_listed(configfile, ['list'], 0, 1, 0)
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_image_build(self):
         configfile = self.setup_config('node_dib.yaml')
         self._useBuilder(configfile)
 
-        self.patch_argv("-c", configfile, "image-build", "fake-dib-diskimage")
+        self.patch_argv("-c", configfile, "image-build", "fake-dib-image")
         nodepoolcmd.main()
+        self.waitForBuild("fake-dib-image", "ready")
         self.assert_listed(configfile, ['dib-image-list'], 4, 'ready', 1)
 
     @skip("Skipping until ZooKeeper is enabled")

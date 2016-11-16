@@ -428,6 +428,15 @@ class DBTestCase(BaseTestCase):
                 return
             time.sleep(0.1)
 
+    def waitForBuild(self, image_name, state=None):
+        while True:
+            self.wait_for_threads()
+            builds = self.zk.getMostRecentBuilds(1, image_name, state)
+            if builds:
+                break
+            time.sleep(1)
+        self.wait_for_threads()
+
     def waitForImage(self, provider_name, image_name):
         while True:
             self.wait_for_threads()
