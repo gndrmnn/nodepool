@@ -955,7 +955,7 @@ class ZooKeeper(object):
         path = self._imageBuildsPath(image)
         path = path + "/%s" % build_number
         try:
-            self.client.delete(path)
+            self.client.delete(path, recursive=True)
         except kze.NoNodeError:
             pass
 
