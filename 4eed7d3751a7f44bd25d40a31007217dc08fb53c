@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_2e1f3060",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-16T17:24:44Z",
+      "side": 1,
+      "message": "The image-delete command deletes an uploaded image, but dib-image-delete deletes the image on disk.  I think we still need both commands.  But we can rename them if you want.  :)",
+      "revId": "4eed7d3751a7f44bd25d40a31007217dc08fb53c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
