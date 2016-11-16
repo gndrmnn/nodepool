@@ -108,7 +108,6 @@ class OpenStackProvider(Provider):
     def __init__(self, provider, use_taskmanager):
         self.provider = provider
         self._images = {}
-        self._networks = {}
         self.__flavors = {}
         self.__azs = None
         self._use_taskmanager = use_taskmanager
@@ -291,14 +290,6 @@ class OpenStackProvider(Provider):
         self._images[name] = image
         return image
 
-    def findNetwork(self, name):
-        if name in self._networks:
-            return self._networks[name]
-
-        network = self._client.get_network(name)
-        self._networks[name] = network
-        return network
-
     def deleteImage(self, name):
         if name in self._images:
             del self._images[name]
@@ -333,10 +324,12 @@ class OpenStackProvider(Provider):
             create_args['availability_zone'] = az
         nics = []
         for network in networks:
-            net_id = self.findNetwork(network)['id']
-            nics.append({'net-id': net_id})
+            if network.id:
+                nics.append({'id': network.id})
+            else:
+                nics.append(network.name)
         if nics:
-            create_args['nics'] = nics
+            create_args['network'] = nics
         # Put provider.name and image_name in as groups so that ansible
         # inventory can auto-create groups for us based on each of those
         # qualities

@@ -110,12 +110,6 @@ class FakeOpenStackCloud(object):
                 return instance
         return None
 
-    def get_network(self, name_or_id, filters=None):
-        for net in self.networks:
-            if net['id'] == name_or_id or net['name'] == name_or_id:
-                return net
-        return self.networks[0]
-
     def _create(self, instance_list, instance_type=Dummy.INSTANCE,
                 done_status='ACTIVE', max_quota=-1, **kw):
         should_fail = kw.get('SHOULD_FAIL', '').lower() == 'true'
