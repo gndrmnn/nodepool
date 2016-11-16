@@ -107,7 +107,7 @@ function nodepool_write_config {
 keys=simple
 
 [loggers]
-keys=root,nodepool,shade
+keys=root,nodepool,shade,kazoo
 
 [handlers]
 keys=console
@@ -126,6 +126,12 @@ propagate=0
 level=DEBUG
 handlers=console
 qualname=shade
+propagate=0
+
+[logger_kazoo]
+level=INFO
+handlers=console
+qualname=kazoo
 propagate=0
 
 [handler_console]
@@ -164,6 +170,10 @@ images-dir: $NODEPOOL_DIB_BASE_PATH/images
 # the value).
 dburi: '$dburi'
 
+zookeeper-servers:
+  - host: localhost
+    port: 2181
+
 gearman-servers:
   - host: localhost
     port: 8991
@@ -198,7 +208,6 @@ providers:
     images:
       - name: ubuntu-dib
         min-ram: 1024
-        diskimage: ubuntu-dib
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
