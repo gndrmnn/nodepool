@@ -164,6 +164,10 @@ images-dir: $NODEPOOL_DIB_BASE_PATH/images
 # the value).
 dburi: '$dburi'
 
+zookeeper-servers:
+  - host: localhost
+    port: 2181
+
 gearman-servers:
   - host: localhost
     port: 8991
@@ -198,7 +202,6 @@ providers:
     images:
       - name: ubuntu-dib
         min-ram: 1024
-        diskimage: ubuntu-dib
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
