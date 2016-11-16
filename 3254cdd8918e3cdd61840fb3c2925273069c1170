@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_2efe5037",
+        "filename": "nodepool/tests/fixtures/node_vhd_and_qcow2.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T17:43:21Z",
+      "side": 1,
+      "message": "You didn\u0027t like the ubuntu image based on a fedora base image? Pretty sure thats how google ran their linux for a while...\n\n(it was actually an ubuntu userland on top of red hat kernel iirc)",
+      "revId": "3254cdd8918e3cdd61840fb3c2925273069c1170",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
