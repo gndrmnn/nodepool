@@ -372,7 +372,7 @@ class NodePoolBuilder(object):
                 ext_image_name, filename,
                 image_type=image_file.extension,
                 meta=image_meta)
-        except exceptions.BuilderError:
+        except Exception:
             # note this is intended duplication with UploadWorker, as
             # self.log here likely redirected to it's own file.
             log.exception('Exception while uploading image')
