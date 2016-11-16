@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_3a75a497",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T21:28:59Z",
+      "side": 1,
+      "message": "Could this be simplified to generating the list of builds that are not ready, building, or deleted? Seems odd that we need to generate two lists and then iterate over them cross checking. I think the comment above tries to hit on this but I am not sure why that is necessary as the only transition to ready is from building right?",
+      "revId": "b812369873900a23ab71af2ecf78e6082f8ad51c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_3a3844a0",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T21:28:59Z",
+      "side": 1,
+      "message": "I think we can also set uploads_exist \u003d False early in this function and just set it to True if we hit the above exception. Then this looping goes away.",
+      "revId": "b812369873900a23ab71af2ecf78e6082f8ad51c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
