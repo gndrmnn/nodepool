@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_4bd45046",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-16T22:39:29Z",
+      "side": 1,
+      "message": "This undoes the logging fix, we need to keep the -l $NODEPOOL_LOGGING here.",
+      "revId": "6879b368f53bd2ea08ed8b9cf59932cfc69297d7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
