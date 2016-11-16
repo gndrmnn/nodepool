@@ -16,6 +16,23 @@
       "revId": "4eed7d3751a7f44bd25d40a31007217dc08fb53c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_194d5d6c",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-16T18:51:20Z",
+      "side": 1,
+      "message": "This comment is nonsense.  Sorry.",
+      "revId": "4eed7d3751a7f44bd25d40a31007217dc08fb53c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
