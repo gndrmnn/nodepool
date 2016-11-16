@@ -104,10 +104,6 @@ class FakeOpenStackCloud(object):
                 return instance
         return None
 
-    def get_network(self, name_or_id, filters=None):
-        return dict(id='fake-network-uuid',
-                    name='fake-network-name')
-
     def _create(
             self, instance_list, instance_type=Dummy.INSTANCE,
             done_status='ACTIVE', **kw):

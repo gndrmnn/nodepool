@@ -145,15 +145,6 @@ class ProviderManager(TaskManager):
         self._images[name] = image
         return image
 
-    def findNetwork(self, name):
-        if name in self._networks:
-            return self._networks[name]
-
-        with shade_inner_exceptions():
-            network = self._client.get_network(name)
-        self._networks[name] = network
-        return network
-
     def deleteImage(self, name):
         if name in self._images:
             del self._images[name]
@@ -198,14 +189,13 @@ class ProviderManager(TaskManager):
         nics = []
         for network in self.provider.networks:
             if network.id:
-                nics.append({'net-id': network.id})
+                nics.append({'id': network.id})
             elif network.name:
-                net_id = self.findNetwork(network.name)['id']
-                nics.append({'net-id': net_id})
+                nics.append(network.name)
             else:
                 raise Exception("Invalid 'networks' configuration.")
         if nics:
-            create_args['nics'] = nics
+            create_args['network'] = nics
         # Put provider.name and image_name in as groups so that ansible
         # inventory can auto-create groups for us based on each of those
         # qualities
