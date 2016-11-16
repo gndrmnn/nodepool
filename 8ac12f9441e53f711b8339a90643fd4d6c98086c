@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_d0abafd4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-16T22:16:55Z",
+      "side": 1,
+      "message": "syntax doesn\u0027t look right here",
+      "revId": "8ac12f9441e53f711b8339a90643fd4d6c98086c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
