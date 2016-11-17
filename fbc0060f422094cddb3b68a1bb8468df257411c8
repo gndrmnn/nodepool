@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_2cae1581",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-17T22:07:58Z",
+      "side": 1,
+      "message": "This can be somewhat of a race since the delete from disk and deleting the znode is not atomic, but I\u0027m not quite sure how to account for that.",
+      "revId": "fbc0060f422094cddb3b68a1bb8468df257411c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
