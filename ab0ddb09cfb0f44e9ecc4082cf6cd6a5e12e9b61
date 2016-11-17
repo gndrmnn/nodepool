@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_7e5365e2",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-17T15:59:23Z",
+      "side": 1,
+      "message": "This should accept a default, otherwise we are suggesting that users set their mysql root passwords to \"insecure_slave\" (the point of using that as a value was to make sure that users thought twice about doing exactly that).",
+      "revId": "ab0ddb09cfb0f44e9ecc4082cf6cd6a5e12e9b61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_9e5041d6",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-17T15:59:23Z",
+      "side": 1,
+      "message": "Why do we do this in CI?  Why would we do this to a developer\u0027s machine?",
+      "revId": "ab0ddb09cfb0f44e9ecc4082cf6cd6a5e12e9b61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
