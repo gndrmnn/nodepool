@@ -68,6 +68,24 @@
       "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_2a41aba9",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6547
+      },
+      "writtenOn": "2016-11-17T15:04:01Z",
+      "side": 1,
+      "message": "But we didn\u0027t push for that - and don\u0027t currently offer any jobs with only mysql.\n\nOne way of doing it is: https://review.openstack.org/398784 . But that would not help with pushing database setup to repos.",
+      "parentUuid": "7a77a97e_4a942742",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
