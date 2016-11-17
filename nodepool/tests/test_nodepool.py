@@ -17,7 +17,6 @@ import json
 import logging
 import threading
 import time
-from unittest import skip
 
 import fixtures
 
@@ -126,56 +125,6 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 2)
-
-    @skip("Disabled for early v3 development")
-    def test_dib_snapimage_delete(self):
-        """Test that a dib image (snapshot) can be deleted."""
-        configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
-        pool.start()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
-        self.waitForNodes(pool)
-        snap_id = None
-
-        with pool.getDB().getSession() as session:
-            snapshot_images = session.getSnapshotImages()
-            self.assertEqual(len(snapshot_images), 1)
-            snap_id = snapshot_images[0].id
-            pool.deleteImage(snap_id)
-
-        self.wait_for_threads()
-
-        with pool.getDB().getSession() as session:
-            while True:
-                snap_image = session.getSnapshotImage(snap_id)
-                if snap_image is None:
-                    break
-                time.sleep(.2)
-
-    @skip("Disabled for early v3 development")
-    def test_dib_image_delete(self):
-        """Test that a dib image (snapshot) can be deleted."""
-        configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
-        pool.start()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
-        self.waitForNodes(pool)
-        image_id = None
-
-        with pool.getDB().getSession() as session:
-            images = session.getDibImages()
-            self.assertEqual(len(images), 1)
-            image_id = images[0].id
-            pool.deleteDibImage(images[0])
-
-        while True:
-            with pool.getDB().getSession() as session:
-                images = session.getDibImages()
-                if image_id not in [x.id for x in images]:
-                    break
-                time.sleep(.1)
 
     def test_subnodes(self):
         """Test that an image and node are created"""
@@ -382,104 +331,6 @@ class TestNodepool(tests.DBTestCase):
                                      target_name='fake-target',
                                      state=nodedb.READY)
             self.assertEqual(len(nodes), 1)
-
-    @skip("Disabled for early v3 development")
-    def test_building_image_cleanup_on_start(self):
-        """Test that a building image is deleted on start"""
-        configfile = self.setup_config('node.yaml')
-        pool = nodepool.nodepool.NodePool(self.secure_conf, configfile,
-                                          watermark_sleep=1)
-        try:
-            pool.start()
-            self.waitForImage(pool, 'fake-provider', 'fake-image')
-            self.waitForNodes(pool)
-        finally:
-            # Stop nodepool instance so that it can be restarted.
-            pool.stop()
-
-        with pool.getDB().getSession() as session:
-            images = session.getSnapshotImages()
-            self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
-
-        # Start nodepool instance which should delete our old image.
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        # Ensure we have a config loaded for periodic cleanup.
-        while not pool.config:
-            time.sleep(0)
-        # Wait for startup to shift state to a state that periodic cleanup
-        # will act on.
-        while True:
-            with pool.getDB().getSession() as session:
-                if session.getSnapshotImages()[0].state != nodedb.BUILDING:
-                    break
-                time.sleep(0)
-        # Necessary to force cleanup to happen within the test timeframe
-        pool.periodicCleanup()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
-        self.waitForNodes(pool)
-
-        with pool.getDB().getSession() as session:
-            images = session.getSnapshotImages()
-            self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            # should be second image built.
-            self.assertEqual(images[0].id, 2)
-
-    @skip("Disabled for early v3 development")
-    def test_building_dib_image_cleanup_on_start(self):
-        """Test that a building dib image is deleted on start"""
-        configfile = self.setup_config('node.yaml')
-        pool = nodepool.nodepool.NodePool(self.secure_conf, configfile,
-                                          watermark_sleep=1)
-        self._useBuilder(configfile)
-        try:
-            pool.start()
-            self.waitForImage(pool, 'fake-provider', 'fake-image')
-            self.waitForNodes(pool)
-        finally:
-            # Stop nodepool instance so that it can be restarted.
-            pool.stop()
-
-        with pool.getDB().getSession() as session:
-            # We delete the snapshot image too to force a new dib image
-            # to be built so that a new image can be uploaded to replace
-            # the image that was in the snapshot table.
-            images = session.getSnapshotImages()
-            self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
-            images = session.getDibImages()
-            self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            images[0].state = nodedb.BUILDING
-
-        # Start nodepool instance which should delete our old image.
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        # Ensure we have a config loaded for periodic cleanup.
-        while not pool.config:
-            time.sleep(0)
-        # Wait for startup to shift state to a state that periodic cleanup
-        # will act on.
-        while True:
-            with pool.getDB().getSession() as session:
-                if session.getDibImages()[0].state != nodedb.BUILDING:
-                    break
-                time.sleep(0)
-        # Necessary to force cleanup to happen within the test timeframe
-        pool.periodicCleanup()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
-        self.waitForNodes(pool)
-
-        with pool.getDB().getSession() as session:
-            images = session.getDibImages()
-            self.assertEqual(len(images), 1)
-            self.assertEqual(images[0].state, nodedb.READY)
-            # should be second image built.
-            self.assertEqual(images[0].id, 2)
 
     def test_job_start_event(self):
         """Test that job start marks node used"""
