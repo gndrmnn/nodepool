@@ -51,6 +51,23 @@
       "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_4a942742",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-11-17T15:01:18Z",
+      "side": 1,
+      "message": "Note that the DB setup macros we have in our JJB config are not _required_ to be able to use databases in jobs. They exist as a transitional tool for projects that still expect the exact DB setup we used to bake into our snapshot images, pre-DIB. Any job can perform similar (or completely different) DB setup as it sees fit. Also, we have those macros broken down per-DB, so you _could_ just use the mysql macro(s) and not the ones for postgres if that\u0027s what you want.",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
