@@ -334,22 +334,10 @@ class MySQLSchemaFixture(fixtures.Fixture):
         random_bits = ''.join(random.choice(string.ascii_lowercase +
                                             string.ascii_uppercase)
                               for x in range(8))
-        self.name = '%s_%s' % (random_bits, os.getpid())
-        self.passwd = uuid.uuid4().hex
-        db = pymysql.connect(host="localhost",
-                             user="openstack_citest",
-                             passwd="openstack_citest",
-                             db="openstack_citest")
-        cur = db.cursor()
-        cur.execute("create database %s" % self.name)
-        cur.execute(
-            "grant all on %s.* to '%s'@'localhost' identified by '%s'" %
-            (self.name, self.name, self.passwd))
-        cur.execute("flush privileges")
-
-        self.dburi = 'mysql+pymysql://%s:%s@localhost/%s' % (self.name,
-                                                             self.passwd,
-                                                             self.name)
+        self.name = '%s_%s_' % (random_bits, os.getpid())
+        self.dburi = 'mysql+pymysql://%s:%s@localhost/%s' % ('openstack_citest',
+                                                             'openstack_citest',
+                                                             'openstack_citest')
         self.addDetail('dburi', testtools.content.text_content(self.dburi))
         self.addCleanup(self.cleanup)
 
@@ -359,9 +347,9 @@ class MySQLSchemaFixture(fixtures.Fixture):
                              passwd="openstack_citest",
                              db="openstack_citest")
         cur = db.cursor()
-        cur.execute("drop database %s" % self.name)
-        cur.execute("drop user '%s'@'localhost'" % self.name)
-        cur.execute("flush privileges")
+        cur.execute("drop table if exists %s" % self.name+'node')
+        cur.execute("drop table if exists %s" % self.name+'subnode')
+        cur.execute("drop table if exists %s" % self.name+'job')
 
 
 class BuilderFixture(fixtures.Fixture):
@@ -387,6 +375,7 @@ class DBTestCase(BaseTestCase):
         f = MySQLSchemaFixture()
         self.useFixture(f)
         self.dburi = f.dburi
+        self.table_prefix = f.name
         self.secure_conf = self._setup_secure()
 
         gearman_fixture = GearmanServerFixture()
@@ -468,6 +457,7 @@ class DBTestCase(BaseTestCase):
 
     def useNodepool(self, *args, **kwargs):
         args = (self.secure_conf,) + args
+        kwargs['_table_prefix'] = self.table_prefix
         pool = nodepool.NodePool(*args, **kwargs)
         self.addCleanup(pool.stop)
         return pool

@@ -877,7 +877,8 @@ class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
     def __init__(self, securefile, configfile,
-                 watermark_sleep=WATERMARK_SLEEP):
+                 watermark_sleep=WATERMARK_SLEEP,
+                 _table_prefix=None):
         threading.Thread.__init__(self, name='NodePool')
         self.securefile = securefile
         self.configfile = configfile
@@ -895,6 +896,7 @@ class NodePool(threading.Thread):
         self._instance_delete_threads_lock = threading.Lock()
         self._image_build_jobs = JobTracker()
         self._wake_condition = threading.Condition()
+        self._table_prefix = _table_prefix
 
     def stop(self):
         self._stopped = True
@@ -928,7 +930,7 @@ class NodePool(threading.Thread):
 
     def reconfigureDatabase(self, config):
         if (not self.config) or config.dburi != self.config.dburi:
-            config.db = nodedb.NodeDatabase(config.dburi)
+            config.db = nodedb.NodeDatabase(config.dburi, prefix=self._table_prefix)
         else:
             config.db = self.config.db
 
