@@ -437,6 +437,19 @@ class DBTestCase(BaseTestCase):
             time.sleep(1)
         self.wait_for_threads()
 
+    def waitForBuildDelete(self, nb, image_name, build_id):
+        base = "-".join([image_name, build_id])
+        while True:
+            self.wait_for_threads()
+            files = builder.DibImageFile.from_image_id(
+                nb._config.imagesdir, base)
+            if not files:
+                break
+            time.sleep(1)
+
+        self.assertIsNone(self.zk.getBuild(image_name, build_id))
+        self.wait_for_threads()
+
     def waitForNodes(self, pool):
         self.wait_for_config(pool)
         allocation_history = allocation.AllocationHistory()
@@ -475,7 +488,9 @@ class DBTestCase(BaseTestCase):
         return app
 
     def _useBuilder(self, configfile):
-        self.useFixture(BuilderFixture(configfile))
+        nodepool_builder = BuilderFixture(configfile)
+        self.useFixture(nodepool_builder)
+        return nodepool_builder.builder
 
     def setupZK(self):
         f = ZookeeperServerFixture()
