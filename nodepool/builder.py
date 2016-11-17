@@ -169,7 +169,11 @@ class CleanupWorker(BaseWorker):
         '''
         Search for an upload for a build within the recency table.
         '''
-        for b_id, u_id, u_time in self._rtable[image][provider]:
+        provider = self._rtable[image].get(provider)
+        if not provider:
+            return False
+
+        for b_id, u_id, u_time in provider:
             if build_id == b_id and upload_id == u_id:
                 return True
         return False
@@ -229,34 +233,34 @@ class CleanupWorker(BaseWorker):
 
         return True
 
-    def _cleanupProvider(self, provider, image, build_id):
-        all_uploads = self._zk.getUploads(image, build_id, provider.name)
+    def _cleanupProvider(self, provider_name, image, build_id):
+        all_uploads = self._zk.getUploads(image, build_id, provider_name)
 
         for upload in all_uploads:
-            if self._isRecentUpload(image, provider, build_id, upload.id):
+            if self._isRecentUpload(image, provider_name, build_id, upload.id):
                 continue
 
             deleted = False
 
             if upload.state != 'deleted':
-                if not self._inProgressUpload(upload, image, provider.name):
+                if not self._inProgressUpload(upload, image, provider_name):
                     data = zk.ImageUpload()
                     data.state = 'deleted'
-                    self._zk.storeImageUpload(image, build_id, provider,
+                    self._zk.storeImageUpload(image, build_id, provider_name,
                                               data, upload.id)
                     deleted = True
 
             if upload.state == 'deleted' or deleted:
-                manager = self._config.provider_managers[provider.name]
+                manager = self._config.provider_managers[provider_name]
                 try:
                     manager.deleteImage(upload.external_name)
                 except Exception:
                     self.log.exception(
                         "Unable to delete image %s from %s: %s",
-                        upload.external_name, provider.name)
+                        upload.external_name, provider_name)
                 else:
                     self._zk.deleteUpload(image, build_id,
-                                          provider.name, upload.id)
+                                          provider_name, upload.id)
 
     def _inProgressBuild(self, build, image):
         '''
@@ -314,7 +318,7 @@ class CleanupWorker(BaseWorker):
 
             for provider in known_providers:
                 try:
-                    self._cleanupProvider(provider, image, build.id)
+                    self._cleanupProvider(provider.name, image, build.id)
                 except Exception:
                     self.log.exception("Exception cleaning up build %s "
                                        "of image %s in provider %s:",

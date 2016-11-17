@@ -150,7 +150,7 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_dib_image_delete(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
+        builder = self._useBuilder(configfile)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes(pool)
@@ -163,6 +163,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         # Check the the image is marked for deletion
         self.assert_listed(configfile, ['dib-image-list'], 4, 'deleted', 1)
+        self.waitForBuildDelete(builder, 'fake-image', '0000000001')
 
     @skip("Skipping until ZooKeeper is enabled")
     def test_image_upload(self):
