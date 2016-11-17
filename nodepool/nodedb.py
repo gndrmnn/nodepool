@@ -46,63 +46,6 @@ from sqlalchemy import Table, Column, Integer, String, \
 from sqlalchemy.orm import scoped_session, mapper, relationship, foreign
 from sqlalchemy.orm.session import Session, sessionmaker
 
-metadata = MetaData()
-
-node_table = Table(
-    'node', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('provider_name', String(255), index=True, nullable=False),
-    Column('label_name', String(255), index=True, nullable=False),
-    Column('target_name', String(255), index=True, nullable=False),
-    Column('manager_name', String(255)),
-    # Machine name
-    Column('hostname', String(255), index=True),
-    # Eg, jenkins node name
-    Column('nodename', String(255), index=True),
-    # Provider assigned id for this machine
-    Column('external_id', String(255)),
-    # Provider availability zone for this machine
-    Column('az', String(255)),
-    # Primary IP address
-    Column('ip', String(255)),
-    # Internal/fixed IP address
-    Column('ip_private', String(255)),
-    # One of the above values
-    Column('state', Integer),
-    # Time of last state change
-    Column('state_time', Integer),
-    # Comment about the state of the node - used to annotate held nodes
-    Column('comment', String(255)),
-    mysql_engine='InnoDB',
-    )
-subnode_table = Table(
-    'subnode', metadata,
-    Column('id', Integer, primary_key=True),
-    Column('node_id', Integer, index=True, nullable=False),
-    # Machine name
-    Column('hostname', String(255), index=True),
-    # Provider assigned id for this machine
-    Column('external_id', String(255)),
-    # Primary IP address
-    Column('ip', String(255)),
-    # Internal/fixed IP address
-    Column('ip_private', String(255)),
-    # One of the above values
-    Column('state', Integer),
-    # Time of last state change
-    Column('state_time', Integer),
-    mysql_engine='InnoDB',
-    )
-job_table = Table(
-    'job', metadata,
-    Column('id', Integer, primary_key=True),
-    # The name of the job
-    Column('name', String(255), index=True),
-    # Automatically hold up to this number of nodes that fail this job
-    Column('hold_on_failure', Integer),
-    mysql_engine='InnoDB',
-    )
-
 
 class Node(object):
     def __init__(self, provider_name, label_name, target_name, az,
@@ -181,42 +124,101 @@ class Job(object):
         session.commit()
 
 
-mapper(Job, job_table)
-
-
-mapper(SubNode, subnode_table,
-       properties=dict(_state=subnode_table.c.state))
-
-
-mapper(Node, node_table,
-       properties=dict(
-           _state=node_table.c.state,
-           subnodes=relationship(
-               SubNode,
-               cascade='all, delete-orphan',
-               uselist=True,
-               primaryjoin=foreign(subnode_table.c.node_id) == node_table.c.id,
-               backref='node')))
-
-
 class NodeDatabase(object):
-    def __init__(self, dburi):
+    def __init__(self, dburi, prefix=None):
         engine_kwargs = dict(echo=False, pool_recycle=3600)
         if 'sqlite:' not in dburi:
             engine_kwargs['max_overflow'] = -1
 
+        self.prefix = prefix or ''
+        self.performMapping()
         self.engine = create_engine(dburi, **engine_kwargs)
-        metadata.create_all(self.engine)
+        self.metadata.create_all(self.engine)
         self.session_factory = sessionmaker(bind=self.engine)
         self.session = scoped_session(self.session_factory)
 
     def getSession(self):
-        return NodeDatabaseSession(self.session)
+        return NodeDatabaseSession(self.session, self)
+
+    def performMapping(self):
+        metadata = MetaData()
+        self.node_table = Table(
+            self.prefix+'node', metadata,
+            Column('id', Integer, primary_key=True),
+            Column('provider_name', String(255), index=True, nullable=False),
+            Column('label_name', String(255), index=True, nullable=False),
+            Column('target_name', String(255), index=True, nullable=False),
+            Column('manager_name', String(255)),
+            # Machine name
+            Column('hostname', String(255), index=True),
+            # Eg, jenkins node name
+            Column('nodename', String(255), index=True),
+            # Provider assigned id for this machine
+            Column('external_id', String(255)),
+            # Provider availability zone for this machine
+            Column('az', String(255)),
+            # Primary IP address
+            Column('ip', String(255)),
+            # Internal/fixed IP address
+            Column('ip_private', String(255)),
+            # One of the above values
+            Column('state', Integer),
+            # Time of last state change
+            Column('state_time', Integer),
+            # Comment about the state of the node - used to annotate held nodes
+            Column('comment', String(255)),
+            mysql_engine='InnoDB',
+            )
+        self.subnode_table = Table(
+            self.prefix+'subnode', metadata,
+            Column('id', Integer, primary_key=True),
+            Column('node_id', Integer, index=True, nullable=False),
+            # Machine name
+            Column('hostname', String(255), index=True),
+            # Provider assigned id for this machine
+            Column('external_id', String(255)),
+            # Primary IP address
+            Column('ip', String(255)),
+            # Internal/fixed IP address
+            Column('ip_private', String(255)),
+            # One of the above values
+            Column('state', Integer),
+            # Time of last state change
+            Column('state_time', Integer),
+            mysql_engine='InnoDB',
+            )
+        self.job_table = Table(
+            self.prefix+'job', metadata,
+            Column('id', Integer, primary_key=True),
+            # The name of the job
+            Column('name', String(255), index=True),
+            # Automatically hold up to this number of nodes that fail this job
+            Column('hold_on_failure', Integer),
+            mysql_engine='InnoDB',
+            )
+
+        mapper(Job, self.job_table)
+
+        mapper(SubNode, self.subnode_table,
+               properties=dict(_state=self.subnode_table.c.state))
+
+        mapper(Node, self.node_table,
+               properties=dict(
+                   _state=self.node_table.c.state,
+                   subnodes=relationship(
+                       SubNode,
+                       cascade='all, delete-orphan',
+                       uselist=True,
+                       primaryjoin=(foreign(self.subnode_table.c.node_id) ==
+                                    self.node_table.c.id),
+                       backref='node')))
+        self.metadata = metadata
 
 
 class NodeDatabaseSession(object):
-    def __init__(self, session):
+    def __init__(self, session, db):
         self.session = session
+        self.db = db
 
     def __enter__(self):
         return self
@@ -241,8 +243,8 @@ class NodeDatabaseSession(object):
     def getNodes(self, provider_name=None, label_name=None, target_name=None,
                  state=None):
         exp = self.session().query(Node).order_by(
-            node_table.c.provider_name,
-            node_table.c.label_name)
+            self.db.node_table.c.provider_name,
+            self.db.node_table.c.label_name)
         if provider_name:
             exp = exp.filter_by(provider_name=provider_name)
         if label_name:
@@ -250,7 +252,7 @@ class NodeDatabaseSession(object):
         if target_name:
             exp = exp.filter_by(target_name=target_name)
         if state:
-            exp = exp.filter(node_table.c.state == state)
+            exp = exp.filter(self.db.node_table.c.state == state)
         return exp.all()
 
     def createNode(self, *args, **kwargs):

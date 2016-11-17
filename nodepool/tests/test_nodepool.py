@@ -32,7 +32,7 @@ class TestNodepool(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestNodepool")
 
     def test_db(self):
-        db = nodedb.NodeDatabase(self.dburi)
+        db = nodedb.NodeDatabase(self.dburi, prefix=self.table_prefix)
         with db.getSession() as session:
             session.getNodes()
 
