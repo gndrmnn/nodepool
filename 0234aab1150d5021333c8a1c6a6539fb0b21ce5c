@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_ccb92117",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-17T22:01:45Z",
+      "side": 1,
+      "message": "this needs to be reverted",
+      "revId": "0234aab1150d5021333c8a1c6a6539fb0b21ce5c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
