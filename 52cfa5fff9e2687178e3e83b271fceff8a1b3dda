@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_c1180a21",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-17T21:34:55Z",
+      "side": 1,
+      "message": "Add assert to validate provider doesn\u0027t show up.",
+      "revId": "52cfa5fff9e2687178e3e83b271fceff8a1b3dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_e11506e5",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-17T21:34:55Z",
+      "side": 1,
+      "message": "Add assert to validate provider here.",
+      "revId": "52cfa5fff9e2687178e3e83b271fceff8a1b3dda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
