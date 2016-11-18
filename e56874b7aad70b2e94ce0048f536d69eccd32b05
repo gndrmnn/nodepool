@@ -69,6 +69,24 @@
       "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_c6b2b94b",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-18T16:16:28Z",
+      "side": 1,
+      "message": "Ok, I get this now. We could probably comment that second part, but not a -1 now.",
+      "parentUuid": "7a77a97e_e3524766",
+      "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
