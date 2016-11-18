@@ -16,6 +16,24 @@
       "revId": "af87c1d0867696f432c22163ca2a82dda9beefbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_3966322a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-18T16:48:22Z",
+      "side": 1,
+      "message": "We only set it today with label.min_ready \u003e\u003d 0, skipping anything related to provider.max_servers.",
+      "parentUuid": "7a77a97e_9937464c",
+      "revId": "af87c1d0867696f432c22163ca2a82dda9beefbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
