@@ -914,12 +914,6 @@ class NodePool(threading.Thread):
             self.gearman_client.shutdown()
         self.log.debug("finished stopping")
 
-    def waitForBuiltImages(self):
-        self.log.debug("Waiting for images to complete building.")
-        for job in self._image_build_jobs.running_jobs:
-            job.waitForCompletion()
-        self.log.debug("Done waiting for images to complete building.")
-
     def loadConfig(self):
         self.log.debug("Loading configuration")
         config = nodepool_config.loadConfig(self.configfile)
