@@ -16,6 +16,24 @@
       "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_e53332f4",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-18T13:51:09Z",
+      "side": 1,
+      "message": "Ugh, well, assert_listed doesn\u0027t exist here, so maybe just call getUploads() for the 2nd provider and verify nothing is returned.",
+      "parentUuid": "7a77a97e_1fec0129",
+      "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
