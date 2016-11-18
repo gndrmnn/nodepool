@@ -620,6 +620,48 @@ class TestNodepool(tests.DBTestCase):
             'fake-image', 'fake-provider2')
         self.assertTrue(image)
 
+    def test_two_labels_no_providers(self):
+        configfile = self.setup_config(
+            'node_two_labels_no_providers.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        # fake-image should exist.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider')
+        self.assertTrue(image)
+        self.assertTrue(self.zk.getBuild('fake-image', '0000000001'))
+
+        # fake-image2 should not exist.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image2', 'fake-provider')
+        self.assertFalse(image)
+        self.assertFalse(self.zk.getBuild('fake-image2', '0000000001'))
+
+    def test_two_labels_min_ready_zero(self):
+        configfile = self.setup_config(
+            'node_two_labels_min_ready_zero.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        # fake-image should exist.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider')
+        self.assertTrue(image)
+        self.assertTrue(self.zk.getBuild('fake-image', '0000000001'))
+
+        # fake-image2 should exist.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image2', 'fake-provider')
+        self.assertTrue(image)
+        self.assertTrue(self.zk.getBuild('fake-image2', '0000000001'))
+
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):

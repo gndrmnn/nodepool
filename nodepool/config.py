@@ -313,7 +313,7 @@ def loadConfig(config_path):
     # a given image needs to be updated.
     newconfig.images_in_use = set()
     for label in newconfig.labels.values():
-        if label.min_ready >= 0:
+        if label.providers:
             newconfig.images_in_use.add(label.image)
 
     return newconfig

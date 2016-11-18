@@ -198,15 +198,14 @@ providers or images are used to create them).  Example::
     Refers to providers images, see :ref:`images`.
 
   ``providers`` (list)
-    Required if any nodes should actually be created (e.g., the label is not
-    currently disabled, see ``min-ready`` below).
+    Required if any nodes should actually be created. Set to [] to have the
+    label considered disabled.
 
 **optional**
 
   ``min-ready`` (default: 2)
-    Minimum instances that should be in a ready state. Set to -1 to have the
-    label considered disabled. ``min-ready`` is best-effort based on available
-    capacity and is not a guaranteed allocation.
+    Minimum instances that should be in a ready state. ``min-ready`` is
+    best-effort based on available capacity and is not a guaranteed allocation.
 
   ``subnodes``
     Used to configure multi-node support.  If a `subnodes` key is supplied to

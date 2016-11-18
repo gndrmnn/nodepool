@@ -437,6 +437,9 @@ class BuildWorker(BaseWorker):
         .. note:: It's important to lock the image build before we check
             the state time and then build to eliminate any race condition.
         '''
+        if diskimage.name not in self._config.images_in_use:
+            return
+
         now = int(time.time())
         builds = self._zk.getMostRecentBuilds(1, diskimage.name, 'ready')
 
