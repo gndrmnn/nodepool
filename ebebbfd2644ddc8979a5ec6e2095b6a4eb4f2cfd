@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_a3468f78",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-18T16:11:04Z",
+      "side": 1,
+      "message": "This log line will happen *a lot*.  We should remove it.",
+      "revId": "ebebbfd2644ddc8979a5ec6e2095b6a4eb4f2cfd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
