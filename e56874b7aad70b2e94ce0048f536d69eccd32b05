@@ -52,6 +52,23 @@
       "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_e3524766",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-18T16:08:15Z",
+      "side": 1,
+      "message": "The main thing we\u0027re doing here is making sure that fake-image is gone from fake-provider2.  Secondarily, this also checks that we didn\u0027t do something weird like build another image for fake-provider after the config reload.  We could drop it entirely and the test would still test what it\u0027s supposed to test.",
+      "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
