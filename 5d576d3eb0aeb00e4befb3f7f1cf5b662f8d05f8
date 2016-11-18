@@ -16,6 +16,23 @@
       "revId": "5d576d3eb0aeb00e4befb3f7f1cf5b662f8d05f8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_66664552",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-18T16:29:20Z",
+      "side": 1,
+      "message": "Oh, this is object identity comparison now since above i changed builds_to_keep to filter down from all_builds, so the same objects would be in both lists.",
+      "revId": "5d576d3eb0aeb00e4befb3f7f1cf5b662f8d05f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
