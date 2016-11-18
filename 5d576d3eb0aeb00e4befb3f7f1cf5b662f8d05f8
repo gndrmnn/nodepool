@@ -33,6 +33,24 @@
       "revId": "5d576d3eb0aeb00e4befb3f7f1cf5b662f8d05f8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_66f4855a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-18T16:30:39Z",
+      "side": 1,
+      "message": "Nevermind. Object equality is the intent.",
+      "parentUuid": "7a77a97e_46bdc9d6",
+      "revId": "5d576d3eb0aeb00e4befb3f7f1cf5b662f8d05f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
