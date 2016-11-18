@@ -194,12 +194,12 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Check that two images are ready for it now.
         self.assert_images_listed(configfile, 2)
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_hold(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes(pool)
         # Assert one node exists and it is node 1 in a ready state.
         self.assert_listed(configfile, ['list'], 0, 1, 1)
