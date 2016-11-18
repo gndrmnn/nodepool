@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_109eaeb8",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-18T14:22:07Z",
+      "side": 1,
+      "message": "file is missing in git",
+      "revId": "a8cda8b20e5c84546a33612856ccee3112be6d71",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
