@@ -423,6 +423,9 @@ class BuildWorker(BaseWorker):
             # or if ZK connection is suspended
             if not self.running or self._zk.suspended or self._zk.lost:
                 return
+            # Check if min-ready is -1 for labels.
+            if diskimage.name not in self._config.images_in_use:
+                continue
             try:
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
