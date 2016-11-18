@@ -64,15 +64,6 @@ class NodePoolCmd(NodepoolApp):
             help='list images built with diskimage-builder')
         cmd_dib_image_list.set_defaults(func=self.dib_image_list)
 
-        cmd_image_update = subparsers.add_parser(
-            'image-update',
-            help='rebuild the image and upload to provider')
-        cmd_image_update.add_argument(
-            'provider',
-            help='provider name (`all` for uploading to all providers)')
-        cmd_image_update.add_argument('image', help='image name')
-        cmd_image_update.set_defaults(func=self.image_update)
-
         cmd_image_build = subparsers.add_parser(
             'image-build',
             help='build image using diskimage-builder')
@@ -394,7 +385,7 @@ class NodePoolCmd(NodepoolApp):
 
         self.pool = nodepool.NodePool(self.args.secure, self.args.config)
         config = self.pool.loadConfig()
-        if self.args.command in ('image-upload', 'image-update'):
+        if self.args.command in ('image-upload'):
             self.pool.reconfigureGearmanClient(config)
         self.pool.reconfigureDatabase(config)
         self.pool.setConfig(config)
