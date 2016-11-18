@@ -145,8 +145,9 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_hold(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
         pool.start()
-        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes(pool)
         # Assert one node exists and it is node 1 in a ready state.
         self.assert_listed(configfile, ['list'], 0, 1, 1)
