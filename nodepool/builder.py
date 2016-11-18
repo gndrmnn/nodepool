@@ -782,6 +782,10 @@ class UploadWorker(BaseWorker):
         if image.name not in self._config.images_in_use:
             return
 
+        # Check if provider max-servers is -1 (disabled).
+        if provider.max_servers < 0:
+            return
+
         # Search for the most recent 'ready' image build
         builds = self._zk.getMostRecentBuilds(1, image.name,
                                               'ready')
