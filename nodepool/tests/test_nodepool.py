@@ -582,6 +582,44 @@ class TestNodepool(tests.DBTestCase):
             node = session.getNode(2)
             self.assertEqual(node, None)
 
+    def test_two_provider_no_images(self):
+        configfile = self.setup_config(
+            'node_two_provider_no_images.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        # fake-image should exist for fake-provider.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider')
+        self.assertTrue(image)
+
+        # fake-image should exist for fake-provider2.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider2')
+        self.assertFalse(image)
+
+    def test_two_provider_max_servers_zero(self):
+        configfile = self.setup_config(
+            'node_two_provider_max_servers_zero.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        # fake-image should exist for fake-provider.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider')
+        self.assertTrue(image)
+
+        # fake-image should exist for fake-provider2.
+        image = self.zk.getMostRecentImageUpload(
+            'fake-image', 'fake-provider2')
+        self.assertTrue(image)
+
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):
