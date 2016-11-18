@@ -34,6 +34,24 @@
       "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_b0117a54",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-18T14:19:55Z",
+      "side": 1,
+      "message": "After looking again, do we not want to check the image was actually moved from the cloud for provider too? Right now we are just checking the image state in zookeeper but it is possible, the image could still live",
+      "parentUuid": "7a77a97e_e53332f4",
+      "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
