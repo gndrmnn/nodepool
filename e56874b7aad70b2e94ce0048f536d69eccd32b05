@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_1fec0129",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-18T13:12:41Z",
+      "side": 1,
+      "message": "Perhaps I need another cup of coffee this morning, but I don\u0027t think this is a valid test. Getting the most recent image of the not-removed provider will always be the same. I think what you need to do here is replace both getMostRecentImageUpload calls with assert_listed calls: the first making sure there are two images, the second making sure there is just one.",
+      "revId": "e56874b7aad70b2e94ce0048f536d69eccd32b05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
