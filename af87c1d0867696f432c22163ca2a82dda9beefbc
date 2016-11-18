@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_9937464c",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-18T16:45:35Z",
+      "side": 1,
+      "message": "Why is this line necessary?  The line above should cover it.",
+      "revId": "af87c1d0867696f432c22163ca2a82dda9beefbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
