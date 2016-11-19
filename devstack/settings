@@ -1,3 +1,6 @@
+# Increase default size so we can upload more images.
+SWIFT_LOOPBACK_DISK_SIZE=4GB
+
 NODEPOOL_CONFIG=/etc/nodepool/nodepool.yaml
 NODEPOOL_LOGGING=/etc/nodepool/logging.conf
 NODEPOOL_SECURE=/etc/nodepool/secure.conf
