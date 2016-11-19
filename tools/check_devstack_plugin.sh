@@ -33,13 +33,15 @@ function waitfornode {
 
 # Check that snapshot image built
 waitforimage trusty-server
-# check that dib image built
-waitforimage ubuntu-dib
+# check that DIB images built
+waitforimage ubuntu-trusty
+waitforimage ubuntu-xenial
 
 # check snapshot image was bootable
 waitfornode trusty-server
-# check dib image was bootable
-waitfornode ubuntu-dib
+# check DIB images are bootable
+waitfornode ubuntu-trusty
+waitfornode ubuntu-xenial
 
 set -o errexit
 # Show the built nodes
@@ -48,6 +50,7 @@ $NODEPOOL list
 # Try to delete the nodes that were just built
 $NODEPOOL delete --now 1
 $NODEPOOL delete --now 2
+$NODEPOOL delete --now 3
 
 # show the deleted nodes (and their replacements may be building)
 $NODEPOOL list
