@@ -162,6 +162,10 @@ dburi: $dburi
 EOF
     sudo mv /tmp/secure.conf $NODEPOOL_SECURE
 
+if [ -f $NODEPOOL_CACHE_GET_PIP ] ; then
+    local pip_cache="DIB_REPOLOCATION_pip_and_virtualenv: file://$NODEPOOL_CACHE_GET_PIP"
+fi
+
     cat > /tmp/nodepool.yaml <<EOF
 # You will need to make and populate these two paths as necessary,
 # cloning nodepool does not do this. Further in this doc we have an
@@ -200,8 +204,13 @@ labels:
     min-ready: 1
     providers:
       - name: devstack
-  - name: ubuntu-dib
-    image: ubuntu-dib
+  - name: ubuntu-trusty
+    image: ubuntu-trusty
+    min-ready: 1
+    providers:
+      - name: devstack
+  - name: ubuntu-xenial
+    image: ubuntu-xenial
     min-ready: 1
     providers:
       - name: devstack
@@ -228,15 +237,21 @@ providers:
         # Alter below to point to your local user private key
         private-key: $NODEPOOL_KEY
         config-drive: true
-      - name: ubuntu-dib
+      - name: ubuntu-trusty
         min-ram: 1024
-        diskimage: ubuntu-dib
+        diskimage: ubuntu-trusty
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true
+      - name: ubuntu-xenial
+        min-ram: 1024
+        diskimage: ubuntu-xenial
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
 
 diskimages:
-  - name: ubuntu-dib
+  - name: ubuntu-trusty
     elements:
       - ubuntu-minimal
       - vm
@@ -250,12 +265,23 @@ diskimages:
       DIB_APT_LOCAL_CACHE: '0'
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $pip_cache
+  - name: ubuntu-xenial
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - nodepool-setup
+    release: xenial
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $pip_cache
 EOF
-    if [ -f $NODEPOOL_CACHE_GET_PIP ] ; then
-        cat >> /tmp/nodepool.yaml <<EOF
-      DIB_REPOLOCATION_pip_and_virtualenv: file://$NODEPOOL_CACHE_GET_PIP
-EOF
-    fi
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
     cp /etc/openstack/clouds.yaml /tmp
