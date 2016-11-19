@@ -1,0 +1,2 @@
+# Increase default size so we can upload more images.
+SWIFT_LOOPBACK_DISK_SIZE=4GB
