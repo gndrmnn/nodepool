@@ -173,3 +173,9 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.replace_config(configfile, 'node_two_image_remove.yaml')
         self.waitForImageDeletion('fake-provider', 'fake-image2')
         self.waitForBuildDeletion('fake-image2', '0000000001')
+
+    def test_image_rebuild_age(self):
+        configfile = self.setup_config('node_rebuild_age.yaml')
+        self._useBuilder(configfile)
+        self.waitForBuild('fake-image', '0000000001')
+        self.waitForBuild('fake-image', '0000000002')
