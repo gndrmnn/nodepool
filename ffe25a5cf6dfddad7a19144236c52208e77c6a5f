@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_54d28835",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-21T21:27:31Z",
+      "side": 1,
+      "message": "Maybe name test \"test_disabled_label\"",
+      "revId": "ffe25a5cf6dfddad7a19144236c52208e77c6a5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_74d78423",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-21T21:27:31Z",
+      "side": 1,
+      "message": "node_disabled.yaml.  But maybe rename node_disabled_label.yaml.",
+      "revId": "ffe25a5cf6dfddad7a19144236c52208e77c6a5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
