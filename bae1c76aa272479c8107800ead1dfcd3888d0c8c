@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_8a788d2d",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-21T13:50:09Z",
+      "side": 1,
+      "message": "You are making assumptions about the sequence number (build ID) that ZK is starting with. It does not always start at 1. I\u0027ve seen it start at 0, and I have no idea how it chooses the starting number.",
+      "revId": "bae1c76aa272479c8107800ead1dfcd3888d0c8c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
