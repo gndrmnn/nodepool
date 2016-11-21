@@ -250,6 +250,7 @@ diskimages:
       DIB_APT_LOCAL_CACHE: '0'
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      DIB_CHECKSUM: '1'
 EOF
     if [ -f $NODEPOOL_CACHE_GET_PIP ] ; then
         cat >> /tmp/nodepool.yaml <<EOF
