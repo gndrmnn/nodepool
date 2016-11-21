@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_4003a676",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-21T19:36:16Z",
+      "side": 1,
+      "message": "The state_time is cast to int(), so some precision is lost. While debugging this test, I noticed that the difference between the times of the two builds was usually 1 second. You might want to allow for a larger time difference to avoid random failures where the time might be identical.",
+      "revId": "5d12b93f09cde2797039586c97af2c008a695053",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_80fdbe70",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-21T19:36:16Z",
+      "side": 1,
+      "message": "Should use the build lock here.",
+      "revId": "5d12b93f09cde2797039586c97af2c008a695053",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
