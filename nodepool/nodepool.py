@@ -995,8 +995,8 @@ class NodePool(threading.Thread):
                     second = None
                 minute, hour, dom, month, dow = parts[:5]
                 trigger = apscheduler.triggers.cron.CronTrigger(
-                    day=dom, day_of_week=dow, hour=hour, minute=minute,
-                    second=second)
+                    month=month, day=dom, day_of_week=dow,
+                    hour=hour, minute=minute, second=second)
                 c.job = self.apsched.add_job(
                     cron_map[c.name], trigger=trigger)
             else:
@@ -1451,7 +1451,7 @@ class NodePool(threading.Thread):
         for subnode in node.subnodes:
             if subnode.external_id:
                 manager.waitForServerDeletion(subnode.external_id)
-                subnode.delete()
+            subnode.delete()
 
         node.delete()
         self.log.info("Deleted node id: %s" % node.id)
