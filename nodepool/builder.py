@@ -329,8 +329,13 @@ class CleanupWorker(BaseWorker):
         all_builds = self._zk.getBuilds(image)
         builds_to_keep = set([b for b in sorted(all_builds) if b.state==zk.READY][:2])
         local_builds = set(self._filterLocalBuilds(image, all_builds))
-        # remove any local builds that are not in use
-        if image not in self._config.images_in_use:
+        diskimage = self._config.diskimages.get(image)
+        if not diskimage and not local_builds:
+            # This builder is and was not responsible for this image,
+            # so ignore it.
+            return
+        # Remove any local builds that are not in use.
+        if diskimage and not diskimage.in_use:
             builds_to_keep -= local_builds
             # TODO(jeblair): When all builds for an image which is not
             # in use are deleted, the image znode should be deleted as
@@ -452,8 +457,7 @@ class BuildWorker(BaseWorker):
         .. note:: It's important to lock the image build before we check
             the state time and then build to eliminate any race condition.
         '''
-        if diskimage.name not in self._config.images_in_use:
-            return
+        # TODO(jeblair): check for pause here
 
         now = int(time.time())
         builds = self._zk.getMostRecentBuilds(1, diskimage.name, zk.READY)
@@ -794,8 +798,7 @@ class UploadWorker(BaseWorker):
         exception handling can treat all provider-image uploads
         indepedently.
         '''
-        if image.name not in self._config.images_in_use:
-            return
+        # TODO(jeblair): check for pause here
 
         # Search for the most recent 'ready' image build
         builds = self._zk.getMostRecentBuilds(1, image.name,
