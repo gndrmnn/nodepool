@@ -1,0 +1,16 @@
+py27 develop-inst-noop: /home/shrews/Devel/git/openstack-infra/nodepool
+py27 installed: You are using pip version 8.1.2, however version 9.0.1 is available.,You should consider upgrading via the 'pip install --upgrade pip' command.,appdirs==1.4.0,APScheduler==3.2.0,Babel==2.3.4,cliff==2.1.0,cmd2==0.6.8,coverage==4.2,debtcollector==1.7.0,decorator==4.0.10,dib-utils==0.0.10,discover==0.4.0,diskimage-builder==1.18.2,docutils==0.12,dogpile.cache==0.6.1,ecdsa==0.13,extras==1.0.0,fixtures==3.0.0,flake8==2.5.5,funcsigs==1.0.2,functools32==3.2.3.post2,futures==3.0.5,gear==0.6.2,hacking==0.10.2,ipaddress==1.0.16,iso8601==0.1.11,Jinja2==2.8,jsonpatch==1.14,jsonpointer==1.10,jsonschema==2.5.1,kazoo==2.2.1,keystoneauth1==2.10.0,linecache2==1.0.0,lockfile==0.12.2,MarkupSafe==0.23,mccabe==0.2.1,mock==2.0.0,monotonic==1.1,msgpack-python==0.4.8,multi-key-dict==2.0.3,munch==2.0.4,netaddr==0.7.18,netifaces==0.10.4,-e git://git.openstack.org/openstack-infra/nodepool.git@5d12b93f09cde2797039586c97af2c008a695053#egg=nodepool,openstacksdk==0.9.1,os-client-config==1.18.0,osc-lib==0.4.1,oslo.config==3.14.0,oslo.i18n==3.8.0,oslo.serialization==2.12.0,oslo.utils==3.16.0,oslosphinx==4.7.0,paramiko==1.17.2,Paste==2.0.3,pbr==1.10.0,pep8==1.5.7,positional==1.1.1,prettytable==0.7.2,pycrypto==2.6.1,pyflakes==0.8.1,Pygments==2.1.3,PyMySQL==0.7.6,pyparsing==2.1.5,python-cinderclient==1.8.0,python-daemon==2.0.6,python-designateclient==2.2.0,python-glanceclient==2.3.0,python-heatclient==1.3.0,python-ironicclient==1.6.0,python-jenkins==0.4.13,python-keystoneclient==3.3.0,python-magnumclient==2.2.0,python-mimeparse==1.5.2,python-neutronclient==5.0.0,python-novaclient==5.0.0,python-openstackclient==2.6.0,python-subunit==1.2.0,python-swiftclient==3.0.0,python-troveclient==2.3.0,pytz==2016.6.1,PyYAML==3.11,pyzmq==15.3.0,requests==2.10.0,requestsexceptions==1.1.3,rfc3986==0.3.1,shade==1.9.0,simplejson==3.8.2,six==1.10.0,Sphinx==1.2.3,sphinxcontrib-programoutput==0.8,SQLAlchemy==1.0.14,statsd==3.2.1,stevedore==1.17.0,testrepository==0.0.20,testresources==2.0.1,testscenarios==0.5.0,testtools==2.2.0,traceback2==1.4.0,tzlocal==1.2.2,unicodecsv==0.14.1,unittest2==1.1.0,voluptuous==0.9.3,warlock==1.2.0,WebOb==1.6.1,wrapt==1.10.8
+py27 runtests: PYTHONHASHSEED='3110314911'
+py27 runtests: commands[0] | python setup.py testr --slowest --testr-args=nodepool.tests.test_builder.TestNodePoolBuilder.test_image_rotation
+running testr
+running=OS_STDOUT_CAPTURE=${OS_STDOUT_CAPTURE:-1} OS_STDERR_CAPTURE=${OS_STDERR_CAPTURE:-1} OS_LOG_CAPTURE=${OS_LOG_CAPTURE:-1} OS_TEST_TIMEOUT=60 ${PYTHON:-python} -m subunit.run discover -t ./ nodepool/tests/ --list 
+running=OS_STDOUT_CAPTURE=${OS_STDOUT_CAPTURE:-1} OS_STDERR_CAPTURE=${OS_STDERR_CAPTURE:-1} OS_LOG_CAPTURE=${OS_LOG_CAPTURE:-1} OS_TEST_TIMEOUT=60 ${PYTHON:-python} -m subunit.run discover -t ./ nodepool/tests/  --load-list /tmp/tmp_wKPPP
+Ran 1 tests in 3.713s (-0.101s)
+PASSED (id=597)
+Slowest Tests
+Test id                                                              Runtime (s)
+-------------------------------------------------------------------  -----------
+nodepool.tests.test_builder.TestNodePoolBuilder.test_image_rotation  3.713
+___________________________________ summary ____________________________________
+  py27: commands succeeded
+  congratulations :)

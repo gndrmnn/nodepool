@@ -77,7 +77,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         self.waitForImageDeletion('fake-provider', 'fake-image')
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_alien_list_fail(self):
         def fail_list(self):
             raise RuntimeError('Fake list error')
@@ -89,7 +88,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-list")
         nodepoolcmd.main()
 
-    @skip("Skipping until ZooKeeper is enabled")
     def test_alien_image_list_fail(self):
         def fail_list(self):
             raise RuntimeError('Fake list error')
