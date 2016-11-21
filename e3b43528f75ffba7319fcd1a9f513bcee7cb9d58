@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a77a97e_d453f86a",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-21T21:37:47Z",
+      "side": 1,
+      "message": "Still making assumptions about the build number.",
+      "revId": "e3b43528f75ffba7319fcd1a9f513bcee7cb9d58",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
