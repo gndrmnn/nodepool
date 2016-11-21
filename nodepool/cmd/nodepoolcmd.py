@@ -199,6 +199,7 @@ class NodePoolCmd(NodepoolApp):
                                 % (provider.name, str(e.message)))
         print t
 
+    @skip("Skipping until ZooKeeper is enabled")
     def alien_image_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
