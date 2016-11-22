@@ -303,6 +303,7 @@ class ProviderManager(TaskManager):
             meta = {}
         if image_type:
             meta['disk_format'] = image_type
+        meta['nodepool_managed'] = 'True'
         with shade_inner_exceptions():
             image = self._client.create_image(
                 name=image_name,
