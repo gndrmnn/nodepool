@@ -694,11 +694,12 @@ class UploadWorker(BaseWorker):
         super(UploadWorker, self).__init__(config_path)
         self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
 
-    def _uploadImage(self, build_id, image_name, images, provider):
+    def _uploadImage(self, build_id, upload_id, image_name, images, provider):
         '''
         Upload a local DIB image build to a provider.
 
         :param str build_id: Unique ID of the image build to upload.
+        :param str upload_id: Unique ID of the upload.
         :param str image_name: Name of the diskimage.
         :param list images: A list of DibImageFile objects from this build
             that available for uploading.
@@ -735,6 +736,11 @@ class UploadWorker(BaseWorker):
                       (build_id, filename, provider.name))
 
         manager = self._config.provider_managers[provider.name]
+
+        meta = provider_image.meta.copy()
+        meta['nodepool_build_id'] = build_id
+        meta['nodepool_upload_id'] = upload_id
+
         provider_image = provider.images.get(image_name)
         if provider_image is None:
             raise exceptions.BuilderInvalidCommandError(
@@ -744,7 +750,7 @@ class UploadWorker(BaseWorker):
         external_id = manager.uploadImage(
             ext_image_name, filename,
             image_type=image.extension,
-            meta=provider_image.meta
+            meta=meta
         )
 
         if self._statsd:
@@ -837,7 +843,7 @@ class UploadWorker(BaseWorker):
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 
-                data = self._uploadImage(build.id, image.name,
+                data = self._uploadImage(build.id, upnum, image.name,
                                          local_images, provider)
 
                 # Set final state
