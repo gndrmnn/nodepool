@@ -34,6 +34,24 @@
       "revId": "e3b43528f75ffba7319fcd1a9f513bcee7cb9d58",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a77a97e_2b5f6276",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-22T02:50:30Z",
+      "side": 1,
+      "message": "Off the top of my head:\n\n1) Modify waitForImage to return the image\n2) call waitForImage instead of the first waitForBuild\n3) use image.build_id\n4) Use waitForImage with ignore_list param in place of the 2nd waitForBuild call",
+      "parentUuid": "7a77a97e_2b8e8227",
+      "revId": "e3b43528f75ffba7319fcd1a9f513bcee7cb9d58",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
