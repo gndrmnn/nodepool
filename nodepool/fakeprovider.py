@@ -172,6 +172,7 @@ class FakeOpenStackCloud(object):
         obj.status = status
 
     def create_image(self, **kwargs):
+        self.log.debug("REAL CREATE IMAGE")
         return self._create(
             self._image_list, instance_type=Dummy.IMAGE,
             done_status='READY', **kwargs)
@@ -233,8 +234,22 @@ class FakeOpenStackCloud(object):
 
 
 class FakeUploadFailCloud(FakeOpenStackCloud):
+    log = logging.getLogger("nodepool.FakeUploadFailCloud")
+
+    def __init__(self, times_to_fail=None):
+        super(FakeUploadFailCloud, self).__init__()
+        self.times_to_fail = times_to_fail
+        self.times_failed = 0
+
     def create_image(self, **kwargs):
-        raise exceptions.BuilderError("Test fail image upload.")
+        self.log.debug("FAKE CREATE IMAGE")
+        if self.times_to_fail is None:
+            raise exceptions.BuilderError("Test fail image upload.")
+        self.times_failed += 1
+        if self.times_failed <= self.times_to_fail:
+            raise exceptions.BuilderError("Test fail image upload.")
+        else:
+            return super(FakeUploadFailCloud, self).create_image(**kwargs)
 
 
 class FakeFile(StringIO.StringIO):
