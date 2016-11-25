@@ -152,6 +152,41 @@ class TestNodepool(tests.DBTestCase):
                 for subnode in node.subnodes:
                     self.assertEqual(subnode.state, nodedb.READY)
 
+    def test_subnode_deletion_success(self):
+        """Test that subnodes are deleted with parent node"""
+        configfile = self.setup_config('subnodes.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage(pool, 'fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        subnode_ids = []
+        node_ids = []
+
+        with pool.getDB().getSession() as session:
+            nodes = session.getNodes(provider_name='fake-provider',
+                                     label_name='multi-fake',
+                                     target_name='fake-target',
+                                     state=nodedb.READY)
+            self.assertEqual(len(nodes), 2)
+            for node in nodes:
+                self.assertEqual(len(node.subnodes), 2)
+                for subnode in node.subnodes:
+                    self.assertEqual(subnode.state, nodedb.READY)
+                    subnode_ids.append(subnode.id)
+                node_ids.append(node.id)
+
+        for node_id in node_ids:
+            pool.deleteNode(node_id)
+
+        self.wait_for_threads()
+        self.waitForNodes(pool)
+
+        with pool.getDB().getSession() as session:
+            for subnode_id in subnode_ids:
+                s = session.getSubNode(subnode_id)
+                self.assertIsNone(s)
+
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
         configfile = self.setup_config('node_az.yaml')
@@ -582,6 +617,63 @@ class TestNodepool(tests.DBTestCase):
             node = session.getNode(2)
             self.assertEqual(node, None)
 
+    def test_dont_delete_building_dib_images(self):
+        """Test we don't delete building dib images"""
+        # Get a valid image
+        configfile = self.setup_config('node_dib.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
+        self.waitForNodes(pool)
+        timeout = nodepool.nodepool.IMAGE_CLEANUP
+
+        # Modify the image to be BUILDING and have a state time older
+        # than the cleanup time.
+        with pool.getDB().getSession() as session:
+            dib_image = session.getDibImage(1)
+            dib_image.state = nodedb.BUILDING
+            dib_image.state_time = time.time() - timeout - 1
+            session.commit()
+
+            # Run cleanup which should not delete the building image
+            pool.cleanupOneDibImage(session, dib_image)
+
+        # Check that the image is still present in a new session
+        with pool.getDB().getSession() as session:
+            dib_image = session.getDibImage(1)
+            self.assertEqual(dib_image.state, nodedb.BUILDING)
+            self.assertTrue(time.time() - dib_image.state_time > timeout)
+
+    def test_dont_delete_building_snap_images(self):
+        """Test we don't delete building snapshot images"""
+        # Get a valid image
+        configfile = self.setup_config('node_dib.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        # Because this builds a dib image we also get a snapshot entry
+        # for the uploaded cloud provider image.
+        self.waitForImage(pool, 'fake-dib-provider', 'fake-dib-image')
+        self.waitForNodes(pool)
+        timeout = nodepool.nodepool.IMAGE_CLEANUP
+
+        # Modify the image to be BUILDING and have a state time older
+        # than the cleanup time.
+        with pool.getDB().getSession() as session:
+            snap_image = session.getSnapshotImage(1)
+            snap_image.state = nodedb.BUILDING
+            snap_image.state_time = time.time() - timeout - 1
+            session.commit()
+
+            # Run cleanup which should not delete the building image
+            pool.cleanupOneImage(session, snap_image)
+
+        # Check that the image is still present in a new session
+        with pool.getDB().getSession() as session:
+            snap_image = session.getSnapshotImage(1)
+            self.assertEqual(snap_image.state, nodedb.BUILDING)
+            self.assertTrue(time.time() - snap_image.state_time > timeout)
 
 class TestGearClient(tests.DBTestCase):
     def test_wait_for_completion(self):

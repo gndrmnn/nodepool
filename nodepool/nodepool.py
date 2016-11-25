@@ -876,11 +876,15 @@ class SubNodeLauncher(threading.Thread):
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
-    def __init__(self, securefile, configfile,
+    def __init__(self, securefile, configfile, no_deletes=False,
+                 no_launches=False, no_images=False,
                  watermark_sleep=WATERMARK_SLEEP):
         threading.Thread.__init__(self, name='NodePool')
         self.securefile = securefile
         self.configfile = configfile
+        self.no_deletes = no_deletes
+        self.no_launches = no_launches
+        self.no_images = no_images
         self.watermark_sleep = watermark_sleep
         self._stopped = False
         self.config = None
@@ -995,14 +999,16 @@ class NodePool(threading.Thread):
                     second = None
                 minute, hour, dom, month, dow = parts[:5]
                 trigger = apscheduler.triggers.cron.CronTrigger(
-                    day=dom, day_of_week=dow, hour=hour, minute=minute,
-                    second=second)
+                    month=month, day=dom, day_of_week=dow,
+                    hour=hour, minute=minute, second=second)
                 c.job = self.apsched.add_job(
                     cron_map[c.name], trigger=trigger)
             else:
                 c.job = self.config.crons[c.name].job
 
     def reconfigureUpdateListeners(self, config):
+        if self.no_deletes:
+            return
         if self.config:
             running = set(self.config.zmq_publishers.keys())
         else:
@@ -1451,7 +1457,7 @@ class NodePool(threading.Thread):
         for subnode in node.subnodes:
             if subnode.external_id:
                 manager.waitForServerDeletion(subnode.external_id)
-                subnode.delete()
+            subnode.delete()
 
         node.delete()
         self.log.info("Deleted node id: %s" % node.id)
@@ -1486,6 +1492,8 @@ class NodePool(threading.Thread):
         manager.cleanupServer(external_id)
 
     def _doPeriodicCleanup(self):
+        if self.no_deletes:
+            return
         try:
             self.periodicCleanup()
         except Exception:
@@ -1590,6 +1598,8 @@ class NodePool(threading.Thread):
                                    "%s" % node.id)
 
     def _doPeriodicCheck(self):
+        if self.no_deletes:
+            return
         try:
             with self.getDB().getSession() as session:
                 self.periodicCheck(session)
