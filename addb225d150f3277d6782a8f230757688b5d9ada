@@ -86,6 +86,24 @@
       "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a74a57a_69d4bb46",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6547
+      },
+      "writtenOn": "2016-11-25T09:51:11Z",
+      "side": 1,
+      "message": "Yeah, let\u0027s remove postgres now...",
+      "parentUuid": "7a77a97e_2a41aba9",
+      "revId": "addb225d150f3277d6782a8f230757688b5d9ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
