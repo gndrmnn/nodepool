@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_75d2ad5d",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-26T20:06:57Z",
+      "side": 1,
+      "message": "Lets make this nodepool-builder",
+      "revId": "00aca1ce766f880fc0111ff3ab3aa8734a88c29d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a74a57a_b5c8c5a9",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-26T20:06:57Z",
+      "side": 1,
+      "message": "how about dib-cmd or command",
+      "revId": "00aca1ce766f880fc0111ff3ab3aa8734a88c29d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
