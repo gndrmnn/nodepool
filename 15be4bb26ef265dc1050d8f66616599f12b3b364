@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_ac3a0ee5",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-11-28T17:15:58Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it better to check the image name here instead of image type since both images listed in the config are qcow2?",
+      "revId": "15be4bb26ef265dc1050d8f66616599f12b3b364",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
