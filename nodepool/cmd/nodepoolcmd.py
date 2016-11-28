@@ -162,10 +162,10 @@ class NodePoolCmd(NodepoolApp):
         print status.node_list(self.pool.getDB(), node_id)
 
     def dib_image_list(self):
-        print status.dib_image_list(self.zk)
+        print status.dib_image_list(self.pool.getZK())
 
     def image_list(self):
-        print status.image_list(self.zk)
+        print status.image_list(self.pool.getZK())
 
     def image_build(self, diskimage=None):
         diskimage = diskimage or self.args.image
@@ -174,7 +174,7 @@ class NodePoolCmd(NodepoolApp):
             raise Exception("Trying to build a non disk-image-builder "
                             "image: %s" % diskimage)
 
-        self.zk.submitBuildRequest(diskimage)
+        self.pool.getZK().submitBuildRequest(diskimage)
 
     def alien_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
@@ -251,12 +251,12 @@ class NodePoolCmd(NodepoolApp):
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
-        build = self.zk.getBuild(image, build_num)
+        build = self.pool.getZK().getBuild(image, build_num)
         if not build:
             print("Build %s not found" % self.args.id)
             return
         build.state = zk.DELETING
-        self.zk.storeBuild(image, build, build.id)
+        self.pool.getZK().storeBuild(image, build, build.id)
 
     def image_delete(self):
         provider_name = self.args.provider
@@ -264,15 +264,15 @@ class NodePoolCmd(NodepoolApp):
         build_id = self.args.build_id
         upload_id = self.args.upload_id
 
-        image = self.zk.getImageUpload(image_name, build_id, provider_name,
-                                       upload_id)
+        image = self.pool.getZK().getImageUpload(
+            image_name, build_id, provider_name, upload_id)
         if not image:
             print("Image upload not found")
             return
 
         image.state = zk.DELETING
-        self.zk.storeImageUpload(image.image_name, image.build_id,
-                                 image.provider_name, image, image.id)
+        self.pool.getZK().storeImageUpload(image.image_name, image.build_id,
+                                           image.provider_name, image, image.id)
 
     def config_validate(self):
         validator = ConfigValidator(self.args.config)
@@ -308,8 +308,6 @@ class NodePoolCmd(NodepoolApp):
                 t.join()
 
     def main(self):
-        self.zk = None
-
         # commands which do not need to start-up or parse config
         if self.args.command in ('config-validate'):
             return self.args.func()
@@ -321,16 +319,15 @@ class NodePoolCmd(NodepoolApp):
         if self.args.command in ('image-build', 'dib-image-list',
                                  'image-list', 'dib-image-delete',
                                  'image-delete'):
-            self.zk = zk.ZooKeeper()
-            self.zk.connect(config.zookeeper_servers.values())
+            self.pool.reconfigureZooKeeper(config)
         else:
             self.pool.reconfigureDatabase(config)
 
         self.pool.setConfig(config)
         self.args.func()
 
-        if self.zk:
-            self.zk.disconnect()
+        if self.pool.getZK():
+            self.pool.getZK().disconnect()
 
 def main():
     npc = NodePoolCmd()
