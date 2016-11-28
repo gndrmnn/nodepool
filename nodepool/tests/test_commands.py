@@ -121,6 +121,15 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
         self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
 
+    def test_dib_image_pause(self):
+        configfile = self.setup_config('node_diskimage_pause.yaml')
+        self._useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForNodes(pool)
+        self.assert_listed(configfile, ['dib-image-list'], 1, 'fake-image', 0)
+        self.assert_listed(configfile, ['dib-image-list'], 1, 'fake-image2', 1)
+
     def test_dib_image_delete(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

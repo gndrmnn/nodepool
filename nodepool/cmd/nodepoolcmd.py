@@ -174,6 +174,11 @@ class NodePoolCmd(NodepoolApp):
             raise Exception("Trying to build a non disk-image-builder "
                             "image: %s" % diskimage)
 
+        if diskimage.pause:
+            log.info(
+                "Skipping build request for image %s; paused" % diskimage.name)
+            return
+
         self.zk.submitBuildRequest(diskimage)
 
     def alien_list(self):
