@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_5ac03e50",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-28T23:53:26Z",
+      "side": 1,
+      "message": "Nit, this comment is no longer accurate. We check that we reach a successful working state after failure are handled.",
+      "revId": "a3459933fab03fb3d10d3829f1099a98c5c93eb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a74a57a_fac74a61",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-28T23:53:26Z",
+      "side": 1,
+      "message": "Nit, this would be a bit easier to read if renamed to newest_build and used getMostRecentBuilds() instead since what we seem to be going after is the build id not the actual upload data since the most recent upload was successful.",
+      "revId": "a3459933fab03fb3d10d3829f1099a98c5c93eb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
