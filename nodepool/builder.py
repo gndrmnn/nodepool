@@ -836,7 +836,14 @@ class UploadWorker(BaseWorker):
                 upload = self._zk.getMostRecentBuildImageUploads(
                     1, image.name, build.id, provider.name, zk.READY)
                 if upload:
+                    self.log.debug("Will NOT upload %s:%s to %s, found %s" %
+                                   (image.name, build.id, upload))
                     return
+
+                # NOTE(Shrews): Attempt to debug multi uploads of same image
+                self.log.debug(
+                    "Will upload %s:%s to %s" %
+                    (image.name, build.id, provider.name))
 
                 # New upload number with initial state 'uploading'
                 data = zk.ImageUpload()
@@ -850,6 +857,9 @@ class UploadWorker(BaseWorker):
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
                                           provider.name, data, upnum)
+
+                # NOTE(Shrews): Attempt to debug multi uploads of same image
+                self.log.debug("Upload complete: %s" % data)
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
             pass
