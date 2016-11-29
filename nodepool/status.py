@@ -18,7 +18,7 @@ import time
 
 from nodepool import nodedb
 
-from prettytable import PrettyTable
+import prettytable
 
 
 def age(timestamp):
@@ -31,9 +31,9 @@ def age(timestamp):
 
 
 def node_list(db, node_id=None):
-    t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target",
-                     "Manager", "Hostname", "NodeName", "Server ID",
-                     "IP", "State", "Age", "Comment"])
+    t = prettytable.PrettyTable(["ID", "Provider", "AZ", "Label", "Target",
+                                 "Manager", "Hostname", "NodeName",
+                                 "Server ID", "IP", "State", "Age", "Comment"])
     t.align = 'l'
     with db.getSession() as session:
         for node in session.getNodes():
@@ -49,8 +49,8 @@ def node_list(db, node_id=None):
 
 
 def dib_image_list(db):
-    t = PrettyTable(["ID", "Image", "Filename", "Version",
-                     "State", "Age"])
+    t = prettytable.PrettyTable(["ID", "Image", "Filename", "Version",
+                                 "State", "Age"])
     t.align = 'l'
     with db.getSession() as session:
         for image in session.getDibImages():
@@ -62,8 +62,9 @@ def dib_image_list(db):
 
 
 def image_list(db):
-    t = PrettyTable(["ID", "Provider", "Image", "Hostname", "Version",
-                     "Image ID", "Server ID", "State", "Age"])
+    t = prettytable.PrettyTable(["ID", "Provider", "Image", "Hostname",
+                                 "Version", "Image ID", "Server ID",
+                                 "State", "Age"])
     t.align = 'l'
     with db.getSession() as session:
         for image in session.getSnapshotImages():

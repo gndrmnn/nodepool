@@ -20,7 +20,7 @@ import errno
 import time
 import socket
 import logging
-from sshclient import SSHClient
+import sshclient
 
 import fakeprovider
 import paramiko
@@ -52,7 +52,7 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
     for count in iterate_timeout(
             timeout, exceptions.SSHTimeoutException, "ssh access"):
         try:
-            client = SSHClient(ip, username, **connect_kwargs)
+            client = sshclient.SSHClient(ip, username, **connect_kwargs)
             break
         except paramiko.SSHException as e:
             # NOTE(pabelanger): Currently paramiko only returns a string with

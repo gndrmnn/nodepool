@@ -15,9 +15,9 @@
 from contextlib import contextmanager
 import json
 import logging
-from kazoo.client import KazooClient, KazooState
+from kazoo import client
 from kazoo import exceptions as kze
-from kazoo.recipe.lock import Lock
+from kazoo.recipe import lock
 
 from nodepool import exceptions as npe
 
@@ -111,7 +111,7 @@ class ZooKeeper(object):
         image_lock = self._imageLockPath(image)
         try:
             self.client.ensure_path(self._imagePath(image))
-            self._current_lock = Lock(self.client, image_lock)
+            self._current_lock = lock.Lock(self.client, image_lock)
             have_lock = self._current_lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -143,9 +143,9 @@ class ZooKeeper(object):
 
         .. warning:: This method must not block.
         '''
-        if state == KazooState.LOST:
+        if state == client.KazooState.LOST:
             self.log.debug("ZooKeeper connection: LOST")
-        elif state == KazooState.SUSPENDED:
+        elif state == client.KazooState.SUSPENDED:
             self.log.debug("ZooKeeper connection: SUSPENDED")
         else:
             self.log.debug("ZooKeeper connection: CONNECTED")
@@ -169,7 +169,7 @@ class ZooKeeper(object):
         '''
         if not self.client:
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            self.client = client.KazooClient(hosts=hosts, read_only=read_only)
             self.client.add_listener(self._connection_listener)
             self.client.start()
 
