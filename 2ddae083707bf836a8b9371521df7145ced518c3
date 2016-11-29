@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_53666951",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 887,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-29T02:03:35Z",
+      "side": 1,
+      "message": "no_images is not necessary anymore and can be removed everywhere.",
+      "revId": "2ddae083707bf836a8b9371521df7145ced518c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
