@@ -219,11 +219,12 @@ class NodePoolCmd(NodepoolApp):
                                 % (provider.name, str(e.message)))
 
                 for image in images:
-                    if image['properties'].get('image_type') == 'snapshot':
-                        if not session.getSnapshotImageByExternalID(
-                                provider.name, image['id']):
-                            t.add_row([provider.name, image['name'],
-                                       image['id']])
+                    if image['properties'].get('nodepool_managed'):
+                        continue
+                    if not session.getSnapshotImageByExternalID(
+                            provider.name, image['id']):
+                        t.add_row([provider.name, image['name'],
+                                   image['id']])
         print t
 
     def hold(self):
