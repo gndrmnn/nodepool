@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_b45e9977",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-29T19:09:15Z",
+      "side": 1,
+      "message": "I think this difference is still going to give us the cloud uploaded images since provider_image_ids should still have everything in it.\n\nI think what we want is the subset of provider_images that are not cloud uploaded (one hacky way to get that is what are the images that nodepool uploaded) less the images that nodepool currently knows about as ready.",
+      "revId": "63df476bfc369420ebbebb54a23d655b6be9936e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a74a57a_3488c9c6",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-11-29T19:09:15Z",
+      "side": 1,
+      "message": "Making this:\n\n  for image in provider_images:\n      if image[\u0027id\u0027] in alien_ids:\n          t.add_row()\n\nWould be a bit easier to read and also should be quicker.",
+      "revId": "63df476bfc369420ebbebb54a23d655b6be9936e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
