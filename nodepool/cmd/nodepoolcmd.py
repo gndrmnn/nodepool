@@ -219,7 +219,7 @@ class NodePoolCmd(NodepoolApp):
                                 % (provider.name, str(e.message)))
 
                 for image in images:
-                    if image['metadata'].get('image_type') == 'snapshot':
+                    if image['properties'].get('image_type') == 'snapshot':
                         if not session.getSnapshotImageByExternalID(
                                 provider.name, image['id']):
                             t.add_row([provider.name, image['name'],
