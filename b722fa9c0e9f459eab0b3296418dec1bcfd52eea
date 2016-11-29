@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "5a74a57a_d338b9d5",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-29T01:41:56Z",
+      "side": 1,
+      "message": "Also, we don\u0027t seem to be getting \u0027metadata\u0027 attributes on images back from shade.  From the current code:\n    if image[\u0027metadata\u0027].get(\u0027image_type\u0027) \u003d\u003d \u0027snapshot\u0027:\nKeyError: \u0027metadata\u0027\n\nI think what Clark is suggesting is a good idea.",
+      "revId": "b722fa9c0e9f459eab0b3296418dec1bcfd52eea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a74a57a_07766f3d",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
