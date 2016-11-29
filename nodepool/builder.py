@@ -735,6 +735,10 @@ class UploadWorker(BaseWorker):
                       (build_id, filename, provider.name))
 
         manager = self._config.provider_managers[provider.name]
+
+        meta = provider_image.meta.copy()
+        meta['nodepool_build_id'] = build_id
+
         provider_image = provider.images.get(image_name)
         if provider_image is None:
             raise exceptions.BuilderInvalidCommandError(
@@ -744,7 +748,7 @@ class UploadWorker(BaseWorker):
         external_id = manager.uploadImage(
             ext_image_name, filename,
             image_type=image.extension,
-            meta=provider_image.meta
+            meta=meta
         )
 
         if self._statsd:
