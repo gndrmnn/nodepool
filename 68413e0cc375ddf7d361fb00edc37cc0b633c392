@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_2d1078a8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1578,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-29T20:33:23Z",
+      "side": 0,
+      "message": "still need self.no_launches: return",
+      "revId": "68413e0cc375ddf7d361fb00edc37cc0b633c392",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
