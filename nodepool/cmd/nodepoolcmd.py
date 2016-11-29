@@ -223,10 +223,10 @@ class NodePoolCmd(NodepoolApp):
             uploads = []
             for image in provider_images:
                 # Only consider images marked as managed by nodepool.
-                # This will prevent cloud-provider images from showing
+                # Prevent cloud-provider images from showing
                 # up in alien list since we can't do anything about them
                 # anyway.
-                if image['properties'].get('nodepool_managed'):
+                if 'nodepool_build_id' in image['properties']:
                     # Build list of provider images as recorded in ZK
                     for bnum in self.zk.getBuildNumbers(image['name']):
                         uploads.extend(
