@@ -14,6 +14,7 @@
 # under the License.
 
 import errno
+import functools
 import json
 import logging
 import os
@@ -176,6 +177,36 @@ class NodePoolBuilder(object):
         self._build_workers = build_workers
         self._upload_workers = upload_workers
         self.statsd = stats.get_client()
+
+    def _running_under_virtualenv():
+        # NOTE: borrowed from pip:locations.py
+        if hasattr(sys, 'real_prefix'):
+            return True
+        elif sys.prefix != getattr(sys, "base_prefix", sys.prefix):
+            return True
+        return False
+
+    def activate_virtualenv(log):
+        """Run as a pre-exec function to activate current virtualenv
+
+        If we are invoked directly as /path/ENV/nodepool-builer (as
+        done by an init script, for example) then /path/ENV/bin will
+        not be in our $PATH, meaning we can't find disk-image-create.
+        Apart from that, dib also needs to run in an activated
+        virtualenv so it can find utils like dib-run-parts.  Run this
+        before exec of dib to ensure the current virtualenv (if any)
+        is activated.
+
+        :param log: logging is usually redirected when using this;
+                    pass the logger to use
+        """
+        if _running_under_virtualenv():
+            activate_this = os.path.join(sys.prefix, "bin", "activate_this.py")
+            log.debug("Activating virtualenv %s for build" % activate_this)
+            if not os.path.exists(activate_this):
+                raise exceptions.BuilderError("Running in a virtualenv, but "
+                                              "cannot find: %s" % activate_this)
+            execfile(activate_this, dict(__file__=activate_this))
 
     @property
     def running(self):
@@ -433,6 +464,7 @@ class NodePoolBuilder(object):
                 shlex.split(cmd),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
+                preexec_fn=functools.partial(self.activate_virtualenv, log),
                 env=env)
         except OSError as e:
             raise exceptions.BuilderError(
