@@ -21,10 +21,10 @@ import re
 
 import myjenkins
 import fakeprovider
-from task_manager import Task, TaskManager
+import task_manager
 
 
-class CreateNodeTask(Task):
+class CreateNodeTask(task_manager.Task):
     def main(self, jenkins):
         if 'credentials_id' in self.args:
             launcher_params = {'port': 22,
@@ -54,38 +54,38 @@ class CreateNodeTask(Task):
                 raise
 
 
-class NodeExistsTask(Task):
+class NodeExistsTask(task_manager.Task):
     def main(self, jenkins):
         return jenkins.node_exists(self.args['name'])
 
 
-class DeleteNodeTask(Task):
+class DeleteNodeTask(task_manager.Task):
     def main(self, jenkins):
         return jenkins.delete_node(self.args['name'])
 
 
-class GetNodeConfigTask(Task):
+class GetNodeConfigTask(task_manager.Task):
     def main(self, jenkins):
         return jenkins.get_node_config(self.args['name'])
 
 
-class SetNodeConfigTask(Task):
+class SetNodeConfigTask(task_manager.Task):
     def main(self, jenkins):
         jenkins.reconfig_node(self.args['name'], self.args['config'])
 
 
-class StartBuildTask(Task):
+class StartBuildTask(task_manager.Task):
     def main(self, jenkins):
         jenkins.build_job(self.args['name'],
                           parameters=self.args['params'])
 
 
-class GetInfoTask(Task):
+class GetInfoTask(task_manager.Task):
     def main(self, jenkins):
         return jenkins.get_info()
 
 
-class JenkinsManager(TaskManager):
+class JenkinsManager(task_manager.TaskManager):
     log = logging.getLogger("nodepool.JenkinsManager")
 
     def __init__(self, target):

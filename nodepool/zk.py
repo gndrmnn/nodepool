@@ -18,9 +18,9 @@ import json
 import logging
 import six
 import time
-from kazoo.client import KazooClient, KazooState
+from kazoo import client
 from kazoo import exceptions as kze
-from kazoo.recipe.lock import Lock
+from kazoo.recipe import lock as k_lock
 
 from nodepool import exceptions as npe
 
@@ -346,7 +346,7 @@ class ZooKeeper(object):
     def _getImageBuildLock(self, image, blocking=True, timeout=None):
         lock_path = self._imageBuildLockPath(image)
         try:
-            lock = Lock(self.client, lock_path)
+            lock = k_lock.Lock(self.client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -363,7 +363,7 @@ class ZooKeeper(object):
                                  blocking=True, timeout=None):
         lock_path = self._imageBuildNumberLockPath(image, build_number)
         try:
-            lock = Lock(self.client, lock_path)
+            lock = k_lock.Lock(self.client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -380,7 +380,7 @@ class ZooKeeper(object):
                             blocking=True, timeout=None):
         lock_path = self._imageUploadLockPath(image, build_number, provider)
         try:
-            lock = Lock(self.client, lock_path)
+            lock = k_lock.Lock(self.client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -399,10 +399,10 @@ class ZooKeeper(object):
 
         .. warning:: This method must not block.
         '''
-        if state == KazooState.LOST:
+        if state == client.KazooState.LOST:
             self.log.debug("ZooKeeper connection: LOST")
             self._became_lost = True
-        elif state == KazooState.SUSPENDED:
+        elif state == client.KazooState.SUSPENDED:
             self.log.debug("ZooKeeper connection: SUSPENDED")
         else:
             self.log.debug("ZooKeeper connection: CONNECTED")
@@ -414,15 +414,15 @@ class ZooKeeper(object):
 
     @property
     def connected(self):
-        return self.client.state == KazooState.CONNECTED
+        return self.client.state == client.KazooState.CONNECTED
 
     @property
     def suspended(self):
-        return self.client.state == KazooState.SUSPENDED
+        return self.client.state == client.KazooState.SUSPENDED
 
     @property
     def lost(self):
-        return self.client.state == KazooState.LOST
+        return self.client.state == client.KazooState.LOST
 
     @property
     def didLoseConnection(self):
@@ -446,7 +446,7 @@ class ZooKeeper(object):
         '''
         if self.client is None:
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            self.client = client.KazooClient(hosts=hosts, read_only=read_only)
             self.client.add_listener(self._connection_listener)
             self.client.start()
 

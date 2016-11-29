@@ -13,11 +13,11 @@
 
 import os
 
-from nodepool.cmd.config_validator import ConfigValidator
+from nodepool.cmd import config_validator
 
 from nodepool import tests
-from yaml.parser import ParserError
-from voluptuous import MultipleInvalid
+from yaml import parser
+import voluptuous
 
 
 class TestConfigValidation(tests.BaseTestCase):
@@ -29,20 +29,20 @@ class TestConfigValidation(tests.BaseTestCase):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate', 'good.yaml')
 
-        validator = ConfigValidator(config)
+        validator = config_validator.ConfigValidator(config)
         validator.validate()
 
     def test_yaml_error(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate', 'yaml_error.yaml')
 
-        validator = ConfigValidator(config)
-        self.assertRaises(ParserError, validator.validate)
+        validator = config_validator.ConfigValidator(config)
+        self.assertRaises(parser.ParserError, validator.validate)
 
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate',
                               'schema_error.yaml')
 
-        validator = ConfigValidator(config)
-        self.assertRaises(MultipleInvalid, validator.validate)
+        validator = config_validator.ConfigValidator(config)
+        self.assertRaises(voluptuous.MultipleInvalid, validator.validate)

@@ -24,8 +24,8 @@ from nodepool import status
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
 from nodepool.version import version_info as npc_version_info
-from config_validator import ConfigValidator
-from prettytable import PrettyTable
+import config_validator
+import prettytable
 
 log = logging.getLogger(__name__)
 
@@ -183,7 +183,8 @@ class NodePoolCmd(NodepoolApp):
     def alien_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
-        t = PrettyTable(["Provider", "Hostname", "Server ID", "IP"])
+        t = prettytable.PrettyTable(["Provider", "Hostname",
+                                     "Server ID", "IP"])
         t.align = 'l'
         with self.pool.getDB().getSession() as session:
             for provider in self.pool.config.providers.values():
@@ -206,7 +207,7 @@ class NodePoolCmd(NodepoolApp):
     def alien_image_list(self):
         self.pool.reconfigureManagers(self.pool.config, False)
 
-        t = PrettyTable(["Provider", "Name", "Image ID"])
+        t = prettytable.PrettyTable(["Provider", "Name", "Image ID"])
         t.align = 'l'
 
         for provider in self.pool.config.providers.values():
@@ -309,13 +310,13 @@ class NodePoolCmd(NodepoolApp):
                                  image.provider_name, image, image.id)
 
     def config_validate(self):
-        validator = ConfigValidator(self.args.config)
+        validator = config_validator.ConfigValidator(self.args.config)
         validator.validate()
         log.info("Configuation validation complete")
         #TODO(asselin,yolanda): add validation of secure.conf
 
     def job_list(self):
-        t = PrettyTable(["ID", "Name", "Hold on Failure"])
+        t = prettytable.PrettyTable(["ID", "Name", "Hold on Failure"])
         t.align = 'l'
         with self.pool.getDB().getSession() as session:
             for job in session.getJobs():

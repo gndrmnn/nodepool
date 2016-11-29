@@ -26,7 +26,7 @@ import shade
 import exceptions
 import fakeprovider
 from nodeutils import iterate_timeout
-from task_manager import TaskManager, ManagerStoppedException
+import task_manager
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list
@@ -93,8 +93,9 @@ class ProviderManager(object):
 
     def start(self):
         if self._use_taskmanager:
-            self._taskmanager = TaskManager(None, self.provider.name,
-                                            self.provider.rate)
+            self._taskmanager = task_manager.TaskManager(None,
+                                                         self.provider.name,
+                                                         self.provider.rate)
             self._taskmanager.start()
         self.resetClient()
 
@@ -260,7 +261,7 @@ class ProviderManager(object):
                 image = self.getImage(image_id)
             except NotFound:
                 continue
-            except ManagerStoppedException:
+            except task_manager.ManagerStoppedException:
                 raise
             except Exception:
                 self.log.exception('Unable to list images while waiting for '
