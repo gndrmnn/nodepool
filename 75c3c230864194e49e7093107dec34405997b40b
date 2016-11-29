@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_1b76a3d8",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-29T16:34:05Z",
+      "side": 1,
+      "message": "Instead of this, can we mirror the node metadata structure?  So something like:\n\nmeta[\u0027nodepool\u0027] \u003d json.dumps({\u0027build_id\u0027:..., \u0027upload_id\u0027:...})\n\nOr, if we want to flatten the json\n\nmeta[\u0027nodepool_build_id\u0027]\u003d...\nmeta[\u0027nodepool_upload_id\u0027]\u003d...",
+      "revId": "75c3c230864194e49e7093107dec34405997b40b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
