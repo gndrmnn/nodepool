@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_d648508a",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-11-30T14:41:35Z",
+      "side": 0,
+      "message": "We\u0027ll need to update our init.d scripts too.  I can do that",
+      "revId": "eb7c8c52b604c01fa7c3b4122f8b3932f2fdef00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
