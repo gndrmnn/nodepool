@@ -232,6 +232,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_devstack.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
         config-drive: false
       - name: bare-precise
@@ -240,6 +241,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_bare.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: devstack-trusty
         base-image: 'Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)'
@@ -247,6 +249,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_devstack.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: bare-trusty
         base-image: 'Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)'
@@ -254,6 +257,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_bare.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: bare-centos6
         base-image: 'CentOS 6 (PVHVM)'
@@ -261,6 +265,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_bare.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: devstack-f20
         base-image: 'Fedora 20 (Heisenbug) (PVHVM)'
@@ -268,6 +273,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_devstack.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: devstack-f21
         base-image: 'Fedora 21 (PVHVM)'
@@ -301,6 +307,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_devstack.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: bare-precise
         base-image: 'Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)'
@@ -308,6 +315,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_bare.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: devstack-trusty
         base-image: 'Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)'
@@ -315,6 +323,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_devstack.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: bare-trusty
         base-image: 'Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)'
@@ -322,6 +331,7 @@ providers:
         name-filter: 'Performance'
         setup: prepare_node_bare.sh
         username: jenkins
+        user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
       - name: bare-centos6
         base-image: 'CentOS 6 (PVHVM)'
