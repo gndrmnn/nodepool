@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a74a57a_636dee31",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-11-30T17:44:29Z",
+      "side": 1,
+      "message": "I think we should avoid logging here, this is a method that may end up being called many times.  It would be better to just log the checksums when we start uploading it.",
+      "revId": "a9f9bf4f9b81c194cb95eb96b1ab094e3e64d20a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
