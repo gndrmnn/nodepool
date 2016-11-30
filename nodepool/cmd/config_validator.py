@@ -39,6 +39,7 @@ class ConfigValidator:
             'meta': dict,
             'setup': str,
             'username': str,
+            'user-home': str,
             'private-key': str,
             'config-drive': bool,
         }
