@@ -503,6 +503,7 @@ class BuildWorker(BaseWorker):
         super(BuildWorker, self).__init__(config_path, interval)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
+        self.dib_cmd = 'disk-image-create'
 
     def _running_under_virtualenv(self):
         # NOTE: borrowed from pip:locations.py
@@ -529,7 +530,6 @@ class BuildWorker(BaseWorker):
                 raise exceptions.BuilderError("Running in a virtualenv, but "
                                               "cannot find: %s" % activate_this)
             execfile(activate_this, dict(__file__=activate_this))
-
 
     def _checkForScheduledImageUpdates(self):
         '''
@@ -690,13 +690,9 @@ class BuildWorker(BaseWorker):
         if 'qcow2' in img_types:
             qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
 
-        if 'fake-' in diskimage.name:
-            dib_cmd = 'nodepool/tests/fake-image-create'
-        else:
-            dib_cmd = 'disk-image-create'
-
         cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
+               (self.dib_cmd, img_types, qemu_img_options, filename,
+                img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (diskimage.name,))
