@@ -16,6 +16,24 @@
       "revId": "2ddae083707bf836a8b9371521df7145ced518c3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a74a57a_5903a70d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 887,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-11-30T07:58:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a74a57a_53666951",
+      "revId": "2ddae083707bf836a8b9371521df7145ced518c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
