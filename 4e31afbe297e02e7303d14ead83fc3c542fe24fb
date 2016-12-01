@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_4dbaf324",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1412,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-01T23:06:01Z",
+      "side": 1,
+      "message": "I know this patch has been in flight a while, but what about moving this to:\n\n   nodepool.label.LABEL.allocation.*\n\nReason being, we already have exist gauges in:\n\n   nodepool.label.LABEL.nodes.*\n\nDoes it make sense to keep them in the same namespace?",
+      "revId": "4e31afbe297e02e7303d14ead83fc3c542fe24fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
