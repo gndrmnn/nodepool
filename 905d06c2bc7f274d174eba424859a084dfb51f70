@@ -16,6 +16,23 @@
       "revId": "905d06c2bc7f274d174eba424859a084dfb51f70",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_7f811c4a",
+        "filename": "nodepool/status.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-01T19:28:26Z",
+      "side": 1,
+      "message": "The loops are already in the correct order, it just seems that each thing returned by the zk api is not in order.  We could add sorted() calls to each loop, or we could adjust the zk api to return the items sorted.",
+      "revId": "905d06c2bc7f274d174eba424859a084dfb51f70",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
