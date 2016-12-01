@@ -14,6 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import operator
 import time
 
 from nodepool import nodedb
@@ -78,4 +79,4 @@ def image_list(zk):
                                upload.external_id,
                                upload.state,
                                age(upload.state_time)])
-    return str(t)
+    return t.get_string(sort_key=operator.itemgetter(4,1,3,2), sortby="Image")
