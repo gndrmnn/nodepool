@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_a7b010f6",
+        "filename": "nodepool/status.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2016-12-01T18:28:51Z",
+      "side": 1,
+      "message": "Ugh. Magic numbers.",
+      "revId": "905d06c2bc7f274d174eba424859a084dfb51f70",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
