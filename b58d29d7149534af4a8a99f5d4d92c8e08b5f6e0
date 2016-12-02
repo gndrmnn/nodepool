@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_4308d42c",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-02T17:51:49Z",
+      "side": 1,
+      "message": "1st",
+      "revId": "b58d29d7149534af4a8a99f5d4d92c8e08b5f6e0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_030edc3a",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-02T17:51:49Z",
+      "side": 1,
+      "message": "2nd",
+      "revId": "b58d29d7149534af4a8a99f5d4d92c8e08b5f6e0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
