@@ -686,6 +686,7 @@ class ZooKeeper(object):
             return []
 
         matches = []
+        self.log.debug("FOUND BUILDS: %s" % builds)
         for build in builds:
             if build == 'lock':   # skip the build lock node
                 continue
