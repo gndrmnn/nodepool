@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_a0ba7ebe",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-02T17:22:10Z",
+      "side": 1,
+      "message": "If you do push another patchset, s/done/don\u0027t/.",
+      "revId": "5ed2cabb4be2f7bb3fb493bd9af1830dd069faf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_80902245",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-02T17:22:10Z",
+      "side": 1,
+      "message": "A comment explaining why this test deals with 3 images instead of 2 would be nice.",
+      "revId": "5ed2cabb4be2f7bb3fb493bd9af1830dd069faf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_4079aaf5",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-02T17:22:10Z",
+      "side": 1,
+      "message": "Its worth noting that this doesn\u0027t do an explicit assertion against the image being deleted from the provider. Its an implicit check that relies on the behavior that the build is only deleted after the uploads are deleted.",
+      "revId": "5ed2cabb4be2f7bb3fb493bd9af1830dd069faf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_e05e3675",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-02T17:22:10Z",
+      "side": 1,
+      "message": "This is the same sort of indirect assertion here.\n\nWould be good if we could assert something about the uploads too. That way if the behavior tying uploads and builds ever changes it will be easier to spot.",
+      "revId": "5ed2cabb4be2f7bb3fb493bd9af1830dd069faf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
