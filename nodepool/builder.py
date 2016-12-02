@@ -346,6 +346,22 @@ class CleanupWorker(BaseWorker):
                 ret.append(build)
         return ret
 
+    def _cleanupCurrentProviderUploads(self, provider, image, build_id):
+        '''
+        Remove cruft from a current build.
+
+        Current builds (the ones we want to keep) are treated special since
+        we want to remove any ZK nodes for uploads that failed exceptionally
+        hard (i.e., we could not set the state to FAILED and they remain as
+        UPLOADING).
+        '''
+        uploading = self.getUploads(image, build_id, provider,
+                                    states=[zk.UPLOADING])
+        for upload in uploading:
+            if not self._inProgressUpload(upload, image, provider):
+                self.log.info("Removing failed upload record: %s" % image)
+                self.zk.deleteUpload(image, build_id, provider, upload.id)
+
     def _cleanupImage(self, known_providers, image):
         '''
         Clean up one image.
@@ -373,6 +389,9 @@ class CleanupWorker(BaseWorker):
                 try:
                     self._cleanupObsoleteProviderUploads(provider, image,
                                                          build.id)
+                    if build in builds_to_keep:
+                        self._cleanupCurrentProviderUploads(provider, image,
+                                                            build.id)
                 except Exception:
                     self.log.exception("Exception cleaning up uploads "
                                        "of build %s of image %s in "
