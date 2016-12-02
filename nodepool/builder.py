@@ -284,6 +284,9 @@ class CleanupWorker(BaseWorker):
         if upload.state == zk.DELETING or deleted:
             manager = self._config.provider_managers[provider.name]
             try:
+                base = "-".join([image, upload.build_id])
+                self.log.info("Deleting image build %s from %s" %
+                              (base, provider.name))
                 manager.deleteImage(upload.external_name)
             except Exception:
                 self.log.exception(
