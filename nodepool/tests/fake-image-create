@@ -57,6 +57,8 @@ if [ -z "$outfile" ]; then
 else
     for outtype in ${outtypes[@]} ; do
         echo "fake-data" > $outfile.$outtype
+        md5sum $outfile.$outtype > $outfile.$outtype.md5
+        sha256sum $outfile.$outtype > $outfile.$outtype.sha256
     done
 fi
 
