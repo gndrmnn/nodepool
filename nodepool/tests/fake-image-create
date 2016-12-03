@@ -57,6 +57,8 @@ if [ -z "$outfile" ]; then
 else
     for outtype in ${outtypes[@]} ; do
         echo "fake-data" > $outfile.$outtype
+        echo "10da41d43d4bd6d67db763616c18b72f" > $outfile.$outtype.md5
+        echo "0033e9d444953d11689b5fa6a6dba32bf901582f62b0825bc35f593190b1f7dc" > $outfile.$outtype.sha256
     done
 fi
 
