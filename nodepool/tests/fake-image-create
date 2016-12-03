@@ -57,6 +57,10 @@ if [ -z "$outfile" ]; then
 else
     for outtype in ${outtypes[@]} ; do
         echo "fake-data" > $outfile.$outtype
+        if [ "$DIB_CHECKSUM" == "1" ]; then
+            md5sum $outfile.$outtype > $outfile.$outtype.md5
+            sha256sum $outfile.$outtype > $outfile.$outtype.sha256
+        fi
     done
 fi
 
