@@ -74,11 +74,11 @@ class TestNodepoolBuilderDibImage(tests.BaseTestCase):
 
     def test_to_path(self):
         image = builder.DibImageFile('myid1234', 'qcow2')
-        self.assertEqual(image.to_path('/imagedir'),
+        self.assertEqual(image.to_path('/imagedir')['filename'],
                          '/imagedir/myid1234.qcow2')
-        self.assertEqual(image.to_path('/imagedir/'),
+        self.assertEqual(image.to_path('/imagedir/')['filename'],
                          '/imagedir/myid1234.qcow2')
-        self.assertEqual(image.to_path('/imagedir/', False),
+        self.assertEqual(image.to_path('/imagedir/', False)['filename'],
                          '/imagedir/myid1234')
 
         image = builder.DibImageFile('myid1234')

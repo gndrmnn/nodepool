@@ -83,21 +83,27 @@ class DibImageFile(object):
                 )
             my_path += '.' + self.extension
 
-        md5 = self._checksum(my_path, 'md5')
+        result = dict()
+        result.update({'filename': my_path})
+
+        md5_path = '%s.%s' % (my_path, 'md5')
+        md5 = self._checksum(md5_path)
         if md5:
             self.md5 = md5[0:32]
+            result.update({'md5': md5_path})
 
-        sha256 = self._checksum(my_path, 'sha256')
+        sha256_path = '%s.%s' % (my_path, 'sha256')
+        sha256 = self._checksum(sha256_path)
         if sha256:
             self.sha256 = sha256[0:64]
+            result.update({'sha256': sha256_path})
 
-        return my_path
+        return result
 
-    def _checksum(self, filename, hash_name):
-        checksum = '%s.%s' % (filename, hash_name)
-        if not os.path.isfile(checksum):
+    def _checksum(self, filename):
+        if not os.path.isfile(filename):
             return None
-        with open(checksum, 'r') as f:
+        with open(filename, 'r') as f:
             data = f.read()
         return data
 
@@ -229,19 +235,19 @@ class CleanupWorker(BaseWorker):
         self.log.info("Doing cleanup for %s:%s" % (image, build_id))
 
         manifest_dir = None
-
         for f in files:
-            filename = f.to_path(self._config.imagesdir, True)
+            paths = f.to_path(self._config.imagesdir, True)
             if not manifest_dir:
-                path, ext = filename.rsplit('.', 1)
+                path, ext = paths['filename'].rsplit('.', 1)
                 manifest_dir = path + ".d"
 
-            try:
-                os.remove(filename)
-                self.log.info("Removed DIB file %s" % filename)
-            except OSError as e:
-                if e.errno != 2:    # No such file or directory
-                    raise e
+            for path in paths.values():
+                try:
+                    os.remove(path)
+                    self.log.info("Removed DIB file %s" % path)
+                except OSError as e:
+                    if e.errno != 2:    # No such file or directory
+                        raise e
 
         try:
             shutil.rmtree(manifest_dir)
@@ -588,12 +594,12 @@ class BuildWorker(BaseWorker):
         '''
         base = "-".join([diskimage.name, build_id])
         image_file = DibImageFile(base)
-        filename = image_file.to_path(self._config.imagesdir, False)
+        paths = image_file.to_path(self._config.imagesdir, False)
 
         env = os.environ.copy()
         env['DIB_RELEASE'] = diskimage.release
         env['DIB_IMAGE_NAME'] = diskimage.name
-        env['DIB_IMAGE_FILENAME'] = filename
+        env['DIB_IMAGE_FILENAME'] = paths['filename']
 
         # Note we use a reference to the nodepool config here so
         # that whenever the config is updated we get up to date
@@ -619,8 +625,9 @@ class BuildWorker(BaseWorker):
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
-               (dib_cmd, img_types, qemu_img_options, filename, img_elements))
+        cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
+               (dib_cmd, img_types, qemu_img_options, paths['filename'],
+               img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
                                 (diskimage.name,))
@@ -678,9 +685,11 @@ class BuildWorker(BaseWorker):
                     # purposes of watching if we've added too much stuff
                     # into the image.  Note that st_blocks is defined as
                     # 512-byte blocks by stat(2)
-                    size = os.stat("%s.%s" % (filename, ext)).st_blocks * 512
+                    size = os.stat(
+                        "%s.%s" % (paths['filename'], ext)).st_blocks * 512
                     self.log.debug("%s created image %s.%s (size: %d) " %
-                                   (diskimage.name, filename, ext, size))
+                                   (diskimage.name, paths['filename'],
+                                   ext, size))
                     self._statsd.gauge(key, size)
 
         return build_data
@@ -755,7 +764,7 @@ class UploadWorker(BaseWorker):
         self.log.debug("Found image file of type %s for image id: %s" %
                        (image.extension, image.image_id))
 
-        filename = image.to_path(self._config.imagesdir, with_extension=True)
+        paths = image.to_path(self._config.imagesdir, with_extension=True)
 
         dummy_image = type('obj', (object,),
                            {'name': image_name, 'id': image.image_id})
@@ -766,7 +775,7 @@ class UploadWorker(BaseWorker):
         )
 
         self.log.info("Uploading DIB image build %s from %s to %s" %
-                      (build_id, filename, provider.name))
+                      (build_id, paths['filename'], provider.name))
 
         manager = self._config.provider_managers[provider.name]
 
@@ -782,7 +791,7 @@ class UploadWorker(BaseWorker):
 
         try:
             external_id = manager.uploadImage(
-                ext_image_name, filename,
+                ext_image_name, paths['filename'],
                 image_type=image.extension,
                 meta=meta,
                 md5=image.md5,
