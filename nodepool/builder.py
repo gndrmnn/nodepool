@@ -52,7 +52,9 @@ class DibImageFile(object):
         self.image_id = image_id
         self.extension = extension
         self.md5 = None
+        self.md5_file = None
         self.sha256 = None
+        self.sha256_file = None
 
     @staticmethod
     def from_path(path):
@@ -74,6 +76,40 @@ class DibImageFile(object):
     def from_images_dir(images_dir):
         return [DibImageFile.from_path(x) for x in os.listdir(images_dir)]
 
+    @staticmethod
+    def delete(images_dir, image_id, log):
+        files = DibImageFile.from_image_id(images_dir, image_id)
+        if not files:
+            return False
+
+        log.info("Doing cleanup for %s" % image_id)
+
+        manifest_dir = None
+        for f in files:
+            filename = f.to_path(images_dir, True)
+            if not manifest_dir:
+                path, ext = filename.rsplit('.', 1)
+                manifest_dir = path + ".d"
+
+            for item in [filename, f.md5_file, f.sha256_file]:
+                if item is None:
+                    continue
+                try:
+                    os.remove(item)
+                    log.info("Removed DIB file %s" % item)
+                except OSError as e:
+                    if e.errno != 2:    # No such file or directory
+                        raise e
+
+        try:
+            shutil.rmtree(manifest_dir)
+            log.info("Removed DIB manifest %s" % manifest_dir)
+        except OSError as e:
+            if e.errno != 2:    # No such file or directory
+                raise e
+
+        return True
+
     def to_path(self, images_dir, with_extension=True):
         my_path = os.path.join(images_dir, self.image_id)
         if with_extension:
@@ -83,21 +119,24 @@ class DibImageFile(object):
                 )
             my_path += '.' + self.extension
 
-        md5 = self._checksum(my_path, 'md5')
+        md5_file = '%s.%s' % (my_path, 'md5')
+        md5 = self._checksum(md5_file)
         if md5:
+            self.md5_file = md5_file
             self.md5 = md5[0:32]
 
-        sha256 = self._checksum(my_path, 'sha256')
+        sha256_file = '%s.%s' % (my_path, 'sha256')
+        sha256 = self._checksum(sha256_file)
         if sha256:
+            self.sha256_file = sha256_file
             self.sha256 = sha256[0:64]
 
         return my_path
 
-    def _checksum(self, filename, hash_name):
-        checksum = '%s.%s' % (filename, hash_name)
-        if not os.path.isfile(checksum):
+    def _checksum(self, filename):
+        if not os.path.isfile(filename):
             return None
-        with open(checksum, 'r') as f:
+        with open(filename, 'r') as f:
             data = f.read()
         return data
 
@@ -222,35 +261,7 @@ class CleanupWorker(BaseWorker):
         :returns: True if files were deleted, False if none were found.
         '''
         base = "-".join([image, build_id])
-        files = DibImageFile.from_image_id(self._config.imagesdir, base)
-        if not files:
-            return False
-
-        self.log.info("Doing cleanup for %s:%s" % (image, build_id))
-
-        manifest_dir = None
-
-        for f in files:
-            filename = f.to_path(self._config.imagesdir, True)
-            if not manifest_dir:
-                path, ext = filename.rsplit('.', 1)
-                manifest_dir = path + ".d"
-
-            try:
-                os.remove(filename)
-                self.log.info("Removed DIB file %s" % filename)
-            except OSError as e:
-                if e.errno != 2:    # No such file or directory
-                    raise e
-
-        try:
-            shutil.rmtree(manifest_dir)
-            self.log.info("Removed DIB manifest %s" % manifest_dir)
-        except OSError as e:
-            if e.errno != 2:    # No such file or directory
-                raise e
-
-        return True
+        return DibImageFile.delete(self._config.imagesdir, base, self.log)
 
     def _cleanupProvider(self, provider, image, build_id):
         all_uploads = self._zk.getUploads(image, build_id, provider.name)
@@ -639,7 +650,7 @@ class BuildWorker(BaseWorker):
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
+        cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
                (dib_cmd, img_types, qemu_img_options, filename, img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
