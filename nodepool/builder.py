@@ -230,18 +230,26 @@ class CleanupWorker(BaseWorker):
 
         manifest_dir = None
 
+        # TODOv3(pabelanger): Move this into DibImageFile()
         for f in files:
             filename = f.to_path(self._config.imagesdir, True)
             if not manifest_dir:
                 path, ext = filename.rsplit('.', 1)
                 manifest_dir = path + ".d"
 
-            try:
-                os.remove(filename)
-                self.log.info("Removed DIB file %s" % filename)
-            except OSError as e:
-                if e.errno != 2:    # No such file or directory
-                    raise e
+            matches = [
+                filename,
+                '%s.%s' % (filename, 'md5'),
+                '%s.%s' % (filename, 'sha256'),
+            ]
+
+            for m in matches:
+                try:
+                    os.remove(m)
+                    self.log.info("Removed DIB file %s" % m)
+                except OSError as e:
+                    if e.errno != 2:    # No such file or directory
+                        raise e
 
         try:
             shutil.rmtree(manifest_dir)
@@ -619,7 +627,7 @@ class BuildWorker(BaseWorker):
         else:
             dib_cmd = 'disk-image-create'
 
-        cmd = ('%s -x -t %s --no-tmpfs %s -o %s %s' %
+        cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
                (dib_cmd, img_types, qemu_img_options, filename, img_elements))
 
         log = logging.getLogger("nodepool.image.build.%s" %
