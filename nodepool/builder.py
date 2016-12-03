@@ -236,12 +236,19 @@ class CleanupWorker(BaseWorker):
                 path, ext = filename.rsplit('.', 1)
                 manifest_dir = path + ".d"
 
-            try:
-                os.remove(filename)
-                self.log.info("Removed DIB file %s" % filename)
-            except OSError as e:
-                if e.errno != 2:    # No such file or directory
-                    raise e
+            matches = [
+                filename,
+                '%s.%s' % (filename, 'md5'),
+                '%s.%s' % (filename, 'sha256'),
+            ]
+
+            for m in matches:
+                try:
+                    os.remove(m)
+                    self.log.info("Removed DIB file %s" % m)
+                except OSError as e:
+                    if e.errno != 2:    # No such file or directory
+                        raise e
 
         try:
             shutil.rmtree(manifest_dir)
