@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_07eb2814",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2016-12-04T23:46:39Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer this to know that DIB_CHECKSUM should be set by the caller end exit if not, similar to the other arguments.  otherwise if we drop the argument accidentally, we end up just silently not testing that checksum adding path?",
+      "revId": "fde264da3b8877a52c4118027a76c66d9d7ec48e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
