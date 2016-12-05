@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_d4b1ad02",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:56:34Z",
+      "side": 1,
+      "message": "It is possible that filename be None (in some esoteric corner cases like user has old DIB that doesn\u0027t create the checksum files). We should be defensive and guard against that here with an if filename is not None check.",
+      "revId": "b3b613731055ac074a1367ed8a65f8771899b357",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
