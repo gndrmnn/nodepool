@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_39c3bc8a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:27:57Z",
+      "side": 1,
+      "message": "See comment below too.\n\nInstead of doing this you could just set self.md5_file \u003d md5_path here because the presence of a hash implies the file exists.\n\nThen anytime the hash is updated you will have an up to date file path property too.",
+      "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_59bcf805",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:27:57Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_f9a78408",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:27:57Z",
+      "side": 1,
+      "message": "I do not think we should change the return type of this method. Currently you can feed to_path into from_path and get an equivalent object. This is a nice property to have, lets keep it.",
+      "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_3971fc76",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:27:57Z",
+      "side": 1,
+      "message": "Then here you would do:\n\n  for path in any(filename, f.md5_file, f.sha256_file):\n\nAnd the loop content remains the same.",
+      "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
