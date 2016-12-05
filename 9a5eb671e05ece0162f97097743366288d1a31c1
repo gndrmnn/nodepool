@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_e8a7b408",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T20:07:49Z",
+      "side": 1,
+      "message": "Let\u0027s just go ahead and address this TODO now because it should be trivial.\n\nDibImageFile.from_image_id returns you a list of DibImageFile objects, each with a .md5 and .sha256 property that includes the hashes from off disk. So you should only need to update DibImageFile to remember that file path too then use it here in the loop below:\n\n  if f.md5_path and os.exists(f.md5_path):\n     os.remove(f.md5_path)\n  # Rinse and repeat for sha256.",
+      "revId": "9a5eb671e05ece0162f97097743366288d1a31c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
