@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_0556995b",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T19:58:48Z",
+      "side": 1,
+      "message": "Don\u0027t you want another waitForImage here if we are waiting on provider upload for 00...02?",
+      "revId": "c20b6688c68bd191325868e74423ca1b17263251",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
