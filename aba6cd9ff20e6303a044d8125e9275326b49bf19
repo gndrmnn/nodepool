@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_e0ed04b8",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T23:41:30Z",
+      "side": 1,
+      "message": "This log message doesn\u0027t appear in the logs of the failed test case implying that we may not be getting this far, or that we always hit the below exception. Might be good to log the below exception at a debug level.",
+      "revId": "aba6cd9ff20e6303a044d8125e9275326b49bf19",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_20bd3cb7",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T23:41:30Z",
+      "side": 1,
+      "message": "This complains about all the extra stuff we pass on the command line now, but doesn\u0027t seem to be fatal.",
+      "revId": "aba6cd9ff20e6303a044d8125e9275326b49bf19",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
