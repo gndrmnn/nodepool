@@ -30,7 +30,7 @@ class NodepoolApp(object):
             if not os.path.exists(fp):
                 raise Exception("Unable to read logging config file at %s" %
                                 fp)
-            logging.config.fileConfig(fp)
+            logging.config.fileConfig(fp, disable_existing_loggers=False)
         else:
             logging.basicConfig(level=logging.DEBUG,
                                 format='%(asctime)s %(levelname)s %(name)s: '
