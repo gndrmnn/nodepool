@@ -364,6 +364,8 @@ class CleanupWorker(BaseWorker):
             # in use are deleted, the image znode should be deleted as
             # well.
 
+        self.log.debug("Keeping builds: %s" % [b.id for b in builds_to_keep])
+
         for build in all_builds:
             # Start by deleting any uploads that are no longer needed
             # because this image has been removed from a provider
@@ -389,6 +391,7 @@ class CleanupWorker(BaseWorker):
                 if build in builds_to_keep:
                     continue
                 elif self._inProgressBuild(build, image):
+                    self.log.debug("Not removing build %s because in progress" % build)
                     continue
 
             for provider in known_providers:
@@ -424,6 +427,8 @@ class CleanupWorker(BaseWorker):
             while self._zk and (self._zk.suspended or self._zk.lost):
                 self.log.info("ZooKeeper suspended. Waiting")
                 time.sleep(SUSPEND_WAIT_TIME)
+
+            self.log.debug("Running clean up")
 
             try:
                 self._run()
