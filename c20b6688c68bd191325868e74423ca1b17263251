@@ -16,6 +16,24 @@
       "revId": "c20b6688c68bd191325868e74423ca1b17263251",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_e5b8bd77",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-05T20:00:59Z",
+      "side": 1,
+      "message": "sure, I can make this more robust too",
+      "parentUuid": "3a71b18c_0556995b",
+      "revId": "c20b6688c68bd191325868e74423ca1b17263251",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
