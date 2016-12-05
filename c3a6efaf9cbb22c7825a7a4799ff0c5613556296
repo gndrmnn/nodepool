@@ -67,6 +67,24 @@
       "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_19d0c01e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-05T21:32:18Z",
+      "side": 1,
+      "message": "any() is the wrong function here, should be filter().",
+      "parentUuid": "3a71b18c_3971fc76",
+      "revId": "c3a6efaf9cbb22c7825a7a4799ff0c5613556296",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
