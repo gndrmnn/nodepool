@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_aa757e64",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-06T19:01:14Z",
+      "side": 1,
+      "message": "This seems complex and does not achieve the goal we had of hiding all of the complexity about managing multiple files within the dibimagefile class.  I believe the fact that \"deleting an image\" became complex is why we ended up leaking these files.  I would like to see this simply be \"f.delete()\".  And then the delete method in dibimagefile handles deleting 0,1,2,3 files as needed.",
+      "revId": "bbf7a120cae0683bb258cf79e2e5c6cba5cbdfa5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
