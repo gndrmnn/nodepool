@@ -16,6 +16,47 @@
       "revId": "4e31afbe297e02e7303d14ead83fc3c542fe24fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_49a8a3db",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1412,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-12-06T01:12:20Z",
+      "side": 1,
+      "message": "I think I agree",
+      "parentUuid": "3a71b18c_4dbaf324",
+      "revId": "4e31afbe297e02e7303d14ead83fc3c542fe24fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_89671be8",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-12-06T01:12:20Z",
+      "side": 1,
+      "message": "(nit) errant whitespace",
+      "range": {
+        "startLine": 1416,
+        "startChar": 68,
+        "endLine": 1416,
+        "endChar": 69
+      },
+      "revId": "4e31afbe297e02e7303d14ead83fc3c542fe24fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
