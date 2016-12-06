@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_9582bec6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2016-12-06T09:31:19Z",
+      "side": 1,
+      "message": "Wouldn\u0027t we want to do this cleanup regardless?",
+      "range": {
+        "startLine": 392,
+        "startChar": 23,
+        "endLine": 392,
+        "endChar": 28
+      },
+      "revId": "7ba37b777411639429f92194cdbf3e2a6aed41b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
