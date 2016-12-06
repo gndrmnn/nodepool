@@ -353,13 +353,19 @@ class CleanupWorker(BaseWorker):
         Current builds (the ones we want to keep) are treated special since
         we want to remove any ZK nodes for uploads that failed exceptionally
         hard (i.e., we could not set the state to FAILED and they remain as
-        UPLOADING).
+        UPLOADING), and we also want to remove any uploads that have been
+        marked for deleting.
         '''
-        uploading = self._zk.getUploads(image, build_id, provider,
-                                        states=[zk.UPLOADING])
-        for upload in uploading:
-            if not self._inProgressUpload(upload, image, provider):
+        cruft = self._zk.getUploads(image, build_id, provider,
+                                    states=[zk.UPLOADING, zk.DELETING])
+        for upload in cruft:
+            if (upload.state == zk.UPLOADING and
+                not self._inProgressUpload(upload, image, provider)
+            ):
                 self.log.info("Removing failed upload record: %s" % upload)
+                self._zk.deleteUpload(image, build_id, provider, upload.id)
+            elif upload.state == zk.DELETING:
+                self.log.info("Removing deleted upload record: %s" % upload)
                 self._zk.deleteUpload(image, build_id, provider, upload.id)
 
     def _cleanupImage(self, known_providers, image):
