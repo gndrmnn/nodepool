@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_4f5e8777",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-12-07T17:52:24Z",
+      "side": 1,
+      "message": "I would think you\u0027d also want the image build ID and upload ID in this message, too, to uniquely identify the failed upload.",
+      "revId": "c16559df78799dffa16de6cbb26b1d10687c6897",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
