@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_a0c72863",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-07T18:51:59Z",
+      "side": 1,
+      "message": "We can remove this, since Ib03852ea378fcdc985825b2e477036b06c53ea57 landed",
+      "revId": "8ab53cb5a3ef615e512c257ec0c33576c5443aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
