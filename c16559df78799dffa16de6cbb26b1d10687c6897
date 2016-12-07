@@ -34,6 +34,23 @@
       "revId": "c16559df78799dffa16de6cbb26b1d10687c6897",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_5ae64317",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-07T18:01:38Z",
+      "side": 1,
+      "message": "We don\u0027t have that information here, but we do have an exception handler around the actual upload call that provides more information if it fails at that location.  This is a fallback exception handler for a much broader set of actions.  In the case that prompted this change, it was triggered by a zk shutdown.  See http://paste.openstack.org/show/591694/",
+      "revId": "c16559df78799dffa16de6cbb26b1d10687c6897",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
