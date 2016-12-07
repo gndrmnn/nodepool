@@ -16,6 +16,24 @@
       "revId": "c16559df78799dffa16de6cbb26b1d10687c6897",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_5a71e376",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-12-07T18:00:25Z",
+      "side": 1,
+      "message": "Oh, nm. This isn\u0027t a ZK image object.",
+      "parentUuid": "3a71b18c_4f5e8777",
+      "revId": "c16559df78799dffa16de6cbb26b1d10687c6897",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
