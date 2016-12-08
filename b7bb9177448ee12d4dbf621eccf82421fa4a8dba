@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_0e0c553a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-08T20:31:47Z",
+      "side": 1,
+      "message": "We should at least only store the build if the state has changed (otherwise we may end up continually resetting the state time).  We *might* want to consider locking the build as well if we consider the risk of two builders racing to set the state to be sufficient.",
+      "revId": "b7bb9177448ee12d4dbf621eccf82421fa4a8dba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
