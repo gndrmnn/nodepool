@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_c82146fe",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-09T18:18:29Z",
+      "side": 1,
+      "message": "We should probably read the object again inside the lock.",
+      "revId": "a88089bf31f94e41f5f80c37fab6bf305165029f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
