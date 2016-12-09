@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a71b18c_4a41a762",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-12-09T20:49:07Z",
+      "side": 1,
+      "message": "We can\u0027t delete the ZK node until after the local files have been deleted. This change allows a builder that doesn\u0027t own the build to remove the ZK node, and the owner of the build would never know to remove the local files.",
+      "revId": "5e61cc6f048a8beb2802fa5fe2191554f15db2fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
