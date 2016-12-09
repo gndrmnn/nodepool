@@ -45,7 +45,7 @@ class SSHClient(object):
             if output:
                 out += line
             if self.log:
-                self.log.info(line.rstrip())
+                self.log.debug(line.rstrip())
         for line in stderr:
             if output:
                 err += line

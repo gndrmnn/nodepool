@@ -536,7 +536,8 @@ class NodeLauncher(threading.Thread):
 
         self.log.debug("Node id: %s testing ssh at ip: %s" %
                        (self.node.id, ip))
-        connect_kwargs = dict(key_filename=self.image.private_key)
+        connect_kwargs = dict(key_filename=self.image.private_key,
+                              log=self.log)
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,
                                  timeout=self.timeout):
@@ -632,7 +633,8 @@ class NodeLauncher(threading.Thread):
         public_key = key.get_name() + ' ' + key.get_base64()
 
         for role, n in nodelist:
-            connect_kwargs = dict(key_filename=self.image.private_key)
+            connect_kwargs = dict(key_filename=self.image.private_key,
+                                  log=self.log)
             host = utils.ssh_connect(n.ip, self.image.username,
                                      connect_kwargs=connect_kwargs,
                                      timeout=self.timeout)
@@ -697,7 +699,8 @@ class NodeLauncher(threading.Thread):
 
     def runReadyScript(self, nodelist):
         for role, n in nodelist:
-            connect_kwargs = dict(key_filename=self.image.private_key)
+            connect_kwargs = dict(key_filename=self.image.private_key,
+                                  log=self.log)
             host = utils.ssh_connect(n.ip, self.image.username,
                                      connect_kwargs=connect_kwargs,
                                      timeout=self.timeout)
@@ -857,7 +860,8 @@ class SubNodeLauncher(threading.Thread):
 
         self.log.debug("Subnode id: %s for node id: %s testing ssh at ip: %s" %
                        (self.subnode_id, self.node_id, ip))
-        connect_kwargs = dict(key_filename=self.image.private_key)
+        connect_kwargs = dict(key_filename=self.image.private_key,
+                              log=self.log)
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,
                                  timeout=self.timeout):
@@ -2263,7 +2267,8 @@ class NodePool(threading.Thread):
             if node.label_name in self.config.labels:
                 label = self.config.labels[node.label_name]
                 image = provider.images[label.image]
-                connect_kwargs = dict(key_filename=image.private_key)
+                connect_kwargs = dict(key_filename=image.private_key,
+                                      log=self.log)
                 try:
                     if utils.ssh_connect(node.ip, image.username,
                                          connect_kwargs=connect_kwargs):
