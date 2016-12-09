@@ -238,11 +238,10 @@ class CleanupWorker(BaseWorker):
         :returns: True if files were deleted, False if none were found.
         '''
         base = "-".join([image, build_id])
+        self.log.info("Doing cleanup for %s" % (base))
         files = DibImageFile.from_image_id(self._config.imagesdir, base)
         if not files:
             return False
-
-        self.log.info("Doing cleanup for %s:%s" % (image, build_id))
 
         manifest_dir = None
 
@@ -456,10 +455,10 @@ class CleanupWorker(BaseWorker):
                         self._zk.storeBuild(image, build, build.id)
 
                 # Release the lock here so we can delete the build znode
-                if self._deleteLocalBuild(image, build.id):
-                    if not self._zk.deleteBuild(image, build.id):
-                        self.log.error("Unable to delete build %s because"
-                                       " uploads still remain.", build)
+                self._deleteLocalBuild(image, build.id)
+                if not self._zk.deleteBuild(image, build.id):
+                    self.log.error("Unable to delete build %s because"
+                                   " uploads still remain.", build)
 
     def run(self):
         '''
