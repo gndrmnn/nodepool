@@ -16,6 +16,24 @@
       "revId": "5e61cc6f048a8beb2802fa5fe2191554f15db2fe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a71b18c_6d111d04",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-09T21:00:46Z",
+      "side": 1,
+      "message": "right, out issue is the file doesn\u0027t exist any place, as DIB never created it.",
+      "parentUuid": "3a71b18c_4a41a762",
+      "revId": "5e61cc6f048a8beb2802fa5fe2191554f15db2fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
