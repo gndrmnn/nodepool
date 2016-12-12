@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_3f0c2242",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-12T17:57:32Z",
+      "side": 1,
+      "message": "This could be simplified further and just set self.dib_cmd to \u0027disk-image-create\u0027 here. Since we aren\u0027t passing this in in the tests we are just setting it after the fact.",
+      "revId": "5e033b411a3bb9852448114411cdc10527a03994",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
