@@ -17,6 +17,7 @@ from copy import copy
 import json
 import logging
 import six
+import threading
 import time
 from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
@@ -308,17 +309,14 @@ class ZooKeeper(object):
             to use the connect() call.
         '''
         self.client = client
-        self._current_build_lock = None
-        self._current_build_number_lock = None
-        self._current_upload_lock = None
+
         self._became_lost = False
 
-        # Dictionary that maps an image build request path being watched to
-        # the function to call when triggered. Why have this? We may need to
-        # handle automatically re-registering these watches for the user in
-        # the event of a disconnect from the cluster.
-        # TODO(Shrews): Hande re-registration
-        self._data_watches = {}
+        # Thread local data
+        self._local = threading.local()
+        self._local.current_build_lock = None
+        self._local.current_build_number_lock = None
+        self._local.current_upload_lock = None
 
     #========================================================================
     # Private Methods
@@ -362,8 +360,8 @@ class ZooKeeper(object):
     def _getImageBuildLock(self, image, blocking=True, timeout=None):
         lock = self._imageBuildLockPath(image)
         try:
-            self._current_build_lock = Lock(self.client, lock)
-            have_lock = self._current_build_lock.acquire(blocking, timeout)
+            self._local.current_build_lock = Lock(self.client, lock)
+            have_lock = self._local.current_build_lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % lock)
@@ -377,9 +375,9 @@ class ZooKeeper(object):
                                  blocking=True, timeout=None):
         lock = self._imageBuildNumberLockPath(image, build_number)
         try:
-            self._current_build_number_lock = Lock(self.client, lock)
-            have_lock = self._current_build_number_lock.acquire(blocking,
-                                                                timeout)
+            self._local.current_build_number_lock = Lock(self.client, lock)
+            have_lock = self._local.current_build_number_lock.acquire(blocking,
+                                                                      timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % lock)
@@ -393,8 +391,9 @@ class ZooKeeper(object):
                             blocking=True, timeout=None):
         lock = self._imageUploadLockPath(image, build_number, provider)
         try:
-            self._current_upload_lock = Lock(self.client, lock)
-            have_lock = self._current_upload_lock.acquire(blocking, timeout)
+            self._local.current_upload_lock = Lock(self.client, lock)
+            have_lock = self._local.current_upload_lock.acquire(blocking,
+                                                                timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % lock)
@@ -417,21 +416,6 @@ class ZooKeeper(object):
             self.log.debug("ZooKeeper connection: SUSPENDED")
         else:
             self.log.debug("ZooKeeper connection: CONNECTED")
-
-    def _watch_wrapper(self, event):
-        '''
-        Function used to handle watch triggers.
-
-        This handles unregistering watch events from the internal mapping
-        and calling the registered function as requested during registration.
-        '''
-        if event.path not in self._data_watches:
-            self.log.error(
-                "Got trigger on %s but watch not registered" % event.path)
-            return
-        (image, func) = self._data_watches[event.path]
-        del self._data_watches[event.path]
-        func(ZooKeeperWatchEvent(event.type, event.state, event.path, image))
 
 
     #========================================================================
@@ -506,15 +490,15 @@ class ZooKeeper(object):
             blocking with a timeout. ZKLockException if we are not blocking
             and could not get the lock, or a lock is already held.
         '''
-        if self._current_build_lock:
+        if self._local.current_build_lock:
             raise npe.ZKLockException("A lock is already held.")
 
         try:
             yield self._getImageBuildLock(image, blocking, timeout)
         finally:
-            if self._current_build_lock:
-                self._current_build_lock.release()
-                self._current_build_lock = None
+            if self._local.current_build_lock:
+                self._local.current_build_lock.release()
+                self._local.current_build_lock = None
 
     @contextmanager
     def imageBuildNumberLock(self, image, build_number,
@@ -538,16 +522,16 @@ class ZooKeeper(object):
             blocking with a timeout. ZKLockException if we are not blocking
             and could not get the lock, or a lock is already held.
         '''
-        if self._current_build_number_lock:
+        if self._local.current_build_number_lock:
             raise npe.ZKLockException("A lock is already held.")
 
         try:
             yield self._getImageBuildNumberLock(image, build_number,
                                                 blocking, timeout)
         finally:
-            if self._current_build_number_lock:
-                self._current_build_number_lock.release()
-                self._current_build_number_lock = None
+            if self._local.current_build_number_lock:
+                self._local.current_build_number_lock.release()
+                self._local.current_build_number_lock = None
 
     @contextmanager
     def imageUploadLock(self, image, build_number, provider,
@@ -570,16 +554,16 @@ class ZooKeeper(object):
             blocking with a timeout. ZKLockException if we are not blocking
             and could not get the lock, or a lock is already held.
         '''
-        if self._current_upload_lock:
+        if self._local.current_upload_lock:
             raise npe.ZKLockException("A lock is already held.")
 
         try:
             yield self._getImageUploadLock(image, build_number, provider,
                                            blocking, timeout)
         finally:
-            if self._current_upload_lock:
-                self._current_upload_lock.release()
-                self._current_upload_lock = None
+            if self._local.current_upload_lock:
+                self._local.current_upload_lock.release()
+                self._local.current_upload_lock = None
 
     def getImageNames(self):
         '''
@@ -968,23 +952,6 @@ class ZooKeeper(object):
             self.client.delete(path)
         except kze.NoNodeError:
             pass
-
-    def registerBuildRequestWatch(self, image, func):
-        '''
-        Register a watch for a node create/delete or data change.
-
-        This registers a one-time watch trigger for a build request for
-        a particular image. Your handler function will need to re-register
-        after an event is received if you want to continue watching.
-
-        Your handler will receive an object of ZooKeeperWatchEvent type.
-
-        :param str image: The image name we want to watch.
-        :param func: A function to call when the watch is triggered.
-        '''
-        path = self._imageBuildRequestPath(image)
-        self._data_watches[path] = (image, func)
-        self.client.exists(path, watch=self._watch_wrapper)
 
     def deleteBuild(self, image, build_number):
         '''
