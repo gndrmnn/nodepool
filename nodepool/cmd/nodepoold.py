@@ -27,7 +27,6 @@ import os
 import sys
 import signal
 
-import nodepool.builder
 import nodepool.cmd
 import nodepool.nodepool
 import nodepool.webapp
@@ -72,14 +71,6 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
         parser.add_argument('-p', dest='pidfile',
                             help='path to pid file',
                             default='/var/run/nodepool/nodepool.pid')
-        parser.add_argument('--no-builder', dest='builder',
-                            action='store_false')
-        parser.add_argument('--build-workers', dest='build_workers',
-                            default=1, help='number of build workers',
-                            type=int)
-        parser.add_argument('--upload-workers', dest='upload_workers',
-                            default=4, help='number of upload workers',
-                            type=int)
         parser.add_argument('--no-deletes', action='store_true')
         parser.add_argument('--no-launches', action='store_true')
         parser.add_argument('--no-webapp', action='store_true')
@@ -89,8 +80,6 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
 
     def exit_handler(self, signum, frame):
         self.pool.stop()
-        if self.args.builder:
-            self.builder.stop()
         if not self.args.no_webapp:
             self.webapp.stop()
         sys.exit(0)
@@ -104,11 +93,6 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
                                                self.args.config,
                                                self.args.no_deletes,
                                                self.args.no_launches)
-        if self.args.builder:
-            self.builder = nodepool.builder.NodePoolBuilder(
-                self.args.config, self.args.build_workers,
-                self.args.upload_workers)
-
         if not self.args.no_webapp:
             self.webapp = nodepool.webapp.WebApp(self.pool)
 
@@ -120,9 +104,6 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
         signal.signal(signal.SIGTERM, self.term_handler)
 
         self.pool.start()
-        if self.args.builder:
-            self.builder.start()
-
         if not self.args.no_webapp:
             self.webapp.start()
 
