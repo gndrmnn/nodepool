@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_22148b9e",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2016-12-14T23:17:11Z",
+      "side": 1,
+      "message": "The normalized YAML for this would be \"false\" (all lower case), but some manual testing confirms they both parse the same.",
+      "revId": "7d02b635c34d01b6a546be0b4ff2998c5e2c5117",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
