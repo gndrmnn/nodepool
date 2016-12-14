@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import testtools
+import threading
 import time
 
 from nodepool import exceptions as npe
@@ -46,104 +46,262 @@ class TestZooKeeper(tests.DBTestCase):
     def test_imageBuildLock(self):
         path = self.zk._imageBuildLockPath("ubuntu-trusty")
         with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
-            self.assertIsNotNone(self.zk._current_build_lock)
+            self.assertIsNotNone(self.zk._local.current_build_lock)
             self.assertIsNotNone(self.zk.client.exists(path))
-        self.assertIsNone(self.zk._current_build_lock)
+        self.assertIsNone(self.zk._local.current_build_lock)
 
-    def test_imageBuildLock_exception_nonblocking(self):
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
-                                                  port=self.zookeeper_port,
-                                                  chroot=self.zookeeper_chroot)])
-        with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
-            with testtools.ExpectedException(npe.ZKLockException):
+    def test_imageBuildLock_exception_nonblocking_same_thread(self):
+        with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
+            with testtools.ExpectedException(
+                npe.ZKLockException, "A lock is already held."
+            ):
                 with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
                     pass
+
+    def _otherBuildLockThread(self, cond1, cond2, image):
+        zk2 = zk.ZooKeeper()
+        zk2.connect([zk.ZooKeeperConnectionConfig(
+            self.zookeeper_host,
+            port=self.zookeeper_port,
+            chroot=self.zookeeper_chroot)])
+
+        with zk2.imageBuildLock(image, blocking=False):
+            # Notify other thread we have the build lock
+            cond1.acquire()
+            cond1.notify()
+            cond1.release()
+
+            # Wait until the other thread does its test
+            cond2.acquire()
+            cond2.wait()
+            cond2.release()
         zk2.disconnect()
 
+    def test_imageBuildLock_exception_nonblocking(self):
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherBuildLockThread,
+                             args=(cond1, cond2, image,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        # Now we try to get the same lock and should fail.
+        with testtools.ExpectedException(
+            npe.ZKLockException, "Did not get lock on .*"
+        ):
+            with self.zk.imageBuildLock(image, blocking=False):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
+
     def test_imageBuildLock_exception_blocking(self):
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
-                                                  port=self.zookeeper_port,
-                                                  chroot=self.zookeeper_chroot)])
-        with zk2.imageBuildLock("ubuntu-trusty", blocking=False):
-            with testtools.ExpectedException(npe.TimeoutException):
-                with self.zk.imageBuildLock("ubuntu-trusty",
-                                            blocking=True,
-                                            timeout=1):
-                    pass
-        zk2.disconnect()
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherBuildLockThread,
+                             args=(cond1, cond2, image,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        # Now we try to get the same lock and should fail.
+        with testtools.ExpectedException(npe.TimeoutException):
+            with self.zk.imageBuildLock(image, blocking=True, timeout=1):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
 
     def test_imageBuildNumberLock(self):
         path = self.zk._imageBuildNumberLockPath("ubuntu-trusty", "0000")
         with self.zk.imageBuildNumberLock(
             "ubuntu-trusty", "0000", blocking=False
         ):
-            self.assertIsNotNone(self.zk._current_build_number_lock)
+            self.assertIsNotNone(self.zk._local.current_build_number_lock)
             self.assertIsNotNone(self.zk.client.exists(path))
-        self.assertIsNone(self.zk._current_build_number_lock)
+        self.assertIsNone(self.zk._local.current_build_number_lock)
 
-    def test_imageBuildNumberLock_exception_nonblocking(self):
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(
-            self.zookeeper_host,
-            port=self.zookeeper_port,
-            chroot=self.zookeeper_chroot)])
-        with zk2.imageBuildNumberLock("ubuntu-trusty", "0000", blocking=False):
-            with testtools.ExpectedException(npe.ZKLockException):
+    def test_imageBuildNumberLock_exception_nonblocking_same_thread(self):
+        with self.zk.imageBuildNumberLock(
+            "ubuntu-trusty", "0000", blocking=False
+        ):
+            with testtools.ExpectedException(
+                npe.ZKLockException, "A lock is already held."
+            ):
                 with self.zk.imageBuildNumberLock(
                     "ubuntu-trusty", "0000", blocking=False
                 ):
                     pass
-        zk2.disconnect()
 
-    def test_imageBuildNumberLock_exception_blocking(self):
+    def _otherBuildNumberLockThread(self, cond1, cond2, image, bnum):
         zk2 = zk.ZooKeeper()
         zk2.connect([zk.ZooKeeperConnectionConfig(
             self.zookeeper_host,
             port=self.zookeeper_port,
             chroot=self.zookeeper_chroot)])
-        with zk2.imageBuildNumberLock("ubuntu-trusty", "0000", blocking=False):
-            with testtools.ExpectedException(npe.TimeoutException):
-                with self.zk.imageBuildNumberLock(
-                    "ubuntu-trusty", "0000", blocking=True, timeout=1
-                ):
-                    pass
+
+        with zk2.imageBuildNumberLock(image, bnum, blocking=False):
+            # Notify other thread we have the build lock
+            cond1.acquire()
+            cond1.notify()
+            cond1.release()
+
+            # Wait until the other thread does its test
+            cond2.acquire()
+            cond2.wait()
+            cond2.release()
         zk2.disconnect()
+
+    def test_imageBuildNumberLock_exception_nonblocking(self):
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+        bnum = "0000000000"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherBuildNumberLockThread,
+                             args=(cond1, cond2, image, bnum,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        with testtools.ExpectedException(
+            npe.ZKLockException, "Did not get lock on .*"
+        ):
+            with self.zk.imageBuildNumberLock(image, bnum, blocking=False):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
+
+    def test_imageBuildNumberLock_exception_blocking(self):
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+        bnum = "0000000000"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherBuildNumberLockThread,
+                             args=(cond1, cond2, image, bnum,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        with testtools.ExpectedException(npe.TimeoutException):
+            with self.zk.imageBuildNumberLock(
+                image, bnum, blocking=True, timeout=1
+            ):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
 
     def test_imageUploadLock(self):
         path = self.zk._imageUploadLockPath("ubuntu-trusty", "0000", "prov1")
         with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",
                                      blocking=False):
-            self.assertIsNotNone(self.zk._current_upload_lock)
+            self.assertIsNotNone(self.zk._local.current_upload_lock)
             self.assertIsNotNone(self.zk.client.exists(path))
-        self.assertIsNone(self.zk._current_upload_lock)
+        self.assertIsNone(self.zk._local.current_upload_lock)
 
-    def test_imageUploadLock_exception_nonblocking(self):
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
-                                                  port=self.zookeeper_port,
-                                                  chroot=self.zookeeper_chroot)])
-        with zk2.imageUploadLock("ubuntu-trusty", "0000", "prov1",
-                                blocking=False):
-            with testtools.ExpectedException(npe.ZKLockException):
+    def test_imageUploadLock_exception_nonblocking_same_thread(self):
+        with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",
+                                     blocking=False):
+            with testtools.ExpectedException(
+                npe.ZKLockException, "A lock is already held."
+            ):
                 with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",
                                              blocking=False):
                     pass
+
+    def _otherUploadLockThread(self, cond1, cond2, image, bnum, prov):
+        zk2 = zk.ZooKeeper()
+        zk2.connect([zk.ZooKeeperConnectionConfig(
+            self.zookeeper_host,
+            port=self.zookeeper_port,
+            chroot=self.zookeeper_chroot)])
+
+        with zk2.imageUploadLock(image, bnum, prov, blocking=False):
+            # Notify other thread we have the build lock
+            cond1.acquire()
+            cond1.notify()
+            cond1.release()
+
+            # Wait until the other thread does its test
+            cond2.acquire()
+            cond2.wait()
+            cond2.release()
         zk2.disconnect()
 
+    def test_imageUploadLock_exception_nonblocking(self):
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+        bnum = "0000000000"
+        prov = "rax"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherUploadLockThread,
+                             args=(cond1, cond2, image, bnum, prov,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        with testtools.ExpectedException(
+            npe.ZKLockException, "Did not get lock on .*"
+        ):
+            with self.zk.imageUploadLock(image, bnum, prov, blocking=False):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
+
     def test_imageUploadLock_exception_blocking(self):
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
-                                                  port=self.zookeeper_port,
-                                                  chroot=self.zookeeper_chroot)])
-        with zk2.imageUploadLock("ubuntu-trusty", "0000", "prov1",
-                                 blocking=False):
-            with testtools.ExpectedException(npe.TimeoutException):
-                with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",
-                                             blocking=True, timeout=1):
-                    pass
-        zk2.disconnect()
+        cond1 = threading.Condition()
+        cond2 = threading.Condition()
+        image = "ubuntu-trusty"
+        bnum = "0000000000"
+        prov = "rax"
+
+        # Start the other thread and wait for it to get the lock first
+        t = threading.Thread(target=self._otherUploadLockThread,
+                             args=(cond1, cond2, image, bnum, prov,))
+        t.start()
+        cond1.acquire()
+        cond1.wait()
+
+        with testtools.ExpectedException(npe.TimeoutException):
+            with self.zk.imageUploadLock(image, bnum, prov,
+                                         blocking=True, timeout=1):
+                pass
+
+        # Tell the other thread to proceed and finish
+        cond2.acquire()
+        cond2.notify()
+        cond2.release()
+        t.join()
 
     def test_storeBuild(self):
         image = "ubuntu-trusty"
@@ -231,32 +389,6 @@ class TestZooKeeper(tests.DBTestCase):
                                                        build_number,
                                                        provider),
                          [upload_id])
-
-    def test_registerBuildRequestWatch(self):
-        func = mock.MagicMock()
-        image = "ubuntu-trusty"
-        watch_path = self.zk._imageBuildRequestPath(image)
-
-        zk2 = zk.ZooKeeper()
-        zk2.connect([zk.ZooKeeperConnectionConfig(self.zookeeper_host,
-                                                  self.zookeeper_port,
-                                                  self.zookeeper_chroot)])
-
-        # First client registers the watch
-        self.zk.registerBuildRequestWatch(image, func)
-        self.assertIn(watch_path, self.zk._data_watches)
-
-        # Second client triggers the watch. Give ZK time to dispatch the event
-        # to the other client.
-        zk2.submitBuildRequest(image)
-        time.sleep(1)
-        zk2.disconnect()
-
-        # Make sure the registered function was called.
-        func.assert_called_once_with(mock.ANY)
-
-        # The watch should be unregistered now.
-        self.assertNotIn(watch_path, self.zk._data_watches)
 
     def test_build_request(self):
         '''Test the build request API methods (has/submit/remove)'''
