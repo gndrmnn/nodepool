@@ -46,10 +46,7 @@ class NotFound(Exception):
 
 
 def get_provider_manager(provider, use_taskmanager):
-    if (provider.cloud_config.get_auth_args().get('auth_url') == 'fake'):
-        return FakeProviderManager(provider, use_taskmanager)
-    else:
-        return ProviderManager(provider, use_taskmanager)
+    return ProviderManager(provider, use_taskmanager)
 
 
 class ProviderManager(object):
@@ -358,12 +355,3 @@ class ProviderManager(object):
     def cleanupLeakedFloaters(self):
         with shade_inner_exceptions():
             self._client.delete_unattached_floating_ips()
-
-
-class FakeProviderManager(ProviderManager):
-    def __init__(self, provider, use_taskmanager):
-        self.__client = fakeprovider.FakeOpenStackCloud()
-        super(FakeProviderManager, self).__init__(provider, use_taskmanager)
-
-    def _getClient(self):
-        return self.__client
