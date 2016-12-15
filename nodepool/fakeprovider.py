@@ -82,7 +82,9 @@ class FakeOpenStackCloud(object):
                     id='fake-image-id',
                     status='READY',
                     name='Fake Precise',
-                    metadata={})
+                    is_public=True,
+                    metadata={},
+                    properties={})
             ]
         if networks is None:
             networks = [dict(id='fake-public-network-uuid',
@@ -147,6 +149,8 @@ class FakeOpenStackCloud(object):
                   public_v6=public_v6,
                   private_v4=private_v4,
                   metadata=kw.get('meta', {}),
+                  properties=kw.get('meta', {}),
+                  is_public=False,
                   manager=self,
                   key_name=kw.get('key_name', None),
                   should_fail=should_fail)

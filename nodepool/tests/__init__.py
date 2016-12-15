@@ -255,10 +255,10 @@ class BaseTestCase(testtools.TestCase):
     def setUpFakes(self):
         log = logging.getLogger("nodepool.test")
         log.debug("set up fakes")
-        fake_client = fakeprovider.FakeOpenStackCloud()
+        self.fake_client = fakeprovider.FakeOpenStackCloud()
 
         def get_fake_client(*args, **kwargs):
-            return fake_client
+            return self.fake_client
 
         self.useFixture(fixtures.MonkeyPatch(
             'nodepool.provider_manager.ProviderManager._getClient',
