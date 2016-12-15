@@ -224,7 +224,7 @@ class NodePoolCmd(NodepoolApp):
                 # anyway.
                 provider_images = [
                     image for image in manager.listImages()
-                    if 'nodepool_build_id' in image['properties']]
+                    if not image['is_public']]
             except Exception as e:
                 log.warning("Exception listing alien images for %s: %s"
                             % (provider.name, str(e.message)))

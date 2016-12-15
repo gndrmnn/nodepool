@@ -22,6 +22,7 @@ import mock
 import testtools
 
 from nodepool.cmd import nodepoolcmd
+from nodepool import fakeprovider
 from nodepool import tests
 from nodepool import zk
 
@@ -51,6 +52,9 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def assert_alien_images_empty(self, configfile):
         self.assert_alien_images_listed(configfile, 0, 0)
+
+    def assert_alien_images(self, configfile):
+        self.assert_alien_images_listed(configfile, 1, 0)
 
     def assert_images_listed(self, configfile, image_cnt, status="ready"):
         self.assert_listed(configfile, ['image-list'], 6, status, image_cnt)
@@ -103,12 +107,27 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         self.assert_alien_images_empty(configfile)
 
+    def test_alien_image_list_alien(self):
+        self.fake_client._image_list.append(
+            fakeprovider.Dummy(
+                fakeprovider.Dummy.IMAGE,
+                id='alien-image',
+                status='READY',
+                name='Fake Alien',
+                is_public=True,
+                metadata={},
+                properties={}))
+        configfile = self.setup_config("node.yaml")
+        self._useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        self.patch_argv("-c", configfile, "alien-image-list")
+        nodepoolcmd.main()
+        self.assert_alien_images(configfile)
+
     def test_alien_image_list_fail(self):
         def fail_list(self):
             raise RuntimeError('Fake list error')
-        self.useFixture(fixtures.MonkeyPatch(
-            'nodepool.fakeprovider.FakeOpenStackCloud.list_servers',
-            fail_list))
+        self.fake_client.list_images = fail_list
 
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "alien-image-list")
