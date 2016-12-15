@@ -301,7 +301,7 @@ provider, the Nodepool image types are also defined (see
         - az1
       boot-timeout: 120
       launch-timeout: 900
-      template-hostname: 'template-{image.name}-{timestamp}'
+      template-hostname: '{image.name}-{timestamp}'
       ipv6-preferred: False
       networks:
         - name: 'some-network-name'
@@ -443,7 +443,7 @@ provider, the Nodepool image types are also defined (see
 
   ``template-hostname``
     Hostname template to use for the spawned instance.
-    Default ``template-{image.name}-{timestamp}``
+    Default ``{image.name}-{timestamp}``
 
   ``rate``
     In seconds. Default 1.0.

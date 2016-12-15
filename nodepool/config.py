@@ -223,7 +223,7 @@ def loadConfig(config_path):
         p.azs = provider.get('availability-zones')
         p.template_hostname = provider.get(
             'template-hostname',
-            'template-{image.name}-{timestamp}'
+            '{image.name}-{timestamp}'
         )
         p.image_type = provider.get(
             'image-type', p.cloud_config.config['image_format'])
