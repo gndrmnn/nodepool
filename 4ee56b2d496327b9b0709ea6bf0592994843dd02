@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_6e4d613d",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 10035
+      },
+      "writtenOn": "2016-12-15T18:10:48Z",
+      "side": 1,
+      "message": "This seems to be no longer correct",
+      "revId": "4ee56b2d496327b9b0709ea6bf0592994843dd02",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
