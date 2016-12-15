@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_c5e01399",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-15T18:35:08Z",
+      "side": 1,
+      "message": "Why let the tests create this?  Wouldn\u0027t it work to let the builder create its own client in all cases (just as before the workers created theirs?).  It seems okay to me for the test to also have its own client -- it can observe and interact with the system as well that way.",
+      "revId": "fca95d16f4ea71113ee98976e3fc657f2cf6f3cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
