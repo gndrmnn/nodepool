@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a6eadb0_2c5b6cf7",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-15T20:47:29Z",
+      "side": 1,
+      "message": "looks like we can use this or provider.images.values(), using values() will give use access to image.name",
+      "revId": "93c1ad0ec75ce9c98ba43c159936573e1acc4605",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a6eadb0_2c236ca8",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 1
