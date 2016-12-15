@@ -300,14 +300,11 @@ class ZooKeeper(object):
 
     IMAGE_ROOT = "/nodepool/images"
 
-    def __init__(self, client=None):
+    def __init__(self):
         '''
         Initialize the ZooKeeper object.
-
-        :param client: A pre-connected client. Optionally, you may choose
-            to use the connect() call.
         '''
-        self.client = client
+        self.client = None
         self._became_lost = False
 
     #========================================================================
@@ -467,6 +464,18 @@ class ZooKeeper(object):
             self.client.stop()
             self.client.close()
             self.client = None
+
+    def resetHosts(self, host_list):
+        '''
+        Reset the ZooKeeper cluster connection host list.
+
+        :param list host_list: A list of
+            :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
+            (one per server) defining the ZooKeeper cluster servers.
+        '''
+        if self.client is not None:
+            hosts = buildZooKeeperHosts(host_list)
+            self.client.set_hosts(hosts=hosts)
 
     @contextmanager
     def imageBuildLock(self, image, blocking=True, timeout=None):
