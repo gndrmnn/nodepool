@@ -16,6 +16,40 @@
       "revId": "93c1ad0ec75ce9c98ba43c159936573e1acc4605",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6eadb0_0c079018",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-15T20:41:16Z",
+      "side": 1,
+      "message": "getBuildNumbers takes a str that is the image name. I think you need to pass image.name here to satisfy that parameter.",
+      "revId": "93c1ad0ec75ce9c98ba43c159936573e1acc4605",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6eadb0_0c55d0f8",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-15T20:41:16Z",
+      "side": 1,
+      "message": "Same thing here as above.",
+      "revId": "93c1ad0ec75ce9c98ba43c159936573e1acc4605",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
