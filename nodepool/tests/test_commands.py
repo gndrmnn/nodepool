@@ -93,7 +93,8 @@ class TestNodepoolCMD(tests.DBTestCase):
 
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "alien-list")
-        nodepoolcmd.main()
+        with testtools.ExpectedException(Exception):
+            nodepoolcmd.main()
 
     def test_alien_image_list_empty(self):
         configfile = self.setup_config("node.yaml")
@@ -112,7 +113,8 @@ class TestNodepoolCMD(tests.DBTestCase):
 
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "alien-image-list")
-        nodepoolcmd.main()
+        with testtools.ExpectedException(Exception):
+            nodepoolcmd.main()
 
     def test_list_nodes(self):
         configfile = self.setup_config('node.yaml')

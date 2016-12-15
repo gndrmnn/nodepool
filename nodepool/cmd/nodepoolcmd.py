@@ -199,7 +199,7 @@ class NodePoolCmd(NodepoolApp):
                             t.add_row([provider.name, server['name'],
                                        server['id'], server['public_v4']])
                 except Exception as e:
-                    log.warning("Exception listing aliens for %s: %s"
+                    raise Exception("Exception listing aliens for %s: %s"
                                 % (provider.name, str(e.message)))
         print t
 
@@ -224,9 +224,9 @@ class NodePoolCmd(NodepoolApp):
                 # anyway.
                 provider_images = [
                     image for image in manager.listImages()
-                    if 'nodepool_build_id' in image['properties']]
+                    if 'nodepool_build_id' in image['metadata']]
             except Exception as e:
-                log.warning("Exception listing alien images for %s: %s"
+                raise Exception("Exception listing alien images for %s: %s"
                             % (provider.name, str(e.message)))
 
             alien_ids = []
