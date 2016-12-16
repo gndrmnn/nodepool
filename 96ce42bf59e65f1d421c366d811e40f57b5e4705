@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_615c5c4b",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-16T20:29:35Z",
+      "side": 1,
+      "message": "Other than this not working on centos or fedora I think this is generally fine.\n\nInstead of making it so that this script has a bunch of logic in it I would rename this element to ubuntu-setup and make a centos/fedora setup element too. Just makes it easier rather than having to if yum ; then yum stuff ; elif dnf then dnf ; else apt-get ; fi.",
+      "revId": "96ce42bf59e65f1d421c366d811e40f57b5e4705",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
