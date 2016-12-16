@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_dbd5221c",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-16T16:51:15Z",
+      "side": 1,
+      "message": "should we be also using this logic in http://git.openstack.org/cgit/openstack-infra/nodepool/tree/nodepool/nodepool.py#n1048?",
+      "revId": "5ba3663adb4f0c93072ee371fccb7f03beceaa9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
