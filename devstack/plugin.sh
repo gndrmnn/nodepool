@@ -168,6 +168,48 @@ dburi: $dburi
 EOF
     sudo mv /tmp/secure.conf $NODEPOOL_SECURE
 
+NODEPOOL_LABELS="\
+  - name: ubuntu-trusty
+    image: ubuntu-trusty
+    min-ready: 1
+    providers:
+      - name: devstack"
+
+NODEPOOL_PROVIDERS="\
+  - name: devstack
+    region-name: '$REGION_NAME'
+    cloud: devstack
+    api-timeout: 60
+    # Long boot timeout to deal with potentially nested virt.
+    boot-timeout: 600
+    launch-timeout: 900
+    max-servers: 2
+    rate: 0.25
+    images:
+      - name: ubuntu-trusty
+        min-ram: 1024
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true"
+
+NODEPOOL_DISKIMAGES="\
+  - name: ubuntu-trusty
+    rebuild-age: 86400
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - nodepool-setup
+    release: trusty
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY"
+
     cat > /tmp/nodepool.yaml <<EOF
 # You will need to make and populate these two paths as necessary,
 # cloning nodepool does not do this. Further in this doc we have an
@@ -200,46 +242,13 @@ cron:
   check: '*/15 * * * *'
 
 labels:
-  - name: ubuntu-trusty
-    image: ubuntu-trusty
-    min-ready: 1
-    providers:
-      - name: devstack
+$NODEPOOL_LABELS
 
 providers:
-  - name: devstack
-    region-name: '$REGION_NAME'
-    cloud: devstack
-    api-timeout: 60
-    # Long boot timeout to deal with potentially nested virt.
-    boot-timeout: 600
-    launch-timeout: 900
-    max-servers: 2
-    rate: 0.25
-    images:
-      - name: ubuntu-trusty
-        min-ram: 1024
-        username: devuser
-        private-key: $NODEPOOL_KEY
-        config-drive: true
+$NODEPOOL_PROVIDERS
 
 diskimages:
-  - name: ubuntu-trusty
-    rebuild-age: 86400
-    elements:
-      - ubuntu-minimal
-      - vm
-      - simple-init
-      - devuser
-      - nodepool-setup
-    release: trusty
-    env-vars:
-      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
-      DIB_CHECKSUM: '1'
-      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
-      DIB_APT_LOCAL_CACHE: '0'
-      DIB_DISABLE_APT_CLEANUP: '1'
-      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+$NODEPOOL_DISKIMAGES
 EOF
     if [ -f $NODEPOOL_CACHE_GET_PIP ] ; then
         cat >> /tmp/nodepool.yaml <<EOF
