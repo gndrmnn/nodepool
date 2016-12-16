@@ -33,6 +33,24 @@
       "revId": "5ba3663adb4f0c93072ee371fccb7f03beceaa9b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6eadb0_4eea32dc",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2016-12-16T17:13:18Z",
+      "side": 1,
+      "message": "It\u0027s not necessary there (although we could do it) because that is just a single thread that needs the ZK connection. The method used here is safe for multiple threads sharing the connection and won\u0027t disrupt other threads.",
+      "parentUuid": "1a6eadb0_bbdf86d4",
+      "revId": "5ba3663adb4f0c93072ee371fccb7f03beceaa9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
