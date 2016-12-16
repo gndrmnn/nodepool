@@ -19,6 +19,8 @@ NODEPOOL_PUBKEY=$HOME/.ssh/id_nodepool.pub
 NODEPOOL_INSTALL=$HOME/nodepool-venv
 NODEPOOL_CACHE_GET_PIP=/opt/stack/cache/files/get-pip.py
 
+NODEPOOL_FULL_TEST=1
+
 # Install shade from git if requested. If not requested
 # nodepool install will pull it in.
 function install_shade {
@@ -214,6 +216,27 @@ EOF
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_CACHE_GET_PIP"
+
+    if [ $NODEPOOL_FULL_TEST ]; then
+        NODEPOOL_DISKIMAGES+="\
+  - name: ubuntu-precise
+    rebuild-age: 86400
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - nodepool-setup
+    release: precise
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_CACHE_GET_PIP"
+    fi
 
     cat > /tmp/nodepool.yaml <<EOF
 # You will need to make and populate these two paths as necessary,
