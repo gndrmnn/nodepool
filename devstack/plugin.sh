@@ -200,6 +200,11 @@ cron:
   check: '*/15 * * * *'
 
 labels:
+  - name: ubuntu-precise
+    image: ubuntu-trusty
+    min-ready: 1
+    providers:
+      - name: devstack
   - name: ubuntu-trusty
     image: ubuntu-trusty
     min-ready: 1
@@ -217,6 +222,11 @@ providers:
     max-servers: 2
     rate: 0.25
     images:
+      - name: ubuntu-precise
+        min-ram: 1024
+        username: devuser
+        private-key: $NODEPOOL_KEY
+        config-drive: true
       - name: ubuntu-trusty
         min-ram: 1024
         username: devuser
@@ -224,6 +234,23 @@ providers:
         config-drive: true
 
 diskimages:
+  - name: ubuntu-precise
+    pause: true
+    rebuild-age: 86400
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - nodepool-setup
+    release: precise
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
   - name: ubuntu-trusty
     rebuild-age: 86400
     elements:
