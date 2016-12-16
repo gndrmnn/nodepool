@@ -16,6 +16,23 @@
       "revId": "5ba3663adb4f0c93072ee371fccb7f03beceaa9b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6eadb0_bbdf86d4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-16T17:00:45Z",
+      "side": 1,
+      "message": "Probably?  But I think we could do it in a followup.",
+      "revId": "5ba3663adb4f0c93072ee371fccb7f03beceaa9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
