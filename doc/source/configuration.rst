@@ -239,6 +239,7 @@ on this configuration::
   - name: ubuntu-precise
     pause: False
     rebuild-age: 86400
+    formats: []
     elements:
       - ubuntu-minimal
       - vm
@@ -257,6 +258,21 @@ on this configuration::
       DIB_APT_LOCAL_CACHE: '0'
       DIB_DISABLE_APT_CLEANUP: '1'
       FS_TYPE: ext3
+  - name: ubuntu-xenial
+    pause: True
+    formats:
+      - tar
+      - qcow2
+    elements:
+      - ubuntu-minimal
+      - vm
+    release: xenial
+    env-vars:
+      TMPDIR: /opt/dib_tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
 
 
 **required**
@@ -265,6 +281,9 @@ on this configuration::
     Identifier to reference the disk image in :ref:`images` and :ref:`labels`.
 
 **optional**
+
+  ``formats`` (list)
+    Enumerate all the output formats produced when building the image.
 
   ``rebuild-age``
     If the current diskimage is older than this value (in seconds),
