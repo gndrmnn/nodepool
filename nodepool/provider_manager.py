@@ -212,6 +212,7 @@ class ProviderManager(object):
                 raise Exception("Invalid 'networks' configuration.")
         if nics:
             create_args['nics'] = nics
+        create_args['ip_pool'] = self.provider.pool
         # Put provider.name and image_name in as groups so that ansible
         # inventory can auto-create groups for us based on each of those
         # qualities
