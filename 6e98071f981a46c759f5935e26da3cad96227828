@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a6eadb0_83493891",
+        "filename": "doc/source/scripts.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2016-12-19T18:44:57Z",
+      "side": 1,
+      "message": "We might want to make more verbage here about needing to bake in these scripts via the dib builds and what path they are run against (/opt/nodepool iirc). But we didn\u0027t have that before so fine for followup change.",
+      "revId": "6e98071f981a46c759f5935e26da3cad96227828",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
