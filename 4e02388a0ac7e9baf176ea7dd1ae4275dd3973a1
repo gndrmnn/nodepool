@@ -22,6 +22,23 @@
       "revId": "4e02388a0ac7e9baf176ea7dd1ae4275dd3973a1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a6eadb0_e324acb0",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2016-12-19T18:27:16Z",
+      "side": 1,
+      "message": "Agreed.  :(",
+      "revId": "4e02388a0ac7e9baf176ea7dd1ae4275dd3973a1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
