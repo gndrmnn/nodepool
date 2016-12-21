@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da4df55a_1a493c8c",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2016-12-21T23:34:46Z",
+      "side": 1,
+      "message": "Why are we pip intalling glean here? We want diskimage-builder to do this",
+      "revId": "c13951e0d8d0b14701448542f1dd1587d367ee74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
