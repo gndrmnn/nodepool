@@ -240,17 +240,17 @@ providers:
         private-key: $NODEPOOL_KEY
         config-drive: true
       - name: ubuntu-precise
-        min-ram: 1024
+        min-ram: 512
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
       - name: ubuntu-trusty
-        min-ram: 1024
+        min-ram: 512
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
       - name: ubuntu-xenial
-        min-ram: 1024
+        min-ram: 512
         username: devuser
         private-key: $NODEPOOL_KEY
         config-drive: true
