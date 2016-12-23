@@ -158,6 +158,12 @@ dburi: $dburi
 EOF
     sudo mv /tmp/secure.conf $NODEPOOL_SECURE
 
+    if use_library_from_git "glean"; then
+        DIB_GLEAN_INSTALLTYPE="DIB_INSTALLTYPE_simple_init: 'source'"
+        DIB_GLEAN_REPOTYPE="DIB_REPOTYPE_glean: 'file'"
+        DIB_GLEAN_REPOLOCATION="DIB_REPOLOCATION_glean: '$DEST/glean'"
+    fi
+
     if [ -f $NODEPOOL_CACHE_GET_PIP ] ; then
         DIB_GET_PIP="DIB_REPOLOCATION_pip_and_virtualenv: file://$NODEPOOL_CACHE_GET_PIP"
     fi
@@ -272,6 +278,9 @@ diskimages:
       DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOTYPE
+      $DIB_GLEAN_REPOLOCATION
   - name: fedora-24
     pause: $NODEPOOL_PAUSE_FEDORA_24_DIB
     rebuild-age: 86400
@@ -289,6 +298,9 @@ diskimages:
       DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOTYPE
+      $DIB_GLEAN_REPOLOCATION
   - name: ubuntu-precise
     pause: $NODEPOOL_PAUSE_UBUNTU_PRECISE_DIB
     rebuild-age: 86400
@@ -308,6 +320,9 @@ diskimages:
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOTYPE
+      $DIB_GLEAN_REPOLOCATION
   - name: ubuntu-trusty
     pause: $NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB
     rebuild-age: 86400
@@ -327,6 +342,9 @@ diskimages:
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOTYPE
+      $DIB_GLEAN_REPOLOCATION
   - name: ubuntu-xenial
     pause: $NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB
     rebuild-age: 86400
@@ -346,6 +364,9 @@ diskimages:
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
       $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOTYPE
+      $DIB_GLEAN_REPOLOCATION
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
