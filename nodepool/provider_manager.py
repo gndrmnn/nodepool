@@ -55,4 +55,3 @@ class ProviderManager(object):
     def stopProviders(config):
         for m in config.provider_managers.values():
             m.stop()
-            m.join()
