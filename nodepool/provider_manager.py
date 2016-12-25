@@ -81,7 +81,6 @@ class ProviderManager(object):
     def stopProviders(config):
         for m in config.provider_managers.values():
             m.stop()
-            m.join()
 
     def __init__(self, provider, use_taskmanager):
         self.provider = provider
@@ -102,10 +101,6 @@ class ProviderManager(object):
         if self._taskmanager:
             self._taskmanager.stop()
 
-    def join(self):
-        if self._taskmanager:
-            self._taskmanager.join()
-
     @property
     def _flavors(self):
         if not self.__flavors:
@@ -125,7 +120,7 @@ class ProviderManager(object):
     def resetClient(self):
         self._client = self._getClient()
         if self._use_taskmanager:
-            self._taskmanager.setClient(self._client)
+            self._taskmanager.set_client(self._client)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
