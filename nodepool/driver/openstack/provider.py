@@ -120,7 +120,7 @@ class OpenStackProvider(Provider):
 
     def start(self):
         if self._use_taskmanager:
-            self._taskmanager = TaskManager(None, self.provider.name,
+            self._taskmanager = TaskManager(self.provider.name,
                                             self.provider.rate)
             self._taskmanager.start()
         self.resetClient()
@@ -259,7 +259,7 @@ class OpenStackProvider(Provider):
     def resetClient(self):
         self._client = self._getClient()
         if self._use_taskmanager:
-            self._taskmanager.setClient(self._client)
+            self._taskmanager.set_client(self._client)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
