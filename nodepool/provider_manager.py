@@ -125,7 +125,7 @@ class ProviderManager(object):
     def resetClient(self):
         self._client = self._getClient()
         if self._use_taskmanager:
-            self._taskmanager.setClient(self._client)
+            self._taskmanager.set_client(self._client)
 
     def _getFlavors(self):
         flavors = self.listFlavors()
