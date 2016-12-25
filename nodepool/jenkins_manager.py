@@ -21,10 +21,11 @@ import re
 
 import myjenkins
 import fakeprovider
-from task_manager import Task, TaskManager
+from task_manager import TaskManager
+from shade import task_manager as shade_task_manager
 
 
-class CreateNodeTask(Task):
+class CreateNodeTask(shade_task_manager.Task):
     def main(self, jenkins):
         if 'credentials_id' in self.args:
             launcher_params = {'port': 22,
@@ -54,33 +55,33 @@ class CreateNodeTask(Task):
                 raise
 
 
-class NodeExistsTask(Task):
+class NodeExistsTask(shade_task_manager.Task):
     def main(self, jenkins):
         return jenkins.node_exists(self.args['name'])
 
 
-class DeleteNodeTask(Task):
+class DeleteNodeTask(shade_task_manager.Task):
     def main(self, jenkins):
         return jenkins.delete_node(self.args['name'])
 
 
-class GetNodeConfigTask(Task):
+class GetNodeConfigTask(shade_task_manager.Task):
     def main(self, jenkins):
         return jenkins.get_node_config(self.args['name'])
 
 
-class SetNodeConfigTask(Task):
+class SetNodeConfigTask(shade_task_manager.Task):
     def main(self, jenkins):
         jenkins.reconfig_node(self.args['name'], self.args['config'])
 
 
-class StartBuildTask(Task):
+class StartBuildTask(shade_task_manager.Task):
     def main(self, jenkins):
         jenkins.build_job(self.args['name'],
                           parameters=self.args['params'])
 
 
-class GetInfoTask(Task):
+class GetInfoTask(shade_task_manager.Task):
     def main(self, jenkins):
         return jenkins.get_info()
 
@@ -109,29 +110,29 @@ class JenkinsManager(TaskManager):
         else:
             args['username'] = username
             args['private_key'] = private_key
-        return self.submitTask(CreateNodeTask(**args))
+        return self.submit_task(CreateNodeTask(**args))
 
     def nodeExists(self, name):
-        return self.submitTask(NodeExistsTask(name=name))
+        return self.submit_task(NodeExistsTask(name=name))
 
     def deleteNode(self, name):
-        return self.submitTask(DeleteNodeTask(name=name))
+        return self.submit_task(DeleteNodeTask(name=name))
 
     LABEL_RE = re.compile(r'<label>(.*)</label>')
 
     def relabelNode(self, name, labels):
-        config = self.submitTask(GetNodeConfigTask(name=name))
+        config = self.submit_task(GetNodeConfigTask(name=name))
         old = None
         m = self.LABEL_RE.search(config)
         if m:
             old = m.group(1)
         config = self.LABEL_RE.sub('<label>%s</label>' % ' '.join(labels),
                                    config)
-        self.submitTask(SetNodeConfigTask(name=name, config=config))
+        self.submit_task(SetNodeConfigTask(name=name, config=config))
         return old
 
     def startBuild(self, name, params):
-        self.submitTask(StartBuildTask(name=name, params=params))
+        self.submit_task(StartBuildTask(name=name, params=params))
 
     def getInfo(self):
         return self._client.get_info()
