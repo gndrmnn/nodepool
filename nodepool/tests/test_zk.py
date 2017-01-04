@@ -491,6 +491,44 @@ class TestZooKeeper(tests.DBTestCase):
         self.assertEqual(1, len(launchers))
         self.assertEqual(name, launchers[0])
 
+    def test_getNodeRequest_empty(self):
+        self.assertIsNone(self.zk.getNodeRequest())
+
+    def test_getNodeRequest(self):
+        req = "500-123"
+        value = "test value"
+        path = "%s/%s" % (self.zk.REQUEST_ROOT, req)
+        self.zk.client.create(path, value=value,
+                              makepath=True, ephemeral=True)
+        data = self.zk.getNodeRequest()
+        self.assertEqual(data, value)
+
+    def test_getNodeRequest_priority(self):
+        # Create a low priority request
+        low_req1 = "600-123"
+        low_value1 = "low value 1"
+        path = "%s/%s" % (self.zk.REQUEST_ROOT, low_req1)
+        self.zk.client.create(path, value=low_value1,
+                              makepath=True, ephemeral=True)
+
+        # Create higher priority request
+        high_req = "100-123"
+        high_value = "high value"
+        path = "%s/%s" % (self.zk.REQUEST_ROOT, high_req)
+        self.zk.client.create(path, value=high_value,
+                              makepath=True, ephemeral=True)
+
+        # Create a second low priority request
+        low_req2 = "500-123"
+        low_value2 = "low value 2"
+        path = "%s/%s" % (self.zk.REQUEST_ROOT, low_req2)
+        self.zk.client.create(path, value=low_value2,
+                              makepath=True, ephemeral=True)
+
+        # Verify we get the highest priority request
+        data = self.zk.getNodeRequest()
+        self.assertEqual(data, high_value)
+
 
 class TestZKModel(tests.BaseTestCase):
 
