@@ -300,6 +300,7 @@ class ZooKeeper(object):
 
     IMAGE_ROOT = "/nodepool/images"
     LAUNCHER_ROOT = "/nodepool/launchers"
+    REQUEST_ROOT = "/nodepool/requests"
 
     def __init__(self, client=None):
         '''
@@ -1064,3 +1065,12 @@ class ZooKeeper(object):
             return []
 
         return launchers
+
+    def getNodeRequest(self):
+        '''
+        Pop the highest priority node request off the queue.
+
+        :returns: The request data, or None.
+        '''
+        queue = self.client.Queue(self.REQUEST_ROOT)
+        return queue.get()
