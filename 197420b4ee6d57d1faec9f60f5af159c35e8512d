@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_4745376e",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1071,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-04T17:29:37Z",
+      "side": 1,
+      "message": "We need to leave the request on the queue so that we can return data back to zuul.",
+      "revId": "197420b4ee6d57d1faec9f60f5af159c35e8512d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
