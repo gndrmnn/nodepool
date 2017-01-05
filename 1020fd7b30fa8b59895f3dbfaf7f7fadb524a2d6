@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_680f3588",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-05T21:45:16Z",
+      "side": 0,
+      "message": "Code from here...",
+      "revId": "1020fd7b30fa8b59895f3dbfaf7f7fadb524a2d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5201f7_8828d9e3",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-05T21:45:16Z",
+      "side": 0,
+      "message": "...to here may be useful.",
+      "revId": "1020fd7b30fa8b59895f3dbfaf7f7fadb524a2d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5201f7_a8259d09",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-05T21:45:16Z",
+      "side": 0,
+      "message": "Code from here...",
+      "revId": "1020fd7b30fa8b59895f3dbfaf7f7fadb524a2d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5201f7_c81e61ba",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-05T21:45:16Z",
+      "side": 0,
+      "message": "...to here may be useful.",
+      "revId": "1020fd7b30fa8b59895f3dbfaf7f7fadb524a2d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
