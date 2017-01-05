@@ -904,7 +904,7 @@ class ZooKeeper(object):
         return uploads[:count]
 
     def getMostRecentImageUpload(self, image, provider,
-                                 state="ready"):
+                                 state=READY):
         '''
         Retrieve the most recent image upload data with the given state.
 

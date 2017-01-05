@@ -85,6 +85,7 @@ class ChrootedKazooFixture(fixtures.Fixture):
 
         _tmp_client.ensure_path(self.chroot_path)
         _tmp_client.stop()
+        _tmp_client.close()
 
         # Create a chroot'ed client
         self.zkclient = kazoo.client.KazooClient(
@@ -106,6 +107,7 @@ class ChrootedKazooFixture(fixtures.Fixture):
         _tmp_client.start()
         _tmp_client.delete(self.chroot_path, recursive=True)
         _tmp_client.stop()
+        _tmp_client.close()
 
 
 class BaseTestCase(testtools.TestCase):
