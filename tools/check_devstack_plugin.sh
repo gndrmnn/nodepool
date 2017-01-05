@@ -31,6 +31,8 @@ function waitfornode {
     done
 }
 
+exit 0
+
 # check that image built
 waitforimage ubuntu-dib
 
