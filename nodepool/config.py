@@ -101,16 +101,6 @@ class Cron(ConfigValue):
         return "<Cron %s>" % self.name
 
 
-class ZMQPublisher(ConfigValue):
-    def __repr__(self):
-        return "<ZMQPublisher %s>" % self.name
-
-
-class GearmanServer(ConfigValue):
-    def __repr__(self):
-        return "<GearmanServer %s>" % self.name
-
-
 class DiskImage(ConfigValue):
     def __repr__(self):
         return "<DiskImage %s>" % self.name
@@ -155,8 +145,6 @@ def loadConfig(config_path):
     newconfig.dburi = None
     newconfig.provider_managers = {}
     newconfig.jenkins_managers = {}
-    newconfig.zmq_publishers = {}
-    newconfig.gearman_servers = {}
     newconfig.zookeeper_servers = {}
     newconfig.diskimages = {}
     newconfig.crons = {}
@@ -170,19 +158,6 @@ def loadConfig(config_path):
         newconfig.crons[c.name] = c
         c.job = None
         c.timespec = config.get('cron', {}).get(name, default)
-
-    for addr in config.get('zmq-publishers', []):
-        z = ZMQPublisher()
-        z.name = addr
-        z.listener = None
-        newconfig.zmq_publishers[z.name] = z
-
-    for server in config.get('gearman-servers', []):
-        g = GearmanServer()
-        g.host = server['host']
-        g.port = server.get('port', 4730)
-        g.name = g.host + '_' + str(g.port)
-        newconfig.gearman_servers[g.name] = g
 
     for server in config.get('zookeeper-servers', []):
         z = zk.ZooKeeperConnectionConfig(server['host'],
@@ -312,8 +287,6 @@ def loadConfig(config_path):
         t.jenkins_user = None
         t.jenkins_apikey = None
         t.jenkins_credentials_id = None
-
-        t.assign_via_gearman = target.get('assign-via-gearman', False)
 
         t.hostname = target.get(
             'hostname',
