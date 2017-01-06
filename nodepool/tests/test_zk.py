@@ -543,19 +543,19 @@ class TestZKModel(tests.BaseTestCase):
 
     def test_BaseModel_toDict(self):
         o = zk.BaseModel('0001')
-        o.state = zk.BUILDING
         d = o.toDict()
         self.assertNotIn('id', d)
-        self.assertEqual(o.state, d['state'])
-        self.assertIsNotNone(d['state_time'])
 
     def test_ImageBuild_toDict(self):
         o = zk.ImageBuild('0001')
+        o.state = zk.BUILDING
         o.builder = 'localhost'
         o.formats = ['qemu', 'raw']
 
         d = o.toDict()
         self.assertNotIn('id', d)
+        self.assertEqual(o.state, d['state'])
+        self.assertIsNotNone(d['state_time'])
         self.assertEqual(','.join(o.formats), d['formats'])
         self.assertEqual(o.builder, d['builder'])
 
@@ -578,6 +578,7 @@ class TestZKModel(tests.BaseTestCase):
 
     def test_ImageUpload_toDict(self):
         o = zk.ImageUpload('0001', '0003')
+        o.state = zk.UPLOADING
         o.external_id = 'DEADBEEF'
         o.external_name = 'trusty'
 
@@ -586,6 +587,8 @@ class TestZKModel(tests.BaseTestCase):
         self.assertNotIn('build_id', d)
         self.assertNotIn('provider_name', d)
         self.assertNotIn('image_name', d)
+        self.assertEqual(o.state, d['state'])
+        self.assertEqual(o.state_time, d['state_time'])
         self.assertEqual(o.external_id, d['external_id'])
         self.assertEqual(o.external_name, d['external_name'])
 
@@ -621,7 +624,7 @@ class TestZKModel(tests.BaseTestCase):
         now = int(time.time())
         req_id = "500-123"
         d = {
-            'state': zk.READY,
+            'state': zk.REQUESTED,
             'state_time': now
         }
 
