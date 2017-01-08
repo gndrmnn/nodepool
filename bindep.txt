@@ -1,0 +1,10 @@
+mysql-server
+libmysqlclient-dev
+g++
+python-dev
+libffi-dev
+libssl-dev
+qemu-utils
+libxml2-dev
+libxslt1-dev
+zookeeperd
