@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_8008422a",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-09T22:50:05Z",
+      "side": 1,
+      "message": "Maybe this is how we should do it, but I\u0027ll note that the object has a toDict method we could consider using.",
+      "revId": "6c4ba1493d59d483f62f30a7d32338138ba8dddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
