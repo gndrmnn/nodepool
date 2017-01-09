@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_acd9ce85",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1027,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-09T18:03:06Z",
+      "side": 1,
+      "message": "We can go ahead and pull the no-launches thing.  That was part of an emergency measure we took in openstack to deal with a 2000 node quota.  Per-provider launcher daemons will address that problem in a better way.",
+      "revId": "83c8c16b246dae10b3395c975a8b53ce8e86768a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
