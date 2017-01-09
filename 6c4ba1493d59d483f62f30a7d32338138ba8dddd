@@ -16,6 +16,24 @@
       "revId": "6c4ba1493d59d483f62f30a7d32338138ba8dddd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5201f7_208dd67b",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-09T22:57:00Z",
+      "side": 1,
+      "message": "This won\u0027t always work. Builds can be in a failed state (or deleting) in which case you won\u0027t have certain attributes (builder, formats, etc). I think you probably want to look at using the getBuilds() API method instead.",
+      "parentUuid": "ba5201f7_8008422a",
+      "revId": "6c4ba1493d59d483f62f30a7d32338138ba8dddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
