@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_d5acca37",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-09T22:44:27Z",
+      "side": 1,
+      "message": "I\u0027d like to make this clear that in normal use, it is inferred from the cloud configs; this actually sort of suggests the opposite.  So maybe:\n\nThe list of formats to build is normally automatically created based on the needs of the providers to which the image is uploaded.  To build images even when no providers are configured or to build additional formats which you know you may need in the future, list those formats here.",
+      "revId": "a3ff30dacf62739d85a25542d8f2c0f0c85ad64c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
