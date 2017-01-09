@@ -34,6 +34,24 @@
       "revId": "6c4ba1493d59d483f62f30a7d32338138ba8dddd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba5201f7_60a51eb4",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-09T23:04:03Z",
+      "side": 1,
+      "message": "Turns out you really do want everything, even failed builds. Nevermind my comment then.  :)",
+      "parentUuid": "ba5201f7_208dd67b",
+      "revId": "6c4ba1493d59d483f62f30a7d32338138ba8dddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
