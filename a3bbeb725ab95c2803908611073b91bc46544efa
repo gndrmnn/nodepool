@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_ebf29805",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2017-01-10T23:36:33Z",
+      "side": 1,
+      "message": "If we go around again it might be clearer to say something like \"remove if this diskimage no longer has any providers requesting it, or explicit \"format:\" requests\" or something.",
+      "revId": "a3bbeb725ab95c2803908611073b91bc46544efa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
