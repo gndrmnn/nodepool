@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba5201f7_dd0be57b",
+        "filename": "nodepool/cmd/nodepoold.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-10T17:49:36Z",
+      "side": 1,
+      "message": "This would be good if we were trying to let people know we\u0027re changing the default.  That might be useful, but that\u0027s kind of a soft-break: if you aren\u0027t passing the argument, we\u0027re going to switch that to mean we won\u0027t run the builder.  The program will start, and you\u0027ll need to figure out why your images are building.  Hopefully you read the release announcement and you already knew that.\n\nBut I think what\u0027s more important is that we tell people who *are* passing the argument (and therefore, the behavior is not going to change) that they need to go ahead and remove the argument from their invocation.  Because when we drop the args entirely, the program won\u0027t even start.  The goal of this exercise was to try to avoid that situation.",
+      "revId": "9ea9ba68232aacac2df66d9e3d5601dc314916dc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
