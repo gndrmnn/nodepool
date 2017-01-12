@@ -297,7 +297,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
-    release: 24
+    release: 25
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
