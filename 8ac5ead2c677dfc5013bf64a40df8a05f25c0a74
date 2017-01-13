@@ -69,6 +69,23 @@
       "revId": "8ac5ead2c677dfc5013bf64a40df8a05f25c0a74",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_691ed7bb",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-13T19:08:02Z",
+      "side": 1,
+      "message": "But with different log prefixes.  I believe we run with nodepool at debug level but not shade.",
+      "revId": "8ac5ead2c677dfc5013bf64a40df8a05f25c0a74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
