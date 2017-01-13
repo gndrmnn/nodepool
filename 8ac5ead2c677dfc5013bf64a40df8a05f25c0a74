@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a3c09a3_49775b3a",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-01-13T19:03:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a3c09a3_60a8ac20",
+      "revId": "8ac5ead2c677dfc5013bf64a40df8a05f25c0a74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a3c09a3_8063d819",
         "filename": "nodepool/task_manager.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-13T18:09:45Z",
       "side": 1,
       "message": "Why drop the \u0027running task\u0027 portion of the log, or the \u0027ran task in\u0027 log entry?",
+      "revId": "8ac5ead2c677dfc5013bf64a40df8a05f25c0a74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_c9998b70",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-01-13T19:03:59Z",
+      "side": 1,
+      "message": "Those are always logged in run_task in the base class, so if we keep them here, we\u0027ll be double-logging.",
+      "parentUuid": "7a3c09a3_8063d819",
       "revId": "8ac5ead2c677dfc5013bf64a40df8a05f25c0a74",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
