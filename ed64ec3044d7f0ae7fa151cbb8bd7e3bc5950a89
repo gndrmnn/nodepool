@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a3c09a3_60c6ec68",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-13T17:57:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a3c09a3_9ef97ecb",
+      "revId": "ed64ec3044d7f0ae7fa151cbb8bd7e3bc5950a89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a3c09a3_bef63ad5",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-13T17:28:56Z",
       "side": 1,
       "message": "I think I\u0027d skip these log messages -- especially in light of the above comment.",
+      "revId": "ed64ec3044d7f0ae7fa151cbb8bd7e3bc5950a89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_40c9f077",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-13T17:57:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a3c09a3_bef63ad5",
       "revId": "ed64ec3044d7f0ae7fa151cbb8bd7e3bc5950a89",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
