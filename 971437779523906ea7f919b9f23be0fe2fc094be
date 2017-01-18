@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a3c09a3_fca46bba",
+        "filename": "tools/zuul-nodepool-integration/builder-logging.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-18T22:35:22Z",
+      "side": 1,
+      "message": "You will probably want to update the integration test job to capture this log file.",
+      "revId": "971437779523906ea7f919b9f23be0fe2fc094be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_9cc7e763",
+        "filename": "tools/zuul-nodepool-integration/launcher-logging.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-18T22:35:22Z",
+      "side": 1,
+      "message": "You will probably want to update the integration test job to capture this log file.",
+      "revId": "971437779523906ea7f919b9f23be0fe2fc094be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_fc8b8b1c",
+        "filename": "tools/zuul-nodepool-integration/secure.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-18T22:35:22Z",
+      "side": 1,
+      "message": "I assume the script in zuul/ will make sure this is valid connection string?",
+      "revId": "971437779523906ea7f919b9f23be0fe2fc094be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
