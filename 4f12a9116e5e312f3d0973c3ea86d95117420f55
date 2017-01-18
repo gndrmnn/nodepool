@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a3c09a3_18bfbf61",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-01-18T06:14:42Z",
+      "side": 1,
+      "message": "just \"return num_requested + num_in_use \u003e provider_max\"?",
+      "range": {
+        "startLine": 733,
+        "startChar": 8,
+        "endLine": 735,
+        "endChar": 20
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_33881c71",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-01-18T06:14:42Z",
+      "side": 1,
+      "message": "I see this part on every exit of the function (and also in run).\n\nMaybe it makes sense to put request update and unlock into a resource manager or function decorator in order to guarantee all (future) exit paths of these functions automatically do this.",
+      "range": {
+        "startLine": 776,
+        "startChar": 0,
+        "endLine": 777,
+        "endChar": 51
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
