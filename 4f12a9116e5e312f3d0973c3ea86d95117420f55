@@ -69,6 +69,30 @@
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_4185bdcc",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-18T12:51:03Z",
+      "side": 1,
+      "message": "It\u0027s also possible I initially misunderstood your suggestion. :)  I now think you\u0027re suggesting decorating these two methods to make certain the lock is released. That might be a good idea if I end up with more methods that rely on that happening. I don\u0027t think it\u0027s worth it for 2 methods, ATM.",
+      "parentUuid": "7a3c09a3_6fad459a",
+      "range": {
+        "startLine": 776,
+        "startChar": 0,
+        "endLine": 777,
+        "endChar": 51
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
