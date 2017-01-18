@@ -45,6 +45,30 @@
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a3c09a3_6fad459a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-18T12:31:58Z",
+      "side": 1,
+      "message": "We cannot do that because we do not always want to unlock after an update (see the example code where we set PENDING a few lines below).",
+      "parentUuid": "7a3c09a3_33881c71",
+      "range": {
+        "startLine": 776,
+        "startChar": 0,
+        "endLine": 777,
+        "endChar": 51
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
