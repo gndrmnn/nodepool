@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "5a3905b3_287a0925",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-19T19:20:24Z",
+      "side": 1,
+      "message": "My guess is we probably want to eventually alter this function to do what the docstring says.",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a3c09a3_18bfbf61",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -142,6 +159,23 @@
     },
     {
       "key": {
+        "uuid": "5a3905b3_e887210d",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-19T19:20:24Z",
+      "side": 1,
+      "message": "I like the idea of using __str__.\n\nclient.create(path, value\u003dstr(node)).  or maybe even client.create(path, value\u003dnode) would work?",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a3905b3_889bfdc8",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
@@ -153,6 +187,23 @@
       "writtenOn": "2017-01-19T19:13:54Z",
       "side": 1,
       "message": "This made me realize that we probably can\u0027t currenlty have node or image names like: ubuntu/trusty and ubuntu/xenial. Is that something maybe we should escape properly so that they are valid?",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a3905b3_087d4d1c",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-19T19:20:24Z",
+      "side": 1,
+      "message": "We probably should either escape all the operator-provided names or reject \u0027/\u0027.",
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
