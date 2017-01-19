@@ -225,6 +225,24 @@
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a3905b3_4882f595",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-19T19:28:32Z",
+      "side": 1,
+      "message": "I vote reject \u0027/\u0027 because it will affect/complicate both ZK and local FS (dib) code. But as I am not an actual operator, that is left for others to decide.",
+      "parentUuid": "5a3905b3_087d4d1c",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
