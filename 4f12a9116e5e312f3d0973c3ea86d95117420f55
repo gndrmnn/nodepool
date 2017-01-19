@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a3905b3_c5f33009",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-19T19:13:54Z",
+      "side": 1,
+      "message": "Note that this will return the list of images that the provider is configured to provide, the the list of images that the provider is currently able to provide. Pointing this out because the docstring uses the term \"available\" which I don\u0027t think is actually the case here.",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 53
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a3c09a3_18bfbf61",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
@@ -90,6 +113,46 @@
         "endLine": 777,
         "endChar": 51
       },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a3905b3_c5441076",
+        "filename": "nodepool/tests/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-19T19:13:54Z",
+      "side": 1,
+      "message": "Maybe we shoudl consider a consistent serialize() method on these? Or maybe rely on str(some_obj) python magic to get us what we want? just thinking that its a bit clunky and potentially error prone to have to jump through multiple type conversions to get what we want.",
+      "range": {
+        "startLine": 482,
+        "startChar": 36,
+        "endLine": 482,
+        "endChar": 72
+      },
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a3905b3_889bfdc8",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-01-19T19:13:54Z",
+      "side": 1,
+      "message": "This made me realize that we probably can\u0027t currenlty have node or image names like: ubuntu/trusty and ubuntu/xenial. Is that something maybe we should escape properly so that they are valid?",
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
