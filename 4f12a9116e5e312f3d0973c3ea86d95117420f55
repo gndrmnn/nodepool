@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "5a3905b3_484f55bd",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-19T19:26:28Z",
+      "side": 1,
+      "message": "Good call. Will address in a follow up.",
+      "parentUuid": "5a3905b3_287a0925",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a3c09a3_18bfbf61",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 2
