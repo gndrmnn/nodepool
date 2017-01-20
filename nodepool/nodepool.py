@@ -734,6 +734,56 @@ class NodeRequestWorker(threading.Thread):
         num_in_use = self._countNodes()
         return num_requested + num_in_use > provider_max
 
+    def _unlockNodeSet(self, nodeset):
+        '''
+        Attempt unlocking all Nodes in the given node set.
+
+        :param list nodeset: A list of Node objects.
+        '''
+        for node in nodeset:
+            try:
+                self.zk.unlockNode(node)
+            except Exception:
+                self.log.exception("Error unlocking node:")
+
+    def _findUnusedNodeOfType(self, node_type):
+        return None
+
+    def _launchNode(self, node_type):
+        return None
+
+    def _getNodeSet(self):
+        '''
+        Get a list of nodes that would satisfy the request.
+
+        :returns: A list of locked Node objects, or an empty list on failure.
+        '''
+        return []
+        nodeset = []
+        for ntype in self.request.node_types:
+            got_a_node = False
+
+            while not got_a_node:
+                node = self._findUnusedNodeOfType(ntype)
+                if not node:
+                    try:
+                        node = self._launchNode(ntype)
+                    except Exception:
+                        self.log.exception("Failed to launch new node:")
+                        self._unlockNodeSet(nodeset)
+                        return []
+
+                try:
+                    self.zk.lockNode(node)
+                except:
+                    # someone already grabbed this one. try again
+                    continue
+
+                nodeset.append(node)
+                got_a_node = True
+
+        return nodeset
+
     def run(self):
         self.log.debug("Handling request %s" % self.request)
         try:
@@ -777,15 +827,22 @@ class NodeRequestWorker(threading.Thread):
             self.zk.unlockNodeRequest(self.request)
             return
 
-        # TODO(Shrews): Determine node availability and if we need to launch
-        # new nodes, or reuse existing nodes.
-
         self.request.state = zk.PENDING
         self.zk.updateNodeRequest(self.request)
 
-        # TODO(Shrews): Make magic happen here
+        nodeset = self._getNodeSet()
 
-        self.request.state = zk.FULFILLED
+        if not nodeset:
+            self.request.declined_by.append(self.launcher_id)
+            launchers = set(self.zk.getRegisteredLaunchers())
+            if launchers.issubset(set(self.request.declined_by)):
+                # All launchers have declined it
+                self.request.state = zk.FAILED
+            else:
+                self.request.state = zk.REQUESTED
+        else:
+            self.request.state = zk.FULFILLED
+
         self.zk.updateNodeRequest(self.request)
         self.zk.unlockNodeRequest(self.request)
 
@@ -800,7 +857,8 @@ class ProviderWorker(threading.Thread):
     that will be recognized and this thread will shut itself down.
     '''
 
-    def __init__(self, configfile, zk, provider):
+    def __init__(self, configfile, zk, provider,
+                 watermark_sleep=WATERMARK_SLEEP):
         threading.Thread.__init__(
             self, name='ProviderWorker.%s' % provider.name
         )
@@ -810,6 +868,7 @@ class ProviderWorker(threading.Thread):
         self.running = False
         self.configfile = configfile
         self.workers = []
+        self.watermark_sleep = watermark_sleep
         self.launcher_id = "%s-%s-%s" % (socket.gethostname(),
                                          os.getpid(),
                                          self.ident)
@@ -913,7 +972,7 @@ class ProviderWorker(threading.Thread):
             if self.provider.max_concurrency != 0:
                 self._processRequests()
 
-            time.sleep(10)
+            time.sleep(self.watermark_sleep)
             self._updateProvider()
 
     def stop(self):
@@ -951,7 +1010,17 @@ class NodePool(threading.Thread):
             provider_manager.ProviderManager.stopProviders(self.config)
         if self.apsched and self.apsched.running:
             self.apsched.shutdown()
-        self.log.debug("finished stopping")
+
+        # Don't let stop() return until all provider threads have been
+        # terminated.
+        self.log.info("Stopping provider threads")
+        for thd in self.provider_threads.values():
+            if thd.isAlive():
+                thd.stop()
+            self.log.info("Waiting for %s" % thd.name)
+            thd.join()
+
+        self.log.debug("Finished stopping")
 
     def loadConfig(self):
         self.log.debug("Loading configuration")
@@ -1244,7 +1313,7 @@ class NodePool(threading.Thread):
         Start point for the NodePool thread.
         '''
         # Provider threads keyed by provider name
-        provider_threads = {}
+        self.provider_threads = {}
 
         while not self._stopped:
             try:
@@ -1259,30 +1328,25 @@ class NodePool(threading.Thread):
                 # the config. Removing a provider from the config and then
                 # adding it back would cause a restart.
                 for p in self.config.providers.values():
-                    if p.name not in provider_threads.keys():
-                        t = ProviderWorker(self.configfile, self.zk, p)
+                    if p.name not in self.provider_threads.keys():
+                        t = ProviderWorker(self.configfile, self.zk, p,
+                                           self.watermark_sleep)
                         self.log.info( "Starting %s" % t.name)
                         t.start()
-                        provider_threads[p.name] = t
-                    elif not provider_threads[p.name].isAlive():
-                        provider_threads[p.name].join()
-                        t = ProviderWorker(self.configfile, self.zk, p)
+                        self.provider_threads[p.name] = t
+                    elif not self.provider_threads[p.name].isAlive():
+                        self.provider_threads[p.name].join()
+                        t = ProviderWorker(self.configfile, self.zk, p,
+                                           self.watermark_sleep)
                         self.log.info( "Restarting %s" % t.name)
                         t.start()
-                        provider_threads[p.name] = t
+                        self.provider_threads[p.name] = t
             except Exception:
                 self.log.exception("Exception in main loop:")
 
             self._wake_condition.acquire()
             self._wake_condition.wait(self.watermark_sleep)
             self._wake_condition.release()
-
-        # Stop provider threads
-        for thd in provider_threads.values():
-            if thd.isAlive():
-                thd.stop()
-            self.log.info("Waiting for %s" % thd.name)
-            thd.join()
 
     def _run(self, session, allocation_history):
         # Make up the subnode deficit first to make sure that an
