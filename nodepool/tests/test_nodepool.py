@@ -15,6 +15,7 @@
 
 import json
 import logging
+import mock
 import time
 from unittest import skip
 
@@ -30,7 +31,30 @@ import nodepool.nodepool
 class TestNodepool(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestNodepool")
 
-    def test_decline_and_fail(self):
+    @mock.patch('nodepool.nodepool.NodeRequestWorker._launchNode')
+    def test_failure_to_launch(self, mock_launch):
+        '''
+        Test that failing to launch a new node marks the request as failed.
+        '''
+        mock_launch.side_effect = Exception("launch failure")
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+
+        req = zk.NodeRequest()
+        req.node_types.append("fake-image")
+        self.submitNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+        self.assertNotEqual(req.declined_by, [])
+
+    def test_invalid_image_fails(self):
+        '''
+        Test that an invalid image declines and fails the request.
+        '''
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
@@ -38,7 +62,6 @@ class TestNodepool(tests.DBTestCase):
         req = zk.NodeRequest()
         req.node_types.append("zorky-zumba")
         self.submitNodeRequest(req)
-        self.assertEqual(req.state, zk.REQUESTED)
 
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FAILED)

@@ -188,6 +188,10 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("CleanupWorker"):
                     continue
+                if t.name.startswith("ProviderWorker"):
+                    continue
+                if t.name.startswith("NodeRequestWorker"):
+                    continue
                 if t.name not in whitelist:
                     done = False
             if done:

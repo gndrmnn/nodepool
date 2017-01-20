@@ -734,6 +734,82 @@ class NodeRequestWorker(threading.Thread):
         num_in_use = self._countNodes()
         return num_requested + num_in_use > provider_max
 
+    def _unlockNodeSet(self, nodeset):
+        '''
+        Attempt unlocking all Nodes in the given node set.
+
+        :param list nodeset: A list of Node objects.
+        '''
+        for node in nodeset:
+            try:
+                self.zk.unlockNode(node)
+            except Exception:
+                self.log.exception("Error unlocking node:")
+
+    def _getReadyNodesOfTypes(self, ntypes):
+        '''
+        Query ZooKeeper for unused/ready nodes.
+
+        :param str ntypes: The node types we want.
+
+        :returns: A dictionary, keyed by node type, with lists of Node objects
+            that are ready, or an empty dict if none are found.
+        '''
+        ret = {}
+        for node_id in self.zk.getNodes():
+            node = self.zk.getNode(node_id)
+            if node and node.state == zk.READY and node.type in ntypes:
+                if node.type not in ret:
+                    ret[node.type] = []
+                ret[node.type].append(node)
+        return ret
+
+    def _launchNode(self, node_type):
+        self.log.debug("Launching node of type: %s" % node_type)
+        raise Exception("Not Implemented")
+
+    def _getNodeSet(self):
+        '''
+        Get a list of nodes that would satisfy the request.
+
+        :returns: A list of locked Node objects, or an empty list on failure.
+        '''
+        nodeset = []
+        ready_nodes = self._getReadyNodesOfTypes(self.request.node_types)
+
+        for ntype in self.request.node_types:
+            # First try to grab from the list of already available nodes.
+            got_a_node = False
+            if ntype in ready_nodes:
+                for node in ready_nodes[ntype]:
+                    try:
+                        self.zk.lockNode(node, blocking=False)
+                    except exceptions.ZKLockException:
+                        # It's already locked so skip it.
+                        continue
+                    else:
+                        got_a_node = True
+                        nodeset.append(node)
+                        break
+
+            # Could not grab an existing node, so launch a new one.
+            if not got_a_node:
+                while True:
+                    try:
+                        node = self._launchNode(ntype)
+                        self.zk.lockNode(node, blocking=False)
+                        nodeset.append(node)
+                        break
+                    except exceptions.ZKLockException:
+                        # We launched it, but someone else grabbed it.
+                        continue
+                    except:
+                        self.log.exception("Failed to launch new node:")
+                        self._unlockNodeSet(nodeset)
+                        return []
+
+        return nodeset
+
     def run(self):
         self.log.debug("Handling request %s" % self.request)
         try:
@@ -777,15 +853,22 @@ class NodeRequestWorker(threading.Thread):
             self.zk.unlockNodeRequest(self.request)
             return
 
-        # TODO(Shrews): Determine node availability and if we need to launch
-        # new nodes, or reuse existing nodes.
-
         self.request.state = zk.PENDING
         self.zk.updateNodeRequest(self.request)
 
-        # TODO(Shrews): Make magic happen here
+        nodeset = self._getNodeSet()
 
-        self.request.state = zk.FULFILLED
+        if not nodeset:
+            self.request.declined_by.append(self.launcher_id)
+            launchers = set(self.zk.getRegisteredLaunchers())
+            if launchers.issubset(set(self.request.declined_by)):
+                # All launchers have declined it
+                self.request.state = zk.FAILED
+            else:
+                self.request.state = zk.REQUESTED
+        else:
+            self.request.state = zk.FULFILLED
+
         self.zk.updateNodeRequest(self.request)
         self.zk.unlockNodeRequest(self.request)
 
