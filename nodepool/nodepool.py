@@ -734,6 +734,56 @@ class NodeRequestWorker(threading.Thread):
         num_in_use = self._countNodes()
         return num_requested + num_in_use > provider_max
 
+    def _unlockNodeSet(self, nodeset):
+        '''
+        Attempt unlocking all Nodes in the given node set.
+
+        :param list nodeset: A list of Node objects.
+        '''
+        for node in nodeset:
+            try:
+                self.zk.unlockNode(node)
+            except Exception:
+                self.log.exception("Error unlocking node:")
+
+    def _findUnusedNodeOfType(self, node_type):
+        return None
+
+    def _launchNode(self, node_type):
+        return None
+
+    def _getNodeSet(self):
+        '''
+        Get a list of nodes that would satisfy the request.
+
+        :returns: A list of locked Node objects, or an empty list on failure.
+        '''
+        return []
+        nodeset = []
+        for ntype in self.request.node_types:
+            got_a_node = False
+
+            while not got_a_node:
+                node = self._findUnusedNodeOfType(ntype)
+                if not node:
+                    try:
+                        node = self._launchNode(ntype)
+                    except Exception:
+                        self.log.exception("Failed to launch new node:")
+                        self._unlockNodeSet(nodeset)
+                        return []
+
+                try:
+                    self.zk.lockNode(node)
+                except:
+                    # someone already grabbed this one. try again
+                    continue
+
+                nodeset.append(node)
+                got_a_node = True
+
+        return nodeset
+
     def run(self):
         self.log.debug("Handling request %s" % self.request)
         try:
@@ -777,15 +827,22 @@ class NodeRequestWorker(threading.Thread):
             self.zk.unlockNodeRequest(self.request)
             return
 
-        # TODO(Shrews): Determine node availability and if we need to launch
-        # new nodes, or reuse existing nodes.
-
         self.request.state = zk.PENDING
         self.zk.updateNodeRequest(self.request)
 
-        # TODO(Shrews): Make magic happen here
+        nodeset = self._getNodeSet()
 
-        self.request.state = zk.FULFILLED
+        if not nodeset:
+            self.request.declined_by.append(self.launcher_id)
+            launchers = set(self.zk.getRegisteredLaunchers())
+            if launchers.issubset(set(self.request.declined_by)):
+                # All launchers have declined it
+                self.request.state = zk.FAILED
+            else:
+                self.request.state = zk.REQUESTED
+        else:
+            self.request.state = zk.FULFILLED
+
         self.zk.updateNodeRequest(self.request)
         self.zk.unlockNodeRequest(self.request)
 
