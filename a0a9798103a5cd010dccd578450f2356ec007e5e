@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a3905b3_6cc65c9b",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 7979
+      },
+      "writtenOn": "2017-01-23T15:32:43Z",
+      "side": 1,
+      "message": "This would fail if /etc/nodepool exists. Can add -p flag to avoid that.",
+      "range": {
+        "startLine": 628,
+        "startChar": 0,
+        "endLine": 628,
+        "endChar": 69
+      },
+      "revId": "a0a9798103a5cd010dccd578450f2356ec007e5e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
