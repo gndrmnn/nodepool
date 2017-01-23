@@ -243,6 +243,23 @@
       "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a3905b3_b546c878",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-23T16:47:22Z",
+      "side": 1,
+      "message": "I think you just did.  ;)",
+      "revId": "4f12a9116e5e312f3d0973c3ea86d95117420f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
