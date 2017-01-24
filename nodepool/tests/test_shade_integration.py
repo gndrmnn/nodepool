@@ -20,6 +20,8 @@ import shade
 import testtools
 import yaml
 
+from nodepool import config as nodepool_config
+from nodepool import provider_manager
 from nodepool import tests
 from nodepool.provider_manager import shade_inner_exceptions
 
@@ -43,15 +45,17 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
     def test_nodepool_provider_config(self):
         configfile = self.setup_config('integration.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
+        config = nodepool_config.loadConfig(configfile)
+        self.assertIn('real-provider', config.providers)
+        pm = provider_manager.ProviderManager(
+            config.providers['real-provider'], use_taskmanager=False)
+        pm.start()
         auth_data = {'username': 'real',
                      'project_id': 'real',
                      'password': 'real',
                      'auth_url': 'real'}
-        self.assertEqual(provider_manager._client.auth, auth_data)
-        self.assertEqual(provider_manager._client.region_name, 'real-region')
+        self.assertEqual(pm._client.auth, auth_data)
+        self.assertEqual(pm._client.region_name, 'real-region')
 
     def test_nodepool_osc_config(self):
         configfile = self.setup_config('integration_osc.yaml')
@@ -62,34 +66,12 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         osc_config = {'clouds': {'real-cloud': {'auth': auth_data}}}
         self._use_cloud_config(osc_config)
 
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
-        self.assertEqual(provider_manager._client.auth, auth_data)
-
-    def test_nodepool_osc_config_reload(self):
-        configfile = self.setup_config('integration_osc.yaml')
-        auth_data = {'username': 'os_real',
-                     'project_name': 'os_real',
-                     'password': 'os_real',
-                     'auth_url': 'os_real'}
-        osc_config = {'clouds': {'real-cloud': {'auth': auth_data}}}
-        self._use_cloud_config(osc_config)
-
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
-        self.assertEqual(provider_manager._client.auth, auth_data)
-
-        # update the config
-        auth_data['password'] = 'os_new_real'
-        os.remove(self.clouds_path)
-        with open(self.clouds_path, 'w') as h:
-            yaml.safe_dump(osc_config, h)
-
-        pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
-        self.assertEqual(provider_manager._client.auth, auth_data)
+        config = nodepool_config.loadConfig(configfile)
+        self.assertIn('real-provider', config.providers)
+        pm = provider_manager.ProviderManager(
+            config.providers['real-provider'], use_taskmanager=False)
+        pm.start()
+        self.assertEqual(pm._client.auth, auth_data)
 
     def test_exceptions(self):
         log = self.useFixture(fixtures.FakeLogger(level=logging.DEBUG))
