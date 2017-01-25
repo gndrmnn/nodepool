@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a461143_c2d26b34",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-01-25T17:14:17Z",
+      "side": 0,
+      "message": "There\u0027s some more cleanup to do around this, and of the static methods in the providermanager class, yeah?",
+      "revId": "5ee68af0014f5abfadcfefc8a6e8057acf365347",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
