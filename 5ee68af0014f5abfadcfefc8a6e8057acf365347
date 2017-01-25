@@ -16,6 +16,24 @@
       "revId": "5ee68af0014f5abfadcfefc8a6e8057acf365347",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_7e106f4f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-25T18:06:23Z",
+      "side": 0,
+      "message": "No. The builder still expects the same behavior from the static methods.",
+      "parentUuid": "3a461143_c2d26b34",
+      "revId": "5ee68af0014f5abfadcfefc8a6e8057acf365347",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
