@@ -619,11 +619,13 @@ class TestZKModel(tests.BaseTestCase):
     def test_Node_toDict(self):
         o = zk.Node('123')
         o.provider = 'rax'
+        o.type = 'trusty'
         d = o.toDict()
         self.assertNotIn('id', d)
         self.assertIn('state', d)
         self.assertIn('state_time', d)
         self.assertEqual(d['provider'], 'rax')
+        self.assertEqual(d['type'], 'trusty')
 
     def test_Node_fromDict(self):
         now = int(time.time())
@@ -632,6 +634,7 @@ class TestZKModel(tests.BaseTestCase):
             'state': zk.READY,
             'state_time': now,
             'provider': 'rax',
+            'type': 'trusty',
         }
 
         o = zk.Node.fromDict(d, node_id)
@@ -639,3 +642,4 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(o.state, d['state'])
         self.assertEqual(o.state_time, d['state_time'])
         self.assertEqual(o.provider, 'rax')
+        self.assertEqual(o.type, 'trusty')

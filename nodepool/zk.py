@@ -351,12 +351,13 @@ class Node(BaseModel):
     Class representing a launched node.
     '''
     VALID_STATES = set([BUILDING, TESTING, READY, IN_USE, USED,
-                        HOLD, DELETING])
+                        HOLD, DELETING, FAILED])
 
     def __init__(self, id=None):
         super(Node, self).__init__(id)
         self.lock = None
         self.provider = None
+        self.type = None
 
     def __repr__(self):
         d = self.toDict()
@@ -370,6 +371,7 @@ class Node(BaseModel):
         '''
         d = super(Node, self).toDict()
         d['provider'] = self.provider
+        d['type'] = self.type
         return d
 
     @staticmethod
@@ -385,6 +387,7 @@ class Node(BaseModel):
         o = Node(o_id)
         super(Node, o).fromDict(d)
         o.provider = d.get('provider')
+        o.type = d.get('type')
         return o
 
 

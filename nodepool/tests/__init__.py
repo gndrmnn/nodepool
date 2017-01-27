@@ -161,8 +161,6 @@ class BaseTestCase(testtools.TestCase):
         whitelist = ['APScheduler',
                      'MainThread',
                      'NodePool',
-                     'NodePool Builder',
-                     'NodeUpdateListener',
                      'fake-provider',
                      'fake-provider1',
                      'fake-provider2',
@@ -170,7 +168,6 @@ class BaseTestCase(testtools.TestCase):
                      'fake-dib-provider',
                      'fake-jenkins',
                      'fake-target',
-                     'DiskImageBuilder queue',
                      ]
 
         while True:
@@ -187,6 +184,10 @@ class BaseTestCase(testtools.TestCase):
                 if t.name.startswith("BuildWorker"):
                     continue
                 if t.name.startswith("CleanupWorker"):
+                    continue
+                if t.name.startswith("ProviderWorker"):
+                    continue
+                if t.name.startswith("NodeRequestWorker"):
                     continue
                 if t.name not in whitelist:
                     done = False
