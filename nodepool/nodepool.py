@@ -520,13 +520,14 @@ class NodeLauncher(threading.Thread):
                        (self.node.id, server.get('public_v4'),
                         server.get('public_v6')))
 
-        self.log.debug("Node id: %s testing ssh at ip: %s" %
-                       (self.node.id, ip))
+        self.log.debug("Node id: %s testing ssh at ip: %s timeout: %s" %
+                       (self.node.id, ip, self.timeout))
         connect_kwargs = dict(key_filename=self.image.private_key)
         if not utils.ssh_connect(ip, self.image.username,
                                  connect_kwargs=connect_kwargs,
                                  timeout=self.timeout):
             raise LaunchAuthException("Unable to connect via ssh")
+        self.log.info("Node id: %s ssh connection successful" % self.node.id)
 
         # Save the elapsed time for statsd
         dt = int((time.time() - start_time) * 1000)
@@ -618,6 +619,7 @@ class NodeLauncher(threading.Thread):
         public_key = key.get_name() + ' ' + key.get_base64()
 
         for role, n in nodelist:
+            self.log.info("Writing Nodepool Info")
             connect_kwargs = dict(key_filename=self.image.private_key)
             host = utils.ssh_connect(n.ip, self.image.username,
                                      connect_kwargs=connect_kwargs,
@@ -625,9 +627,11 @@ class NodeLauncher(threading.Thread):
             if not host:
                 raise Exception("Unable to log in via SSH")
 
+            self.log.info("Creating config dir")
             host.ssh("Create config dir", "sudo mkdir -p /etc/nodepool")
             host.ssh("Change config dir owner",
                      "sudo chown %s -R /etc/nodepool" % self.image.username)
+            self.log.info("Created config dir")
 
             ftp = host.client.open_sftp()
 
@@ -682,6 +686,7 @@ class NodeLauncher(threading.Thread):
             f.close()
 
             ftp.close()
+            self.log.info("Copied files")
 
     def runReadyScript(self, nodelist):
         for role, n in nodelist:
