@@ -447,7 +447,7 @@ class DBTestCase(BaseTestCase):
         '''
         while True:
             req = self.zk.getNodeRequest(req.id)
-            if req.state != zk.REQUESTED:
+            if req.state not in (zk.REQUESTED, zk.PENDING):
                 break
             time.sleep(1)
         return req
