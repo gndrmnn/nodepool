@@ -16,6 +16,24 @@
       "revId": "578822276d9926fa689980d557cd9a4cedd34c0c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_e18a3063",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-01-31T18:50:51Z",
+      "side": 0,
+      "message": "I intentionally WANT to use the id setter here (see below) to do the validation that we are getting a string. None would not be valid in this case, which is why I set self._id directly.",
+      "parentUuid": "3a461143_6122c0a4",
+      "revId": "578822276d9926fa689980d557cd9a4cedd34c0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
