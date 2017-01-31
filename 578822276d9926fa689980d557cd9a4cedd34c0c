@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a461143_6122c0a4",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-01-31T18:48:04Z",
+      "side": 0,
+      "message": "self._id ?\n\nFor that matter - why not just give o_id a default value of None in the argument list?",
+      "revId": "578822276d9926fa689980d557cd9a4cedd34c0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
