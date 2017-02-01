@@ -52,6 +52,23 @@
       "revId": "578822276d9926fa689980d557cd9a4cedd34c0c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_c45c571b",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-01T00:48:48Z",
+      "side": 0,
+      "message": "That makes sense.  It\u0027s such an \"obvious\" optimization though it may warrant a code comment.",
+      "revId": "578822276d9926fa689980d557cd9a4cedd34c0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
