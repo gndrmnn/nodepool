@@ -63,6 +63,30 @@
       "revId": "cc3cd6747c94211629e3c9ac5df7b8468e003b60",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_db540a23",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2017-02-01T23:54:54Z",
+      "side": 1,
+      "message": "You don\u0027t need to have another thread to run the polling. It also means that completed handlers are removed as soon as they say they are done rather than waiting around for something else to clean them up. So if we need to count the running handlers or something like that we know that the request_handlers list is current.",
+      "parentUuid": "3a461143_afbd55d9",
+      "range": {
+        "startLine": 905,
+        "startChar": 8,
+        "endLine": 905,
+        "endChar": 12
+      },
+      "revId": "cc3cd6747c94211629e3c9ac5df7b8468e003b60",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
