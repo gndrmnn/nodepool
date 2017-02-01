@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a461143_44286733",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-01T00:55:35Z",
+      "side": 1,
+      "message": "Nit: remove \u0027thread\u0027",
+      "revId": "cc3cd6747c94211629e3c9ac5df7b8468e003b60",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
