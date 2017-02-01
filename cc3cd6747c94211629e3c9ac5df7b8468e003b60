@@ -16,6 +16,29 @@
       "revId": "cc3cd6747c94211629e3c9ac5df7b8468e003b60",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a461143_2d117f04",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2017-02-01T02:17:53Z",
+      "side": 1,
+      "message": "Rather than polling, why not have the handlers call back when they are complete?",
+      "range": {
+        "startLine": 905,
+        "startChar": 8,
+        "endLine": 905,
+        "endChar": 12
+      },
+      "revId": "cc3cd6747c94211629e3c9ac5df7b8468e003b60",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
