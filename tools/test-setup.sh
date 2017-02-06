@@ -15,12 +15,12 @@ DB_ROOT_PW=${MYSQL_ROOT_PW:-insecure_slave}
 DB_USER=openstack_citest
 DB_PW=openstack_citest
 
-sudo -H mysqladmin -u root password $DB_ROOT_PW
+mysqladmin -u root password $DB_ROOT_PW
 
 # It's best practice to remove anonymous users from the database.  If
 # a anonymous user exists, then it matches first for connections and
 # other connections from that host will not work.
-sudo -H mysql -u root -p$DB_ROOT_PW -h localhost -e "
+mysql -u root -p$DB_ROOT_PW -h localhost -e "
     DELETE FROM mysql.user WHERE User='';
     FLUSH PRIVILEGES;
     GRANT ALL PRIVILEGES ON *.*
