@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a430d35_024b2eca",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-06T20:57:18Z",
+      "side": 1,
+      "message": "As of this change, there hasn\u0027t been a need to pass the ZooKeeper connection to the launch thread. However, it is going to be needed in the next change, so I could move this there later. It actually shouldn\u0027t matter much since the state is set by the launch thread as the very last thing before terminating, but it probably does make sense to do it more locally to the state change.",
+      "parentUuid": "1a430d35_e21c6215",
+      "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a430d35_6230729f",
         "filename": "nodepool/tests/test_nodelaunchmanager.py",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-06T20:48:09Z",
       "side": 1,
       "message": "I would love to avoid mocking this.  We can probably do this for real using the fake provider.  Since _launchNode is currently a noop, this shouldn\u0027t even be necessary for this test right now.",
+      "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a430d35_627dd2e6",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-06T20:57:18Z",
+      "side": 1,
+      "message": "Good point.",
+      "parentUuid": "1a430d35_6230729f",
       "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1a430d35_82847ed4",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-06T20:57:18Z",
+      "side": 1,
+      "message": "Yep",
+      "parentUuid": "1a430d35_82271e63",
+      "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a430d35_a22a5a2a",
         "filename": "nodepool/tests/test_nodelaunchmanager.py",
         "patchSetId": 10
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "1a430d35_a25eda73",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-06T20:57:18Z",
+      "side": 1,
+      "message": "Ok. I\u0027ll keep this one for the time being then.",
+      "parentUuid": "1a430d35_a22a5a2a",
+      "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a430d35_c221264f",
         "filename": "nodepool/tests/test_nodelaunchmanager.py",
         "patchSetId": 10
@@ -81,6 +153,24 @@
       "writtenOn": "2017-02-06T20:48:09Z",
       "side": 1,
       "message": "And this one for the moment as well.",
+      "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a430d35_02508e5c",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-06T20:57:18Z",
+      "side": 1,
+      "message": "Ok.",
+      "parentUuid": "1a430d35_c221264f",
       "revId": "ae7cda7044154ac4d4a18bc89413b336fd156b93",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
