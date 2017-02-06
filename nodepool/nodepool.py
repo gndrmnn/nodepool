@@ -903,16 +903,20 @@ class NodeRequestHandler(object):
             # Could not grab an existing node, so launch a new one.
             if not got_a_node:
                 node = zk.Node()
-                node.state = zk.BUILDING
                 node.type = ntype
                 node.provider = self.provider.name
                 node.allocated_to = self.request.id
 
                 # Note: It should be safe (i.e., no race) to lock the node
-                # *after* it is stored since nodes in BUILDING state are not
+                # *after* it is stored since nodes with no state are not
                 # locked anywhere.
                 self.zk.storeNode(node)
                 self.zk.lockNode(node, blocking=False)
+
+                # Set state AFTER lock so that it isn't accidentally cleaned
+                # up (unlocked BUILDING nodes will be deleted).
+                node.state = zk.BUILDING
+                self.zk.storeNode(node)
 
                 # NOTE: We append the node to nodeset if it successfully
                 # launches.
