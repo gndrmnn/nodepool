@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a430d35_a2025a6d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-06T20:54:51Z",
+      "side": 1,
+      "message": "We need to make sure that the node is still stored with a state time so that if we encounter an unlocked node with no state with a state time older than some period, we can know that we failed between these two calls and it should be removed.  if we need to add a state (\"INITIALIZING\"?) to accomplish that, that would be okay.",
+      "revId": "890421767f5c3aa2cd2a8d444f7dd3100ec969bd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
