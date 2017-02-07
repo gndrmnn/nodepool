@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a430d35_253e46da",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-07T18:29:12Z",
+      "side": 1,
+      "message": "Drop template? Since we are no longer doing snapshots?",
+      "revId": "315ee5256654c36bec36147fae052622884adc5e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
