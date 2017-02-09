@@ -685,7 +685,7 @@ class NodeLauncher(threading.Thread):
         :param Node node: The node object.
         :param int retries: Number of times to retry failed launches.
         '''
-        threading.Thread.__init__(self)
+        threading.Thread.__init__(self, name="NodeLauncher")
         self.log = logging.getLogger("nodepool.NodeLauncher")
         self._zk = zk
         self._provider = provider
@@ -1671,7 +1671,6 @@ class NodePool(threading.Thread):
     def updateConfig(self):
         config = self.loadConfig()
         self.reconfigureZooKeeper(config)
-        self.reconfigureCrons(config)
         self.setConfig(config)
 
     def run(self):
