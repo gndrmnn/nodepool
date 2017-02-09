@@ -378,6 +378,7 @@ class Node(BaseModel):
     def __init__(self, id=None):
         super(Node, self).__init__(id)
         self.lock = None
+        self.lock_holder = None
         self.provider = None
         self.type = None
         self.allocated_to = None
@@ -437,6 +438,7 @@ class Node(BaseModel):
         d['external_id'] = self.external_id
         d['hostname'] = self.hostname
         d['comment'] = self.comment
+        d['lock_holder'] = self.lock_holder
         return d
 
     @staticmethod
@@ -464,6 +466,7 @@ class Node(BaseModel):
         o.external_id = d.get('external_id')
         o.hostname = d.get('hostname')
         o.comment = d.get('comment')
+        o.lock_holder = d.get('lock_holder')
         return o
 
 
@@ -1345,7 +1348,7 @@ class ZooKeeper(object):
         request.lock.release()
         request.lock = None
 
-    def lockNode(self, node, blocking=True, timeout=None):
+    def lockNode(self, node, blocking=True, timeout=None, identifier=None):
         '''
         Lock a node.
 
@@ -1364,7 +1367,7 @@ class ZooKeeper(object):
         '''
         path = self._nodeLockPath(node.id)
         try:
-            lock = Lock(self.client, path)
+            lock = Lock(self.client, path, identifier)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -1376,6 +1379,7 @@ class ZooKeeper(object):
             raise npe.ZKLockException("Did not get lock on %s" % path)
 
         node.lock = lock
+        node.lock_holder = identifier
 
     def unlockNode(self, node):
         '''
@@ -1389,8 +1393,10 @@ class ZooKeeper(object):
         '''
         if node.lock is None:
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
+        self.log.debug("********************** unlocking node %s", node)
         node.lock.release()
         node.lock = None
+        node.lock_holder = None
 
     def getNodes(self):
         '''

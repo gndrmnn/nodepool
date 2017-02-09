@@ -1085,7 +1085,8 @@ class NodeRequestHandler(object):
             if self.request.reuse and ntype in ready_nodes:
                 for node in ready_nodes[ntype]:
                     try:
-                        self.zk.lockNode(node, blocking=False)
+                        self.zk.lockNode(node, blocking=False,
+                                         identifier="NodeRequestHandler:reuse")
                     except exceptions.ZKLockException:
                         # It's already locked so skip it.
                         continue
@@ -1109,7 +1110,8 @@ class NodeRequestHandler(object):
                 # *after* it is stored since nodes in INIT state are not
                 # locked anywhere.
                 self.zk.storeNode(node)
-                self.zk.lockNode(node, blocking=False)
+                self.zk.lockNode(node, blocking=False,
+                                 identifier="NodeRequestHandler:new node")
 
                 # Set state AFTER lock so sthat it isn't accidentally cleaned
                 # up (unlocked BUILDING nodes will be deleted).
@@ -1176,6 +1178,7 @@ class NodeRequestHandler(object):
                 self.request.nodes.append(node.id)
             self.request.state = zk.FULFILLED
 
+        self.log.debug("Unlocking nodeset for request %s", self.request.id)
         self._unlockNodeSet()
         self.zk.storeNodeRequest(self.request)
         self.zk.unlockNodeRequest(self.request)
@@ -1396,7 +1399,8 @@ class NodeCleanupWorker(threading.Thread):
             # Any nodes in these states that are unlocked can be deleted.
             if node.state in (zk.USED, zk.IN_USE, zk.BUILDING, zk.DELETING):
                 try:
-                    self._zk.lockNode(node, blocking=False)
+                    self._zk.lockNode(node, blocking=False,
+                                      identifier="_cleanupNodes")
                 except exceptions.ZKLockException:
                     continue
 
@@ -1805,6 +1809,7 @@ class NodePool(threading.Thread):
                     continue
 
                 if req.state == zk.FULFILLED:
+                    self.log.debug("Request fulfilled: %s", req)
                     # Reset node allocated_to
                     for node_id in req.nodes:
                         node = self.zk.getNode(node_id)
