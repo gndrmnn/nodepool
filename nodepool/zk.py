@@ -375,6 +375,8 @@ class Node(BaseModel):
         self.image_id = None
         self.launcher = None
         self.created_time = None
+        self.external_id = None
+        self.hostname = None
 
     def __repr__(self):
         d = self.toDict()
@@ -396,7 +398,9 @@ class Node(BaseModel):
                     self.public_ipv6 == other.public_ipv6 and
                     self.image_id == other.image_id and
                     self.launcher == other.launcher and
-                    self.created_time == other.created_time)
+                    self.created_time == other.created_time and
+                    self.external_id == other.external_id and
+                    self.hostname == other.hostname)
         else:
             return False
 
@@ -415,6 +419,8 @@ class Node(BaseModel):
         d['image_id'] = self.image_id
         d['launcher'] = self.launcher
         d['created_time'] = self.created_time
+        d['external_id'] = self.external_id
+        d['hostname'] = self.hostname
         return d
 
     @staticmethod
@@ -439,6 +445,8 @@ class Node(BaseModel):
         o.image_id = d.get('image_id')
         o.launcher = d.get('launcher')
         o.created_time = d.get('created_time')
+        o.external_id = d.get('external_id')
+        o.hostname = d.get('hostname')
         return o
 
 
