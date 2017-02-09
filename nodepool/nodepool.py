@@ -1671,7 +1671,6 @@ class NodePool(threading.Thread):
     def updateConfig(self):
         config = self.loadConfig()
         self.reconfigureZooKeeper(config)
-        self.reconfigureCrons(config)
         self.setConfig(config)
 
     def run(self):
