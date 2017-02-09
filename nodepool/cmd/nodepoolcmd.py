@@ -275,7 +275,7 @@ class NodePoolCmd(NodepoolApp):
         try:
             self.zk.lockNode(node, blocking=True, timeout=1)
         except Exception:
-            print("Cannot lock node %s. Try again." % node.id)
+            print("Cannot lock node %s. Try again. Lock holder is %s" % node.id, node.lock_holder)
             return
 
         if self.args.now:
