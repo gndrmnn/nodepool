@@ -24,6 +24,7 @@ labels:
 
 providers:
   - name: fake-provider
+    cloud: devstack
     max-servers: 96
     auth-url: 'fake'
     images:
