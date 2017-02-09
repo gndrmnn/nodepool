@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a430d35_b38c01db",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-09T14:03:56Z",
+      "side": 1,
+      "message": "This is done in a future review (not yet submitted).",
+      "parentUuid": "1a430d35_53311d59",
+      "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a430d35_73345949",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-08T21:20:41Z",
       "side": 1,
       "message": "If this is used to launch unallocated nodes (i.e. min_ready demand), then I think we need to unlock the node here.",
+      "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a430d35_f7011406",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-09T14:03:56Z",
+      "side": 1,
+      "message": "That part (min-ready support) is not implemented yet, though I don\u0027t see why you think we\u0027d have to unlock the node here to support that. I\u0027d rather tackle that in a later review.",
+      "parentUuid": "1a430d35_73345949",
       "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1a430d35_7c8dead1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-09T14:03:56Z",
+      "side": 1,
+      "message": "This is checked in _getReadyNodesOfTypes() above.",
+      "parentUuid": "1a430d35_9337054c",
+      "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a430d35_b34241ac",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 12
@@ -64,6 +118,24 @@
       "writtenOn": "2017-02-08T21:20:41Z",
       "side": 1,
       "message": "Why wait until here to unlock the nodes, won\u0027t they have allocated_to set, preventing them from being double-allocated?",
+      "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a430d35_d755d9f9",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-09T14:03:56Z",
+      "side": 1,
+      "message": "Because the launch threads will be modifying them and we need to guarantee that no other handlers have grabbed them. It would be racey to check values of the node.",
+      "parentUuid": "1a430d35_b34241ac",
       "revId": "e27d786b38007f6eff98482e3792833b37b9ee4d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
