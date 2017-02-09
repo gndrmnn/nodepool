@@ -31,16 +31,16 @@ function waitfornode {
     name=$1
     state='ready'
 
+    $NODEPOOL list
     while ! $NODEPOOL list | grep $name | grep $state; do
         $NODEPOOL image-list > /tmp/.nodepool-image-list.txt
         $NODEPOOL list > /tmp/.nodepool-list.txt
         sudo mv /tmp/.nodepool-image-list.txt $WORKSPACE/logs/nodepool-image-list.txt
         sudo mv /tmp/.nodepool-list.txt $WORKSPACE/logs/nodepool-list.txt
         sleep 10
+        $NODEPOOL list
     done
 }
-
-exit 0
 
 if [ $NODEPOOL_PAUSE_CENTOS_7_DIB = 'false' ]; then
     # check that image built
