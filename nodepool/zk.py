@@ -1345,7 +1345,7 @@ class ZooKeeper(object):
         request.lock.release()
         request.lock = None
 
-    def lockNode(self, node, blocking=True, timeout=None):
+    def lockNode(self, node, blocking=True, timeout=None, identifier=None):
         '''
         Lock a node.
 
@@ -1364,7 +1364,7 @@ class ZooKeeper(object):
         '''
         path = self._nodeLockPath(node.id)
         try:
-            lock = Lock(self.client, path)
+            lock = Lock(self.client, path, identifier)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -1376,6 +1376,7 @@ class ZooKeeper(object):
             raise npe.ZKLockException("Did not get lock on %s" % path)
 
         node.lock = lock
+        self.log.debug("Node %s locked by %s", node.id, identifier)
 
     def unlockNode(self, node):
         '''
@@ -1391,6 +1392,7 @@ class ZooKeeper(object):
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
         node.lock.release()
         node.lock = None
+        self.log.debug("********************************* unlocked node %s", node)
 
     def getNodes(self):
         '''
