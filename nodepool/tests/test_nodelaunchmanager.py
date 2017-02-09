@@ -17,6 +17,7 @@ import logging
 import mock
 import time
 
+from nodepool import provider_manager
 from nodepool import tests
 from nodepool import zk
 from nodepool.nodepool import NodeLaunchManager
@@ -25,10 +26,32 @@ from nodepool.nodepool import NodeLaunchManager
 class TestNodeLaunchManager(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestNodeLaunchManager")
 
+    def _setup(self, configfile):
+        # Need a builder for the launch code to work
+        self._useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        # Need a nodepool to access config objects
+        self.nodepool = self.useNodepool(configfile, watermark_sleep=1)
+        self.nodepool.start()
+        self.wait_for_config(self.nodepool)
+        self.provider = self.nodepool.config.providers['fake-provider']
+        self.labels = self.nodepool.config.labels
+
+        # Neither the builder nor nodepool configs have provider managers
+        # in their configs, so create one.
+        self.pmanager = provider_manager.ProviderManager(self.provider, False)
+        self.pmanager.resetClient()
+
     def test_successful_launch(self):
+        configfile = self.setup_config('node.yaml')
+        self._setup(configfile)
+
         n1 = zk.Node()
         n1.state = zk.BUILDING
-        mgr = NodeLaunchManager(self.zk, 0)
+        n1.type = 'fake-label'
+        mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
+                                self.pmanager, 1)
         mgr.launch(n1)
         while not mgr.poll():
             time.sleep(0)
@@ -37,10 +60,15 @@ class TestNodeLaunchManager(tests.DBTestCase):
 
     @mock.patch('nodepool.nodepool.NodeLauncher._launchNode')
     def test_failed_launch(self, mock_launch):
+        configfile = self.setup_config('node.yaml')
+        self._setup(configfile)
+
         mock_launch.side_effect = Exception()
         n1 = zk.Node()
         n1.state = zk.BUILDING
-        mgr = NodeLaunchManager(self.zk, 0)
+        n1.type = 'fake-label'
+        mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
+                                self.pmanager, 1)
         mgr.launch(n1)
         while not mgr.poll():
             time.sleep(0)
@@ -49,12 +77,18 @@ class TestNodeLaunchManager(tests.DBTestCase):
 
     @mock.patch('nodepool.nodepool.NodeLauncher._launchNode')
     def test_mixed_launch(self, mock_launch):
+        configfile = self.setup_config('node.yaml')
+        self._setup(configfile)
+
         mock_launch.side_effect = [None, Exception()]
         n1 = zk.Node()
         n1.state = zk.BUILDING
+        n1.type = 'fake-label'
         n2 = zk.Node()
         n2.state = zk.BUILDING
-        mgr = NodeLaunchManager(self.zk, 0)
+        n2.type = 'fake-label'
+        mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
+                                self.pmanager, 1)
         mgr.launch(n1)
         mgr.launch(n2)
         while not mgr.poll():
