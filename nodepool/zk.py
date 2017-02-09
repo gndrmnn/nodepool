@@ -1391,6 +1391,7 @@ class ZooKeeper(object):
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
         node.lock.release()
         node.lock = None
+        self.log.debug("********************************* unlocked node %s", node)
 
     def getNodes(self):
         '''
