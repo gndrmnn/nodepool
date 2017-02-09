@@ -159,7 +159,7 @@ class NodePoolCmd(NodepoolApp):
             l.setLevel(logging.WARNING)
 
     def list(self, node_id=None):
-        print status.node_list(self.pool.getDB(), node_id)
+        print status.node_list(self.zk, node_id)
 
     def dib_image_list(self):
         print status.dib_image_list(self.zk)
