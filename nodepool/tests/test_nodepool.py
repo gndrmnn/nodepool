@@ -44,7 +44,7 @@ class TestNodepool(tests.DBTestCase):
         pool.start()
 
         req = zk.NodeRequest()
-        req.node_types.append('fake-image')
+        req.node_types.append('fake-label')
         self.submitNodeRequest(req)
         self.assertEqual(req.state, zk.REQUESTED)
 
@@ -75,7 +75,7 @@ class TestNodepool(tests.DBTestCase):
         pool.start()
 
         req = zk.NodeRequest()
-        req.node_types.append('fake-image')
+        req.node_types.append('fake-label')
         self.submitNodeRequest(req)
         self.assertEqual(req.state, zk.REQUESTED)
 

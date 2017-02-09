@@ -658,6 +658,7 @@ class TestZKModel(tests.BaseTestCase):
         o.public_ipv6 = '<ipv6>'
         o.image_id = 'image-id'
         o.launcher = 'launcher-id'
+        o.external_id = 'ABCD'
 
         d = o.toDict()
         self.assertNotIn('id', d)
@@ -673,6 +674,7 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(d['public_ipv6'], o.public_ipv6)
         self.assertEqual(d['image_id'], o.image_id)
         self.assertEqual(d['launcher'], o.launcher)
+        self.assertEqual(d['external_id'], o.external_id)
 
     def test_Node_fromDict(self):
         now = int(time.time())
@@ -690,6 +692,7 @@ class TestZKModel(tests.BaseTestCase):
             'public_ipv6': '<ipv6>',
             'image_id': 'image-id',
             'launcher': 'launcher-id',
+            'external_id': 'ABCD',
         }
 
         o = zk.Node.fromDict(d, node_id)
@@ -706,3 +709,4 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(o.public_ipv6, d['public_ipv6'])
         self.assertEqual(o.image_id, d['image_id'])
         self.assertEqual(o.launcher, d['launcher'])
+        self.assertEqual(o.external_id, d['external_id'])
