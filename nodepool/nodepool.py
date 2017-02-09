@@ -672,15 +672,180 @@ class SubNodeLauncher(threading.Thread):
 
 
 class NodeLauncher(threading.Thread):
-    def __init__(self, zk, node, retries):
+
+    def __init__(self, zk, provider, label, provider_manager, node, retries):
+        '''
+        Initialize the launcher.
+
+        :param ZooKeeper zk: A ZooKeeper object.
+        :param Provider provider: A config Provider object.
+        :param Label label: The Label object for this node type.
+        :param ProviderManager provider_manager: The manager object used to
+            interact with the selected provider.
+        :param Node node: The node object.
+        :param int retries: Number of times to retry failed launches.
+        '''
         threading.Thread.__init__(self)
+        self.log = logging.getLogger("nodepool.NodeLauncher")
         self._zk = zk
+        self._provider = provider
+        self._label = label
+        self._manager = provider_manager
         self._node = node
         self._retries = retries
 
     def _launchNode(self):
-        # TODO(Shrews): Use self._retries here
-        pass
+        config_image = self._provider.images[self._label.image]
+
+        cloud_image = self._zk.getMostRecentImageUpload(
+            config_image.name, self._provider.name)
+        if not cloud_image:
+            raise LaunchNodepoolException(
+                "Unable to find current cloud image %s in %s" %
+                (config_image.name, self._provider.name)
+            )
+
+        hostname = self._provider.hostname_format.format(
+            label=self._label, provider=self._provider, node=self._node
+        )
+
+        self.log.info("Creating server with hostname %s in %s from image %s "
+                      "for node id: %s" % (hostname, self._provider.name,
+                                           config_image.name, self._node.id))
+
+        server = self._manager.createServer(
+            hostname,
+            config_image.min_ram,
+            cloud_image.external_id,
+            name_filter=config_image.name_filter,
+            az=self._node.az,
+            config_drive=config_image.config_drive,
+            nodepool_node_id=self._node.id,
+            nodepool_image_name=config_image.name)
+
+        self._node.external_id = server.id
+        self._node.hostname = hostname
+
+        # Checkpoint save the updated node info
+        self._zk.storeNode(self._node)
+
+        self.log.debug("Waiting for server %s for node id: %s" %
+                       (server.id, self._node.id))
+        server = self._manager.waitForServer(
+            server, self._provider.launch_timeout)
+
+        if server.status != 'ACTIVE':
+            raise LaunchStatusException("Server %s for node id: %s "
+                                        "status: %s" %
+                                        (server.id, self._node.id,
+                                         server.status))
+
+        self._node.public_ipv4 = server.public_v4
+        self._node.public_ipv6 = server.public_v6
+
+        preferred_ip = server.public_v4
+        if self._provider.ipv6_preferred:
+            if server.public_v6:
+                preferred_ip = server.public_v6
+            else:
+                self.log.warning('Preferred ipv6 not available, '
+                                 'falling back to ipv4.')
+        if not preferred_ip:
+            self.log.debug(
+                "Server data for failed IP: %s" % pprint.pformat(
+                    server))
+            raise LaunchNetworkException("Unable to find public IP of server")
+
+        self._node.private_ipv4 = server.private_v4
+        # devstack-gate multi-node depends on private_v4 being populated
+        # with something. On clouds that don't have a private address, use
+        # the public.
+        if not self._node.private_ipv4:
+            self._node.private_ipv4 = server.public_v4
+
+        # Checkpoint save the updated node info
+        self._zk.storeNode(self._node)
+
+        self.log.debug("Node id: %s is running, ipv4: %s, ipv6: %s" %
+                       (self._node.id, self._node.public_ipv4,
+                        self._node.public_ipv6))
+
+        self.log.debug("Node id: %s testing ssh at ip: %s" %
+                       (self._node.id, preferred_ip))
+        host = utils.ssh_connect(
+            preferred_ip, config_image.username,
+            connect_kwargs=dict(key_filename=config_image.private_key),
+            timeout=self._provider.boot_timeout)
+        if not host:
+            raise LaunchAuthException("Unable to connect via ssh")
+
+        self._writeNodepoolInfo(host, preferred_ip, self._node)
+        if self._label.ready_script:
+            self.runReadyScript(host, hostname, self._label.ready_script)
+
+    def _writeNodepoolInfo(self, host, preferred_ip, node):
+        key = paramiko.RSAKey.generate(2048)
+        public_key = key.get_name() + ' ' + key.get_base64()
+        host.ssh("test for config dir", "ls /etc/nodepool")
+
+        ftp = host.client.open_sftp()
+
+        # The IP of this node
+        f = ftp.open('/etc/nodepool/node', 'w')
+        f.write(preferred_ip + '\n')
+        f.close()
+        # The private IP of this node
+        f = ftp.open('/etc/nodepool/node_private', 'w')
+        f.write(node.private_ipv4 + '\n')
+        f.close()
+        # The SSH key for this node set
+        f = ftp.open('/etc/nodepool/id_rsa', 'w')
+        key.write_private_key(f)
+        f.close()
+        f = ftp.open('/etc/nodepool/id_rsa.pub', 'w')
+        f.write(public_key + '\n')
+        f.close()
+        # Provider information for this node set
+        f = ftp.open('/etc/nodepool/provider', 'w')
+        f.write('NODEPOOL_PROVIDER=%s\n' % self._provider.name)
+        f.write('NODEPOOL_CLOUD=%s\n' % self._provider.cloud_config.name)
+        f.write('NODEPOOL_REGION=%s\n' % (
+            self._provider.region_name or '',))
+        f.write('NODEPOOL_AZ=%s\n' % (node.az or '',))
+        f.close()
+        # The instance UUID for this node
+        f = ftp.open('/etc/nodepool/uuid', 'w')
+        f.write(node.external_id + '\n')
+        f.close()
+
+        ftp.close()
+
+    def _runReadyScript(self, host, hostname, script):
+        env_vars = ''
+        for k, v in os.environ.items():
+            if k.startswith('NODEPOOL_'):
+                env_vars += ' %s="%s"' % (k, v)
+        host.ssh("run ready script",
+                 "cd /opt/nodepool-scripts && %s ./%s %s" %
+                 (env_vars, script, hostname),
+                 output=True)
+
+    def _run(self):
+        attempts = 1
+        while attempts <= self._retries:
+            try:
+                self._launchNode()
+                break
+            except:
+                self.log.exception("Launch attempt %d/%d failed for node %s:",
+                    attempts, self._retries, self._node.id)
+                if attempts == self._retries:
+                    raise
+                attempts += 1
+
+        self._node.state = zk.READY
+        self._zk.storeNode(self._node)
+        self.log.info("Node id %s is ready", self._node.id)
 
     def run(self):
         try:
@@ -689,23 +854,31 @@ class NodeLauncher(threading.Thread):
             self._node.state = zk.FAILED
             self._zk.storeNode(self._node)
 
-    def _run(self):
-        self._launchNode()
-        self._node.state = zk.READY
-        self._zk.storeNode(self._node)
-
 
 class NodeLaunchManager(object):
     '''
     Handle launching multiple nodes in parallel.
     '''
-    def __init__(self, zk, retries):
-        self._zk = zk
+    def __init__(self, zk, provider, labels, provider_manager, retries):
+        '''
+        Initialize the launch manager.
+
+        :param ZooKeeper zk: A ZooKeeper object.
+        :param Provider provider: A config Provider object.
+        :param dict labels: A dict of config Label objects.
+        :param ProviderManager provider_manager: The manager object used to
+            interact with the selected provider.
+        :param int retries: Number of times to retry failed launches.
+        '''
         self._retries = retries
         self._nodes = []
         self._failed_nodes = []
         self._ready_nodes = []
         self._threads = []
+        self._zk = zk
+        self._provider = provider
+        self._labels = labels
+        self._manager = provider_manager
 
     @property
     def alive_thread_count(self):
@@ -734,7 +907,9 @@ class NodeLaunchManager(object):
         :param Node node: The node object.
         '''
         self._nodes.append(node)
-        t = NodeLauncher(self._zk, node, self._retries)
+        label = self._labels[node.type]
+        t = NodeLauncher(self._zk, self._provider, label, self._manager,
+                         node, self._retries)
         t.start()
         self._threads.append(t)
 
@@ -784,6 +959,7 @@ class NodeRequestHandler(object):
         self.log = logging.getLogger("nodepool.NodeRequestHandler")
         self.provider = pw.provider
         self.zk = pw.zk
+        self.labels = pw.labels
         self.manager = pw.manager
         self.launcher_id = pw.launcher_id
         self.request = request
@@ -800,7 +976,13 @@ class NodeRequestHandler(object):
 
         :returns: True if it is available, False otherwise.
         '''
-        for img in self.request.node_types:
+        for label in self.request.node_types:
+            try:
+                img = self.labels[label].image
+            except KeyError:
+                 self.log.error("Node type %s not a defined label", label)
+                 return False
+
             if not self.zk.getMostRecentImageUpload(img, self.provider.name):
                 return False
         return True
@@ -888,7 +1070,8 @@ class NodeRequestHandler(object):
         self.request.state = zk.PENDING
         self.zk.updateNodeRequest(self.request)
 
-        self.launch_manager = NodeLaunchManager(self.zk, retries=3)
+        self.launch_manager = NodeLaunchManager(
+            self.zk, self.provider, self.labels, self.manager, retries=3)
         ready_nodes = self._getReadyNodesOfTypes(self.request.node_types)
 
         for ntype in self.request.node_types:
@@ -1017,6 +1200,7 @@ class ProviderWorker(threading.Thread):
         # These attributes will be used by NodeRequestHandler
         self.zk = zk
         self.manager = None
+        self.labels = None
         self.provider = provider
         self.launcher_id = "%s-%s-%s" % (socket.gethostname(),
                                          os.getpid(),
@@ -1035,6 +1219,7 @@ class ProviderWorker(threading.Thread):
         this thread to terminate.
         '''
         config = nodepool_config.loadConfig(self.configfile)
+        self.labels = config.labels
 
         if self.provider.name not in config.providers.keys():
             self.log.info("Provider %s removed from config"
