@@ -252,14 +252,14 @@ class NodePoolCmd(NodepoolApp):
         print t
 
     def hold(self):
-        node_id = None
-        with self.pool.getDB().getSession() as session:
-            node = session.getNode(self.args.id)
-            node.state = nodedb.HOLD
-            if self.args.reason:
-                node.comment = self.args.reason
-            node_id = node.id
-        self.list(node_id=node_id)
+        node = self.zk.getNode(self.args.id)
+        node.state = zk.HOLD
+        if self.args.reason:
+            node.comment = self.args.reason
+        self.zk.lockNode(node, blocking=False)
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+        self.list(node_id=self.args.id)
 
     def delete(self):
         if self.args.now:
@@ -355,7 +355,7 @@ class NodePoolCmd(NodepoolApp):
         if self.args.command in ('image-build', 'dib-image-list',
                                  'image-list', 'dib-image-delete',
                                  'image-delete', 'alien-image-list',
-                                 'list'):
+                                 'list', 'hold'):
             self.zk = zk.ZooKeeper()
             self.zk.connect(config.zookeeper_servers.values())
         else:

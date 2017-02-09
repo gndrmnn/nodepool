@@ -205,22 +205,22 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.assert_listed(
             configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
 
-    @skip("Disabled for early v3 development")
     def test_hold(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
-        self.waitForNodes(pool)
+        request = self._createNodeRequest()
+        request = self.waitForNodeRequest(request)
         # Assert one node exists and it is node 1 in a ready state.
-        self.assert_listed(configfile, ['list'], 0, 1, 1)
+        self.assert_listed(configfile, ['list'], 0, request.nodes[0], 1)
         self.assert_nodes_listed(configfile, 1, zk.READY)
-        # Hold node 1
-        self.patch_argv('-c', configfile, 'hold', '1')
+        # Hold node 0000000000
+        self.patch_argv('-c', configfile, 'hold', request.nodes[0])
         nodepoolcmd.main()
         # Assert the state changed to HOLD
-        self.assert_listed(configfile, ['list'], 0, 1, 1)
+        self.assert_listed(configfile, ['list'], 0, request.nodes[0], 1)
         self.assert_nodes_listed(configfile, 1, 'hold')
 
     @skip("Disabled for early v3 development")
