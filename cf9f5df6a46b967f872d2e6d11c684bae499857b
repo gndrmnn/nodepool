@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_531ace18",
+        "filename": "nodepool/status.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-09T22:07:06Z",
+      "side": 0,
+      "message": "We still need comment here, as we use it for the hold command --reason flag.",
+      "revId": "cf9f5df6a46b967f872d2e6d11c684bae499857b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
