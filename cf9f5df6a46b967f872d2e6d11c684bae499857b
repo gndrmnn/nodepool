@@ -16,6 +16,24 @@
       "revId": "cf9f5df6a46b967f872d2e6d11c684bae499857b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_a976203c",
+        "filename": "nodepool/status.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-10T11:33:18Z",
+      "side": 0,
+      "message": "Ah, ok. This was also missed in the Node definition in the spec. I\u0027ll add a new field for this and update this review.",
+      "parentUuid": "fa31d9ce_531ace18",
+      "revId": "cf9f5df6a46b967f872d2e6d11c684bae499857b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
