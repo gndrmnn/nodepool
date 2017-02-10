@@ -1449,7 +1449,7 @@ class ZooKeeper(object):
             path = self._nodePath(node.id)
             self.client.set(path, node.serialize())
 
-    def getReadyNodesOfTypes(self, labels):
+    def getNodesOfTypes(self, labels, state=None):
         '''
         Query ZooKeeper for unused/ready nodes.
 
@@ -1461,9 +1461,9 @@ class ZooKeeper(object):
         ret = {}
         for node_id in self.getNodes():
             node = self.getNode(node_id)
-            if (node and node.state == READY and
-                not node.allocated_to and node.type in labels
-            ):
+            if (node and not node.allocated_to and node.type in labels):
+                if (state and node.state != state):
+                    continue
                 if node.type not in ret:
                     ret[node.type] = []
                 ret[node.type].append(node)

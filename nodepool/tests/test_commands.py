@@ -136,9 +136,10 @@ class TestNodepoolCMD(tests.DBTestCase):
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
-        request = self._createNodeRequest()
-        request = self.waitForNodeRequest(request)
-        self.assertEqual(request.state, zk.FULFILLED)
+        #request = self._createNodeRequest()
+        #request = self.waitForNodeRequest(request)
+        self.waitForNodes(pool)
+        #self.assertEqual(request.state, zk.FULFILLED)
         self.assert_nodes_listed(configfile, 1)
 
     def test_config_validate(self):
