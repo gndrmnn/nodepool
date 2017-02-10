@@ -442,6 +442,7 @@ class DBTestCase(BaseTestCase):
             time.sleep(1)
 
         self.wait_for_threads()
+        return ready_nodes
 
     def waitForNodeRequest(self, req):
         '''
