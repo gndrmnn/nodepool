@@ -420,17 +420,18 @@ class DBTestCase(BaseTestCase):
 
         self.wait_for_threads()
 
-    def waitForNodes(self, pool):
-        self.wait_for_config(pool)
-        allocation_history = allocation.AllocationHistory()
+    def waitForNodes(self):
         while True:
             self.wait_for_threads()
-            with pool.getDB().getSession() as session:
-                needed = pool.getNeededNodes(session, allocation_history)
-                if not needed:
-                    nodes = session.getNodes(state=nodedb.BUILDING)
-                    if not nodes:
-                        break
+            total_nodes = self.zk.getNodes()
+            if total_nodes:
+                nodes = []
+                for node in total_nodes:
+                    n = self.zk.getNode(node)
+                    if n.state == zk.BUILDING:
+                        nodes.append(n)
+                if not nodes:
+                    break
             time.sleep(1)
         self.wait_for_threads()
 
