@@ -120,25 +120,13 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv("-c", configfile, "alien-image-list")
         nodepoolcmd.main()
 
-    def _createNodeRequest(self):
-        req = zk.NodeRequest()
-        req.state = zk.REQUESTED
-        req.node_types.append('fake-label')
-        req_path = "%s/" % self.zk.REQUEST_ROOT
-        path = self.zk.client.create(req_path, value=req.serialize(),
-                                     sequence=True, makepath=True)
-        req.id = path.split("/")[-1]
-        return req
-
     def test_list_nodes(self):
         configfile = self.setup_config('node.yaml')
         self._useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
-        request = self._createNodeRequest()
-        request = self.waitForNodeRequest(request)
-        self.assertEqual(request.state, zk.FULFILLED)
+        self.waitForNodes('fake-label')
         self.assert_nodes_listed(configfile, 1)
 
     def test_config_validate(self):
