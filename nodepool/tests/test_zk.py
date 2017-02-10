@@ -553,7 +553,7 @@ class TestZooKeeper(tests.DBTestCase):
             self.zk.client.exists(self.zk._requestPath(req.id))
         )
 
-    def test_getReadyNodesOfTypes(self):
+    def test_getNodesOfTypes(self):
         n1 = self._create_node()
         n1.type = 'label1'
         self.zk.storeNode(n1)
@@ -562,14 +562,19 @@ class TestZooKeeper(tests.DBTestCase):
         n2.type = 'label1'
         self.zk.storeNode(n2)
         n3 = self._create_node()
-        n3.state = zk.READY
+        n3.state = zk.BUILDING
         n3.type = 'label2'
         self.zk.storeNode(n3)
 
-        r = self.zk.getReadyNodesOfTypes(['label1'])
+        r = self.zk.getNodesOfTypes(['label1'], zk.READY)
         self.assertIn('label1', r)
         self.assertEqual(1, len(r['label1']))
         self.assertEqual(n2, r['label1'][0])
+
+        r = self.zk.getNodesOfTypes(['label2'], zk.BUILDING)
+        self.assertIn('label2', r)
+        self.assertEqual(1, len(r['label2']))
+        self.assertEqual(n3, r['label2'][0])
 
 
 class TestZKModel(tests.BaseTestCase):

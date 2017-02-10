@@ -1052,7 +1052,7 @@ class NodeRequestHandler(object):
 
         self.launch_manager = NodeLaunchManager(
             self.zk, self.provider, self.labels, self.manager, retries=3)
-        ready_nodes = self.zk.getReadyNodesOfTypes(self.request.node_types)
+        ready_nodes = self.zk.getNodesOfTypes(self.request.node_types, zk.READY)
 
         for ntype in self.request.node_types:
             # First try to grab from the list of already available nodes.
@@ -1484,7 +1484,7 @@ class NodePool(threading.Thread):
             raise KeyError("{0} not in {1}".format(target.name,
                            self.config.jenkins_managers.keys()))
 
-    def getNeededNodes(self, session, allocation_history):
+    def getNeededNodes(self, allocation_history):
         self.log.debug("Beginning node launch calculation")
         # Get the current demand for nodes.
         label_demand = {}
@@ -1498,20 +1498,24 @@ class NodePool(threading.Thread):
                 continue
             online_targets.add(target.name)
 
-        nodes = session.getNodes()
+        node_ids = self.zk.getNodes()
+        nodes = []
+        for n in node_ids:
+            nodes.append(self.zk.getNode(n))
 
         def count_nodes(label_name, state):
             return len([n for n in nodes
-                        if (n.target_name in online_targets and
-                            n.label_name == label_name and
+                        if (n.type == label_name and
                             n.state == state)])
 
         def count_nodes_and_subnodes(provider_name):
             count = 0
             for n in nodes:
-                if n.provider_name != provider_name:
+                if n.provider != provider_name:
                     continue
-                count += 1 + len(n.subnodes)
+                # TODOv3(pabelanger): Account for subnodes
+                #count += 1 + len(n.subnodes)
+                count += 1
             return count
 
         # Add a provider for each node provider, along with current
@@ -1535,11 +1539,10 @@ class NodePool(threading.Thread):
         # used for a job in demand.
         for label in self.config.labels.values():
             start_demand = label_demand.get(label.name, 0)
-            n_ready = count_nodes(label.name, nodedb.READY)
-            n_building = count_nodes(label.name, nodedb.BUILDING)
-            n_used = count_nodes(label.name, nodedb.USED)
-            n_test = count_nodes(label.name, nodedb.TEST)
-            ready = n_ready + n_building + n_used + n_test
+            n_ready = count_nodes(label.name, zk.READY)
+            n_building = count_nodes(label.name, zk.BUILDING)
+            n_used = count_nodes(label.name, zk.USED)
+            ready = n_ready + n_building + n_used
 
             capacity = 0
             for provider in label.providers.values():
@@ -1589,8 +1592,7 @@ class NodePool(threading.Thread):
                                                       label_demand[label.name],
                                                       allocation_history)
 
-                nodes = session.getNodes(label_name=label.name,
-                                         target_name=target.name)
+                nodes = self.zk.getNodesOfTypes(label.name)
                 allocation_requests[label.name] = ar
                 ar.addTarget(at, len(nodes))
                 for provider in label.providers.values():
@@ -1708,7 +1710,7 @@ class NodePool(threading.Thread):
         requested_labels = self._submittedRequests.keys()
         needed_labels = list(set(label_names) - set(requested_labels))
 
-        ready_nodes = self.zk.getReadyNodesOfTypes(needed_labels)
+        ready_nodes = self.zk.getNodesOfTypes(needed_labels, zk.READY)
 
         for label in self.config.labels.values():
             if label.name not in needed_labels:
@@ -1778,7 +1780,7 @@ class NodePool(threading.Thread):
             for i in range(num_to_launch):
                 self.launchSubNode(session, node)
 
-        nodes_to_launch = self.getNeededNodes(session, allocation_history)
+        nodes_to_launch = self.getNeededNodes( allocation_history)
 
         for (tlp, num_to_launch) in nodes_to_launch:
             (target, label, provider) = tlp
