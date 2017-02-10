@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_632c2e4b",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-10T20:26:15Z",
+      "side": 1,
+      "message": "I don\u0027t think you want to break on \u0027not nodes\u0027. You want to wait until you find a node with the given label.\n\n  while True:\n      for nid in self.zk.getNodes():\n          node \u003d self.zk.getNode(nid)\n          if node.type \u003d\u003d label and node.state \u003d\u003d zk.READY:\n              break\n      time.sleep(1)",
+      "range": {
+        "startLine": 434,
+        "startChar": 20,
+        "endLine": 434,
+        "endChar": 25
+      },
+      "revId": "763eb34043f3e7e28158d0af341aea4001cf69c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
