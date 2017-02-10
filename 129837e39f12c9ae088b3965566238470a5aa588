@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_bccbb271",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1516,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-10T17:06:29Z",
+      "side": 1,
+      "message": "How do we deal with subnodes now?",
+      "revId": "129837e39f12c9ae088b3965566238470a5aa588",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

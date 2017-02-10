@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_1ca11eaa",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1541,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-10T17:06:29Z",
+      "side": 0,
+      "message": "Do we need this any more? I couldn\u0027t see a TEST state",
+      "revId": "36d2c044182ead21bd5d82e48f209239dbd29331",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_dc9f865d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1593,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-10T17:06:29Z",
+      "side": 0,
+      "message": "I guess targets don\u0027t play a roll in v3, since everything is in  zookeeper",
+      "revId": "36d2c044182ead21bd5d82e48f209239dbd29331",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
