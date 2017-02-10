@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_6e8fb523",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-10T21:00:06Z",
+      "side": 1,
+      "message": "This call requires a list.",
+      "revId": "dad2ca072e519cd76b2183c07338ff11936325d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_4eabd174",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-10T21:00:06Z",
+      "side": 1,
+      "message": "This isn\u0027t actually getting called because the test is still disabled. Best to move this change to the \u0027list\u0027 review.",
+      "revId": "dad2ca072e519cd76b2183c07338ff11936325d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
