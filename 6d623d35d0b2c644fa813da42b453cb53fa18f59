@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_978967cd",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-10T17:32:27Z",
+      "side": 1,
+      "message": "I think later down the road we can work to get rid of this.",
+      "revId": "6d623d35d0b2c644fa813da42b453cb53fa18f59",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_b7866bb7",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-10T17:32:27Z",
+      "side": 1,
+      "message": "We should make this \"except: Exception\"",
+      "revId": "6d623d35d0b2c644fa813da42b453cb53fa18f59",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
