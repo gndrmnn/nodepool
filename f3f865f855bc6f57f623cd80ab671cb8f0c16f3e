@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_573b6feb",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-10T17:34:33Z",
+      "side": 1,
+      "message": "I think we have general support for making reason/comment a required argument.  Maybe we should go ahead and do that here or in a followup change?",
+      "revId": "f3f865f855bc6f57f623cd80ab671cb8f0c16f3e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
