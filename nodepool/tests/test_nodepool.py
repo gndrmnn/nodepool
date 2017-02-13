@@ -38,7 +38,7 @@ class TestNodepool(tests.DBTestCase):
         '''
         configfile = self.setup_config('node.yaml')
         self._useBuilder(configfile)
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
@@ -56,9 +56,10 @@ class TestNodepool(tests.DBTestCase):
             node = self.zk.getNode(node_id)
             self.assertEqual(node.allocated_to, req.id)
             self.assertEqual(node.state, zk.READY)
+            self.assertIsNotNone(node.launcher)
+            self.assertEqual(node.image_id, image.external_id)
             self.zk.lockNode(node, blocking=False)
             self.zk.unlockNode(node)
-
 
     @mock.patch('nodepool.nodepool.NodeLauncher._launchNode')
     def test_fail_request_on_launch_failure(self, mock_launch):

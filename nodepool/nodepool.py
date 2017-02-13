@@ -725,6 +725,7 @@ class NodeLauncher(threading.Thread):
 
         self._node.external_id = server.id
         self._node.hostname = hostname
+        self._node.image_id = cloud_image.external_id
 
         # Checkpoint save the updated node info
         self._zk.storeNode(self._node)
@@ -1077,6 +1078,7 @@ class NodeRequestHandler(object):
                 node.state = zk.INIT
                 node.type = ntype
                 node.provider = self.provider.name
+                node.launcher = self.launcher_id
                 node.allocated_to = self.request.id
 
                 # Note: It should be safe (i.e., no race) to lock the node
