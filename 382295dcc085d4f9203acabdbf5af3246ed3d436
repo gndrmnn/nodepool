@@ -16,6 +16,24 @@
       "revId": "382295dcc085d4f9203acabdbf5af3246ed3d436",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_5c27c863",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-13T17:44:55Z",
+      "side": 1,
+      "message": "Ah, yeah. To avoid a monotony of log messages about failed requests because the images weren\u0027t yet available to launch nodes. Doesn\u0027t affect the functionality.",
+      "parentUuid": "fa31d9ce_bcd9a485",
+      "revId": "382295dcc085d4f9203acabdbf5af3246ed3d436",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
