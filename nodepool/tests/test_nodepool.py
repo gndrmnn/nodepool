@@ -173,7 +173,6 @@ class TestNodepool(tests.DBTestCase):
         else:
             self.assertEqual(nodes[1].provider, 'fake-provider1')
 
-    @skip("Disabled for early v3 development")
     def test_dib_upload_fail(self):
         """Test that an image upload failure is contained."""
         configfile = self.setup_config('node_upload_fail.yaml')
@@ -181,19 +180,12 @@ class TestNodepool(tests.DBTestCase):
         self._useBuilder(configfile)
         pool.start()
         self.waitForImage('fake-provider2', 'fake-image')
-        self.waitForNodes(pool)
-
-        with pool.getDB().getSession() as session:
-            nodes = session.getNodes(provider_name='fake-provider1',
-                                     label_name='fake-label',
-                                     target_name='fake-target',
-                                     state=nodedb.READY)
-            self.assertEqual(len(nodes), 0)
-            nodes = session.getNodes(provider_name='fake-provider2',
-                                     label_name='fake-label',
-                                     target_name='fake-target',
-                                     state=nodedb.READY)
-            self.assertEqual(len(nodes), 2)
+        nodes = self.waitForNodes('fake-label', 2)
+        self.assertEqual(len(nodes), 2)
+        self.assertEqual(nodes[0].provider, 'fake-provider2')
+        self.assertEqual(nodes[0].type, 'fake-label')
+        self.assertEqual(nodes[1].provider, 'fake-provider2')
+        self.assertEqual(nodes[1].type, 'fake-label')
 
     @skip("Disabled for early v3 development")
     def test_subnodes(self):
