@@ -1459,8 +1459,7 @@ class ZooKeeper(object):
             that are ready, or an empty dict if none are found.
         '''
         ret = {}
-        for node_id in self.getNodes():
-            node = self.getNode(node_id)
+        for node in self.nodeIterator():
             if (node and node.state == READY and
                 not node.allocated_to and node.type in labels
             ):
@@ -1468,3 +1467,12 @@ class ZooKeeper(object):
                     ret[node.type] = []
                 ret[node.type].append(node)
         return ret
+
+    def nodeIterator(self):
+        '''
+        Utility generator method for iterating through all nodes.
+        '''
+        for node_id in self.getNodes():
+            node = self.getNode(node_id)
+            if node:
+                yield node
