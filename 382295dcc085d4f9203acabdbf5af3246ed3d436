@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_bcd9a485",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-13T17:42:54Z",
+      "side": 1,
+      "message": "any reason for moving this?  I only ask because all other tests we start the pool first, then waitForImage()",
+      "revId": "382295dcc085d4f9203acabdbf5af3246ed3d436",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
