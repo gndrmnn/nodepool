@@ -1449,6 +1449,21 @@ class ZooKeeper(object):
             path = self._nodePath(node.id)
             self.client.set(path, node.serialize())
 
+    def deleteNode(self, node):
+        '''
+        Delete a node.
+
+        :param Node node: The Node object representing the ZK node to delete.
+        '''
+        if not node.id:
+            return
+
+        path = self._nodePath(node.id)
+        try:
+            self.client.delete(path)
+        except kze.NoNodeError:
+            pass
+
     def getReadyNodesOfTypes(self, labels):
         '''
         Query ZooKeeper for unused/ready nodes.
