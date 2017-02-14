@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_2df54756",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-02-14T18:39:03Z",
+      "side": 1,
+      "message": "This check should be redundant as nodeIterator doesn\u0027t return None objects.",
+      "range": {
+        "startLine": 1003,
+        "startChar": 15,
+        "endLine": 1003,
+        "endChar": 23
+      },
+      "revId": "34af97f17df5912cfc4e3ee905a483fdfa08d2aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_2d67074e",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1463,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-02-14T18:39:03Z",
+      "side": 1,
+      "message": "This check should be redundant as nodeIterator doesn\u0027t return None objects.",
+      "range": {
+        "startLine": 1463,
+        "startChar": 16,
+        "endLine": 1463,
+        "endChar": 24
+      },
+      "revId": "34af97f17df5912cfc4e3ee905a483fdfa08d2aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
