@@ -174,20 +174,18 @@ class NodeCompleteThread(threading.Thread):
 class InstanceDeleter(threading.Thread):
     log = logging.getLogger("nodepool.InstanceDeleter")
 
-    def __init__(self, nodepool, provider_name, external_id):
+    def __init__(self, manager, node):
         threading.Thread.__init__(self, name='InstanceDeleter for %s %s' %
-                                  (provider_name, external_id))
-        self.nodepool = nodepool
-        self.provider_name = provider_name
-        self.external_id = external_id
+                                  (node.provider, node.external_id))
+        self._manager = manager
+        self._node = node
 
     def run(self):
         try:
-            self.nodepool._deleteInstance(self.provider_name,
-                                          self.external_id)
+            self._manager.cleanupServer(self._node.external_id)
         except Exception:
-            self.log.exception("Exception deleting instance %s from %s:" %
-                               (self.external_id, self.provider_name))
+            self.log.exception("Exception deleting instance %s from %s:",
+                               self._node.external_id, self._node.provider)
 
 
 class NodeDeleter(threading.Thread):
@@ -1331,6 +1329,108 @@ class ProviderWorker(threading.Thread):
             self.manager.join()
 
 
+class NodeCleanupWorker(threading.Thread):
+    def __init__(self, configfile, zk, interval):
+        threading.Thread.__init__(self, name='NodeCleanupWorker')
+        self.log = logging.getLogger("nodepool.NodeCleanupWorker")
+        self._configfile = configfile
+        self._config = None
+        self._config_mtime = 0
+        self._zk = zk
+        self._interval = interval
+        self._running = False
+        self._managers = {}
+
+    def _deleteInstance(self, node):
+        '''
+        Delete an instance from a provider.
+
+        A thread will be spawned to delete the actual instance from the
+        provider.
+
+        :param Node node: A Node object representing the instance to delete.
+        '''
+        self.log.info("Deleting instance %s from %s",
+                      node.external_id, node.provider)
+        try:
+            t = InstanceDeleter(self._manager[node.provider], node)
+            t.start()
+        except Exception:
+            self.log.exception("Could not delete instance %s on provider %s",
+                               node.external_id, node.provider)
+
+    def _cleanupNodes(self):
+        '''
+        Delete instances from providers and nodes entries from ZooKeeper.
+        '''
+        # TODO(Shrews): Cleanup alien instances
+
+        for node in self._zk.nodeIterator():
+            # Can't do anything if we aren't configured for this provider.
+            if node.provider not in self._managers:
+                continue
+
+            # Any nodes in these states that are unlocked can be deleted.
+            if node.state in (zk.USED, zk.IN_USE, zk.BUILDING, zk.DELETING):
+                try:
+                    self._zk.lockNode(node, blocking=False)
+                except exceptions.ZKLockException:
+                    continue
+
+                self._deleteInstance(node)
+
+                self.log.info("Deleting ZK node id=%s, state=%s",
+                              node.id, node.state)
+                self._zk.unlockNode(node)
+                self._zk.deleteNode(node)
+
+    def _updateConfig(self):
+        '''
+        Read the config file, updating if modified since last update.
+
+        Rather than waste I/O and CPU cycles continuously loading the
+        config file and rebuilding the Config object, let's do so only
+        if we see it's been changed.
+        '''
+        mtime = os.stat(self._configfile)
+        if mtime <= self._config_mtime:
+            return
+
+        self._config_mtime = mtime
+        self._config = nodepool_config.loadConfig(self._configfile)
+
+        # Forget any providers that were removed.
+        for provider_name in self._managers.keys():
+            if provider_name not in self._config.providers:
+                self._managers[provider_name].stop()
+                del self._managers[provider_name]
+
+        # Add any new providers
+        for provider_name in self._config.providers.keys():
+            if provider_name not in self._managers:
+                provider = self._config.providers[provider_name]
+                pm = provider_manager.get_provider_manager(provider, True)
+                self._managers[provider_name] = pm
+
+    def run(self):
+        self.log.info("Starting")
+        self._running = True
+
+        while self._running:
+            try:
+                self._updateConfig()
+                self._cleanupNodes()
+            except Exception:
+                self.log.exception("Exception in NodeCleanupWorker:")
+
+            time.sleep(self._interval)
+
+        self.log.info("Stopped")
+
+    def stop(self):
+        self._running = False
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -1341,16 +1441,14 @@ class NodePool(threading.Thread):
         self.configfile = configfile
         self.no_deletes = no_deletes
         self.watermark_sleep = watermark_sleep
+        self.cleanup_interval = 5
         self._stopped = False
         self.config = None
         self.apsched = None
         self.zk = None
         self.statsd = stats.get_client()
         self._provider_threads = {}
-        self._delete_threads = {}
-        self._delete_threads_lock = threading.Lock()
-        self._instance_delete_threads = {}
-        self._instance_delete_threads_lock = threading.Lock()
+        self._cleanup_thread = None
         self._wake_condition = threading.Condition()
         self._submittedRequests = {}
 
@@ -1363,6 +1461,10 @@ class NodePool(threading.Thread):
             provider_manager.ProviderManager.stopProviders(self.config)
         if self.apsched and self.apsched.running:
             self.apsched.shutdown()
+
+        if self._cleanup_thread:
+            self._cleanup_thread.stop()
+            self._cleanup_thread.join()
 
         # Don't let stop() return until all provider threads have been
         # terminated.
@@ -1750,6 +1852,11 @@ class NodePool(threading.Thread):
 
                 self.createMinReady()
 
+                if not self._cleanup_thread:
+                    self._cleanup_thread = NodeCleanupWorker(
+                        self.configfile, self.zk, self.cleanup_interval)
+                    self._cleanup_thread.start()
+
                 # Start (or restart) provider threads for each provider in
                 # the config. Removing a provider from the config and then
                 # adding it back would cause a restart.
@@ -1757,14 +1864,14 @@ class NodePool(threading.Thread):
                     if p.name not in self._provider_threads.keys():
                         t = ProviderWorker(self.configfile, self.zk, p,
                                            self.watermark_sleep)
-                        self.log.info( "Starting %s" % t.name)
+                        self.log.info("Starting %s" % t.name)
                         t.start()
                         self._provider_threads[p.name] = t
                     elif not self._provider_threads[p.name].isAlive():
                         self._provider_threads[p.name].join()
                         t = ProviderWorker(self.configfile, self.zk, p,
                                            self.watermark_sleep)
-                        self.log.info( "Restarting %s" % t.name)
+                        self.log.info("Restarting %s" % t.name)
                         t.start()
                         self._provider_threads[p.name] = t
             except Exception:

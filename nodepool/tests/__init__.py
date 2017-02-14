@@ -192,6 +192,8 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("NodeLauncher"):
                     continue
+                if t.name.startswith("NodeCleanupWorker"):
+                    continue
                 if t.name not in whitelist:
                     done = False
             if done:
@@ -445,6 +447,7 @@ class DBTestCase(BaseTestCase):
     def useNodepool(self, *args, **kwargs):
         args = (self.secure_conf,) + args
         pool = nodepool.NodePool(*args, **kwargs)
+        pool.cleanup_interval = .5
         self.addCleanup(pool.stop)
         return pool
 
