@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_1aa99090",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-14T23:17:29Z",
+      "side": 1,
+      "message": "While we can\u0027t wait for nodes that don\u0027t exist, we can wait for these two nodes, and then perform a query across all nodes and verify that no others exist.  That\u0027s basically what the old test was doing.",
+      "revId": "bffff72e266b7efdc821c3def9077a6450250d3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
