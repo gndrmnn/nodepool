@@ -192,6 +192,8 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("NodeLauncher"):
                     continue
+                if t.name.startswith("NodeCleanupWorker"):
+                    continue
                 if t.name not in whitelist:
                     done = False
             if done:

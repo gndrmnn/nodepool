@@ -1331,6 +1331,60 @@ class ProviderWorker(threading.Thread):
             self.manager.join()
 
 
+class NodeCleanupWorker(threading.Thread):
+    def __init__(self, zk, interval):
+        threading.Thread.__init__(self, name='NodeCleanupWorker')
+        self.log = logging.getLogger("nodepool.NodeCleanupWorker")
+        self._zk = zk
+        self._interval = interval
+        self._running = False
+
+    def _deleteInstance(self, node):
+        '''
+        Delete an instance from a provider.
+
+        A thread will be spawned to delete the actual instance.
+
+        :param Node node: A Node object representing the instance to delete.
+        '''
+        self.log.info("Deleting instance %s from %s",
+                      node.external_id, node.provider)
+        pass
+
+    def _cleanupNodes(self):
+        '''
+        Delete instances from providers and nodes entries from ZooKeeper.
+        '''
+        # TODO(Shrews): Cleanup alien instances
+
+        for node in self._zk.nodeIterator():
+            if node.state in (zk.USED, zk.IN_USE, zk.BUILDING, zk.DELETING):
+                try:
+                    self._zk.lockNode(node, blocking=False)
+                except exceptions.ZKLockException:
+                    continue
+
+                self._deleteInstance(node)
+
+                self.log.info("Deleting ZK node id=%s, state=%s",
+                              node.id, node.state)
+                self._zk.unlockNode(node)
+                self._zk.deleteNode(node)
+
+    def run(self):
+        self.log.info("Starting")
+        self._running = True
+        while self._running:
+            try:
+                self._cleanupNodes()
+            except Exception:
+                self.log.exception("Exception in NodeCleanupWorker:")
+        self.log.info("Stopped")
+
+    def stop(self):
+        self._running = False
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -1341,16 +1395,14 @@ class NodePool(threading.Thread):
         self.configfile = configfile
         self.no_deletes = no_deletes
         self.watermark_sleep = watermark_sleep
+        self.cleanup_interval = 5
         self._stopped = False
         self.config = None
         self.apsched = None
         self.zk = None
         self.statsd = stats.get_client()
         self._provider_threads = {}
-        self._delete_threads = {}
-        self._delete_threads_lock = threading.Lock()
-        self._instance_delete_threads = {}
-        self._instance_delete_threads_lock = threading.Lock()
+        self._cleanup_thread = None
         self._wake_condition = threading.Condition()
         self._submittedRequests = {}
 
@@ -1363,6 +1415,10 @@ class NodePool(threading.Thread):
             provider_manager.ProviderManager.stopProviders(self.config)
         if self.apsched and self.apsched.running:
             self.apsched.shutdown()
+
+        if self._cleanup_thread:
+            self._cleanup_thread.stop()
+            self._cleanup_thread.join()
 
         # Don't let stop() return until all provider threads have been
         # terminated.
@@ -1749,6 +1805,11 @@ class NodePool(threading.Thread):
 
                 self.createMinReady()
 
+                if not self._cleanup_thread:
+                    self._cleanup_thread = NodeCleanupWorker(
+                        self.zk, self.cleanup_interval)
+                    self._cleanup_thread.start()
+
                 # Start (or restart) provider threads for each provider in
                 # the config. Removing a provider from the config and then
                 # adding it back would cause a restart.
@@ -1756,14 +1817,14 @@ class NodePool(threading.Thread):
                     if p.name not in self._provider_threads.keys():
                         t = ProviderWorker(self.configfile, self.zk, p,
                                            self.watermark_sleep)
-                        self.log.info( "Starting %s" % t.name)
+                        self.log.info("Starting %s" % t.name)
                         t.start()
                         self._provider_threads[p.name] = t
                     elif not self._provider_threads[p.name].isAlive():
                         self._provider_threads[p.name].join()
                         t = ProviderWorker(self.configfile, self.zk, p,
                                            self.watermark_sleep)
-                        self.log.info( "Restarting %s" % t.name)
+                        self.log.info("Restarting %s" % t.name)
                         t.start()
                         self._provider_threads[p.name] = t
             except Exception:
