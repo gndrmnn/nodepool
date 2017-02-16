@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fa31d9ce_f51d7873",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-16T00:49:31Z",
+      "side": 1,
+      "message": "Addressed with review https://review.openstack.org/434567",
+      "parentUuid": "fa31d9ce_ac7bbdbc",
+      "revId": "ac96d533e8e81b083a2dba35f2e67102b6aa7794",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa31d9ce_cc4c71a0",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-15T22:43:28Z",
       "side": 1,
       "message": "We can remove the no_deletes thing.  That\u0027s leftover from our temporary emergency split of the nodepool daemon for openstack scaling purposes.",
+      "revId": "ac96d533e8e81b083a2dba35f2e67102b6aa7794",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa31d9ce_15112c5d",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 1898,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-16T00:49:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa31d9ce_cc4c71a0",
       "revId": "ac96d533e8e81b083a2dba35f2e67102b6aa7794",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
