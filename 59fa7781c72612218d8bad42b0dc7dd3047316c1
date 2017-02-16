@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_e02bf47f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-02-16T00:55:02Z",
+      "side": 1,
+      "message": "make sense to move this to line 269?",
+      "revId": "59fa7781c72612218d8bad42b0dc7dd3047316c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
