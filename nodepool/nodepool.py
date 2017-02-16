@@ -1076,8 +1076,9 @@ class ProviderWorker(threading.Thread):
             except exceptions.ZKLockException:
                 continue
 
-            # Make sure the state didn't change on us
-            if req.state != zk.REQUESTED:
+            # Make sure the state didn't change on us after getting the lock
+            req = self.zk.getNodeRequest(req_id)
+            if req and req.state != zk.REQUESTED:
                 self.zk.unlockNodeRequest(req)
                 continue
 
