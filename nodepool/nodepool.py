@@ -1190,6 +1190,18 @@ class NodeCleanupWorker(threading.Thread):
                 except exceptions.ZKLockException:
                     continue
 
+                # For nodes not in DELETING state, make sure they've been
+                # around for a minimum time before deleting them.
+                if node.state != zk.DELETING:
+                    now = time.time()
+                    time_in_state = now - node.state_time
+                    if time_in_state > NODE_CLEANUP:
+                        zk_conn.unlockNode(node)
+                        continue
+                    self.log.debug("Deleting node %s which has been in %s"
+                                   " state for %s hours", node.id, node.state,
+                                   time_in_state/3600)
+
                 # The InstanceDeleter thread will unlock and remove the
                 # node from ZooKeeper if it succeeds.
                 self._deleteInstance(node)
