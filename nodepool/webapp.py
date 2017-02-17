@@ -25,8 +25,7 @@ import status
 """Nodepool main web app.
 
 Nodepool supports HTTP requests directly against it for determining
-status. These responses are provided as preformatted text for now, but
-should be augmented or replaced with JSON data structures.
+status. These responses are provided as preformatted and JSON.
 """
 
 
@@ -76,6 +75,8 @@ class WebApp(threading.Thread):
             return result
         if path == '/image-list':
             output = status.image_list(self.nodepool.getZK())
+        elif path == '/image-list.json':
+            output = status.image_list_json(self.nodepool.getZK())
         elif path == '/dib-image-list':
             output = status.dib_image_list(self.nodepool.getZK())
         elif path == '/dib-image-list.json':
