@@ -171,6 +171,27 @@ def image_list(zk):
     return str(t)
 
 
+def image_list_json(zk):
+    objs = []
+    for image_name in zk.getImageNames():
+        for build_no in zk.getBuildNumbers(image_name):
+            for provider in zk.getBuildProviders(image_name, build_no):
+                for upload_no in zk.getImageUploadNumbers(
+                        image_name, build_no, provider):
+                    upload = zk.getImageUpload(image_name, build_no,
+                                               provider, upload_no)
+                    objs.append({'id': '-'.join([image_name, build_no]),
+                                 'upload_no': upload_no,
+                                 'image': image_name,
+                                 'provider': provider,
+                                 'external_name': upload.external_name,
+                                 'external_id': upload.external_id,
+                                 'state': upload.state,
+                                 'age': int(upload.state_time)
+                    })
+    return json.dumps(objs)
+
+
 def request_list(zk):
     t = PrettyTable(["Request ID", "State", "Requestor", "Node Types", "Nodes",
                      "Declined By"])
