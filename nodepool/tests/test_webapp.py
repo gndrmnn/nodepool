@@ -44,6 +44,30 @@ class TestWebApp(tests.DBTestCase):
         data = f.read()
         self.assertTrue('fake-image' in data.decode('utf8'))
 
+    def test_image_list_json(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes(pool)
+
+        req = request.Request(
+            "http://localhost:%s/image-list.json" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().getheader('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data)
+        self.assertDictContainsSubset({'id': 'fake-image-0000000001',
+                                       'state': 'ready',
+                                       'provider': 'fake-provider',
+                                       'image': 'fake-image'}, objs[0])
+
     def test_dib_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
