@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa31d9ce_d8369db3",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-17T15:11:00Z",
+      "side": 1,
+      "message": "Wrong thread.  :)  The builder has its own cleanup thread.",
+      "revId": "f6987f4b14e4be8ade8b93a4a5989d17522df667",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
