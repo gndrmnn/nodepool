@@ -1611,7 +1611,7 @@ class NodePool(threading.Thread):
 
                 self.createMinReady()
 
-                if not self._cleanup_thread:
+                if not self._cleanup_thread and self.cleanup_interval > 0:
                     self._cleanup_thread = NodeCleanupWorker(
                         self, self.cleanup_interval)
                     self._cleanup_thread.start()
