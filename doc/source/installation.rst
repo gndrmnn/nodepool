@@ -58,7 +58,13 @@ The secure.conf file is used to store nodepool configurations that contain
 sensitive data. The nodepool.yaml files is used to store all other
 configurations.
 
-The logging configuration file is in the standard python logging
-`configuration file format
-<http://docs.python.org/2/library/logging.config.html#configuration-file-format>`_.
+The logging configuration file can accept either:
+
+* the traditional ini python logging `configuration file format
+  <https://docs.python.org/2/library/logging.config.html#configuration-file-format>`_.
+
+* a `.yml` or `.yaml` suffixed file that will be parsed and loaded as the newer
+  `dictConfig format
+  <https://docs.python.org/2/library/logging.config.html#configuration-dictionary-schema>`_.
+
 The Nodepool configuration file is described in :ref:`configuration`.
