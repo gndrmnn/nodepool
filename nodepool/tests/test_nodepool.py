@@ -195,7 +195,6 @@ class TestNodepool(tests.DBTestCase):
         self.assertEqual(nodes[1].provider, 'fake-provider2')
         self.assertEqual(nodes[1].type, 'fake-label')
 
-    @skip("Disabled for early v3 development")
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
         configfile = self.setup_config('node_az.yaml')
@@ -203,15 +202,12 @@ class TestNodepool(tests.DBTestCase):
         self._useBuilder(configfile)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
-        self.waitForNodes(pool)
+        nodes = self.waitForNodes('fake-label')
 
-        with pool.getDB().getSession() as session:
-            nodes = session.getNodes(provider_name='fake-provider',
-                                     label_name='fake-label',
-                                     target_name='fake-target',
-                                     state=nodedb.READY)
-            self.assertEqual(len(nodes), 1)
-            self.assertEqual(nodes[0].az, 'az1')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(nodes[0].provider, 'fake-provider')
+        self.assertEqual(nodes[0].type, 'fake-label')
+        self.assertEqual(nodes[0].az, 'az1')
 
     @skip("Disabled for early v3 development")
     def test_node_ipv6(self):

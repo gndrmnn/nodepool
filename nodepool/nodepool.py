@@ -920,6 +920,8 @@ class NodeRequestHandler(object):
                 node.provider = self.provider.name
                 node.launcher = self.launcher_id
                 node.allocated_to = self.request.id
+                if self.provider.azs:
+                    node.az = random.choice(self.provider.azs)
 
                 # Note: It should be safe (i.e., no race) to lock the node
                 # *after* it is stored since nodes in INIT state are not
