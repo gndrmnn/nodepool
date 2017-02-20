@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_76d31439",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1160,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2017-02-20T19:56:34Z",
+      "side": 1,
+      "message": "This isn\u0027t called anywhere",
+      "range": {
+        "startLine": 1160,
+        "startChar": 8,
+        "endLine": 1160,
+        "endChar": 32
+      },
+      "revId": "6790f0b1838542897f4acc794339986a067cfe9f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
