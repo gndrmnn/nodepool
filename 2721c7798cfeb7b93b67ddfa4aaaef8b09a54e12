@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_1fc2f733",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-20T14:49:41Z",
+      "side": 1,
+      "message": "I\u0027d be surprised if this works since AZ info is pretty much ignored, atm.",
+      "revId": "2721c7798cfeb7b93b67ddfa4aaaef8b09a54e12",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
