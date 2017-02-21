@@ -476,6 +476,7 @@ class NodeLauncher(threading.Thread):
         self.log.info("Creating server with hostname %s in %s from image %s "
                       "for node id: %s" % (hostname, self.provider.name,
                                            self.image.name, self.node_id))
+        self.manager.setZK(self.getZk())
         server = self.manager.createServer(
             hostname, self.image.min_ram, cloud_image.external_id,
             name_filter=self.image.name_filter, az=self.node.az,
@@ -797,6 +798,7 @@ class SubNodeLauncher(threading.Thread):
                       "for subnode id: %s for node id: %s"
                       % (hostname, self.provider.name,
                          self.image.name, self.subnode_id, self.node_id))
+        self.manager.setZk(self.getZk())
         server = self.manager.createServer(
             hostname, self.image.min_ram, cloud_image.external_id,
             name_filter=self.image.name_filter, az=self.node_az,
@@ -1355,6 +1357,7 @@ class NodePool(threading.Thread):
                                '%s of node id: %s' %
                                (subnode.external_id, subnode.id,
                                 subnode.node.id))
+                self.manager.setZk(self.getZk())
                 manager.cleanupServer(subnode.external_id)
                 manager.waitForServerDeletion(subnode.external_id)
             except provider_manager.NotFound:
@@ -1414,6 +1417,7 @@ class NodePool(threading.Thread):
                 self.log.exception("Exception revoking node id: %s" %
                                    node.id)
 
+        manager.setZk(self.getZk())
         for subnode in node.subnodes:
             if subnode.external_id:
                 try:
@@ -1469,6 +1473,7 @@ class NodePool(threading.Thread):
     def _deleteInstance(self, provider_name, external_id):
         provider = self.config.providers[provider_name]
         manager = self.getProviderManager(provider)
+        manager.setZk(self.getZk())
         manager.cleanupServer(external_id)
 
     def _doPeriodicCleanup(self):
@@ -1509,53 +1514,7 @@ class NodePool(threading.Thread):
                 self.log.exception("Exception cleaning up node id %s:" %
                                    node_id)
 
-        try:
-            self.cleanupLeakedInstances()
-            pass
-        except Exception:
-            self.log.exception("Exception cleaning up leaked nodes")
-
         self.log.debug("Finished periodic cleanup")
-
-    def cleanupLeakedInstances(self):
-        known_providers = self.config.providers.keys()
-        for provider in self.config.providers.values():
-            manager = self.getProviderManager(provider)
-            servers = manager.listServers()
-            with self.getDB().getSession() as session:
-                for server in servers:
-                    meta = server.get('metadata', {}).get('nodepool')
-                    if not meta:
-                        self.log.debug("Instance %s (%s) in %s has no "
-                                       "nodepool metadata" % (
-                                           server['name'], server['id'],
-                                           provider.name))
-                        continue
-                    meta = json.loads(meta)
-                    if meta['provider_name'] not in known_providers:
-                        self.log.debug("Instance %s (%s) in %s "
-                                       "lists unknown provider %s" % (
-                                           server['name'], server['id'],
-                                           provider.name,
-                                           meta['provider_name']))
-                        continue
-                    node_id = meta.get('node_id')
-                    if node_id:
-                        if session.getNode(node_id):
-                            continue
-                        self.log.warning("Deleting leaked instance %s (%s) "
-                                         "in %s for node id: %s" % (
-                                             server['name'], server['id'],
-                                             provider.name, node_id))
-                        self.deleteInstance(provider.name, server['id'])
-                    else:
-                        self.log.warning("Instance %s (%s) in %s has no "
-                                         "database id" % (
-                                             server['name'], server['id'],
-                                             provider.name))
-                        continue
-            if provider.clean_floating_ips:
-                manager.cleanupLeakedFloaters()
 
     def cleanupOneNode(self, session, node):
         now = time.time()

@@ -73,7 +73,7 @@ class ProviderManager(object):
         self.provider = provider
 
     def start(self):
-        self.resetClient()
+        pass
 
     def stop(self):
         pass
@@ -81,12 +81,8 @@ class ProviderManager(object):
     def join(self):
         pass
 
-    def _getClient(self):
-        # TODO(mordred) create zk client
-        return None
-
-    def resetClient(self):
-        self._client = self._getClient()
+    def setZk(self, zk):
+        self._zk = sk
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
                      az=None, key_name=None, name_filter=None,
