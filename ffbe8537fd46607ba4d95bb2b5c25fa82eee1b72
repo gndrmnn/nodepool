@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_d68b85c1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-22T22:52:06Z",
+      "side": 1,
+      "message": "self.request.id ?",
+      "revId": "ffbe8537fd46607ba4d95bb2b5c25fa82eee1b72",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da36d5c6_5662353f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-02-22T22:52:06Z",
+      "side": 1,
+      "message": "You probably want node.id here, as \u0027node\u0027 by itself will output everything about the node, losing the \"for request\" part in the output.",
+      "revId": "ffbe8537fd46607ba4d95bb2b5c25fa82eee1b72",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
