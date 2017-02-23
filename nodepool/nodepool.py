@@ -1012,8 +1012,8 @@ class NodeRequestHandler(object):
             for node in self.nodeset:
                 # Record node ID in the request
                 self.request.nodes.append(node.id)
-                self.log.debug("Fulfilled node request %s",
-                               self.request.id)
+            self.log.debug("Fulfilled node request %s",
+                           self.request.id)
             self.request.state = zk.FULFILLED
 
         self._unlockNodeSet()
