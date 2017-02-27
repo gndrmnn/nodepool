@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da36d5c6_d7293ef4",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1546,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-02-27T19:21:27Z",
+      "side": 1,
+      "message": "Might want to do if launched_id and launcher_id !\u003d provider.launcher_id ... otherwise you\u0027re doing equality test on None objects which is always a bit grody.",
+      "revId": "cc1a8b25e43bb0417058f8a0f68fddc3b5b51a28",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
