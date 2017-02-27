@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "da36d5c6_979266f5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-02-27T19:27:43Z",
+      "side": 1,
+      "message": "This name is misleading; we\u0027re not identifying the launcher, we\u0027re identifying conceptual. nodepool systems.",
+      "revId": "cc1a8b25e43bb0417058f8a0f68fddc3b5b51a28",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da36d5c6_d7293ef4",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 1
