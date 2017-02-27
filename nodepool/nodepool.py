@@ -1542,6 +1542,13 @@ class NodePool(threading.Thread):
                                            provider.name,
                                            meta['provider_name']))
                         continue
+                    launcher_id = meta.get('launcher_id', None)
+                    if launcher_id != provider.launcher_id:
+                        self.log.debug("Instance %s (%s) in %s "
+                                       "was not launched by us" % (
+                                           server['name'], server['id'],
+                                           provider.name))
+                        continue
                     node_id = meta.get('node_id')
                     if node_id:
                         if session.getNode(node_id):
