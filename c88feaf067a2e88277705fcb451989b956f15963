@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba2be162_89cf2e28",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:19:55Z",
+      "side": 1,
+      "message": "If something goes wrong from here out, we won\u0027t unlock the node since we haven\u0027t added it to the nodeset.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba2be162_a9d4f2bc",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:19:55Z",
+      "side": 1,
+      "message": "I think by this point we\u0027ve already essentially accepted the request -- there\u0027s nothing we will do between this point and setting the request to pending other than wait, so we may want to move this until after the pending store for better information for admins.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba2be162_c9dda6e1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:19:55Z",
+      "side": 1,
+      "message": "We may now already hold the lock.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba2be162_e9da6ae7",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 968,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:19:55Z",
+      "side": 1,
+      "message": "When I imagine fixing the locking issue in waitforavailablenodes, I imagine it looking a lot like this loop.  So I wonder if we can finish moving this loop into waitforavailablenodes, and expect that when we come out of that, we will have a set of locked nodes and the headroom to launch the rest.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
