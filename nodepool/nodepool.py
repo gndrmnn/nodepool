@@ -850,17 +850,6 @@ class NodeRequestHandler(object):
                 count += 1
         return count
 
-    def _wouldExceedQuota(self):
-        '''
-        Determines if request would exceed provider quota.
-
-        :returns: True if quota would be exceeded, False otherwise.
-        '''
-        provider_max = self.provider.max_servers
-        num_requested = len(self.request.node_types)
-        num_in_use = self._countNodes()
-        return num_requested + num_in_use > provider_max
-
     def _unlockNodeSet(self):
         '''
         Attempt unlocking all Nodes in the object node set.
@@ -874,6 +863,45 @@ class NodeRequestHandler(object):
                 self.log.exception("Error unlocking node:")
             self.log.debug("Unlocked node %s for request %s",
                            node.id, self.request.id)
+
+    def _waitForAvailableNodes(self):
+        '''
+        Check node availability, pausing all request handling until this
+        request can be processed. Nodes that are READY/unlocked or not yet
+        created are counted as available.
+
+        note:: This check works best under the assumption that a provider is
+            not shared among multiple nodepool launchers. Otherwise, our
+            "availability" calculation could become invalid between the check
+            and the actual request handling.
+        '''
+        logged = False
+        while True:
+            remaining_capacity = self.provider.max_servers - self._countNodes()
+
+            # Only consider a READY node available if it is unlocked
+            ready_nodes = self.zk.getReadyNodesOfTypes(self.request.node_types)
+            ready = 0
+            for ntype in self.request.node_types:
+                if self.request.reuse and ntype in ready_nodes:
+                    for node in ready_nodes[ntype]:
+                        try:
+                            self.zk.lockNode(node, blocking=False)
+                        except exceptions.ZKLockException:
+                            pass
+                        else:
+                            self.zk.unlockNode(node)
+                            ready += 1
+
+            if (ready + remaining_capacity) < len(self.request.node_types):
+                if not logged:
+                    self.log.debug(
+                        "Pausing request handling to satisfy request %s",
+                        self.request)
+                    logged = True
+                time.sleep(1)
+            else:
+                break
 
     def _run(self):
         '''
@@ -891,7 +919,7 @@ class NodeRequestHandler(object):
         declined_reasons = []
         if not self._imagesAvailable():
             declined_reasons.append('images are not available')
-        if self._wouldExceedQuota():
+        if len(self.request.node_types) > self.provider.max_servers:
             declined_reasons.append('it would exceed quota')
         if declined_reasons:
             self.log.debug("Declining node request %s because %s",
@@ -907,6 +935,8 @@ class NodeRequestHandler(object):
             self.zk.unlockNodeRequest(self.request)
             self.done = True
             return
+
+        self._waitForAvailableNodes()
 
         self.log.debug("Accepting node request %s", self.request.id)
         self.request.state = zk.PENDING
