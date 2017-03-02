@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "ba2be162_84a393ff",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:28:48Z",
+      "side": 1,
+      "message": "Oops, I misread, we release the locks here, so this is fine.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba2be162_a9d4f2bc",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 1
@@ -64,6 +81,23 @@
       "writtenOn": "2017-03-02T21:19:55Z",
       "side": 1,
       "message": "When I imagine fixing the locking issue in waitforavailablenodes, I imagine it looking a lot like this loop.  So I wonder if we can finish moving this loop into waitforavailablenodes, and expect that when we come out of that, we will have a set of locked nodes and the headroom to launch the rest.",
+      "revId": "c88feaf067a2e88277705fcb451989b956f15963",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba2be162_a4a897dc",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 968,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-02T21:28:48Z",
+      "side": 1,
+      "message": "Because of my earlier error, there is nothing to fix in waitforavailablenodes.  However, I think we can still make this more robust and with less repitition (and excess locking) by having waitforavailablenodes perform this function and remove this loop.",
       "revId": "c88feaf067a2e88277705fcb451989b956f15963",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
