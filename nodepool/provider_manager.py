@@ -234,8 +234,20 @@ class ProviderManager(object):
             nodepool=json.dumps(nodepool_meta)
         )
 
-        with shade_inner_exceptions():
-            return self._client.create_server(wait=False, **create_args)
+        try:
+            with shade_inner_exceptions():
+                return self._client.create_server(wait=False, **create_args)
+        except shade.OpenStackCloudBadRequest:
+            # We've gotten a 400 error from nova - which means the request
+            # was malformed. The most likely cause of that, unless something
+            # became functionally and systemically broken, is stale image
+            # or flavor cache. Log a message, invalidate the caches so that
+            # next time we get new caches.
+            self._images = {}
+            self.__flavors = {}
+            self.log.info(
+                "Clearing flavor and image caches due to 400 error from nova")
+            raise
 
     def getServer(self, server_id):
         with shade_inner_exceptions():
