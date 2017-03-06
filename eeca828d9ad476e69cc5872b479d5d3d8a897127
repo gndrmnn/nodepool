@@ -22,6 +22,30 @@
       "revId": "eeca828d9ad476e69cc5872b479d5d3d8a897127",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba2be162_484229af",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-06T12:48:54Z",
+      "side": 1,
+      "message": "I\u0027m not totally following what you\u0027re asking here. In your scenario, are you proposing what would happen if 100% of the nodes were already prepared and in a READY state and were split 80/20 across two AZs? If so, then yes, the 90% request would fail. There would be no way to satisfy it without a node reallocation across AZs.",
+      "parentUuid": "ba2be162_c31a89c5",
+      "range": {
+        "startLine": 902,
+        "startChar": 24,
+        "endLine": 902,
+        "endChar": 30
+      },
+      "revId": "eeca828d9ad476e69cc5872b479d5d3d8a897127",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
