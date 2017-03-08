@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_0a835299",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2017-03-08T22:18:57Z",
+      "side": 0,
+      "message": "Not sure why this is being removed sorry?",
+      "range": {
+        "startLine": 352,
+        "startChar": 7,
+        "endLine": 352,
+        "endChar": 33
+      },
+      "revId": "d3a7cfa268b20ebf61c794c0dad02428b73b7077",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
