@@ -22,6 +22,30 @@
       "revId": "d3a7cfa268b20ebf61c794c0dad02428b73b7077",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_ada980e1",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-08T22:26:55Z",
+      "side": 0,
+      "message": "Its not needed, as we use it to disable GPG checks for APT. Since we are using upstream source, we can verify packages.",
+      "parentUuid": "9a30ddce_0a835299",
+      "range": {
+        "startLine": 352,
+        "startChar": 7,
+        "endLine": 352,
+        "endChar": 33
+      },
+      "revId": "d3a7cfa268b20ebf61c794c0dad02428b73b7077",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
