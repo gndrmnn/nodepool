@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a30ddce_c54109ab",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-09T17:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a30ddce_4f061887",
+      "revId": "acc2f3fc0643710b4f12ea6d89933a3173d8ab1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a30ddce_6f0bdc8e",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-09T16:39:02Z",
       "side": 1,
       "message": "We should verify that the provider name matches our provider name.  I know that we only get servers from our providers, but if we\u0027re running two separate nodepool systems, we may point them at the same cloud but give them different provider names.",
+      "revId": "acc2f3fc0643710b4f12ea6d89933a3173d8ab1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_e53e0d27",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-09T17:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a30ddce_6f0bdc8e",
       "revId": "acc2f3fc0643710b4f12ea6d89933a3173d8ab1a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
