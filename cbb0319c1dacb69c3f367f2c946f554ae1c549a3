@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_55f13d94",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-09T21:11:51Z",
+      "side": 1,
+      "message": "We were conditionally placing these values in metadata before. Now it\u0027s done all the time. I believe that is causing the devstack test failures.",
+      "revId": "cbb0319c1dacb69c3f367f2c946f554ae1c549a3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
