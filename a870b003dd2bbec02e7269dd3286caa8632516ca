@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_d671c577",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-09T15:40:42Z",
+      "side": 1,
+      "message": "Let\u0027s change manager to either \u0027requestor\u0027 or \u0027client\u0027.  Manager is a pretty specific zuulv2.5 term.",
+      "revId": "a870b003dd2bbec02e7269dd3286caa8632516ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
