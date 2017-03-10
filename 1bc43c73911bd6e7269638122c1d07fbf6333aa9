@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a30ddce_7656422b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T00:46:27Z",
+      "side": 1,
+      "message": "I get touchy about this.  :)\n\nWe have a script in Zuul to fetch these similar dependencies.  Why don\u0027t we adopt that approach.  We don\u0027t have to start from zero here.",
+      "revId": "1bc43c73911bd6e7269638122c1d07fbf6333aa9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_9653b638",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T00:46:27Z",
+      "side": 1,
+      "message": "The zuul status page has a similar issue and I believe has a solution.",
+      "revId": "1bc43c73911bd6e7269638122c1d07fbf6333aa9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da36d5c6_3d2287ba",
         "filename": "contrib/status/js/jquery.timeago.js",
         "patchSetId": 2
@@ -13,6 +47,23 @@
       "writtenOn": "2017-02-17T22:50:38Z",
       "side": 1,
       "message": "I don\u0027t think we should be embedding this.  We should update the README explaining how to install the dependency.",
+      "revId": "1bc43c73911bd6e7269638122c1d07fbf6333aa9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_b6327a0e",
+        "filename": "contrib/status/js/status.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T00:46:27Z",
+      "side": 1,
+      "message": "Is this correct?",
       "revId": "1bc43c73911bd6e7269638122c1d07fbf6333aa9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
