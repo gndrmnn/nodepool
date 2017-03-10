@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_8e329ba5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T17:26:42Z",
+      "side": 0,
+      "message": "We should remove this file.  I proposed change I69f588e548f2d1fb7f99217d3aef6bc24632c7e1 to do this.",
+      "revId": "9ff5fc9c5082e1157c398fe802854c4487b8138b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_ae259f5c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T17:26:42Z",
+      "side": 0,
+      "message": "Removed in Iaf2b5aa96c41e03d5b73254776f2b2814dd0973b.",
+      "revId": "9ff5fc9c5082e1157c398fe802854c4487b8138b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_ce281336",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T17:26:42Z",
+      "side": 0,
+      "message": "This should also be removed, but there are more references remaining, and also we should clean up all the mysql depedencies, etc.",
+      "revId": "9ff5fc9c5082e1157c398fe802854c4487b8138b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
