@@ -690,6 +690,7 @@ class NodeRequestHandler(object):
 
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the NodeCleanupWorker.
+                # TODO(jeblair): exit here if the provider is stopped.
                 while self._countNodes() >= self.provider.max_servers:
                     if not logged:
                         self.log.debug(
