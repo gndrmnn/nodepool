@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9a30ddce_b23259a5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-10T21:54:48Z",
+      "side": 1,
+      "message": "Very true. Rather than keep a pointer, I proposed modifying the loop to short-circuit after it finds the paused handler.",
+      "parentUuid": "9a30ddce_b7cdeb32",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a30ddce_d7d09fcb",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "9a30ddce_d2250d5c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-10T21:54:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a30ddce_d7d09fcb",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a30ddce_f7d3e3d2",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 3
@@ -64,6 +100,24 @@
       "writtenOn": "2017-03-10T21:31:29Z",
       "side": 1,
       "message": "For that matter, this one will be as well.",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_1224055c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-10T21:54:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a30ddce_f7d3e3d2",
       "revId": "160501a9bff40df1875475107797109f0f151d97",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
