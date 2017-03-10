@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_97caa719",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T21:31:29Z",
+      "side": 1,
+      "message": "This might be better inside of the try or _run so we get the exception logged.",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_b7cdeb32",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T21:31:29Z",
+      "side": 1,
+      "message": "There should be at most one handler paused; would this be simpler if we just kept a pointer to that one rather than looping through all of them?",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_d7d09fcb",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T21:31:29Z",
+      "side": 1,
+      "message": "This is going to be pretty chatty, emitting a paused line every 10s.  Maybe drop it?  We already logged when we paused.",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_f7d3e3d2",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-10T21:31:29Z",
+      "side": 1,
+      "message": "For that matter, this one will be as well.",
+      "revId": "160501a9bff40df1875475107797109f0f151d97",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
