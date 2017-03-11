@@ -16,6 +16,24 @@
       "revId": "6daaa31bbcb6c372198a9061524c2f45c3552529",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a30ddce_9770e2a5",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-11T01:45:24Z",
+      "side": 1,
+      "message": "Actually, you\u0027re just missing the \"not\" part here.\n\n    if not r.poll():",
+      "parentUuid": "9a30ddce_b40fa435",
+      "revId": "6daaa31bbcb6c372198a9061524c2f45c3552529",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
