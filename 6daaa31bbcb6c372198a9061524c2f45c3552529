@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_b40fa435",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-11T01:29:48Z",
+      "side": 1,
+      "message": "You still need the paused check here, otherwise you remove the paused handler.",
+      "revId": "6daaa31bbcb6c372198a9061524c2f45c3552529",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
