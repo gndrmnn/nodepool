@@ -312,7 +312,7 @@ class TestZooKeeper(tests.DBTestCase):
         v2 = zk.ImageBuild()
         v2.state = zk.BUILDING
         v3 = zk.ImageBuild()
-        v3.state = zk.FAILED
+        v3.setFailed()
         v4 = zk.ImageBuild()
         v4.state = zk.DELETING
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
@@ -332,7 +332,7 @@ class TestZooKeeper(tests.DBTestCase):
         v2 = zk.ImageBuild()
         v2.state = zk.BUILDING
         v3 = zk.ImageBuild()
-        v3.state = zk.FAILED
+        v3.setFailed("Test Failure")
         v4 = zk.ImageBuild()
         v4.state = zk.DELETING
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
@@ -344,6 +344,10 @@ class TestZooKeeper(tests.DBTestCase):
         matches = self.zk.getBuilds(image, [zk.DELETING, zk.FAILED])
         self.assertEqual(2, len(matches))
 
+        for m in matches:
+            if m.state == zk.FAILED:
+                self.assertEqual("Test Failure", m.state_msg)
+
     def test_getUploads(self):
         path = self.zk._imageUploadPath("trusty", "000", "rax")
         v1 = zk.ImageUpload()
@@ -351,7 +355,7 @@ class TestZooKeeper(tests.DBTestCase):
         v2 = zk.ImageUpload()
         v2.state = zk.UPLOADING
         v3 = zk.ImageUpload()
-        v3.state = zk.FAILED
+        v3.setFailed("Test Failure")
         v4 = zk.ImageUpload()
         v4.state = zk.DELETING
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
@@ -364,6 +368,10 @@ class TestZooKeeper(tests.DBTestCase):
                                      [zk.DELETING, zk.FAILED])
         self.assertEqual(2, len(matches))
 
+        for m in matches:
+            if m.state == zk.FAILED:
+                self.assertEqual("Test Failure", m.state_msg)
+
     def test_getUploads_any(self):
         path = self.zk._imageUploadPath("trusty", "000", "rax")
         v1 = zk.ImageUpload()
@@ -371,7 +379,7 @@ class TestZooKeeper(tests.DBTestCase):
         v2 = zk.ImageUpload()
         v2.state = zk.UPLOADING
         v3 = zk.ImageUpload()
-        v3.state = zk.FAILED
+        v3.setFailed()
         v4 = zk.ImageUpload()
         v4.state = zk.DELETING
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)

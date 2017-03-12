@@ -436,7 +436,7 @@ class NodeLauncher(threading.Thread, StatsReporter):
         except Exception as e:
             self.log.exception("Launch failed for node %s:",
                                self._node.id)
-            self._node.state = zk.FAILED
+            self._node.setFailed()
             self._zk.storeNode(self._node)
 
             if hasattr(e, 'statsd_key'):
@@ -741,7 +741,7 @@ class NodeRequestHandler(object):
                 self.log.debug("Failing declined node request %s",
                                self.request.id)
                 # All launchers have declined it
-                self.request.state = zk.FAILED
+                self.request.setFailed()
             self.zk.storeNodeRequest(self.request)
             self.zk.unlockNodeRequest(self.request)
             self.done = True
@@ -761,7 +761,7 @@ class NodeRequestHandler(object):
             self._run()
         except Exception:
             self.log.exception("Exception in NodeRequestHandler:")
-            self.request.state = zk.FAILED
+            self.request.setFailed()
             self.zk.storeNodeRequest(self.request)
             self.zk.unlockNodeRequest(self.request)
             self.done = True
@@ -801,7 +801,7 @@ class NodeRequestHandler(object):
                 # All launchers have declined it
                 self.log.debug("Failing declined node request %s",
                                self.request.id)
-                self.request.state = zk.FAILED
+                self.request.setFailed()
             else:
                 self.request.state = zk.REQUESTED
         else:

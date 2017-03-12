@@ -134,6 +134,7 @@ class BaseModel(object):
         self._state = None
         self.state_time = None
         self.stat = None
+        self.state_msg = None
 
     @property
     def id(self):
@@ -153,8 +154,14 @@ class BaseModel(object):
     def state(self, value):
         if value not in self.VALID_STATES:
             raise TypeError("'%s' is not a valid state" % value)
+        if self._state != value:
+            self.state_msg = None
         self._state = value
         self.state_time = time.time()
+
+    def setFailed(self, msg=None):
+        self.state = FAILED
+        self.state_msg = msg
 
     def toDict(self):
         '''
@@ -163,6 +170,7 @@ class BaseModel(object):
         d = {}
         d['state'] = self.state
         d['state_time'] = self.state_time
+        d['state_msg'] = self.state_msg
         return d
 
     def fromDict(self, d):
@@ -176,6 +184,8 @@ class BaseModel(object):
             self.state = d['state']
         if 'state_time' in d:
             self.state_time = d['state_time']
+        if 'state_msg' in d:
+            self.state_msg = d['state_msg']
 
     def serialize(self):
         '''

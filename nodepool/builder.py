@@ -731,10 +731,10 @@ class BuildWorker(BaseWorker):
         if self._zk.didLoseConnection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
             self._zk.resetLostFlag()
-            build_data.state = zk.FAILED
+            build_data.setFailed()
         elif p.returncode:
             self.log.info("DIB failed creating %s" % diskimage.name)
-            build_data.state = zk.FAILED
+            build_data.setFailed()
         else:
             self.log.info("DIB image %s is built" % diskimage.name)
             build_data.state = zk.READY
@@ -871,7 +871,7 @@ class UploadWorker(BaseWorker):
             self.log.exception("Failed to upload image %s to provider %s" %
                                (image_name, provider.name))
             data = zk.ImageUpload()
-            data.state = zk.FAILED
+            data.setFailed()
             return data
 
         if self._statsd:
