@@ -44,7 +44,7 @@ class TestNodepool(tests.DBTestCase):
         pool.start()
 
         req = zk.NodeRequest()
-        req.state = zk.REQUESTED
+        req.setState(zk.REQUESTED)
         req.node_types.append('fake-label')
         self.zk.storeNodeRequest(req)
 
@@ -89,7 +89,7 @@ class TestNodepool(tests.DBTestCase):
         manager.createServer_fails = 2
 
         req = zk.NodeRequest()
-        req.state = zk.REQUESTED
+        req.setState(zk.REQUESTED)
         req.node_types.append('fake-label')
         self.zk.storeNodeRequest(req)
 
@@ -107,7 +107,7 @@ class TestNodepool(tests.DBTestCase):
         pool.start()
 
         req = zk.NodeRequest()
-        req.state = zk.REQUESTED
+        req.setState(zk.REQUESTED)
         req.node_types.append("zorky-zumba")
         self.zk.storeNodeRequest(req)
 
@@ -266,7 +266,7 @@ class TestNodepool(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual(zk.READY, nodes[0].state)
         self.assertEqual('fake-provider', nodes[0].provider)
-        nodes[0].state = zk.DELETING
+        nodes[0].setState(zk.DELETING)
         self.zk.storeNode(nodes[0])
 
         # Wait for this one to be deleted
@@ -290,7 +290,7 @@ class TestNodepool(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         req = zk.NodeRequest()
-        req.state = zk.REQUESTED
+        req.setState(zk.REQUESTED)
         req.node_types.append('fake-label')
         self.zk.storeNodeRequest(req)
 

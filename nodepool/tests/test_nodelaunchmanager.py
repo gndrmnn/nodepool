@@ -51,7 +51,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
         self._setup(configfile)
 
         n1 = zk.Node()
-        n1.state = zk.BUILDING
+        n1.setState(zk.BUILDING)
         n1.type = 'fake-label'
         mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
                                 self.pmanager, 'zuul', 1)
@@ -68,7 +68,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
 
         mock_launch.side_effect = Exception()
         n1 = zk.Node()
-        n1.state = zk.BUILDING
+        n1.setState(zk.BUILDING)
         n1.type = 'fake-label'
         mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
                                 self.pmanager, 'zuul', 1)
@@ -85,10 +85,10 @@ class TestNodeLaunchManager(tests.DBTestCase):
 
         mock_launch.side_effect = [None, Exception()]
         n1 = zk.Node()
-        n1.state = zk.BUILDING
+        n1.setState(zk.BUILDING)
         n1.type = 'fake-label'
         n2 = zk.Node()
-        n2.state = zk.BUILDING
+        n2.setState(zk.BUILDING)
         n2.type = 'fake-label'
         mgr = NodeLaunchManager(self.zk, self.provider, self.labels,
                                 self.pmanager, 'zuul', 1)

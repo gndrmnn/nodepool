@@ -423,7 +423,7 @@ class NodeLauncher(threading.Thread, StatsReporter):
                     raise
                 attempts += 1
 
-        self._node.state = zk.READY
+        self._node.setState(zk.READY)
         self._zk.storeNode(self._node)
         self.log.info("Node id %s is ready", self._node.id)
 
@@ -436,7 +436,7 @@ class NodeLauncher(threading.Thread, StatsReporter):
         except Exception as e:
             self.log.exception("Launch failed for node %s:",
                                self._node.id)
-            self._node.state = zk.FAILED
+            self._node.setState(zk.FAILED)
             self._zk.storeNode(self._node)
 
             if hasattr(e, 'statsd_key'):
@@ -699,7 +699,7 @@ class NodeRequestHandler(object):
                     time.sleep(1)
 
                 node = zk.Node()
-                node.state = zk.INIT
+                node.setState(zk.INIT)
                 node.type = ntype
                 node.provider = self.provider.name
                 node.az = chosen_az
@@ -716,7 +716,7 @@ class NodeRequestHandler(object):
 
                 # Set state AFTER lock so sthat it isn't accidentally cleaned
                 # up (unlocked BUILDING nodes will be deleted).
-                node.state = zk.BUILDING
+                node.setState(zk.BUILDING)
                 self.zk.storeNode(node)
 
                 # NOTE: We append the node to nodeset if it successfully
@@ -741,14 +741,14 @@ class NodeRequestHandler(object):
                 self.log.debug("Failing declined node request %s",
                                self.request.id)
                 # All launchers have declined it
-                self.request.state = zk.FAILED
+                self.request.setState(zk.FAILED)
             self.zk.storeNodeRequest(self.request)
             self.zk.unlockNodeRequest(self.request)
             self.done = True
             return
 
         self.log.debug("Accepting node request %s", self.request.id)
-        self.request.state = zk.PENDING
+        self.request.setState(zk.PENDING)
         self.zk.storeNodeRequest(self.request)
         self._waitForNodeSet()
 
@@ -761,7 +761,7 @@ class NodeRequestHandler(object):
             self._run()
         except Exception:
             self.log.exception("Exception in NodeRequestHandler:")
-            self.request.state = zk.FAILED
+            self.request.setState(zk.FAILED)
             self.zk.storeNodeRequest(self.request)
             self.zk.unlockNodeRequest(self.request)
             self.done = True
@@ -801,9 +801,9 @@ class NodeRequestHandler(object):
                 # All launchers have declined it
                 self.log.debug("Failing declined node request %s",
                                self.request.id)
-                self.request.state = zk.FAILED
+                self.request.setState(zk.FAILED)
             else:
-                self.request.state = zk.REQUESTED
+                self.request.setState(zk.REQUESTED)
         else:
             self.nodeset.extend(self.launch_manager.ready_nodes)
             for node in self.nodeset:
@@ -811,7 +811,7 @@ class NodeRequestHandler(object):
                 self.request.nodes.append(node.id)
             self.log.debug("Fulfilled node request %s",
                            self.request.id)
-            self.request.state = zk.FULFILLED
+            self.request.setState(zk.FULFILLED)
 
         self._unlockNodeSet()
         self.zk.storeNodeRequest(self.request)
@@ -1267,7 +1267,7 @@ class NodePool(threading.Thread):
         '''
         def createRequest(label_name):
             req = zk.NodeRequest()
-            req.state = zk.REQUESTED
+            req.setState(zk.REQUESTED)
             req.node_types.append(label_name)
             req.reuse = False    # force new node launches
             self.zk.storeNodeRequest(req)

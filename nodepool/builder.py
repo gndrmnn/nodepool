@@ -286,7 +286,7 @@ class CleanupWorker(BaseWorker):
         if upload.state != zk.DELETING:
             if not self._inProgressUpload(upload):
                 data = zk.ImageUpload()
-                data.state = zk.DELETING
+                data.setState(zk.DELETING)
                 self._zk.storeImageUpload(upload.image_name, upload.build_id,
                                           upload.provider_name, data,
                                           upload.id)
@@ -452,7 +452,7 @@ class CleanupWorker(BaseWorker):
                     with self._zk.imageBuildNumberLock(
                         image, build.id, blocking=False
                     ):
-                        build.state = zk.DELETING
+                        build.setState(zk.DELETING)
                         self._zk.storeBuild(image, build, build.id)
 
                 # Release the lock here so we can delete the build znode
@@ -587,7 +587,7 @@ class BuildWorker(BaseWorker):
                     self.log.info("Building image %s" % diskimage.name)
 
                     data = zk.ImageBuild()
-                    data.state = zk.BUILDING
+                    data.setState(zk.BUILDING)
                     data.builder = self._hostname
 
                     bnum = self._zk.storeBuild(diskimage.name, data)
@@ -636,7 +636,7 @@ class BuildWorker(BaseWorker):
                     "Manual build request for image %s" % diskimage.name)
 
                 data = zk.ImageBuild()
-                data.state = zk.BUILDING
+                data.setState(zk.BUILDING)
                 data.builder = self._hostname
 
                 bnum = self._zk.storeBuild(diskimage.name, data)
@@ -731,13 +731,13 @@ class BuildWorker(BaseWorker):
         if self._zk.didLoseConnection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
             self._zk.resetLostFlag()
-            build_data.state = zk.FAILED
+            build_data.setState(zk.FAILED)
         elif p.returncode:
             self.log.info("DIB failed creating %s" % diskimage.name)
-            build_data.state = zk.FAILED
+            build_data.setState(zk.FAILED)
         else:
             self.log.info("DIB image %s is built" % diskimage.name)
-            build_data.state = zk.READY
+            build_data.setState(zk.READY)
             build_data.formats = img_types.split(",")
 
             if self._statsd:
@@ -871,7 +871,7 @@ class UploadWorker(BaseWorker):
             self.log.exception("Failed to upload image %s to provider %s" %
                                (image_name, provider.name))
             data = zk.ImageUpload()
-            data.state = zk.FAILED
+            data.setState(zk.FAILED)
             return data
 
         if self._statsd:
@@ -886,7 +886,7 @@ class UploadWorker(BaseWorker):
                       (base, provider.name))
 
         data = zk.ImageUpload()
-        data.state = zk.READY
+        data.setState(zk.READY)
         data.external_id = external_id
         data.external_name = ext_image_name
         return data
@@ -981,7 +981,7 @@ class UploadWorker(BaseWorker):
 
                 # New upload number with initial state 'uploading'
                 data = zk.ImageUpload()
-                data.state = zk.UPLOADING
+                data.setState(zk.UPLOADING)
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 

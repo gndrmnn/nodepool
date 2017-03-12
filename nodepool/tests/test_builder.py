@@ -253,7 +253,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                     'fake-provider', zk.READY)[0]
 
         # Store a new ZK node as UPLOADING to represent a hard fail
-        upload.state = zk.UPLOADING
+        upload.setState(zk.UPLOADING)
 
         with self.zk.imageUploadLock(upload.image_name, upload.build_id,
                                      upload.provider_name, blocking=True,

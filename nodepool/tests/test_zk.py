@@ -127,7 +127,7 @@ class TestZooKeeper(tests.DBTestCase):
         image = "ubuntu-trusty"
         orig_data = zk.ImageBuild()
         orig_data.builder = 'host'
-        orig_data.state = zk.READY
+        orig_data.setState(zk.READY)
         with self.zk.imageBuildLock(image, blocking=True, timeout=1):
             build_num = self.zk.storeBuild(image, orig_data)
 
@@ -185,7 +185,7 @@ class TestZooKeeper(tests.DBTestCase):
         provider = "rax"
         orig_data = zk.ImageUpload()
         orig_data.external_id = "deadbeef"
-        orig_data.state = zk.READY
+        orig_data.setState(zk.READY)
 
         build_number = self.zk.storeBuild(image, zk.ImageBuild())
         upload_id = self.zk.storeImageUpload(image, build_number, provider,
@@ -236,12 +236,12 @@ class TestZooKeeper(tests.DBTestCase):
         provider = "rax"
         build = {'state': zk.READY, 'state_time': int(time.time())}
         up1 = zk.ImageUpload()
-        up1.state = zk.READY
+        up1.setState(zk.READY)
         up2 = zk.ImageUpload()
-        up2.state = zk.READY
+        up2.setState(zk.READY)
         up2.state_time = up1.state_time + 10
         up3 = zk.ImageUpload()
-        up3.state = zk.DELETING
+        up3.setState(zk.DELETING)
         up3.state_time = up2.state_time + 10
 
         bnum = self.zk.storeBuild(image, zk.ImageBuild.fromDict(build))
@@ -260,12 +260,12 @@ class TestZooKeeper(tests.DBTestCase):
         provider = "rax"
         build = {'state': zk.READY, 'state_time': int(time.time())}
         up1 = zk.ImageUpload()
-        up1.state = zk.READY
+        up1.setState(zk.READY)
         up2 = zk.ImageUpload()
-        up2.state = zk.READY
+        up2.setState(zk.READY)
         up2.state_time = up1.state_time + 10
         up3 = zk.ImageUpload()
-        up3.state = zk.UPLOADING
+        up3.setState(zk.UPLOADING)
         up3.state_time = up2.state_time + 10
 
         bnum = self.zk.storeBuild(image, zk.ImageBuild.fromDict(build))
@@ -284,18 +284,18 @@ class TestZooKeeper(tests.DBTestCase):
         provider = "rax"
 
         build1 = zk.ImageBuild()
-        build1.state = zk.READY
+        build1.setState(zk.READY)
         build2 = zk.ImageBuild()
-        build2.state = zk.READY
+        build2.setState(zk.READY)
         build2.state_time = build1.state_time + 10
 
         bnum1 = self.zk.storeBuild(image, build1)
         bnum2 = self.zk.storeBuild(image, build2)
 
         upload1 = zk.ImageUpload()
-        upload1.state = zk.READY
+        upload1.setState(zk.READY)
         upload2 = zk.ImageUpload()
-        upload2.state = zk.READY
+        upload2.setState(zk.READY)
         upload2.state_time = upload1.state_time + 10
 
         self.zk.storeImageUpload(image, bnum1, provider, upload1)
@@ -308,13 +308,13 @@ class TestZooKeeper(tests.DBTestCase):
         image = "ubuntu-trusty"
         path = self.zk._imageBuildsPath(image)
         v1 = zk.ImageBuild()
-        v1.state = zk.READY
+        v1.setState(zk.READY)
         v2 = zk.ImageBuild()
-        v2.state = zk.BUILDING
+        v2.setState(zk.BUILDING)
         v3 = zk.ImageBuild()
-        v3.state = zk.FAILED
+        v3.setState(zk.FAILED)
         v4 = zk.ImageBuild()
-        v4.state = zk.DELETING
+        v4.setState(zk.DELETING)
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
         self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
         self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
@@ -328,13 +328,13 @@ class TestZooKeeper(tests.DBTestCase):
         image = "ubuntu-trusty"
         path = self.zk._imageBuildsPath(image)
         v1 = zk.ImageBuild()
-        v1.state = zk.READY
+        v1.setState(zk.READY)
         v2 = zk.ImageBuild()
-        v2.state = zk.BUILDING
+        v2.setState(zk.BUILDING)
         v3 = zk.ImageBuild()
-        v3.state = zk.FAILED
+        v3.setState(zk.FAILED, "Test Failure")
         v4 = zk.ImageBuild()
-        v4.state = zk.DELETING
+        v4.setState(zk.DELETING)
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
         self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
         self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
@@ -344,16 +344,20 @@ class TestZooKeeper(tests.DBTestCase):
         matches = self.zk.getBuilds(image, [zk.DELETING, zk.FAILED])
         self.assertEqual(2, len(matches))
 
+        for m in matches:
+            if m.state == zk.FAILED:
+                self.assertEqual("Test Failure", m.state_msg)
+
     def test_getUploads(self):
         path = self.zk._imageUploadPath("trusty", "000", "rax")
         v1 = zk.ImageUpload()
-        v1.state = zk.READY
+        v1.setState(zk.READY)
         v2 = zk.ImageUpload()
-        v2.state = zk.UPLOADING
+        v2.setState(zk.UPLOADING)
         v3 = zk.ImageUpload()
-        v3.state = zk.FAILED
+        v3.setState(zk.FAILED, "Test Failure")
         v4 = zk.ImageUpload()
-        v4.state = zk.DELETING
+        v4.setState(zk.DELETING)
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
         self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
         self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
@@ -364,16 +368,20 @@ class TestZooKeeper(tests.DBTestCase):
                                      [zk.DELETING, zk.FAILED])
         self.assertEqual(2, len(matches))
 
+        for m in matches:
+            if m.state == zk.FAILED:
+                self.assertEqual("Test Failure", m.state_msg)
+
     def test_getUploads_any(self):
         path = self.zk._imageUploadPath("trusty", "000", "rax")
         v1 = zk.ImageUpload()
-        v1.state = zk.READY
+        v1.setState(zk.READY)
         v2 = zk.ImageUpload()
-        v2.state = zk.UPLOADING
+        v2.setState(zk.UPLOADING)
         v3 = zk.ImageUpload()
-        v3.state = zk.FAILED
+        v3.setState(zk.FAILED)
         v4 = zk.ImageUpload()
-        v4.state = zk.DELETING
+        v4.setState(zk.DELETING)
         self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
         self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
         self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
@@ -386,7 +394,7 @@ class TestZooKeeper(tests.DBTestCase):
     def test_deleteBuild(self):
         image = 'trusty'
         build = zk.ImageBuild()
-        build.state = zk.READY
+        build.setState(zk.READY)
         bnum = self.zk.storeBuild(image, build)
         self.assertTrue(self.zk.deleteBuild(image, bnum))
 
@@ -395,11 +403,11 @@ class TestZooKeeper(tests.DBTestCase):
         provider = 'rax'
 
         build = zk.ImageBuild()
-        build.state = zk.READY
+        build.setState(zk.READY)
         bnum = self.zk.storeBuild(image, build)
 
         upload = zk.ImageUpload()
-        upload.state = zk.READY
+        upload.setState(zk.READY)
         self.zk.storeImageUpload(image, bnum, provider, upload)
 
         self.assertFalse(self.zk.deleteBuild(image, bnum))
@@ -445,7 +453,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_getNodeRequest(self):
         r = zk.NodeRequest("500-123")
-        r.state = zk.REQUESTED
+        r.setState(zk.REQUESTED)
         path = self.zk._requestPath(r.id)
         self.zk.client.create(path, value=r.serialize(),
                               makepath=True, ephemeral=True)
@@ -465,7 +473,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_getNode(self):
         n = zk.Node('100')
-        n.state = zk.BUILDING
+        n.setState(zk.BUILDING)
         path = self.zk._nodePath(n.id)
         self.zk.client.create(path, value=n.serialize(), makepath=True)
         o = self.zk.getNode(n.id)
@@ -500,7 +508,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def _create_node(self):
         node = zk.Node()
-        node.state = zk.BUILDING
+        node.setState(zk.BUILDING)
         node.provider = 'rax'
 
         self.assertIsNone(node.id)
@@ -518,14 +526,14 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_storeNode_update(self):
         node = self._create_node()
-        node.state = zk.READY
+        node.setState(zk.READY)
         self.zk.storeNode(node)
         node2 = self.zk.getNode(node.id)
         self.assertEqual(node, node2)
 
     def _create_node_request(self):
         req = zk.NodeRequest()
-        req.state = zk.REQUESTED
+        req.setState(zk.REQUESTED)
         req.node_types.append('label1')
         self.zk.storeNodeRequest(req)
         self.assertIsNotNone(
@@ -540,7 +548,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_storeNodeRequest_update(self):
         req = self._create_node_request()
-        req.state = zk.FULFILLED
+        req.setState(zk.FULFILLED)
         self.zk.storeNodeRequest(req)
         self.assertIsNotNone(req.id)
         req2 = self.zk.getNodeRequest(req.id)
@@ -565,11 +573,11 @@ class TestZooKeeper(tests.DBTestCase):
         n1.type = 'label1'
         self.zk.storeNode(n1)
         n2 = self._create_node()
-        n2.state = zk.READY
+        n2.setState(zk.READY)
         n2.type = 'label1'
         self.zk.storeNode(n2)
         n3 = self._create_node()
-        n3.state = zk.READY
+        n3.setState(zk.READY)
         n3.type = 'label2'
         self.zk.storeNode(n3)
 
@@ -643,7 +651,7 @@ class TestZKModel(tests.BaseTestCase):
             TypeError, "'blah' is not a valid state"
         ):
             o = zk.BaseModel('0001')
-            o.state = 'blah'
+            o.setState('blah')
 
     def test_BaseModel_toDict(self):
         o = zk.BaseModel('0001')
@@ -652,7 +660,7 @@ class TestZKModel(tests.BaseTestCase):
 
     def test_ImageBuild_toDict(self):
         o = zk.ImageBuild('0001')
-        o.state = zk.BUILDING
+        o.setState(zk.BUILDING)
         o.builder = 'localhost'
         o.formats = ['qemu', 'raw']
 
@@ -682,7 +690,7 @@ class TestZKModel(tests.BaseTestCase):
 
     def test_ImageUpload_toDict(self):
         o = zk.ImageUpload('0001', '0003')
-        o.state = zk.UPLOADING
+        o.setState(zk.UPLOADING)
         o.external_id = 'DEADBEEF'
         o.external_name = 'trusty'
 
@@ -759,7 +767,7 @@ class TestZKModel(tests.BaseTestCase):
 
     def test_Node_toDict(self):
         o = zk.Node('123')
-        o.state = zk.INIT
+        o.setState(zk.INIT)
         o.provider = 'rax'
         o.type = 'trusty'
         o.allocated_to = '456-789'

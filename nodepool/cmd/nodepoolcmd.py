@@ -238,7 +238,7 @@ class NodePoolCmd(NodepoolApp):
 
     def hold(self):
         node = self.zk.getNode(self.args.id)
-        node.state = zk.HOLD
+        node.setState(zk.HOLD)
         node.comment = self.args.reason
         self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
@@ -260,7 +260,7 @@ class NodePoolCmd(NodepoolApp):
             nodepool.InstanceDeleter.delete(self.zk, manager, node)
             manager.stop()
         else:
-            node.state = zk.DELETING
+            node.setState(zk.DELETING)
             self.zk.storeNode(node)
             self.zk.unlockNode(node)
 
@@ -277,7 +277,7 @@ class NodePoolCmd(NodepoolApp):
             print("Cannot delete a build in progress")
             return
 
-        build.state = zk.DELETING
+        build.setState(zk.DELETING)
         self.zk.storeBuild(image, build, build.id)
 
     def image_delete(self):
@@ -296,7 +296,7 @@ class NodePoolCmd(NodepoolApp):
             print("Cannot delete because image upload in progress")
             return
 
-        image.state = zk.DELETING
+        image.setState(zk.DELETING)
         self.zk.storeImageUpload(image.image_name, image.build_id,
                                  image.provider_name, image, image.id)
 

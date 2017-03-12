@@ -132,6 +132,7 @@ class BaseModel(object):
             # Bypass the setter for id to set the default.
             self._id = None
         self._state = None
+        self._state_msg = None
         self.state_time = None
         self.stat = None
 
@@ -149,11 +150,17 @@ class BaseModel(object):
     def state(self):
         return self._state
 
-    @state.setter
-    def state(self, value):
+    @property
+    def state_msg(self):
+        return self._state_msg
+
+    def setState(self, value, msg=None):
         if value not in self.VALID_STATES:
             raise TypeError("'%s' is not a valid state" % value)
+        if msg and value != FAILED:
+            raise ValueError("State msg is current only supported for Failure")
         self._state = value
+        self._state_msg = msg
         self.state_time = time.time()
 
     def toDict(self):
@@ -163,6 +170,7 @@ class BaseModel(object):
         d = {}
         d['state'] = self.state
         d['state_time'] = self.state_time
+        d['state_msg'] = self.state_msg
         return d
 
     def fromDict(self, d):
@@ -173,9 +181,11 @@ class BaseModel(object):
         assumes self has already been instantiated.
         '''
         if 'state' in d:
-            self.state = d['state']
+            self._state = d['state']
         if 'state_time' in d:
             self.state_time = d['state_time']
+        if 'state_msg' in d:
+            self._state_msg = d['state_msg']
 
     def serialize(self):
         '''
