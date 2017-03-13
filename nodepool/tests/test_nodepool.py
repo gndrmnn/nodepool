@@ -20,7 +20,6 @@ from unittest import skip
 import fixtures
 
 from nodepool import tests
-from nodepool import nodedb
 from nodepool import zk
 import nodepool.fakeprovider
 import nodepool.nodepool
