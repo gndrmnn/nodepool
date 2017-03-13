@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_99171044",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-13T15:41:53Z",
+      "side": 1,
+      "message": "What are you thinking would use secure.conf? I assume some sort of credentials for zookeeper?",
+      "revId": "c863294c5a38c9a0e2a30c8a39bfe25527a0f97d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
