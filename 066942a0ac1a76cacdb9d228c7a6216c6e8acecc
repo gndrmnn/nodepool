@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_b9013407",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-13T15:41:17Z",
+      "side": 1,
+      "message": "We don\u0027t actually consume both nodes, but that\u0027s fine.",
+      "revId": "066942a0ac1a76cacdb9d228c7a6216c6e8acecc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
