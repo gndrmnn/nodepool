@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a25e98e_4d514a62",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-13T21:15:29Z",
+      "side": 1,
+      "message": "needs to be a tuple: (ip, 22)",
+      "revId": "f280bf3d1061d8df6750ea666c31166be9fa8932",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
