@@ -33,6 +33,23 @@
       "revId": "bf1846437c9f099f1269d258f05a5e71f1b80c89",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a25e98e_3579ba30",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2017-03-13T19:52:26Z",
+      "side": 1,
+      "message": "Doing the keyscan in-process is, at least on it\u0027s face, a little cleaner and simpler than a subprocess callout. Also, the paramiko dependency is pure python. It transitively pulls in cryptography which is impure, but odds are we\u0027re going to at least be depending directly on that in zuul v3 so having it dragged into nodepool is not a huge concern for me.",
+      "revId": "bf1846437c9f099f1269d258f05a5e71f1b80c89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
