@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a30ddce_c0042916",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-03-13T17:27:13Z",
+      "side": 1,
+      "message": "We should reduce the race surface area here and just let zk_conn.deleteNode() delete the lock (and thus implicitly unlock it). Probably worth a comment in the code too.\n\nThat way we don\u0027t have this gap between line 210 and 211 where we unlock the node, context switch, have something else grab the node lock successfully, then the node gets deleted and sadness happens.",
+      "revId": "1e3764e83965f6feb5243fd392b2418497f183f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
