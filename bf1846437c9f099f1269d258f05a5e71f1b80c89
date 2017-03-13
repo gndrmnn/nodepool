@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a25e98e_0fce6d83",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-13T19:15:09Z",
+      "side": 1,
+      "message": "Since we already import paramiko, do we want to use it for keyscan?\n\nhttps://github.com/paramiko/paramiko/blob/master/paramiko/transport.py#L661\n\nFrom what I gather, the code would be:\n\n  t \u003d paramiko.transport.Transport(\u0027%s:%s\u0027 % (host, port))\n  t.start_client()\n  key \u003d t.get_remote_server_key()",
+      "revId": "bf1846437c9f099f1269d258f05a5e71f1b80c89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
