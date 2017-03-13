@@ -16,6 +16,23 @@
       "revId": "bf1846437c9f099f1269d258f05a5e71f1b80c89",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a25e98e_1aca2d50",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-13T19:35:32Z",
+      "side": 1,
+      "message": "When we\u0027re done, this would be the only use of paramiko -- ready scripts are going away.\n\nHaving said that, it may still be worthwhile, as it eliminates a subprocess call and output parsing.  I have a small preference for paramiko because of this.",
+      "revId": "bf1846437c9f099f1269d258f05a5e71f1b80c89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
