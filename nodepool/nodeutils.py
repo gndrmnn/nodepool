@@ -19,6 +19,7 @@
 import errno
 import time
 import socket
+import subprocess
 import logging
 from sshclient import SSHClient
 
@@ -73,3 +74,20 @@ def ssh_connect(ip, username, connect_kwargs={}, timeout=60):
     if "access okay" in out:
         return client
     return None
+
+
+def keyscan(ip):
+    if 'fake' in ip:
+        return ['fake_key']
+
+    keys = []
+    try:
+        output = subprocess.check_output(['ssh-keyscan', ip])
+    except Exception as e:
+        log.exception("ssh-keyscan failure: %s", e)
+
+    for line in output:
+        if line.startswith('#'):
+            continue
+        keys.append(line)
+    return keys
