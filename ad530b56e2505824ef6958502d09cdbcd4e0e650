@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a1ff146_3c9ef756",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-14T21:00:02Z",
+      "side": 1,
+      "message": "I think we can remove this",
+      "revId": "ad530b56e2505824ef6958502d09cdbcd4e0e650",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a1ff146_9cad2b8b",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-14T21:00:02Z",
+      "side": 1,
+      "message": "And this",
+      "revId": "ad530b56e2505824ef6958502d09cdbcd4e0e650",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
