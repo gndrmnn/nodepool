@@ -375,6 +375,9 @@ class NodeLauncher(threading.Thread, StatsReporter):
     def _writeNodepoolInfo(self, host, preferred_ip, node):
         key = paramiko.RSAKey.generate(2048)
         public_key = key.get_name() + ' ' + key.get_base64()
+        # This is a test for the existence and not a creation on purpose.
+        # Current requirements for nodepool nodes are that nodepool can log
+        # in and that it can write to /etc/nodepool.
         host.ssh("test for config dir", "ls /etc/nodepool")
 
         ftp = host.client.open_sftp()
@@ -1170,6 +1173,14 @@ class NodeCleanupWorker(threading.Thread):
                 if meta['nodepool_provider_name'] != provider.name:
                     # Another launcher, sharing this provider but configured
                     # with a different name, owns this.
+                    continue
+
+                nodepool_id = meta.get('nodepool_id', None)
+                if provider.nodepool_id is not None and \
+                        nodepool_id != provider.nodepool_id:
+                    self.log.debug("Instance %s (%s) in %s "
+                                   "was not launched by us" % (
+                                       server.name, server.id, provider.name))
                     continue
 
                 if not zk_conn.getNode(meta['nodepool_node_id']):
