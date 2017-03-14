@@ -408,6 +408,7 @@ function start_nodepool {
 
     run_process nodepool "$NODEPOOL_INSTALL/bin/nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LOGGING -d"
     run_process nodepool-builder "$NODEPOOL_INSTALL/bin/nodepool-builder -c $NODEPOOL_CONFIG -l $NODEPOOL_LOGGING -d"
+    run_process nodepool-builder "$NODEPOOL_INSTALL/bin/nodepool-webapp -c $NODEPOOL_CONFIG -l $NODEPOOL_LOGGING -d"
     :
 }
 
