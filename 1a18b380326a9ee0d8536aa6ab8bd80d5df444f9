@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a1ff146_a1f28cd0",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2017-03-15T21:03:14Z",
+      "side": 1,
+      "message": "You don\u0027t supply the alternative until the next sentence so this doesn\u0027t need to be here",
+      "range": {
+        "startLine": 61,
+        "startChar": 39,
+        "endLine": 61,
+        "endChar": 45
+      },
+      "revId": "1a18b380326a9ee0d8536aa6ab8bd80d5df444f9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
