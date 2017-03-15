@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a1ff146_b6c4bb40",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-15T03:04:39Z",
+      "side": 0,
+      "message": "Can this whole if be removed if the comment is correct as to why we were checking it?",
+      "revId": "acb0165e60a5614929348f6bdfdf1bdb34ad2d40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
