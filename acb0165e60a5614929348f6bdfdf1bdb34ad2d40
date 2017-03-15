@@ -16,6 +16,24 @@
       "revId": "acb0165e60a5614929348f6bdfdf1bdb34ad2d40",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a1ff146_9df34973",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-15T13:28:05Z",
+      "side": 0,
+      "message": "This is the default name of a thread if a name is not explicitly given, so it cannot be removed.",
+      "parentUuid": "3a1ff146_b6c4bb40",
+      "revId": "acb0165e60a5614929348f6bdfdf1bdb34ad2d40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
