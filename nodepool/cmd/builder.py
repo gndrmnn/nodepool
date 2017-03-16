@@ -39,6 +39,7 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolApp):
                             default='/etc/nodepool/nodepool.yaml',
                             help='path to config file')
         parser.add_argument('-l', dest='logconfig',
+                            default='/etc/nodepool/logging.conf',
                             help='path to log config file')
         parser.add_argument('-p', dest='pidfile',
                             help='path to pid file',

@@ -70,6 +70,7 @@ class NodePoolDaemon(nodepool.cmd.NodepoolApp):
         parser.add_argument('-d', dest='nodaemon', action='store_true',
                             help='do not run as a daemon')
         parser.add_argument('-l', dest='logconfig',
+                            default='/etc/nodepool/logging.conf',
                             help='path to log config file')
         parser.add_argument('-p', dest='pidfile',
                             help='path to pid file',

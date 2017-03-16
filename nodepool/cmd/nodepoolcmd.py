@@ -41,6 +41,7 @@ class NodePoolCmd(NodepoolApp):
                             default='/etc/nodepool/secure.conf',
                             help='path to secure file')
         parser.add_argument('-l', dest='logconfig',
+                            default='/etc/nodepool/logging.conf',
                             help='path to log config file')
         parser.add_argument('--version', action='version',
                             version=npc_version_info.version_string(),
