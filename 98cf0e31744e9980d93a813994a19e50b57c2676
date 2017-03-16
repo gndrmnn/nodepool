@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_ec6cba0a",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-16T19:37:33Z",
+      "side": 1,
+      "message": "How about BaseCleanupWorker instead?",
+      "revId": "98cf0e31744e9980d93a813994a19e50b57c2676",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
