@@ -279,17 +279,3 @@ class FakeSFTPClient(object):
 
     def close(self):
         pass
-
-
-class FakeSSHClient(object):
-    def __init__(self):
-        self.client = self
-
-    def ssh(self, description, cmd, output=False):
-        return True
-
-    def scp(self, src, dest):
-        return True
-
-    def open_sftp(self):
-        return FakeSFTPClient()
