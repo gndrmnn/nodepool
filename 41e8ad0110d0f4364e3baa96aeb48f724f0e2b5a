@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_2c8972cb",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1192,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-16T19:34:28Z",
+      "side": 1,
+      "message": "This should be in the less aggressive thread. Locks are cleaned up only after they are 8 hours old, so no need to check so often.",
+      "revId": "41e8ad0110d0f4364e3baa96aeb48f724f0e2b5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
