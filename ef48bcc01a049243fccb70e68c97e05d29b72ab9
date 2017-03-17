@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_bf3e3eb6",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-17T17:08:23Z",
+      "side": 1,
+      "message": "run_process nodepool-webapp",
+      "revId": "ef48bcc01a049243fccb70e68c97e05d29b72ab9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
