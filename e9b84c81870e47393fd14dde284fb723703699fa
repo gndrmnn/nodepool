@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_9b5fdf71",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-17T13:32:13Z",
+      "side": 1,
+      "message": "None values here are for not-happy making in dsvm jobs.",
+      "revId": "e9b84c81870e47393fd14dde284fb723703699fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
