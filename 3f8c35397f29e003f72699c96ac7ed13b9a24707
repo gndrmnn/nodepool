@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_88306558",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-17T21:24:01Z",
+      "side": 1,
+      "message": "I\u0027d put the try/except in the base class so you don\u0027t have to duplicate it, but we can do that later.",
+      "revId": "3f8c35397f29e003f72699c96ac7ed13b9a24707",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
