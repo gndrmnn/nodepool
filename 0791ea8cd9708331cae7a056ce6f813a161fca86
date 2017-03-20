@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_016ed894",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-20T20:09:46Z",
+      "side": 1,
+      "message": "\"Before\"?",
+      "revId": "0791ea8cd9708331cae7a056ce6f813a161fca86",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_2169148c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-20T20:09:46Z",
+      "side": 1,
+      "message": "This did not remove username.",
+      "revId": "0791ea8cd9708331cae7a056ce6f813a161fca86",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_e16e1c95",
+        "filename": "nodepool/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-20T20:09:46Z",
+      "side": 1,
+      "message": "A similar change needs to be made in provider_manager.py.\n\nNote that the Zuul-nodepool integration test should exercise the fake provider system.",
+      "revId": "0791ea8cd9708331cae7a056ce6f813a161fca86",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
