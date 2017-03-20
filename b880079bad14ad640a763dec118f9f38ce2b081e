@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_3e05b9bb",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-20T16:17:01Z",
+      "side": 1,
+      "message": "This can go, too, since I find it used only from FakeSSHClient.",
+      "revId": "b880079bad14ad640a763dec118f9f38ce2b081e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_5eeef5ec",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-20T16:17:01Z",
+      "side": 1,
+      "message": "This can go away now.",
+      "revId": "b880079bad14ad640a763dec118f9f38ce2b081e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
