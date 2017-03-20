@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_16b6143d",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-03-20T23:58:53Z",
+      "side": 1,
+      "message": "If we want to explicitly check that nodes for the second request can be fullfilled when we delete the nodes for req1 sequentially then I think we want to wait here for node3 (node[0] of req2) to boot, then delete node2, then wait for node4 to boot.\n\nThis will explicitly check for handling of the case that caused problems previously (this currently implicitly does it depending on timing of test code execution).",
+      "revId": "240502705faa63c5b33c5a4e0f2be16298e614b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
