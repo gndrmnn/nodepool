@@ -633,12 +633,18 @@ class NodeRequestHandler(object):
         # we need to calculate the difference between our current node set
         # and what was requested. We cannot use set operations here since a
         # node type can appear more than once in the requested types.
+        self.log.debug(self.nodeset)
         saved_types = collections.Counter([n.type for n in self.nodeset])
+        self.log.debug(saved_types)
         requested_types = collections.Counter(self.request.node_types)
+        self.log.debug(requested_types)
         diff = requested_types - saved_types
+        self.log.debug(diff)
         needed_types = list(diff.elements())
+        self.log.debug(needed_types)
 
         ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+        self.log.debug(ready_nodes)
 
         for ntype in needed_types:
             # First try to grab from the list of already available nodes.
