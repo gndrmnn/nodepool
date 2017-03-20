@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_47c1c52d",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-20T19:04:16Z",
+      "side": 0,
+      "message": "again, do we want this?",
+      "revId": "03c5dbcd3f9aac57281737516e063602f923afa8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
