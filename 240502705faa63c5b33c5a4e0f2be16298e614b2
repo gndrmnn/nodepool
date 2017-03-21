@@ -16,6 +16,24 @@
       "revId": "240502705faa63c5b33c5a4e0f2be16298e614b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_61a20dff",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-21T12:33:00Z",
+      "side": 1,
+      "message": "Changed to wait for a new node to get allocated to the second request.",
+      "parentUuid": "1a1ced50_16b6143d",
+      "revId": "240502705faa63c5b33c5a4e0f2be16298e614b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
