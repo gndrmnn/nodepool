@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ced50_f375ae31",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-22T17:40:31Z",
+      "side": 1,
+      "message": "Ah, yeah, \u0027finally\u0027 would be better here.",
+      "parentUuid": "1a1ced50_eeb22ae4",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a1ced50_0ecea662",
         "filename": "nodepool/nodeutils.py",
         "patchSetId": 8
