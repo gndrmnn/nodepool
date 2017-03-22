@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_ea75a8ca",
+        "filename": "nodepool/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-22T22:01:38Z",
+      "side": 1,
+      "message": "This doesn\u0027t work.  If you *name* a cloud, OSC requires it to exist.",
+      "revId": "c12d677edd633131af64325e05842c72de7bd8c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
