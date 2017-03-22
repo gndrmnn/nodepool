@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_eeb22ae4",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-22T16:24:34Z",
+      "side": 1,
+      "message": "Should this be a finally: ?  (would need to make sure that sock and t are initalized to None at the start of the loop)",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_0ecea662",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-22T16:24:34Z",
+      "side": 1,
+      "message": "and also maybe wrap each of these close calls in a try/except log?",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
