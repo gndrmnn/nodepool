@@ -184,8 +184,9 @@ class ProviderManager(object):
 
     def createServer(self, name, min_ram, image_id=None, image_name=None,
                      az=None, key_name=None, name_filter=None,
-                     config_drive=None, nodepool_node_id=None,
-                     nodepool_image_name=None):
+                     config_drive=True, nodepool_node_id=None,
+                     nodepool_image_name=None,
+                     nodepool_snapshot_image_id=None):
         if image_name:
             image = self.findImage(image_name)
         else:
@@ -223,6 +224,8 @@ class ProviderManager(object):
             groups=",".join(groups_list),
             nodepool_provider_name=self.provider.name,
         )
+        if self.provider.nodepool_id:
+            meta['nodepool_nodepool_id'] = self.provider.nodepool_id
         if nodepool_node_id:
             meta['nodepool_node_id'] = nodepool_node_id
         if nodepool_image_name:
