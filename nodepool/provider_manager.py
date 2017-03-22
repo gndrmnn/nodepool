@@ -44,7 +44,7 @@ class NotFound(Exception):
 
 
 def get_provider_manager(provider, use_taskmanager):
-    if (provider.cloud_config.name == 'fake'):
+    if (provider.name.startswith('fake')):
         return FakeProviderManager(provider, use_taskmanager)
     else:
         return ProviderManager(provider, use_taskmanager)

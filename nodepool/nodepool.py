@@ -1402,6 +1402,13 @@ class NodePool(threading.Thread):
         :returns: True if image associated with the label is uploaded and
             ready in at least one provider. False otherwise.
         '''
+        for pool in label.pools:
+            for pool_label in pool.labels.values():
+                if self.zk.getMostRecentImageUpload(pool_label.diskimage.name,
+                                                    pool.provider.name):
+                    return True
+        return False
+
         for provider_name in label.providers.keys():
             if self.zk.getMostRecentImageUpload(label.image, provider_name):
                 return True
