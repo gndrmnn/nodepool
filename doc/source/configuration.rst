@@ -365,6 +365,14 @@ provider, the Nodepool image types are also defined (see
 
     Default 3.
 
+  ``nodepool-id`` (deprecated)
+
+    A unique string to identify which nodepool instances is using a provider.
+    This is useful if you want to configure production and development instances
+    of nodepool but share the same provider.
+
+    Default None
+
   ``keypair``
     Default None
 
@@ -398,7 +406,8 @@ provider, the Nodepool image types are also defined (see
     Default ``template-{image_name}-{timestamp}``
 
   ``rate``
-    In seconds. Default 1.0.
+    In seconds, amount to wait between operations on the provider.
+    Defaults to ``1.0``.
 
   ``clean-floating-ips``
     If it is set to True, nodepool will assume it is the only user of the
@@ -470,7 +479,7 @@ Example configuration::
     Default ``/var/lib/jenkins/.ssh/id_rsa``
 
   ``config-drive`` (boolean)
-    Whether config drive should be used for the image.
+    Whether config drive should be used for the image. Default ``True``
 
   ``meta`` (dict)
     Arbitrary key/value metadata to store for this server using the Nova
