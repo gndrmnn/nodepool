@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_3dc811a8",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 7191
+      },
+      "writtenOn": "2017-03-22T06:06:42Z",
+      "side": 1,
+      "message": "same as last patch but setup_logging is moved down to here which means it will be executed within the DaemonContext block.",
+      "revId": "6e206087df06ca094e1b03fa5efd566d341a6fd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
