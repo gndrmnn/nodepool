@@ -16,6 +16,23 @@
       "revId": "08a5426240a3da96eb97aea609e91d563e655e79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_1da2239b",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-03-23T17:04:55Z",
+      "side": 1,
+      "message": "This is a per label setting not a provider setting. You need to set it under each of the labels above.",
+      "revId": "08a5426240a3da96eb97aea609e91d563e655e79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
