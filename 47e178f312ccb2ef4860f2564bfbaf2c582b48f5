@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "ffe62b97_17cba653",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-23T23:11:44Z",
+      "side": 1,
+      "message": "Yeah.  I was trying to be minimal here to avoid stepping on other ongoing doc work.  Really this, like most of the config, needs a lot more prose.",
+      "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe62b97_bcbbc10c",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -30,6 +47,23 @@
       "writtenOn": "2017-03-23T22:21:36Z",
       "side": 1,
       "message": "I think the code still supports also setting id, yeah?",
+      "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_f7c72245",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-23T23:11:44Z",
+      "side": 1,
+      "message": "yeah, fixing this in a followup.",
       "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
