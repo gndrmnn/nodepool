@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_7f4f9433",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-23T14:54:47Z",
+      "side": 1,
+      "message": "If you want to reduce indenting\n\n  if not self.label.console_log: return",
+      "revId": "c8a82ae07f287742c0a68d6b52ee2c397e26dfdf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
