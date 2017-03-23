@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_713562f7",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T22:18:56Z",
+      "side": 1,
+      "message": "clouds.yaml",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_f15bb251",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T22:18:56Z",
+      "side": 1,
+      "message": "Maybe it\u0027s time to default config-drive to true for the common case?",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_711e8271",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T22:18:56Z",
+      "side": 1,
+      "message": "clouds.yaml",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_51137e67",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T22:18:56Z",
+      "side": 1,
+      "message": "clouds.yaml",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_f1097231",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T22:18:56Z",
+      "side": 1,
+      "message": "clouds.yaml",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
