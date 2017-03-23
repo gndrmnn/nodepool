@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ced50_84708941",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-23T14:38:41Z",
+      "side": 1,
+      "message": "I think the issue from the previous patch, was we failed to open the socket, because routing issue. they tried t.close, which causes reference error because t was never initialized.\n\nSo, I\u0027m struggling a little to find all the correct paths beside doing\n\n  if t: t.close()\n  if sock: sock.close()",
+      "parentUuid": "1a1ced50_090e728b",
+      "revId": "885f2cb84ebfe15b1605104d608a500effd460ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a1ced50_891a62c4",
         "filename": "nodepool/nodeutils.py",
         "patchSetId": 10
