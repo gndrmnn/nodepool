@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1ced50_090e728b",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-23T14:20:47Z",
+      "side": 1,
+      "message": "Is this the correct order here? Seems like we should try to close the paramiko layer first.",
+      "revId": "885f2cb84ebfe15b1605104d608a500effd460ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1ced50_891a62c4",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-23T14:20:47Z",
+      "side": 1,
+      "message": "s/connecitons/connections/",
+      "range": {
+        "startLine": 85,
+        "startChar": 49,
+        "endLine": 85,
+        "endChar": 60
+      },
+      "revId": "885f2cb84ebfe15b1605104d608a500effd460ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
