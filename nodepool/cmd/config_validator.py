@@ -24,11 +24,6 @@ class ConfigValidator:
         self.config_file = config_file
 
     def validate(self):
-        cron = {
-            'check': str,
-            'cleanup': str,
-        }
-
         old_network = {
             'net-id': str,
             'net-label': str,
@@ -103,7 +98,6 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
-            'cron': cron,
             'providers': [provider],
             'labels': [label],
             'diskimages': [diskimage],
