@@ -24,11 +24,6 @@ class ConfigValidator:
         self.config_file = config_file
 
     def validate(self):
-        cron = {
-            'check': str,
-            'cleanup': str,
-        }
-
         images = {
             'name': str,
             'pause': bool,
@@ -109,7 +104,6 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
-            'cron': cron,
             'providers': [providers],
             'labels': [labels],
             'diskimages': [diskimages],

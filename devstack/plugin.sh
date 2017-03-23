@@ -173,10 +173,6 @@ zookeeper-servers:
   - host: localhost
     port: 2181
 
-cron:
-  cleanup: '*/1 * * * *'
-  check: '*/15 * * * *'
-
 labels:
   - name: centos-7
     image: centos-7
