@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_853664b4",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T20:16:12Z",
+      "side": 0,
+      "message": "This can also go - can be configured in clouds.yaml",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_e5465022",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T20:16:12Z",
+      "side": 0,
+      "message": "This is not needed, force-ipv4 is in clouds.yaml",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_855f84e4",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T20:16:12Z",
+      "side": 0,
+      "message": "this can go - clouds.yaml",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_e5e2d001",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-23T20:16:12Z",
+      "side": 0,
+      "message": "I think we should have nodepool default config-drive to true and invert this option to disable it if you need to for some reason.",
+      "revId": "b61b221bfe47082ee49550a26b0ccb8827044a2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
