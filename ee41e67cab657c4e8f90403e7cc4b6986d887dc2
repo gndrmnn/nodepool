@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_897afa85",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-23T23:39:48Z",
+      "side": 1,
+      "message": "If we land this, let\u0027s put a TODO here explaining what raw is and that it will be removed.",
+      "revId": "ee41e67cab657c4e8f90403e7cc4b6986d887dc2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
