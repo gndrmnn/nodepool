@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1a1ced50_7f14f4e7",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-23T14:55:55Z",
+      "side": 1,
+      "message": "I think that is the solution, though. Set sock and t to None before your try. Then do the if-close.",
+      "parentUuid": "1a1ced50_84708941",
+      "revId": "885f2cb84ebfe15b1605104d608a500effd460ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a1ced50_891a62c4",
         "filename": "nodepool/nodeutils.py",
         "patchSetId": 10
