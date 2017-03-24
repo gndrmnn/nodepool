@@ -153,6 +153,23 @@
       "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_f521304f",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-24T19:17:03Z",
+      "side": 1,
+      "message": "Because we now have multiple threads per provider, they\u0027re going to share the same launcher_id unless you modify it to include the pool name, or some other differentiation.",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
