@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_fca7f04e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-24T12:23:15Z",
+      "side": 1,
+      "message": "So, this isn\u0027t true any more, since we are moving it up to our first SSH connection attempt.  That is mind, should we also consider moving this into the provider section?  It seems reasonable to think you only care about a single provider at a time vs all providers using the image.",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 32
+      },
+      "revId": "d32b904a15d6f4c69c98b06db1e770d7a7189be7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
