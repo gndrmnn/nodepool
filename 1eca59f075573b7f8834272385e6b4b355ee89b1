@@ -84,6 +84,23 @@
       "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_12726ae6",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-24T19:10:20Z",
+      "side": 1,
+      "message": "We need to check \u0027pool\u0027 here, too.",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
