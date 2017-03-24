@@ -287,8 +287,9 @@ class NodeLauncher(threading.Thread, StatsReporter):
 
         server = self._manager.createServer(
             hostname,
-            self._label.min_ram,
-            cloud_image.external_id,
+            image_id=cloud_image.external_id,
+            flavor_name=self._label.flavor_name,
+            min_ram=self._label.min_ram,
             name_filter=self._label.name_filter,
             az=self._node.az,
             config_drive=self._diskimage.config_drive,

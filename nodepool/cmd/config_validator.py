@@ -24,12 +24,26 @@ class ConfigValidator:
         self.config_file = config_file
 
     def validate(self):
-        pool_label = {
+
+        pool_label_base = v.Schema({
             v.Required('name'): str,
             v.Required('diskimage'): str,
-            'min-ram': int,
+            v.Exclusive('flavor-name', 'flavor'): str,
+            v.Exclusive('min-ram', 'flavor'): int,
             'name-filter': str,
-        }
+        })
+
+        pool_flavor_name = v.Schema({
+            v.Required('flavor-name'): str,
+        }, extra=True)
+
+        pool_min_ram = v.Schema({
+            v.Required('min-ram'): int,
+        }, extra=True)
+
+        pool_label = v.All(
+            pool_label_base, v.Any(
+                pool_flavor_name, pool_min_ram))
 
         pool = {
             'name': str,

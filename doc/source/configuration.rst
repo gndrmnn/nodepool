@@ -441,6 +441,11 @@ Example configuration::
   ``diskimage``
     Refers to provider's diskimages, see :ref:`images`.
 
+**one-of**
+
+  ``flavor-name``
+    Name or id of the flavor to use. Must be an exact match.
+
   ``min-ram``
     Determine the flavor to use (e.g. ``m1.medium``, ``m1.large``,
     etc).  The smallest flavor that meets the ``min-ram`` requirements
@@ -454,3 +459,4 @@ Example configuration::
     the flavor-name (e.g. Rackspace offer a "Performance" flavour; setting
     `name-filter` to ``Performance`` will ensure the chosen flavor also
     contains this string as well as meeting `min-ram` requirements).
+    `name-filter` may only be used with `min-ram`.
