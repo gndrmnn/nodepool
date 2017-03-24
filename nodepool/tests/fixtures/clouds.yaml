@@ -13,3 +13,11 @@ clouds:
       project_id: 'fake'
       auth_url: 'fake'
     image_format: 'vhd'
+
+  fake-ipv4:
+    force-ipv4: True
+    auth:
+      username: 'fake'
+      password: 'fake'
+      project_id: 'fake'
+      auth_url: 'fake'
