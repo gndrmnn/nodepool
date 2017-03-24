@@ -36,6 +36,41 @@
     },
     {
       "key": {
+        "uuid": "ffe62b97_d5474c1d",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-24T19:14:10Z",
+      "side": 1,
+      "message": "we did on master already.",
+      "parentUuid": "ffe62b97_f15bb251",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_d5706c75",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-24T19:14:10Z",
+      "side": 1,
+      "message": "I think we are missing:\n\n  diskimage: centos-7",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe62b97_711e8271",
         "filename": "nodepool/cmd/config_validator.py",
         "patchSetId": 2
@@ -81,6 +116,23 @@
       "writtenOn": "2017-03-23T22:18:56Z",
       "side": 1,
       "message": "clouds.yaml",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_3541d80c",
+        "filename": "nodepool/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-03-24T19:14:10Z",
+      "side": 1,
+      "message": "dsvm job doesn\u0027t like this.",
       "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
