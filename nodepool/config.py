@@ -88,6 +88,7 @@ class Label(ConfigValue):
 class ProviderLabel(ConfigValue):
     def __eq__(self, other):
         if (other.diskimage != self.diskimage or
+            other.flavor_name != self.flavor_name or
             other.min_ram != self.min_ram or
             other.name_filter != self.name_filter):
             return False
@@ -266,9 +267,20 @@ def loadConfig(config_path):
                 pl.pool = pp
                 pp.labels[pl.name] = pl
                 pl.diskimage = newconfig.diskimages[label['diskimage']]
-                pl.min_ram = label['min-ram']
+                pl.flavor_name = label.get('flavor-name', None)
+                pl.min_ram = label.get('min-ram', 0)
+                if not pl.flavor_name and not pl.min_ram:
+                    # Should we make this more fatal?
+                    self.log.error(
+                        "One of flavor-name or min-ram must be provided")
+                if pl.flavor_name and pl.min_ram:
+                    self.log.error(
+                        "Only one of flavor-name or min-ram can be provided")
                 pl.name_filter = label.get('name-filter', None)
-
+                if pl.flavor_name and pl.name_filter:
+                    self.log.error(
+                        "Only one of flavor-name or name-filter"
+                        " can be provided")
                 top_label = newconfig.labels[pl.name]
                 top_label.pools.append(pp)
 

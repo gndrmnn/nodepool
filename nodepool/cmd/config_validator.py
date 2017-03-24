@@ -32,6 +32,7 @@ class ConfigValidator:
         pool_label = {
             v.Required('name'): str,
             v.Required('diskimage'): str,
+            'flavor-name': str,
             'min-ram': int,
             'name-filter': str,
         }
