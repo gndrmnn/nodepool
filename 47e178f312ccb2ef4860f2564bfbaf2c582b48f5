@@ -36,6 +36,29 @@
     },
     {
       "key": {
+        "uuid": "ffe62b97_8ff09392",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-24T18:45:33Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to exist.",
+      "range": {
+        "startLine": 219,
+        "startChar": 47,
+        "endLine": 219,
+        "endChar": 69
+      },
+      "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe62b97_bcbbc10c",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -64,6 +87,29 @@
       "writtenOn": "2017-03-23T23:11:44Z",
       "side": 1,
       "message": "yeah, fixing this in a followup.",
+      "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_efda7fe7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-24T18:45:33Z",
+      "side": 1,
+      "message": "Pools do not have an images section.",
+      "range": {
+        "startLine": 467,
+        "startChar": 23,
+        "endLine": 467,
+        "endChar": 31
+      },
       "revId": "47e178f312ccb2ef4860f2564bfbaf2c582b48f5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
