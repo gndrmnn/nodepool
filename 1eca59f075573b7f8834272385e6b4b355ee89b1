@@ -170,6 +170,24 @@
       "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_b5da8814",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-24T19:24:34Z",
+      "side": 1,
+      "message": "Oh, nevermind. You include pool in the thread name above.",
+      "parentUuid": "ffe62b97_f521304f",
+      "revId": "1eca59f075573b7f8834272385e6b4b355ee89b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
