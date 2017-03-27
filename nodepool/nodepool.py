@@ -669,8 +669,9 @@ class NodeRequestHandler(object):
             if not got_a_node:
                 # Select grouping AZ if we didn't set AZ from a selected,
                 # pre-existing node
-                if not self.chosen_az and self.provider.azs:
-                    self.chosen_az = random.choice(self.provider.azs)
+                if not self.chosen_az:
+                    self.chosen_az = random.choice(
+                        self.provider.azs or self._manager.azs())
 
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the DeletedNodeWorker.

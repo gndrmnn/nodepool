@@ -320,7 +320,7 @@ provider, the Nodepool image types are also defined (see
 **optional**
 
   ``availability-zones`` (list)
-    Without it nodepool will rely on nova to schedule an availability zone.
+    Without it nodepool will fetch the list of available zones from nova.
 
     If it is provided the value should be a list of availability zone names.
     Nodepool will select one at random and provide that to nova. This should
