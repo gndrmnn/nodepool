@@ -618,6 +618,10 @@ class NodeRequestHandler(object):
 
         ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
 
+        # Pick an AZ either from the configured list of AZs provided by the
+        # user, or from the list of available AZs in the cloud
+        self.chosen_az = random.choice(self.pool.azs or self._manager.azs())
+
         for ntype in needed_types:
             # First try to grab from the list of already available nodes.
             got_a_node = False
@@ -629,7 +633,7 @@ class NodeRequestHandler(object):
                         continue
                     if node.pool != self.pool.name:
                         continue
-                    if self.chosen_az and node.az != self.chosen_az:
+                    if node.az != self.chosen_az:
                         continue
 
                     try:
@@ -650,19 +654,10 @@ class NodeRequestHandler(object):
                         self.zk.storeNode(node)
                         self.nodeset.append(node)
 
-                        # If we haven't already chosen an AZ, select the
-                        # AZ from this ready node. This will cause new nodes
-                        # to share this AZ, as well.
-                        if not self.chosen_az and node.az:
-                            self.chosen_az = node.az
                         break
 
             # Could not grab an existing node, so launch a new one.
             if not got_a_node:
-                # Select grouping AZ if we didn't set AZ from a selected,
-                # pre-existing node
-                if not self.chosen_az and self.pool.azs:
-                    self.chosen_az = random.choice(self.pool.azs)
 
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the DeletedNodeWorker.
