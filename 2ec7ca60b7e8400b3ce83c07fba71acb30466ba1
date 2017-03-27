@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_4e224602",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-27T17:30:41Z",
+      "side": 1,
+      "message": "This is an FYI, but this entire section is changed in https://review.openstack.org/449147. It needs correction if this goes in first. Not sure how we should handle that: rebase this or a new review.",
+      "revId": "2ec7ca60b7e8400b3ce83c07fba71acb30466ba1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_ae2b122e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 674,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-27T17:30:41Z",
+      "side": 1,
+      "message": "We need this moved to the top of the function because we need the AZ for pre-existing nodes, too.",
+      "revId": "2ec7ca60b7e8400b3ce83c07fba71acb30466ba1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
