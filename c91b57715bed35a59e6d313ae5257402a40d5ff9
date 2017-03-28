@@ -16,6 +16,24 @@
       "revId": "c91b57715bed35a59e6d313ae5257402a40d5ff9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_84d47b21",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-03-28T15:59:17Z",
+      "side": 1,
+      "message": "Ignore this stupid comment.",
+      "parentUuid": "ffe62b97_cb7bb625",
+      "revId": "c91b57715bed35a59e6d313ae5257402a40d5ff9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
