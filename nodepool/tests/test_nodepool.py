@@ -38,6 +38,7 @@ class TestNodepool(tests.DBTestCase):
         nodepool.nodepool.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
+        nodes = self.waitForNodes('fake-label')
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
