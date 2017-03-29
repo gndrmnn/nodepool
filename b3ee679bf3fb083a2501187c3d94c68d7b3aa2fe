@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ffe62b97_cf4f0969",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-29T16:04:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffe62b97_8cb0efde",
+      "revId": "b3ee679bf3fb083a2501187c3d94c68d7b3aa2fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe62b97_6cb36bea",
         "filename": "nodepool/nodepool.py",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-29T15:52:17Z",
       "side": 1,
       "message": "Should this be getAZs() ?",
+      "revId": "b3ee679bf3fb083a2501187c3d94c68d7b3aa2fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffe62b97_af7ba589",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-03-29T16:04:45Z",
+      "side": 1,
+      "message": "yup",
+      "parentUuid": "ffe62b97_6cb36bea",
       "revId": "b3ee679bf3fb083a2501187c3d94c68d7b3aa2fe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
