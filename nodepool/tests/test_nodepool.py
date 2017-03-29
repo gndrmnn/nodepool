@@ -69,8 +69,6 @@ class TestNodepool(tests.DBTestCase):
         )
         self.zk.deleteNodeRequest(req)
         self.waitForNodeRequestLockDeletion(req.id)
-        self.assertReportedStat('nodepool.nodes.ready', '1|g')
-        self.assertReportedStat('nodepool.nodes.building', '0|g')
 
     def test_node_assignment_at_quota(self):
         '''
@@ -224,6 +222,8 @@ class TestNodepool(tests.DBTestCase):
         self.assertEqual(nodes[0].provider, 'fake-provider')
         self.assertEqual(nodes[0].type, 'fake-label')
         self.assertNotEqual(nodes[0].host_keys, [])
+        self.assertReportedStat('nodepool.nodes.ready', '1|g')
+        self.assertReportedStat('nodepool.nodes.building', '0|g')
 
     def test_disabled_label(self):
         """Test that a node is not created with min-ready=0"""
