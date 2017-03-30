@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe62b97_a4ca7817",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-03-30T15:31:47Z",
+      "side": 1,
+      "message": "Oops, I think I left these commented-out lines here from the config syntax change.  I\u0027ll remove them in a followup.",
+      "revId": "6cd9e39f45b2d350c26de7255cf01f554f5d4ac4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
