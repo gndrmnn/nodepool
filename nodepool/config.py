@@ -252,6 +252,7 @@ def loadConfig(config_path):
                 pl.diskimage = newconfig.diskimages[label['diskimage']]
                 pl.min_ram = label['min-ram']
                 pl.name_filter = label.get('name-filter', None)
+                pl.console_log = label.get('console-log', False)
 
                 top_label = newconfig.labels[pl.name]
                 top_label.pools.append(pp)
