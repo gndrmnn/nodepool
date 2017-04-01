@@ -222,7 +222,7 @@ providers:
     region-name: '$REGION_NAME'
     cloud: devstack
     # Long boot timeout to deal with potentially nested virt.
-    boot-timeout: 600
+    boot-timeout: 60
     launch-timeout: 900
     rate: 0.25
     diskimages:
@@ -250,22 +250,27 @@ providers:
             diskimage: centos-7
             min-ram: 1024
             name-filter: 'nodepool'
+            console-log: True
           - name: fedora-25
             diskimage: fedora-25
             min-ram: 1024
             name-filter: 'nodepool'
+            console-log: True
           - name: ubuntu-precise
             diskimage: ubuntu-precise
             min-ram: 512
             name-filter: 'nodepool'
+            console-log: True
           - name: ubuntu-trusty
             diskimage: ubuntu-trusty
             min-ram: 512
             name-filter: 'nodepool'
+            console-log: True
           - name: ubuntu-xenial
             diskimage: ubuntu-xenial
             min-ram: 512
             name-filter: 'nodepool'
+            console-log: True
 
 diskimages:
   - name: centos-7

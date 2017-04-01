@@ -230,6 +230,7 @@ Example::
             - name: trusty
               min-ram: 8192
               diskimage: trusty
+              console-log: True
             - name: precise
               min-ram: 8192
               diskimage: precise
@@ -349,6 +350,7 @@ Example::
         - name: trusty
           min-ram: 8192
           diskimage: trusty
+          console-log: True
         - name: precise
           min-ram: 8192
           diskimage: precise
@@ -441,6 +443,7 @@ Example configuration::
   labels:
     - name: precise
       min-ram: 8192
+      console-log: True
       name-filter: 'something to match'
 
 **required**
@@ -459,6 +462,10 @@ Example configuration::
     ``name-filter`` below.
 
 **optional**
+
+  ``console-log`` (default: False)
+    On the failure of the ssh ready check, download the server console log to
+    aid in debuging the problem.
 
   ``name-filter``
     Additional filter complementing ``min-ram``, will be required to match on
