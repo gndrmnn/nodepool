@@ -22,6 +22,7 @@ import time
 import yaml
 
 import fakeprovider
+import mqtt
 import zk
 
 
@@ -343,6 +344,7 @@ def loadSecureConfig(config, secure_config_path):
                 section_name, 'credentials')
         except:
             pass
+    return mqtt.get_client(secure)
 
 
 def _cloudKwargsFromProvider(provider):
