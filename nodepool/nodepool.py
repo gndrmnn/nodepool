@@ -76,7 +76,7 @@ class LaunchAuthException(Exception):
 class NodeCompleteThread(threading.Thread):
     log = logging.getLogger("nodepool.NodeCompleteThread")
 
-    def __init__(self, nodepool, nodename, jobname, result, branch):
+    def __init__(self, nodepool, nodename, jobname, result, branch, mqtt=None):
         threading.Thread.__init__(self, name='NodeCompleteThread for %s' %
                                   nodename)
         self.nodename = nodename
@@ -85,6 +85,7 @@ class NodeCompleteThread(threading.Thread):
         self.result = result
         self.branch = branch
         self.statsd = stats.get_client()
+        self.mqtt = mqtt
 
     def run(self):
         try:
@@ -104,6 +105,16 @@ class NodeCompleteThread(threading.Thread):
         if node.state == nodedb.HOLD:
             self.log.info("Node id: %s is complete but in HOLD state" %
                           node.id)
+            if self.mqtt:
+                topic = '/'.join([node.target_name, node.provider_name,
+                                  node.label_name, 'held'])
+                payload = {
+                    'node_id': node.id,
+                    'branch': self.branch,
+                    'job_name': self.jobname,
+                    'job_result': self.result,
+                }
+                self.mqtt.publish_single(topic, json.dumps(payload))
             return
 
         nodepool_job = session.getJobByName(self.jobname)
@@ -122,7 +133,17 @@ class NodeCompleteThread(threading.Thread):
                 self.log.info("Node id: %s failed %s, automatically holding" % (
                     node.id, self.jobname))
                 self.nodepool.updateStats(session, node.provider_name)
-                return
+            if self.mqtt:
+                topic = '/'.join([node.target_name, node.provider_name,
+                                  node.label_name, 'held'])
+                payload = {
+                    'node_id': node.id,
+                    'branch': self.branch,
+                    'job_name': self.jobname,
+                    'job_result': self.result,
+                }
+                self.mqtt.publish_single(topic, json.dumps(payload))
+            return
 
         target = self.nodepool.config.targets[node.target_name]
         if self.jobname == target.jenkins_test_job:
@@ -142,10 +163,9 @@ class NodeCompleteThread(threading.Thread):
             self.log.info("Node id: %s failed acceptance test, deleting" %
                           node.id)
 
+        start = node.state_time
+        dt = int((time.time() - start) * 1000)
         if self.statsd and self.result == 'SUCCESS':
-            start = node.state_time
-            dt = int((time.time() - start) * 1000)
-
             # nodepool.job.tempest
             key = 'nodepool.job.%s' % self.jobname
             self.statsd.timing(key + '.runtime', dt)
@@ -165,6 +185,18 @@ class NodeCompleteThread(threading.Thread):
             key += '.%s' % node.provider_name
             self.statsd.timing(key + '.runtime', dt)
             self.statsd.incr(key + '.builds')
+        if self.mqtt:
+            topic = '/'.join([node.target_name, node.provider_name,
+                              node.label_name, 'complete'])
+            payload = {
+                'node_id': node.id,
+                'duration': dt,
+                'branch': self.branch,
+                'job_name': self.jobname,
+                'job_result': self.result,
+            }
+            self.mqtt.publish_single(topic, json.dumps(payload))
+
 
         time.sleep(DELETE_DELAY)
         self.nodepool.deleteNode(node.id)
@@ -173,7 +205,7 @@ class NodeCompleteThread(threading.Thread):
 class NodeUpdateListener(threading.Thread):
     log = logging.getLogger("nodepool.NodeUpdateListener")
 
-    def __init__(self, nodepool, addr):
+    def __init__(self, nodepool, addr, mqtt=None):
         threading.Thread.__init__(self, name='NodeUpdateListener')
         self.nodepool = nodepool
         self.socket = self.nodepool.zmq_context.socket(zmq.SUB)
@@ -182,6 +214,7 @@ class NodeUpdateListener(threading.Thread):
         self.socket.setsockopt(zmq.SUBSCRIBE, event_filter)
         self.socket.connect(addr)
         self._stopped = False
+        self.mqtt = mqtt
 
     def run(self):
         while not self._stopped:
@@ -243,7 +276,7 @@ class NodeUpdateListener(threading.Thread):
 
     def handleCompletePhase(self, nodename, jobname, result, branch):
         t = NodeCompleteThread(self.nodepool, nodename, jobname, result,
-                               branch)
+                               branch, mqtt=mqtt)
         t.start()
 
 
@@ -447,6 +480,19 @@ class NodeLauncher(threading.Thread):
             except Exception:
                 self.log.exception("Exception reporting launch stats:")
 
+            if self.nodepool.mqtt:
+                topic = '/'.join([self.target.name, self.provider.name, self.label,
+                                  'created'])
+
+                payload = {
+                    'launch_time': dt,
+                    'image_name': self.image.name,
+                    'az': self.node.az,
+                    'manager': self.node.manager_name,
+                    'node_id': self.node_id,
+                    'failed': self.failed,
+                }
+                self.nodepool.mqtt.publish_single(topic, json.dumps(payload))
             if failed:
                 try:
                     self.nodepool.deleteNode(self.node_id)
@@ -881,6 +927,7 @@ class NodePool(threading.Thread):
         self.apsched = None
         self.zk = None
         self.statsd = stats.get_client()
+        self.mqtt = None
         self._delete_threads = {}
         self._delete_threads_lock = threading.Lock()
         self._instance_delete_threads = {}
@@ -908,7 +955,7 @@ class NodePool(threading.Thread):
     def loadConfig(self):
         self.log.debug("Loading configuration")
         config = nodepool_config.loadConfig(self.configfile)
-        nodepool_config.loadSecureConfig(config, self.securefile)
+        self.mqtt = nodepool_config.loadSecureConfig(config, self.securefile)
         return config
 
     def reconfigureDatabase(self, config):
@@ -1008,7 +1055,7 @@ class NodePool(threading.Thread):
         self.zmq_context = zmq.Context()
         for z in config.zmq_publishers.values():
             self.log.debug("Starting listener for %s" % z.name)
-            z.listener = NodeUpdateListener(self, z.name)
+            z.listener = NodeUpdateListener(self, z.name, mqtt=self.mqtt)
             z.listener.start()
 
     def reconfigureGearmanClient(self, config):
@@ -1444,14 +1491,22 @@ class NodePool(threading.Thread):
 
         node.delete()
         self.log.info("Deleted node id: %s" % node.id)
-
+        dt = int((time.time() - node.state_time) * 1000)
         if self.statsd:
-            dt = int((time.time() - node.state_time) * 1000)
             key = 'nodepool.delete.%s.%s.%s' % (image_name,
                                                 node.provider_name,
                                                 node.target_name)
             self.statsd.timing(key, dt)
             self.statsd.incr(key)
+        if self.mqtt:
+            topic = '/'.join([target_name, provider_name,
+                              node.label_name, 'delete'])
+            payload = {
+                'node_id': node.id,
+                'image_name': image_name,
+                'duration': dt,
+            }
+            self.mqtt.publish_single('delete', json.dumps(payload))
         self.updateStats(session, node.provider_name)
 
     def deleteInstance(self, provider_name, external_id):
