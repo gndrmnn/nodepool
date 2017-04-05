@@ -95,7 +95,7 @@ def keyscan(ip, timeout=60):
     # only the single key is placed into the list.
     if key:
         keys.append(
-            "%s %s" % (key.get_name(),
+            "%s %s %s" % (ip, key.get_name(),
                        base64.encodestring(str(key)).replace('\n', ''))
         )
 
