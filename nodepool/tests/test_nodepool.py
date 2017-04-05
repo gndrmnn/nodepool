@@ -34,6 +34,7 @@ class TestNodepool(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         self._useBuilder(configfile)
         image = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
 
         nodepool.nodepool.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -54,6 +55,7 @@ class TestNodepool(tests.DBTestCase):
             self.assertEqual(node.state, zk.READY)
             self.assertIsNotNone(node.launcher)
             self.assertEqual(node.az, "az1")
+            self.assertEqual(node.username, "zuul")
             p = "{path}/{id}".format(
                 path=self.zk._imageUploadPath(image.image_name,
                                               image.build_id,
@@ -217,12 +219,14 @@ class TestNodepool(tests.DBTestCase):
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
         pool.start()
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
         nodes = self.waitForNodes('fake-label')
 
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider')
         self.assertEqual(nodes[0].type, 'fake-label')
+        self.assertEqual(nodes[0].username, 'zuul')
         self.assertNotEqual(nodes[0].host_keys, [])
 
     def test_disabled_label(self):
@@ -246,6 +250,7 @@ class TestNodepool(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider')
         self.assertEqual(nodes[0].type, 'fake-label')
+        self.assertEqual(nodes[0].username, 'zuul')
 
     def test_node_vhd_image(self):
         """Test that a image and node are created vhd image"""
@@ -289,8 +294,10 @@ class TestNodepool(tests.DBTestCase):
         self.assertEqual(total_nodes, 2)
         self.assertEqual(nodes[0].provider, 'fake-provider2')
         self.assertEqual(nodes[0].type, 'fake-label')
+        self.assertEqual(nodes[0].username, 'zuul')
         self.assertEqual(nodes[1].provider, 'fake-provider2')
         self.assertEqual(nodes[1].type, 'fake-label')
+        self.assertEqual(nodes[1].username, 'zuul')
 
     def test_node_az(self):
         """Test that an image and node are created with az specified"""

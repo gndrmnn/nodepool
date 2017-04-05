@@ -119,6 +119,7 @@ Example configuration::
         - growroot
         - infra-package-needs
       release: precise
+      username: zuul
       env-vars:
         TMPDIR: /opt/dib_tmp
         DIB_CHECKSUM: '1'
@@ -143,6 +144,7 @@ Example configuration::
         - growroot
         - infra-package-needs
       release: precise
+      username: ubuntu
       env-vars:
         TMPDIR: /opt/dib_tmp
         DIB_CHECKSUM: '1'
@@ -185,6 +187,9 @@ Example configuration::
 
   ``pause`` (bool)
     When set to True, nodepool-builder will not build the diskimage.
+
+  ``username`` (string)
+    The username that a consumer should use when SSHing onto the node.
 
 .. _provider:
 
