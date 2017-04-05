@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bff0334d_8c88c471",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-05T17:50:48Z",
+      "side": 1,
+      "message": "It\u0027s configurable, but it does default to 24 hours.  Maybe \"normal rebuild cycle (which defaults to 24 hours)\"?",
+      "revId": "77ceb0ac49930c3177908dc0b9834ccced2adfd1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff0334d_6c7d806d",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-05T17:50:48Z",
+      "side": 1,
+      "message": "^to",
+      "revId": "77ceb0ac49930c3177908dc0b9834ccced2adfd1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff0334d_4c82bc51",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-05T17:50:48Z",
+      "side": 1,
+      "message": "If you do this and the image is not paused, it will be immediately uploaded again.  So you may want to pause the image until you know it will be rebuilt correctly.  Of course, if you know that it will be rebuilt correctly immediately, you can just dib-image-delete the whole thing without pausing.\n\nfuture work: We should make sure that somewhere we explain the aggressive build/upload behavior.  This may not be the right place; that should probably be in a section that generally explains what the nodepool-builder does.  But we should link to it here.",
+      "revId": "77ceb0ac49930c3177908dc0b9834ccced2adfd1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff0334d_2c977893",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-05T17:50:48Z",
+      "side": 1,
+      "message": "I wonder if we should have section titles for each of these things?  Or maybe two for \u0027image tasks\u0027 and \u0027node tasks\u0027?",
+      "revId": "77ceb0ac49930c3177908dc0b9834ccced2adfd1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
