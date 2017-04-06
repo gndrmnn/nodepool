@@ -16,6 +16,40 @@
       "revId": "7e93fb3c7b0b0995b386a451c5e775dd17350920",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff0334d_6e478a4d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-06T15:50:49Z",
+      "side": 1,
+      "message": "missing docstring",
+      "revId": "7e93fb3c7b0b0995b386a451c5e775dd17350920",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff0334d_4e7606a7",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-06T15:50:49Z",
+      "side": 1,
+      "message": "Maybe we should set it to None?  Other unused fields will end up as None.",
+      "revId": "7e93fb3c7b0b0995b386a451c5e775dd17350920",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
