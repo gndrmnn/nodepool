@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bff0334d_984a1453",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-06T15:05:15Z",
+      "side": 1,
+      "message": "This is the timeout for the whole operation.  If it\u0027s 5 minutes, then we will wait 5 minutes if we get to this point at the start.  We will wait 10 minutes if we get to this point after getting a bunch of TCP rejects.\n\nMaybe that\u0027s okay?  Or maybe we should use \"timeout-elapsed\" here?\n\nAFAICT, no timeout was the previous behavior, so this is an improvement regardless.",
+      "revId": "29f037488eb7af667ee64c81ad970c70874428aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
