@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bff0334d_782bd093",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-04-06T15:23:13Z",
+      "side": 1,
+      "message": "We don\u0027t actually use \u0027username\u0027 in nodepool. Just pass it as metadata to zuul.\n\nTrying to understand the use case were we\u0027d have different usernames for images in the same cloud.  Otherwise, I think just making it a configuration option in zuul makes sense.",
+      "revId": "7e93fb3c7b0b0995b386a451c5e775dd17350920",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
