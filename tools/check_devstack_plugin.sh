@@ -15,6 +15,14 @@ NODEPOOL_PAUSE_OPENSUSE_42_2_DIB=${NODEPOOL_PAUSE_OPENSUSE_42_2_DIB:-true}
 NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-false}
 NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB=${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB:-true}
 
+function sshintonode {
+    name=$1
+    state='ready'
+
+    node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f11`
+    ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_nodepool root@$node ls /
+}
+
 function waitforimage {
     name=$1
     state='ready'
@@ -74,6 +82,8 @@ if [ $NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB = 'false' ]; then
     waitforimage ubuntu-trusty
     # check image was bootable
     waitfornode ubuntu-trusty
+    # check ssh for root user
+    sshintonode ubuntu-trusty
 fi
 
 if [ $NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB = 'false' ]; then
