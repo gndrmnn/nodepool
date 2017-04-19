@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ffa3b31_543777e4",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-04-19T13:29:31Z",
+      "side": 1,
+      "message": "It turns out this supports image-name or image-id (because of the passthrough to shade) Maybe we should call it image-name-or-id? Or, since that\u0027s ugly, just indicate in the docs that both name and id are ok.\n\nOR - maybe, what about ``cloudimage`` - to indicate it\u0027s an image that is provided by the cloud?\n\n(I don\u0027t care about the bikeshedding - the important bit is to include in the docs that it can be either name or id)",
+      "revId": "3af7cd24d1b462083be550521326efc04a4ff758",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
