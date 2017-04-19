@@ -80,6 +80,11 @@ class ProviderDiskImage(ConfigValue):
         return "<ProviderDiskImage %s>" % self.name
 
 
+class ProviderUnmanagedImage(ConfigValue):
+    def __repr__(self):
+        return "<ProviderUnmanagedImage %s>" % self.name
+
+
 class Label(ConfigValue):
     def __repr__(self):
         return "<Label %s>" % self.name
@@ -88,6 +93,7 @@ class Label(ConfigValue):
 class ProviderLabel(ConfigValue):
     def __eq__(self, other):
         if (other.diskimage != self.diskimage or
+            other.image_name != self.image_name or
             other.min_ram != self.min_ram or
             other.flavor_name != self.flavor_name or
             other.key_name != self.key_name):
@@ -233,6 +239,12 @@ def loadConfig(config_path):
                     #self.log.error("Invalid metadata for %s; ignored"
                     #               % i.name)
                     i.meta = {}
+        p.unmanagedimages = {}
+        for image in provider.get('unmanagedimages', []):
+            i = ProviderUnmanagedImage()
+            i.name = image['name']
+            i.config_drive = image.get('config-drive', None)
+            p.unmanagedimages[i.name] = i
         p.pools = {}
         for pool in provider.get('pools', []):
             pp = ProviderPool()
@@ -248,7 +260,12 @@ def loadConfig(config_path):
                 pl.name = label['name']
                 pl.pool = pp
                 pp.labels[pl.name] = pl
-                pl.diskimage = newconfig.diskimages[label['diskimage']]
+                diskimage = label.get('diskimage', None)
+                if diskimage:
+                    pl.diskimage = newconfig.diskimages[diskimage]
+                else:
+                    pl.diskimage = None
+                pl.image_name = label.get('image-name', None)
                 pl.min_ram = label.get('min-ram', 0)
                 pl.flavor_name = label.get('flavor-name', None)
                 pl.key_name = label.get('key-name')

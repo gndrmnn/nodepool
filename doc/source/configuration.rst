@@ -450,8 +450,13 @@ Example configuration::
     Identifier to refer this image from :ref:`labels` and :ref:`diskimages`
     sections.
 
+**one of**
+
   ``diskimage``
     Refers to provider's diskimages, see :ref:`provider_diskimages`.
+
+  ``image-name``
+    Refers to an externally managed image already existing on the provider.
 
 **at least one of**
 
