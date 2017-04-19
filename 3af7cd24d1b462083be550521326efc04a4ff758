@@ -16,6 +16,40 @@
       "revId": "3af7cd24d1b462083be550521326efc04a4ff758",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ffa3b31_d17f16de",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-19T14:41:57Z",
+      "side": 1,
+      "message": "We do have \"flavor-name\" below which then says \"name or id\", so I think \"image-name\", but with appropriate docs, is a reasonable choice.  But we do have some other good choices.",
+      "revId": "3af7cd24d1b462083be550521326efc04a4ff758",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ffa3b31_b1800ac1",
+        "filename": "nodepool/tests/fixtures/node_unmanaged_image.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-04-19T14:41:57Z",
+      "side": 1,
+      "message": "This should be the default; let\u0027s remove this from the test to make sure that we don\u0027t need a diskimages section in the config file and fix it if it does break.",
+      "revId": "3af7cd24d1b462083be550521326efc04a4ff758",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
