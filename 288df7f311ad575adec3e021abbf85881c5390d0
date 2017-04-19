@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ffa3b31_71f4d086",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-04-19T08:12:49Z",
+      "side": 1,
+      "message": "min-ram and flavor-name must be declared as required, otherwise any will also be satisfied without any of these keys.\n\n label_min_ram \u003d v.Schema({v.Required(\u0027min-ram\u0027): int}, extra\u003dTrue)\n label_flavor_name \u003d v.Schema({v.Required(\u0027flavor-name\u0027): str}, extra\u003dTrue)",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 62
+      },
+      "revId": "288df7f311ad575adec3e021abbf85881c5390d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
