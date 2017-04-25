@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ff73747_a3c5ac3e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-04-25T03:59:11Z",
+      "side": 1,
+      "message": "Some log formatters (I use one for json logging) support the extra dict which adds extra meta data. This would be perfect here for including the server_id in the extra metadata. That way one could easily filter for failed logs regarding a specific node e.g. in elastic search.",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 45
+      },
+      "revId": "4cfe78301d5778aa68e751408be6b94618ac3156",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
