@@ -79,6 +79,7 @@ class ConfigValidator:
 
         diskimage = {
             'name': str,
+            'builders': [str],
             'pause': bool,
             'elements': [str],
             'formats': [str],
