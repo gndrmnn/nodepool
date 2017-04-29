@@ -548,6 +548,11 @@ class BuildWorker(BaseWorker):
             # or if ZK connection is suspended
             if not self.running or self._zk.suspended or self._zk.lost:
                 return
+            # Check if diskimage is to only be built on a specific builder.
+            if diskimage.builders and self._hostname not in diskimage.builders:
+                print self._hostname
+                print 'skipping!'
+                return
             try:
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
@@ -614,6 +619,9 @@ class BuildWorker(BaseWorker):
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
             if not self.running or self._zk.suspended or self._zk.lost:
+                return
+            # Check if diskimage is to only be built on a specific builder.
+            if diskimage.builders and self._hostname not in diskimage.builders:
                 return
             try:
                 self._checkImageForManualBuildRequest(diskimage)

@@ -170,6 +170,21 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.assert_listed(configfile, ['image-list'], 3, 'fake-image', 0)
         self.assert_listed(configfile, ['image-list'], 3, 'fake-image2', 1)
 
+    def test_dib_image_limit_builders(self):
+        configfile = self.setup_config('node_diskimage_limit_builders.yaml')
+        with mock.patch('socket.gethostname', return_value='nb01.example.org'):
+            self._useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        # fake-image will be built, since hostname is nb01.example.org.
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+        self.assert_listed(configfile, ['dib-image-list'], 1, 'fake-image', 1)
+        # fake-image2 will be built has builders field is missing.
+        nodes = self.waitForNodes('fake-label2')
+        self.assertEqual(len(nodes), 1)
+        self.assert_listed(configfile, ['dib-image-list'], 1, 'fake-image2', 1)
+
     def test_dib_image_delete(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

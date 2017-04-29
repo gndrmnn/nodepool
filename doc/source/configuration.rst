@@ -106,6 +106,10 @@ Example configuration::
 
   diskimages:
     - name: ubuntu-precise
+      builders:
+        - nb01.openstack.org
+        - nb02.openstack.org
+        - nb03.openstack.org
       pause: False
       rebuild-age: 86400
       elements:
@@ -127,6 +131,8 @@ Example configuration::
         DIB_DISABLE_APT_CLEANUP: '1'
         FS_TYPE: ext3
     - name: ubuntu-xenial
+      builders:
+        - nb02.openstack.org
       pause: True
       rebuild-age: 86400
       formats:
@@ -159,6 +165,12 @@ Example configuration::
     and :ref:`labels`.
 
 **optional**
+
+  ``builders`` (list)
+    A list of nodepool-builder hosts that are able to build the diskimage. For
+    example, you want to limit building diskimages to one or more hosts.
+
+    Default None (No filtering is used)
 
   ``formats`` (list)
     The list of formats to build is normally automatically created based on the
