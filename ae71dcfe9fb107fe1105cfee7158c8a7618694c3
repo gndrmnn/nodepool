@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ff73747_c9ba4409",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-02T15:17:28Z",
+      "side": 1,
+      "message": "we should make this example.org",
+      "revId": "ae71dcfe9fb107fe1105cfee7158c8a7618694c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ff73747_a935b8aa",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-02T15:17:28Z",
+      "side": 1,
+      "message": "here too",
+      "revId": "ae71dcfe9fb107fe1105cfee7158c8a7618694c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
