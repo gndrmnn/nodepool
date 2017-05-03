@@ -1,0 +1,27 @@
+'version': 1,
+'disable_existing_loggers': False,
+
+'formatters': {
+    'standard': {
+        '()': 'diskimage_builder.logging_config.DibFormatter',
+        'datefmt': '%Y-%m-%d %H:%M:%S',
+        'fmt': '%(levelname)s '
+        '%(name)s [-] %(message)s',
+        'debug_suffix': ' %(funcName)s %(pathname)s:%(lineno)d'
+    }
+},
+'handlers': {
+    'default': {
+        'level': LOG_LEVEL,
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+    }
+},
+'loggers': {
+    '': {
+        'handlers': ['default'],
+        'level': LOG_LEVEL,
+        'propagate': True
+    }
+}
+
