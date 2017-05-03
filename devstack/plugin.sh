@@ -478,6 +478,36 @@ cache:
 EOF
     sudo mv /tmp/clouds.yaml /etc/openstack/clouds.yaml
     mkdir -p $HOME/.cache/openstack/
+
+    # dib logs are captured in the nodepool-builder output, which is
+    # time stamped by systemd.
+    cat >>/tmp/dib-logging.json <<EOF
+'version': 1,
+'disable_existing_loggers': False,
+
+'formatters': {
+    'standard': {
+        '()': 'diskimage_builder.logging_config.DibFormatter',
+        'fmt': '%(levelname)s %(name)s [-] %(message)s',
+        'debug_suffix': ' %(funcName)s %(pathname)s:%(lineno)d'
+    }
+},
+'handlers': {
+    'default': {
+        'level': DEBUG,
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+    }
+},
+'loggers': {
+    '': {
+        'handlers': ['default'],
+        'level': DEBUG,
+        'propagate': True
+    }
+}
+EOF
+    sudo mv /tmp/dib-logging.json $NODEPOOL_DIB_LOGGING
 }
 
 # Initialize database
@@ -532,6 +562,8 @@ function start_nodepool {
     run_process statsd "/usr/bin/socat -u udp-recv:$STATSD_PORT -"
 
     run_process nodepool "$NODEPOOL_INSTALL/bin/nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LOGGING -d"
+
+    export DIB_PYTHON_LOGGING_CONFIG_FILE=$NODEPOOL_DIB_LOGGING
     run_process nodepool-builder "$NODEPOOL_INSTALL/bin/nodepool-builder -c $NODEPOOL_CONFIG -l $NODEPOOL_LOGGING -d"
     :
 }

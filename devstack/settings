@@ -3,6 +3,8 @@ NODEPOOL_LOGGING=/etc/nodepool/logging.conf
 NODEPOOL_SECURE=/etc/nodepool/secure.conf
 NODEPOOL_DIB_BASE_PATH=/opt/dib
 
+NODEPOOL_DIB_LOGGING=/etc/nodepool/dib-logging.json
+
 # Flags to control which images we build.
 # NOTE(pabelanger): Be sure to also update tools/check_devstack_plugin.sh if you
 # change the defaults.
