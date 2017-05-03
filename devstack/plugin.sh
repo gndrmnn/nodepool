@@ -171,7 +171,8 @@ formatter=simple
 args=(sys.stdout,)
 
 [formatter_simple]
-format=%(asctime)s %(levelname)s %(name)s: %(message)s
+# note; time stamp by systemd
+format=%(levelname)s %(name)s: %(message)s
 datefmt=
 EOF
 
