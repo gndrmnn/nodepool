@@ -128,39 +128,39 @@ keys=simple
 keys=root,nodepool,shade,kazoo,keystoneauth,novaclient
 
 [handlers]
-keys=console
+keys=console, file
 
 [logger_root]
 level=WARNING
-handlers=console
+handlers=console, file
 
 [logger_nodepool]
 level=DEBUG
-handlers=console
+handlers=console, file
 qualname=nodepool
 propagate=0
 
 [logger_shade]
 level=DEBUG
-handlers=console
+handlers=console, file
 qualname=shade
 propagate=0
 
 [logger_keystoneauth]
 level=DEBUG
-handlers=console
+handlers=console, file
 qualname=keystoneauth
 propagate=0
 
 [logger_novaclient]
 level=DEBUG
-handlers=console
+handlers=console, file
 qualname=novaclient
 propagate=0
 
 [logger_kazoo]
 level=INFO
-handlers=console
+handlers=console, file
 qualname=kazoo
 propagate=0
 
@@ -170,13 +170,28 @@ class=StreamHandler
 formatter=simple
 args=(sys.stdout,)
 
-[formatter_simple]
+[handler_file]
+level=DEBUG
+class=FileHandler
+formatter=simple
+args=("$NODEPOOL_LOG",)
+
+[formatter_journal]
 # note; time stamp by systemd
 format=%(levelname)s %(name)s: %(message)s
 datefmt=
+
+[formatter_file]
+# note; time stamp by systemd
+format=%(asctime) %(levelname)s %(name)s: %(message)s
+datefmt=
+
 EOF
 
     sudo mv /tmp/logging.conf $NODEPOOL_LOGGING
+
+    sudo mkdir $(dirname $NODEPOOL_LOG)
+    sudo chmod 0777 $(dirname $NODEPOOL_LOG)
 
     cat > /tmp/secure.conf << EOF
 [database]
