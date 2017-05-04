@@ -1,6 +1,8 @@
 NODEPOOL_CONFIG=/etc/nodepool/nodepool.yaml
-NODEPOOL_LOGGING=/etc/nodepool/logging.conf
-NODEPOOL_LOG=/var/log/nodepool/nodepool.log
+NODEPOOL_LAUNCHER_LOGGING_CONFIG=/etc/nodepool/launcher-logging.conf
+NODEPOOL_BUILDER_LOGGING_CONFIG=/etc/nodepool/builder-logging.conf
+NODEPOOL_LAUNCHER_LOG=/var/log/nodepool/nodepool-launcher.log
+NODEPOOL_BUILDER_LOG=/var/log/nodepool/nodepool-builder.log
 NODEPOOL_SECURE=/etc/nodepool/secure.conf
 NODEPOOL_DIB_BASE_PATH=/opt/dib
 

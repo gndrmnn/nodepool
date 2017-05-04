@@ -115,10 +115,9 @@ EOF
     sudo chown -R stack:stack $NODEPOOL_DIB_BASE_PATH
 }
 
-function nodepool_write_config {
-    sudo mkdir -p $(dirname $NODEPOOL_CONFIG)
-    sudo mkdir -p $(dirname $NODEPOOL_SECURE)
-    local dburi=$(database_connection_url nodepool)
+function nodepool_write_log_config {
+    local log_config_file=$1
+    local log_file=$2
 
     cat > /tmp/logging.conf <<EOF
 [formatters]
@@ -174,7 +173,7 @@ args=(sys.stdout,)
 level=DEBUG
 class=FileHandler
 formatter=file
-args=("$NODEPOOL_LOG",)
+args=("$log_file",)
 
 [formatter_journal]
 # note; time stamp by systemd
@@ -182,16 +181,23 @@ format=%(levelname)s %(name)s: %(message)s
 datefmt=
 
 [formatter_file]
-# note; time stamp by systemd
 format=%(asctime) %(levelname)s %(name)s: %(message)s
 datefmt=
 
 EOF
 
-    sudo mv /tmp/logging.conf $NODEPOOL_LOGGING
+    sudo mv /tmp/logging.conf $log_config_file
+    sudo mkdir -p $(dirname $log_file)
+    sudo chmod 0777 $(dirname $log_file)
+}
 
-    sudo mkdir $(dirname $NODEPOOL_LOG)
-    sudo chmod 0777 $(dirname $NODEPOOL_LOG)
+function nodepool_write_config {
+    sudo mkdir -p $(dirname $NODEPOOL_CONFIG)
+    sudo mkdir -p $(dirname $NODEPOOL_SECURE)
+    local dburi=$(database_connection_url nodepool)
+
+    nodepool_write_log_config $NODEPOOL_LAUNCHER_LOGGING_CONFIG $NODEPOOL_LAUNCHER_LOG
+    nodepool_write_log_config $NODEPOOL_BUILDER_LOGGING_CONFIG $NODEPOOL_BUILDER_LOG
 
     cat > /tmp/secure.conf << EOF
 [database]
@@ -546,8 +552,8 @@ function start_nodepool {
     export STATSD_PORT=8125
     run_process statsd "/usr/bin/socat -u udp-recv:$STATSD_PORT -"
 
-    run_process nodepool "$NODEPOOL_INSTALL/bin/nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LOGGING -d"
-    run_process nodepool-builder "$NODEPOOL_INSTALL/bin/nodepool-builder -c $NODEPOOL_CONFIG -l $NODEPOOL_LOGGING -d"
+    run_process nodepool "$NODEPOOL_INSTALL/bin/nodepoold -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE -l $NODEPOOL_LAUNCHER_LOGGING_CONFIG -d"
+    run_process nodepool-builder "$NODEPOOL_INSTALL/bin/nodepool-builder -c $NODEPOOL_CONFIG -l $NODEPOOL_BUILDER_LOGGING_CONFIG -d"
     :
 }
 
