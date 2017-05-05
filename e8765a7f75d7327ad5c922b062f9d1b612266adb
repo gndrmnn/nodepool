@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f044301_d1dc0748",
+        "filename": "devstack/gate/post_test_hook.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2017-05-05T00:24:11Z",
+      "side": 1,
+      "message": "local outside function",
+      "revId": "e8765a7f75d7327ad5c922b062f9d1b612266adb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
