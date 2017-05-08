@@ -451,6 +451,26 @@ class TestNodepool(tests.DBTestCase):
         servers = manager.listServers()
         self.assertEqual(len(servers), 1)
 
+    def test_max_ready_age(self):
+        """Test that a leaked node is deleted"""
+        configfile = self.setup_config('node_max_ready_age.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.log.debug("Waiting for initial pool...")
+        nodes = self.waitForNodes('fake-label')
+        self.log.debug("...done waiting for initial pool.")
+
+        # Make sure we have a node built and ready
+        self.assertEqual(len(nodes), 1)
+        manager = pool.getProviderManager('fake-provider')
+        servers = manager.listServers()
+        self.assertEqual(len(servers), 1)
+
+        # Wait for the instance to be cleaned up
+        self.waitForInstanceDeletion(manager, nodes[0].external_id)
+
     def test_label_provider(self):
         """Test that only providers listed in the label satisfy the request"""
         configfile = self.setup_config('node_label_provider.yaml')
