@@ -14,7 +14,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 import logging
 import threading
 import time
@@ -256,12 +260,12 @@ class FakeUploadFailCloud(FakeOpenStackCloud):
             return super(FakeUploadFailCloud, self).create_image(**kwargs)
 
 
-class FakeFile(StringIO.StringIO):
+class FakeFile(StringIO):
     def __init__(self, path):
-        StringIO.StringIO.__init__(self)
+        StringIO.__init__(self)
         self.__path = path
 
     def close(self):
         print("Wrote to %s:" % self.__path)
         print(self.getvalue())
-        StringIO.StringIO.close(self)
+        StringIO.close(self)
