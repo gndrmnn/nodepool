@@ -15,7 +15,10 @@
 
 import json
 import logging
-import urllib2
+try:
+    import urllib2
+except ImportError:
+    from urllib import request as urllib2
 
 from nodepool import tests
 
