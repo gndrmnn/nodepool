@@ -20,7 +20,7 @@ import sys
 import signal
 
 import nodepool.cmd
-import nodepool.nodepool
+import nodepool.launcher
 import nodepool.webapp
 
 log = logging.getLogger(__name__)
