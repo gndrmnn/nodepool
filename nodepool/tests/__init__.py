@@ -159,7 +159,7 @@ class BaseTestCase(testtools.TestCase):
         else:
             logging.basicConfig(level=logging.DEBUG)
         l = logging.getLogger('kazoo')
-        l.setLevel(logging.INFO)
+        l.setLevel(logging.DEBUG)
         l.propagate=False
         l = logging.getLogger('stevedore')
         l.setLevel(logging.INFO)
