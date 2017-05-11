@@ -491,7 +491,8 @@ class TestNodepool(tests.DBTestCase):
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
         pool.start()
-
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
         req = self.waitForNodeRequest(req, (zk.FULFILLED,))
         # Since our config file has min-ready=0, we should be able to re-use
         # the previously assigned node, thus making sure that the cleanup
