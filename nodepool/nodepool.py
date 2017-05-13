@@ -285,7 +285,9 @@ class NodeLauncher(threading.Thread, StatsReporter):
             config_drive=self._diskimage.config_drive,
             nodepool_node_id=self._node.id,
             nodepool_image_name=self._diskimage.name,
-            networks=self._pool.networks)
+            networks=self._pool.networks,
+            boot_from_volume=self._label.boot_from_volume,
+            volume_size=self._label.volume_size)
 
         self._node.external_id = server.id
         self._node.hostname = hostname

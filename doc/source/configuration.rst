@@ -468,6 +468,17 @@ Example configuration::
 
 **optional**
 
+  ``boot-from-volume`` (bool)
+    If given, the label for use in this pool will create a volume from the
+    image and boot the node from it.
+
+    Default: False
+
   ``key-name``
     If given, is the name of a keypair that will be used when booting each
     server.
+
+  ``volume-size``
+    When booting an image from volume, how big should the created volume be.
+
+    In gigabytes. Default 50.
