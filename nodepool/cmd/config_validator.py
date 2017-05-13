@@ -40,6 +40,8 @@ class ConfigValidator:
             'min-ram': int,
             'flavor-name': str,
             'key-name': str,
+            'boot-from-volume': bool,
+            'volume-size': int,
         }
 
         pool_label = v.All(pool_label_main,
