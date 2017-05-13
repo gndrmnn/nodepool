@@ -262,6 +262,7 @@ providers:
             diskimage: ubuntu-trusty
             min-ram: 512
             flavor-name: 'nodepool'
+            boot-from-volume: true
           - name: ubuntu-xenial
             diskimage: ubuntu-xenial
             min-ram: 512

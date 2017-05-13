@@ -187,7 +187,7 @@ class ProviderManager(object):
                      flavor_name=None, min_ram=None,
                      az=None, key_name=None, config_drive=True,
                      nodepool_node_id=None, nodepool_image_name=None,
-                     networks=None):
+                     networks=None, boot_from_volume=False, volume_size=50):
         if not networks:
             networks = []
         if image_name:
@@ -198,7 +198,9 @@ class ProviderManager(object):
         create_args = dict(name=name,
                            image=image,
                            flavor=flavor,
-                           config_drive=config_drive)
+                           config_drive=config_drive,
+                           boot_from_volume=boot_from_volume,
+                           volume_size=volume_size)
         if key_name:
             create_args['key_name'] = key_name
         if az:
