@@ -482,7 +482,9 @@ class NodeLauncher(threading.Thread):
             key_name=self.image.key_name,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            boot_from_volume=self.image.boot_from_volume,
+            volume_size=self.image.volume_size)
         server_id = server['id']
         self.node.external_id = server_id
         session.commit()
@@ -807,7 +809,9 @@ class SubNodeLauncher(threading.Thread):
             key_name=self.image.key_name,
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
-            nodepool_image_name=self.image.name)
+            nodepool_image_name=self.image.name,
+            boot_from_volume=self.image.boot_from_volume,
+            volume_size=self.image.volume_size)
         server_id = server['id']
         self.subnode.external_id = server_id
         session.commit()

@@ -243,6 +243,8 @@ def loadConfig(config_path):
             i.private_key = image.get('private-key',
                                       '/var/lib/jenkins/.ssh/id_rsa')
             i.config_drive = image.get('config-drive', True)
+            i.boot_from_volume = bool(image.get('boot-from-volume', False))
+            i.volume_size = image.get('volume-size', 50)
 
             # This dict is expanded and used as custom properties when
             # the image is uploaded.

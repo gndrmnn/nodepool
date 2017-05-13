@@ -57,6 +57,8 @@ providers:
         username: jenkins
         user-home: /home/jenkins
         private-key: /home/nodepool/.ssh/id_rsa
+        boot-from-volume: True
+        volume-size: 100
   - name: cloud2
     region-name: 'chocolate'
     service-type: 'compute'

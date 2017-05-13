@@ -36,6 +36,8 @@ class ConfigValidator:
             'name-filter': str,
             'key-name': str,
             'diskimage': str,
+            'boot-from-volume': bool,
+            'volume-size': int,
             'meta': dict,
             'username': str,
             'user-home': str,

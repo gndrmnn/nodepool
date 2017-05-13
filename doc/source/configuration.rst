@@ -558,6 +558,17 @@ Example configuration::
     metadata service. A maximum of five entries is allowed, and both keys and
     values must be 255 characters or less.
 
+  ``boot-from-volume`` (bool)
+    If given, the label for use in this pool will create a volume from the
+    image and boot the node from it.
+
+    Default: False
+
+  ``volume-size``
+    When booting an image from volume, how big should the created volume be.
+
+    In gigabytes. Default 50.
+
 .. _targets:
 
 targets
