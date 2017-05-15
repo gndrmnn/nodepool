@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f013ff3_68730ee9",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2017-05-15T18:42:45Z",
+      "side": 1,
+      "message": "I think you mean \"is exceeded\" not \"exceeds\".",
+      "revId": "075ab413b5b80ceb479f8c6bd55cad45483199da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f013ff3_4880528c",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2017-05-15T18:42:45Z",
+      "side": 1,
+      "message": "This label is never used, this line should be removed.",
+      "revId": "075ab413b5b80ceb479f8c6bd55cad45483199da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f013ff3_287d06b1",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 6039
+      },
+      "writtenOn": "2017-05-15T18:42:45Z",
+      "side": 1,
+      "message": "This label shadows the previous one.",
+      "revId": "075ab413b5b80ceb479f8c6bd55cad45483199da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
