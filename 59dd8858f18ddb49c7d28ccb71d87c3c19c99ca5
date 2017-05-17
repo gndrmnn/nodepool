@@ -16,6 +16,24 @@
       "revId": "59dd8858f18ddb49c7d28ccb71d87c3c19c99ca5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_af1dc9be",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-05-17T14:20:46Z",
+      "side": 1,
+      "message": "check out https://pythonhosted.org/six/#six.reraise",
+      "parentUuid": "ff0f0b1f_3487d0da",
+      "revId": "59dd8858f18ddb49c7d28ccb71d87c3c19c99ca5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
