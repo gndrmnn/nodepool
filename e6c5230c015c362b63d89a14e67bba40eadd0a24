@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_4b13ba0e",
+        "filename": "nodepool/nodepool.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-05-17T17:23:12Z",
+      "side": 1,
+      "message": "This will return too early and not check all of the request node types.",
+      "revId": "e6c5230c015c362b63d89a14e67bba40eadd0a24",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
