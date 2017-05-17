@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_d072d911",
+        "filename": "nodepool/tests/test_nodepool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-05-17T16:59:36Z",
+      "side": 1,
+      "message": "I worry that we have a race here. It\u0027s a pretty well fixed race, because 2 seconds is a _long_ time for the main thread to be paused while this one runs. But I wonder if we should skip these assertions for the sake of remaining deterministic in this test.",
+      "revId": "f13683f928e6ac886125e984d02258fbb81ad539",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
