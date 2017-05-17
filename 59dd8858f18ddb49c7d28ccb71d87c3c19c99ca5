@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_3487d0da",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-05-17T14:02:52Z",
+      "side": 1,
+      "message": "Happy to be proven wrong here, but this seems incorrect in either python 2 or 3. Values passed to Exception() are the actual value of the exception. I *think* what is needed here for py3 is something more like:\n\n    raise self._exception(None).with_traceback(self._traceback)\n\n\nHowever, that doesn\u0027t work with py2.",
+      "revId": "59dd8858f18ddb49c7d28ccb71d87c3c19c99ca5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
