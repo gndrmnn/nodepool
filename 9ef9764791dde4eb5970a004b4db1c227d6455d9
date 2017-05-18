@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_7f73c7e8",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-18T08:49:25Z",
+      "side": 1,
+      "message": "debugging leftover...",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 21
+      },
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
