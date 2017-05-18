@@ -183,7 +183,7 @@ class BaseModel(object):
 
         Used for storing the object data in ZooKeeper.
         '''
-        return json.dumps(self.toDict())
+        return json.dumps(self.toDict()).encode('utf8')
 
 
 class ImageBuild(BaseModel):
@@ -583,8 +583,8 @@ class ZooKeeper(object):
     def _requestLockPath(self, request):
         return "%s/%s" % (self.REQUEST_LOCK_ROOT, request)
 
-    def _strToDict(self, data):
-        return json.loads(data)
+    def _bytesToDict(self, data):
+        return json.loads(data.decode('utf8'))
 
     def _getImageBuildLock(self, image, blocking=True, timeout=None):
         lock_path = self._imageBuildLockPath(image)
@@ -888,7 +888,7 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return None
 
-        d = ImageBuild.fromDict(self._strToDict(data), build_number)
+        d = ImageBuild.fromDict(self._bytesToDict(data), build_number)
         d.stat = stat
         return d
 
@@ -1007,7 +1007,7 @@ class ZooKeeper(object):
             return None
 
         d = ImageUpload.fromDict(
-            self._strToDict(data), build_number, provider, image, upload_number
+            self._bytesToDict(data), build_number, provider, image, upload_number
         )
         d.stat = stat
         return d
@@ -1336,7 +1336,7 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return None
 
-        d = NodeRequest.fromDict(self._strToDict(data), request)
+        d = NodeRequest.fromDict(self._bytesToDict(data), request)
         d.stat = stat
         return d
 
@@ -1502,7 +1502,7 @@ class ZooKeeper(object):
         if not data:
             return None
 
-        d = Node.fromDict(self._strToDict(data), node)
+        d = Node.fromDict(self._bytesToDict(data), node)
         d.id = node
         d.stat = stat
         return d
