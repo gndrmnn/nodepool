@@ -1,0 +1,20 @@
+*.egg
+*.egg-info
+*.pyc
+.test
+.testrepository
+.tox
+AUTHORS
+build/*
+ChangeLog
+config
+doc/build/*
+zuul/versioninfo
+dist/
+venv/
+*~
+.*.swp
+
+# hidden files are not needed for deployment (except .git)
+.*
+!.git
