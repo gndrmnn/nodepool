@@ -537,7 +537,7 @@ class BuildWorker(BaseWorker):
             if not os.path.exists(activate_this):
                 raise exceptions.BuilderError("Running in a virtualenv, but "
                                               "cannot find: %s" % activate_this)
-            execfile(activate_this, dict(__file__=activate_this))
+            exec(open(activate_this).read())
 
     def _checkForScheduledImageUpdates(self):
         '''
