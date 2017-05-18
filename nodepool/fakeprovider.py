@@ -44,7 +44,7 @@ class Dummy(object):
 
     def __repr__(self):
         args = []
-        for k in self.__kw.keys():
+        for k in list(self.__kw.keys()):
             args.append('%s=%s' % (k, getattr(self, k)))
         args = ' '.join(args)
         return '<%s %s %s>' % (self.__kind, id(self), args)
