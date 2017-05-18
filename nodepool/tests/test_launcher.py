@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import logging
+import os.path
 import time
 import fixtures
 
@@ -274,19 +275,17 @@ class TestLauncher(tests.DBTestCase):
     def test_node_vhd_and_qcow2(self):
         """Test label provided by vhd and qcow2 images builds"""
         configfile = self.setup_config('node_vhd_and_qcow2.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
-        self.waitForImage('fake-provider1', 'fake-image')
-        self.waitForImage('fake-provider2', 'fake-image')
-        pool.start()
-        nodes = self.waitForNodes('fake-label', 2)
-        self.assertEqual(len(nodes), 2)
-        self.assertEqual(zk.READY, nodes[0].state)
-        self.assertEqual(zk.READY, nodes[1].state)
-        if nodes[0].provider == 'fake-provider1':
-            self.assertEqual(nodes[1].provider, 'fake-provider2')
-        else:
-            self.assertEqual(nodes[1].provider, 'fake-provider1')
+        p1_image = self.waitForImage('fake-provider1', 'fake-image')
+        p2_image = self.waitForImage('fake-provider2', 'fake-image')
+        _, p1_image_type = os.path.splitext(p1_image.image_name)
+        _, p2_image_type = os.path.splitext(p2_image.image_name)
+
+        # We can't guarantee which provider would build the requested
+        # nodes, but that doesn't matter so much as guaranteeing that the
+        # correct image type is uploaded to the correct provider.
+        self.assertEqual(p1_image_type, ".qcow2")
+        self.assertEqual(p2_image_type, ".vhd")
 
     def test_dib_upload_fail(self):
         """Test that an image upload failure is contained."""
