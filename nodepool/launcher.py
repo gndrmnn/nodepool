@@ -1452,7 +1452,7 @@ class NodePool(threading.Thread):
         We also must reset the allocated_to attribute for each Node assigned
         to our request, since we are deleting the request.
         '''
-        for label in self._submittedRequests.keys():
+        for label in list(self._submittedRequests.keys()):
             label_requests = self._submittedRequests[label]
             active_requests = []
 
@@ -1505,7 +1505,7 @@ class NodePool(threading.Thread):
                     return True
         return False
 
-        for provider_name in label.providers.keys():
+        for provider_name in list(label.providers.keys()):
             if self.zk.getMostRecentImageUpload(label.image, provider_name):
                 return True
         return False
@@ -1534,8 +1534,8 @@ class NodePool(threading.Thread):
         # resubmit a request for a type if a request for that type is
         # still in progress.
         self.removeCompletedRequests()
-        label_names = self.config.labels.keys()
-        requested_labels = self._submittedRequests.keys()
+        label_names = list(self.config.labels.keys())
+        requested_labels = list(self._submittedRequests.keys())
         needed_labels = list(set(label_names) - set(requested_labels))
 
         ready_nodes = self.zk.getReadyNodesOfTypes(needed_labels)
@@ -1549,7 +1549,7 @@ class NodePool(threading.Thread):
 
             # Calculate how many nodes of this type we need created
             need = 0
-            if label.name not in ready_nodes.keys():
+            if label.name not in list(ready_nodes.keys()):
                 need = label.min_ready
             elif len(ready_nodes[label.name]) < min_ready:
                 need = min_ready - len(ready_nodes[label.name])
@@ -1596,7 +1596,7 @@ class NodePool(threading.Thread):
                     for pool in provider.pools.values():
                         pool_keys.add(provider.name + '-' + pool.name)
 
-                for key in self._pool_threads.keys():
+                for key in list(self._pool_threads.keys()):
                     if key not in pool_keys:
                         self._pool_threads[key].stop()
 
@@ -1606,7 +1606,7 @@ class NodePool(threading.Thread):
                 for provider in self.config.providers.values():
                     for pool in provider.pools.values():
                         key = provider.name + '-' + pool.name
-                        if key not in self._pool_threads.keys():
+                        if key not in list(self._pool_threads.keys()):
                             t = PoolWorker(self, provider.name, pool.name)
                             self.log.info( "Starting %s" % t.name)
                             t.start()
