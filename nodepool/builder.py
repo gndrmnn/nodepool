@@ -713,7 +713,7 @@ class BuildWorker(BaseWorker):
                 shlex.split(cmd),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                preexec_fn=self._activate_virtualenv,
+#                preexec_fn=self._activate_virtualenv,
                 env=env)
         except OSError as e:
             raise exceptions.BuilderError(
