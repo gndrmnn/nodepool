@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_0d37cce5",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "This is already iterating, so it doesn\u0027t need a list call.",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_ed35b8db",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "We can drop this line and just do:\n        if image in provider.diskimages:",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_2d3cd0c6",
+        "filename": "nodepool/fakeprovider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "iteration doesn\u0027t need a list.",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_cd30b4eb",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1455,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "not needed",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_ad4d8073",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1508,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "not needed",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_8d507c0c",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1552,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "if label.name not in ready_nodes:",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_6d576804",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1599,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "not needed",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_4d5a642a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1609,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-19T17:22:20Z",
+      "side": 1,
+      "message": "if key not in self._pool_threads:",
+      "revId": "8f89a203af59ccfe2c632504dd1b4b38d2dc0d99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
