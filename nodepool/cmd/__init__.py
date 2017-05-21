@@ -25,6 +25,7 @@ import signal
 import sys
 import threading
 import traceback
+import yaml
 
 from nodepool.version import version_info as npd_version_info
 
@@ -105,8 +106,11 @@ class NodepoolApp(object):
                 m = "Unable to read logging config file at %s" % fp
                 raise Exception(m)
 
-            logging.config.fileConfig(fp)
-
+            if os.path.splitext(fp)[1] in ('.yml', '.yaml'):
+                with open(fp, 'r') as f:
+                    logging.config.dictConfig(yaml.safe_load(f))
+            else:
+                logging.config.fileConfig(fp, disable_existing_loggers=False)
         else:
             m = '%(asctime)s %(levelname)s %(name)s: %(message)s'
             logging.basicConfig(level=logging.DEBUG, format=m)
