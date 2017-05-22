@@ -142,7 +142,7 @@ def main():
 
     if npd.args.version:
         from nodepool.version import version_info as npd_version_info
-        print "Nodepool version: %s" % npd_version_info.version_string()
+        print("Nodepool version: %s" % npd_version_info.version_string())
         return(0)
 
     pid = pid_file_module.TimeoutPIDLockFile(npd.args.pidfile, 10)
