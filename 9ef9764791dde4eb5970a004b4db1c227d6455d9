@@ -2,6 +2,108 @@
   "comments": [
     {
       "key": {
+        "uuid": "ff0f0b1f_4c022d0d",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "This seems like a strong opinion on how runtime configuration should be managed.",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_87113e55",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "This release seems like a magic number that could quickly go stale.",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_e706ba1c",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "Should probably do the trick here to install the bins in /usr/bin like you did in the zuul docker file.",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_e71fda58",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "Same here, shouldn\u0027t this be a variable at least?",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_c70bb621",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "Should probably do the trick here to install the bins in /usr/bin like you did in the zuul docker file.",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_8c0cc541",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "Should probably do the trick here to install the bins in /usr/bin like you did in the zuul docker file.",
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff0f0b1f_7f73c7e8",
         "filename": "Dockerfile",
         "patchSetId": 2
@@ -19,6 +121,23 @@
         "endLine": 100,
         "endChar": 21
       },
+      "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_47456642",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-05-22T21:20:54Z",
+      "side": 1,
+      "message": "Should probably do the trick here to install the bins in /usr/bin like you did in the zuul docker file.",
       "revId": "9ef9764791dde4eb5970a004b4db1c227d6455d9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
