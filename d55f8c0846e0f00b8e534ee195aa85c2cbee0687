@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_c07119aa",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-24T15:58:52Z",
+      "side": 1,
+      "message": "I think this is higher than debug. Either info or warning?",
+      "revId": "d55f8c0846e0f00b8e534ee195aa85c2cbee0687",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
