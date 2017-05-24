@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_80e4410e",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-24T16:11:22Z",
+      "side": 1,
+      "message": "This is an error and should be at error level.  The nodepool operator needs to correct the situation; it\u0027s not going to be fixed on its own.\n\nAlso, I\u0027m not sure why a traceback is bad here.  *many* times in the past openstack has reported some problem and we actually needed the full traceback to figure out what the actual problem was and how to fix it.  Perhaps I\u0027m just battle scarred, or perhaps I don\u0027t want to have to undo this later.",
+      "revId": "66b897b6624861fe91427469ee158a3a6e2c0484",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
