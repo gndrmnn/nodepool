@@ -218,7 +218,23 @@ class ProviderManager(object):
         )
 
         with shade_inner_exceptions():
-            return self._client.create_server(wait=False, **create_args)
+            try:
+                return self._client.create_server(wait=False, **create_args)
+            except OpenStackCloudBadRequest as e:
+                # TODO(mordred) When we RESTify create_server in shade, we'll
+                #               want to double-check this string match. Or
+                #               maybe even throw a specific error in this
+                #               case.
+                if "Can not find requested image (HTTP 400)" not in str(e):
+                    raise
+                self.log.warning(
+                    "Cloud {provider} could not find image {image}:{image_id}"
+                    " while launching node {node}: {exc}".format(
+                        provider=self.provider.name,
+                        image=nodepool_image_name,
+                        node=nodepool_node_id,
+                        image_id=image['id'],
+                        exc=str(e))
 
     def getServer(self, server_id):
         with shade_inner_exceptions():
