@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_6a910ef1",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-24T15:20:59Z",
+      "side": 1,
+      "message": "Using `python$X -m virtualenv` runs the virtualenv code under that version of python but doesn\u0027t necessarily install that version of python to the virtualenv. I think virtualenv may install the version of python it runs under by default though so this may be fine.\n\nUsing `virtualenv -p python$X` is a bit more explicit though.",
+      "revId": "52ce48d0d1e8766ddf27312f5823951cd789a629",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
