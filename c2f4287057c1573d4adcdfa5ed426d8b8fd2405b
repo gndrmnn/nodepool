@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_916ff529",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-05-24T18:01:29Z",
+      "side": 1,
+      "message": "This should actually be \u0027rb\u0027. r+ is for read+write",
+      "revId": "c2f4287057c1573d4adcdfa5ed426d8b8fd2405b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_716a211a",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-05-24T18:01:29Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "c2f4287057c1573d4adcdfa5ed426d8b8fd2405b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
