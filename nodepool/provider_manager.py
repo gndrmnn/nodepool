@@ -218,7 +218,16 @@ class ProviderManager(object):
         )
 
         with shade_inner_exceptions():
-            return self._client.create_server(wait=False, **create_args)
+            try:
+                return self._client.create_server(wait=False, **create_args)
+            except OpenStackCloudBadRequest as e:
+                if "Can not find requested image (HTTP 400)" not in str(e):
+                    raise
+                self.log.debug(
+                    "Nova could not find image {image}:{image_id} while"
+                    " launching server".format(
+                        image=nodepool_image_name,
+                        image_id=image['id'])
 
     def getServer(self, server_id):
         with shade_inner_exceptions():
