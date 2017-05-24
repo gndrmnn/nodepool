@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_51c4bd3f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-05-24T17:57:05Z",
+      "side": 1,
+      "message": "Seems like this one could explode too if the uploads list is longer than 2.",
+      "revId": "7b30381306cda921e368fb19fb4f67dc29263469",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
