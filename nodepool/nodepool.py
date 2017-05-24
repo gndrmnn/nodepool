@@ -483,6 +483,9 @@ class NodeLauncher(threading.Thread):
             config_drive=self.image.config_drive,
             nodepool_node_id=self.node_id,
             nodepool_image_name=self.image.name)
+        if not server:
+            raise LaunchStatusException("No server for node id: %s " %
+                                        self.node.id)
         server_id = server['id']
         self.node.external_id = server_id
         session.commit()
