@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_bb0f7a86",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-24T16:52:39Z",
+      "side": 1,
+      "message": "I still think this should be error level.",
+      "revId": "ee09401b00cffaa1a25dffbcdb7a294fd9b2632a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
