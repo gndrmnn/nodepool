@@ -16,6 +16,23 @@
       "revId": "66b897b6624861fe91427469ee158a3a6e2c0484",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff0f0b1f_a062a508",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-05-24T16:26:48Z",
+      "side": 1,
+      "message": "Also, if we do hide the traceback, we should at least log the error (which contains the request id) so we can pass it on to the cloud operator.  Adding a str(e) here should do the trick.",
+      "revId": "66b897b6624861fe91427469ee158a3a6e2c0484",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
