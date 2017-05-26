@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff0f0b1f_60d67fc6",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-26T17:20:06Z",
+      "side": 1,
+      "message": "I don\u0027t think the conversion to list is required since you will iterate over request_labels just once and for loops work on iterables. But thats a minor thing.",
+      "revId": "f74add7de554614ea5f64c44039eff53d5d37a89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
