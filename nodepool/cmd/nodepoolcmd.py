@@ -20,11 +20,11 @@ import sys
 from prettytable import PrettyTable
 
 from nodepool import launcher
-from nodepool import provider_manager
 from nodepool import status
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
+from nodepool.driver import get_provider_manager
 
 log = logging.getLogger(__name__)
 
@@ -264,7 +264,7 @@ class NodePoolCmd(NodepoolApp):
         self.zk.lockNode(node, blocking=True, timeout=5)
 
         if self.args.now:
-            manager = provider_manager.get_provider_manager(provider, True)
+            manager = get_provider_manager(provider, True)
             manager.start()
             launcher.InstanceDeleter.delete(self.zk, manager, node)
             manager.stop()

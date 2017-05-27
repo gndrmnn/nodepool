@@ -198,7 +198,8 @@ class BaseTestCase(testtools.TestCase):
             return fake_client
 
         self.useFixture(fixtures.MonkeyPatch(
-            'nodepool.provider_manager.ProviderManager._getClient',
+            'nodepool.driver.openstack.provider.OpenStackProviderManager.'
+            '_getClient',
             get_fake_client))
         self.useFixture(fixtures.MonkeyPatch(
             'nodepool.launcher._get_one_cloud',

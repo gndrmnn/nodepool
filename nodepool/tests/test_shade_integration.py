@@ -22,9 +22,9 @@ import voluptuous
 import yaml
 
 from nodepool import config as nodepool_config
-from nodepool import provider_manager
 from nodepool import tests
-from nodepool.provider_manager import shade_inner_exceptions
+from nodepool.driver.openstack.provider import shade_inner_exceptions
+from nodepool.driver.openstack.provider import OpenStackProviderManager
 
 
 class TestShadeIntegration(tests.IntegrationTestCase):
@@ -63,7 +63,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
         config = nodepool_config.loadConfig(configfile)
         self.assertIn('real-provider', config.providers)
-        pm = provider_manager.ProviderManager(
+        pm = OpenStackProviderManager(
             config.providers['real-provider'], use_taskmanager=False)
         pm.start()
         self.assertEqual(pm._client.auth, auth_data)

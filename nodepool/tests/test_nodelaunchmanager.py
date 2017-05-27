@@ -18,10 +18,10 @@ import mock
 import time
 
 from nodepool import builder
-from nodepool import provider_manager
 from nodepool import tests
 from nodepool import zk
-from nodepool.launcher import NodeLaunchManager
+from nodepool.driver.openstack.handler import NodeLaunchManager
+from nodepool.driver.openstack.provider import OpenStackProviderManager
 
 
 class TestNodeLaunchManager(tests.DBTestCase):
@@ -43,7 +43,8 @@ class TestNodeLaunchManager(tests.DBTestCase):
         self.provider_pool = self.provider.pools['main']
 
         # The builder config does not have a provider manager, so create one.
-        self.pmanager = provider_manager.ProviderManager(self.provider, False)
+        self.pmanager = OpenStackProviderManager(
+            self.provider, False)
         self.pmanager.resetClient()
 
     def test_successful_launch(self):
@@ -61,7 +62,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
         self.assertEqual(len(mgr.ready_nodes), 1)
         self.assertEqual(len(mgr.failed_nodes), 0)
 
-    @mock.patch('nodepool.launcher.NodeLauncher._launchNode')
+    @mock.patch('nodepool.driver.openstack.handler.NodeLauncher._launchNode')
     def test_failed_launch(self, mock_launch):
         configfile = self.setup_config('node.yaml')
         self._setup(configfile)
@@ -78,7 +79,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
         self.assertEqual(len(mgr.failed_nodes), 1)
         self.assertEqual(len(mgr.ready_nodes), 0)
 
-    @mock.patch('nodepool.launcher.NodeLauncher._launchNode')
+    @mock.patch('nodepool.driver.openstack.handler.NodeLauncher._launchNode')
     def test_mixed_launch(self, mock_launch):
         configfile = self.setup_config('node.yaml')
         self._setup(configfile)

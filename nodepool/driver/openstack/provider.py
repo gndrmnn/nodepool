@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2011-2013 OpenStack Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from nodepool.driver import ProviderManager
+
 import logging
 from contextlib import contextmanager
 import operator
@@ -23,7 +23,7 @@ import operator
 import shade
 
 from nodepool import exceptions
-from nodepool import fakeprovider
+from nodepool.launcher import NotFound
 from nodepool.nodeutils import iterate_timeout
 from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
@@ -41,47 +41,10 @@ def shade_inner_exceptions():
         raise
 
 
-class NotFound(Exception):
-    pass
 
-
-def get_provider_manager(provider, use_taskmanager):
-    if provider.name.startswith('fake'):
-        return FakeProviderManager(provider, use_taskmanager)
-    else:
-        return ProviderManager(provider, use_taskmanager)
-
-
-class ProviderManager(object):
-    log = logging.getLogger("nodepool.ProviderManager")
-
-    @staticmethod
-    def reconfigure(old_config, new_config, use_taskmanager=True):
-        stop_managers = []
-        for p in new_config.providers.values():
-            oldmanager = None
-            if old_config:
-                oldmanager = old_config.provider_managers.get(p.name)
-            if oldmanager and p != oldmanager.provider:
-                stop_managers.append(oldmanager)
-                oldmanager = None
-            if oldmanager:
-                new_config.provider_managers[p.name] = oldmanager
-            else:
-                ProviderManager.log.debug("Creating new ProviderManager object"
-                                          " for %s" % p.name)
-                new_config.provider_managers[p.name] = \
-                    get_provider_manager(p, use_taskmanager)
-                new_config.provider_managers[p.name].start()
-
-        for stop_manager in stop_managers:
-            stop_manager.stop()
-
-    @staticmethod
-    def stopProviders(config):
-        for m in config.provider_managers.values():
-            m.stop()
-            m.join()
+class OpenStackProviderManager(ProviderManager):
+    log = logging.getLogger("nodepool.driver.openstack.provider."
+                            "OpenStackProviderManager")
 
     def __init__(self, provider, use_taskmanager):
         self.provider = provider
@@ -370,19 +333,3 @@ class ProviderManager(object):
                 # ability to turn off random portions of the OpenStack API.
                 self.__azs = [None]
         return self.__azs
-
-
-class FakeProviderManager(ProviderManager):
-    def __init__(self, provider, use_taskmanager):
-        self.createServer_fails = 0
-        self.__client = fakeprovider.FakeOpenStackCloud()
-        super(FakeProviderManager, self).__init__(provider, use_taskmanager)
-
-    def _getClient(self):
-        return self.__client
-
-    def createServer(self, *args, **kwargs):
-        while self.createServer_fails:
-            self.createServer_fails -= 1
-            raise Exception("Expected createServer exception")
-        return super(FakeProviderManager, self).createServer(*args, **kwargs)
