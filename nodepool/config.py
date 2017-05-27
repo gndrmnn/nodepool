@@ -197,10 +197,14 @@ def loadConfig(config_path):
     for provider in config.get('providers', []):
         p = Provider()
         p.name = provider['name']
+        p.driver = provider.get('driver', 'openstack')
         newconfig.providers[p.name] = p
 
         cloud_kwargs = _cloudKwargsFromProvider(provider)
-        p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+        if p.driver == 'openstack':
+            p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+        else:
+            p.cloud_config = None
         p.region_name = provider.get('region-name')
         p.max_concurrency = provider.get('max-concurrency', -1)
         p.rate = provider.get('rate', 1.0)
@@ -216,7 +220,10 @@ def loadConfig(config_path):
             'image-name-format',
             '{image_name}-{timestamp}'
         )
-        p.image_type = p.cloud_config.config['image_format']
+        if p.driver == 'openstack':
+            p.image_type = p.cloud_config.config['image_format']
+        else:
+            p.image_type = None
         p.diskimages = {}
         for image in provider.get('diskimages', []):
             i = ProviderDiskImage()
@@ -252,10 +259,28 @@ def loadConfig(config_path):
             pp.name = pool['name']
             pp.provider = p
             p.pools[pp.name] = pp
-            pp.max_servers = pool['max-servers']
-            pp.azs = pool.get('availability-zones')
+            pp.max_servers = pool.get('max-servers', None)
+            pp.azs = pool.get('availability-zones', [])
             pp.networks = pool.get('networks', [])
             pp.labels = {}
+            pp.nodes = []
+            for node in pool.get('nodes', []):
+                pp.nodes.append({
+                    'name': node['name'],
+                    'labels': node['labels'].split(),
+                    'host-key': node['host-key'],
+                })
+                for label in node['labels'].split():
+                    pl = ProviderLabel()
+                    pl.diskimage = None
+                    pl.cloud_image = None
+                    pl.min_ram = None
+                    pl.flavor_name = None
+                    pl.key_name = None
+                    pl.name = label
+                    pl.pool = pp
+                    pp.labels[pl.name] = pl
+                    newconfig.labels[label].pools.append(pp)
             for label in pool.get('labels', []):
                 pl = ProviderLabel()
                 pl.name = label['name']

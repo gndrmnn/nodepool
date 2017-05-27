@@ -42,6 +42,13 @@ SUSPEND_WAIT_TIME = 30       # How long to wait between checks for ZooKeeper
                              # connectivity if it disappears.
 
 
+def get_node_request_handler(provider, pw, request):
+    if provider.driver == "openstack":
+        return OpenStackNodeRequestHandler(pw, request)
+    elif provider.driver == "static":
+        return StaticNodeRequestHandler(pw, request)
+
+
 class LaunchNodepoolException(Exception):
     statsd_key = 'error.nodepool'
 
@@ -538,13 +545,11 @@ class NodeRequestHandler(object):
         :param PoolWorker pw: The parent PoolWorker object.
         :param NodeRequest request: The request to handle.
         '''
-        self.log = logging.getLogger("nodepool.NodeRequestHandler")
         self.pw = pw
         self.request = request
         self.launch_manager = None
         self.nodeset = []
         self.done = False
-        self.chosen_az = None
         self.paused = False
 
     def _setFromPoolWorker(self):
@@ -559,6 +564,125 @@ class NodeRequestHandler(object):
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
         self.launcher_id = self.pw.launcher_id
+
+    @property
+    def alive_thread_count(self):
+        if not self.launch_manager:
+            return 0
+        return self.launch_manager.alive_thread_count
+
+    #----------------------------------------------------------------
+    # Public methods
+    #----------------------------------------------------------------
+
+    def unlockNodeSet(self, clear_allocation=False):
+        '''
+        Attempt unlocking all Nodes in the node set.
+
+        :param bool clear_allocation: If true, clears the node allocated_to
+            attribute.
+        '''
+        for node in self.nodeset:
+            if not node.lock:
+                continue
+
+            if clear_allocation:
+                node.allocated_to = None
+                self.zk.storeNode(node)
+
+            try:
+                self.zk.unlockNode(node)
+            except Exception:
+                self.log.exception("Error unlocking node:")
+            self.log.debug("Unlocked node %s for request %s",
+                           node.id, self.request.id)
+
+        self.nodeset = []
+
+    def run(self):
+        '''
+        Execute node request handling.
+
+        This code is designed to be re-entrant. Because we can't always
+        satisfy a request immediately (due to lack of provider resources), we
+        need to be able to call run() repeatedly until the request can be
+        fulfilled. The node set is saved and added to between calls.
+        '''
+        try:
+            self._setFromPoolWorker()
+            self.run_handler()
+        except Exception:
+            self.log.exception("Exception in NodeRequestHandler:")
+            self.unlockNodeSet(clear_allocation=True)
+            self.request.state = zk.FAILED
+            self.zk.storeNodeRequest(self.request)
+            self.zk.unlockNodeRequest(self.request)
+            self.done = True
+
+    def poll(self):
+        '''
+        Check if the request has been handled.
+
+        Once the request has been handled, the 'nodeset' attribute will be
+        filled with the list of nodes assigned to the request, or it will be
+        empty if the request could not be fulfilled.
+
+        :returns: True if we are done with the request, False otherwise.
+        '''
+        if self.paused:
+            return False
+
+        if self.done:
+            return True
+
+        if self.launch_manager and not self.launch_manager.poll():
+            return False
+
+        # If the request has been pulled, unallocate the node set so other
+        # requests can use them.
+        if not self.zk.getNodeRequest(self.request.id):
+            self.log.info("Node request %s disappeared", self.request.id)
+            for node in self.nodeset:
+                node.allocated_to = None
+                self.zk.storeNode(node)
+            self.unlockNodeSet()
+            self.zk.unlockNodeRequest(self.request)
+            return True
+
+        if self.launch_manager and self.launch_manager.failed_nodes:
+            self.log.debug("Declining node request %s because nodes failed",
+                           self.request.id)
+            self.request.declined_by.append(self.launcher_id)
+            launchers = set(self.zk.getRegisteredLaunchers())
+            if launchers.issubset(set(self.request.declined_by)):
+                # All launchers have declined it
+                self.log.debug("Failing declined node request %s",
+                               self.request.id)
+                self.request.state = zk.FAILED
+            else:
+                self.request.state = zk.REQUESTED
+        elif not self.nodeset:
+            return False
+        else:
+            for node in self.nodeset:
+                # Record node ID in the request
+                self.request.nodes.append(node.id)
+            self.log.debug("Fulfilled node request %s",
+                           self.request.id)
+            self.request.state = zk.FULFILLED
+
+        self.unlockNodeSet()
+        self.zk.storeNodeRequest(self.request)
+        self.zk.unlockNodeRequest(self.request)
+        return True
+
+
+class OpenStackNodeRequestHandler(NodeRequestHandler):
+    log = logging.getLogger("nodepool.OpenStackNodeRequestHandler")
+
+    def __init__(self, pw, request):
+        super(OpenStackNodeRequestHandler, self).__init__(pw, request)
+        self.chosen_az = None
 
     def _imagesAvailable(self):
         '''
@@ -734,12 +858,10 @@ class NodeRequestHandler(object):
                 self.nodeset.append(node)
                 self.launch_manager.launch(node)
 
-    def _run(self):
+    def run_handler(self):
         '''
-        Main body for the NodeRequestHandler.
+        Main body for the OpenStackNodeRequestHandler.
         '''
-        self._setFromPoolWorker()
-
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()
         if invalid_types:
@@ -775,113 +897,40 @@ class NodeRequestHandler(object):
 
         self._waitForNodeSet()
 
-    @property
-    def alive_thread_count(self):
-        if not self.launch_manager:
-            return 0
-        return self.launch_manager.alive_thread_count
 
-    #----------------------------------------------------------------
-    # Public methods
-    #----------------------------------------------------------------
+class StaticNodeRequestHandler(NodeRequestHandler):
+    log = logging.getLogger("nodepool.StaticNodeRequestHandler")
 
-    def unlockNodeSet(self, clear_allocation=False):
+    def run_handler(self):
         '''
-        Attempt unlocking all Nodes in the node set.
-
-        :param bool clear_allocation: If true, clears the node allocated_to
-            attribute.
+        Main body for the StaticNodeRequestHandler.
         '''
-        for node in self.nodeset:
-            if not node.lock:
-                continue
+        static_node = None
+        ntype = None
+        for pool in self.provider.pools.values():
+            for node in pool.nodes:
+                for node_type in self.request.node_types:
+                    if node_type in node["labels"]:
+                        static_node = node
+                        ntype = node_type
+                        break
 
-            if clear_allocation:
-                node.allocated_to = None
-                self.zk.storeNode(node)
-
-            try:
-                self.zk.unlockNode(node)
-            except Exception:
-                self.log.exception("Error unlocking node:")
-            self.log.debug("Unlocked node %s for request %s",
-                           node.id, self.request.id)
-
-        self.nodeset = []
-
-    def run(self):
-        '''
-        Execute node request handling.
-
-        This code is designed to be re-entrant. Because we can't always
-        satisfy a request immediately (due to lack of provider resources), we
-        need to be able to call run() repeatedly until the request can be
-        fulfilled. The node set is saved and added to between calls.
-        '''
-        try:
-            self._run()
-        except Exception:
-            self.log.exception("Exception in NodeRequestHandler:")
-            self.unlockNodeSet(clear_allocation=True)
-            self.request.state = zk.FAILED
-            self.zk.storeNodeRequest(self.request)
-            self.zk.unlockNodeRequest(self.request)
-            self.done = True
-
-    def poll(self):
-        '''
-        Check if the request has been handled.
-
-        Once the request has been handled, the 'nodeset' attribute will be
-        filled with the list of nodes assigned to the request, or it will be
-        empty if the request could not be fulfilled.
-
-        :returns: True if we are done with the request, False otherwise.
-        '''
-        if self.paused:
-            return False
-
-        if self.done:
-            return True
-
-        if not self.launch_manager.poll():
-            return False
-
-        # If the request has been pulled, unallocate the node set so other
-        # requests can use them.
-        if not self.zk.getNodeRequest(self.request.id):
-            self.log.info("Node request %s disappeared", self.request.id)
-            for node in self.nodeset:
-                node.allocated_to = None
-                self.zk.storeNode(node)
-            self.unlockNodeSet()
-            self.zk.unlockNodeRequest(self.request)
-            return True
-
-        if self.launch_manager.failed_nodes:
-            self.log.debug("Declining node request %s because nodes failed",
-                           self.request.id)
-            self.request.declined_by.append(self.launcher_id)
-            launchers = set(self.zk.getRegisteredLaunchers())
-            if launchers.issubset(set(self.request.declined_by)):
-                # All launchers have declined it
-                self.log.debug("Failing declined node request %s",
-                               self.request.id)
-                self.request.state = zk.FAILED
-            else:
-                self.request.state = zk.REQUESTED
+        if static_node:
+            self.log.debug("Assigning static_node %s to %s" % (static_node,
+                                                               self.request))
+            node = zk.Node()
+            node.state = zk.READY
+            node.external_id = "static-%s" % self.request.id
+            node.hostname = static_node["name"]
+            node.interface_ip = static_node["name"]
+            node.host_keys = [static_node["host-key"]]
+            node.provider = self.provider.name
+            node.type = ntype
+            self.nodeset.append(node)
         else:
-            for node in self.nodeset:
-                # Record node ID in the request
-                self.request.nodes.append(node.id)
-            self.log.debug("Fulfilled node request %s",
-                           self.request.id)
-            self.request.state = zk.FULFILLED
-
-        self.unlockNodeSet()
-        self.zk.storeNodeRequest(self.request)
-        self.zk.unlockNodeRequest(self.request)
-        return True
+            self.log.warning("Couldn't find static_node for %s" % self.request)
+            self.request.state = zk.FAILED
+        self.zk.storeNode(node)
 
 
 class PoolWorker(threading.Thread):
@@ -969,7 +1018,7 @@ class PoolWorker(threading.Thread):
 
             # Got a lock, so assign it
             self.log.info("Assigning node request %s" % req)
-            rh = NodeRequestHandler(self, req)
+            rh = get_node_request_handler(provider, self, req)
             rh.run()
             if rh.paused:
                 self.paused_handler = rh
@@ -1514,6 +1563,9 @@ class NodePool(threading.Thread):
             ready in at least one provider. False otherwise.
         '''
         for pool in label.pools:
+            if pool.provider.driver != "openstack":
+                # No need to manage image for provider != openstack
+                return True
             for pool_label in pool.labels.values():
                 if pool_label.cloud_image:
                     manager = self.getProviderManager(pool.provider.name)

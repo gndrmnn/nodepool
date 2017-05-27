@@ -48,8 +48,10 @@ class NotFound(Exception):
 def get_provider_manager(provider, use_taskmanager):
     if provider.name.startswith('fake'):
         return FakeProviderManager(provider, use_taskmanager)
-    else:
-        return ProviderManager(provider, use_taskmanager)
+    elif provider.driver == 'openstack':
+        return OpenStackProviderManager(provider, use_taskmanager)
+    elif provider.driver == 'static':
+        return StaticNodeProviderManager(provider)
 
 
 class ProviderManager(object):
@@ -69,7 +71,8 @@ class ProviderManager(object):
                 new_config.provider_managers[p.name] = oldmanager
             else:
                 ProviderManager.log.debug("Creating new ProviderManager object"
-                                          " for %s" % p.name)
+                                          " for %s driver %s" % (p.name,
+                                                                 p.driver))
                 new_config.provider_managers[p.name] = \
                     get_provider_manager(p, use_taskmanager)
                 new_config.provider_managers[p.name].start()
@@ -82,6 +85,63 @@ class ProviderManager(object):
         for m in config.provider_managers.values():
             m.stop()
             m.join()
+
+    def start(self):
+        raise NotImplemented()
+
+    def stop(self):
+        raise NotImplemented()
+
+    def join(self):
+        raise NotImplemented()
+
+    def getImage(self, name, **kwarg):
+        raise NotImplemented()
+
+    def getAZs(self):
+        raise NotImplemented()
+
+    def createServer(self, name, **kwarg):
+        raise NotImplemented()
+
+    def cleanupServer(self, server_id):
+        raise NotImplemented()
+
+    def deleteServer(self, server_id):
+        raise NotImplemented()
+
+    def waitForServerDeletion(self, server_id):
+        raise NotImplemented()
+
+    def listServers(self):
+        raise NotImplemented()
+
+
+class StaticNodeProviderManager(ProviderManager):
+    log = logging.getLogger("nodepool.StaticNodeProviderManager")
+
+    def __init__(self, provider):
+        self.provider = provider
+
+    def start(self):
+        self.log.info("Starting...")
+
+    def listServers(self):
+        servers = []
+        for pool in self.provider.pools.values():
+            for node in pool.nodes:
+                servers.append(node)
+        return servers
+
+    def cleanupServer(self, server_id):
+        return True
+
+    def waitForServerDeletion(self, server_id):
+        return True
+
+
+class OpenStackProviderManager(ProviderManager):
+    log = logging.getLogger("nodepool.OpenStackProviderManager")
 
     def __init__(self, provider, use_taskmanager):
         self.provider = provider
@@ -372,7 +432,7 @@ class ProviderManager(object):
         return self.__azs
 
 
-class FakeProviderManager(ProviderManager):
+class FakeProviderManager(OpenStackProviderManager):
     def __init__(self, provider, use_taskmanager):
         self.createServer_fails = 0
         self.__client = fakeprovider.FakeOpenStackCloud()
