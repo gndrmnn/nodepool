@@ -33,6 +33,7 @@ from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
 from nodepool.driver import NodeRequestHandler
+from nodepool.driver import ProviderManager
 from nodepool.driver import get_node_request_handler
 
 MINS = 60
@@ -1257,7 +1258,7 @@ class NodePool(threading.Thread):
         self._wake_condition.notify()
         self._wake_condition.release()
         if self.config:
-            provider_manager.ProviderManager.stopProviders(self.config)
+            ProviderManager.stopProviders(self.config)
 
         if self._cleanup_thread:
             self._cleanup_thread.stop()
@@ -1321,7 +1322,7 @@ class NodePool(threading.Thread):
 
     def updateConfig(self):
         config = self.loadConfig()
-        provider_manager.ProviderManager.reconfigure(self.config, config)
+        ProviderManager.reconfigure(self.config, config)
         self.reconfigureZooKeeper(config)
         self.setConfig(config)
 
