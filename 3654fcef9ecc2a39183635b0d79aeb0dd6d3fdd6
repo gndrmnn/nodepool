@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_96d6944f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-29T10:48:39Z",
+      "side": 1,
+      "message": "That would make the code easier to manage. The reconfigure method could pass the raw config yaml dictionary and let the provider manage its own bits.",
+      "parentUuid": "df140735_7bd089ca",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 64
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_1bd74dc2",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-29T10:26:10Z",
       "side": 1,
       "message": "some fallback exception and/or logging would be cool here",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 66
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_963214a7",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-29T10:48:39Z",
+      "side": 1,
+      "message": "Next PS will raise an exception",
+      "parentUuid": "df140735_1bd74dc2",
       "range": {
         "startLine": 33,
         "startChar": 0,
