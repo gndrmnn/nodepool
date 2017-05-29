@@ -66,8 +66,14 @@ class ConfigValidator:
             'config-drive': bool,
         }
 
+        driver = {
+            'name': str,
+            'manage_images': bool,
+        }
+
         provider = {
             'name': str,
+            'driver': driver,
             'region-name': str,
             v.Required('cloud'): str,
             'max-concurrency': int,
