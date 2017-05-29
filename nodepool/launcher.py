@@ -304,7 +304,7 @@ class PoolWorker(threading.Thread):
 
             # Got a lock, so assign it
             self.log.info("Assigning node request %s" % req)
-            rh = get_node_request_handler(self, req)
+            rh = get_node_request_handler(provider, self, req)
             rh.run()
             if rh.paused:
                 self.paused_handler = rh
@@ -849,6 +849,9 @@ class NodePool(threading.Thread):
             ready in at least one provider. False otherwise.
         '''
         for pool in label.pools:
+            if not pool.provider.driver.manage_images:
+                # Provider doesn't manage images, assuming label is ready
+                return True
             for pool_label in pool.labels.values():
                 if pool_label.cloud_image:
                     manager = self.getProviderManager(pool.provider.name)
