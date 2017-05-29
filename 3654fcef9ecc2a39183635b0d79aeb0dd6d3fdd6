@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_7bd089ca",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:26:10Z",
+      "side": 1,
+      "message": "I know it\u0027s specified like this in the spec. But I\u0027m just asking myself if it would be more flexible (and easier to parse) if we move the driver specific parts one level down to the driver.\n\nMore flexible in terms that the driver could later supply its own config validators which can be used here.",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 64
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_1bd74dc2",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:26:10Z",
+      "side": 1,
+      "message": "some fallback exception and/or logging would be cool here",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 66
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
