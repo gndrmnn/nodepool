@@ -304,7 +304,7 @@ class PoolWorker(threading.Thread):
 
             # Got a lock, so assign it
             self.log.info("Assigning node request %s" % req)
-            rh = get_node_request_handler(self, req)
+            rh = get_node_request_handler(provider, self, req)
             rh.run()
             if rh.paused:
                 self.paused_handler = rh

@@ -197,10 +197,15 @@ def loadConfig(config_path):
     for provider in config.get('providers', []):
         p = Provider()
         p.name = provider['name']
+        p.driver = provider.get('driver', 'openstack')
         newconfig.providers[p.name] = p
 
         cloud_kwargs = _cloudKwargsFromProvider(provider)
-        p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+        p.cloud_config = None
+        p.image_type = None
+        if p.driver == 'openstack':
+            p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
+            p.image_type = p.cloud_config.config['image_format']
         p.region_name = provider.get('region-name')
         p.max_concurrency = provider.get('max-concurrency', -1)
         p.rate = provider.get('rate', 1.0)
@@ -216,7 +221,6 @@ def loadConfig(config_path):
             'image-name-format',
             '{image_name}-{timestamp}'
         )
-        p.image_type = p.cloud_config.config['image_format']
         p.diskimages = {}
         for image in provider.get('diskimages', []):
             i = ProviderDiskImage()
