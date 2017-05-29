@@ -29,16 +29,17 @@ def get_provider_manager(provider, use_taskmanager):
 
     if provider.name.startswith('fake'):
         return FakeProviderManager(provider, use_taskmanager)
-    else:
+    elif provider.driver == 'openstack':
         return OpenStackProviderManager(provider, use_taskmanager)
 
 
-def get_node_request_handler(pw, request):
+def get_node_request_handler(provider, pw, request):
     # TODO: uses a better drivers management
     # Dynamically import to avoid circular import issues
     from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 
-    return OpenStackNodeRequestHandler(pw, request)
+    if provider.driver == 'openstack':
+        return OpenStackNodeRequestHandler(pw, request)
 
 
 class ProviderManager(object):
