@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_81276c65",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T11:28:38Z",
+      "side": 1,
+      "message": "hm, unfortunately I couldn\u0027t come up with a nicer form of the config. But still I find the multiplexed validation too confusing and hard to maintain so I propose something like this if possible (I think it might be as the validators can be sticked together):\n\n1. first validate the provider with only the generic (mandatory?) attributes ignoring unknown stuff: name, driver, pools(top-level), ...\n2. add driver specific validator to the generic one: e.g. cloud, diskimages, pools(complete)\n3. validate again with the complete validator and rejecting unknown stuff now\n\nThat way we wouldn\u0027t have to add logic like \u0027if driver is static, cloud is not valid\u0027",
+      "parentUuid": "df140735_96d6944f",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 64
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_1bd74dc2",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
