@@ -22,6 +22,30 @@
       "revId": "38ef17811c0d8099071d33fe8eeaba2bf82d73f9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_7b7d296d",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-29T10:03:54Z",
+      "side": 1,
+      "message": "Good point, or this could go in nodepool.exceptions too.\nI moved it to the launcher since it is expected there.",
+      "parentUuid": "df140735_503ec429",
+      "range": {
+        "startLine": 25,
+        "startChar": 14,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "revId": "38ef17811c0d8099071d33fe8eeaba2bf82d73f9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
