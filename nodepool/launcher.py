@@ -853,6 +853,9 @@ class NodePool(threading.Thread):
             ready in at least one provider. False otherwise.
         '''
         for pool in label.pools:
+            if pool.provider.driver != "openstack":
+                # No need to manage image for provider != openstack
+                return True
             for pool_label in pool.labels.values():
                 if pool_label.cloud_image:
                     manager = self.getProviderManager(pool.provider.name)

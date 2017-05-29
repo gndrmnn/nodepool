@@ -24,6 +24,7 @@ def get_provider_manager(provider, use_taskmanager):
     # TODO: uses a better drivers management
     # Dynamically import to avoid circular import issues
     from nodepool.driver.openstack.provider import OpenStackProviderManager
+    from nodepool.driver.static.provider import StaticNodeProviderManager
     from nodepool.driver.fake.provider import FakeProviderManager
 
 
@@ -31,15 +32,20 @@ def get_provider_manager(provider, use_taskmanager):
         return FakeProviderManager(provider, use_taskmanager)
     elif provider.driver == 'openstack':
         return OpenStackProviderManager(provider, use_taskmanager)
+    elif provider.driver == 'static':
+        return StaticNodeProviderManager(provider)
 
 
 def get_node_request_handler(provider, pw, request):
     # TODO: uses a better drivers management
     # Dynamically import to avoid circular import issues
     from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
+    from nodepool.driver.static.handler import StaticNodeRequestHandler
 
     if provider.driver == 'openstack':
         return OpenStackNodeRequestHandler(pw, request)
+    elif provider.driver == 'static':
+        return StaticNodeRequestHandler(pw, request)
 
 
 class ProviderManager(object):
@@ -211,7 +217,7 @@ class NodeRequestHandler(object):
         if self.done:
             return True
 
-        if not self.launch_manager.poll():
+        if self.launch_manager and not self.launch_manager.poll():
             return False
 
         # If the request has been pulled, unallocate the node set so other
@@ -225,7 +231,7 @@ class NodeRequestHandler(object):
             self.zk.unlockNodeRequest(self.request)
             return True
 
-        if self.launch_manager.failed_nodes:
+        if self.launch_manager and self.launch_manager.failed_nodes:
             self.log.debug("Declining node request %s because nodes failed",
                            self.request.id)
             self.request.declined_by.append(self.launcher_id)
@@ -237,6 +243,8 @@ class NodeRequestHandler(object):
                 self.request.state = zk.FAILED
             else:
                 self.request.state = zk.REQUESTED
+        elif not self.nodeset:
+            return False
         else:
             for node in self.nodeset:
                 # Record node ID in the request
