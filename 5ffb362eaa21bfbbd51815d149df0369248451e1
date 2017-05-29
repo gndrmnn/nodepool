@@ -96,6 +96,121 @@
     },
     {
       "key": {
+        "uuid": "df140735_968e942c",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "createServer looks to be called enly by the parts which will be moved into the openstack driver.\n\nThis is maybe not needed in the public api as node requests are handled in the driver then?",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 20
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_d631acee",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "Ok, cleanupServer probably makes sense for all backends. But I think it might make sense to rename this to cleanupNode as Nodepool is a pool of nodes. So in the process of restructuring this we could rename this.",
+      "range": {
+        "startLine": 98,
+        "startChar": 8,
+        "endLine": 98,
+        "endChar": 21
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_d6bbec0b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "Not sure what is the difference between cleanupServer and deleteServer. Should be deleteServer be part of the driver internal api of the openstack driver (and called during cleanupServer)?",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 20
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_f6e5d039",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "waitForServerDeletion probably also needs to be in the api but could also be renamed to something like waitForNodeDeletion or waitForNodeCleanup?",
+      "range": {
+        "startLine": 104,
+        "startChar": 8,
+        "endLine": 104,
+        "endChar": 29
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_3640e835",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "listServers probably makes sense to be part of the api, but it maybe also might make sense to rename this to listNodes",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 19
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_7b0e49e6",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -131,6 +246,30 @@
       "side": 1,
       "message": "Those sounds generic enough to be implementable by other drivers.",
       "parentUuid": "df140735_7b0e49e6",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 30
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_5688fc1d",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T10:53:29Z",
+      "side": 1,
+      "message": "Right, my first thought was too quick... ;)\n\nPlease see specific comments for each method.",
+      "parentUuid": "df140735_f66270d8",
       "range": {
         "startLine": 95,
         "startChar": 0,
