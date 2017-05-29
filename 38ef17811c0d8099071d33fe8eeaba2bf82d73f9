@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_503ec429",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-05-29T09:49:23Z",
+      "side": 1,
+      "message": "Just asking myself if this should this come from driver?",
+      "range": {
+        "startLine": 25,
+        "startChar": 14,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "revId": "38ef17811c0d8099071d33fe8eeaba2bf82d73f9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
