@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2011-2013 OpenStack Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +21,6 @@ import operator
 import shade
 
 from nodepool import exceptions
-from nodepool import fakeprovider
 from nodepool.driver import ProviderManager
 from nodepool.nodeutils import iterate_timeout
 from nodepool.task_manager import ManagerStoppedException
@@ -42,12 +39,9 @@ def shade_inner_exceptions():
         raise
 
 
-class NotFound(Exception):
-    pass
-
-
 class OpenStackProviderManager(ProviderManager):
-    log = logging.getLogger("nodepool.OpenStackProviderManager")
+    log = logging.getLogger("nodepool.driver.openstack.provider."
+                            "OpenStackProviderManager")
 
     def __init__(self, provider, use_taskmanager):
         self.provider = provider
@@ -230,7 +224,7 @@ class OpenStackProviderManager(ProviderManager):
                 timeout, exceptions.ImageCreateException, "image creation"):
             try:
                 image = self.getImage(image_id)
-            except NotFound:
+            except exceptions.NotFound:
                 continue
             except ManagerStoppedException:
                 raise
@@ -320,7 +314,7 @@ class OpenStackProviderManager(ProviderManager):
     def cleanupNode(self, server_id):
         server = self.getServer(server_id)
         if not server:
-            raise NotFound()
+            raise exceptions.NotFound()
 
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
@@ -339,19 +333,3 @@ class OpenStackProviderManager(ProviderManager):
                 # ability to turn off random portions of the OpenStack API.
                 self.__azs = [None]
         return self.__azs
-
-
-class FakeProviderManager(OpenStackProviderManager):
-    def __init__(self, provider, use_taskmanager):
-        self.createServer_fails = 0
-        self.__client = fakeprovider.FakeOpenStackCloud()
-        super(FakeProviderManager, self).__init__(provider, use_taskmanager)
-
-    def _getClient(self):
-        return self.__client
-
-    def createServer(self, *args, **kwargs):
-        while self.createServer_fails:
-            self.createServer_fails -= 1
-            raise Exception("Expected createServer exception")
-        return super(FakeProviderManager, self).createServer(*args, **kwargs)
