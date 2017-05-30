@@ -218,6 +218,8 @@ def loadConfig(config_path):
             p.driver.manage_images = True
             p.cloud_config = _get_one_cloud(cloud_config, cloud_kwargs)
             p.image_type = p.cloud_config.config['image_format']
+        elif p.driver.name == 'oci':
+            p.hypervisor = provider.get('host')
         p.region_name = provider.get('region-name')
         p.max_concurrency = provider.get('max-concurrency', -1)
         p.rate = provider.get('rate', 1.0)
