@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_1eb84dc6",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df140735_5626bcb9",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 30
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_db50b5d7",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -119,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_beb601d9",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Right, since node creation is managed by the request handler, then this shouldn\u0027t be part of the public api.",
+      "parentUuid": "df140735_968e942c",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 20
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_d631acee",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -130,6 +178,30 @@
       "writtenOn": "2017-05-29T10:53:29Z",
       "side": 1,
       "message": "Ok, cleanupServer probably makes sense for all backends. But I think it might make sense to rename this to cleanupNode as Nodepool is a pool of nodes. So in the process of restructuring this we could rename this.",
+      "range": {
+        "startLine": 98,
+        "startChar": 8,
+        "endLine": 98,
+        "endChar": 21
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_9ecb3d52",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df140735_d631acee",
       "range": {
         "startLine": 98,
         "startChar": 8,
@@ -165,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_5ec5a53b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Indeed, the launcher only need to request cleanup and wait for cleanup.",
+      "parentUuid": "df140735_d6bbec0b",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 20
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_f6e5d039",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -188,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_dee655e9",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df140735_f6e5d039",
+      "range": {
+        "startLine": 104,
+        "startChar": 8,
+        "endLine": 104,
+        "endChar": 29
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_3640e835",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -199,6 +319,30 @@
       "writtenOn": "2017-05-29T10:53:29Z",
       "side": 1,
       "message": "listServers probably makes sense to be part of the api, but it maybe also might make sense to rename this to listNodes",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 19
+      },
+      "revId": "5ffb362eaa21bfbbd51815d149df0369248451e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_beeba1ae",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T02:35:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df140735_3640e835",
       "range": {
         "startLine": 107,
         "startChar": 8,
