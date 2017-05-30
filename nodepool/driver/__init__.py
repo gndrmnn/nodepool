@@ -25,6 +25,7 @@ def get_provider_manager(provider, use_taskmanager):
     # Dynamically import to avoid circular import issues
     from nodepool.driver.openstack.provider import OpenStackProviderManager
     from nodepool.driver.static.provider import StaticNodeProviderManager
+    from nodepool.driver.oci.provider import OpenContainerProviderManager
     from nodepool.driver.fake.provider import FakeProviderManager
 
 
@@ -34,6 +35,8 @@ def get_provider_manager(provider, use_taskmanager):
         return OpenStackProviderManager(provider, use_taskmanager)
     elif provider.driver == 'static':
         return StaticNodeProviderManager(provider)
+    elif provider.driver == 'oci':
+        return OpenContainerProviderManager(provider)
     else:
         raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
@@ -43,11 +46,14 @@ def get_node_request_handler(provider, pw, request):
     # Dynamically import to avoid circular import issues
     from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
     from nodepool.driver.static.handler import StaticNodeRequestHandler
+    from nodepool.driver.oci.handler import OpenContainerNodeRequestHandler
 
     if provider.driver == 'openstack':
         return OpenStackNodeRequestHandler(pw, request)
     elif provider.driver == 'static':
         return StaticNodeRequestHandler(pw, request)
+    elif provider.driver == 'oci':
+        return OpenContainerNodeRequestHandler(pw, request)
     else:
         raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
