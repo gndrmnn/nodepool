@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "df140735_1e316d0c",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-05-30T03:03:51Z",
+      "side": 1,
+      "message": "Absolutely, so it looks pretty easy to move all that code to the provider constructor and just reference the config dictionary right after p.driver, e.g.: \"p.config \u003d provider\". Well the reconfigure will also needs the global config object so that provider can inspect labels and diskimages lists.\n\nThough this is probably better to do in a follow-up patch, in particular I would prefer that we get to the point where drivers are tested before adding a new/different config validation.",
+      "parentUuid": "df140735_81276c65",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 64
+      },
+      "revId": "3654fcef9ecc2a39183635b0d79aeb0dd6d3fdd6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_1bd74dc2",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
