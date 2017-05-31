@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_e24821cd",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:32:10Z",
+      "side": 1,
+      "message": "We should document the api in use here (looks like subclasses are required to implement at least the run_hanlder() method).",
+      "revId": "5b0a9abe32c2b9bab7a895f545795b6ab5f8c952",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_c24abdaa",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:32:10Z",
+      "side": 1,
+      "message": "This also looks like a class that might want to have a base implementation with an OpenStack (or other driver) specific launch() method layered over the top.",
+      "revId": "5b0a9abe32c2b9bab7a895f545795b6ab5f8c952",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
