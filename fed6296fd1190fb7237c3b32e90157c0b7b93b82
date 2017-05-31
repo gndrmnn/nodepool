@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_dd63c0db",
+        "filename": "nodepool/driver/oci/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:35:17Z",
+      "side": 1,
+      "message": "I think this belongs in the provider? The separation as I see it (and i could be wrong) is the request handler is the front end of the request which interacts with things talking to zookeeper. The provider is the backend of the request which talks to the \"cloud\" to create (as necessary) the compute resources.\n\nMight be a good idea to formally write down the basic architecture/design of this so that its clear for the various drivers.",
+      "revId": "fed6296fd1190fb7237c3b32e90157c0b7b93b82",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
