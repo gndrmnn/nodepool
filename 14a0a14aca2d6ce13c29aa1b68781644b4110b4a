@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_c27bddbb",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:30:41Z",
+      "side": 1,
+      "message": "self.provider.listNodes()?",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_e2ab811a",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:30:41Z",
+      "side": 1,
+      "message": "You may want to apply a random sort to this so that you don\u0027t always return the same static node to all jobs. Same with pools? I would expect that distributing the work even under low demand is what most users will want if for no other reason than making sure they have a working set of nodes when demand is high and don\u0027t end up with a lot of failing jobs in that situation.",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_c2299d9b",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-05-31T19:30:41Z",
+      "side": 1,
+      "message": "Rather than hard code this to the openstack driver here, might be better to make this an attribute of the driver?\n\n  if not pool.provider.driver.manage_images:\n      return True\n\nThat way other drivers could potentially have managed images?",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
