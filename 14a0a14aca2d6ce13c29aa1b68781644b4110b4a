@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df140735_d53cabc9",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-01T08:11:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df140735_c27bddbb",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_e2ab811a",
         "filename": "nodepool/driver/static/handler.py",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "df140735_554e5b6f",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-01T08:11:29Z",
+      "side": 1,
+      "message": "Good idea, next PS uses random.shuffle()",
+      "parentUuid": "df140735_e2ab811a",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df140735_c2299d9b",
         "filename": "nodepool/launcher.py",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2017-05-31T19:30:41Z",
       "side": 1,
       "message": "Rather than hard code this to the openstack driver here, might be better to make this an attribute of the driver?\n\n  if not pool.provider.driver.manage_images:\n      return True\n\nThat way other drivers could potentially have managed images?",
+      "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_b565b7e3",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-01T08:11:29Z",
+      "side": 1,
+      "message": "Good idea, I\u0027ll add that in the config extension change ( https://review.openstack.org/468751 )",
+      "parentUuid": "df140735_c2299d9b",
       "revId": "14a0a14aca2d6ce13c29aa1b68781644b4110b4a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
