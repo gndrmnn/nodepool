@@ -23,8 +23,8 @@ from nodepool import zk
 def get_provider_manager(provider, use_taskmanager):
     # TODO: uses a better drivers management
     # Dynamically import to avoid circular import issues
-    from nodepool.provider_manager import OpenStackProviderManager
-    from nodepool.provider_manager import FakeProviderManager
+    from nodepool.driver.openstack.provider import OpenStackProviderManager
+    from nodepool.driver.fake.provider import FakeProviderManager
 
 
     if provider.name.startswith('fake'):
@@ -36,7 +36,7 @@ def get_provider_manager(provider, use_taskmanager):
 def get_node_request_handler(pw, request):
     # TODO: uses a better drivers management
     # Dynamically import to avoid circular import issues
-    from nodepool.launcher import OpenStackNodeRequestHandler
+    from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 
     return OpenStackNodeRequestHandler(pw, request)
 
