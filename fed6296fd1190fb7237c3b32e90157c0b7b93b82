@@ -16,6 +16,24 @@
       "revId": "fed6296fd1190fb7237c3b32e90157c0b7b93b82",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df140735_6be73b42",
+        "filename": "nodepool/driver/oci/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-01T09:09:37Z",
+      "side": 1,
+      "message": "That\u0027s a good idea, next PS will move stuff around",
+      "parentUuid": "df140735_dd63c0db",
+      "revId": "fed6296fd1190fb7237c3b32e90157c0b7b93b82",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
