@@ -15,7 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
 from nodepool import zk
+
+
+def get_provider_manager(provider, use_taskmanager):
+    # TODO: uses a better drivers management
+    # Dynamically import to avoid circular import issues
+    from nodepool.provider_manager import OpenStackProviderManager
+    from nodepool.provider_manager import FakeProviderManager
+
+
+    if provider.name.startswith('fake'):
+        return FakeProviderManager(provider, use_taskmanager)
+    else:
+        return OpenStackProviderManager(provider, use_taskmanager)
 
 
 def get_node_request_handler(pw, request):
@@ -24,6 +39,64 @@ def get_node_request_handler(pw, request):
     from nodepool.launcher import OpenStackNodeRequestHandler
 
     return OpenStackNodeRequestHandler(pw, request)
+
+
+class ProviderManager(object):
+    """The Provider Manager interface
+
+    The class or instance attribute **name** must be provided as a string.
+
+    """
+    log = logging.getLogger("nodepool.ProviderManager")
+
+    @staticmethod
+    def reconfigure(old_config, new_config, use_taskmanager=True):
+        stop_managers = []
+        for p in new_config.providers.values():
+            oldmanager = None
+            if old_config:
+                oldmanager = old_config.provider_managers.get(p.name)
+            if oldmanager and p != oldmanager.provider:
+                stop_managers.append(oldmanager)
+                oldmanager = None
+            if oldmanager:
+                new_config.provider_managers[p.name] = oldmanager
+            else:
+                ProviderManager.log.debug("Creating new ProviderManager object"
+                                          " for %s" % p.name)
+                new_config.provider_managers[p.name] = \
+                    get_provider_manager(p, use_taskmanager)
+                new_config.provider_managers[p.name].start()
+
+        for stop_manager in stop_managers:
+            stop_manager.stop()
+
+    @staticmethod
+    def stopProviders(config):
+        for m in config.provider_managers.values():
+            m.stop()
+            m.join()
+
+    def start(self):
+        raise NotImplemented()
+
+    def stop(self):
+        raise NotImplemented()
+
+    def join(self):
+        raise NotImplemented()
+
+    def labelReady(self, name):
+        raise NotImplemented()
+
+    def cleanupNode(self, node_id):
+        raise NotImplemented()
+
+    def waitForNodeCleanup(self, node_id):
+        raise NotImplemented()
+
+    def listNodes(self):
+        raise NotImplemented()
 
 
 class NodeRequestHandler(object):
