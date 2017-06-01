@@ -24,9 +24,9 @@ import shlex
 
 from nodepool import config as nodepool_config
 from nodepool import exceptions
-from nodepool import provider_manager
 from nodepool import stats
 from nodepool import zk
+from nodepool.driver import ProviderManager
 
 
 MINS = 60
@@ -492,7 +492,7 @@ class CleanupWorker(BaseWorker):
 
             time.sleep(self._interval)
 
-        provider_manager.ProviderManager.stopProviders(self._config)
+        ProviderManager.stopProviders(self._config)
 
     def _run(self):
         '''
@@ -503,7 +503,7 @@ class CleanupWorker(BaseWorker):
             self._config = new_config
 
         self._checkForZooKeeperChanges(new_config)
-        provider_manager.ProviderManager.reconfigure(self._config, new_config,
+        ProviderManager.reconfigure(self._config, new_config,
                                                      use_taskmanager=False)
         self._config = new_config
 
@@ -793,7 +793,7 @@ class UploadWorker(BaseWorker):
             self._config = new_config
 
         self._checkForZooKeeperChanges(new_config)
-        provider_manager.ProviderManager.reconfigure(self._config, new_config,
+        ProviderManager.reconfigure(self._config, new_config,
                                                      use_taskmanager=False)
         self._config = new_config
 
@@ -1005,7 +1005,7 @@ class UploadWorker(BaseWorker):
 
             time.sleep(self._interval)
 
-        provider_manager.ProviderManager.stopProviders(self._config)
+        ProviderManager.stopProviders(self._config)
 
 
 class NodePoolBuilder(object):
@@ -1145,5 +1145,5 @@ class NodePoolBuilder(object):
         self.zk.disconnect()
 
         self.log.debug('Stopping providers')
-        provider_manager.ProviderManager.stopProviders(self._config)
+        ProviderManager.stopProviders(self._config)
         self.log.debug('Finished stopping')
