@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df140735_f34874b3",
+        "filename": "nodepool/driver/oci/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-06-05T23:01:53Z",
+      "side": 1,
+      "message": "I am on the fence, while the code is straightforward, I do think there is an argument that could be made to move all this logic into 1 or 2 playbooks. This is assuming ansible-playbook was setup properly.\n\nMy concern, most of the code is remove execution of shell commands on node; this to me is what ansible is great at.",
+      "revId": "7776a68b917e3eaa0dcccfbac74fe3bd452f2e6a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
