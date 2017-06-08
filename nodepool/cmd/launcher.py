@@ -54,7 +54,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
         self.pool = nodepool.launcher.NodePool(self.args.secure,
                                                self.args.config)
         if not self.args.no_webapp:
-            self.webapp = nodepool.webapp.WebApp(self.pool)
+            self.webapp = nodepool.webapp.WebApp(self.pool,
+                                                 **self.args.config.webapp)
 
         signal.signal(signal.SIGINT, self.exit_handler)
         # For back compatibility:
