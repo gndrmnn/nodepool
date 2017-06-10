@@ -462,6 +462,7 @@ Example configuration::
   cloud-images:
     - name: trusty-external
       config-drive: False
+      key-name: mykey
 
 **required**
 
@@ -473,6 +474,9 @@ Example configuration::
   ``config-drive`` (boolean)
     Whether config drive should be used for the cloud image. Default ``True``
 
+  ``key-name``
+    If given, is the name of a keypair that will be used when booting each
+    server.
 
 .. _pool_labels:
 
