@@ -67,6 +67,7 @@ class ConfigValidator:
         provider_cloud_images = {
             'name': str,
             'config-drive': bool,
+            'key-name': str,
         }
 
         provider = {

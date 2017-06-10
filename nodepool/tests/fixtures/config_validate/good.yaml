@@ -54,6 +54,7 @@ providers:
     cloud-images:
       - name: trusty-unmanaged
         config-drive: true
+        key-name: my-key
     pools:
       - name: main
         max-servers: 184

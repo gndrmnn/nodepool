@@ -250,6 +250,7 @@ def loadConfig(config_path):
             i = ProviderCloudImage()
             i.name = image['name']
             i.config_drive = image.get('config-drive', None)
+            i.key_name = image.get('key-name', None)
             p.cloud_images[i.name] = i
         p.pools = {}
         for pool in provider.get('pools', []):

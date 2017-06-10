@@ -284,10 +284,12 @@ class NodeLauncher(threading.Thread, StatsReporter):
                                                cloud_image.provider_name),
                 upload_id=cloud_image.id)
             image_name = self._diskimage.name
+            key_name = self._label.key_name
 
         else:
             # launch using unmanaged cloud image
             config_drive = self._cloud_image.config_drive
+            key_name = self._cloud_image.key_name
             image_external_id = self._label.cloud_image
             image_id = self._label.cloud_image
             image_name = self._cloud_image.name
@@ -311,7 +313,7 @@ class NodeLauncher(threading.Thread, StatsReporter):
             image_id=image_external_id,
             min_ram=self._label.min_ram,
             flavor_name=self._label.flavor_name,
-            key_name=self._label.key_name,
+            key_name=key_name,
             az=self._node.az,
             config_drive=config_drive,
             nodepool_node_id=self._node.id,
