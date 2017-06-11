@@ -19,6 +19,41 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_41cdd35b",
+        "filename": "nodepool/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-11T23:16:30Z",
+      "side": 1,
+      "message": "Note that was part of the original spec, see http://specs.openstack.org/openstack-infra/infra-specs/specs/nodepool-drivers.html#proposed-change.\n\nIt makes sense to me that nodepool checks the static node is the correct one, though it makes the configuration file clunky. A similar level of security could be accomplished externally too, using ipsec AH for example.",
+      "parentUuid": "7f231b9d_8eee7a86",
+      "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_c12fa3f4",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-11T23:16:30Z",
+      "side": 1,
+      "message": "This member isn\u0027t used actually. I\u0027m not sure the \u0027pool\u0027 concepts apply well to static provider...",
+      "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_4ed742c1",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 7
@@ -30,6 +65,24 @@
       "writtenOn": "2017-06-11T20:09:18Z",
       "side": 1,
       "message": "We should use the same logic we do today in the openstack driver. I don\u0027t think there is a need to be different between openstack and static.  Keyscan ip, then pass that into zookeeper, raising an exception if we fail to gather host keys.",
+      "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_a134a74b",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-11T23:16:30Z",
+      "side": 1,
+      "message": "The logic is different enough to warrant a custom logic imo.",
+      "parentUuid": "7f231b9d_4ed742c1",
       "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_01d7dbef",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-11T23:16:30Z",
+      "side": 1,
+      "message": "I _think_ the reasoning is to prevent static node spoofing...",
+      "parentUuid": "7f231b9d_2ee406ac",
+      "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_eec60e17",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 7
@@ -64,6 +135,24 @@
       "writtenOn": "2017-06-11T20:09:18Z",
       "side": 1,
       "message": "I\u0027m not sure we need this any more. For openstack provider we just keyscan now and pass that information to zuul. It then handles SSH access.",
+      "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_c10a0389",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-11T23:16:30Z",
+      "side": 1,
+      "message": "It\u0027s ok to remove that part, though I find it easier to catch potencial problems earlier. Similarly to Jenkins, we could also check if there is enough memory and disk space too.",
+      "parentUuid": "7f231b9d_eec60e17",
       "revId": "fbe241eb917de3daf7c7526fa057454b547738d1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
