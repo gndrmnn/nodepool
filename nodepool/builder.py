@@ -831,6 +831,12 @@ class UploadWorker(BaseWorker):
             that available for uploading.
         :param provider: The provider from the parsed config file.
         '''
+
+        # To make it easier to trace upload issues, we provide a
+        # logger per provider which can be filtered into separate
+        # files with config.
+        log = logging.getLogger("nodepool.image.upload.%s" % (provider.name))
+
         start_time = time.time()
         timestamp = int(start_time)
 
@@ -846,8 +852,8 @@ class UploadWorker(BaseWorker):
                 (provider.image_type, build_id)
             )
 
-        self.log.debug("Found image file of type %s for image id: %s" %
-                       (image.extension, image.image_id))
+        log.debug("Found image file of type %s for image id: %s" %
+                  (image.extension, image.image_id))
 
         filename = image.to_path(self._config.imagesdir, with_extension=True)
 
@@ -859,8 +865,8 @@ class UploadWorker(BaseWorker):
             timestamp=str(timestamp)
         )
 
-        self.log.info("Uploading DIB image build %s from %s to %s" %
-                      (build_id, filename, provider.name))
+        log.info("Uploading DIB image build %s from %s to %s" %
+                 (build_id, filename, provider.name))
 
         manager = self._config.provider_managers[provider.name]
         provider_image = provider.images.get(image_name)
@@ -882,8 +888,8 @@ class UploadWorker(BaseWorker):
                 sha256=image.sha256,
             )
         except Exception:
-            self.log.exception("Failed to upload image %s to provider %s" %
-                               (image_name, provider.name))
+            log.exception("Failed to upload image %s to provider %s" %
+                          (image_name, provider.name))
             data = zk.ImageUpload()
             data.state = zk.FAILED
             return data
@@ -896,8 +902,8 @@ class UploadWorker(BaseWorker):
             self._statsd.incr(key)
 
         base = "-".join([image_name, build_id])
-        self.log.info("Image build %s in %s is ready" %
-                      (base, provider.name))
+        log.info("Image build %s in %s is ready" %
+                 (base, provider.name))
 
         data = zk.ImageUpload()
         data.state = zk.READY
