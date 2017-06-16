@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f231b9d_8b20faf8",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-06-16T14:11:03Z",
+      "side": 1,
+      "message": "Abstract",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_0be98a7e",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-06-16T14:11:03Z",
+      "side": 1,
+      "message": "Refactoring not in scope of this - but maybe we should put get_fake_client and _getClient override into the fake drivers themselves so that this test only has to set the option driver\u003dfake and the rest just works?",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_0b9e2a06",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-06-16T14:11:03Z",
+      "side": 1,
+      "message": "It feels like this should be using get_provider_manager",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_8baa3a16",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-06-16T14:11:03Z",
+      "side": 1,
+      "message": "get_provider_manager",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
