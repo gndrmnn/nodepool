@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7f231b9d_85157e42",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-06-16T18:58:14Z",
+      "side": 1,
+      "message": "Odd indenting here now.",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_8b20faf8",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 7
