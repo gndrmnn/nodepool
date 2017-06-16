@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f231b9d_eef41cf3",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-06-16T14:26:13Z",
+      "side": 1,
+      "message": "For static nodes we\u0027re going to want their host keys either to be pre-accepted, or listed in the config. (these are pre-existing hosts, so we want to make sure we\u0027re not getting MITM\u0027d) I mention that because one of the static server use-cases is to allow zuul to trigger deployments.\n\nThis is different from cloud nodes where we don\u0027t have that option.",
+      "revId": "dcddc62e34e76165a10cef0e1c157d5ac12e3ffb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
