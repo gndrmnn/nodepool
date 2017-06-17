@@ -1,0 +1,18 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: oci-label
+    min-ready: 42
+
+providers:
+  - name: oci-provider
+    driver: oci
+    hypervisor: localhost
+    pools:
+      - name: main
+        max-servers: 255
+        labels:
+          - name: oci-label
