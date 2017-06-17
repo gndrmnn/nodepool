@@ -900,6 +900,8 @@ class UploadWorker(BaseWorker):
         to providers, do the upload if they are available on the local disk.
         '''
         for provider in self._config.providers.values():
+            if not provider.driver.manage_images:
+                continue
             for image in provider.diskimages.values():
                 uploaded = False
 
