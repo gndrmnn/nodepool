@@ -270,10 +270,32 @@ def loadConfig(config_path):
             pp.name = pool['name']
             pp.provider = p
             p.pools[pp.name] = pp
-            pp.max_servers = pool['max-servers']
-            pp.azs = pool.get('availability-zones')
+            pp.max_servers = pool.get('max-servers', None)
+            pp.azs = pool.get('availability-zones', [])
             pp.networks = pool.get('networks', [])
             pp.labels = {}
+            pp.nodes = []
+            for node in pool.get('nodes', []):
+                pp.nodes.append({
+                    'name': node['name'],
+                    'labels': node['labels'].split(),
+                    'host-key': node['host-key'],
+                    'timeout': int(node.get('timeout', 5)),
+                    'ssh-port': int(node.get('ssh-port', 22)),
+                    'username': node.get('username', 'root'),
+                    'max-concurrency': int(node.get('max-concurrency', 1)),
+                })
+                for label in node['labels'].split():
+                    pl = ProviderLabel()
+                    pl.diskimage = None
+                    pl.cloud_image = None
+                    pl.min_ram = None
+                    pl.flavor_name = None
+                    pl.key_name = None
+                    pl.name = label
+                    pl.pool = pp
+                    pp.labels[pl.name] = pl
+                    newconfig.labels[label].pools.append(pp)
             for label in pool.get('labels', []):
                 pl = ProviderLabel()
                 pl.name = label['name']
