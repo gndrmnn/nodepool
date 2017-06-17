@@ -84,6 +84,17 @@ providers:
             labels: static-centos
             host-key: fake-key
 
+  - name: runc
+    driver: oci
+    cloud: fake
+    pools:
+      - name: main
+        max-server: 42
+        labels:
+          - name: oci-fedora
+            # TODO: remove this when provider config validation is per driver
+            min-ram: 1
+
 
 diskimages:
   - name: trusty
