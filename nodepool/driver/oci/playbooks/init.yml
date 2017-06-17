@@ -1,0 +1,53 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Ensure runC is available"
+      command: which runc
+
+    - name: "List used port"
+      shell: "ss --t -l -n | cut -d: -f2 | awk '/[0-9]/ { print $1 }'"
+      register: used_port
+
+    - name: "Ensure /var/tmp/zuul-console exists"
+      file:
+        path: /var/tmp/zuul-console
+        state: directory
+        mode: 01777
+
+    - name: "Prepare host-rootfs bind mount"
+      block:
+        - name: "Ensure host-rootfs directory exists"
+          file:
+            path: /srv/host-rootfs
+            state: directory
+
+        - name: "Add host-rootfs to fstab"
+          lineinfile:
+            path: /etc/fstab
+            line: / /srv/host-rootfs none bind,ro,private 0 0
+
+        - name: "Ensure / is bind moutned to /srv/host-rootfs"
+          command: mount /srv/host-rootfs
+      when: use_rootfs
+
+    - name: "List running containers"
+      command: runc list -q
+      register: running_containers
+
+    - name: "Spawn zuul_console daemon"
+      zuul_console:
+        path: "/var/tmp/zuul-console/{log_uuid}.log"
+
+    - set_fact:
+        hypervisor_info:
+          ports: "{{ used_port.stdout_lines }}"
+          containers: "{{ running_containers.stdout_lines }}"
+
+- hosts: localhost
+  tasks:
+    - name: "Save results"
+      copy:
+        content: "{{ hostvars[groups['hypervisor'][0]]['hypervisor_info']|to_json }}"
+        dest: "{{ hypervisor_info_file }}"
+        mode: 0400
