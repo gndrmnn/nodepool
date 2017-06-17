@@ -19,6 +19,7 @@
 import logging
 
 from nodepool.driver.fake.provider import FakeProvider
+from nodepool.driver.oci.provider import OpenContainerProvider
 from nodepool.driver.openstack.provider import OpenStackProvider
 from nodepool.driver.static.provider import StaticNodeProvider
 
@@ -30,6 +31,8 @@ def get_provider_manager(provider, use_taskmanager):
         return OpenStackProvider(provider, use_taskmanager)
     elif provider.driver.name == 'static':
         return StaticNodeProvider(provider)
+    elif provider.driver.name == 'oci':
+        return OpenContainerProvider(provider)
     else:
         raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
