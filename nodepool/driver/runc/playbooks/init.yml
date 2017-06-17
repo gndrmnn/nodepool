@@ -1,0 +1,91 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Ensure runC is available"
+      command: which runc
+
+    - name: "List used port"
+      shell: "ss --t -l -n | cut -d: -f2 | awk '/[0-9]/ { print $1 }'"
+      register: used_port
+
+    - name: "Ensure /var/tmp/zuul-console exists"
+      file:
+        path: /var/tmp/zuul-console
+        state: directory
+        mode: 01777
+
+    - name: "Ensure state data directory exists"
+      file:
+        path: "{{ zuul_console_dir }}"
+        state: directory
+        mode: 0700
+      when: zuul_console_dir != '/tmp'
+
+    - name: "Prepare host-rootfs bind mount"
+      block:
+        - name: "Ensure host-rootfs directory exists"
+          file:
+            path: /srv/host-rootfs
+            state: directory
+
+        - name: "Create the systemd mount service"
+          copy:
+            content: |
+              [Unit]
+              Description=Private bind-mount of the host rootfs
+
+              [Mount]
+              What=/
+              Where=/srv/host-rootfs
+              Type=none
+              Options=bind,ro,private
+
+              [Install]
+              WantedBy=multi-user.target
+            dest: /etc/systemd/system/srv-host\x2drootfs.mount
+          register: _systemd_unit
+
+        - name: Reload systemd if unit changed
+          systemd:
+            name: srv-host\x2drootfs.mount
+            state: started
+            daemon-reload: yes
+          when: _systemd_unit is changed
+
+        - name: Ensure host-rootfs is mounted
+          service:
+            name:  srv-host\x2drootfs.mount
+            state: started
+            enabled: yes
+      when: use_rootfs
+
+    - name: "List running containers"
+      command: runc list -q
+      register: running_containers
+
+    - name: "Spawn zuul_console daemon"
+      zuul_console:
+        path: "/var/tmp/zuul-console/{log_uuid}.log"
+
+    - name: Gather network facts
+      setup:
+        gather_subset:
+          - '!all'
+          - '!min'
+          - network
+
+    - set_fact:
+        hypervisor_info:
+          ports: "{{ used_port.stdout_lines }}"
+          containers: "{{ running_containers.stdout_lines }}"
+          ipv4: "{{ ansible_default_ipv4.address | default(None) }}"
+          ipv6: "{{ ansible_default_ipv6.address | default(None) }}"
+
+- hosts: localhost
+  tasks:
+    - name: "Save results"
+      copy:
+        content: "{{ hostvars[groups['hypervisor'][0]]['hypervisor_info']|to_json }}"
+        dest: "{{ hypervisor_info_file }}"
+        mode: 0400
