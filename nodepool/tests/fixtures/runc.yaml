@@ -1,0 +1,18 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: runc-label
+    min-ready: 42
+
+providers:
+  - name: runc-provider
+    driver: runc
+    hypervisor: localhost
+    pools:
+      - name: main
+        max-servers: 255
+        labels:
+          - name: runc-label
