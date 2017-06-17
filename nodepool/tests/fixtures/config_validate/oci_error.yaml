@@ -1,0 +1,4 @@
+providers:
+  - name: oci-provider
+    driver: oci
+    cloud: no-cloud
