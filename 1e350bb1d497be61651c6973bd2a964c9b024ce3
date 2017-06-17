@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_9c8034f7",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:07:46Z",
+      "side": 1,
+      "message": "Indeed, fixed!",
+      "parentUuid": "7f231b9d_85157e42",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_8b20faf8",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2017-06-16T14:11:03Z",
       "side": 1,
       "message": "Abstract",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_7c7b1827",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:07:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f231b9d_8b20faf8",
       "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_dc0c6c95",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:07:46Z",
+      "side": 1,
+      "message": "I\u0027ll add a follow for that.",
+      "parentUuid": "7f231b9d_0be98a7e",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_0b9e2a06",
         "filename": "nodepool/tests/test_nodelaunchmanager.py",
         "patchSetId": 7
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_1c1784a6",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:07:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f231b9d_0b9e2a06",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_8baa3a16",
         "filename": "nodepool/tests/test_shade_integration.py",
         "patchSetId": 7
@@ -81,6 +153,24 @@
       "writtenOn": "2017-06-16T14:11:03Z",
       "side": 1,
       "message": "get_provider_manager",
+      "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_1c7c24ea",
+        "filename": "nodepool/tests/test_shade_integration.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:07:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f231b9d_8baa3a16",
       "revId": "1e350bb1d497be61651c6973bd2a964c9b024ce3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
