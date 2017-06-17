@@ -1,0 +1,40 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Create work directory"
+      file:
+        path: "/var/lib/nodepool/runc/{{ container_id }}/.ssh"
+        state: directory
+        mode: 0700
+        owner: "{{ worker_username }}"
+        group: "{{ worker_username }}"
+
+    - name: "Copy authorized keys"
+      copy:
+        src: "{{ worker_homedir }}/.ssh/authorized_keys"
+        dest: "/var/lib/nodepool/runc/{{ container_id }}/.ssh/authorized_keys"
+        owner: "{{ worker_username }}"
+        group: "{{ worker_username }}"
+        mode: 0600
+        remote_src: true
+
+    - name: "Write config.json"
+      copy:
+        src: "{{ container_spec }}"
+        dest: "/var/lib/nodepool/runc/{{ container_id }}/config.json"
+
+    - name: "Start container"
+      command: >
+        runc run --detach --bundle /var/lib/nodepool/runc/{{ container_id }}
+            {{ container_id }}
+
+- hosts: localhost
+  tasks:
+    - name: "Wait for ssh access"
+      command: >
+        ssh -o StrictHostKeyChecking=no {{ host_addr }} -p {{ container_port }}
+            echo okay
+      register: access_ok
+      failed_when: access_ok.rc not in [0, 255]
+      until: access_ok.stdout.find("okay")
