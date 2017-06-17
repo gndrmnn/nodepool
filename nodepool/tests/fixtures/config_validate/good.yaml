@@ -84,6 +84,15 @@ providers:
             username: zuul
             max-concurrency: 1
 
+  - name: runc
+    driver: oci
+    hypervisor: fedora.example.com
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: oci-fedora
+
 diskimages:
   - name: trusty
     formats:

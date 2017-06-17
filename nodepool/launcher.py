@@ -29,6 +29,7 @@ from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
 from nodepool.driver.fake.handler import FakeNodeRequestHandler
+from nodepool.driver.oci.handler import OpenContainerNodeRequestHandler
 from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 from nodepool.driver.static.handler import StaticNodeRequestHandler
 
@@ -149,6 +150,8 @@ class PoolWorker(threading.Thread):
             return OpenStackNodeRequestHandler(self, request)
         elif provider.driver.name == 'static':
             return StaticNodeRequestHandler(self, request)
+        elif provider.driver.name == 'oci':
+            return OpenContainerNodeRequestHandler(self, request)
         else:
             raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
