@@ -1,0 +1,14 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Kill container"
+      command: "runc kill --all {{ container_id }} KILL"
+
+    - name: "Delete left-overs"
+      command: "runc delete --force {{ container_id }}"
+
+    - name: "Delete work directory"
+      file:
+        path: "/var/lib/nodepool/oci/{{ container_id }}"
+        state: absent
