@@ -352,6 +352,11 @@ Options
          static driver, see the separate section
          :attr:`providers.[static]`
 
+      .. value:: runc
+
+         For details on the extra options required and provided by the
+         runc driver, see the separate section :attr:`providers.[runc]`
+
       .. value:: kubernetes
 
          For details on the extra options required and provided by the
@@ -1051,6 +1056,142 @@ Selecting the static driver adds the following options to the
          :default: 1
 
          The number of jobs that can run in parallel on this node.
+
+
+Runc driver
+-----------
+
+The runc provider driver is used to spawn thin containers on static nodes using
+`runc <https://github.com/opencontainers/runc>`_.
+
+Selecting the runC driver adds the following options to the
+:attr:`providers` section of the configuration.
+
+.. attr-overview::
+   :prefix: providers.[runc]
+   :maxdepth: 3
+
+.. attr:: providers.[runc]
+   :type: list
+
+   The runc provider driver is used to define runc containers.
+
+   Example:
+
+   .. code-block:: yaml
+
+      providers:
+        - name: container-pool
+          driver: runc
+          pools:
+            - name: fedora.example.com
+              host-key: fake-key
+              max-servers: 42
+              labels:
+                - name: fedora-runc
+            - name: fedora2.example.com
+              max-servers: 42
+              labels:
+                - name: fedora-runc
+
+      .. attr:: zuul-console-dir
+         :default: /tmp
+         :type: str
+
+         The directory named shared between the host and the containers for
+         zuul console's logs. When using a directory other than /tmp,
+         Zuul configuration 'log_stream_file' [executor] needs to match the
+         new directory.
+
+   .. attr:: pools
+      :type: list
+
+      A pool defines a host to run the containers.
+
+      .. attr:: name
+         :required:
+
+         The hostname of the instance.
+
+      .. attr:: host-key
+         :type: str
+
+         The ssh host key of the node.
+
+      .. attr:: max-servers
+         :type: int
+
+         Maximum number of containers spawnable from this host. This can
+         be used to limit the number of containers. If not defined
+         nodepool can create as many servers the tenant allows.
+
+   .. attr:: labels
+      :type: list
+
+      Each entry in a pool`s `labels` section indicates that the
+      corresponding label is available for use in this pool.
+
+      Each entry is a dictionary with the following keys
+
+      .. attr:: name
+         :required:
+
+         Identifier for this label; references an entry in the
+         :attr:`labels` section.
+
+      .. attr:: path
+         :default: /
+
+         The rootfs path of the container.
+
+      .. attr:: username
+         :default: zuul
+
+         The zuul worker user inside the container.
+
+      .. attr:: home-dir
+         :default: /home/{username}
+
+         The home directory of the zuul worker.
+
+
+The pool nodes need to be pre-configured:
+
+* Create a new user, for example: useradd -m zuul-worker
+* Authorize nodepool to connect as root: copy the /var/lib/nodepool/.ssh/id_rsa.pub to
+  /root/.ssh/authorized_keys
+* Authorize zuul to connect to the new user: copy the /var/lib/zuul/.ssh/id_rsa.pub to
+  /home/zuul-worker/.ssh/authorized_keys
+* Create the working directory: mkdir /home/zuul-worker/src
+* Install runc and any other test packages such as yamllint, rpm-build, ...
+* Authorize network connection from nodepool on port 22 and zuul on ports 22022 to 65535
+
+To use a custom rootfs:
+
+* Extract a rootfs, for example from a cloud disk image, e.g. in /srv/centos-7
+* Create server ssh keys: chroot /srv/centos-7 /usr/sbin/sshd-keygen
+* Create a new user: chroot /srv/centos-7 useradd -m zuul-worker
+* Install test packages: chroot /srv/centos-7 yum install -y rpm-build
+* Authorize zuul to connect to the new user: copy the /var/lib/zuul/.ssh/id_rsa.pub to
+  /srv/centos-7/home/zuul-worker/.ssh/authorized_keys
+
+Then create a new label in the nodepool configuration using the 'path'
+attribute to set the new rootfs, for example:
+
+.. code-block:: yaml
+
+  labels:
+    - name: centos-runc
+
+  providers:
+    - name: container-pool
+      driver: runc
+      pools:
+        - name: fedora.example.com
+          labels:
+            - name: centos-runc
+              username: zuul-worker
+              path: /srv/centos-7
 
 
 Kubernetes Driver
