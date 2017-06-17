@@ -1,0 +1,4 @@
+providers:
+  - name: runc-provider
+    driver: runc
+    cloud: no-cloud
