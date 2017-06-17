@@ -24,6 +24,7 @@ from nodepool import zk
 from nodepool.driver import ConfigValue
 from nodepool.driver.fake.config import FakeProviderConfig
 from nodepool.driver.openstack.config import OpenStackProviderConfig
+from nodepool.driver.static.config import StaticProviderConfig
 
 
 class Config(ConfigValue):
@@ -63,6 +64,8 @@ def get_provider_config(provider):
         return FakeProviderConfig(provider)
     elif provider['driver'] == 'openstack':
         return OpenStackProviderConfig(provider)
+    elif provider['driver'] == 'static':
+        return StaticProviderConfig(provider)
 
 
 def loadConfig(config_path):
