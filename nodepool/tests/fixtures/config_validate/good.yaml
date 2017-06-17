@@ -18,6 +18,8 @@ labels:
     min-ready: 0
   - name: trusty-external
     min-ready: 1
+  - name: static-centos
+    min-ready: 1
 
 providers:
   - name: cloud1
@@ -69,6 +71,19 @@ providers:
           - name: trusty-external
             cloud-image: trusty-unmanaged
             min-ram: 8192
+
+  - name: static-rack
+    driver: static
+    # TODO: move provider config validator in driver so that it doesn't require
+    #       the cloud value
+    cloud: fake
+    pools:
+      - name: main
+        nodes:
+          - name: centos.example.com
+            labels: static-centos
+            host-key: fake-key
+
 
 diskimages:
   - name: trusty

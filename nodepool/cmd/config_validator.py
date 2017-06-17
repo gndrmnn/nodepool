@@ -49,11 +49,20 @@ class ConfigValidator:
                            v.Any(label_min_ram, label_flavor_name),
                            v.Any(label_diskimage, label_cloud_image))
 
+        pool_node_main = {
+            v.Required('name'): str,
+            v.Required('labels'): str,
+            v.Required('host-key'): str,
+        }
+
+        pool_node = v.All(pool_node_main)
+
         pool = {
             'name': str,
             'networks': [str],
             'max-servers': int,
             'labels': [pool_label],
+            'nodes': [pool_node],
             'availability-zones': [str],
             }
 
