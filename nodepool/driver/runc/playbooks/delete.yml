@@ -1,0 +1,21 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Check if container exists"
+      command: "runc state {{ container_id }}"
+      register: _container_state
+      failed_when: false
+
+    - block:
+        - name: "Kill container"
+          command: "runc kill --all {{ container_id }} KILL"
+
+        - name: "Delete left-overs"
+          command: "runc delete --force {{ container_id }}"
+
+        - name: "Delete work directory"
+          file:
+            path: "/var/lib/nodepool/runc/{{ container_id }}"
+            state: absent
+      when: _container_state.rc == 0
