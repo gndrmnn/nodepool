@@ -97,6 +97,9 @@ class Drivers:
 
     @staticmethod
     def get(name):
+        # Backward compatibility with legacy implementation
+        if name == "oci":
+            name = "runc"
         if not Drivers.drivers:
             Drivers.load()
         try:
