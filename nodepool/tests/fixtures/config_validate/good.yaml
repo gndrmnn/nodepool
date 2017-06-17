@@ -87,6 +87,19 @@ providers:
             username: zuul
             max-concurrency: 1
 
+  - name: runc
+    driver: oci
+    cloud: fake
+    hypervisor: fedora.example.com
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: oci-fedora
+            # TODO: remove these when provider config validation is per driver
+            min-ram: 1
+            diskimage: fake
+
 diskimages:
   - name: trusty
     formats:
