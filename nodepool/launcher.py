@@ -30,6 +30,7 @@ from nodepool import config as nodepool_config
 from nodepool import zk
 from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
+from nodepool.driver.static.handler import StaticNodeRequestHandler
 
 
 MINS = 60
@@ -146,6 +147,8 @@ class PoolWorker(threading.Thread):
             return FakeNodeRequestHandler(self, request)
         elif provider.driver.name == 'openstack':
             return OpenStackNodeRequestHandler(self, request)
+        elif provider.driver.name == 'static':
+            return StaticNodeRequestHandler(self, request)
         else:
             raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
