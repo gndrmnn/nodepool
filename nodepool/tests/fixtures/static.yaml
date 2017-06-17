@@ -1,0 +1,29 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: fake-label
+    min-ready: 2
+
+  - name: fake-concurrent-label
+    min-ready: 2
+
+providers:
+  - name: static-provider
+    driver: static
+    pools:
+      - name: main
+        nodes:
+          - name: 127.0.0.1
+            labels: fake-label
+            host-key: fake-key
+            timeout: 13
+            ssh-port: 22022
+            username: zuul
+            max-parallel-jobs: 1
+          - name: 127.0.0.2
+            labels: fake-concurrent-label
+            host-key: fake-key
+            max-parallel-jobs: 2
