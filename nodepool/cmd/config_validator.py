@@ -89,6 +89,7 @@ class ConfigValidator:
             'driver': str,
             'region-name': str,
             v.Required('cloud'): str,
+            'hypervisor': str,
             'max-concurrency': int,
             'boot-timeout': int,
             'launch-timeout': int,
