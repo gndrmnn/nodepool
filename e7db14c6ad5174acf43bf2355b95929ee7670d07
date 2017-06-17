@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_5c1a9c16",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:06:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f231b9d_2bbe86b3",
+      "revId": "e7db14c6ad5174acf43bf2355b95929ee7670d07",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_abc97659",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_3c15a0e5",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:06:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f231b9d_abc97659",
+      "revId": "e7db14c6ad5174acf43bf2355b95929ee7670d07",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_ab3cd62e",
         "filename": "nodepool/launcher.py",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2017-06-16T14:02:20Z",
       "side": 1,
       "message": "I could see (thinking to future) this maybe wanting to be in the interface too? Like, imagine a k8s or docker driver where we want to check to see if the dockerhub has a given image name - or an AWS or GCE driver. If it was, the static driver could always just return true because there is no \u0027image\u0027.\n\nDoesn\u0027t need to happen right now- just a thought.",
+      "revId": "e7db14c6ad5174acf43bf2355b95929ee7670d07",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_9cd27427",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:06:58Z",
+      "side": 1,
+      "message": "Indeed, well there is already a driver setting to tell if it manages images or not.",
+      "parentUuid": "7f231b9d_ab3cd62e",
       "revId": "e7db14c6ad5174acf43bf2355b95929ee7670d07",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
