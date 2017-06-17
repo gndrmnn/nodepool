@@ -400,7 +400,7 @@ class TestLauncher(tests.DBTestCase):
         def fail_delete(self, name):
             raise RuntimeError('Fake Error')
 
-        fake_delete = 'nodepool.provider_manager.FakeProvider.deleteServer'
+        fake_delete = 'nodepool.driver.fake.provider.FakeProvider.deleteServer'
         self.useFixture(fixtures.MonkeyPatch(fake_delete, fail_delete))
 
         configfile = self.setup_config('node.yaml')
