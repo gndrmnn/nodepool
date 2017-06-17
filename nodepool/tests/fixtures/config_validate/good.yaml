@@ -19,6 +19,8 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: fedora-oci
+  - name: centos-oci
 
 providers:
   - name: cloud1
@@ -89,6 +91,17 @@ providers:
             ssh-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: runc
+    driver: oci
+    hypervisor: fedora.example.com
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: fedora-oci
+          - name: centos-oci
+            path: /srv/centos
 
 diskimages:
   - name: trusty
