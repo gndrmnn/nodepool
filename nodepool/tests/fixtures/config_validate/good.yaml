@@ -18,6 +18,7 @@ labels:
     min-ready: 0
   - name: trusty-external
     min-ready: 1
+  - name: trusty-static
 
 providers:
   - name: cloud1
@@ -69,6 +70,22 @@ providers:
           - name: trusty-external
             cloud-image: trusty-unmanaged
             min-ram: 8192
+
+  - name: static-rack
+    driver: static
+    # TODO: move provider config validator in driver so that it doesn't require
+    #       the cloud value
+    cloud: fake
+    pools:
+      - name: main
+        nodes:
+          - name: trusty.example.com
+            labels: trusty-static
+            host-key: fake-key
+            timeout: 13
+            ssh-port: 22022
+            username: zuul
+            max-concurrency: 1
 
 diskimages:
   - name: trusty
