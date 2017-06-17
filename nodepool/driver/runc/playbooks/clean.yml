@@ -1,0 +1,19 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "List instances"
+      command: runc list -q
+      register: running
+
+    - name: "List state data"
+      command: find /var/lib/nodepool/runc/ -maxdepth 1 -mindepth 1 -mtime +1
+      register: state
+
+    - name: "Remove leaked state data directory"
+      file:
+        path: "/var/lib/nodepool/runc/{{ item }}"
+        state: absent
+      with_items: >
+        {{ state.stdout_lines | difference(running.stdout_lines +
+                                           ['host-rootfs']) }}

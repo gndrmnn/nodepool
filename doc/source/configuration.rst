@@ -767,3 +767,63 @@ corresponding label.
 
   ``max-parallel-jobs``
   The number of jobs that can run in parallel on this node, default to *1*.
+
+
+Runc driver
+^^^^^^^^^^^
+
+The runc provider driver is used to spawn thin containers on static nodes using
+`runc <https://github.com/opencontainers/runc>`_.
+
+Example::
+
+  providers:
+  - name: container-pool
+    driver: runc
+    pools:
+      - name: fedora.example.com
+        max-servers: 42
+        labels:
+          - name: fedora-runc
+      - name: fedora2.example.com
+        max-servers: 42
+        labels:
+          - name: fedora-runc
+
+The static nodes need to be pre-configured:
+
+* Create a new user, for example: useradd -m zuul-worker
+* Authorize nodepool to connect as root: copy the /var/lib/nodepool/.ssh/id_rsa.pub to
+  /root/.ssh/authorized_keys
+* Authorize zuul to connect to the new user: copy the /var/lib/zuul/.ssh/id_rsa.pub to
+  /home/zuul-worker/.ssh/authorized_keys
+* Create the working directory: mkdir /home/zuul-worker/src
+* Install runc and any other test packages such as yamllint, rpm-build, ...
+* Authorize network connection from nodepool on port 22 and zuul on ports 22022 to 65535
+
+To use a custom rootfs:
+
+* Extract a rootfs, for example from a cloud disk image, e.g. in /srv/centos-7
+* Create server ssh keys: chroot /srv/centos-7 /usr/sbin/sshd-keygen
+* Create a new user: chroot /srv/centos-7 useradd -m zuul-worker
+* Install test packages: chroot /srv/centos-7 yum install -y rpm-build
+* Authorize zuul to connect to the new user: copy the /var/lib/zuul/.ssh/id_rsa.pub to
+  /srv/centos-7/home/zuul-worker/.ssh/authorized_keys
+
+Then create a new label in the nodepool configuration using the 'path'
+attribute to set the new rootfs, for example:
+
+.. code-block:: yaml
+
+  labels:
+    - name: centos-runc
+
+  providers:
+    - name: container-pool
+      driver: runc
+      pools:
+        - name: fedora.example.com
+          labels:
+            - name: centos-runc
+              username: zuul-worker
+              path: /srv/centos-7
