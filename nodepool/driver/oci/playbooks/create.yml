@@ -1,0 +1,43 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Create work directory"
+      file:
+        path: "/var/lib/nodepool/oci/{{ container_id }}/{{ item }}"
+        state: directory
+        mode: 0700
+        owner: zuul
+        group: zuul
+      with_items:
+        - work
+        - .ssh
+
+    - name: "Install zuul authorized keys"
+      copy:
+        remote_src: true
+        src: /var/lib/zuul/.ssh/authorized_keys
+        dest: "/var/lib/nodepool/oci/{{ container_id }}/.ssh/authorized_keys"
+        mode: 0600
+        owner: zuul
+        group: zuul
+
+    - name: "Write config.json"
+      copy:
+        src: "{{ container_spec }}"
+        dest: "/var/lib/nodepool/oci/{{ container_id }}/config.json"
+
+    - name: "Start container"
+      command: >
+        runc run --detach --bundle /var/lib/nodepool/oci/{{ container_id }}
+            {{ container_id }}
+
+- hosts: localhost
+  tasks:
+    - name: "Wait for ssh access"
+      command: >
+        ssh -o StrictHostKeyChecking=no {{ host_addr }} -p {{ container_port }}
+            echo okay
+      register: access_ok
+      failed_when: access_ok.rc not in [0, 255]
+      until: access_ok.stdout.find("okay")
