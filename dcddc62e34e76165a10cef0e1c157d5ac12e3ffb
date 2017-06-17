@@ -16,6 +16,24 @@
       "revId": "dcddc62e34e76165a10cef0e1c157d5ac12e3ffb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_72a0df90",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-17T13:08:52Z",
+      "side": 1,
+      "message": "This should be checked by the above condition. I\u0027ll add a todo until I figure how to instruct paramiko to use a known host key.",
+      "parentUuid": "7f231b9d_eef41cf3",
+      "revId": "dcddc62e34e76165a10cef0e1c157d5ac12e3ffb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
