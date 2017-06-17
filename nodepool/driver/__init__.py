@@ -168,7 +168,7 @@ class NodeRequestHandler(object):
         if self.done:
             return True
 
-        if not self.launch_manager.poll():
+        if self.launch_manager and not self.launch_manager.poll():
             return False
 
         # If the request has been pulled, unallocate the node set so other
@@ -182,7 +182,7 @@ class NodeRequestHandler(object):
             self.zk.unlockNodeRequest(self.request)
             return True
 
-        if self.launch_manager.failed_nodes:
+        if self.launch_manager and self.launch_manager.failed_nodes:
             self.log.debug("Declining node request %s because nodes failed",
                            self.request.id)
             self.request.declined_by.append(self.launcher_id)
@@ -194,6 +194,8 @@ class NodeRequestHandler(object):
                 self.request.state = zk.FAILED
             else:
                 self.request.state = zk.REQUESTED
+        elif not self.nodeset:
+            return False
         else:
             # The assigned nodes must be added to the request in the order
             # in which they were requested.
