@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f231b9d_5666d42b",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-06-19T18:18:31Z",
+      "side": 1,
+      "message": "As we are already renaming all stuff to \u0027node\u0027 maybe NodeDeleter makes sense here too.",
+      "range": {
+        "startLine": 43,
+        "startChar": 6,
+        "endLine": 43,
+        "endChar": 21
+      },
+      "revId": "2c2bd288b4608f6673497e86c3ea3c9e827f5585",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
