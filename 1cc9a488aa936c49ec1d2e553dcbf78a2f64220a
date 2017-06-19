@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f231b9d_ec4072a7",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-06-19T17:59:28Z",
+      "side": 1,
+      "message": "I saw that there is a move to remove six as zuul will be py3 only this could be just (https://docs.python.org/3.5/library/abc.html):\n\n  class NodeRequestHandler(object, metaclass\u003dABCMeta)",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 33
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_cc85b6ae",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-06-19T17:59:28Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 32
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_cc5c964c",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-06-19T17:59:28Z",
+      "side": 1,
+      "message": "It\u0027s",
+      "range": {
+        "startLine": 236,
+        "startChar": 16,
+        "endLine": 236,
+        "endChar": 18
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_36a35803",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-06-19T17:59:28Z",
+      "side": 1,
+      "message": "_get_node_request_handler because private method?",
+      "range": {
+        "startLine": 727,
+        "startChar": 8,
+        "endLine": 727,
+        "endChar": 32
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
