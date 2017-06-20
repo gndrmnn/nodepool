@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f201791_a90a5787",
+        "filename": "nodepool/status.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-06-20T23:59:30Z",
+      "side": 1,
+      "message": "We cal the others basically after their attribute name (private_ipv4 \u003d\u003d Private IPv4), but with this one we just do \"Port\" and not \"SSH Port\". Given that on an OpenStack cloud, Port is a Neutron term, I think it might be good to disambiguate.",
+      "revId": "aa58bd9d657d2f16a3d65792129d03b79cb8c4be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
