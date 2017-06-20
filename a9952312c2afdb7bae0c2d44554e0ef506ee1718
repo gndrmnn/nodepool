@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f201791_b5d9a023",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-06-20T13:16:19Z",
+      "side": 1,
+      "message": "I sort of feel like if an actual image ID is provided that we should record that value in image_id rather than repeating the name. I\u0027m fine with the \"display\" name overriding the provider given name.",
+      "revId": "a9952312c2afdb7bae0c2d44554e0ef506ee1718",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
