@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_71a30f02",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-20T02:45:06Z",
+      "side": 1,
+      "message": "Indeed, but let\u0027s wait py27 job are dropped first",
+      "parentUuid": "7f231b9d_ec4072a7",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 33
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_cc85b6ae",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 6
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "7f231b9d_717c2f72",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-20T02:45:06Z",
+      "side": 1,
+      "message": "I think this is out of scope for this topic",
+      "parentUuid": "7f231b9d_cc5c964c",
+      "range": {
+        "startLine": 236,
+        "startChar": 16,
+        "endLine": 236,
+        "endChar": 18
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f231b9d_36a35803",
         "filename": "nodepool/launcher.py",
         "patchSetId": 6
@@ -82,6 +130,30 @@
       "writtenOn": "2017-06-19T17:59:28Z",
       "side": 1,
       "message": "_get_node_request_handler because private method?",
+      "range": {
+        "startLine": 727,
+        "startChar": 8,
+        "endLine": 727,
+        "endChar": 32
+      },
+      "revId": "1cc9a488aa936c49ec1d2e553dcbf78a2f64220a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f231b9d_b1e76747",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-06-20T02:45:06Z",
+      "side": 1,
+      "message": "Yes, fixed.",
+      "parentUuid": "7f231b9d_36a35803",
       "range": {
         "startLine": 727,
         "startChar": 8,
