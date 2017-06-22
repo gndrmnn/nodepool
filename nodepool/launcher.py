@@ -1075,7 +1075,11 @@ class BaseCleanupWorker(threading.Thread):
         threading.Thread.__init__(self, name=name)
         self._nodepool = nodepool
         self._interval = interval
-        self._running = False
+        self._death = threading.Event()
+
+    @property
+    def running(self):
+        return not self._death.is_set()
 
     def _deleteInstance(self, node):
         '''
@@ -1100,22 +1104,26 @@ class BaseCleanupWorker(threading.Thread):
 
     def run(self):
         self.log.info("Starting")
-        self._running = True
+        self._death.clear()
 
-        while self._running:
+        while self.running:
             # Don't do work if we've lost communication with the ZK cluster
             zk_conn = self._nodepool.getZK()
-            while zk_conn and (zk_conn.suspended or zk_conn.lost):
+            while (zk_conn and (zk_conn.suspended or zk_conn.lost) and
+                    self.running):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
+                self._death.wait(SUSPEND_WAIT_TIME)
+
+            if not self.running:
+                break
 
             self._run()
-            time.sleep(self._interval)
+            self._death.wait(self._interval)
 
         self.log.info("Stopped")
 
     def stop(self):
-        self._running = False
+        self._death.set()
         self.join()
 
 
