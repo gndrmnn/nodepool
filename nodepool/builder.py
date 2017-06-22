@@ -112,7 +112,7 @@ class BaseWorker(threading.Thread):
         super(BaseWorker, self).__init__()
         self.log = logging.getLogger("nodepool.builder.BaseWorker")
         self.daemon = True
-        self._running = False
+        self._death = threading.Event()
         self._config = None
         self._config_path = config_path
         self._zk = zk
@@ -133,10 +133,10 @@ class BaseWorker(threading.Thread):
 
     @property
     def running(self):
-        return self._running
+        return self._death.is_set()
 
     def shutdown(self):
-        self._running = False
+        self._death.set()
 
 
 class CleanupWorker(BaseWorker):
@@ -475,20 +475,21 @@ class CleanupWorker(BaseWorker):
         '''
         Start point for the CleanupWorker thread.
         '''
-        self._running = True
-        while self._running:
+        self._death.clear()
+        while not self._death.is_set():
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and not self._death.is_set()):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if self._death.is_set():
+                break
             try:
                 self._run()
             except Exception:
                 self.log.exception("Exception in CleanupWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
         provider_manager.ProviderManager.stopProviders(self._config)
 
@@ -772,20 +773,21 @@ class BuildWorker(BaseWorker):
         '''
         Start point for the BuildWorker thread.
         '''
-        self._running = True
-        while self._running:
+        self._death.clear()
+        while not self._death.is_set():
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and not self._death.is_set()):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if self._death.is_set():
+                break
             try:
                 self._run()
             except Exception:
                 self.log.exception("Exception in BuildWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
     def _run(self):
         '''
@@ -1017,21 +1019,22 @@ class UploadWorker(BaseWorker):
         '''
         Start point for the UploadWorker thread.
         '''
-        self._running = True
-        while self._running:
+        self._death.clear()
+        while not self._death.is_set():
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and not self._death.is_set()):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if self._death.is_set():
+                break
             try:
                 self._reloadConfig()
                 self._checkForProviderUploads()
             except Exception:
                 self.log.exception("Exception in UploadWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
         provider_manager.ProviderManager.stopProviders(self._config)
 
@@ -1131,6 +1134,9 @@ class NodePoolBuilder(object):
             # Wait until all threads are running. Otherwise, we have a race
             # on the worker _running attribute if shutdown() is called before
             # run() actually begins.
+            #
+            # TODO: refactor this to use something like a latch and wait
+            # for the latch to reach zero (ie all threads have started).
             while not all([
                 x.running for x in (self._build_workers
                                     + self._upload_workers
