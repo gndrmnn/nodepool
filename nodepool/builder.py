@@ -25,6 +25,7 @@ import sys
 
 import config as nodepool_config
 import exceptions
+import latch
 import provider_manager
 import stats
 import zk
@@ -108,17 +109,18 @@ class DibImageFile(object):
 
 
 class BaseWorker(threading.Thread):
-    def __init__(self, config_path, interval, zk):
+    def __init__(self, config_path, interval, zk, barrier):
         super(BaseWorker, self).__init__()
         self.log = logging.getLogger("nodepool.builder.BaseWorker")
         self.daemon = True
-        self._running = False
+        self._death = threading.Event()
         self._config = None
         self._config_path = config_path
         self._zk = zk
         self._hostname = socket.gethostname()
         self._statsd = stats.get_client()
         self._interval = interval
+        self._barrier = barrier
 
     def _checkForZooKeeperChanges(self, new_config):
         '''
@@ -132,11 +134,11 @@ class BaseWorker(threading.Thread):
             self._zk.resetHosts(new_config.zookeeper_servers.values())
 
     @property
-    def running(self):
-        return self._running
+    def _running(self):
+        return not self._death.is_set()
 
     def shutdown(self):
-        self._running = False
+        self._death.set()
 
 
 class CleanupWorker(BaseWorker):
@@ -145,8 +147,9 @@ class CleanupWorker(BaseWorker):
     and any local DIB builds.
     '''
 
-    def __init__(self, name, config_path, interval, zk):
-        super(CleanupWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, config_path, interval, zk, barrier):
+        super(CleanupWorker, self).__init__(config_path, interval,
+                                            zk, barrier)
         self.log = logging.getLogger("nodepool.builder.CleanupWorker.%s" % name)
         self.name = 'CleanupWorker.%s' % name
 
@@ -475,20 +478,22 @@ class CleanupWorker(BaseWorker):
         '''
         Start point for the CleanupWorker thread.
         '''
-        self._running = True
+        self._death.clear()
+        self._barrier.countdown()
         while self._running:
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and self._running):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if not self._running:
+                break
             try:
                 self._run()
             except Exception:
                 self.log.exception("Exception in CleanupWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
         provider_manager.ProviderManager.stopProviders(self._config)
 
@@ -509,11 +514,12 @@ class CleanupWorker(BaseWorker):
 
 
 class BuildWorker(BaseWorker):
-    def __init__(self, name, config_path, interval, zk, dib_cmd):
-        super(BuildWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, config_path, interval, zk, barrier, dib_cmd):
+        super(BuildWorker, self).__init__(config_path, interval, zk, barrier)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
         self.dib_cmd = dib_cmd
+        self.barrier = barrier
 
     def _running_under_virtualenv(self):
         # NOTE: borrowed from pip:locations.py
@@ -548,7 +554,7 @@ class BuildWorker(BaseWorker):
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
-            if not self.running or self._zk.suspended or self._zk.lost:
+            if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
                 self._checkImageForScheduledImageUpdates(diskimage)
@@ -615,7 +621,7 @@ class BuildWorker(BaseWorker):
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
-            if not self.running or self._zk.suspended or self._zk.lost:
+            if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
                 self._checkImageForManualBuildRequest(diskimage)
@@ -772,20 +778,22 @@ class BuildWorker(BaseWorker):
         '''
         Start point for the BuildWorker thread.
         '''
-        self._running = True
+        self._death.clear()
+        self._barrier.countdown()
         while self._running:
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and self._running):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if not self._running:
+                break
             try:
                 self._run()
             except Exception:
                 self.log.exception("Exception in BuildWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
     def _run(self):
         '''
@@ -804,8 +812,9 @@ class BuildWorker(BaseWorker):
 
 
 class UploadWorker(BaseWorker):
-    def __init__(self, name, config_path, interval, zk):
-        super(UploadWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, config_path, interval, zk, barrier):
+        super(UploadWorker, self).__init__(config_path, interval,
+                                           zk, barrier)
         self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
         self.name = 'UploadWorker.%s' % name
 
@@ -920,7 +929,7 @@ class UploadWorker(BaseWorker):
 
                 # Check if we've been told to shutdown
                 # or if ZK connection is suspended
-                if not self.running or self._zk.suspended or self._zk.lost:
+                if not self._running or self._zk.suspended or self._zk.lost:
                     return
                 try:
                     uploaded = self._checkProviderImageUpload(provider, image)
@@ -1017,21 +1026,23 @@ class UploadWorker(BaseWorker):
         '''
         Start point for the UploadWorker thread.
         '''
-        self._running = True
+        self._death.clear()
+        self._barrier.countdown()
         while self._running:
             # Don't do work if we've lost communication with the ZK cluster
-            while self._zk and (self._zk.suspended or self._zk.lost):
+            while (self._zk and (self._zk.suspended or self._zk.lost)
+                    and self._running):
                 self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-
+                self._death.wait(SUSPEND_WAIT_TIME)
+            if not self._running:
+                break
             try:
                 self._reloadConfig()
                 self._checkForProviderUploads()
             except Exception:
                 self.log.exception("Exception in UploadWorker:")
-                time.sleep(10)
-
-            time.sleep(self._interval)
+                self._death.wait(10)
+            self._death.wait(self._interval)
 
         provider_manager.ProviderManager.stopProviders(self._config)
 
@@ -1111,32 +1122,31 @@ class NodePoolBuilder(object):
 
             self.log.debug('Starting listener for build jobs')
 
+            barrier = latch.Latch(
+                max(0, self._num_builders) + max(0, self._num_uploaders) + 1)
+
             # Create build and upload worker objects
             for i in range(self._num_builders):
                 w = BuildWorker(i, self._config_path, self.build_interval,
-                                self.zk, self.dib_cmd)
+                                self.zk, barrier, self.dib_cmd)
                 w.start()
                 self._build_workers.append(w)
 
             for i in range(self._num_uploaders):
                 w = UploadWorker(i, self._config_path, self.upload_interval,
-                                 self.zk)
+                                 self.zk, barrier)
                 w.start()
                 self._upload_workers.append(w)
 
             self._janitor = CleanupWorker(0, self._config_path,
-                                          self.cleanup_interval, self.zk)
+                                          self.cleanup_interval, self.zk,
+                                          barrier)
             self._janitor.start()
 
             # Wait until all threads are running. Otherwise, we have a race
             # on the worker _running attribute if shutdown() is called before
             # run() actually begins.
-            while not all([
-                x.running for x in (self._build_workers
-                                    + self._upload_workers
-                                    + [self._janitor])
-            ]):
-                time.sleep(0)
+            barrier.wait()
 
     def stop(self):
         '''
