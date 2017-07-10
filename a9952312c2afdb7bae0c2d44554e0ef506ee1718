@@ -16,6 +16,23 @@
       "revId": "a9952312c2afdb7bae0c2d44554e0ef506ee1718",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f1d235d_f970fdde",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-07-10T14:59:52Z",
+      "side": 1,
+      "message": "Well, the zookeeper image_id field was intended to be nodepool\u0027s image id.  That doesn\u0027t map very well to images nodepool isn\u0027t managing.  What we put here is kind of a grey area.  I think the utility of the field is saying \"what image did this node boot with\".  The nodepool image name is an approximation of that.  Really, we probably want to come up with some new format that includes the external name, possibly combined with the external id, and maybe image date.  Or maybe those should all go in new fields, and image_id should not be set.",
+      "revId": "a9952312c2afdb7bae0c2d44554e0ef506ee1718",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
