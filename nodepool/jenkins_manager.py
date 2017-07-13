@@ -20,6 +20,7 @@ import logging
 import re
 
 import jenkins
+from jenkins import JenkinsException
 import fakeprovider
 from task_manager import Task, TaskManager
 
@@ -47,7 +48,7 @@ class CreateNodeTask(Task):
             args['labels'] = self.args['labels']
         try:
             jenkins.create_node(**args)
-        except jenkins.JenkinsException as e:
+        except JenkinsException as e:
             if 'already exists' in str(e):
                 pass
             else:
