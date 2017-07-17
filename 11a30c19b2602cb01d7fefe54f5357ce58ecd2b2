@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1a1f67_b7ca294b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T16:27:01Z",
+      "side": 1,
+      "message": "Q: why could we not store this information into zookeeper? Or is it a chicken and egg issue?\n\nFollow up, would pulling in something like dogpile.cache.dbm also make more sense? IIRC, it has a small dependency list",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 9
+      },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
