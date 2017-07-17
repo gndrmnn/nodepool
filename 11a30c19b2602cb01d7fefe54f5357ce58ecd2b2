@@ -135,6 +135,24 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_2d35aa8f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T17:12:17Z",
+      "side": 1,
+      "message": "Do we want nodepool creating the file to start with? To me it makes more sense to have puppet-zuul manage this file. This goes back to how puppet-zookeeper works today.\n\nI think we ship a default myid file, with some value, then indicate to users to properly configure it for multiple builders.",
+      "parentUuid": "1f1a1f67_b27c771f",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_4d86a668",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -221,6 +239,24 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_8de4be3d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T17:12:17Z",
+      "side": 1,
+      "message": "+1 /var/lib/nodepool",
+      "parentUuid": "1f1a1f67_0d7c2e70",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_32350790",
         "filename": "nodepool/builder.py",
         "patchSetId": 1
@@ -256,6 +292,30 @@
       "side": 1,
       "message": "Well, except we aren\u0027t really deprecating it. We still allow the option for use of hostname. Perhaps a WARNING might make more sense? But since the warning already exists in the documentation I added, maybe that\u0027s being too verbose about it. I could go either way.",
       "parentUuid": "1f1a1f67_32350790",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 75
+      },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_2d3eca8b",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T17:12:17Z",
+      "side": 1,
+      "message": "Right, my vote would be just to remove the hostname lookup and keep things simple for users.  Because, as you say if hostname changes, then we need to edit zookeeper directly and don\u0027t think a user should be doing that.",
+      "parentUuid": "1f1a1f67_32e4e7e0",
       "range": {
         "startLine": 242,
         "startChar": 0,
