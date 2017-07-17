@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1f1a1f67_adad3aea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "s/ a image / an image /",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_b7ca294b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -43,6 +60,23 @@
         "endLine": 23,
         "endChar": 9
       },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_8db6fe3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "This information is specifically a unique identifier to use to identify an instance of nodepool to Zookeeper. Hostname has cross-cutting implications beyond nodepool including monitoring, logging, etc, and they may in fact change. Requiring operators to be careful about them makes managing servers that run nodepool complicated where it doesn\u0027t need to be.",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -101,6 +135,40 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_4d86a668",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "It\u0027s more of a tradeoff than \"one is better than the other\". Using hostname means the burden is on the operator to make sure the hostname is unique and doesn\u0027t change between build attempts. Using UUID means the file on disk is extremely important to preserve. There will be shops where hostname comes from a container and can be aggressively maintained, and they\u0027ll be fine without the UUID. There will also be shops where hostname is part of a larger configuration of tools on the box where nodepool runs, and thus the UUID is the better way to isolate.",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_2d8b6a6e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "I think we should add a mention of the backward compat rule here, and warn that all nodepool builders need to be restarted with builder-id-file set before hostnames can be reused safely.",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_d2c7f395",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -130,6 +198,23 @@
       "side": 1,
       "message": "Absolutely.",
       "parentUuid": "1f1a1f67_d2c7f395",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_0d7c2e70",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "/var/db isn\u0027t a thing in FHS. /var/lib/nodepool or /var/nodepool would be more appropriate.",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -177,6 +262,23 @@
         "endLine": 245,
         "endChar": 75
       },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_6db3a24e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2017-07-17T17:06:07Z",
+      "side": 1,
+      "message": "uuid1 is a little haphazard when performance isn\u0027t critical. It _should_ be unique between boxes that have different MAC addresses when run in the same second. But the risk of collision is at about 16 bits of entropy when you consider how not-random MAC addresses are in VMs and containers (if the box has the same MAC, you get 14 bits of entropy). I see no reason to build on a tiny bit of entropy when we can have all the entropy of the system\u0027s PRNG with uuid4().",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
