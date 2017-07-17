@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_724fff33",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T16:43:57Z",
+      "side": 1,
+      "message": "Warning: BIKESHED TIME\n\nSo, what if we took a page from zookeepers book and just created a myid file into /etc/nodepool. Then, just have nodepool read that on startup to identify its self?\n\nThen we\u0027d have it as a CLI option, defaulting to /etc/nodepool/myid.\n\nI\u0027m finding it a little odd to have builder-id-file here in nodepool.yaml, that\u0027s the reason for painting",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_d2c7f395",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -36,6 +53,29 @@
       "writtenOn": "2017-07-17T16:41:03Z",
       "side": 1,
       "message": "[+0] I\u0027d suggest a .txt extension as an example so that folks feel more comfortable inspecting it.",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_32350790",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T16:43:57Z",
+      "side": 1,
+      "message": "Ya, maybe we can also emit a deprecated warning below so we can eventually remove this?",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 75
+      },
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
