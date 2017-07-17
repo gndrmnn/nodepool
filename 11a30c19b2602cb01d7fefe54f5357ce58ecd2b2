@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_721c9fc0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T16:55:17Z",
+      "side": 1,
+      "message": "Oops, responded to this in the comment section.",
+      "parentUuid": "1f1a1f67_b7ca294b",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 9
+      },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_724fff33",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
