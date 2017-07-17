@@ -153,6 +153,24 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_68ba700a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "Good question. You can still use puppet (or XYZ thing) to manage the file for you as it is now. But allowing the file to be auto-populated (as this patch does) would allow for an \"uh oh\" scenario where the admin forgot to put the file in place and builder is all of a sudden using an auto-created value that you did not intend.",
+      "parentUuid": "1f1a1f67_2d35aa8f",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_4d86a668",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -170,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_684f1034",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "Ack. Not sure if you are suggesting a change to the above text then to clarify something, or just a general comment.",
+      "parentUuid": "1f1a1f67_4d86a668",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_2d8b6a6e",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 1
@@ -181,6 +217,24 @@
       "writtenOn": "2017-07-17T17:06:07Z",
       "side": 1,
       "message": "I think we should add a mention of the backward compat rule here, and warn that all nodepool builders need to be restarted with builder-id-file set before hostnames can be reused safely.",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_2867d8bf",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "Will add that.",
+      "parentUuid": "1f1a1f67_2d8b6a6e",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -251,6 +305,24 @@
       "side": 1,
       "message": "+1 /var/lib/nodepool",
       "parentUuid": "1f1a1f67_0d7c2e70",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_280c78eb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "Will change the example to: /var/lib/nodepool/builder-id.txt",
+      "parentUuid": "1f1a1f67_8de4be3d",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -328,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "1f1a1f67_28c3585f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "I could be convinced to remove the ability to use hostname altogether if that\u0027s the consensus of the group.",
+      "parentUuid": "1f1a1f67_2d3eca8b",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 75
+      },
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f1a1f67_6db3a24e",
         "filename": "nodepool/builder.py",
         "patchSetId": 1
@@ -339,6 +435,24 @@
       "writtenOn": "2017-07-17T17:06:07Z",
       "side": 1,
       "message": "uuid1 is a little haphazard when performance isn\u0027t critical. It _should_ be unique between boxes that have different MAC addresses when run in the same second. But the risk of collision is at about 16 bits of entropy when you consider how not-random MAC addresses are in VMs and containers (if the box has the same MAC, you get 14 bits of entropy). I see no reason to build on a tiny bit of entropy when we can have all the entropy of the system\u0027s PRNG with uuid4().",
+      "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_68fdd0af",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-17T17:54:48Z",
+      "side": 1,
+      "message": "Sure, easy enough to switch versions.",
+      "parentUuid": "1f1a1f67_6db3a24e",
       "revId": "11a30c19b2602cb01d7fefe54f5357ce58ecd2b2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
