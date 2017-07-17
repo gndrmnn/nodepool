@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1a1f67_8d9cb9c0",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-07-17T20:27:55Z",
+      "side": 1,
+      "message": "lets make this opensuse-423, like nodepool.yaml. Same with all references below",
+      "revId": "140550afd7b48be443d9eb8ab1dcec94c54fcb10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
