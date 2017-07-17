@@ -112,6 +112,7 @@ class ConfigValidator:
 
         top_level = {
             'webapp': webapp,
+            'builder-id-file': str,
             'elements-dir': str,
             'images-dir': str,
             'zookeeper-servers': [{

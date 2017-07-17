@@ -19,6 +19,26 @@ and ``providers`` sections::
 The following sections are available.  All are required unless
 otherwise indicated.
 
+.. _builder-id-file:
+
+builder-id-file
+---------------
+
+The builder daemon creates a UUID to uniquely identify itself and to mark
+image builds in ZooKeeper that it owns. The ``builder-id-file`` parameter
+specifies the file that will contain the UUID across restarts. If this file
+does not exist, it will be created on initial startup. If the option is not
+specified, then the builder hostname will be used.
+
+Beware of using the hostname if there is a possibility of it ever changing.
+Because this value will be recorded in ZooKeeper to help identify owners of
+built images, a changed hostname could cause orphaned image builds, which
+will never be deleted.
+
+Example::
+
+  builder-id-file: /var/db/nodepool/builder-id.dat
+
 .. _webapp-conf:
 
 webapp

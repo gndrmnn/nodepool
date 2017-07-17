@@ -21,6 +21,7 @@ import subprocess
 import threading
 import time
 import shlex
+import uuid
 
 from nodepool import config as nodepool_config
 from nodepool import exceptions
@@ -107,7 +108,7 @@ class DibImageFile(object):
 
 
 class BaseWorker(threading.Thread):
-    def __init__(self, config_path, interval, zk):
+    def __init__(self, builder_id, config_path, interval, zk):
         super(BaseWorker, self).__init__()
         self.log = logging.getLogger("nodepool.builder.BaseWorker")
         self.daemon = True
@@ -118,6 +119,7 @@ class BaseWorker(threading.Thread):
         self._hostname = socket.gethostname()
         self._statsd = stats.get_client()
         self._interval = interval
+        self._builder_id = builder_id
 
     def _checkForZooKeeperChanges(self, new_config):
         '''
@@ -144,8 +146,9 @@ class CleanupWorker(BaseWorker):
     and any local DIB builds.
     '''
 
-    def __init__(self, name, config_path, interval, zk):
-        super(CleanupWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, builder_id, config_path, interval, zk):
+        super(CleanupWorker, self).__init__(builder_id, config_path,
+                                            interval, zk)
         self.log = logging.getLogger("nodepool.builder.CleanupWorker.%s" % name)
         self.name = 'CleanupWorker.%s' % name
 
@@ -236,7 +239,11 @@ class CleanupWorker(BaseWorker):
             # NOTE(pabelanger): It is possible we don't have any files because
             # diskimage-builder failed. So, check to see if we have the correct
             # builder so we can removed the data from zookeeper.
-            if build.builder == self._hostname:
+
+            # To maintain backward compatibility with builders that didn't
+            # use unique builder IDs before, but do now, always compare to
+            # hostname as well since some ZK data may still reference that.
+            if build.builder in (self._hostname, self._builder_id):
                 return True
             return False
 
@@ -510,8 +517,9 @@ class CleanupWorker(BaseWorker):
 
 
 class BuildWorker(BaseWorker):
-    def __init__(self, name, config_path, interval, zk, dib_cmd):
-        super(BuildWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, builder_id, config_path, interval, zk, dib_cmd):
+        super(BuildWorker, self).__init__(builder_id, config_path,
+                                          interval, zk)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
         self.dib_cmd = dib_cmd
@@ -573,7 +581,7 @@ class BuildWorker(BaseWorker):
 
                     data = zk.ImageBuild()
                     data.state = zk.BUILDING
-                    data.builder = self._hostname
+                    data.builder = self._builder_id
                     data.formats = list(diskimage.image_types)
 
                     bnum = self._zk.storeBuild(diskimage.name, data)
@@ -623,7 +631,7 @@ class BuildWorker(BaseWorker):
 
                 data = zk.ImageBuild()
                 data.state = zk.BUILDING
-                data.builder = self._hostname
+                data.builder = self._builder_id
                 data.formats = list(diskimage.image_types)
 
                 bnum = self._zk.storeBuild(diskimage.name, data)
@@ -712,7 +720,7 @@ class BuildWorker(BaseWorker):
             time.sleep(SUSPEND_WAIT_TIME)
 
         build_data = zk.ImageBuild()
-        build_data.builder = self._hostname
+        build_data.builder = self._builder_id
 
         if self._zk.didLoseConnection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
@@ -778,8 +786,9 @@ class BuildWorker(BaseWorker):
 
 
 class UploadWorker(BaseWorker):
-    def __init__(self, name, config_path, interval, zk):
-        super(UploadWorker, self).__init__(config_path, interval, zk)
+    def __init__(self, name, builder_id, config_path, interval, zk):
+        super(UploadWorker, self).__init__(builder_id, config_path,
+                                           interval, zk)
         self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
         self.name = 'UploadWorker.%s' % name
 
@@ -1055,6 +1064,21 @@ class NodePoolBuilder(object):
     # Private methods
     #=======================================================================
 
+    def _getBuilderID(self, id_file):
+        if not id_file:
+            # Fallback to hostname
+            return socket.gethostname()
+
+        if not os.path.exists(id_file):
+            with open(id_file, "w") as f:
+                builder_id = str(uuid.uuid1())
+                f.write(builder_id)
+            return builder_id
+
+        with open(id_file, "r") as f:
+            builder_id = f.read()
+        return builder_id
+
     def _getAndValidateConfig(self):
         config = nodepool_config.loadConfig(self._config_path)
         if not config.zookeeper_servers.values():
@@ -1082,6 +1106,8 @@ class NodePoolBuilder(object):
             self._config = self._getAndValidateConfig()
             self._running = True
 
+            builder_id = self._getBuilderID(self._config.builder_id_file)
+
             # All worker threads share a single ZooKeeper instance/connection.
             self.zk = zk.ZooKeeper()
             self.zk.connect(list(self._config.zookeeper_servers.values()))
@@ -1090,20 +1116,21 @@ class NodePoolBuilder(object):
 
             # Create build and upload worker objects
             for i in range(self._num_builders):
-                w = BuildWorker(i, self._config_path, self.build_interval,
-                                self.zk, self.dib_cmd)
+                w = BuildWorker(i, builder_id, self._config_path,
+                                self.build_interval, self.zk, self.dib_cmd)
                 w.start()
                 self._build_workers.append(w)
 
             for i in range(self._num_uploaders):
-                w = UploadWorker(i, self._config_path, self.upload_interval,
-                                 self.zk)
+                w = UploadWorker(i, builder_id, self._config_path,
+                                 self.upload_interval, self.zk)
                 w.start()
                 self._upload_workers.append(w)
 
             if self.cleanup_interval > 0:
                 self._janitor = CleanupWorker(
-                    0, self._config_path, self.cleanup_interval, self.zk)
+                    0, builder_id, self._config_path,
+                    self.cleanup_interval, self.zk)
                 self._janitor.start()
 
             # Wait until all threads are running. Otherwise, we have a race

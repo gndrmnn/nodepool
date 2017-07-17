@@ -195,7 +195,7 @@ class ImageBuild(BaseModel):
     def __init__(self, build_id=None):
         super(ImageBuild, self).__init__(build_id)
         self._formats = []
-        self.builder = None          # Builder hostname
+        self.builder = None
 
     def __repr__(self):
         d = self.toDict()

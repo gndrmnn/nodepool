@@ -149,6 +149,7 @@ def loadConfig(config_path):
     cloud_config = os_client_config.OpenStackConfig()
 
     newconfig = Config()
+    newconfig.builder_id_file = config.get('builder-id-file')
     newconfig.db = None
     newconfig.webapp = {
         'port': config.get('webapp', {}).get('port', 8005),
