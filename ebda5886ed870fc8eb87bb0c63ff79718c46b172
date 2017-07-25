@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ff346bd7_d2228e01",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-25T13:49:30Z",
+      "side": 1,
+      "message": "Perhaps this should be renamed get_provider() now since a manager is not returned? This can be done in a followup though.",
+      "revId": "ebda5886ed870fc8eb87bb0c63ff79718c46b172",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff346bd7_b2b82a2a",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 12
@@ -13,6 +30,24 @@
       "writtenOn": "2017-07-25T13:28:48Z",
       "side": 1,
       "message": "So, the logic of this is hurting my brain a little bit (as it did when I first encountered the ProviderManager), but I think this breaks our automatic config updating. The point of the ProviderManager code is to prevent having more than 1 active provider object.\n\nThe NodePool class calls updateConfig(), which will then call ProviderManager.reconfigure() for all ProviderManagers stored in our config object (which are initially set by calling updateConfig()). That call is going to fail with this change.\nWe also lose our protection against having more than 1 active provider. Using the reconfigure() call is our interface to guarantee that.",
+      "revId": "ebda5886ed870fc8eb87bb0c63ff79718c46b172",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff346bd7_52345efb",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-25T13:49:30Z",
+      "side": 1,
+      "message": "Ok, after looking more, I think we\u0027re ok on this.\n\nNodePool instantiates ProviderManager.reconfigure() directly (never calling get_provider_manager), and the get_provider_manager() call is within reconfigure() itself.\n\nPlus, we have tests in test_builder.py that explicitly test config changes, so I withdraw my previous concern.",
+      "parentUuid": "ff346bd7_b2b82a2a",
       "revId": "ebda5886ed870fc8eb87bb0c63ff79718c46b172",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
