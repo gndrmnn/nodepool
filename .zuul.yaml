@@ -1,0 +1,9 @@
+- project:
+    name: openstack-infra/nodepool
+    check:
+      jobs:
+        - tox-docs
+        - tox-cover
+        - tox-pep8
+        - tox-py27
+        - tox-py35
