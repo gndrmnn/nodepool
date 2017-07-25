@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ff346bd7_1f3ffe25",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-07-25T14:27:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff346bd7_d2228e01",
+      "revId": "ebda5886ed870fc8eb87bb0c63ff79718c46b172",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff346bd7_b2b82a2a",
         "filename": "nodepool/provider_manager.py",
         "patchSetId": 12
