@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff346bd7_d6a254fc",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-07-26T15:06:14Z",
+      "side": 1,
+      "message": "We\u0027re trying to move away from python 2 for the feature/zuulv3 branch, so let\u0027s not add py27.",
+      "revId": "267bc5636418212e25ab24417f13ef8c6702507e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
