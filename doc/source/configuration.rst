@@ -217,11 +217,33 @@ Example configuration::
 .. _provider:
 
 provider
----------
+--------
 
-Lists the OpenStack cloud providers Nodepool should use.  Within each
-provider the available Nodepool image types are defined (see
-:ref:`provider_diskimages`.
+Lists the providers Nodepool should use. Each providers is associated to
+a driver listed bellow.
+
+**required**
+
+  ``name``
+
+
+**optional**
+
+  ``driver``
+    Default to *openstack*
+
+  ``max-concurrency``
+    Maximum number of node requests that this provider is allowed to handle
+    concurrently. The default, if not specified, is to have no maximum. Since
+    each node request is handled by a separate thread, this can be useful for
+    limiting the number of threads used by the nodepool-launcher daemon.
+
+
+OpenStack driver
+^^^^^^^^^^^^^^^^
+
+Within each OpenSTack provider the available Nodepool image types are defined
+(see :ref:`provider_diskimages`).
 
 A provider's resources are partitioned into groups called "pools" (see
 :ref:`pools` for details), and within a pool, the node types which are
@@ -232,6 +254,7 @@ Example::
 
   providers:
     - name: provider1
+      driver: openstack
       cloud: example
       region-name: 'region1'
       rate: 1.0
@@ -266,6 +289,8 @@ Example::
               min-ram: 8192
               diskimage: devstack-trusty
     - name: provider2
+      driver: openstack
+      cloud: example2
       region-name: 'region1'
       rate: 1.0
       image-name-format: 'template-{image_name}-{timestamp}'
@@ -290,8 +315,6 @@ Example::
               diskimage: devstack-trusty
 
 **required**
-
-  ``name``
 
   ``cloud``
   Name of a cloud configured in ``clouds.yaml``.
@@ -349,12 +372,6 @@ Example::
     If it is set to True, nodepool will assume it is the only user of the
     OpenStack project and will attempt to clean unattached floating ips that
     may have leaked around restarts.
-
-  ``max-concurrency``
-    Maximum number of node requests that this provider is allowed to handle
-    concurrently. The default, if not specified, is to have no maximum. Since
-    each node request is handled by a separate thread, this can be useful for
-    limiting the number of threads used by the nodepool-launcher daemon.
 
 .. _pools:
 
