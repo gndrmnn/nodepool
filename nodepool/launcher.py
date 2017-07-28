@@ -455,8 +455,7 @@ class CleanupWorker(BaseCleanupWorker):
                     node.provider = provider.name
                     self._deleteInstance(node)
 
-            if provider.clean_floating_ips:
-                manager.cleanupLeakedFloaters()
+            manager.cleanupLeakedResources()
 
     def _cleanupMaxReadyAge(self):
         '''
