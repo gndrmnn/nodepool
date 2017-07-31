@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df3967d1_9240bf09",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-07-31T06:07:05Z",
+      "side": 1,
+      "message": "This is becaused the os_client_config class variable is shared by all OpenStack drivers so that the OpenStackConfig object is only instanciated once.\n\nOn the other hand, we could create one OpenStackConfig object per driver too.",
+      "parentUuid": "df3967d1_1707211f",
+      "revId": "c5e0a6f51d9db9d2cd8fadf1f02d58b3eb139b84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df3967d1_5776c9da",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2017-07-31T05:52:29Z",
       "side": 1,
       "message": "Floating IPs are OpenStack specific stuff. I think this shouldn\u0027t be part of the generic base class.",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 38
+      },
+      "revId": "c5e0a6f51d9db9d2cd8fadf1f02d58b3eb139b84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df3967d1_b232a3a6",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-07-31T06:07:05Z",
+      "side": 1,
+      "message": "This is because the _cleanupLeakedInstances launcher method expect this variable to be defined. Maybe the provider can provide a generic cleanUp method that the openstack provider will implement to call manager.cleanupLeakedFloaters() when config has clean floating ips.",
+      "parentUuid": "df3967d1_5776c9da",
       "range": {
         "startLine": 319,
         "startChar": 8,
