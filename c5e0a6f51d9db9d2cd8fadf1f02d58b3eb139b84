@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_1707211f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-07-31T05:52:29Z",
+      "side": 1,
+      "message": "Why is this needed here in the generig part?",
+      "revId": "c5e0a6f51d9db9d2cd8fadf1f02d58b3eb139b84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df3967d1_5776c9da",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-07-31T05:52:29Z",
+      "side": 1,
+      "message": "Floating IPs are OpenStack specific stuff. I think this shouldn\u0027t be part of the generic base class.",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 38
+      },
+      "revId": "c5e0a6f51d9db9d2cd8fadf1f02d58b3eb139b84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
