@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_9684f75f",
+        "filename": "nodepool/driver/oci/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-08-01T18:52:49Z",
+      "side": 1,
+      "message": "I still think we should have a discussion about moving the majority of this into an ansible driver. Most of this is about using python to invoke CLI commands.",
+      "revId": "80e2609acbf0fd1111c593e2ba086ba030a9a261",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
