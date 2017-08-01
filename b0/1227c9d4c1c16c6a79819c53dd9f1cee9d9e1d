@@ -1,0 +1,10 @@
+Verified+1: Zuul
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 01 Aug 2017 13:24:55 +0000
+Reviewed-on: https://review.openstack.org/488383
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
