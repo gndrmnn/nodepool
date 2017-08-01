@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_378433b1",
+        "filename": "devstack/settings",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-01T13:32:25Z",
+      "side": 1,
+      "message": "copy pasta\n\ns/FEDORA_25/FEDORA_26/",
+      "revId": "2fbe6a5973507406ee214724e1ea3d4eefd30b72",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
