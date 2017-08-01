@@ -32,8 +32,8 @@ def age(timestamp):
 def node_list(zk, node_id=None, detail=False):
     headers = ["ID", "Provider", "Server ID", "State", "Age", "Locked"]
     detail_headers = ["AZ", "Label", "Hostname", "Public IPv4",
-                      "Private IPv4", "IPv6", "SSH Port", "Launcher",
-                      "Comment"]
+                      "Private IPv4", "IPv6", "SSH Port", "Hold Job",
+                      "Launcher", "Comment"]
     if detail:
         headers += detail_headers
 
@@ -56,8 +56,8 @@ def node_list(zk, node_id=None, detail=False):
             if detail:
                 values += [node.az, node.type, node.hostname,
                            node.public_ipv4, node.private_ipv4,
-                           node.public_ipv6, node.ssh_port, node.launcher,
-                           node.comment]
+                           node.public_ipv6, node.ssh_port, node.hold_job,
+                           node.launcher, node.comment]
             t.add_row(values)
     else:
         for node in zk.nodeIterator():
@@ -74,8 +74,8 @@ def node_list(zk, node_id=None, detail=False):
             if detail:
                 values += [node.az, node.type, node.hostname,
                            node.public_ipv4, node.private_ipv4,
-                           node.public_ipv6, node.ssh_port, node.launcher,
-                           node.comment]
+                           node.public_ipv6, node.ssh_port, node.hold_job,
+                           node.launcher, node.comment]
             t.add_row(values)
     return str(t)
 
