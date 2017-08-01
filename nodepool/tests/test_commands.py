@@ -58,8 +58,12 @@ class TestNodepoolCMD(tests.DBTestCase):
     def assert_images_listed(self, configfile, image_cnt, status="ready"):
         self.assert_listed(configfile, ['image-list'], 6, status, image_cnt)
 
-    def assert_nodes_listed(self, configfile, node_cnt, status="ready"):
-        self.assert_listed(configfile, ['list'], 11, status, node_cnt)
+    def assert_nodes_listed(self, configfile, node_cnt, status="ready",
+                            detail=False):
+        cmd = ['list']
+        if detail:
+            cmd += ['--detail']
+        self.assert_listed(configfile, cmd, 5, status, node_cnt)
 
     def test_image_list_empty(self):
         self.assert_images_listed(self.setup_config("node_cmd.yaml"), 0)
@@ -124,7 +128,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
-        self.assert_nodes_listed(configfile, 1)
+        self.assert_nodes_listed(configfile, 1, detail=True)
 
     def test_config_validate(self):
         config = os.path.join(os.path.dirname(tests.__file__),
