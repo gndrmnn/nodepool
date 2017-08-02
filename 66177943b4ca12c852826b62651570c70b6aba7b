@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_2d503bd4",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-08-02T13:25:30Z",
+      "side": 1,
+      "message": "Maybe\n\n  cmd \u003d [\u0027list\u0027]\n  self.assert_listed(configfile, cmd, 5, status, node_cnt)\n  cmd +\u003d [\u0027--detail\u0027]\n  self.assert_listed(configfile, cmd, 11, status, node_cnt)",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 64
+      },
+      "revId": "66177943b4ca12c852826b62651570c70b6aba7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
