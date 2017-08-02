@@ -1,0 +1,9 @@
+Code-Review+2: Jesse Keating <omgjlk@us.ibm.com>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 02 Aug 2017 04:30:14 +0000
+Reviewed-on: https://review.openstack.org/482942
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
