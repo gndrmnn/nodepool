@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_ce2bf62d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-08-02T05:47:51Z",
+      "side": 1,
+      "message": "OpenStack",
+      "range": {
+        "startLine": 245,
+        "startChar": 12,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
