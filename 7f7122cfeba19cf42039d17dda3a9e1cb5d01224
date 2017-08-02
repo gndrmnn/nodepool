@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_6ec08a7c",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-08-02T05:35:24Z",
+      "side": 1,
+      "message": "I\u0027d like to see also such an assertion for the detailed list here which is used by at least test_list_nodes.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 69
+      },
+      "revId": "7f7122cfeba19cf42039d17dda3a9e1cb5d01224",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
