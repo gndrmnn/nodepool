@@ -22,6 +22,30 @@
       "revId": "66177943b4ca12c852826b62651570c70b6aba7b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df3967d1_6d79a32d",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-08-02T13:30:21Z",
+      "side": 1,
+      "message": "My comment was nonsense as the magic number is the index of the status field and not len(columns).",
+      "parentUuid": "df3967d1_2d503bd4",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 64
+      },
+      "revId": "66177943b4ca12c852826b62651570c70b6aba7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
