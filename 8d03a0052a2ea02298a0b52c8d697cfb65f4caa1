@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "9f436f4f_96c0b852",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:25:54Z",
+      "side": 1,
+      "message": "Just noticed this, but it probably makes more sense for this section to be named \u0027providers\u0027 to match the config value.",
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f436f4f_565ed0e6",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:25:54Z",
+      "side": 1,
+      "message": "nit: s/Each providers/Each provider/",
+      "range": {
+        "startLine": 222,
+        "startChar": 46,
+        "endLine": 222,
+        "endChar": 55
+      },
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f436f4f_16704872",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:25:54Z",
+      "side": 1,
+      "message": "nit: s/bellow/below/",
+      "range": {
+        "startLine": 223,
+        "startChar": 16,
+        "endLine": 223,
+        "endChar": 22
+      },
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df3967d1_ce2bf62d",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 2
@@ -18,6 +81,52 @@
         "startChar": 12,
         "endLine": 245,
         "endChar": 21
+      },
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f436f4f_36cb4c54",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:25:54Z",
+      "side": 1,
+      "message": "For clarity, we should probably be specific here to the driver and say \"An OpenStack provider\u0027s resources\". Similarly, see the suggested change to the pools wording below, too.",
+      "range": {
+        "startLine": 248,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 22
+      },
+      "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f436f4f_d6c1a030",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:25:54Z",
+      "side": 1,
+      "message": "s/from a provider/from an OpenStack provider/",
+      "range": {
+        "startLine": 381,
+        "startChar": 36,
+        "endLine": 381,
+        "endChar": 51
       },
       "revId": "8d03a0052a2ea02298a0b52c8d697cfb65f4caa1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
