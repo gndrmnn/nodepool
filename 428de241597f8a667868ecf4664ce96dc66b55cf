@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f436f4f_563ff0d5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 22
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-08-08T17:33:01Z",
+      "side": 1,
+      "message": "I would think that this could get confusing with the identically named providers.max-concurrency config option.",
+      "range": {
+        "startLine": 639,
+        "startChar": 4,
+        "endLine": 639,
+        "endChar": 19
+      },
+      "revId": "428de241597f8a667868ecf4664ce96dc66b55cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
