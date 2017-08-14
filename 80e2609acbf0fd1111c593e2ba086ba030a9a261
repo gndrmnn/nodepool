@@ -16,6 +16,24 @@
       "revId": "80e2609acbf0fd1111c593e2ba086ba030a9a261",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f436f4f_9371650f",
+        "filename": "nodepool/driver/oci/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-08-14T07:23:10Z",
+      "side": 1,
+      "message": "Indeed, the paramiko code could be refactor into an ansible playbook. I\u0027ll work on a proof of concept for the PTG.",
+      "parentUuid": "df3967d1_9684f75f",
+      "revId": "80e2609acbf0fd1111c593e2ba086ba030a9a261",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
