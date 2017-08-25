@@ -42,7 +42,7 @@ class Provider(object):
         pass
 
     @abc.abstractmethod
-    def labelReady(self, name):
+    def imageReady(self, name):
         pass
 
     @abc.abstractmethod
