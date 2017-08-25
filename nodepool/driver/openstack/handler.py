@@ -303,7 +303,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
             if self.pool.labels[label].cloud_image:
                 img = self.pool.labels[label].cloud_image
-                if not self.manager.labelReady(img):
+                if not self.manager.imageReady(img):
                     return False
             else:
                 img = self.pool.labels[label].diskimage.name

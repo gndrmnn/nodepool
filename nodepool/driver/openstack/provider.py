@@ -273,8 +273,22 @@ class OpenStackProvider(Provider):
         with shade_inner_exceptions():
             return self._client.get_image(image_id)
 
-    def labelReady(self, image_id):
-        return self.getImage(image_id)
+    def imageReady(self, cloud_image_name):
+        cloud_image = self.provider.cloud_images[cloud_image_name]
+
+        #TODO(jeblair): this should be a static function shared with handler.py
+        # These are different values for zk, but it's all the same
+        # for cloud-images.
+        # image_external is what we use for OpenStack.
+        # image_id is what we record in the node for zk.
+        # image_name is what we log, so matches the config.
+        if cloud_image.image_id:
+            image_external = dict(id=cloud_image.image_id)
+        elif cloud_image.image_name:
+            image_external = cloud_image.image_name
+        else:
+            image_external = cloud_image.name
+        return self.getImage(image_external)
 
     def uploadImage(self, image_name, filename, image_type=None, meta=None,
             md5=None, sha256=None):

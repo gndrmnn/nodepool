@@ -769,8 +769,18 @@ class NodePool(threading.Thread):
             for pool_label in pool.labels.values():
                 if pool_label.cloud_image:
                     manager = self.getProviderManager(pool.provider.name)
-                    if manager.labelReady(pool_label.cloud_image):
+                    if manager.imageReady(pool_label.cloud_image):
                         return True
+                    else:
+                        self.log.warning(
+                            "Provider %s is configured to use %s as the"
+                            " cloud-image for label %s and that"
+                            " cloud-image could not be found in the"
+                            " cloud." % (pool.provider.name,
+                                         pool_label.cloud_image,  # Note
+                                         pool_label.cloud_image))
+                        # TODO(jeblair): second value should be replaced with
+                        # whatever we pass to shade
                 elif self.zk.getMostRecentImageUpload(pool_label.diskimage.name,
                                                       pool.provider.name):
                     return True
