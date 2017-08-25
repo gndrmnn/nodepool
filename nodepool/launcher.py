@@ -767,13 +767,14 @@ class NodePool(threading.Thread):
                 # Provider doesn't manage images, assuming label is ready
                 return True
             for pool_label in pool.labels.values():
-                if pool_label.cloud_image:
-                    manager = self.getProviderManager(pool.provider.name)
-                    if manager.labelReady(pool_label.cloud_image):
-                        return True
-                elif self.zk.getMostRecentImageUpload(pool_label.diskimage.name,
-                                                      pool.provider.name):
+                if pool_label.diskimage:
+                    if self.zk.getMostRecentImageUpload(
+                        pool_label.diskimage.name, pool.provider.name):
                     return True
+                else:
+                    manager = self.getProviderManager(pool.provider.name)
+                    if manager.labelReady(pool_label):
+                        return True
         return False
 
         for provider_name in label.providers.keys():
