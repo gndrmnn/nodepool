@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f287b81_1ccfc156",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-08-28T21:04:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f287b81_919b9a16",
+      "range": {
+        "startLine": 530,
+        "startChar": 67,
+        "endLine": 531,
+        "endChar": 29
+      },
+      "revId": "b4d5edad28d332adce4a6faa1b5c0ef512fb56e7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f287b81_51a1b245",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-28T20:38:00Z",
       "side": 1,
       "message": "of",
+      "range": {
+        "startLine": 533,
+        "startChar": 4,
+        "endLine": 533,
+        "endChar": 6
+      },
+      "revId": "b4d5edad28d332adce4a6faa1b5c0ef512fb56e7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f287b81_fcd755ed",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2017-08-28T21:04:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f287b81_51a1b245",
       "range": {
         "startLine": 533,
         "startChar": 4,
