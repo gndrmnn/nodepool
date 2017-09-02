@@ -106,6 +106,25 @@ def node_list_json(zk):
     return json.dumps([node.toDict() for node in zk.nodeIterator()])
 
 
+def label_list(zk):
+    labels = {}
+    for node in zk.nodeIterator():
+        labels.setdefault(node.type, 0)
+        labels[node.type] += 1
+    t = PrettyTable(["Label", "Count"])
+    for label in sorted(labels.keys()):
+        t.add_row((label, labels[label]))
+    return str(t)
+
+
+def label_list_json(zk):
+    labels = {}
+    for node in zk.nodeIterator():
+        labels.setdefault(node.type, 0)
+        labels[node.type] += 1
+    return json.dumps(labels)
+
+
 def dib_image_list(zk):
     t = PrettyTable(["ID", "Image", "Builder", "Formats",
                      "State", "Age"])
