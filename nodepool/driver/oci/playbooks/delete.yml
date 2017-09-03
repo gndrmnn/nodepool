@@ -1,0 +1,17 @@
+---
+- hosts: hypervisor
+  remote_user: root
+  tasks:
+    - name: "Kill container"
+      command: "runc kill --all {{ container_id }} KILL"
+
+    - name: "Delete left-overs"
+      command: "runc delete --force {{ container_id }}"
+
+    - name: "Delete state paths"
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/var/lib/zuul/work/{{ container_id }}"
+        - "/var/lib/nodepool/oci/{{ container_id }}"

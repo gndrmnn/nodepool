@@ -15,15 +15,12 @@
 import logging
 import json
 import socket
+import subprocess
 import random
-
-import paramiko
-import paramiko.client
+import os
 
 from nodepool.driver import Provider
 from nodepool.nodeutils import keyscan
-
-USED_PORTS='ss --t -l -n | cut -d: -f2 | awk \'/[0-9]/ { print $1 }\''
 
 
 class OpenContainerProvider(Provider):
@@ -41,53 +38,55 @@ class OpenContainerProvider(Provider):
             if [True for path in pool.labels.values() if path == '/']:
                 self.use_rootfs = True
                 break
+        self.prepare_ansible_environment()
 
-    def _getClient(self, port=22):
-        client = paramiko.client.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.load_system_host_keys()
-        client.connect(self.hypervisor, port=port, username='root')
-        return client
+    def prepare_ansible_environment(self):
+        self.playbook_path = "%s/playbooks" % os.path.dirname(__file__)
+        self.data_path = os.path.expanduser("~/oci")
+        self.inventory = os.path.join(self.data_path,
+                                      "%s.inventory" % self.hypervisor)
+        self.info_path = os.path.join(self.data_path,
+                                      "%s.json" % self.hypervisor)
+        if not os.path.isdir(self.data_path):
+            os.makedirs(self.data_path, 0o700)
+        with open(self.inventory, "w") as inv:
+            inv.write("""[hypervisor]\n%s ansible_user=root""" %
+                      self.hypervisor)
+
+    def run_ansible(self, playbook, extra_vars=[]):
+        # TODO: replace this by a hypervisor_host_key provider setting
+        os.environ["ANSIBLE_HOST_KEY_CHECKING"] = "False"
+        argv = ["ansible-playbook",
+                "%s/%s.yml" % (self.playbook_path, playbook),
+                "-i", self.inventory,
+                "-e", "use_rootfs=%s" % str(self.use_rootfs),
+                "-e", "hypervisor_info_file=%s" % self.info_path]
+        for extra_var in extra_vars:
+            argv.extend(["-e", extra_var])
+        self.log.debug("Running '%s'" % " ".join(argv))
+        proc = subprocess.Popen(argv, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+        if proc.wait():
+            self.log.error("Failed to run '%s' stdout: %s, stderr: %s" % (
+                " ".join(argv), proc.stdout.read(), proc.stderr.read()))
+            return False
+        return True
 
     def start(self):
-        client = None
-        try:
-            client = self._getClient()
-            _, stdout, _ = client.exec_command('which runc')
-            if not stdout.read().decode('utf-8').startswith("/"):
-                self.log.error("%s: runc is not installed" %
-                               self.provider.hypervisor)
-                return
-            _, stdout, _ = client.exec_command(USED_PORTS)
-            for port in stdout.readlines():
-                self.ports.add(int(port))
-            if self.use_rootfs:
-                client.exec_command('grep " \/mnt" /proc/mounts || '
-                                    'mount -o bind,ro --make-private / /mnt')
-            self.ready = True
-        except:
-            self.log.exception("Can't connect to hypervisor")
-        finally:
-            if client:
-                client.close()
+        self.listNodes()
 
     def stop(self):
         self.log.debug("Stopping")
 
     def listNodes(self):
-        if not self.ready:
+        if not self.run_ansible("init"):
             return []
-
-        client = self._getClient()
-        stdin, stdout, stderr = client.exec_command('runc list -q')
+        inf = json.load(open(self.info_path))
         servers = []
-        while True:
-            line = stdout.readline()
-            if not line:
-                break
-            servers.append({'name': line})
-        client.close()
+        for server_name in inf["containers"]:
+            servers.append({'name': server_name})
         self.container_count = len(servers)
+        self.ports = set(map(int, inf["ports"]))
         return servers
 
     def labelReady(self, name):
@@ -100,34 +99,16 @@ class OpenContainerProvider(Provider):
         pass
 
     def cleanupNode(self, server_id):
-        if not self.ready:
-            return False
-
         self.container_count -= 1
         if server_id in self.containers:
             self.ports.remove(self.containers[server_id])
             del self.containers[server_id]
-        client = self._getClient()
-        cmds = [
-            'runc kill --all %s KILL' % server_id,
-            'runc delete --force %s' % server_id,
-            'rm -Rf /var/lib/zuul/work/%s' % server_id,
-            'rm -Rf /var/lib/nodepool/oci/%s' % server_id,
-        ]
-        client.exec_command(";".join(cmds))
-        self.log.debug("Running %s" % cmds)
-        client.close()
-        return True
+        return self.run_ansible("delete", ["container_id=%s" % server_id])
 
     def waitForNodeCleanup(self, server_id):
-        if not self.ready:
-            return False
         return True
 
     def createContainer(self, pool, hostid, rootfs):
-        if not self.ready:
-            return None, None
-
         if pool.max_servers and self.container_count >= pool.max_servers:
             self.log.warning("Max container reached (%d)" %
                              self.container_count)
@@ -140,36 +121,22 @@ class OpenContainerProvider(Provider):
         if retry == 9:
             self.log.error("Couldn't find a free port")
             return None, None
-        bundle_path = "/var/lib/nodepool/oci/%s" % hostid
-        cmds = [
-            "mkdir -p %s" % bundle_path,
-            "mkdir -p /var/lib/zuul/work/%s" % hostid,
-            "chown zuul:zuul /var/lib/zuul/work/%s" % hostid,
-            "cat > %s/config.json" % bundle_path,
-        ]
-        self.log.debug("Executing %s" % cmds)
-        client = self._getClient()
-        stdin, _, _ = client.exec_command("; ".join(cmds))
-        stdin.write(self.render_config(hostid, port, rootfs))
-        stdin.close()
-        client.close()
-        client = self._getClient()
-        cmd = 'runc run --detach --bundle %s %s' % (bundle_path, hostid)
-        self.log.debug("Executing %s" % cmd)
-        client.exec_command(cmd)
-        client.close()
 
-        # Check container is active
+        spec_path = os.path.join(self.data_path, "%s.config" % hostid)
+        with open(spec_path, "w") as spec_file:
+            spec_file.write(self.render_config(hostid, port, rootfs))
+        created = self.run_ansible("create", [
+            "container_id=%s" % hostid, "container_spec=%s" % spec_path,
+            "host_addr=%s" % self.hypervisor, "container_port=%s" % port])
+        os.unlink(spec_path)
+        if not created:
+            return None, None
+
         try:
             key = keyscan(self.hypervisor, port=port, timeout=15)
-            client = self._getClient(port=port)
-            client.exec_command('echo okay')
-            client.close()
         except:
-            self.log.exception("Can't connect to container")
+            self.log.exception("Can't scan host key")
             return None, None
-        finally:
-            client.close()
         self.ports.add(port)
         self.container_count += 1
         self.containers[hostid] = port
