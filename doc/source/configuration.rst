@@ -217,7 +217,7 @@ Example configuration::
     When set to True, nodepool-builder will not build the diskimage.
 
   ``username`` (string)
-    The username that a consumer should use when SSHing onto the node.
+    The username that a consumer should use when connecting onto the node.
 
 .. _provider:
 
