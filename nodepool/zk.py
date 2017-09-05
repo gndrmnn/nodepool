@@ -438,7 +438,7 @@ class Node(BaseModel):
         self.private_ipv4 = None
         self.public_ipv6 = None
         self.interface_ip = None
-        self.ssh_port = 22
+        self.connection_port = 22
         self.image_id = None
         self.launcher = None
         self.created_time = None
@@ -499,7 +499,7 @@ class Node(BaseModel):
         d['private_ipv4'] = self.private_ipv4
         d['public_ipv6'] = self.public_ipv6
         d['interface_ip'] = self.interface_ip
-        d['ssh_port'] = self.ssh_port
+        d['connection_port'] = self.connection_port or self.ssh_port
         d['image_id'] = self.image_id
         d['launcher'] = self.launcher
         d['created_time'] = self.created_time
@@ -535,7 +535,7 @@ class Node(BaseModel):
         o.private_ipv4 = d.get('private_ipv4')
         o.public_ipv6 = d.get('public_ipv6')
         o.interface_ip = d.get('interface_ip')
-        o.ssh_port = d.get('ssh_port', 22)
+        o.connection_port = d.get('connection_port', d.get('ssh_port', 22))
         o.image_id = d.get('image_id')
         o.launcher = d.get('launcher')
         o.created_time = d.get('created_time')
