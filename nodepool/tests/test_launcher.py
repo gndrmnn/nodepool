@@ -584,3 +584,4 @@ class TestLauncher(tests.DBTestCase):
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
+        self.assertEqual('zuul', nodes[0].username)

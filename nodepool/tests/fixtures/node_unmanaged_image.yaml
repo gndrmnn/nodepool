@@ -18,6 +18,7 @@ providers:
     rate: 0.0001
     cloud-images:
       - name: fake-image
+        username: zuul
     pools:
       - name: main
         max-servers: 96
