@@ -69,6 +69,7 @@ class ConfigValidator:
             'config-drive': bool,
             v.Exclusive('image-id', 'cloud-image-name-or-id'): str,
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
+            'username': str,
         }
 
         provider = {
