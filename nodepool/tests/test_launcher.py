@@ -643,9 +643,15 @@ class TestLauncher(tests.DBTestCase):
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
         manager._client.create_image(name="fake-image")
+        manager._client.create_image(name="fake-image-windows")
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
+        self.assertIsNone(nodes[0].username)
+
+        nodes = self.waitForNodes('fake-label-windows')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual('zuul', nodes[0].username)
 
     def test_paused_gets_declined(self):
         """Test that a paused request, that later gets declined, unpauses."""

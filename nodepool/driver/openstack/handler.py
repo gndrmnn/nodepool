@@ -113,9 +113,7 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
                 image_external = self._cloud_image.name
             image_id = self._cloud_image.name
             image_name = self._cloud_image.name
-
-            # TODO(tobiash): support username also for unmanaged cloud images
-            username = None
+            username = self._cloud_image.username
 
         hostname = self._provider.hostname_format.format(
             label=self._label, provider=self._provider, node=self._node
