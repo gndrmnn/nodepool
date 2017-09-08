@@ -147,6 +147,7 @@ Example configuration::
         - infra-package-needs
       release: precise
       username: zuul
+      password: thisissecret
       env-vars:
         TMPDIR: /opt/dib_tmp
         DIB_CHECKSUM: '1'
@@ -172,6 +173,7 @@ Example configuration::
         - infra-package-needs
       release: precise
       username: ubuntu
+      password: thisissecret
       env-vars:
         TMPDIR: /opt/dib_tmp
         DIB_CHECKSUM: '1'
@@ -218,6 +220,9 @@ Example configuration::
 
   ``username`` (string)
     The username that a consumer should use when connecting onto the node.
+
+  ``password`` (string)
+    The password that a consumer should use when connecting onto the node.
 
 .. _provider:
 
@@ -503,6 +508,9 @@ Example configuration::
 
   ``username`` (str)
     The username that a consumer should use when connecting onto the node.
+
+  ``password`` (str)
+    The password that a consumer should use when connecting onto the node.
 
 .. _pool_labels:
 

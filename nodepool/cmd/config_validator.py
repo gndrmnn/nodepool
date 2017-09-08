@@ -70,6 +70,7 @@ class ConfigValidator:
             v.Exclusive('image-id', 'cloud-image-name-or-id'): str,
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
             'username': str,
+            'password': str,
         }
 
         provider = {
@@ -106,6 +107,7 @@ class ConfigValidator:
             'rebuild-age': int,
             'env-vars': {str: str},
             'username': str,
+            'password': str,
         }
 
         webapp = {

@@ -58,6 +58,7 @@ providers:
         config-drive: true
       - name: windows-unmanaged
         username: winzuul
+        password: verysecret
     pools:
       - name: main
         max-servers: 184
@@ -87,6 +88,7 @@ diskimages:
     release: trusty
     rebuild-age: 3600
     username: zuul
+    password: verysecret
     env-vars:
       TMPDIR: /opt/dib_tmp
       DIB_IMAGE_CACHE: /opt/dib_cache

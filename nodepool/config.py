@@ -119,7 +119,8 @@ class DiskImage(ConfigValue):
             other.env_vars != self.env_vars or
             other.image_types != self.image_types or
             other.pause != self.pause or
-            other.username != self.username):
+            other.username != self.username or
+            other.password != self.password):
             return False
         return True
 
@@ -195,6 +196,7 @@ def loadConfig(config_path):
         d.image_types = set(diskimage.get('formats', []))
         d.pause = bool(diskimage.get('pause', False))
         d.username = diskimage.get('username')
+        d.password = diskimage.get('password')
 
     for label in config.get('labels', []):
         l = Label()
@@ -269,6 +271,7 @@ def loadConfig(config_path):
             i.image_id = image.get('image-id', None)
             i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
+            i.password = image.get('password', None)
             p.cloud_images[i.name] = i
         p.pools = {}
         for pool in provider.get('pools', []):
