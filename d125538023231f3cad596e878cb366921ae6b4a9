@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f2577a7_fa759499",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2017-09-11T17:26:29Z",
+      "side": 1,
+      "message": "Yep, extra field now... this explains the earlier test failure.",
+      "revId": "d125538023231f3cad596e878cb366921ae6b4a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
