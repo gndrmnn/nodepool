@@ -1,0 +1,10 @@
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Verified+1: Zuul
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 11 Sep 2017 18:01:45 +0000
+Reviewed-on: https://review.openstack.org/502504
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
