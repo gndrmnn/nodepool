@@ -129,7 +129,6 @@ class PoolWorker(threading.Thread):
         self.provider_name = provider_name
         self.pool_name = pool_name
         self.running = False
-        self.paused_handler = None
         self.request_handlers = []
         self.watermark_sleep = nodepool.watermark_sleep
         self.zk = self.getZK()
@@ -149,6 +148,9 @@ class PoolWorker(threading.Thread):
         else:
             raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
+    def _get_paused_request_handlers(self):
+        return [x for x in self.request_handlers if x.paused]
+
     def _assignHandlers(self):
         '''
         For each request we can grab, create a NodeRequestHandler for it.
@@ -162,7 +164,7 @@ class PoolWorker(threading.Thread):
             return
 
         for req_id in self.zk.getNodeRequests():
-            if self.paused_handler:
+            if self._get_paused_request_handlers():
                 return
 
             # Get active threads for all pools for this provider
@@ -204,8 +206,6 @@ class PoolWorker(threading.Thread):
             self.log.info("Assigning node request %s" % req)
             rh = self._get_node_request_handler(provider, req)
             rh.run()
-            if rh.paused:
-                self.paused_handler = rh
             self.request_handlers.append(rh)
 
     def _removeCompletedHandlers(self):
@@ -260,15 +260,15 @@ class PoolWorker(threading.Thread):
             self.zk.registerLauncher(self.launcher_id)
 
             try:
-                if not self.paused_handler:
+                paused_handlers = self._get_paused_request_handlers()
+                if not paused_handlers:
                     self._assignHandlers()
                 else:
-                    # If we are paused, one request handler could not
-                    # satisify its assigned request, so give it
-                    # another shot. Unpause ourselves if it completed.
-                    self.paused_handler.run()
-                    if not self.paused_handler.paused:
-                        self.paused_handler = None
+                    # If we are paused, at least one request handler could not
+                    # satisfy its assigned request, so give it
+                    # another shot. We will automatically be unpaused once all
+                    # paused request handlers completed.
+                    paused_handlers[0].run()
 
                 self._removeCompletedHandlers()
             except Exception:
@@ -276,8 +276,8 @@ class PoolWorker(threading.Thread):
             time.sleep(self.watermark_sleep)
 
         # Cleanup on exit
-        if self.paused_handler:
-            self.paused_handler.unlockNodeSet(clear_allocation=True)
+        for handler in self._get_paused_request_handlers():
+            handler.unlockNodeSet(clear_allocation=True)
 
     def stop(self):
         '''
