@@ -206,6 +206,9 @@ class OpenStackProvider(Provider):
 
         return copy.deepcopy(self._current_nodepool_quota['quota'])
 
+    def invalidateQuotaCache(self):
+        self._current_nodepool_quota['timestamp'] = 0
+
     def usedNodepoolQuota(self, zk):
         used_quota = QuotaInformation()
 
