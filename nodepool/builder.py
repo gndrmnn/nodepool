@@ -727,6 +727,7 @@ class BuildWorker(BaseWorker):
         build_data.builder_id = self._builder_id
         build_data.builder = self._hostname
         build_data.username = diskimage.username
+        build_data.connection_type = diskimage.connection_type
 
         if self._zk.didLoseConnection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
@@ -812,7 +813,7 @@ class UploadWorker(BaseWorker):
         self._config = new_config
 
     def _uploadImage(self, build_id, upload_id, image_name, images, provider,
-                     username):
+                     username, connection_type):
         '''
         Upload a local DIB image build to a provider.
 
@@ -823,6 +824,7 @@ class UploadWorker(BaseWorker):
             that available for uploading.
         :param provider: The provider from the parsed config file.
         :param username:
+        :param connection_type:
         '''
         start_time = time.time()
         timestamp = int(start_time)
@@ -894,6 +896,7 @@ class UploadWorker(BaseWorker):
         data.external_name = ext_image_name
         data.format = image.extension
         data.username = username
+        data.connection_type = connection_type
 
         return data
 
@@ -989,13 +992,14 @@ class UploadWorker(BaseWorker):
                 data = zk.ImageUpload()
                 data.state = zk.UPLOADING
                 data.username = build.username
+                data.connection_type = build.connection_type
 
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 
                 data = self._uploadImage(build.id, upnum, image.name,
                                          local_images, provider,
-                                         build.username)
+                                         build.username, build.connection_type)
 
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
