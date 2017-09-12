@@ -62,11 +62,13 @@ class ConfigValidator:
             'pause': bool,
             'meta': dict,
             'config-drive': bool,
+            'connection-type': str,
         }
 
         provider_cloud_images = {
             'name': str,
             'config-drive': bool,
+            'connection-type': str,
             v.Exclusive('image-id', 'cloud-image-name-or-id'): str,
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
             'username': str,
