@@ -43,14 +43,17 @@ def iterate_timeout(max_seconds, exc, purpose):
     raise exc("Timeout waiting for %s" % purpose)
 
 
-def keyscan(ip, port=22, timeout=60):
+def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
     '''
     Scan the IP address for public SSH keys.
 
     Keys are returned formatted as: "<type> <base64_string>"
     '''
     if 'fake' in ip:
-        return ['ssh-rsa FAKEKEY']
+        if gather_hostkeys:
+            return ['ssh-rsa FAKEKEY']
+        else:
+            return []
 
     if ipaddress.ip_address(six.text_type(ip)).version < 6:
         family = socket.AF_INET
@@ -62,16 +65,18 @@ def keyscan(ip, port=22, timeout=60):
     keys = []
     key = None
     for count in iterate_timeout(
-            timeout, exceptions.SSHTimeoutException, "ssh access"):
+            timeout, exceptions.ConnectionTimeoutException,
+            "connection on port %s" % port):
         sock = None
         t = None
         try:
             sock = socket.socket(family, socket.SOCK_STREAM)
             sock.settimeout(timeout)
             sock.connect(sockaddr)
-            t = paramiko.transport.Transport(sock)
-            t.start_client(timeout=timeout)
-            key = t.get_remote_server_key()
+            if gather_hostkeys:
+                t = paramiko.transport.Transport(sock)
+                t.start_client(timeout=timeout)
+                key = t.get_remote_server_key()
             break
         except socket.error as e:
             if e.errno not in [errno.ECONNREFUSED, errno.EHOSTUNREACH, None]:
