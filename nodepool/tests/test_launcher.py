@@ -34,6 +34,7 @@ class TestLauncher(tests.DBTestCase):
         self._useBuilder(configfile)
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
+        self.assertIsNone(image.connection_type)
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -57,6 +58,7 @@ class TestLauncher(tests.DBTestCase):
             self.assertEqual(node.region, 'fake-region')
             self.assertEqual(node.az, "az1")
             self.assertEqual(node.username, "zuul")
+            self.assertIsNone(node.connection_type)
             p = "{path}/{id}".format(
                 path=self.zk._imageUploadPath(image.image_name,
                                               image.build_id,
@@ -590,3 +592,4 @@ class TestLauncher(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label-windows')
         self.assertEqual(len(nodes), 1)
         self.assertEqual('zuul', nodes[0].username)
+        self.assertEqual('winrm', nodes[0].connection_type)
