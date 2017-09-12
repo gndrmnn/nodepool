@@ -197,6 +197,9 @@ class OpenStackProvider(Provider):
 
         return copy.deepcopy(self._current_nodepool_quota['quota'])
 
+    def invalidateQuotaCache(self):
+        self._current_nodepool_quota['timestamp'] = 0
+
     def usedNodepoolQuota(self, zk, pool=None):
         '''
         Sums up the quota used currently by nodepool. If pool is given it is
