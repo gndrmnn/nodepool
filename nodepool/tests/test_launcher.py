@@ -654,6 +654,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual('zuul', nodes[0].username)
         self.assertEqual('winrm', nodes[0].connection_type)
+        self.assertEqual(nodes[0].host_keys, [])
 
     def test_paused_gets_declined(self):
         """Test that a paused request, that later gets declined, unpauses."""
