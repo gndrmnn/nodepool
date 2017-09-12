@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f2577a7_14aa5ad1",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-09-12T17:23:22Z",
+      "side": 1,
+      "message": "hm, looks like this is not that easy. While this works in terms of not failing requests I think this should also pause the request handler.",
+      "revId": "74ba1fb3135b6f0e1cbce04e5f36bf04d08949c3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
