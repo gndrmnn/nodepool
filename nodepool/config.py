@@ -247,6 +247,7 @@ def loadConfig(config_path):
             diskimage.image_types.add(p.image_type)
             i.pause = bool(image.get('pause', False))
             i.config_drive = image.get('config-drive', None)
+            i.connection_type = image.get('connection-type', 'ssh')
 
             # This dict is expanded and used as custom properties when
             # the image is uploaded.
@@ -269,6 +270,7 @@ def loadConfig(config_path):
             i.image_id = image.get('image-id', None)
             i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
+            i.connection_type = image.get('connection-type', 'ssh')
             p.cloud_images[i.name] = i
         p.pools = {}
         for pool in provider.get('pools', []):
