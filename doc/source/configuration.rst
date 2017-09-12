@@ -219,6 +219,11 @@ Example configuration::
   ``username`` (string)
     The username that a consumer should use when connecting onto the node.
 
+  ``connection_type`` (string)
+    The connection_type that a consumer should use when connecting onto the
+    node. For most diskimages this is not necessary. However when creating
+    Windows images this could be 'winrm' to enable access via ansible.
+
 .. _provider:
 
 provider
@@ -476,6 +481,8 @@ Example configuration::
   cloud-images:
     - name: trusty-external
       config-drive: False
+    - name: windows-external
+      connection_type: winrm
 
 **required**
 
@@ -505,6 +512,11 @@ Example configuration::
 
   ``username`` (str)
     The username that a consumer should use when connecting onto the node.
+
+  ``connection_type`` (str)
+    The connection_type that a consumer should use when connecting onto the
+    node. For most diskimages this is not necessary. However when creating
+    Windows images this could be 'winrm' to enable access via ansible.
 
 .. _pool_labels:
 

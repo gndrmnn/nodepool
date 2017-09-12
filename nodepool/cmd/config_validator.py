@@ -67,6 +67,7 @@ class ConfigValidator:
         provider_cloud_images = {
             'name': str,
             'config-drive': bool,
+            'connection_type': str,
             v.Exclusive('image-id', 'cloud-image-name-or-id'): str,
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
             'username': str,
@@ -106,6 +107,7 @@ class ConfigValidator:
             'rebuild-age': int,
             'env-vars': {str: str},
             'username': str,
+            'connection_type': str,
         }
 
         webapp = {
