@@ -78,6 +78,7 @@ class ConfigValidator:
             'region-name': str,
             v.Required('cloud'): str,
             'max-concurrency': int,
+            'max-quota-age': int,
             'boot-timeout': int,
             'launch-timeout': int,
             'launch-retries': int,

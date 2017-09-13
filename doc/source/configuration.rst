@@ -362,6 +362,10 @@ Example::
     each node request is handled by a separate thread, this can be useful for
     limiting the number of threads used by the nodepool-launcher daemon.
 
+  ``max-quota-age``
+    Maximum age of the quota cache before rerequesting from the cloud during
+    remaining quota calculation.
+
 .. _pools:
 
 pools

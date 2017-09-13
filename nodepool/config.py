@@ -50,6 +50,7 @@ class Provider(ConfigValue):
             other.launch_timeout != self.launch_timeout or
             other.clean_floating_ips != self.clean_floating_ips or
             other.max_concurrency != self.max_concurrency or
+            other.max_quota_age != self.max_quota_age or
             other.diskimages != self.diskimages):
             return False
 
@@ -225,6 +226,7 @@ def loadConfig(config_path):
             p.image_type = p.cloud_config.config['image_format']
         p.region_name = provider.get('region-name')
         p.max_concurrency = provider.get('max-concurrency', -1)
+        p.max_quota_age = provider.get('max-quota-age', 60)
         p.rate = provider.get('rate', 1.0)
         p.boot_timeout = provider.get('boot-timeout', 60)
         p.launch_timeout = provider.get('launch-timeout', 3600)
