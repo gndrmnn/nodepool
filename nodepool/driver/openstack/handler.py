@@ -325,6 +325,18 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 invalid.append(ntype)
         return invalid
 
+    def _checkQuota(self, ntype):
+        nodepool_quota = self.manager.estimatedNodepoolQuota(self.zk, self.pool)
+
+        needed_quota = self.manager.resourcesByNodeType(ntype, self.pool)
+
+        for i in nodepool_quota.keys():
+            for j in nodepool_quota[i].keys():
+                if needed_quota[i][j] > nodepool_quota[i][j]:
+                    # at least one quota value would be exceeded
+                    return False
+        return True
+
     def _countNodes(self):
         '''
         Query ZooKeeper to determine the number of provider nodes launched.
@@ -427,7 +439,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the DeletedNodeWorker.
-                if self._countNodes() >= self.pool.max_servers:
+                if not self._checkQuota(ntype):
                     if not self.paused:
                         self.log.debug(
                             "Pausing request handling to satisfy request %s",

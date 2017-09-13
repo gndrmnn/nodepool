@@ -14,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import logging
 from contextlib import contextmanager
 import operator
+import time
 
 import shade
 
@@ -39,6 +41,42 @@ def shade_inner_exceptions():
         raise
 
 
+def resource_structure(instances=0, cores=0, ram=0):
+    return {
+        'compute': {
+            'instances': instances,
+            'cores': cores,
+            'ram': ram,
+        }
+    }
+
+
+def _resource_add_subtract(first, second, add=True):
+    for service in first.keys():
+        for resource in first[service].keys():
+            second_value = second.get(service, {}).get(resource, 0)
+            if add:
+                first[service][resource] += second_value
+            else:
+                first[service][resource] -= second_value
+
+
+def resource_subtract(first, second):
+    '''
+    Subtracts the resourses defined in second from first by directly
+    modifying first.
+    '''
+    _resource_add_subtract(first, second, add=False)
+
+
+def resource_add(first, second):
+    '''
+    Adds the resourses defined in second to first by directly
+    modifying first.
+    '''
+    _resource_add_subtract(first, second, add=True)
+
+
 class OpenStackProvider(Provider):
     log = logging.getLogger("nodepool.driver.openstack.OpenStackProvider")
 
@@ -50,6 +88,10 @@ class OpenStackProvider(Provider):
         self.__azs = None
         self._use_taskmanager = use_taskmanager
         self._taskmanager = None
+        self._current_nodepool_quota = None
+
+        # TODO(tobiash): make configurable
+        self._max_quota_age = 60
 
     def start(self):
         if self._use_taskmanager:
@@ -81,6 +123,89 @@ class OpenStackProvider(Provider):
             cloud_config=self.provider.cloud_config,
             manager=manager,
             **self.provider.cloud_config.config)
+
+    def _getLimits(self):
+        refresh = False
+        if self._current_limits:
+            now = time.time()
+            if now > self._current_limits['timestamp'] + self._max_limits_age:
+                refresh = True
+        else:
+            refresh = True
+
+        if refresh:
+            with shade_inner_exceptions:
+                self._current_limits['limits'] = \
+                    self._client.get_compute_limits()
+            self._current_limits['timestamp'] = time.time()
+
+        return self._current_limits['limits']
+
+    def resourcesByNodeType(self, ntype, pool):
+        provider_label = pool.labels[ntype]
+
+        flavor = self.findFlavor(provider_label.flavor_name,
+                                 provider_label.min_ram)
+
+        return resource_structure(instances=1,
+                                  cores=flavor.vcpus,
+                                  ram=flavor.ram)
+
+    def estimatedNodepoolQuota(self, zk, pool):
+        '''
+        Determine how much quota is available for nodepool managed resources.
+        This needs to take into account the quota of the tenant, resources
+        used outside of nodepool and the currently used resources by nodepool,
+        max settings in nodepool config. This is cached for _max_quota_age
+        seconds.
+
+        :return: Total amount of resources available which is currently
+                 available to nodepool including currently existing nodes.
+        '''
+
+        if self._current_nodepool_quota:
+            now = time.time()
+            if now < self._current_nodepool_quota['timestamp'] +\
+                    self._max_quota_age:
+                return self._current_nodepool_quota['quota']
+
+        with shade_inner_exceptions():
+            limits = self._client.get_compute_limits()
+
+        nodepool_max = resource_structure(instances=limits.max_total_instances,
+                                          cores=limits.max_total_cores,
+                                          ram=limits.max_total_ram_size)
+
+        # For calculating the unmanaged resources currently in use we start
+        # with the absolute resources in use and subtract the resources used
+        # by us.
+        unmanaged_resources_used = resource_structure(
+            instances=limits.total_instances_used,
+            cores=limits.total_cores_used,
+            ram=limits.total_ram_used)
+
+        for node in zk.nodeIterator():
+            if (node.provider == self.provider.name and
+                    node.pool == pool.name):
+
+                node_resources = self.resourcesByNodeType(node.type, pool)
+                resource_subtract(
+                    unmanaged_resources_used, node_resources)
+
+        # Now we have the unmanaged resources, subtract them from nodepool_max
+        # to get the quota available for us.
+        resource_subtract(nodepool_max, unmanaged_resources_used)
+
+        # TODO(tobiash): cap by configured limits more generic
+        nodepool_max['compute']['instances'] = \
+            min(nodepool_max['compute']['instances'], pool.max_servers)
+
+        self._current_nodepool_quota = {
+            'quota': nodepool_max,
+            'timestamp': time.time()
+        }
+
+        return copy.deepcopy(self._current_nodepool_quota['quota'])
 
     def resetClient(self):
         self._client = self._getClient()
