@@ -14,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import logging
 from contextlib import contextmanager
 import operator
+import time
 
 import shade
 
@@ -39,6 +41,43 @@ def shade_inner_exceptions():
         raise
 
 
+class QuotaInformation:
+
+    def __init__(self, instances=0, cores=0, ram=0):
+        self.quota = {
+            'compute': {
+                'instances': instances,
+                'cores': cores,
+                'ram': ram,
+            }
+        }
+
+    def _add_subtract(self, other, add=True):
+        for category in self.quota.keys():
+            for resource in self.quota[category].keys():
+                second_value = other.quota.get(category, {}).get(resource, 0)
+                if add:
+                    self.quota[category][resource] += second_value
+                else:
+                    self.quota[category][resource] -= second_value
+
+    def subtract(self, other):
+        self._add_subtract(other, add=False)
+
+    def add(self, other):
+        self._add_subtract(other, True)
+
+    def non_negative(self):
+        for key_i, category in self.quota.items():
+            for resource, value in category.items():
+                if value < 0:
+                    return False
+        return True
+
+    def __str__(self):
+        return str(self.quota)
+
+
 class OpenStackProvider(Provider):
     log = logging.getLogger("nodepool.driver.openstack.OpenStackProvider")
 
@@ -50,6 +89,10 @@ class OpenStackProvider(Provider):
         self.__azs = None
         self._use_taskmanager = use_taskmanager
         self._taskmanager = None
+        self._current_nodepool_quota = None
+
+        # TODO(tobiash): make configurable
+        self._max_quota_age = 60
 
     def start(self):
         if self._use_taskmanager:
@@ -81,6 +124,97 @@ class OpenStackProvider(Provider):
             cloud_config=self.provider.cloud_config,
             manager=manager,
             **self.provider.cloud_config.config)
+
+    def _getLimits(self):
+        refresh = False
+        if self._current_limits:
+            now = time.time()
+            if now > self._current_limits['timestamp'] + self._max_limits_age:
+                refresh = True
+        else:
+            refresh = True
+
+        if refresh:
+            with shade_inner_exceptions:
+                self._current_limits['limits'] = \
+                    self._client.get_compute_limits()
+            self._current_limits['timestamp'] = time.time()
+
+        return self._current_limits['limits']
+
+    def resourcesByNodeType(self, ntype, pool):
+        provider_label = pool.labels[ntype]
+
+        flavor = self.findFlavor(provider_label.flavor_name,
+                                 provider_label.min_ram)
+
+        return QuotaInformation(instances=1,
+                                cores=flavor.vcpus,
+                                ram=flavor.ram)
+
+    def estimatedNodepoolQuota(self, zk):
+        '''
+        Determine how much quota is available for nodepool managed resources.
+        This needs to take into account the quota of the tenant, resources
+        used outside of nodepool and the currently used resources by nodepool,
+        max settings in nodepool config. This is cached for _max_quota_age
+        seconds.
+
+        :return: Total amount of resources available which is currently
+                 available to nodepool including currently existing nodes.
+        '''
+
+        if self._current_nodepool_quota:
+            now = time.time()
+            if now < self._current_nodepool_quota['timestamp'] +\
+                    self._max_quota_age:
+                return copy.deepcopy(self._current_nodepool_quota['quota'])
+
+        self.log.debug("Updating quota information")
+
+        with shade_inner_exceptions():
+            limits = self._client.get_compute_limits()
+
+        # This is initialized with the full tenant quota and later gets
+        # the quota available for nodepool.
+        nodepool_quota = QuotaInformation(instances=limits.max_total_instances,
+                                          cores=limits.max_total_cores,
+                                          ram=limits.max_total_ram_size)
+
+        # For calculating the unmanaged resources currently in use we start
+        # with the absolute resources in use and subtract the resources used
+        # by us.
+        unmanaged_quota_used = QuotaInformation(
+            instances=limits.total_instances_used,
+            cores=limits.total_cores_used,
+            ram=limits.total_ram_used)
+
+        nodepool_quota_used = self.usedNodepoolQuota(zk)
+        unmanaged_quota_used.subtract(nodepool_quota_used)
+
+        # Now we have the unmanaged resources, subtract them from nodepool_max
+        # to get the quota available for us.
+        nodepool_quota.subtract(unmanaged_quota_used)
+
+        self._current_nodepool_quota = {
+            'quota': nodepool_quota,
+            'timestamp': time.time()
+        }
+
+        quota = self._current_nodepool_quota['quota']
+        self.log.debug("Available nodepool quota: %s", quota)
+
+        return copy.deepcopy(self._current_nodepool_quota['quota'])
+
+    def usedNodepoolQuota(self, zk):
+        used_quota = QuotaInformation()
+
+        for node in zk.nodeIterator():
+            if node.provider == self.provider.name:
+                pool = self.provider.pools.get(node.pool)
+                node_resources = self.resourcesByNodeType(node.type, pool)
+                used_quota.add(node_resources)
+        return used_quota
 
     def resetClient(self):
         self._client = self._getClient()
