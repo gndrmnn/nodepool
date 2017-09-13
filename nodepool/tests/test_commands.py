@@ -44,7 +44,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                 log.debug(row)
                 if row[col] == val:
                     rows_with_val += 1
-            self.assertEquals(rows_with_val, count)
+            self.assertEqual(rows_with_val, count)
 
     def assert_alien_images_listed(self, configfile, image_cnt, image_id):
         self.assert_listed(configfile, ['alien-image-list'], 2, image_id, image_cnt)
