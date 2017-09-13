@@ -17,6 +17,7 @@ import collections
 import logging
 import pprint
 import random
+import sys
 import threading
 import time
 
@@ -26,6 +27,7 @@ from nodepool import stats
 from nodepool import zk
 from nodepool.driver import NodeLaunchManager
 from nodepool.driver import NodeRequestHandler
+from nodepool.driver.openstack.provider import QuotaInformation
 
 
 class NodeLauncher(threading.Thread, stats.StatsReporter):
@@ -325,18 +327,31 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 invalid.append(ntype)
         return invalid
 
-    def _countNodes(self):
-        '''
-        Query ZooKeeper to determine the number of provider nodes launched.
+    def _checkQuota(self, ntype):
 
-        :returns: An integer for the number launched for this provider.
-        '''
-        count = 0
-        for node in self.zk.nodeIterator():
-            if (node.provider == self.provider.name and
-                node.pool == self.pool.name):
-                count += 1
-        return count
+        needed_quota = self.manager.quotaNeededByNodeType(ntype, self.pool)
+
+        # Calculate remaining quota which is calculated as:
+        # quota = <total nodepool quota> - <used quota> - <quota for node>
+        tenant_quota = self.manager.estimatedNodepoolQuota(self.zk)
+        tenant_quota.subtract(self.manager.usedNodepoolQuota(self.zk))
+        tenant_quota.subtract(needed_quota)
+        self.log.debug("Predicted tenant quota: %s", tenant_quota)
+
+        if not tenant_quota.non_negative():
+            return False
+
+        # Now calculate pool specific quota. As long as we currently don't
+        # have other limits other than max_servers initialize the other values
+        # with sys.maxsize in order to have effectively no quota.
+        pool_quota = QuotaInformation(instances=self.pool.max_servers,
+                                      cores=sys.maxsize,
+                                      ram=sys.maxsize)
+        pool_quota.subtract(self.manager.usedNodepoolQuota(self.zk, self.pool))
+        pool_quota.subtract(needed_quota)
+        self.log.debug("Predicted pool quota: %s", pool_quota)
+
+        return pool_quota.non_negative()
 
     def _waitForNodeSet(self):
         '''
@@ -427,7 +442,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the DeletedNodeWorker.
-                if self._countNodes() >= self.pool.max_servers:
+                if not self._checkQuota(ntype):
                     if not self.paused:
                         self.log.debug(
                             "Pausing request handling to satisfy request %s",
