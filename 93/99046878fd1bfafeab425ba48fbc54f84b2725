@@ -1,0 +1,10 @@
+Verified+1: Zuul
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 13 Sep 2017 15:29:17 +0000
+Reviewed-on: https://review.openstack.org/503422
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
