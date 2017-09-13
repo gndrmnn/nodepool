@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import logging
+import munch
 import threading
 import time
 import uuid
@@ -87,8 +88,10 @@ class FakeOpenStackCloud(object):
                              name='fake-ipv6-network-name')]
         self.networks = networks
         self._flavor_list = [
-            Dummy(Dummy.FLAVOR, id='f1', ram=8192, name='Fake Flavor'),
-            Dummy(Dummy.FLAVOR, id='f2', ram=8192, name='Unreal Flavor'),
+            Dummy(Dummy.FLAVOR, id='f1', ram=8192, name='Fake Flavor',
+                  vcpus=4),
+            Dummy(Dummy.FLAVOR, id='f2', ram=8192, name='Unreal Flavor',
+                  vcpus=4),
         ]
         self._server_list = []
 
@@ -232,6 +235,15 @@ class FakeOpenStackCloud(object):
     def list_availability_zone_names(self):
         return ['fake-az1', 'fake-az2']
 
+    def get_compute_limits(self):
+        return munch.Munch({
+            'max_total_cores': 100,
+            'max_total_instances': 20,
+            'max_total_ram_size': 1000000,
+            'total_cores_used': 10,
+            'total_instances_used': 5,
+            'total_ram_used': 200000,
+        })
 
 class FakeUploadFailCloud(FakeOpenStackCloud):
     log = logging.getLogger("nodepool.FakeUploadFailCloud")
