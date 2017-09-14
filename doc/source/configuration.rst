@@ -429,6 +429,10 @@ Example::
     limit the number of servers. If not defined nodepool can create as many
     servers the tenant allows.
 
+  ``max-ram``
+    Maximum ram usable from this pool. This can be used to limit the amount of
+    ram allocated by nodepool. If not defined nodepool can use as much ram as
+    the tenant allows.
 
 **optional**
 
