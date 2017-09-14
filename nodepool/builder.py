@@ -728,6 +728,7 @@ class BuildWorker(BaseWorker):
         build_data.builder = self._hostname
         build_data.username = diskimage.username
         build_data.connection_type = diskimage.connection_type
+        build_data.connection_port = diskimage.connection_port
 
         if self._zk.didLoseConnection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
@@ -813,7 +814,7 @@ class UploadWorker(BaseWorker):
         self._config = new_config
 
     def _uploadImage(self, build_id, upload_id, image_name, images, provider,
-                     username, connection_type):
+                     username, connection_type, connection_port):
         '''
         Upload a local DIB image build to a provider.
 
@@ -825,6 +826,7 @@ class UploadWorker(BaseWorker):
         :param provider: The provider from the parsed config file.
         :param username:
         :param connection_type:
+        :param connection_port:
         '''
         start_time = time.time()
         timestamp = int(start_time)
@@ -897,6 +899,7 @@ class UploadWorker(BaseWorker):
         data.format = image.extension
         data.username = username
         data.connection_type = connection_type
+        data.connection_port = connection_port
 
         return data
 
@@ -993,13 +996,15 @@ class UploadWorker(BaseWorker):
                 data.state = zk.UPLOADING
                 data.username = build.username
                 data.connection_type = build.connection_type
+                data.connection_port = build.connection_port
 
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 
                 data = self._uploadImage(build.id, upnum, image.name,
                                          local_images, provider,
-                                         build.username, build.connection_type)
+                                         build.username, build.connection_type,
+                                         build.connection_port)
 
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
