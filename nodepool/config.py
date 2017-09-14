@@ -275,7 +275,7 @@ def loadConfig(config_path):
             pp.name = pool['name']
             pp.provider = p
             p.pools[pp.name] = pp
-            pp.max_servers = pool['max-servers']
+            pp.max_servers = pool.get('max-servers', None)
             pp.azs = pool.get('availability-zones')
             pp.networks = pool.get('networks', [])
             pp.labels = {}
