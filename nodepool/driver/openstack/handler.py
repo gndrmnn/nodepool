@@ -355,7 +355,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         # have other limits other than max_servers initialize the other values
         # with sys.maxsize in order to have effectively no quota.
         pool_quota = QuotaInformation(instances=self.pool.max_servers,
-                                      cores=sys.maxsize,
+                                      cores=self.pool.max_cores,
                                       ram=sys.maxsize)
         pool_quota.subtract(self.manager.usedNodepoolQuota(self.zk, self.pool))
         pool_quota.subtract(needed_quota)
