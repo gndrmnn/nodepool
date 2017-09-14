@@ -55,6 +55,7 @@ class ConfigValidator:
             'auto-floating-ip': bool,
             'max-cores': int,
             'max-servers': int,
+            'max-ram': int,
             'labels': [pool_label],
             'availability-zones': [str],
             }

@@ -407,6 +407,8 @@ Example::
   ``max-servers``
     Maximum number of servers spawnable from this pool. Defaults to unlimited.
 
+  ``max-ram``
+    Maximum ram usable from this pool. Defaults to unlimited.
 
 **optional**
 
