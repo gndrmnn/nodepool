@@ -17,7 +17,6 @@ import collections
 import logging
 import pprint
 import random
-import sys
 import threading
 import time
 
@@ -356,7 +355,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         # with sys.maxsize in order to have effectively no quota.
         pool_quota = QuotaInformation(instances=self.pool.max_servers,
                                       cores=self.pool.max_cores,
-                                      ram=sys.maxsize)
+                                      ram=self.pool.max_ram)
         pool_quota.subtract(self.manager.usedNodepoolQuota(self.zk, self.pool))
         pool_quota.subtract(needed_quota)
         self.log.debug("Predicted pool quota: %s", pool_quota)
