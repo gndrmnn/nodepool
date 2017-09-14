@@ -18,6 +18,7 @@
 
 import os_client_config
 from six.moves import configparser as ConfigParser
+import math
 import time
 import yaml
 
@@ -275,7 +276,9 @@ def loadConfig(config_path):
             pp.name = pool['name']
             pp.provider = p
             p.pools[pp.name] = pp
-            pp.max_servers = pool['max-servers']
+            # Default the max values with math.nan to ease calculations
+            # with unlimited quota.
+            pp.max_servers = pool.get('max-servers', math.nan)
             pp.azs = pool.get('availability-zones')
             pp.networks = pool.get('networks', [])
             pp.labels = {}
