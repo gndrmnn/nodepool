@@ -53,6 +53,7 @@ class ConfigValidator:
             'name': str,
             'networks': [str],
             'auto-floating-ip': bool,
+            'max-cores': int,
             'max-servers': int,
             'labels': [pool_label],
             'availability-zones': [str],
