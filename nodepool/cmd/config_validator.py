@@ -54,6 +54,7 @@ class ConfigValidator:
             'networks': [str],
             'max-cores': int,
             'max-servers': int,
+            'max-ram': int,
             'labels': [pool_label],
             'availability-zones': [str],
             }
