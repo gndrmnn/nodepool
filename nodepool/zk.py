@@ -206,6 +206,7 @@ class ImageBuild(BaseModel):
         self.builder_id = None    # Unique ID
         self.username = None
         self.connection_type = None
+        self.connection_port = None
 
     def __repr__(self):
         d = self.toDict()
@@ -241,6 +242,8 @@ class ImageBuild(BaseModel):
             d['username'] = self.username
         if self.connection_type:
             d['connection_type'] = self.connection_type
+        if self.connection_port:
+            d['connection_port'] = self.connection_port
         return d
 
     @staticmethod
@@ -259,6 +262,7 @@ class ImageBuild(BaseModel):
         o.builder_id = d.get('builder_id')
         o.username = d.get('username')
         o.connection_type = d.get('connection_type')
+        o.connection_port = d.get('connection_port')
         # Only attempt the split on non-empty string
         if d.get('formats', ''):
             o.formats = d.get('formats', '').split(',')
@@ -272,7 +276,8 @@ class ImageUpload(BaseModel):
     VALID_STATES = set([UPLOADING, READY, DELETING, FAILED])
 
     def __init__(self, build_id=None, provider_name=None, image_name=None,
-                 upload_id=None, username=None, connection_type=None):
+                 upload_id=None, username=None, connection_type=None,
+                 connection_port=None):
         super(ImageUpload, self).__init__(upload_id)
         self.build_id = build_id
         self.provider_name = provider_name
@@ -280,6 +285,7 @@ class ImageUpload(BaseModel):
         self.format = None
         self.username = username
         self.connection_type = connection_type
+        self.connection_port = connection_port
         self.external_id = None      # Provider ID of the image
         self.external_name = None    # Provider name of the image
 
@@ -301,6 +307,7 @@ class ImageUpload(BaseModel):
                     self.image_name == other.image_name and
                     self.format == other.format and
                     self.username == other.username and
+                    self.connection_port == other.connection_port and
                     self.connection_type == other.connection_type)
         else:
             return False
@@ -317,6 +324,8 @@ class ImageUpload(BaseModel):
             d['username'] = self.username
         if self.connection_type:
             d['connection_type'] = self.connection_type
+        if self.connection_port:
+            d['connection_port'] = self.connection_port
         return d
 
     @staticmethod
@@ -339,6 +348,7 @@ class ImageUpload(BaseModel):
         o.format = d.get('format')
         o.username = d.get('username')
         o.connection_type = d.get('connection_type')
+        o.connection_port = d.get('connection_port')
         return o
 
 
@@ -491,6 +501,7 @@ class Node(BaseModel):
                     self.hold_job == other.hold_job and
                     self.username == other.username and
                     self.connection_type == other.connection_type and
+                    self.connection_port == other.connection_port and
                     self.host_keys == other.host_keys)
         else:
             return False
@@ -524,6 +535,8 @@ class Node(BaseModel):
             d['username'] = self.username
         if self.connection_type:
             d['connection_type'] = self.connection_type
+        if self.connection_port:
+            d['connection_port'] = self.connection_port
         return d
 
     @staticmethod
@@ -549,7 +562,7 @@ class Node(BaseModel):
         o.private_ipv4 = d.get('private_ipv4')
         o.public_ipv6 = d.get('public_ipv6')
         o.interface_ip = d.get('interface_ip')
-        o.connection_port = d.get('connection_port', 22)
+        o.connection_port = d.get('connection_port')
         o.image_id = d.get('image_id')
         o.launcher = d.get('launcher')
         o.created_time = d.get('created_time')

@@ -120,6 +120,7 @@ class DiskImage(ConfigValue):
             other.image_types != self.image_types or
             other.pause != self.pause or
             other.username != self.username or
+            other.connection_port != self.connection_port or
             other.connection_type != self.connection_type):
             return False
         return True
@@ -197,6 +198,7 @@ def loadConfig(config_path):
         d.pause = bool(diskimage.get('pause', False))
         d.username = diskimage.get('username')
         d.connection_type = diskimage.get('connection_type')
+        d.connection_port = diskimage.get('connection_port')
 
     for label in config.get('labels', []):
         l = Label()
@@ -272,6 +274,7 @@ def loadConfig(config_path):
             i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
             i.connection_type = image.get('connection_type', None)
+            i.connection_port = image.get('connection_port', None)
             p.cloud_images[i.name] = i
         p.pools = {}
         for pool in provider.get('pools', []):
