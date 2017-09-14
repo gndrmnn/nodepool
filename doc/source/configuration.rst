@@ -394,6 +394,9 @@ Example::
 
   ``name``
 
+  ``max-cores``
+    Maximum number of cores usable from this pool. Defaults to unlimited.
+
   ``max-servers``
     Maximum number of servers spawnable from this pool. Defaults to unlimited.
 
