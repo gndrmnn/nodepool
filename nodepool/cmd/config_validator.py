@@ -68,6 +68,7 @@ class ConfigValidator:
             'name': str,
             'config-drive': bool,
             'connection_type': str,
+            'connection_port': int,
             v.Exclusive('image-id', 'cloud-image-name-or-id'): str,
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
             'username': str,
@@ -108,6 +109,7 @@ class ConfigValidator:
             'env-vars': {str: str},
             'username': str,
             'connection_type': str,
+            'connection_port': int,
         }
 
         webapp = {

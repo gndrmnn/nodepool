@@ -23,6 +23,7 @@ providers:
       - name: fake-image-windows
         username: zuul
         connection_type: winrm
+        connection_port: 5986
     pools:
       - name: main
         max-servers: 96

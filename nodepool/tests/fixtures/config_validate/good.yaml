@@ -59,6 +59,7 @@ providers:
       - name: windows-unmanaged
         username: winzuul
         connection_type: winrm
+        connection_port: 5986
     pools:
       - name: main
         max-servers: 184
@@ -89,6 +90,7 @@ diskimages:
     rebuild-age: 3600
     username: zuul
     connection_type: ssh
+    connection_port: 22
     env-vars:
       TMPDIR: /opt/dib_tmp
       DIB_IMAGE_CACHE: /opt/dib_cache
