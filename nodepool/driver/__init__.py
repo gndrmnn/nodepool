@@ -81,6 +81,8 @@ class NodeRequestHandler(object):
         self.nodeset = []
         self.done = False
         self.paused = False
+        log = logging.getLogger("nodepool.driver.openstack."
+                                "OpenStackNodeRequestHandler")
 
     def _setFromPoolWorker(self):
         '''

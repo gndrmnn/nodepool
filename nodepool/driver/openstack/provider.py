@@ -18,6 +18,7 @@ import logging
 from contextlib import contextmanager
 import operator
 
+import munch
 import shade
 
 from nodepool import exceptions
@@ -201,7 +202,16 @@ class OpenStackProvider(Provider):
         create_args['meta'] = meta
 
         with shade_inner_exceptions():
-            return self._client.create_server(wait=False, **create_args)
+            try:
+                return self._client.create_server(wait=False, **create_args)
+            except shade.OpenStackCloudCreateException as e:
+                self.log.exception(
+                    "Initial server creation failed for {id} on"
+                    " {cloud}:{region}".format(
+                        id=e.resource_id,
+                        cloud=self._client.name,
+                        region=self._client.region_name))
+                return munch.Munch(id=e.resource_id, error='ERROR')
 
     def getServer(self, server_id):
         with shade_inner_exceptions():
