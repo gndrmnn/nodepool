@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f2577a7_7596dc40",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-09-15T17:42:21Z",
+      "side": 1,
+      "message": "Slight nit the attribute is resourceid not server.id in the exception so this is slightly confusing if maybe more about the intent.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 45
+      },
+      "revId": "0ee37d037a9fb0bb008c0625ff961d7d337d02dc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
