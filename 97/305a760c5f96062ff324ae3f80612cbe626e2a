@@ -1,0 +1,10 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Verified+1: Zuul
+Code-Review+2: Jesse Keating <omgjlk@us.ibm.com>
+Workflow+1: Jesse Keating <omgjlk@us.ibm.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 22 Sep 2017 19:59:21 +0000
+Reviewed-on: https://review.openstack.org/506750
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
