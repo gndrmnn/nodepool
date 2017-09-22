@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f515b1d_73f66e92",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-09-22T19:04:12Z",
+      "side": 1,
+      "message": "Missing )",
+      "revId": "b367101fbbd65c3b936931b1517954748ab86578",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
