@@ -182,7 +182,7 @@ class NodePoolCmd(NodepoolApp):
             if (self.args.provider and
                     provider.name != self.args.provider):
                 continue
-            manager = self.pool.getProviderManager(provider)
+            manager = self.pool.getProviderManager(provider.name)
 
             try:
                 servers = manager.listNodes()
