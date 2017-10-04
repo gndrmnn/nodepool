@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import mock
 import time
 
@@ -25,7 +24,6 @@ from nodepool.driver.openstack.handler import OpenStackNodeLaunchManager
 
 
 class TestNodeLaunchManager(tests.DBTestCase):
-    log = logging.getLogger("nodepool.TestNodeLaunchManager")
 
     def _setup(self, configfile):
         # Need a builder for the launch code to work and to access

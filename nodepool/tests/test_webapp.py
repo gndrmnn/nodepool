@@ -14,7 +14,6 @@
 # limitations under the License.
 
 import json
-import logging
 import yaml
 from six.moves.urllib import request
 
@@ -22,7 +21,6 @@ from nodepool import tests
 
 
 class TestWebApp(tests.DBTestCase):
-    log = logging.getLogger("nodepool.TestWebApp")
 
     def test_image_list(self):
         configfile = self.setup_config('node.yaml')

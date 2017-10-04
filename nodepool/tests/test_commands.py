@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os.path
 import sys  # noqa making sure its available for monkey patching
 
@@ -36,7 +35,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.useFixture(fixtures.MonkeyPatch('sys.argv', argv))
 
     def assert_listed(self, configfile, cmd, col, val, count, col_count=0):
-        log = logging.getLogger("tests.PrettyTableMock")
         self.patch_argv("-c", configfile, *cmd)
         with mock.patch('prettytable.PrettyTable.add_row') as m_add_row:
             nodepoolcmd.main()
@@ -46,7 +44,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                 row = args[0]
                 if col_count:
                     self.assertEquals(len(row), col_count)
-                log.debug(row)
+                self.log.debug(row)
                 if row[col] == val:
                     rows_with_val += 1
             self.assertEquals(rows_with_val, count)

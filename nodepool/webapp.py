@@ -13,13 +13,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import logging
 import threading
 import time
 from paste import httpserver
 import webob
 from webob import dec
 
+import nodepool.log
 from nodepool import status
 
 """Nodepool main web app.
@@ -52,7 +52,7 @@ class Cache(object):
 
 
 class WebApp(threading.Thread):
-    log = logging.getLogger("nodepool.WebApp")
+    log = nodepool.log.getLogger("nodepool.WebApp")
 
     def __init__(self, nodepool, port=8005, listen_address='0.0.0.0',
                  cache_expiry=1):

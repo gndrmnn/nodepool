@@ -21,13 +21,13 @@ import ipaddress
 import time
 import six
 import socket
-import logging
 
 import paramiko
 
 from nodepool import exceptions
+import nodepool.log
 
-log = logging.getLogger("nodepool.utils")
+log = nodepool.log.getLogger("nodepool.utils")
 
 
 ITERATE_INTERVAL = 2  # How long to sleep while waiting for something

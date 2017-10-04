@@ -20,10 +20,10 @@ import sys
 import threading
 import six
 from six.moves import queue as Queue
-import logging
 import time
 import requests.exceptions
 
+import nodepool.log
 from nodepool import stats
 
 class ManagerStoppedException(Exception):
@@ -63,7 +63,7 @@ class Task(object):
 
 
 class TaskManager(threading.Thread):
-    log = logging.getLogger("nodepool.TaskManager")
+    log = nodepool.log.getLogger("nodepool.TaskManager")
 
     def __init__(self, client, name, rate):
         super(TaskManager, self).__init__(name=name)

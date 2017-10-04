@@ -19,6 +19,7 @@ import abc
 
 import six
 
+import nodepool.log
 from nodepool import zk
 
 
@@ -81,6 +82,7 @@ class NodeRequestHandler(object):
         self.nodeset = []
         self.done = False
         self.paused = False
+        self.log = nodepool.log.getLogger('nodepool.driver.NodeRequestHandler')
 
     def _setFromPoolWorker(self):
         '''
@@ -94,6 +96,7 @@ class NodeRequestHandler(object):
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
         self.launcher_id = self.pw.launcher_id
+        self.log.setResourceName(self.launcher_id)
 
     @property
     def alive_thread_count(self):

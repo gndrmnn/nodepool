@@ -277,7 +277,7 @@ class BuilderFixture(fixtures.Fixture):
 class DBTestCase(BaseTestCase):
     def setUp(self):
         super(DBTestCase, self).setUp()
-        self.log = logging.getLogger("tests")
+        self.log = logging.getLogger(self.id())
         self.secure_conf = self._setup_secure()
         self.setupZK()
 

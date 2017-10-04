@@ -28,6 +28,7 @@ import traceback
 
 import yaml
 
+import nodepool.log
 from nodepool.version import version_info as npd_version_info
 
 
@@ -73,7 +74,7 @@ def stack_dump_handler(signum, frame):
         label = '%s (%s)' % (thread_name, thread_id)
         log_str += "Thread: %s\n" % label
         log_str += "".join(traceback.format_stack(stack_frame))
-    log = logging.getLogger("nodepool.stack_dump")
+    log = nodepool.log.getLogger("nodepool.stack_dump")
     log.debug(log_str)
     signal.signal(signal.SIGUSR2, stack_dump_handler)
 

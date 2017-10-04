@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import time
 import fixtures
 
@@ -23,7 +22,6 @@ import nodepool.launcher
 
 
 class TestLauncher(tests.DBTestCase):
-    log = logging.getLogger("nodepool.TestLauncher")
 
     def test_node_assignment(self):
         '''

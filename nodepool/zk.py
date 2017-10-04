@@ -15,7 +15,6 @@
 from contextlib import contextmanager
 from copy import copy
 import json
-import logging
 import six
 import time
 from kazoo.client import KazooClient, KazooState
@@ -23,6 +22,7 @@ from kazoo import exceptions as kze
 from kazoo.recipe.lock import Lock
 
 from nodepool import exceptions as npe
+import nodepool.log
 
 # States:
 # We are building this image (or node) but it is not ready for use.
@@ -551,7 +551,7 @@ class ZooKeeper(object):
     to be unique.
     '''
 
-    log = logging.getLogger("nodepool.zk.ZooKeeper")
+    log = nodepool.log.getLogger("nodepool.zk.ZooKeeper")
 
     IMAGE_ROOT = "/nodepool/images"
     LAUNCHER_ROOT = "/nodepool/launchers"

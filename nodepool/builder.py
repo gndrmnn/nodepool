@@ -13,7 +13,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import logging
 import os
 import shutil
 import socket
@@ -25,6 +24,7 @@ import uuid
 
 from nodepool import config as nodepool_config
 from nodepool import exceptions
+import nodepool.log
 from nodepool import provider_manager
 from nodepool import stats
 from nodepool import zk
@@ -110,7 +110,7 @@ class DibImageFile(object):
 class BaseWorker(threading.Thread):
     def __init__(self, builder_id, config_path, interval, zk):
         super(BaseWorker, self).__init__()
-        self.log = logging.getLogger("nodepool.builder.BaseWorker")
+        self.log = nodepool.log.getLogger("nodepool.builder.BaseWorker")
         self.daemon = True
         self._running = False
         self._config = None
@@ -149,7 +149,8 @@ class CleanupWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, interval, zk):
         super(CleanupWorker, self).__init__(builder_id, config_path,
                                             interval, zk)
-        self.log = logging.getLogger("nodepool.builder.CleanupWorker.%s" % name)
+        self.log = nodepool.log.getLogger(
+            "nodepool.builder.CleanupWorker", name)
         self.name = 'CleanupWorker.%s' % name
 
     def _buildUploadRecencyTable(self):
@@ -522,7 +523,7 @@ class BuildWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, interval, zk, dib_cmd):
         super(BuildWorker, self).__init__(builder_id, config_path,
                                           interval, zk)
-        self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
+        self.log = nodepool.log.getLogger("nodepool.builder.BuildWorker", name)
         self.name = 'BuildWorker.%s' % name
         self.dib_cmd = dib_cmd
 
@@ -691,8 +692,7 @@ class BuildWorker(BaseWorker):
                (self.dib_cmd, img_types, qemu_img_options, filename,
                 img_elements))
 
-        log = logging.getLogger("nodepool.image.build.%s" %
-                                (diskimage.name,))
+        log = nodepool.log.getLogger("nodepool.image.build", diskimage.name)
 
         self.log.info('Running %s' % cmd)
 
@@ -794,7 +794,8 @@ class UploadWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, interval, zk):
         super(UploadWorker, self).__init__(builder_id, config_path,
                                            interval, zk)
-        self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
+        self.log = nodepool.log.getLogger(
+            "nodepool.builder.UploadWorker", name)
         self.name = 'UploadWorker.%s' % name
 
     def _reloadConfig(self):
@@ -1029,7 +1030,7 @@ class NodePoolBuilder(object):
 
         * Start and maintain the working state of each worker thread.
     '''
-    log = logging.getLogger("nodepool.builder.NodePoolBuilder")
+    log = nodepool.log.getLogger("nodepool.builder.NodePoolBuilder")
 
     def __init__(self, config_path, num_builders=1, num_uploaders=4,
                  fake=False):

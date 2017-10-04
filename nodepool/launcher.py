@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import os
 import os.path
 import socket
@@ -24,6 +23,7 @@ import threading
 import time
 
 from nodepool import exceptions
+import nodepool.log
 from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
@@ -42,11 +42,13 @@ SUSPEND_WAIT_TIME = 30       # How long to wait between checks for ZooKeeper
 
 
 class NodeDeleter(threading.Thread, stats.StatsReporter):
-    log = logging.getLogger("nodepool.NodeDeleter")
 
     def __init__(self, zk, manager, node):
-        threading.Thread.__init__(self, name='NodeDeleter for %s %s' %
-                                  (node.provider, node.external_id))
+        resource_name = '%s.%s' % ((node.provider, node.external_id))
+        threading.Thread.__init__(self, name='NodeDeleter for %s' %
+                                  resource_name)
+        self.log = nodepool.log.getLogger(
+            "nodepool.NodeDeleter", resource_name)
         stats.StatsReporter.__init__(self)
         self._zk = zk
         self._manager = manager
@@ -121,10 +123,11 @@ class PoolWorker(threading.Thread):
     '''
 
     def __init__(self, nodepool, provider_name, pool_name):
+        resource_name = '%s-%s' % (provider_name, pool_name)
         threading.Thread.__init__(
             self, name='PoolWorker.%s-%s' % (provider_name, pool_name)
         )
-        self.log = logging.getLogger("nodepool.%s" % self.name)
+        self.log = nodepool.log.getLogger("nodepool.pool", resource_name)
         self.nodepool = nodepool
         self.provider_name = provider_name
         self.pool_name = pool_name
@@ -344,7 +347,7 @@ class CleanupWorker(BaseCleanupWorker):
     def __init__(self, nodepool, interval):
         super(CleanupWorker, self).__init__(
             nodepool, interval, name='CleanupWorker')
-        self.log = logging.getLogger("nodepool.CleanupWorker")
+        self.log = nodepool.log.getLogger("nodepool.CleanupWorker")
 
     def _resetLostRequest(self, zk_conn, req):
         '''
@@ -538,7 +541,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
     def __init__(self, nodepool, interval):
         super(DeletedNodeWorker, self).__init__(
             nodepool, interval, name='DeletedNodeWorker')
-        self.log = logging.getLogger("nodepool.DeletedNodeWorker")
+        self.log = nodepool.log.getLogger("nodepool.DeletedNodeWorker")
 
     def _cleanupNodes(self):
         '''
@@ -603,7 +606,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
 
 
 class NodePool(threading.Thread):
-    log = logging.getLogger("nodepool.NodePool")
+    log = nodepool.log.getLogger("nodepool.NodePool")
 
     def __init__(self, securefile, configfile,
                  watermark_sleep=WATERMARK_SLEEP):

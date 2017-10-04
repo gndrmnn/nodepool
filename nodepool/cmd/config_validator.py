@@ -10,11 +10,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import logging
 import voluptuous as v
 import yaml
 
-log = logging.getLogger(__name__)
+import nodepool.log
+
+log = nodepool.log.getLogger(__name__)
 
 
 class ConfigValidator:

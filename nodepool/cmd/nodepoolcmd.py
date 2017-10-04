@@ -14,19 +14,21 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import logging
 import logging.config
 import sys
 
 from prettytable import PrettyTable
 
 from nodepool import launcher
+import nodepool.log
 from nodepool import provider_manager
 from nodepool import status
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
 
-log = logging.getLogger(__name__)
+log = nodepool.log.getLogger(__name__)
 
 
 class NodePoolCmd(NodepoolApp):

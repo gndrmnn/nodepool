@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 from contextlib import contextmanager
 import operator
 
@@ -22,6 +21,7 @@ import shade
 
 from nodepool import exceptions
 from nodepool.driver import Provider
+import nodepool.log
 from nodepool.nodeutils import iterate_timeout
 from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
@@ -40,7 +40,7 @@ def shade_inner_exceptions():
 
 
 class OpenStackProvider(Provider):
-    log = logging.getLogger("nodepool.driver.openstack.OpenStackProvider")
+    log = nodepool.log.getLogger("nodepool.driver.openstack.OpenStackProvider")
 
     def __init__(self, provider, use_taskmanager):
         self.provider = provider

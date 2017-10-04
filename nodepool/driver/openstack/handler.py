@@ -14,7 +14,6 @@
 # under the License.
 
 import collections
-import logging
 import pprint
 import random
 import threading
@@ -22,6 +21,7 @@ import time
 
 from nodepool import exceptions
 from nodepool import nodeutils as utils
+import nodepool.log
 from nodepool import stats
 from nodepool import zk
 from nodepool.driver import NodeLaunchManager
@@ -29,8 +29,7 @@ from nodepool.driver import NodeRequestHandler
 
 
 class NodeLauncher(threading.Thread, stats.StatsReporter):
-    log = logging.getLogger("nodepool.driver.openstack."
-                            "NodeLauncher")
+    log = nodepool.log.getLogger("nodepool.driver.openstack.NodeLauncher")
 
     def __init__(self, zk, provider_label, provider_manager, requestor,
                  node, retries):
@@ -47,7 +46,7 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
         '''
         threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
         stats.StatsReporter.__init__(self)
-        self.log = logging.getLogger("nodepool.NodeLauncher-%s" % node.id)
+        self.log = nodepool.log.getLogger("nodepool.NodeLauncher", node.id)
         self._zk = zk
         self._label = provider_label
         self._manager = provider_manager
@@ -286,6 +285,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
     def __init__(self, pw, request):
         super(OpenStackNodeRequestHandler, self).__init__(pw, request)
+        self.log = nodepool.log.getLogger(
+            "nodepool.driver.openstack.OpenStackNodeRequestHandler")
         self.chosen_az = None
 
     def _imagesAvailable(self):
@@ -471,9 +472,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         self._setFromPoolWorker()
 
         # We have the launcher_id attr after _setFromPoolWorker() is called.
-        self.log = logging.getLogger(
-            "nodepool.driver.openstack.OpenStackNodeRequestHandler[%s]" %
-            self.launcher_id)
+        self.log.setResourceName(self.launcher_id)
 
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()

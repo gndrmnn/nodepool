@@ -14,16 +14,16 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import logging
 import os
 import sys
 import signal
 
 import nodepool.cmd
 import nodepool.launcher
+import nodepool.log
 import nodepool.webapp
 
-log = logging.getLogger(__name__)
+log = nodepool.log.getLogger(__name__)
 
 
 class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
