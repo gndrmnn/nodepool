@@ -399,12 +399,13 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                         continue
                     else:
                         if self.paused:
-                            self.log.debug("Unpaused request %s", self.request)
+                            self.log.debug("%s: Unpaused request %s",
+                                           self.launcher_id, self.request)
                             self.paused = False
 
                         self.log.debug(
-                            "Locked existing node %s for request %s",
-                            node.id, self.request.id)
+                            "%s: Locked existing node %s for request %s",
+                            self.launcher_id, node.id, self.request.id)
                         got_a_node = True
                         node.allocated_to = self.request.id
                         self.zk.storeNode(node)
@@ -430,13 +431,14 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 if self._countNodes() >= self.pool.max_servers:
                     if not self.paused:
                         self.log.debug(
-                            "Pausing request handling to satisfy request %s",
-                            self.request)
+                            "%s: Pausing request handling to satisfy "
+                            "request %s", self.launcher_id, self.request)
                     self.paused = True
                     return
 
                 if self.paused:
-                    self.log.debug("Unpaused request %s", self.request)
+                    self.log.debug("%s: Unpaused request %s",
+                                   self.launcher_id, self.request)
                     self.paused = False
 
                 node = zk.Node()
@@ -455,8 +457,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 # locked anywhere.
                 self.zk.storeNode(node)
                 self.zk.lockNode(node, blocking=False)
-                self.log.debug("Locked building node %s for request %s",
-                               node.id, self.request.id)
+                self.log.debug("%s: Locked building node %s for request %s",
+                               self.launcher_id, node.id, self.request.id)
 
                 # Set state AFTER lock so sthat it isn't accidentally cleaned
                 # up (unlocked BUILDING nodes will be deleted).
@@ -482,13 +484,14 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
             declined_reasons.append('it would exceed quota')
 
         if declined_reasons:
-            self.log.debug("Declining node request %s because %s",
-                           self.request.id, ', '.join(declined_reasons))
+            self.log.debug("%s: Declining node request %s because %s",
+                           self.laucher_id, self.request.id,
+                           ', '.join(declined_reasons))
             self.request.declined_by.append(self.launcher_id)
             launchers = set(self.zk.getRegisteredLaunchers())
             if launchers.issubset(set(self.request.declined_by)):
-                self.log.debug("Failing declined node request %s",
-                               self.request.id)
+                self.log.debug("%s: Failing declined node request %s",
+                               self.launcher_id, self.request.id)
                 # All launchers have declined it
                 self.request.state = zk.FAILED
             self.unlockNodeSet(clear_allocation=True)
@@ -498,9 +501,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
             return
 
         if self.paused:
-            self.log.debug("Retrying node request %s", self.request.id)
+            self.log.debug("%s: Retrying node request %s",
+                           self.laucher_id, self.request.id)
         else:
-            self.log.debug("Accepting node request %s", self.request.id)
+            self.log.debug("%s: Accepting node request %s",
+                           self.launcher_id, self.request.id)
             self.request.state = zk.PENDING
             self.zk.storeNodeRequest(self.request)
 
