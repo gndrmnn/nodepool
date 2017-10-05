@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f515b1d_933af131",
+        "filename": "nodepool/tests/test_nodelaunchmanager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-10-05T08:27:51Z",
+      "side": 1,
+      "message": "This line is too long. Looks like the pep8 test config is broken which should catch this.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 114
+      },
+      "revId": "c724475cd45c4d0e4308a61e9b7776132edd2841",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
