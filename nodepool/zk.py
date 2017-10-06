@@ -1629,3 +1629,15 @@ class ZooKeeper(object):
             req = self.getNodeRequest(req_id)
             if req:
                 yield req
+
+    def countProviderNodes(self, provider_name):
+        '''
+        Count the number of nodes that exist for the given provider.
+
+        :param str provider_name: The provider name.
+        '''
+        count = 0
+        for node in self.nodeIterator():
+            if node.provider == provider_name:
+                count = count + 1
+        return count
