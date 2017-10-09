@@ -1436,6 +1436,8 @@ class ZooKeeper(object):
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % path)
+        except kze.NoNodeError:
+            self.log.error("Request not found for locking: %s", request)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
@@ -1483,6 +1485,8 @@ class ZooKeeper(object):
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % path)
+        except kze.NoNodeError:
+            self.log.error("Node not found for locking: %s", node)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
