@@ -307,6 +307,28 @@ class BaseCleanupWorker(threading.Thread):
 
         :param Node node: A Node object representing the instance to delete.
         '''
+        # We cannot delete an instance that is building. Note that the
+        # znode state might be BUILDING, but that doesn't necessarily mean
+        # that the instance itself is still building, so we need to check
+        # directly with the provider.
+        try:
+            manager = self._nodepool.getProviderManager(node.provider)
+            server = manager.getServer(node.external_id)
+            if server and server.status and (server.status == 'building'):
+                self.log.info(
+                    "Cannot delete instance %s in %s. Status is building.",
+                    node.external_id, node.provider)
+                if node.lock:
+                    # Leaked instances won't have a node in ZK or a lock
+                    self.zk.unlockNode(node)
+        except Exception:
+            if node.lock:
+                # Leaked instances won't have a node in ZK or a lock
+                try:
+                    self.zk.unlockNode(node)
+                except Exception:
+                    self.log.exception("Failed to unlock node: %s", node)
+
         self.log.info("Deleting %s instance %s from %s",
                       node.state, node.external_id, node.provider)
         try:
