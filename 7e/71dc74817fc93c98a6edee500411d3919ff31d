@@ -1,0 +1,9 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Jesse Keating <omgjlk@us.ibm.com>
+Workflow+1: Jesse Keating <omgjlk@us.ibm.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 17 Oct 2017 15:38:49 +0000
+Reviewed-on: https://review.openstack.org/512413
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
