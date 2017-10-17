@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f4e5783_b1920056",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-10-17T03:28:11Z",
+      "side": 1,
+      "message": "So now we only unlock if there was an exception in the storeNode call?",
+      "revId": "4b7a0e62ff0361be0c87a9d01fcd325f1b3ccd7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f4e5783_f1851808",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 6589
+      },
+      "writtenOn": "2017-10-17T03:28:11Z",
+      "side": 1,
+      "message": "This Exception handling just logs, but doesn\u0027t do anything else? So then it always falls through to the unlock node below?",
+      "revId": "4b7a0e62ff0361be0c87a9d01fcd325f1b3ccd7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
