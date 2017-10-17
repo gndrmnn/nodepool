@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5f4e5783_4b054c10",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-10-17T12:06:30Z",
+      "side": 1,
+      "message": "Oops! Good catch. This was originally a \u0027finally\u0027 block in an earlier PS. Will fix this.",
+      "parentUuid": "5f4e5783_b1920056",
+      "revId": "4b7a0e62ff0361be0c87a9d01fcd325f1b3ccd7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f4e5783_f1851808",
         "filename": "nodepool/launcher.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2017-10-17T03:28:11Z",
       "side": 1,
       "message": "This Exception handling just logs, but doesn\u0027t do anything else? So then it always falls through to the unlock node below?",
+      "revId": "4b7a0e62ff0361be0c87a9d01fcd325f1b3ccd7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f4e5783_2b21f09f",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-10-17T12:06:30Z",
+      "side": 1,
+      "message": "Correct. Before, if storeNode() threw an exception, we\u0027d abort without even trying the unlock below. Now we\u0027ll log something and always try the unlock.",
+      "parentUuid": "5f4e5783_f1851808",
       "revId": "4b7a0e62ff0361be0c87a9d01fcd325f1b3ccd7b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
