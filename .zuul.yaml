@@ -1,8 +1,34 @@
+- job:
+    name: nodepool-zuul-functional
+    parent: legacy-base
+    run: playbooks/nodepool-zuul-functional/run
+    post-run: playbooks/nodepool-zuul-functional/post
+    timeout: 1800
+    required-projects:
+      - openstack-infra/nodepool
+      - openstack-infra/zuul
+
 - project:
     name: openstack-infra/nodepool
+    templates:
+      - system-required
+      - openstack-python-jobs-no-constraints
+      - openstack-python35-jobs-no-constraints
+      - publish-openstack-sphinx-docs-infra
+      - publish-to-pypi
     check:
       jobs:
         - tox-docs
         - tox-cover
         - tox-pep8
         - tox-py35
+        - nodepool-functional-py35:
+            voting: false
+        - nodepool-functional-py35-src:
+            voting: false
+    post:
+      jobs:
+        - tox-cover
+    experimental:
+      jobs:
+        - nodepool-zuul-functional
