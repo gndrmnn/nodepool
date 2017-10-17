@@ -1,8 +1,29 @@
+- job:
+    name: nodepool-zuul-functional
+    parent: legacy-base
+    run: playbooks/nodepool-zuul-functional/run
+    post-run: playbooks/nodepool-zuul-functional/post
+    timeout: 1800
+    required-projects:
+      - openstack-infra/nodepool
+      - openstack-infra/zuul
+
 - project:
     name: openstack-infra/nodepool
     check:
       jobs:
-        - tox-docs
-        - tox-cover
-        - tox-pep8
+        - tox-py27:
+            branches: ^(?!feature/zuulv3).*$
         - tox-py35
+        - nodepool-functional-py35:
+            voting: false
+        - nodepool-functional-py35-src:
+            voting: false
+    gate:
+      jobs:
+        - tox-py27:
+            branches: ^(?!feature/zuulv3).*$
+        - tox-py35
+    experimental:
+      jobs:
+        - nodepool-zuul-functional
