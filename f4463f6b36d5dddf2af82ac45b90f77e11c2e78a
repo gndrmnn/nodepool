@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f4e5783_d90c6895",
+        "filename": ".zuul.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 6547
+      },
+      "writtenOn": "2017-10-17T20:25:02Z",
+      "side": 1,
+      "message": "no need to add it here then;) you need to backport this to the feature branch anyhow since this project definition is only for master.\n\nbtw. it\u0027s branches\n\nI suggest to move the tox-py35 to project-config since it part of PTI",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 34
+      },
+      "revId": "f4463f6b36d5dddf2af82ac45b90f77e11c2e78a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
