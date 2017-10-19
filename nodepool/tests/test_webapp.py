@@ -74,3 +74,43 @@ class TestWebApp(tests.DBTestCase):
         config = yaml.safe_load(open(configfile))
         self.assertEqual(config['webapp']['port'], 8080)
         self.assertEqual(config['webapp']['listen_address'], '127.0.0.1')
+
+    def test_node_list(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/node-list" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'text/plain; charset=UTF-8')
+        data = f.read()
+        self.assertIn('fake-label', data.decode('utf8'))
+
+    def test_node_list_detail(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/node-list-detail" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'text/plain; charset=UTF-8')
+        data = f.read()
+        self.assertIn('fake-label-fake-provider-0000000000', data.decode('utf8'))
