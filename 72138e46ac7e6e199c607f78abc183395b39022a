@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f4b6375_2d5ce37c",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-10-20T20:45:12Z",
+      "side": 1,
+      "message": "the declaration is \n\n  start_client(event\u003dNone, timeout\u003dNone)\n\nSo don\u0027t we need to do this?\n\n  t.start_client(timeout\u003dtimeout)",
+      "range": {
+        "startLine": 74,
+        "startChar": 12,
+        "endLine": 74,
+        "endChar": 35
+      },
+      "revId": "72138e46ac7e6e199c607f78abc183395b39022a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
