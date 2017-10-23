@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f4b6375_6e93c35c",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "Is this still the case?",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 99
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_8e96ff4b",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "This will always be true, can we clean this up in a followup?",
+      "range": {
+        "startLine": 53,
+        "startChar": 10,
+        "endLine": 53,
+        "endChar": 36
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_ce8197fd",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "This will never be true due to export above.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 55
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_0e8c4f34",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "This will also always be true. None of the cases below will run.",
+      "range": {
+        "startLine": 87,
+        "startChar": 10,
+        "endLine": 87,
+        "endChar": 32
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_4e75a731",
+        "filename": "playbooks/nodepool-functional-py35/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 91
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_2e726b4a",
+        "filename": "playbooks/nodepool-functional-py35/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 53,
+        "startChar": 10,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_0e91ef47",
+        "filename": "playbooks/nodepool-functional-py35/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 55
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_ae9bfb63",
+        "filename": "playbooks/nodepool-functional-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 89
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_6ea18394",
+        "filename": "playbooks/nodepool-functional-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "This will never be true.",
+      "range": {
+        "startLine": 53,
+        "startChar": 10,
+        "endLine": 53,
+        "endChar": 36
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_0eba0fc0",
+        "filename": "playbooks/nodepool-functional-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 55
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_eebe93b2",
+        "filename": "playbooks/nodepool-functional-src/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 87,
+        "startChar": 10,
+        "endLine": 87,
+        "endChar": 32
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_6ecaa34e",
+        "filename": "playbooks/nodepool-functional/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 81
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_2ec02b2a",
+        "filename": "playbooks/nodepool-functional/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "This will never be true.",
+      "range": {
+        "startLine": 53,
+        "startChar": 10,
+        "endLine": 53,
+        "endChar": 36
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_eee333d8",
+        "filename": "playbooks/nodepool-functional/run.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-10-23T23:18:58Z",
+      "side": 1,
+      "message": "See comment on py35 src run.yaml.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 55
+      },
+      "revId": "3bd21837001c77873b7cf4827de6d898fed567e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
