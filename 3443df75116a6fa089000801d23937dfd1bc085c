@@ -16,6 +16,24 @@
       "revId": "3443df75116a6fa089000801d23937dfd1bc085c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f4b6375_7a2c8fab",
+        "filename": "playbooks/nodepool-zuul-functional/run.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-10-24T11:30:42Z",
+      "side": 1,
+      "message": "Possibly? The goal here is to just get the jobs migrated into the repo. We can modify them much more easily after that.",
+      "parentUuid": "3f4b6375_0e168fa9",
+      "revId": "3443df75116a6fa089000801d23937dfd1bc085c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
