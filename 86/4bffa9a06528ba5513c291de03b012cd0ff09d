@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+1: Jenkins
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 26 Oct 2017 14:12:25 +0000
+Reviewed-on: https://review.openstack.org/506137
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
