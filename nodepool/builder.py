@@ -428,6 +428,9 @@ class CleanupWorker(BaseWorker):
             # (since this should be done regardless of the build
             # state).
             for provider in known_providers:
+                if not provider.driver.manage_images:
+                    # This provider doesn't manage images
+                    continue
                 try:
                     self._cleanupObsoleteProviderUploads(provider, image,
                                                          build.id)
@@ -454,6 +457,9 @@ class CleanupWorker(BaseWorker):
                     continue
 
             for provider in known_providers:
+                if not provider.driver.manage_images:
+                    # This provider doesn't manage images
+                    continue
                 try:
                     self._cleanupProvider(provider, image, build.id)
                 except Exception:
