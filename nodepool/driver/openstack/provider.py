@@ -217,8 +217,8 @@ class OpenStackProvider(Provider):
     def waitForServer(self, server, timeout=3600):
         with shade_inner_exceptions():
             return self._client.wait_for_server(
-                server=server, auto_ip=True, reuse=False,
-                timeout=timeout)
+                server=server, auto_ip=self.provider.auto_floating_ip,
+                reuse=False, timeout=timeout)
 
     def waitForNodeCleanup(self, server_id, timeout=600):
         for count in iterate_timeout(

@@ -236,6 +236,7 @@ def loadConfig(config_path):
             'image-name-format',
             '{image_name}-{timestamp}'
         )
+        p.auto_floating_ip = bool(provider.get('auto-floating-ip', True))
         p.diskimages = {}
         for image in provider.get('diskimages', []):
             i = ProviderDiskImage()

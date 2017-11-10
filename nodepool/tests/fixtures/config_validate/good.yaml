@@ -28,6 +28,7 @@ providers:
     max-concurrency: 10
     launch-retries: 3
     rate: 0.001
+    auto-floating-ip: True
     diskimages:
       - name: trusty
     pools:
@@ -50,6 +51,7 @@ providers:
     region-name: 'chocolate'
     boot-timeout: 120
     rate: 0.001
+    auto-floating-ip: False
     diskimages:
       - name: trusty
         pause: False

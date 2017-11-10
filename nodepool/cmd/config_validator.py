@@ -84,6 +84,7 @@ class ConfigValidator:
             'rate': float,
             'hostname-format': str,
             'image-name-format': str,
+            'auto-floating-ip': bool,
             'clean-floating-ips': bool,
             'pools': [pool],
             'diskimages': [provider_diskimage],
