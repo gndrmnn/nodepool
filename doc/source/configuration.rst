@@ -374,6 +374,7 @@ Example::
         - az1
       networks:
         - some-network-name
+      auto-floating-ip: False
       labels:
         - name: trusty
           min-ram: 8192
@@ -411,6 +412,12 @@ Example::
     Specify custom Neutron networks that get attached to each
     node. Specify the name or id of the network as a string.
 
+  ``auto-floating-ip`` (bool)
+    Specify custom behavior of allocating floating ip for each node.
+    When set to False, nodepool-launcher will not apply floating ip
+    for nodes. When zuul instances and nodes are deployed in the same
+    internal private network, set the option to False to save floating ip
+    for cloud provider. The default value is True.
 
 .. _provider_diskimages:
 
