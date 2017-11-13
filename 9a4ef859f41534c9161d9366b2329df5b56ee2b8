@@ -16,6 +16,23 @@
       "revId": "9a4ef859f41534c9161d9366b2329df5b56ee2b8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_00ad7c87",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-13T19:18:08Z",
+      "side": 1,
+      "message": "Maybe we should use the default here too? Right after an upgrade, any ImageBuild values read from ZK won\u0027t have this field.",
+      "revId": "9a4ef859f41534c9161d9366b2329df5b56ee2b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
