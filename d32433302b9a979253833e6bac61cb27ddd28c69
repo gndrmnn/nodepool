@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_94b64dfa",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 9
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-13T20:14:30Z",
+      "side": 1,
+      "message": "We should mention the default value.",
+      "revId": "d32433302b9a979253833e6bac61cb27ddd28c69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_34f439cf",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-13T20:14:30Z",
+      "side": 1,
+      "message": "Default needed for backward compat.",
+      "revId": "d32433302b9a979253833e6bac61cb27ddd28c69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_94288d34",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-13T20:14:30Z",
+      "side": 1,
+      "message": "Default needed for backward compat.",
+      "revId": "d32433302b9a979253833e6bac61cb27ddd28c69",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
