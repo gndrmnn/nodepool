@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_c0a1a4ab",
+        "filename": "nodepool/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-13T19:14:20Z",
+      "side": 1,
+      "message": "Need a default value here.",
+      "revId": "9a4ef859f41534c9161d9366b2329df5b56ee2b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
