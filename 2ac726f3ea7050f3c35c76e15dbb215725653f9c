@@ -16,6 +16,24 @@
       "revId": "2ac726f3ea7050f3c35c76e15dbb215725653f9c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_7fb50131",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-11-13T02:55:33Z",
+      "side": 1,
+      "message": "Good catch, thank you, I will move option into each pool config and add docs.",
+      "parentUuid": "1f485f77_bb45db19",
+      "revId": "2ac726f3ea7050f3c35c76e15dbb215725653f9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
