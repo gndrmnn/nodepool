@@ -1,0 +1,8 @@
+Code-Review+2: Ricardo Carrillo Cruz <ricardo.carrillo.cruz@gmail.com>
+Workflow+1: Ricardo Carrillo Cruz <ricardo.carrillo.cruz@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 14 Nov 2017 17:12:09 +0000
+Reviewed-on: https://review.openstack.org/453968
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
