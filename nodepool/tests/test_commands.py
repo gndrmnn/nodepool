@@ -304,3 +304,12 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.zk.storeNodeRequest(req)
 
         self.assert_listed(configfile, ['request-list'], 0, req.id, 1)
+
+    def test_without_argument(self):
+        configfile = self.setup_config("node_cmd.yaml")
+        self.patch_argv("-c", configfile)
+        try:
+            result = nodepoolcmd.main()
+            self.assertEqual(1, result)
+        except TypeError:
+            self.fail("TypeError should not be raised.")
