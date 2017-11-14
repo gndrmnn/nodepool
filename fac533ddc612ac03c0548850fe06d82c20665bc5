@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_fcc0b67e",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2017-11-14T09:57:19Z",
+      "side": 1,
+      "message": "i think this should still return an error (1) so scripts, etc stop",
+      "revId": "fac533ddc612ac03c0548850fe06d82c20665bc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_7cd5e642",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2017-11-14T09:57:19Z",
+      "side": 1,
+      "message": "i think this is a bit specific to the failure.  i think that this should ultimately exit(1) as it was an error, so probably good to mock.patch sys.exit and check that returned 1?",
+      "revId": "fac533ddc612ac03c0548850fe06d82c20665bc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
