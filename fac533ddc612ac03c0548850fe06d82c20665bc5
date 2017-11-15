@@ -33,6 +33,24 @@
       "revId": "fac533ddc612ac03c0548850fe06d82c20665bc5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_30b41835",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-11-15T03:28:43Z",
+      "side": 1,
+      "message": "We call nodepoolcmd.main() method in the case, so we can assert the return value equal 1 instead of mock sys.exit.",
+      "parentUuid": "1f485f77_7cd5e642",
+      "revId": "fac533ddc612ac03c0548850fe06d82c20665bc5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
