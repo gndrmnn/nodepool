@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_b0bb6870",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2017-11-15T04:12:34Z",
+      "side": 1,
+      "message": "still a little weird to catch this explicitly for mine.  just leave it and if it raises the exception, the test will fail anyway",
+      "revId": "736fcfe6faad93fc961601cefa09d5e097db3b88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
