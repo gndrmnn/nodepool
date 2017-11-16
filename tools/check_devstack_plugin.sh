@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/new/nodepool-venv}
+NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/nodepool-venv}
 NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
 NODEPOOL_SECURE=${NODEPOOL_SECURE:-/etc/nodepool/secure.conf}
 NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
@@ -20,10 +20,8 @@ function waitforimage {
     state='ready'
 
     while ! $NODEPOOL image-list | grep $name | grep $state; do
-        $NODEPOOL image-list > /tmp/.nodepool-image-list.txt
-        $NODEPOOL list > /tmp/.nodepool-list.txt
-        sudo mv /tmp/.nodepool-image-list.txt $WORKSPACE/logs/nodepool-image-list.txt
-        sudo mv /tmp/.nodepool-list.txt $WORKSPACE/logs/nodepool-list.txt
+        $NODEPOOL image-list > ./logs/nodepool-image-list.txt
+        $NODEPOOL list > ./logs/nodepool-list.txt
         sleep 10
     done
 }
@@ -33,10 +31,8 @@ function waitfornode {
     state='ready'
 
     while ! $NODEPOOL list | grep $name | grep $state | grep "unlocked"; do
-        $NODEPOOL image-list > /tmp/.nodepool-image-list.txt
-        $NODEPOOL list > /tmp/.nodepool-list.txt
-        sudo mv /tmp/.nodepool-image-list.txt $WORKSPACE/logs/nodepool-image-list.txt
-        sudo mv /tmp/.nodepool-list.txt $WORKSPACE/logs/nodepool-list.txt
+        $NODEPOOL image-list > ./logs/nodepool-image-list.txt
+        $NODEPOOL list > ./logs/nodepool-list.txt
         sleep 10
     done
 }
