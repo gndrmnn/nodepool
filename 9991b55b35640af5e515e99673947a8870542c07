@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_792c8601",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-16T15:58:39Z",
+      "side": 1,
+      "message": "What\u0027s the reason for clearing out all of the IPs? Couldn\u0027t we just set interface_ip to something (e.g., fake-auto-ip) if auto_ip is True?",
+      "revId": "9991b55b35640af5e515e99673947a8870542c07",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
