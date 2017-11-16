@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - name: Copy files from {{ ansible_user_dir }}/work/logs/nodepool on node
+      synchronize:
+        src: '{{ ansible_user_dir }}/work/logs/nodepool/'
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
