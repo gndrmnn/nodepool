@@ -136,6 +136,10 @@ class Provider(object):
         pass
 
     @abc.abstractmethod
+    def cleanupImageResources(self):
+        pass
+
+    @abc.abstractmethod
     def listNodes(self):
         pass
 

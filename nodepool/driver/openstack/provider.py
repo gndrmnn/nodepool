@@ -504,6 +504,11 @@ class OpenStackProvider(Provider):
         if self.provider.clean_floating_ips:
             self._client.delete_unattached_floating_ips()
 
+    def cleanupImageResources(self):
+        # The underlying shade call is a no-op on clouds that don't use swift
+        # and tasks to upload images.
+        self._client.delete_autocreated_image_objects()
+
     def getAZs(self):
         if self.__azs is None:
             self.__azs = self._client.list_availability_zone_names()

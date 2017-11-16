@@ -1035,6 +1035,16 @@ class UploadWorker(BaseWorker):
                                          local_images, provider,
                                          build.username)
 
+                # We should be deleting image objects on successful image
+                # import, but if we don't, this should take care of it.
+                # This is in the upload worker and not the cleanup worker
+                # so that we can be sure that nobody else is uploading
+                # to this provider. If we had two workers uploading images
+                # to the same provider the cleanup method could potentially
+                # delete objects out from underneath the other upload.
+                for provider in known_providers:
+                    self._cleanupImageResources(provider)
+
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
                                           provider.name, data, upnum)
@@ -1042,6 +1052,10 @@ class UploadWorker(BaseWorker):
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
             return False
+
+    def _cleanupImageResources(self, provider):
+        manager = self._config.provider_managers[provider.name]
+        manager.cleanupImageResources()
 
     def run(self):
 
