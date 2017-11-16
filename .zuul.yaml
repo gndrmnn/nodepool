@@ -1,12 +1,39 @@
 - job:
-    name: nodepool-functional-py35
-    parent: legacy-dsvm-base
-    run: playbooks/nodepool-functional-py35/run.yaml
-    post-run: playbooks/nodepool-functional-py35/post.yaml
+    name: nodepool-functional-base
+    parent: devstack
+    pre-run: playbooks/nodepool-functional-base/pre.yaml
     timeout: 5400
     required-projects:
-      - openstack-infra/devstack-gate
       - openstack-infra/nodepool
+    vars:
+      devstack_services:
+        horizon: false
+        ceilometer-acentral: false
+        ceilometer-acompute: false
+        ceilometer-alarm-evaluator: false
+        ceilometer-alarm-notifier: false
+        ceilometer-anotification: false
+        ceilometer-api: false
+        ceilometer-collector: false
+        cinder: false
+        c-bak: false
+        c-sch: false
+        c-api: false
+        c-vol: false
+        s-account: false
+        s-container: false
+        s-object: false
+        s-proxy: false
+      devstack_plugins:
+        nodepool: https://git.openstack.org/openstack-infra/nodepool
+
+- job:
+    name: nodepool-functional-devstack-py35
+    parent: nodepool-functional-base
+    description: |
+      Run nodepool functional tests for py35
+    run: playbooks/nodepool-functional-devstack-py35/run.yaml
+    post-run: playbooks/nodepool-functional-devstack-py35/post.yaml
 
 - job:
     name: nodepool-functional-py35-src
@@ -33,14 +60,9 @@
 
 - project:
     check:
+      debug: true
       jobs:
-        - tox-docs
-        - tox-cover
-        - tox-pep8
-        - tox-py35
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
+        - nodepool-functional-devstack-py35:
             voting: false
     gate:
       jobs:

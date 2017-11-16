@@ -1,0 +1,8 @@
+- hosts: all
+  roles:
+    - run-devstack
+  tasks:
+    - name: Run nodepool tests
+      command: tools/check_devstack_plugin.sh
+      args:
+        chdir: '{{ zuul.project.src_dir }}'
