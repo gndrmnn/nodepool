@@ -328,9 +328,15 @@ class OpenStackProvider(Provider):
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
 
-    def cleanupLeakedFloaters(self):
+    def cleanupNodeResources(self):
         with shade_inner_exceptions():
             self._client.delete_unattached_floating_ips()
+
+    def cleanupImageResources(self):
+        # The underlying shade call is a no-op on clouds that don't use swift
+        # and tasks to upload images.
+        with shade_inner_exceptions():
+            self._client.delete_autocreated_image_objects()
 
     def getAZs(self):
         if self.__azs is None:

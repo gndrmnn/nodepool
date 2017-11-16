@@ -50,6 +50,14 @@ class Provider(object):
         pass
 
     @abc.abstractmethod
+    def cleanupNodeResources(self):
+        pass
+
+    @abc.abstractmethod
+    def cleanupImageResources(self):
+        pass
+
+    @abc.abstractmethod
     def waitForNodeCleanup(self, node_id):
         pass
 
