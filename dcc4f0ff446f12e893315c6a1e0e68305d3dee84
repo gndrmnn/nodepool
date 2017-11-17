@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f485f77_679e05ba",
+        "filename": "nodepool/tests/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-17T15:07:17Z",
+      "side": 1,
+      "message": "I agree with the comments on the previous patchset. The try-except is not necessary. If an exception is thrown, the test will fail automatically.",
+      "range": {
+        "startLine": 314,
+        "startChar": 8,
+        "endLine": 314,
+        "endChar": 25
+      },
+      "revId": "dcc4f0ff446f12e893315c6a1e0e68305d3dee84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
