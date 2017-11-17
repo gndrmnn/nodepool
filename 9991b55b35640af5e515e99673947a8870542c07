@@ -16,6 +16,24 @@
       "revId": "9991b55b35640af5e515e99673947a8870542c07",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f485f77_55fbc177",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-11-17T01:53:40Z",
+      "side": 1,
+      "message": "If auto_ip is False in wait_for_server(), shade will not allocate any floating ip for server[1], so I clean public_v4 and public_v6, set interface_ip as private_v4 as well.\n\n[1]: https://github.com/openstack-infra/shade/blob/master/shade/openstackcloud.py#L6393-L6396",
+      "parentUuid": "1f485f77_792c8601",
+      "revId": "9991b55b35640af5e515e99673947a8870542c07",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
