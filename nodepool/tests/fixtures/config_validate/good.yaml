@@ -21,6 +21,7 @@ labels:
   - name: trusty-static
   - name: fedora-oci
   - name: centos-oci
+  - name: centos-pod
 
 providers:
   - name: cloud1
@@ -102,6 +103,18 @@ providers:
           - name: fedora-oci
           - name: centos-oci
             path: /srv/centos
+
+  - name: openshift
+    driver: k8s
+    apiserver-url: https://openshift.example.com:8080
+    zuul-public-key: ssh-rsa AAAA8Fake
+    pools:
+      - name: main
+        namespace: default
+        max-servers: 42
+        labels:
+          - name: centos-pod
+            image: docker.io/softwarefactoryproject/zuul-worker-centos-7
 
 diskimages:
   - name: trusty
