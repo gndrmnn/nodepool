@@ -14,3 +14,4 @@ voluptuous
 kazoo
 Paste
 WebOb>=1.8.1
+kubernetes
