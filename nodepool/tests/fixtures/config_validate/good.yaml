@@ -19,6 +19,7 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: centos-pod
 
 providers:
   - name: cloud1
@@ -93,6 +94,18 @@ providers:
             connection-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: openshift
+    driver: k8s
+    config-file: ~/.kube/config
+    zuul-public-key: ssh-rsa AAAA8Fake
+    pools:
+      - name: main
+        namespace: default
+        max-servers: 42
+        labels:
+          - name: centos-pod
+            image: docker.io/softwarefactoryproject/zuul-worker-centos-7
 
 diskimages:
   - name: trusty
