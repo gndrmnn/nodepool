@@ -1,0 +1,74 @@
+---
+- name: "Install etcd, kubernetes"
+  dnf:
+    name: etcd, kubernetes
+    state: present
+
+# Set service key, see https://stackoverflow.com/questions/31891734/not-able-to-create-pod-in-kubernetes
+- block:
+    - name: "Create service key"
+      command: openssl genrsa -out /etc/kubernetes/serviceaccount.key 2048
+      args:
+        creates: /etc/kubernetes/serviceaccount.key
+
+    - name: "Set mode"
+      file:
+        path: /etc/kubernetes/serviceaccount.key
+        group: kube
+        mode: 0640
+
+    - name: "Set parameters"
+      lineinfile:
+        line: "{{ item.line }}"
+        dest: "{{ item.dest }}"
+        regexp: "{{ item.re }}"
+      with_items:
+        - dest: /etc/kubernetes/controller-manager
+          re: '^KUBE_CONTROLLER_MANAGER_ARGS=.*$'
+          line: 'KUBE_CONTROLLER_MANAGER_ARGS="--service_account_private_key_file=/etc/kubernetes/serviceaccount.key"'
+
+# Fix container start, see https://github.com/openshift/origin/issues/15038
+- name: "Remove secrets"
+  file:
+    path: /usr/share/rhel/secrets
+    state: absent
+
+- name: "Start services"
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - etcd
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+
+- name: "Create local mykube node.json"
+  copy:
+    content: '{"apiVersion": "v1", "kind": "Node", "metadata": {"name": "mykube", "labels": {"name": "mykube"}}, "spec": {"externalID": "mykube"}}'
+    dest: /etc/kubernetes/node.json
+
+- name: "Create local mykube"
+  command: kubectl create -f /etc/kubernetes/node.json
+
+- name: "Force kubelet hostname"
+  lineinfile:
+    line: 'KUBELET_HOSTNAME="--hostname-override=mykube"'
+    dest: /etc/kubernetes/kubelet
+    regexp: '^KUBELET_HOSTNAME=.*$'
+
+- name: "Start kubelet"
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - kube-proxy
+    - kubelet
+    - docker
+
+- name: "Wait for node to be ready"
+  command: kubectl get nodes
+  register: kube_node
+  until: kube_node.stdout.find("mykube    Ready") != -1
+  retry: 3
+  delay: 7

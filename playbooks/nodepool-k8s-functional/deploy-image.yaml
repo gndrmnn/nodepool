@@ -1,0 +1,27 @@
+---
+- name: "Write Dockerfile"
+  copy:
+    dest: /etc/kubernetes/Dockerfile
+    content: |
+      FROM fedora:latest
+      MAINTAINER tdecacqu@redhat.com
+
+      # RUN dnf update -y
+      RUN dnf install -y openssh-server passwd rsync ansible strace
+      RUN mkdir /var/run/sshd
+      RUN useradd -m zuul-worker && passwd -d zuul-worker && \
+        mkdir /home/zuul-worker/.ssh /home/zuul-worker/src && \
+        chown -R zuul-worker:zuul-worker /home/zuul-worker
+
+      EXPOSE 22
+      CMD /usr/libexec/openssh/sshd-keygen rsa && /usr/sbin/sshd -D -e \
+        -o UsePrivilegeSeparation=no \
+        -o StrictModes=no   \
+        -o UsePAM=no \
+        -o UseDNS=no
+
+- name: "Build image"
+  command: docker build -t zuul-worker-fedora /etc/kubernetes/
+
+- name: "Tag image"
+  command: docker tag zuul-worker-fedora registry.localhost/zuul-worker-fedora:latest
