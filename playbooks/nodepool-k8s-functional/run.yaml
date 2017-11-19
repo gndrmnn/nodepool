@@ -1,0 +1,23 @@
+---
+- hosts: all
+  tasks:
+    - name: "Deploy kubernetes"
+      include_tasks: deploy-kubernetes.yaml
+
+    - name: "Build test image"
+      include_tasks: deploy-image.yaml
+
+    - name: "Setup nodepool"
+      include_tasks: deploy-nodepool.yaml
+
+    - name: "Check nodepool pod are ready"
+      command: nodepool list
+      register: nodepool_list
+      until:
+        - nodepool_list.stdout.find("PoolWorker.k8s-main") != -1
+        - nodepool_list.stdout.find("ready") != -1
+      retry: 5
+      delay: 7
+
+    - name: "Test a zuul-jobs"
+      command: true # todo
