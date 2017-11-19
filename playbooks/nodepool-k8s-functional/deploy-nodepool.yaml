@@ -1,0 +1,26 @@
+---
+- name: "Install nodepool"
+  command: true # todo
+
+- name: "Install zuul"
+  command: true # todo
+
+- name: "Configure nodepool"
+  copy:
+    dest: /etc/nodepool/nodepool.yaml
+    content: |
+      labels:
+        - name: fedora-pod
+      providers:
+        - name: localhost
+          driver: k8s
+          apiserver-url: http://localhost:8080
+          zuul-public-key: TODO
+          pools:
+            - name: main
+              namespace: default
+              max-servers: 7
+              labels:
+                - name: fedora-pod
+                  image: registry.localhost/zuul-worker-fedora
+                  username: zuul-worker
