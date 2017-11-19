@@ -24,6 +24,7 @@ from nodepool import zk
 from nodepool.driver import ConfigValue
 from nodepool.driver.fake.config import FakeProviderConfig
 from nodepool.driver.oci.config import OpenContainerProviderConfig
+from nodepool.driver.k8s.config import KubernetesProviderConfig
 from nodepool.driver.openstack.config import OpenStackProviderConfig
 from nodepool.driver.static.config import StaticProviderConfig
 
@@ -70,6 +71,8 @@ def get_provider_config(provider):
         return StaticProviderConfig(provider)
     elif provider['driver'] == 'oci':
         return OpenContainerProviderConfig(provider)
+    elif provider['driver'] == 'k8s':
+        return KubernetesProviderConfig(provider)
 
 
 def loadConfig(config_path):

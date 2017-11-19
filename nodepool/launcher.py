@@ -30,6 +30,7 @@ from nodepool import config as nodepool_config
 from nodepool import zk
 from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from nodepool.driver.oci.handler import OpenContainerNodeRequestHandler
+from nodepool.driver.k8s.handler import KubernetesNodeRequestHandler
 from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 from nodepool.driver.static.handler import StaticNodeRequestHandler
 
@@ -152,6 +153,8 @@ class PoolWorker(threading.Thread):
             return StaticNodeRequestHandler(self, request)
         elif provider.driver.name == 'oci':
             return OpenContainerNodeRequestHandler(self, request)
+        elif provider.driver.name == 'k8s':
+            return KubernetesNodeRequestHandler(self, request)
         else:
             raise RuntimeError("Unknown provider driver %s" % provider.driver)
 
