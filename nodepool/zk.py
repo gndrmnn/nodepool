@@ -479,6 +479,7 @@ class Node(BaseModel):
                     self.hold_job == other.hold_job and
                     self.username == other.username and
                     self.connection_type == other.connection_type and
+                    self.connection_port == other.connection_port and
                     self.host_keys == other.host_keys)
         else:
             return False
@@ -511,6 +512,8 @@ class Node(BaseModel):
         d['username'] = self.username
         if self.connection_type:
             d['connection_type'] = self.connection_type
+        if self.connection_port:
+            d['connection_port'] = self.connection_port
         return d
 
     @staticmethod
