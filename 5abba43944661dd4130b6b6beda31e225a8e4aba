@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_fcab5072",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-11-21T03:07:30Z",
+      "side": 1,
+      "message": "I think we want this to be connection-type, to be consistent with other settings.",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 222,
+        "endChar": 19
+      },
+      "revId": "5abba43944661dd4130b6b6beda31e225a8e4aba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_7cb180e1",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-11-21T03:07:30Z",
+      "side": 1,
+      "message": "seems like we want to include connection-type here, not below in diskimages.",
+      "revId": "5abba43944661dd4130b6b6beda31e225a8e4aba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
