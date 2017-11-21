@@ -60,6 +60,7 @@ class TestLauncher(tests.DBTestCase):
             self.assertEqual(node.az, "az1")
             self.assertEqual(node.username, "zuul")
             self.assertEqual(node.connection_type, 'ssh')
+            self.assertEqual(node.connection_port, 22)
             p = "{path}/{id}".format(
                 path=self.zk._imageUploadPath(image.image_name,
                                               image.build_id,
@@ -780,6 +781,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual('zuul', nodes[0].username)
         self.assertEqual('winrm', nodes[0].connection_type)
+        self.assertEqual(5986, nodes[0].connection_port)
         self.assertEqual(nodes[0].host_keys, [])
 
     def test_unmanaged_image_provider_name(self):
