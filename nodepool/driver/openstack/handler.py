@@ -95,6 +95,7 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             image_name = self._diskimage.name
             username = cloud_image.username
             connection_type = self._diskimage.connection_type
+            connection_port = self._diskimage.connection_port
 
         else:
             # launch using unmanaged cloud image
@@ -116,6 +117,7 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             image_name = self._cloud_image.name
             username = self._cloud_image.username
             connection_type = self._cloud_image.connection_type
+            connection_port = self._cloud_image.connection_port
 
         hostname = self._provider.hostname_format.format(
             label=self._label, provider=self._provider, node=self._node
@@ -152,6 +154,7 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
         if username:
             self._node.username = username
         self._node.connection_type = connection_type
+        self._node.connection_port = connection_port
 
         # Checkpoint save the updated node info
         self._zk.storeNode(self._node)
@@ -208,7 +211,8 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             gather_host_keys = connection_type == 'ssh'
             host_keys = utils.nodescan(interface_ip,
                                        timeout=self._provider.boot_timeout,
-                                       gather_hostkeys=gather_host_keys)
+                                       gather_hostkeys=gather_host_keys,
+                                       port=connection_port)
 
             if gather_host_keys and not host_keys:
                 raise exceptions.LaunchKeyscanException(
