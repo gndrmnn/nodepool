@@ -484,6 +484,7 @@ Example configuration::
           key2: value
     - name: windows
       connection-type: winrm
+      connection-port: 5986
 
 **required**
 
@@ -511,6 +512,10 @@ Example configuration::
     node. For most diskimages this is not necessary. However when creating
     Windows images this could be 'winrm' to enable access via ansible.
 
+  ``connection-port`` (int)
+    The port that a consumer should use when connecting onto the
+    node. For most diskimages this is not necessary. However when creating
+    Windows images this could be '5986' to use the right port for winrm.
 
 .. _provider_cloud_images:
 
@@ -528,6 +533,7 @@ Example configuration::
       config-drive: False
     - name: windows-external
       connection-type: winrm
+      connection-port: 5986
 
 **required**
 
@@ -562,6 +568,11 @@ Example configuration::
     The connection type that a consumer should use when connecting onto the
     node. For most diskimages this is not necessary. However when creating
     Windows images this could be 'winrm' to enable access via ansible.
+
+  ``connection-port`` (int)
+    The port that a consumer should use when connecting onto the
+    node. For most diskimages this is not necessary. However when creating
+    Windows images this could be '5986' to use the right winrm port.
 
 .. _pool_labels:
 
