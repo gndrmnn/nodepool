@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_54930ca4",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-11-22T06:42:44Z",
+      "side": 1,
+      "message": "couldn\u0027t we remove that condition and always set the attribute?",
+      "range": {
+        "startLine": 512,
+        "startChar": 8,
+        "endLine": 512,
+        "endChar": 32
+      },
+      "revId": "d0ddf365c0df212cb7a99461a2cb040ef215daed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
