@@ -30,9 +30,9 @@ def age(timestamp):
 
 
 def node_list(zk, node_id=None, detail=False):
-    headers = ["ID", "Provider", "AZ", "Label", "Server ID", "State",
-               "Age", "Locked"]
-    detail_headers = ["Hostname", "Public IPv4", "Private IPv4", "IPv6",
+    headers = ["ID", "Provider", "Label", "Server ID", "Public IPv4",
+               "IPv6", "State", "Age", "Locked"]
+    detail_headers = ["Hostname", "Private IPv4", "AZ",
                       "SSH Port", "Launcher", "Allocated To", "Hold Job",
                       "Comment"]
     if detail:
