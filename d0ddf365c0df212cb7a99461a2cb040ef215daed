@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "ff82abbf_32ad2731",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-11-22T18:20:46Z",
+      "side": 1,
+      "message": "Maybe we should just default to ssh here? That we don\u0027t need conditional checks per tristanC comments.",
+      "revId": "d0ddf365c0df212cb7a99461a2cb040ef215daed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_d2ab9b1a",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-11-22T18:20:46Z",
+      "side": 1,
+      "message": "same",
+      "revId": "d0ddf365c0df212cb7a99461a2cb040ef215daed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff82abbf_54930ca4",
         "filename": "nodepool/zk.py",
         "patchSetId": 4
