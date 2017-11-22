@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_b46058a7",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-11-22T06:47:40Z",
+      "side": 1,
+      "message": "Isn\u0027t it missing a \"self.connection_port \u003d None\" here?",
+      "revId": "245931fb9b5ba18f5691926e848e4d0828f3e71d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
