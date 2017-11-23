@@ -28,6 +28,7 @@ from nodepool.driver.openstack.provider import OpenStackProvider
 class Dummy(object):
     IMAGE = 'Image'
     INSTANCE = 'Instance'
+    INSTANCE_META = 'Instance.Metadata'
     FLAVOR = 'Flavor'
     LOCATION = 'Server.Location'
 
@@ -136,6 +137,11 @@ class FakeOpenStackCloud(object):
             private_v4 = 'fake'
             interface_ip = 'fake'
 
+        default_meta = Dummy(Dummy.INSTANCE_META,
+                             nodepool_node_id='fake-nodepool-node-id',
+                             nodepool_image_name='fake-nodepool-image-name',
+                             nodepool_node_label='fake-nodepool-node-label')
+
         s = Dummy(instance_type,
                   id=uuid.uuid4().hex,
                   name=kw['name'],
@@ -147,7 +153,7 @@ class FakeOpenStackCloud(object):
                   private_v4=private_v4,
                   interface_ip=interface_ip,
                   location=Dummy(Dummy.LOCATION, zone=kw.get('az')),
-                  metadata=kw.get('meta', {}),
+                  metadata=kw.get('meta', default_meta),
                   manager=self,
                   key_name=kw.get('key_name', None),
                   should_fail=should_fail,

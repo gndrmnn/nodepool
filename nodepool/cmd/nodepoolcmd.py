@@ -182,7 +182,7 @@ class NodePoolCmd(NodepoolApp):
             if (self.args.provider and
                     provider.name != self.args.provider):
                 continue
-            manager = self.pool.getProviderManager(provider)
+            manager = self.pool.getProviderManager(provider.name)
 
             try:
                 servers = manager.listNodes()
@@ -191,7 +191,7 @@ class NodePoolCmd(NodepoolApp):
                 for server in servers:
                     if server.id not in known:
                         t.add_row([provider.name, server.name,
-                                   server.id, server.public_v4])
+                                   server.id, server.interface_ip])
             except Exception as e:
                 log.warning("Exception listing aliens for %s: %s"
                             % (provider.name, str(e)))
