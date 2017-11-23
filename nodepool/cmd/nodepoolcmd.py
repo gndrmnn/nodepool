@@ -175,23 +175,27 @@ class NodePoolCmd(NodepoolApp):
     def alien_list(self):
         self.pool.updateConfig()
 
-        t = PrettyTable(["Provider", "Hostname", "Server ID", "IP"])
+        t = PrettyTable(
+            ["Provider", "Hostname", "Server ID", "IP", "Private IP"]
+        )
         t.align = 'l'
 
         for provider in self.pool.config.providers.values():
             if (self.args.provider and
                     provider.name != self.args.provider):
                 continue
-            manager = self.pool.getProviderManager(provider)
+            manager = self.pool.getProviderManager(provider.name)
 
             try:
-                servers = manager.listNodes()
+                servers = (server for server in manager.listNodes()
+                           if 'nodepool_node_label' in server['metadata'])
                 known = set([n.external_id for n in self.zk.nodeIterator()
                              if n.provider == provider.name])
                 for server in servers:
                     if server.id not in known:
                         t.add_row([provider.name, server.name,
-                                   server.id, server.public_v4])
+                                   server.id, server.public_v4,
+                                   server.private_v4])
             except Exception as e:
                 log.warning("Exception listing aliens for %s: %s"
                             % (provider.name, str(e)))
