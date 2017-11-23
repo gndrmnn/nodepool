@@ -57,6 +57,9 @@ class TestNodepoolCMD(tests.DBTestCase):
     def assert_alien_images_empty(self, configfile):
         self.assert_alien_images_listed(configfile, 0, 0)
 
+    def assert_alien_listed(self, configfile):
+        self.assert_listed(configfile, ['alien-list'], 0, 0, 0)
+
     def assert_images_listed(self, configfile, image_cnt, status="ready"):
         self.assert_listed(configfile, ['image-list'], 6, status, image_cnt)
 
@@ -107,6 +110,16 @@ class TestNodepoolCMD(tests.DBTestCase):
         configfile = self.setup_config("node_cmd.yaml")
         self.patch_argv("-c", configfile, "alien-list", "fakeprovider")
         nodepoolcmd.main()
+
+    def test_alien_list(self):
+        configfile = self.setup_config('node.yaml')
+        self._useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        self.assert_alien_listed(configfile)
 
     def test_alien_image_list_empty(self):
         configfile = self.setup_config("node.yaml")
