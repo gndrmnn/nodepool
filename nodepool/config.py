@@ -126,8 +126,8 @@ def loadConfig(config_path):
         d.rebuild_age = int(diskimage.get('rebuild-age', 86400))
         d.env_vars = diskimage.get('env-vars', {})
         if not isinstance(d.env_vars, dict):
-            #self.log.error("%s: ignoring env-vars; "
-            #               "should be a dict" % d.name)
+            # self.log.error("%s: ignoring env-vars; "
+            #                "should be a dict" % d.name)
             d.env_vars = {}
         d.image_types = set(diskimage.get('formats', []))
         d.pause = bool(diskimage.get('pause', False))
@@ -152,4 +152,4 @@ def loadSecureConfig(config, secure_config_path):
     secure = ConfigParser.ConfigParser()
     secure.readfp(open(secure_config_path))
 
-    #config.dburi = secure.get('database', 'dburi')
+    # config.dburi = secure.get('database', 'dburi')

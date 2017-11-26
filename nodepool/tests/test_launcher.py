@@ -254,7 +254,7 @@ class TestLauncher(tests.DBTestCase):
         self._test_node_assignment_at_quota(config='node_quota_cloud.yaml',
                                             max_cores=math.inf,
                                             max_instances=math.inf,
-                                            max_ram=2*8192)
+                                            max_ram=2 * 8192)
 
     def test_fail_request_on_launch_failure(self):
         '''
