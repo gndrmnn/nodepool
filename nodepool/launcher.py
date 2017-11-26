@@ -35,10 +35,14 @@ from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 MINS = 60
 HOURS = 60 * MINS
 
-WATERMARK_SLEEP = 10         # Interval between checking if new servers needed
-LOCK_CLEANUP = 8 * HOURS     # When to delete node request lock znodes
-SUSPEND_WAIT_TIME = 30       # How long to wait between checks for ZooKeeper
-                             # connectivity if it disappears.
+# Interval between checking if new servers needed
+WATERMARK_SLEEP = 10
+
+# When to delete node request lock znodes
+LOCK_CLEANUP = 8 * HOURS
+
+# How long to wait between checks for ZooKeeper connectivity if it disappears.
+SUSPEND_WAIT_TIME = 30
 
 
 class NodeDeleter(threading.Thread, stats.StatsReporter):
@@ -137,9 +141,9 @@ class PoolWorker(threading.Thread):
                                          os.getpid(),
                                          self.name)
 
-    #----------------------------------------------------------------
+    # ---------------------------------------------------------------
     # Private methods
-    #----------------------------------------------------------------
+    # ---------------------------------------------------------------
 
     def _get_node_request_handler(self, provider, request):
         if provider.driver.name == 'fake':
@@ -173,8 +177,7 @@ class PoolWorker(threading.Thread):
 
             # Short-circuit for limited request handling
             if (provider.max_concurrency > 0 and
-                active_threads >= provider.max_concurrency
-            ):
+                    active_threads >= provider.max_concurrency):
                 self.log.debug("Request handling limited: %s active threads ",
                                "with max concurrency of %s",
                                active_threads, provider.max_concurrency)
@@ -225,9 +228,9 @@ class PoolWorker(threading.Thread):
         active_reqs = [r.request.id for r in self.request_handlers]
         self.log.debug("Active requests: %s", active_reqs)
 
-    #----------------------------------------------------------------
+    # ---------------------------------------------------------------
     # Public methods
-    #----------------------------------------------------------------
+    # ---------------------------------------------------------------
 
     def activeThreads(self):
         '''
@@ -435,7 +438,7 @@ class CleanupWorker(BaseCleanupWorker):
         for lock in zk.nodeRequestLockIterator():
             if lock.id in requests:
                 continue
-            if (now - lock.stat.mtime/1000) > LOCK_CLEANUP:
+            if (now - lock.stat.mtime / 1000) > LOCK_CLEANUP:
                 zk.deleteNodeRequestLock(lock.id)
 
     def _cleanupLeakedInstances(self):
@@ -580,8 +583,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
             # If a ready node has been allocated to a request, but that
             # request is now missing, deallocate it.
             if (node.state == zk.READY and node.allocated_to
-                and not zk_conn.getNodeRequest(node.allocated_to)
-            ):
+                    and not zk_conn.getNodeRequest(node.allocated_to)):
                 try:
                     zk_conn.lockNode(node, blocking=False)
                 except exceptions.ZKLockException:
@@ -800,8 +802,8 @@ class NodePool(threading.Thread):
                     manager = self.getProviderManager(pool.provider.name)
                     if manager.labelReady(pool_label.cloud_image):
                         return True
-                elif self.zk.getMostRecentImageUpload(pool_label.diskimage.name,
-                                                      pool.provider.name):
+                elif self.zk.getMostRecentImageUpload(
+                        pool_label.diskimage.name, pool.provider.name):
                     return True
         return False
 
@@ -903,13 +905,13 @@ class NodePool(threading.Thread):
                         key = provider.name + '-' + pool.name
                         if key not in self._pool_threads:
                             t = PoolWorker(self, provider.name, pool.name)
-                            self.log.info( "Starting %s" % t.name)
+                            self.log.info("Starting %s" % t.name)
                             t.start()
                             self._pool_threads[key] = t
                         elif not self._pool_threads[key].isAlive():
                             self._pool_threads[key].join()
                             t = PoolWorker(self, provider.name, pool.name)
-                            self.log.info( "Restarting %s" % t.name)
+                            self.log.info("Restarting %s" % t.name)
                             t.start()
                             self._pool_threads[key] = t
             except Exception:

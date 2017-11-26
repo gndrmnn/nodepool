@@ -59,10 +59,12 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
         self._pool = self._label.pool
         self._provider = self._pool.provider
         if self._label.diskimage:
-            self._diskimage = self._provider.diskimages[self._label.diskimage.name]
+            self._diskimage = self._provider.diskimages[
+                self._label.diskimage.name]
         else:
             self._diskimage = None
-        self._cloud_image = self._provider.cloud_images.get(self._label.cloud_image, None)
+        self._cloud_image = self._provider.cloud_images.get(
+            self._label.cloud_image, None)
 
     def logConsole(self, server_id, hostname):
         if not self._label.console_log:
@@ -314,7 +316,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
             else:
                 img = self.pool.labels[label].diskimage.name
 
-                if not self.zk.getMostRecentImageUpload(img, self.provider.name):
+                if not self.zk.getMostRecentImageUpload(img,
+                                                        self.provider.name):
                     return False
         return True
 
