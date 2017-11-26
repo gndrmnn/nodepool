@@ -256,7 +256,7 @@ class TestLauncher(tests.DBTestCase):
         self._test_node_assignment_at_quota(config='node_quota_cloud.yaml',
                                             max_cores=math.inf,
                                             max_instances=math.inf,
-                                            max_ram=2*8192)
+                                            max_ram=2 * 8192)
 
 
     @mock.patch('nodepool.driver.fake.provider.get_fake_quota')
