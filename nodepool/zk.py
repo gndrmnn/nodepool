@@ -576,9 +576,9 @@ class ZooKeeper(object):
         self.client = None
         self._became_lost = False
 
-    #========================================================================
+    # =======================================================================
     # Private Methods
-    #========================================================================
+    # =======================================================================
 
     def _imagePath(self, image):
         return "%s/%s" % (self.IMAGE_ROOT, image)
@@ -702,10 +702,9 @@ class ZooKeeper(object):
         else:
             self.log.debug("ZooKeeper connection: CONNECTED")
 
-
-    #========================================================================
+    # =======================================================================
     # Public Methods and Properties
-    #========================================================================
+    # =======================================================================
 
     @property
     def connected(self):
@@ -1058,9 +1057,11 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return None
 
-        d = ImageUpload.fromDict(
-            self._bytesToDict(data), build_number, provider, image, upload_number
-        )
+        d = ImageUpload.fromDict(self._bytesToDict(data),
+                                 build_number,
+                                 provider,
+                                 image,
+                                 upload_number)
         d.stat = stat
         return d
 
@@ -1151,7 +1152,8 @@ class ZooKeeper(object):
             for upload in uploads:
                 if upload == 'lock':   # skip the upload lock node
                     continue
-                data = self.getImageUpload(image, build_number, provider, upload)
+                data = self.getImageUpload(
+                    image, build_number, provider, upload)
                 if not data or data.state != state:
                     continue
                 elif (recent_data is None or
@@ -1194,7 +1196,8 @@ class ZooKeeper(object):
         # Generate a path for the upload. This doesn't have to exist yet
         # since we'll create new provider/upload ID znodes automatically.
         # Append trailing / so the sequence node is created as a child node.
-        upload_path = self._imageUploadPath(image, build_number, provider) + "/"
+        upload_path = self._imageUploadPath(
+            image, build_number, provider) + "/"
 
         if upload_number is None:
             path = self.client.create(
@@ -1261,8 +1264,8 @@ class ZooKeeper(object):
 
         # Verify that no upload znodes exist.
         for prov in self.getBuildProviders(image, build_number):
-             if self.getImageUploadNumbers(image, build_number, prov):
-                 return False
+            if self.getImageUploadNumbers(image, build_number, prov):
+                return False
 
         try:
             # NOTE: Need to do recursively to remove lock znodes
@@ -1479,7 +1482,8 @@ class ZooKeeper(object):
         :raises: ZKLockException if the request is not currently locked.
         '''
         if request.lock is None:
-            raise npe.ZKLockException("Request %s does not hold a lock" % request)
+            raise npe.ZKLockException(
+                "Request %s does not hold a lock" % request)
         request.lock.release()
         request.lock = None
 
@@ -1623,8 +1627,7 @@ class ZooKeeper(object):
         ret = {}
         for node in self.nodeIterator():
             if (node.state == READY and
-                not node.allocated_to and node.type in labels
-            ):
+                    not node.allocated_to and node.type in labels):
                 if node.type not in ret:
                     ret[node.type] = []
                 ret[node.type].append(node)

@@ -31,7 +31,8 @@ class ConfigValidator:
 
         label_diskimage = v.Schema({v.Required('diskimage'): str}, extra=True)
 
-        label_cloud_image = v.Schema({v.Required('cloud-image'): str}, extra=True)
+        label_cloud_image = v.Schema({v.Required('cloud-image'): str},
+                                     extra=True)
 
         pool_label_main = {
             v.Required('name'): str,
@@ -56,7 +57,7 @@ class ConfigValidator:
             'max-servers': int,
             'labels': [pool_label],
             'availability-zones': [str],
-            }
+        }
 
         provider_diskimage = {
             'name': str,
