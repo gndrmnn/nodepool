@@ -32,9 +32,11 @@ from nodepool import zk
 
 MINS = 60
 HOURS = 60 * MINS
-IMAGE_TIMEOUT = 6 * HOURS    # How long to wait for an image save
-SUSPEND_WAIT_TIME = 30       # How long to wait between checks for
-                             # ZooKeeper connectivity if it disappears.
+# How long to wait for an image save
+IMAGE_TIMEOUT = 6 * HOURS
+
+# How long to wait between checks for ZooKeeper connectivity if it disappears.
+SUSPEND_WAIT_TIME = 30
 
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
@@ -151,7 +153,8 @@ class CleanupWorker(BaseWorker):
                  interval, zk):
         super(CleanupWorker, self).__init__(builder_id, config_path,
                                             secure_path, interval, zk)
-        self.log = logging.getLogger("nodepool.builder.CleanupWorker.%s" % name)
+        self.log = logging.getLogger(
+            "nodepool.builder.CleanupWorker.%s" % name)
         self.name = 'CleanupWorker.%s' % name
 
     def _buildUploadRecencyTable(self):
@@ -246,8 +249,7 @@ class CleanupWorker(BaseWorker):
             # use unique builder IDs before, but do now, always compare to
             # hostname as well since some ZK data may still reference that.
             if (build.builder_id == self._builder_id or
-                build.builder == self._hostname
-            ):
+                    build.builder == self._hostname):
                 return True
             return False
 
@@ -382,8 +384,8 @@ class CleanupWorker(BaseWorker):
                                             zk.FAILED])
         for upload in cruft:
             if (upload.state == zk.UPLOADING and
-                not self._inProgressUpload(upload)
-            ):
+                    not self._inProgressUpload(upload)):
+
                 # Since we cache the uploads above, we need to verify the
                 # state hasn't changed on us (e.g., it could have gone from
                 # an in progress upload to a successfully completed upload
@@ -395,7 +397,8 @@ class CleanupWorker(BaseWorker):
                 self.log.info("Removing failed upload record: %s" % upload)
                 self._zk.deleteUpload(image, build_id, provider, upload.id)
             elif upload.state == zk.DELETING:
-                self.log.info("Removing deleted upload and record: %s" % upload)
+                self.log.info(
+                    "Removing deleted upload and record: %s" % upload)
                 self._deleteUpload(upload)
             elif upload.state == zk.FAILED:
                 self.log.info("Removing failed upload and record: %s" % upload)
@@ -410,7 +413,7 @@ class CleanupWorker(BaseWorker):
         all_builds = self._zk.getBuilds(image)
         builds_to_keep = set([b for b in sorted(all_builds, reverse=True,
                                                 key=lambda y: y.state_time)
-                              if b.state==zk.READY][:2])
+                              if b.state == zk.READY][:2])
         local_builds = set(self._filterLocalBuilds(image, all_builds))
         diskimage = self._config.diskimages.get(image)
         if not diskimage and not local_builds:
@@ -575,7 +578,8 @@ class BuildWorker(BaseWorker):
         if (not builds
             or (now - builds[0].state_time) >= diskimage.rebuild_age
             or not set(builds[0].formats).issuperset(diskimage.image_types)
-        ):
+            ):
+
             try:
                 with self._zk.imageBuildLock(diskimage.name, blocking=False):
                     # To avoid locking each image repeatedly, we have an
@@ -584,7 +588,8 @@ class BuildWorker(BaseWorker):
                     # lock acquisition. If it's not the same build as
                     # identified in the first check above, assume another
                     # BuildWorker created the build for us and continue.
-                    builds2 = self._zk.getMostRecentBuilds(1, diskimage.name, zk.READY)
+                    builds2 = self._zk.getMostRecentBuilds(
+                        1, diskimage.name, zk.READY)
                     if builds2 and builds[0].id != builds2[0].id:
                         return
 
@@ -746,7 +751,8 @@ class BuildWorker(BaseWorker):
             self._zk.resetLostFlag()
             build_data.state = zk.FAILED
         elif p.returncode:
-            self.log.info("DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
+            self.log.info(
+                "DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
             build_data.state = zk.FAILED
         else:
             self.log.info("DIB image %s is built" % diskimage.name)
@@ -756,7 +762,8 @@ class BuildWorker(BaseWorker):
             if self._statsd:
                 # record stats on the size of each image we create
                 for ext in img_types.split(','):
-                    key = 'nodepool.dib_image_build.%s.%s.size' % (diskimage.name, ext)
+                    key = 'nodepool.dib_image_build.%s.%s.size' % (
+                        diskimage.name, ext)
                     # A bit tricky because these image files may be sparse
                     # files; we only want the true size of the file for
                     # purposes of watching if we've added too much stuff
@@ -1101,9 +1108,9 @@ class NodePoolBuilder(object):
         # startup process has completed.
         self._start_lock = threading.Lock()
 
-    #=======================================================================
+    # ======================================================================
     # Private methods
-    #=======================================================================
+    # ======================================================================
 
     def _getBuilderID(self, id_file):
         if not os.path.exists(id_file):
@@ -1126,9 +1133,9 @@ class NodePoolBuilder(object):
             raise RuntimeError('No images-dir specified in config.')
         return config
 
-    #=======================================================================
+    # ======================================================================
     # Public methods
-    #=======================================================================
+    # ======================================================================
 
     def start(self):
         '''
