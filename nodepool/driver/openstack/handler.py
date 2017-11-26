@@ -61,7 +61,8 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
         self._pool = self._label.pool
         self._provider = self._pool.provider
         if self._label.diskimage:
-            self._diskimage = self._provider.diskimages[self._label.diskimage.name]
+            self._diskimage = self._provider.diskimages[
+                self._label.diskimage.name]
         else:
             self._diskimage = None
 
