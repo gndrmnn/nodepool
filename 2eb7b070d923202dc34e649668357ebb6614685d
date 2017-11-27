@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_24810ffc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 7294
+      },
+      "writtenOn": "2017-11-27T18:19:17Z",
+      "side": 1,
+      "message": "floating IP allocation",
+      "range": {
+        "startLine": 422,
+        "startChar": 31,
+        "endLine": 422,
+        "endChar": 53
+      },
+      "revId": "2eb7b070d923202dc34e649668357ebb6614685d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_64907744",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 7294
+      },
+      "writtenOn": "2017-11-27T18:19:17Z",
+      "side": 1,
+      "message": "a floating IP",
+      "range": {
+        "startLine": 423,
+        "startChar": 56,
+        "endLine": 423,
+        "endChar": 67
+      },
+      "revId": "2eb7b070d923202dc34e649668357ebb6614685d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_04a16b94",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 7294
+      },
+      "writtenOn": "2017-11-27T18:19:17Z",
+      "side": 1,
+      "message": "IPs",
+      "range": {
+        "startLine": 425,
+        "startChar": 71,
+        "endLine": 425,
+        "endChar": 73
+      },
+      "revId": "2eb7b070d923202dc34e649668357ebb6614685d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
