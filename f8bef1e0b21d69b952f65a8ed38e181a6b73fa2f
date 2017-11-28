@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_74c48d40",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-11-28T15:43:57Z",
+      "side": 1,
+      "message": "I\u0027m not sure that I agree with this change. Nodepool really shouldn\u0027t be sharing a project. You want to know about other instances that may be using resources, especially if you start getting quota errors.",
+      "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
