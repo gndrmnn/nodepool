@@ -35,9 +35,6 @@ HOURS = 60 * MINS
 # How long to wait for an image save
 IMAGE_TIMEOUT = 6 * HOURS
 
-# How long to wait between checks for ZooKeeper connectivity if it disappears.
-SUSPEND_WAIT_TIME = 30
-
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
 DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
@@ -499,15 +496,6 @@ class CleanupWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._run()
             except Exception:
@@ -551,8 +539,7 @@ class BuildWorker(BaseWorker):
         '''
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
-            # or if ZK connection is suspended
-            if not self._running or self._zk.suspended or self._zk.lost:
+            if not self._running:
                 return
             try:
                 self._checkImageForScheduledImageUpdates(diskimage)
@@ -621,8 +608,7 @@ class BuildWorker(BaseWorker):
         '''
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
-            # or if ZK connection is suspended
-            if not self._running or self._zk.suspended or self._zk.lost:
+            if not self._running:
                 return
             try:
                 self._checkImageForManualBuildRequest(diskimage)
@@ -736,28 +722,12 @@ class BuildWorker(BaseWorker):
 
         p.wait()
 
-        # It's possible the connection to the ZK cluster could have been
-        # interrupted during the build. If so, wait for it to return.
-        # It could transition directly from SUSPENDED to CONNECTED, or go
-        # through the LOST state before CONNECTED.
-        did_suspend = False
-        while self._zk.suspended or self._zk.lost:
-            did_suspend = True
-            self.log.info("ZooKeeper suspended during build. Waiting")
-            time.sleep(SUSPEND_WAIT_TIME)
-        if did_suspend:
-            self.log.info("ZooKeeper available. Resuming")
-
         build_data = zk.ImageBuild()
         build_data.builder_id = self._builder_id
         build_data.builder = self._hostname
         build_data.username = diskimage.username
 
-        if self._zk.didLoseConnection:
-            self.log.info("ZooKeeper lost while building %s" % diskimage.name)
-            self._zk.resetLostFlag()
-            build_data.state = zk.FAILED
-        elif p.returncode:
+        if p.returncode:
             self.log.info(
                 "DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
             build_data.state = zk.FAILED
@@ -789,15 +759,6 @@ class BuildWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._run()
             except Exception:
@@ -947,8 +908,7 @@ class UploadWorker(BaseWorker):
                 uploaded = False
 
                 # Check if we've been told to shutdown
-                # or if ZK connection is suspended
-                if not self._running or self._zk.suspended or self._zk.lost:
+                if not self._running:
                     return
                 try:
                     uploaded = self._checkProviderImageUpload(provider, image)
@@ -1050,15 +1010,6 @@ class UploadWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._reloadConfig()
                 self._checkForProviderUploads()
