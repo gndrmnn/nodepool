@@ -239,9 +239,13 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
                     self._provider_manager.invalidateQuotaCache()
                 attempts += 1
 
-        self._node.state = zk.READY
+        if self._zk.checkLock(self._node.lock):
+            self._node.state = zk.READY
+            self.log.info("Node id %s is ready", self._node.id)
+        else:
+            self._node.state = zk.BUILDING
+            self.log.info("Lock lost while launching %s" % self._node.id)
         self._zk.storeNode(self._node)
-        self.log.info("Node id %s is ready", self._node.id)
 
     def run(self):
         start_time = time.time()
