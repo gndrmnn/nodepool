@@ -16,6 +16,24 @@
       "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_78df9068",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-11-29T03:17:42Z",
+      "side": 1,
+      "message": "In my case, I build nodepool in my public cloud tenant as an internal CICD system, so the instance resources are shared between nodepool and other systems, this change just add a filter to output instances that related with nodepool according to metadata, that is more easy for operator to know which instance is created by nodepool, but don\u0027t exist in current zookeeper, that might should be deleted. I think nodepool should not care about the resources created by others, even if they\u0027re in same tenant.",
+      "parentUuid": "ff82abbf_74c48d40",
+      "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
