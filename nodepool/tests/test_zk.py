@@ -505,6 +505,32 @@ class TestZooKeeper(tests.DBTestCase):
         with testtools.ExpectedException(npe.ZKLockException):
             self.zk.unlockNode(node)
 
+    def _delay_zk_select(self, direction='read'):
+        self._select = self.zk.client.handler.select
+        _socket = self.zk.client._connection._socket
+        start_time = time.monotonic()
+
+        if direction == 'read':
+            socket_pos = 0
+        elif direction == 'write':
+            socket_pos = 1
+
+        self.packet_count = 4
+
+        def delayed_select(*args, **kwargs):
+            result = self._select(*args, **kwargs)
+            if (self.packet_count >= 0 and
+                time.monotonic() - start_time < 5 and
+                len(args[socket_pos]) == 1 and _socket in args[socket_pos]):
+                # for any socket read, simulate a timeout
+                return [], [], []
+            self.packet_count -= 1
+            return result
+        self.zk.client.handler.select = delayed_select
+
+    def _restore_zk_select(self):
+        self.zk.client.handler.select = self._select
+
     def _create_node(self):
         node = zk.Node()
         node.state = zk.BUILDING
@@ -536,7 +562,8 @@ class TestZooKeeper(tests.DBTestCase):
         req.node_types.append('label1')
         self.zk.storeNodeRequest(req)
         self.assertIsNotNone(
-            self.zk.client.exists(self.zk._requestPath(req.id))
+            self.zk.client.retry(self.zk.client.exists,
+                                 self.zk._requestPath(req.id))
         )
         return req
 
@@ -642,6 +669,47 @@ class TestZooKeeper(tests.DBTestCase):
         self.assertEqual(req.id, lock_ids[0])
         self.zk.deleteNodeRequestLock(lock_ids[0])
         self.assertEqual([], self.zk.getNodeRequestLockIDs())
+
+    def test_connectionLost_before_get(self):
+        req = self._create_node_request()
+        try:
+            self._delay_zk_select()
+            req2 = self.zk.getNodeRequest(req.id)
+        finally:
+            self._restore_zk_select()
+        self.assertEqual(req, req2)
+
+    def test_connectionLost_before_create(self):
+        req1 = self._create_node_request()
+        try:
+            self._delay_zk_select(direction='write')
+            req2 = self._create_node_request()
+        finally:
+            self._restore_zk_select()
+        req1_id = int(req1.id.split('-')[-1])
+        req2_id = int(req2.id.split('-')[-1])
+        self.assertEqual(req2_id - req1_id, 1, "IDS are sequencials")
+
+    def test_connectionLost_while_create(self):
+        req1 = self._create_node_request()
+        try:
+            self._delay_zk_select()
+            req2 = self._create_node_request()
+        finally:
+            self._restore_zk_select()
+        req1_id = int(req1.id.split('-')[-1])
+        req2_id = int(req2.id.split('-')[-1])
+        self.assertEqual(req2_id - req1_id, 1, "IDS are sequencials")
+
+    def test_connectionLost_while_store(self):
+        node1 = self._create_node()
+        try:
+            self._delay_zk_select()
+            node2 = self._create_node()
+        finally:
+            self._restore_zk_select()
+        self.assertEqual(
+            int(node2.id) - int(node1.id), 1, "IDS are sequencials")
 
 
 class TestZKModel(tests.BaseTestCase):

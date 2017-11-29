@@ -16,10 +16,13 @@ from contextlib import contextmanager
 from copy import copy
 import json
 import logging
+import os
 import six
 import time
+import uuid
 from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
+from kazoo.handlers.threading import KazooTimeoutError
 from kazoo.recipe.lock import Lock
 
 from nodepool import exceptions as npe
@@ -576,12 +579,15 @@ class ZooKeeper(object):
     REQUEST_ROOT = "/nodepool/requests"
     REQUEST_LOCK_ROOT = "/nodepool/requests-lock"
 
+    # Log zookeeper retry every 10 seconds
+    retry_log_rate = 10
+
     def __init__(self):
         '''
         Initialize the ZooKeeper object.
         '''
         self.client = None
-        self._became_lost = False
+        self._last_retry_log = 0
 
     # =======================================================================
     # Private Methods
@@ -703,40 +709,62 @@ class ZooKeeper(object):
         '''
         if state == KazooState.LOST:
             self.log.debug("ZooKeeper connection: LOST")
-            self._became_lost = True
         elif state == KazooState.SUSPENDED:
             self.log.debug("ZooKeeper connection: SUSPENDED")
         else:
             self.log.debug("ZooKeeper connection: CONNECTED")
 
+    def _kazoo_callback(self):
+        '''
+        Kazoo retry callback
+        '''
+        now = time.monotonic()
+        if now - self._last_retry_log >= self.retry_log_rate:
+            self.log.warning("Retrying zookeeper connection")
+            self._last_retry_log = now
+
+    def _retry_create_sequence(self, path, value):
+        '''
+        Sequence create retry loop that ensure indempotent creation
+        '''
+        # Adds a unique node id
+        value["uuid"] = str(uuid.uuid4())
+        while True:
+            try:
+                return self.client.create(
+                    path,
+                    value=json.dumps(value).encode('utf-8'),
+                    sequence=True,
+                    makepath=True)
+            except (kze.ConnectionLoss,
+                    kze.OperationTimeoutError,
+                    kze.SessionExpiredError):
+                # Check if node was actually created
+                try:
+                    dpath = os.path.dirname(path)
+                    paths = self.client.retry(self.client.get_children, dpath)
+                    for child_path in paths:
+                        child_path = os.path.join(dpath, child_path)
+                        try:
+                            data, stat = self.client.retry(
+                                self.client.get, child_path)
+                        except kze.NoNodeError:
+                            continue
+                        data_dict = json.loads(data.decode('utf-8'))
+                        if data_dict.get("uuid") == value["uuid"]:
+                            # Node has been created
+                            self.log.warning(
+                                "%s: Indempotent create sequence recovered" %
+                                child_path)
+                            return child_path
+                except kze.NoNodeError:
+                    pass
+                time.sleep(0.5)
+                self._kazoo_callback()
+
     # =======================================================================
-    # Public Methods and Properties
+    # Public Methods
     # =======================================================================
-
-    @property
-    def connected(self):
-        if self.client is None:
-            return False
-        return self.client.state == KazooState.CONNECTED
-
-    @property
-    def suspended(self):
-        if self.client is None:
-            return True
-        return self.client.state == KazooState.SUSPENDED
-
-    @property
-    def lost(self):
-        if self.client is None:
-            return True
-        return self.client.state == KazooState.LOST
-
-    @property
-    def didLoseConnection(self):
-        return self._became_lost
-
-    def resetLostFlag(self):
-        self._became_lost = False
 
     def connect(self, host_list, read_only=False):
         '''
@@ -753,9 +781,22 @@ class ZooKeeper(object):
         '''
         if self.client is None:
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            retry = dict(max_tries=-1,
+                         delay=0.5,
+                         ignore_expire=True,
+                         interrupt=self._kazoo_callback)
+            self.client = KazooClient(hosts=hosts,
+                                      read_only=read_only,
+                                      connection_retry=retry,
+                                      command_retry=retry)
             self.client.add_listener(self._connection_listener)
-            self.client.start()
+            # Manually retry initial connection attempt
+            while True:
+                try:
+                    self.client.start(1)
+                    break
+                except KazooTimeoutError:
+                    self._kazoo_callback()
 
     def disconnect(self):
         '''
@@ -767,7 +808,6 @@ class ZooKeeper(object):
         if self.client is not None and self.client.connected:
             self.client.stop()
             self.client.close()
-            self.client = None
 
     def resetHosts(self, host_list):
         '''
@@ -874,7 +914,7 @@ class ZooKeeper(object):
         path = self.IMAGE_ROOT
 
         try:
-            images = self.client.get_children(path)
+            images = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
         return sorted(images)
@@ -890,7 +930,7 @@ class ZooKeeper(object):
         path = self._imageBuildsPath(image)
 
         try:
-            builds = self.client.get_children(path)
+            builds = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
         builds = [x for x in builds if x != 'lock']
@@ -909,7 +949,7 @@ class ZooKeeper(object):
         path = self._imageProviderPath(image, build_number)
 
         try:
-            providers = self.client.get_children(path)
+            providers = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
 
@@ -929,7 +969,7 @@ class ZooKeeper(object):
         path = self._imageUploadPath(image, build_number, provider)
 
         try:
-            uploads = self.client.get_children(path)
+            uploads = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
 
@@ -948,7 +988,7 @@ class ZooKeeper(object):
         path = self._imageBuildsPath(image) + "/%s" % build_number
 
         try:
-            data, stat = self.client.get(path)
+            data, stat = self.client.retry(self.client.get, path)
         except kze.NoNodeError:
             return None
 
@@ -970,7 +1010,7 @@ class ZooKeeper(object):
         path = self._imageBuildsPath(image)
 
         try:
-            builds = self.client.get_children(path)
+            builds = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
 
@@ -1037,15 +1077,11 @@ class ZooKeeper(object):
         build_path = self._imageBuildsPath(image) + "/"
 
         if build_number is None:
-            path = self.client.create(
-                build_path,
-                value=build_data.serialize(),
-                sequence=True,
-                makepath=True)
+            path = self._retry_create_sequence(build_path, build_data.toDict())
             build_number = path.split("/")[-1]
         else:
             path = build_path + build_number
-            self.client.set(path, build_data.serialize())
+            self.client.retry(self.client.set, path, build_data.serialize())
 
         return build_number
 
@@ -1066,7 +1102,7 @@ class ZooKeeper(object):
         path = path + "/%s" % upload_number
 
         try:
-            data, stat = self.client.get(path)
+            data, stat = self.client.retry(self.client.get, path)
         except kze.NoNodeError:
             return None
 
@@ -1094,7 +1130,7 @@ class ZooKeeper(object):
         path = self._imageUploadPath(image, build_number, provider)
 
         try:
-            uploads = self.client.get_children(path)
+            uploads = self.client.retry(self.client.get_children, path)
         except kze.NoNodeError:
             return []
 
@@ -1158,7 +1194,7 @@ class ZooKeeper(object):
             path = self._imageUploadPath(image, build_number, provider)
 
             try:
-                uploads = self.client.get_children(path)
+                uploads = self.client.retry(self.client.get_children, path)
             except kze.NoNodeError:
                 uploads = []
 
@@ -1201,7 +1237,7 @@ class ZooKeeper(object):
         '''
         # We expect the image builds path to already exist.
         build_path = self._imageBuildsPath(image)
-        if not self.client.exists(build_path):
+        if not self.client.retry(self.client.exists, build_path):
             raise npe.ZKException(
                 "Cannot find build %s of image %s" % (build_number, image)
             )
@@ -1213,15 +1249,12 @@ class ZooKeeper(object):
             image, build_number, provider) + "/"
 
         if upload_number is None:
-            path = self.client.create(
-                upload_path,
-                value=image_data.serialize(),
-                sequence=True,
-                makepath=True)
+            path = self._retry_create_sequence(
+                upload_path, image_data.toDict())
             upload_number = path.split("/")[-1]
         else:
             path = upload_path + upload_number
-            self.client.set(path, image_data.serialize())
+            self.client.retry(self.client.set, path, image_data.serialize())
 
         return upload_number
 
@@ -1234,7 +1267,7 @@ class ZooKeeper(object):
         :returns: True if request is pending, False otherwise
         '''
         path = self._imageBuildRequestPath(image)
-        if self.client.exists(path) is not None:
+        if self.client.retry(self.client.exists, path) is not None:
             return True
         return False
 
@@ -1245,7 +1278,7 @@ class ZooKeeper(object):
         :param str image: The image name.
         '''
         path = self._imageBuildRequestPath(image)
-        self.client.ensure_path(path)
+        self.client.retry(self.client.ensure_path, path)
 
     def removeBuildRequest(self, image):
         '''
@@ -1255,7 +1288,7 @@ class ZooKeeper(object):
         '''
         path = self._imageBuildRequestPath(image)
         try:
-            self.client.delete(path)
+            self.client.retry(self.client.delete, path)
         except kze.NoNodeError:
             pass
 
@@ -1282,7 +1315,7 @@ class ZooKeeper(object):
 
         try:
             # NOTE: Need to do recursively to remove lock znodes
-            self.client.delete(path, recursive=True)
+            self.client.retry(self.client.delete, path, recursive=True)
         except kze.NoNodeError:
             pass
 
@@ -1300,7 +1333,7 @@ class ZooKeeper(object):
         path = self._imageUploadPath(image, build_number, provider)
         path = path + "/%s" % upload_number
         try:
-            self.client.delete(path)
+            self.client.retry(self.client.delete, path)
         except kze.NoNodeError:
             pass
 
@@ -1317,7 +1350,8 @@ class ZooKeeper(object):
         path = self._launcherPath(launcher)
 
         try:
-            self.client.create(path, makepath=True, ephemeral=True)
+            self.client.retry(
+                self.client.create, path, makepath=True, ephemeral=True)
         except kze.NodeExistsError:
             pass
 
@@ -1328,7 +1362,8 @@ class ZooKeeper(object):
         :returns: A list of launcher names, or empty list if none are found.
         '''
         try:
-            launchers = self.client.get_children(self.LAUNCHER_ROOT)
+            launchers = self.client.retry(
+                self.client.get_children, self.LAUNCHER_ROOT)
         except kze.NoNodeError:
             return []
 
@@ -1341,7 +1376,8 @@ class ZooKeeper(object):
         :returns: A list of request nodes.
         '''
         try:
-            requests = self.client.get_children(self.REQUEST_ROOT)
+            requests = self.client.retry(
+                self.client.get_children, self.REQUEST_ROOT)
         except kze.NoNodeError:
             return []
 
@@ -1352,7 +1388,8 @@ class ZooKeeper(object):
         Get the current list of all node request lock ids.
         '''
         try:
-            lock_ids = self.client.get_children(self.REQUEST_LOCK_ROOT)
+            lock_ids = self.client.retry(
+                self.client.get_children, self.REQUEST_LOCK_ROOT)
         except kze.NoNodeError:
             return []
         return lock_ids
@@ -1371,7 +1408,7 @@ class ZooKeeper(object):
         '''
         path = self._requestLockPath(lock_id)
         try:
-            data, stat = self.client.get(path)
+            data, stat = self.client.retry(self.client.get, path)
         except kze.NoNodeError:
             return None
         d = NodeRequestLockStats(lock_id)
@@ -1386,7 +1423,7 @@ class ZooKeeper(object):
         '''
         path = self._requestLockPath(lock_id)
         try:
-            self.client.delete(path, recursive=True)
+            self.client.retry(self.client.delete, path, recursive=True)
         except kze.NoNodeError:
             pass
 
@@ -1400,7 +1437,7 @@ class ZooKeeper(object):
         '''
         path = self._requestPath(request)
         try:
-            data, stat = self.client.get(path)
+            data, stat = self.client.retry(self.client.get, path)
         except kze.NoNodeError:
             return None
 
@@ -1417,12 +1454,7 @@ class ZooKeeper(object):
         '''
         if not request.id:
             path = "%s/%s-" % (self.REQUEST_ROOT, priority)
-            path = self.client.create(
-                path,
-                value=request.serialize(),
-                ephemeral=True,
-                sequence=True,
-                makepath=True)
+            path = self._retry_create_sequence(path, request.toDict())
             request.id = path.split("/")[-1]
 
         # Validate it still exists before updating
@@ -1432,7 +1464,7 @@ class ZooKeeper(object):
                     "Attempt to update non-existing request %s" % request)
 
             path = self._requestPath(request.id)
-            self.client.set(path, request.serialize())
+            self.client.retry(self.client.set, path, request.serialize())
 
     def deleteNodeRequest(self, request):
         '''
@@ -1445,7 +1477,7 @@ class ZooKeeper(object):
 
         path = self._requestPath(request.id)
         try:
-            self.client.delete(path)
+            self.client.retry(self.client.delete, path)
         except kze.NoNodeError:
             pass
 
@@ -1557,7 +1589,7 @@ class ZooKeeper(object):
         :returns: A list of nodes.
         '''
         try:
-            return self.client.get_children(self.NODE_ROOT)
+            return self.client.retry(self.client.get_children, self.NODE_ROOT)
         except kze.NoNodeError:
             return []
 
@@ -1571,7 +1603,7 @@ class ZooKeeper(object):
         '''
         path = self._nodePath(node)
         try:
-            data, stat = self.client.get(path)
+            data, stat = self.client.retry(self.client.get, path)
         except kze.NoNodeError:
             return None
         if not data:
@@ -1603,15 +1635,11 @@ class ZooKeeper(object):
             else:
                 node.created_time = time.time()
 
-            path = self.client.create(
-                node_path,
-                value=node.serialize(),
-                sequence=True,
-                makepath=True)
+            path = self._retry_create_sequence(node_path, node.toDict())
             node.id = path.split("/")[-1]
         else:
             path = self._nodePath(node.id)
-            self.client.set(path, node.serialize())
+            self.client.retry(self.client.set, path, node.serialize())
 
     def deleteNode(self, node):
         '''
@@ -1624,7 +1652,7 @@ class ZooKeeper(object):
 
         path = self._nodePath(node.id)
         try:
-            self.client.delete(path, recursive=True)
+            self.client.retry(self.client.delete, path, recursive=True)
         except kze.NoNodeError:
             pass
 
