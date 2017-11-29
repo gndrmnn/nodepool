@@ -23,6 +23,8 @@ import time
 import shlex
 import uuid
 
+from kazoo import exceptions as kze
+
 from nodepool import config as nodepool_config
 from nodepool import exceptions
 from nodepool import provider_manager
@@ -34,9 +36,6 @@ MINS = 60
 HOURS = 60 * MINS
 # How long to wait for an image save
 IMAGE_TIMEOUT = 6 * HOURS
-
-# How long to wait between checks for ZooKeeper connectivity if it disappears.
-SUSPEND_WAIT_TIME = 30
 
 # HP Cloud requires qemu compat with 0.10. That version works elsewhere,
 # so just hardcode it for all qcow2 building
@@ -504,15 +503,6 @@ class CleanupWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._run()
             except Exception:
@@ -579,8 +569,7 @@ class BuildWorker(BaseWorker):
         '''
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
-            # or if ZK connection is suspended
-            if not self._running or self._zk.suspended or self._zk.lost:
+            if not self._running:
                 return
             try:
                 self._checkImageForScheduledImageUpdates(diskimage)
@@ -616,7 +605,8 @@ class BuildWorker(BaseWorker):
             ):
 
             try:
-                with self._zk.imageBuildLock(diskimage.name, blocking=False):
+                with self._zk.imageBuildLock(
+                        diskimage.name, blocking=False) as build_lock:
                     # To avoid locking each image repeatedly, we have an
                     # second, redundant check here to verify that a new
                     # build didn't appear between the first check and the
@@ -637,7 +627,7 @@ class BuildWorker(BaseWorker):
                     data.formats = list(diskimage.image_types)
 
                     bnum = self._zk.storeBuild(diskimage.name, data)
-                    data = self._buildImage(bnum, diskimage)
+                    data = self._buildImage(bnum, diskimage, build_lock)
                     self._zk.storeBuild(diskimage.name, data, bnum)
             except exceptions.ZKLockException:
                 # Lock is already held. Skip it.
@@ -649,8 +639,7 @@ class BuildWorker(BaseWorker):
         '''
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
-            # or if ZK connection is suspended
-            if not self._running or self._zk.suspended or self._zk.lost:
+            if not self._running:
                 return
             try:
                 self._checkImageForManualBuildRequest(diskimage)
@@ -673,7 +662,8 @@ class BuildWorker(BaseWorker):
             return
 
         try:
-            with self._zk.imageBuildLock(diskimage.name, blocking=False):
+            with self._zk.imageBuildLock(
+                    diskimage.name, blocking=False) as build_lock:
                 # Redundant check
                 if not self._zk.hasBuildRequest(diskimage.name):
                     return
@@ -688,7 +678,7 @@ class BuildWorker(BaseWorker):
                 data.formats = list(diskimage.image_types)
 
                 bnum = self._zk.storeBuild(diskimage.name, data)
-                data = self._buildImage(bnum, diskimage)
+                data = self._buildImage(bnum, diskimage, build_lock)
                 self._zk.storeBuild(diskimage.name, data, bnum)
 
                 # Remove request on a successful build
@@ -699,7 +689,7 @@ class BuildWorker(BaseWorker):
             # Lock is already held. Skip it.
             pass
 
-    def _buildImage(self, build_id, diskimage):
+    def _buildImage(self, build_id, diskimage, build_lock):
         '''
         Run the external command to build the diskimage.
 
@@ -769,51 +759,41 @@ class BuildWorker(BaseWorker):
             m = "Exit code: %s\n" % rc
             log.write(m.encode('utf8'))
 
-        # It's possible the connection to the ZK cluster could have been
-        # interrupted during the build. If so, wait for it to return.
-        # It could transition directly from SUSPENDED to CONNECTED, or go
-        # through the LOST state before CONNECTED.
-        did_suspend = False
-        while self._zk.suspended or self._zk.lost:
-            did_suspend = True
-            self.log.info("ZooKeeper suspended during build. Waiting")
-            time.sleep(SUSPEND_WAIT_TIME)
-        if did_suspend:
-            self.log.info("ZooKeeper available. Resuming")
-
         build_data = zk.ImageBuild()
         build_data.builder_id = self._builder_id
         build_data.builder = self._hostname
         build_data.username = diskimage.username
 
-        if self._zk.didLoseConnection:
+        try:
+            self._zk.checkLock(build_lock)
+            if p.returncode:
+                self.log.info(
+                    "DIB failed creating %s (%s)" %
+                    (diskimage.name, p.returncode))
+                build_data.state = zk.FAILED
+            else:
+                self.log.info("DIB image %s is built" % diskimage.name)
+                build_data.state = zk.READY
+                build_data.formats = list(diskimage.image_types)
+
+                if self._statsd:
+                    # record stats on the size of each image we create
+                    for ext in img_types.split(','):
+                        key = 'nodepool.dib_image_build.%s.%s.size' % (
+                            diskimage.name, ext)
+                        # A bit tricky because these image files may be sparse
+                        # files; we only want the true size of the file for
+                        # purposes of watching if we've added too much stuff
+                        # into the image.  Note that st_blocks is defined as
+                        # 512-byte blocks by stat(2)
+                        size = os.stat(
+                            "%s.%s" % (filename, ext)).st_blocks * 512
+                        self.log.debug("%s created image %s.%s (size: %d) " %
+                                       (diskimage.name, filename, ext, size))
+                        self._statsd.gauge(key, size)
+        except kze.SessionExpiredError:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
-            self._zk.resetLostFlag()
             build_data.state = zk.FAILED
-        elif p.returncode:
-            self.log.info(
-                "DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
-            build_data.state = zk.FAILED
-        else:
-            self.log.info("DIB image %s is built" % diskimage.name)
-            build_data.state = zk.READY
-            build_data.formats = list(diskimage.image_types)
-
-            if self._statsd:
-                # record stats on the size of each image we create
-                for ext in img_types.split(','):
-                    key = 'nodepool.dib_image_build.%s.%s.size' % (
-                        diskimage.name, ext)
-                    # A bit tricky because these image files may be sparse
-                    # files; we only want the true size of the file for
-                    # purposes of watching if we've added too much stuff
-                    # into the image.  Note that st_blocks is defined as
-                    # 512-byte blocks by stat(2)
-                    size = os.stat("%s.%s" % (filename, ext)).st_blocks * 512
-                    self.log.debug("%s created image %s.%s (size: %d) " %
-                                   (diskimage.name, filename, ext, size))
-                    self._statsd.gauge(key, size)
-
         return build_data
 
     def run(self):
@@ -822,15 +802,6 @@ class BuildWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._run()
             except Exception:
@@ -980,8 +951,7 @@ class UploadWorker(BaseWorker):
                 uploaded = False
 
                 # Check if we've been told to shutdown
-                # or if ZK connection is suspended
-                if not self._running or self._zk.suspended or self._zk.lost:
+                if not self._running:
                     return
                 try:
                     uploaded = self._checkProviderImageUpload(provider, image)
@@ -1083,15 +1053,6 @@ class UploadWorker(BaseWorker):
         '''
         self._running = True
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self._zk and (self._zk.suspended or self._zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             try:
                 self._reloadConfig()
                 self._checkForProviderUploads()
