@@ -51,6 +51,23 @@
       "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_1f6b911f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-11-30T22:13:35Z",
+      "side": 1,
+      "message": "Rui, nodepool should delete the instances you describe automatically, so if that\u0027s not working, it\u0027s a bug we should work through.",
+      "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
