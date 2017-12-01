@@ -19,6 +19,7 @@ import fixtures
 
 from nodepool import tests
 from nodepool import zk
+from nodepool.driver import Drivers
 import nodepool.launcher
 
 
@@ -476,8 +477,8 @@ class TestLauncher(tests.DBTestCase):
         def fail_delete(self, name):
             raise RuntimeError('Fake Error')
 
-        fake_delete = 'nodepool.driver.fake.provider.FakeProvider.deleteServer'
-        self.useFixture(fixtures.MonkeyPatch(fake_delete, fail_delete))
+        self.useFixture(fixtures.MockPatchObject(
+            Drivers.get('fake')['provider'], 'deleteServer', fail_delete))
 
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
