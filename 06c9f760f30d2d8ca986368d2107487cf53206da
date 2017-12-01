@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff82abbf_d33992f2",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-01T13:10:08Z",
+      "side": 1,
+      "message": "Did you experience an issue that this will fix?\n\nI don\u0027t see how this is better than the default retry you get if you don\u0027t specify a custom retry (see the _RETRY_COMPAT_DEFAULTS definition in https://kazoo.readthedocs.io/en/latest/_modules/kazoo/client.html#KazooClient).\n\nActually, this seems to be less forgiving since the default seems to retry forever (assuming I\u0027m reading that code correctly).",
+      "revId": "06c9f760f30d2d8ca986368d2107487cf53206da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
