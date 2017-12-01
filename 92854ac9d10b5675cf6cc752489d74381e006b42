@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_841e886e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-01T15:24:45Z",
+      "side": 1,
+      "message": "paths",
+      "range": {
+        "startLine": 74,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_e73af6cb",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-01T15:24:45Z",
+      "side": 1,
+      "message": "This now clearly looks like a hack violating the layers. Maybe it\u0027s worth a todo comment to fix that up (maybe by a load_config hook in the drivers?)",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 62
+      },
+      "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_c71d72be",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-01T15:24:45Z",
+      "side": 1,
+      "message": "this looks like it should be a private method (_load_class)",
+      "range": {
+        "startLine": 37,
+        "startChar": 8,
+        "endLine": 37,
+        "endChar": 18
+      },
+      "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_27d0dec9",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-01T15:24:45Z",
+      "side": 1,
+      "message": "I think this could well raise an exception as it points to a logical error if load was not called with the configured driver dirs.",
+      "range": {
+        "startLine": 92,
+        "startChar": 12,
+        "endLine": 92,
+        "endChar": 26
+      },
+      "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
