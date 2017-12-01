@@ -16,6 +16,24 @@
       "revId": "06c9f760f30d2d8ca986368d2107487cf53206da",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_a555a1fc",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-01T13:19:22Z",
+      "side": 1,
+      "message": "Yes, I didn\u0027t want the code to retry infinitely to not lock nodepool in a new state. Manually creating a KazooRetry let us set a custom max_tries.",
+      "parentUuid": "ff82abbf_d33992f2",
+      "revId": "06c9f760f30d2d8ca986368d2107487cf53206da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
