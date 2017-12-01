@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ff82abbf_9cb564d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-12-01T07:44:03Z",
+      "side": 1,
+      "message": "I think we can use server.interface_ip as \"IP\" column, currently it\u0027s server.public_v4, I want to keep backward compatibility, so add the \"Private IP\" column. In my case, I just want to know available IP of servers, not both private and public IP, thank you reminding that",
+      "parentUuid": "ff82abbf_df6be982",
+      "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff82abbf_74c48d40",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
@@ -65,6 +83,24 @@
       "writtenOn": "2017-11-30T22:13:35Z",
       "side": 1,
       "message": "Rui, nodepool should delete the instances you describe automatically, so if that\u0027s not working, it\u0027s a bug we should work through.",
+      "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_1c2ab48f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 8276
+      },
+      "writtenOn": "2017-12-01T07:44:03Z",
+      "side": 1,
+      "message": "Ah, got your point, thank you, the filter is not necessary.",
+      "parentUuid": "ff82abbf_1f6b911f",
       "revId": "f8bef1e0b21d69b952f65a8ed38e181a6b73fa2f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
