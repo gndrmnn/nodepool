@@ -22,8 +22,7 @@ import yaml
 
 from nodepool import zk
 from nodepool.driver import ConfigValue
-from nodepool.driver.fake.config import FakeProviderConfig
-from nodepool.driver.openstack.config import OpenStackProviderConfig
+from nodepool.driver import Drivers
 
 
 class Config(ConfigValue):
@@ -60,10 +59,11 @@ def get_provider_config(provider):
     # Ensure legacy configuration still works when using fake cloud
     if provider.get('name', '').startswith('fake'):
         provider['driver'] = 'fake'
-    if provider['driver'] == 'fake':
-        return FakeProviderConfig(provider)
-    elif provider['driver'] == 'openstack':
-        return OpenStackProviderConfig(provider)
+    driver = Drivers.get(provider['driver'])
+    if driver:
+        return driver['config'](provider)
+    else:
+        raise RuntimeError("Unknown provider driver %s" % provider['driver'])
 
 
 def loadConfig(config_path):
@@ -87,7 +87,7 @@ def loadConfig(config_path):
                 raise e
 
     # Reset the shared os_client_config instance
-    OpenStackProviderConfig.os_client_config = None
+    Drivers.get("openstack")["config"].os_client_config = None
 
     newconfig = Config()
     newconfig.db = None
@@ -100,9 +100,13 @@ def loadConfig(config_path):
     newconfig.labels = {}
     newconfig.elementsdir = config.get('elements-dir')
     newconfig.imagesdir = config.get('images-dir')
+    newconfig.driversdir = config.get('drivers-dir')
     newconfig.provider_managers = {}
     newconfig.zookeeper_servers = {}
     newconfig.diskimages = {}
+
+    if newconfig.driversdir:
+        Drivers.load(newconfig.driversdir.split(':'))
 
     for server in config.get('zookeeper-servers', []):
         z = zk.ZooKeeperConnectionConfig(server['host'],
