@@ -34,6 +34,24 @@
       "revId": "06c9f760f30d2d8ca986368d2107487cf53206da",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff82abbf_85689d21",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-01T13:39:25Z",
+      "side": 1,
+      "message": "To be clear, without setting a custom command_retry, then it seems like the client wait infinitely when zookeeper is unavailable. This kind of change nodepool behavior where it used to fail and report zookeeper connection issue.\n\nSetting a custom command_retry with max_tries\u003d3 and delay\u003d0.1 makes the client retry for about 1.7 second before giving up and raising an exception, which sounds enough to recover from intermittent connection lost.",
+      "parentUuid": "ff82abbf_a555a1fc",
+      "revId": "06c9f760f30d2d8ca986368d2107487cf53206da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
