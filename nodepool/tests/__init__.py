@@ -281,7 +281,7 @@ class DBTestCase(BaseTestCase):
         self.secure_conf = self._setup_secure()
         self.setupZK()
 
-    def setup_config(self, filename, images_dir=None):
+    def setup_config(self, filename, images_dir=None, drivers_dir=None):
         if images_dir is None:
             images_dir = fixtures.TempDir()
             self.useFixture(images_dir)
@@ -291,6 +291,7 @@ class DBTestCase(BaseTestCase):
         with open(configfile, 'rb') as conf_fd:
             config = conf_fd.read().decode('utf8')
             data = config.format(images_dir=images_dir.path,
+                                 drivers_dir=drivers_dir,
                                  zookeeper_host=self.zookeeper_host,
                                  zookeeper_port=self.zookeeper_port,
                                  zookeeper_chroot=self.zookeeper_chroot)
