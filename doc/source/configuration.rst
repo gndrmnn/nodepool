@@ -65,6 +65,16 @@ Example::
 
   images-dir: /path/to/images/dir
 
+
+.. _drivers-dir:
+
+drivers-dir
+-----------
+
+A ':' separated list of paths to load custom drivers from.
+The driver interface is still in development, use this at your own risk.
+
+
 zookeeper-servers
 -----------------
 Lists the ZooKeeper servers uses for coordinating information between
@@ -236,7 +246,7 @@ a driver listed below.
 **optional**
 
   ``driver``
-    Default to *openstack*
+    Defaults to *openstack* (see :ref:`drivers-dir` to use custom drivers)
 
   ``max-concurrency``
     Maximum number of node requests that this provider is allowed to handle

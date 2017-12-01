@@ -15,6 +15,7 @@ import voluptuous as v
 import yaml
 
 from nodepool.config import get_provider_config
+from nodepool.driver import Drivers
 
 log = logging.getLogger(__name__)
 
@@ -57,6 +58,7 @@ class ConfigValidator:
         top_level = {
             'webapp': webapp,
             'elements-dir': str,
+            'drivers-dir': str,
             'images-dir': str,
             'zookeeper-servers': [{
                 'host': str,
@@ -70,6 +72,10 @@ class ConfigValidator:
 
         log.info("validating %s" % self.config_file)
         config = yaml.load(open(self.config_file))
+
+        # load extra drivers now
+        if config.get('drivers-dir'):
+            Drivers.load(config['drivers-dir'].split(':'))
 
         # validate the overall schema
         schema = v.Schema(top_level)
