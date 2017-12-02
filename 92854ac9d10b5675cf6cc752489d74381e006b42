@@ -187,6 +187,30 @@
       "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_181e4bba",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-02T10:31:02Z",
+      "side": 1,
+      "message": "Ah, ok",
+      "parentUuid": "df87a7cf_54b585ed",
+      "range": {
+        "startLine": 92,
+        "startChar": 12,
+        "endLine": 92,
+        "endChar": 26
+      },
+      "revId": "92854ac9d10b5675cf6cc752489d74381e006b42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
