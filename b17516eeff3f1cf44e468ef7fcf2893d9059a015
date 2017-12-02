@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_63f24809",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-02T12:31:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_7882f7ca",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 11
+      },
+      "revId": "b17516eeff3f1cf44e468ef7fcf2893d9059a015",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_38554f51",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_03e33c35",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-02T12:31:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_38554f51",
+      "range": {
+        "startLine": 295,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 78
+      },
+      "revId": "b17516eeff3f1cf44e468ef7fcf2893d9059a015",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_18e16b9b",
         "filename": "nodepool/tests/test_drivers.py",
         "patchSetId": 3
@@ -59,6 +107,24 @@
       "writtenOn": "2017-12-02T10:40:34Z",
       "side": 1,
       "message": "maybe you additionally could use an external copy of the fake driver and not just load but really use the driver",
+      "revId": "b17516eeff3f1cf44e468ef7fcf2893d9059a015",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_e3c89875",
+        "filename": "nodepool/tests/test_drivers.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-02T12:31:40Z",
+      "side": 1,
+      "message": "I added a more exhaustive test using the current test driver",
+      "parentUuid": "df87a7cf_18e16b9b",
       "revId": "b17516eeff3f1cf44e468ef7fcf2893d9059a015",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
