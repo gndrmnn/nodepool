@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_2f5a7e4e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 17
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-06T19:41:18Z",
+      "side": 1,
+      "message": "I picked 5min as default. I think that could be a good value to start.",
+      "parentUuid": "df87a7cf_386e4b95",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_7874d368",
         "filename": "nodepool/driver/fake/provider.py",
         "patchSetId": 17
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_2c1dac65",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-06T19:41:18Z",
+      "side": 1,
+      "message": "Good point, removed",
+      "parentUuid": "df87a7cf_7874d368",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_986f5791",
         "filename": "nodepool/driver/fake/provider.py",
         "patchSetId": 17
@@ -47,6 +83,24 @@
       "writtenOn": "2017-12-06T17:54:50Z",
       "side": 1,
       "message": "We can just use Dummy here.",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_0f353af7",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-06T19:41:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_986f5791",
       "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
