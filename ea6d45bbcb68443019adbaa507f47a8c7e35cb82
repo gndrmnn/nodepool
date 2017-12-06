@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_56a3db9e",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T22:42:30Z",
+      "side": 1,
+      "message": "You can change \"ssh access\" to \"connection scan\" or even \"Connection on port {port}\".  It\u0027s just used to create the execption string: \"Timeout waiting for {str}\"",
+      "revId": "ea6d45bbcb68443019adbaa507f47a8c7e35cb82",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
