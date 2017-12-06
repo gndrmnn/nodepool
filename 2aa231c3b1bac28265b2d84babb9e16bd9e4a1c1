@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_b6b587cf",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T22:43:29Z",
+      "side": 1,
+      "message": "Should this be integer rather than str?",
+      "revId": "2aa231c3b1bac28265b2d84babb9e16bd9e4a1c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
