@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_783cd3c7",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:43:22Z",
+      "side": 1,
+      "message": "Don\u0027t we need to keep setting ssh_port until we update zuul?",
+      "revId": "d9c75b8c6e10498474f73333f952b736cd7d3915",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
