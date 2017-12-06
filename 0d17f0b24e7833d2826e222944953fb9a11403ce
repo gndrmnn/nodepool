@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_386e4b95",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 17
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:54:50Z",
+      "side": 1,
+      "message": "Does this really need to be tunable?  Can we just pick a reasonable default?",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_7874d368",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:54:50Z",
+      "side": 1,
+      "message": "I think this is the first time we directly import munch.  It should be there since it\u0027s a shade dependency, however, that\u0027s kind of an implementation detail and it would be nice not to grow our own dependency on it.  Since we use the object attribute form, why don\u0027t we just return a dummy class in our fake.",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_986f5791",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:54:50Z",
+      "side": 1,
+      "message": "We can just use Dummy here.",
+      "revId": "0d17f0b24e7833d2826e222944953fb9a11403ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
