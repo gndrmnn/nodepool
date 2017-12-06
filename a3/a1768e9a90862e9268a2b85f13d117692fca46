@@ -1,0 +1,11 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+1: K Jonathan Harker <code@gentlydownthe.net>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 06 Dec 2017 18:35:46 +0000
+Reviewed-on: https://review.openstack.org/518620
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
