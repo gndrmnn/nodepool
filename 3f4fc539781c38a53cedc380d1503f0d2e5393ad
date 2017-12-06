@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_3dfe3d37",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "Can this be a yaml list?  We can do the thing we do in zuul -- if it\u0027s a string, automatically transform it into a list of one item (since that\u0027s the most likely use).",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_5df9c14a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "Is this required?  We could make it optional and if the user supplies it, perform the comparison.  Otherwise, use the retrieved value when we allocate the node.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_ddedd18b",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "I think we have an API problem here -- I\u0027m not sure that we should have per-driver request handlers.  Instead, we should just have a single request handler, and it uses the provider drivers to fulfill the requests.  There\u0027s no reason a user shouldn\u0027t be able to make a request with bost static and dynamic nodes.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_7d04c54a",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "I note this still uses the dynamic node approach, rather than static.  That may be okay, but we should still discuss this with Monty since it varies from what we talked about a while ago.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_9dff4933",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "Why can\u0027t the static provider handle a nodeset with more than one node?  I think a primary use case is, say, a rack of machines and someone wants to check out 3 of them to deploy openstack.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_fd9535e5",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "Why do we do this here when we just removed this from the openstack driver?\n\nI know we\u0027ve talked about adding it back to openstack for the purposes of changing how the keyscan is done.  But until we do that, it seems strange for this to behave differently.  It is required?",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_bdea4d72",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-06T17:32:56Z",
+      "side": 1,
+      "message": "It would be good to have a test that requested nodes, then returned the nodes and requested them again, to exercise the full lifecycle.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
