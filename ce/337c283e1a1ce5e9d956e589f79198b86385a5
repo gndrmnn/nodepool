@@ -1,0 +1,10 @@
+Code-Review+1: Tristan Cacqueray <tdecacqu@redhat.com>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 06 Dec 2017 18:15:17 +0000
+Reviewed-on: https://review.openstack.org/506134
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
