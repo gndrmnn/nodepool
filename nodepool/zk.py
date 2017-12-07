@@ -1477,9 +1477,15 @@ class ZooKeeper(object):
         :param NodeRequest request: The request to unlock.
 
         :raises: ZKLockException if the request is not currently locked.
+        :raises: ZKLockMissingException if the request lock does not exist.
         '''
         if request.lock is None:
-            raise npe.ZKLockException("Request %s does not hold a lock" % request)
+            if not self.getNodeRequestLockStats(request.id):
+                raise npe.ZKLockMissingException("Request Lock %s does "
+                                                 "not exist" % request.id)
+            else:
+                raise npe.ZKLockException("Request %s does not hold a lock"
+                                          % request)
         request.lock.release()
         request.lock = None
 
