@@ -19,6 +19,7 @@ import voluptuous as v
 
 from nodepool.driver import ProviderConfig
 from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPool
 
 
 class ProviderDiskImage(ConfigValue):
@@ -58,7 +59,7 @@ class ProviderLabel(ConfigValue):
         return "<ProviderLabel %s>" % self.name
 
 
-class ProviderPool(ConfigValue):
+class ProviderPool(ConfigPool):
     def __eq__(self, other):
         if (other.labels != self.labels or
             other.max_cores != self.max_cores or
