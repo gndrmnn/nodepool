@@ -217,9 +217,16 @@ class PoolWorker(threading.Thread):
         '''
         active_handlers = []
         for r in self.request_handlers:
-            if not r.poll():
-                active_handlers.append(r)
-            else:
+            try:
+                if not r.poll():
+                    active_handlers.append(r)
+                else:
+                    self.log.debug("Removing handler for request %s",
+                                   r.request.id)
+            except exceptions.ZKLockMissingException:
+                # It is possible that some other cleanup action
+                # has already removed the request and request lock
+                # in that case just remove the handler for the request.
                 self.log.debug("Removing handler for request %s", r.request.id)
         self.request_handlers = active_handlers
         active_reqs = [r.request.id for r in self.request_handlers]
