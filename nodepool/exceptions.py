@@ -69,3 +69,6 @@ class ZKException(Exception):
 
 class ZKLockException(ZKException):
     pass
+
+class ZKLockMissingException(ZKLockException):
+    pass
