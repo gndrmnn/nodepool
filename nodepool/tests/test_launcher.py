@@ -108,6 +108,52 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[2].type, 'fake-label4')
         self.assertEqual(nodes[3].type, 'fake-label2')
 
+    def test_request_handler_cleanup_with_no_lock(self):
+        '''
+        Request handler cleanup should work even if the request
+        lock is cleaned up.
+        '''
+        configfile = self.setup_config('node_cleanup_handler.yaml')
+        self._useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        nodepool.launcher.LOCK_CLEANUP = 1
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+        client = pool.getProviderManager('fake-provider')._getClient()
+        client.pause_creates = True
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, (zk.PENDING,))
+
+        # Now we delete the request so that the lock can be deleted
+        self.zk.deleteNodeRequest(req)
+        self.assertEqual(self.zk.getNodeRequest(req), None)
+
+        # The above setup should have given us a request then
+        # because we set LOCK_CLEANUP to one second and because the request
+        # is now gone the lock for that request should be go away too.
+        self.waitForNodeRequestLockDeletion(req.id)
+        # We confirm that the lock is actually gone.
+        self.assertEqual(self.zk.getNodeRequestLockStats(req.id), None)
+        # Now unpause the handler and let it fullfil the request.
+        # Then check that the request handler has been cleaned up.
+        client._server_list[0].event.set()
+
+        # We have to tell the pool worker that its launch manager is
+        # done in order to test the request lock deleted pack in the request
+        # handler.
+        pool_worker = pool.getPoolWorkers('fake-provider')[0]
+        request_handler = pool_worker.request_handlers[0]
+        request_handler.launch_manager.poll = lambda : True
+        while request_handler in pool_worker.request_handlers:
+            time.sleep(0.1)
+        self.assertNotIn(request_handler, pool_worker.request_handlers)
+
     def test_node_assignment_at_quota(self):
         '''
         Successful node launch should have unlocked nodes in READY state
