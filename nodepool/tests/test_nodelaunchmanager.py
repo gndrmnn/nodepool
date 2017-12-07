@@ -21,7 +21,20 @@ from nodepool import builder
 from nodepool import provider_manager
 from nodepool import tests
 from nodepool import zk
-from nodepool.driver.openstack.handler import OpenStackNodeLaunchManager
+from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
+
+
+class OpenStackNodeLaunchManager(OpenStackNodeRequestHandler):
+    def __init__(self, zk, provider_pool, pmanager, req, retries):
+        class Request:
+            requestor = req
+        class Provider:
+            launch_retries = retries
+        super().__init__(None, Request())
+        self.zk = zk
+        self.pool = provider_pool
+        self.manager = pmanager
+        self.provider = Provider()
 
 
 class TestNodeLaunchManager(tests.DBTestCase):
@@ -57,11 +70,12 @@ class TestNodeLaunchManager(tests.DBTestCase):
         mgr = OpenStackNodeLaunchManager(self.zk, self.provider_pool,
                                          self.pmanager, 'zuul', 1)
         mgr.launch(n1)
-        while not mgr.poll():
+        mgr.nodeset.append(n1)
+        while not mgr.poll_launcher():
             time.sleep(0)
-        self.assertEqual(len(mgr.ready_nodes), 1)
-        self.assertEqual(len(mgr.failed_nodes), 0)
-        self.assertEqual(mgr._manager.listNodes()[0]['metadata']['groups'],
+        self.assertEqual(len(mgr._ready_nodes), 1)
+        self.assertEqual(len(mgr._failed_nodes), 0)
+        self.assertEqual(mgr.manager.listNodes()[0]['metadata']['groups'],
                          'fake-provider,fake-image,fake-label')
 
     @mock.patch('nodepool.driver.openstack.handler.NodeLauncher._launchNode')
@@ -76,10 +90,11 @@ class TestNodeLaunchManager(tests.DBTestCase):
         mgr = OpenStackNodeLaunchManager(self.zk, self.provider_pool,
                                          self.pmanager, 'zuul', 1)
         mgr.launch(n1)
-        while not mgr.poll():
+        mgr.nodeset.append(n1)
+        while not mgr.poll_launcher():
             time.sleep(0)
-        self.assertEqual(len(mgr.failed_nodes), 1)
-        self.assertEqual(len(mgr.ready_nodes), 0)
+        self.assertEqual(len(mgr._failed_nodes), 1)
+        self.assertEqual(len(mgr._ready_nodes), 0)
 
     @mock.patch('nodepool.driver.openstack.handler.NodeLauncher._launchNode')
     def test_mixed_launch(self, mock_launch):
@@ -96,8 +111,10 @@ class TestNodeLaunchManager(tests.DBTestCase):
         mgr = OpenStackNodeLaunchManager(self.zk, self.provider_pool,
                                          self.pmanager, 'zuul', 1)
         mgr.launch(n1)
+        mgr.nodeset.append(n1)
         mgr.launch(n2)
-        while not mgr.poll():
+        mgr.nodeset.append(n2)
+        while not mgr.poll_launcher():
             time.sleep(0)
-        self.assertEqual(len(mgr.failed_nodes), 1)
-        self.assertEqual(len(mgr.ready_nodes), 1)
+        self.assertEqual(len(mgr._failed_nodes), 1)
+        self.assertEqual(len(mgr._ready_nodes), 1)
