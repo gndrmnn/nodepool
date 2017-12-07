@@ -1003,7 +1003,7 @@ class TestLauncher(tests.DBTestCase):
         def raise_KeyError(node):
             raise KeyError('fake-provider')
 
-        request_handler.launch_manager.launch = raise_KeyError
+        request_handler.launch = raise_KeyError
 
         # Delete instance in fake-provider by unlocking it and allowing it to
         # become unused. This should cause provider2 to service the request
