@@ -20,6 +20,7 @@ import abc
 import six
 
 from nodepool import zk
+from nodepool import exceptions
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -179,7 +180,14 @@ class NodeRequestHandler(object):
                 node.allocated_to = None
                 self.zk.storeNode(node)
             self.unlockNodeSet()
-            self.zk.unlockNodeRequest(self.request)
+            try:
+                self.zk.unlockNodeRequest(self.request)
+            except exceptions.ZKLockMissingException:
+                # If the Lock is missing some cleanup process has cleaned it
+                # up and there is nothing else for us to do here.
+                self.log.debug("Request lock missing for node request %s "
+                               "when attempting to clean up the Lock",
+                               self.request.id)
             return True
 
         if self.launch_manager.failed_nodes:
