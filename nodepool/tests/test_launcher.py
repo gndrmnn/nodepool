@@ -1001,7 +1001,7 @@ class TestLauncher(tests.DBTestCase):
         def raise_KeyError(self, node):
             raise KeyError('fake-provider')
 
-        request_handler.launch_manager.launch = raise_KeyError
+        request_handler.launch = raise_KeyError
         # Delete instance in fake-provider. This should cause provider2
         # to service the request that was held pending by fake-provider.
         self.zk.deleteNode(provider1_first)
