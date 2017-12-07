@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_710ce840",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_3dfe3d37",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_5df9c14a",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 34
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-06T17:32:56Z",
       "side": 1,
       "message": "Is this required?  We could make it optional and if the user supplies it, perform the comparison.  Otherwise, use the retrieved value when we allocate the node.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_54143244",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "It\u0027s not required, it\u0027s there because it was in the original spec. Next PS will move it to optional.",
+      "parentUuid": "df87a7cf_5df9c14a",
       "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_3445ee43",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "I agree this is sub-optimal and we have to copy and adapt this code for any drivers. I\u0027ll work on a refactor in another patch so that we can discuss a better approach.\n\nThough regarding mixing both static and dynamic node, we\u0027ll have to adjust the openstack handler that already ensure requested node are in the same region/az. Not sure how this will play with a generic handler...",
+      "parentUuid": "df87a7cf_ddedd18b",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_7d04c54a",
         "filename": "nodepool/driver/static/handler.py",
         "patchSetId": 34
@@ -64,6 +118,24 @@
       "writtenOn": "2017-12-06T17:32:56Z",
       "side": 1,
       "message": "I note this still uses the dynamic node approach, rather than static.  That may be okay, but we should still discuss this with Monty since it varies from what we talked about a while ago.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_34b3ae4f",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "Well I\u0027ve been waiting since July for that discussion to happen :-)",
+      "parentUuid": "df87a7cf_7d04c54a",
       "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_74961696",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "It was to keep the handler more simple, but if we refactor this code to be generic accros driver, then the static driver would benefit from multi node request for free. Otherwise it\u0027s not that difficult to make the for each request.node_types loop.",
+      "parentUuid": "df87a7cf_9dff4933",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_fd9535e5",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 34
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_34e16e2b",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "It was simply to fail early (e.g. if ssh doesn\u0027t work, no need to continue and pass the node to zuul), next ps will remove that code.",
+      "parentUuid": "df87a7cf_fd9535e5",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_bdea4d72",
         "filename": "nodepool/tests/test_driver_static.py",
         "patchSetId": 34
@@ -115,6 +223,24 @@
       "writtenOn": "2017-12-06T17:32:56Z",
       "side": 1,
       "message": "It would be good to have a test that requested nodes, then returned the nodes and requested them again, to exercise the full lifecycle.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_f43d468f",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-07T01:37:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_bdea4d72",
       "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
