@@ -14,105 +14,106 @@
 
 import logging
 import random
+import time
+import threading
 
-from nodepool import exceptions
 from nodepool import zk
+from nodepool.driver import NodeLaunchManager
 from nodepool.driver import NodeRequestHandler
+from nodepool.nodeutils import keyscan
+
+
+class PodLauncher(threading.Thread):
+    log = logging.getLogger("nodepool.driver.k8s.PodLauncher")
+
+    def __init__(self, zk, manager, pool, node, retries=3, boot_timeout=10):
+        threading.Thread.__init__(self, name="PodLauncher-%s" % node.id)
+        self.log = logging.getLogger("nodepool.PodLauncher-%s" % node.id)
+        self._zk = zk
+        self._node = node
+        self._label = pool.labels[node.type]
+        self._retries = retries
+        self._boot_timeout = boot_timeout
+        self._pool = pool
+        self._manager = manager
+
+    def _run(self):
+        hostid = self._node.external_id
+        username = self._pool.labels[self._node.type]['username']
+
+        attempts = 1
+        while attempts <= self._retries:
+            self.log.debug("Starting %s container" % self._node.type)
+
+            # TODO: fix using Service NodePort or something...
+            ssh_port = random.randint(22022, 52022)
+            try:
+                pod = self._manager.createContainer(self._pool, hostid,
+                                                    ssh_port, self._label)
+                break
+            except Exception:
+                if attempts == self._retries:
+                    raise
+                attempts += 1
+
+        boot_start = time.monotonic()
+        while time.monotonic() - boot_start < self._boot_timeout:
+            status = self._manager.getContainer(self._pool, pod)
+            self.log.debug("Pod %s is %s" % (pod, status.get('phase')))
+            if status.get('phase') == 'Running':
+                break
+            time.sleep(0.5)
+        if status.get('phase') != 'Running':
+            raise RuntimeError("Pod failed to start: %s" % status.get('phase'))
+
+        server_ip = status.get('hostIP')
+        if not server_ip:
+            raise RuntimeError("Pod doesn't have hostIP")
+
+        try:
+            key = keyscan(server_ip, port=ssh_port, timeout=15)
+        except:
+            raise RuntimeError("Can't scan container key")
+
+        self.log.info("container %s ready" % hostid)
+        self._node.state = zk.READY
+        self._node.external_id = hostid
+        self._node.hostname = server_ip
+        self._node.interface_ip = server_ip
+        self._node.public_ipv4 = server_ip
+        self._node.host_keys = key
+        self._node.ssh_port = ssh_port
+        self._node.username = username
+        self._zk.storeNode(self._node)
+
+    def run(self):
+        try:
+            self._run()
+        except Exception:
+            self.log.exception("Launch failed for node %s:",
+                               self._node.id)
+            self._node.state = zk.FAILED
+            self._zk.storeNode(self._node)
+
+
+class KubernetesNodeLaunchManager(NodeLaunchManager):
+    def launch(self, node):
+        self._nodes.append(node)
+        t = PodLauncher(self._zk, self._manager, self._pool, node)
+        t.start()
+        self._threads.append(t)
 
 
 class KubernetesNodeRequestHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.k8s."
                             "KubernetesNodeRequestHandler")
 
-    def decline(self, reason):
-        self.log.warning("%s: Declined because %s" % (self.request.id, reason))
-        self.request.declined_by.append(self.launcher_id)
-        self.unlockNodeSet(clear_allocation=True)
-        self.zk.storeNodeRequest(self.request)
-        self.zk.unlockNodeRequest(self.request)
-        self.done = True
+    def set_node_metadata(self, node):
+        node.external_id = "%s-%s" % (node.type, self.request.id)
 
-    def run_handler(self):
-        self._setFromPoolWorker()
-
-        # Check for available labels
-        for pool in self.provider.pools.values():
-            missing_labels = set()
-            for node_type in self.request.node_types:
-                if node_type not in pool.labels:
-                    missing_labels.add(node_type)
-                    break
-            if not missing_labels:
-                break
-        if missing_labels:
-            return self.decline("missing label %s" % " ".join(missing_labels))
-
-        # Check pool max-servers
-        if (pool.max_servers and
-            len(self.request.node_types) >= pool.max_servers):
-            return self.decline("request will exceed max containers count")
-
-        self.request.state = zk.PENDING
-        self.zk.storeNodeRequest(self.request)
-
-        ready_nodes = self.zk.getReadyNodesOfTypes(self.request.node_types)
-        for label in self.request.node_types:
-            # First try to grab from the list of already available nodes.
-            got_a_node = False
-            if self.request.reuse and label in ready_nodes:
-                for node in ready_nodes[label]:
-                    # Only interested in nodes from this provider and pool
-                    if node.provider != self.provider.name:
-                        continue
-                    if node.pool != self.pool.name:
-                        continue
-                    try:
-                        self.zk.lockNode(node, blocking=False)
-                    except exceptions.ZKLockException:
-                        # It's already locked so skip it.
-                        continue
-                    self.log.debug("Locked existing node %s for request %s",
-                                   node.id, self.request.id)
-                    got_a_node = True
-                    node.allocated_to = self.request.id
-                    self.zk.storeNode(node)
-                    self.nodeset.append(node)
-                    break
-            if got_a_node:
-                continue
-
-            self.log.debug("Starting %s container" % label)
-
-            hostid = "%s-%s" % (label, self.request.id)
-            image = pool.labels[label]['image']
-            username = pool.labels[label]['username']
-
-            # TODO: fix using Service NodePort or something...
-            ssh_port = random.randint(22022, 52022)
-            pod = self.manager.createContainer(pool, hostid, ssh_port, image,
-                                               username)
-            if not pod:
-                self.request.state = zk.FAILED
-                self.unlockNodeSet(clear_allocation=True)
-                return self.decline("container creation failed")
-
-            ip, key = pod
-
-            self.log.info("container %s ready" % hostid)
-            node = zk.Node()
-            node.state = zk.READY
-            node.external_id = hostid
-            node.hostname = ip
-            node.interface_ip = ip
-            node.public_ipv4 = ip
-            node.host_keys = key
-            node.ssh_port = ssh_port
-            node.provider = self.provider.name
-            node.launcher = self.launcher_id
-            node.allocated_to = self.request.id
-            node.username = username
-            node.type = label
-            node.pool = self.pool.name
-            self.zk.storeNode(node)
-            self.zk.lockNode(node, blocking=False)
-            self.nodeset.append(node)
+    def launch(self, node):
+        if not self.launch_manager:
+            self.launch_manager = KubernetesNodeLaunchManager(
+                self.zk, self.pool, self.manager,
+                self.request.requestor, retries=3)
+        self.launch_manager.launch(node)

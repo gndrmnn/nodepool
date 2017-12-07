@@ -25,7 +25,7 @@ class StaticNodeRequestHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.static."
                             "StaticNodeRequestHandler")
 
-    def checkConcurrency(self, static_node):
+    def _checkConcurrency(self, static_node):
         access_count = 0
         for node in self.zk.nodeIterator():
             if node.hostname != static_node["name"]:
@@ -38,54 +38,25 @@ class StaticNodeRequestHandler(NodeRequestHandler):
             return False
         return True
 
-    def run_handler(self):
-        '''
-        Main body for the StaticNodeRequestHandler.
-        '''
-        self._setFromPoolWorker()
-        static_node = None
-        max_concurrency = False
-        ntype = None
+    def check_capacity(self, node_type):
+        self.static_node = None
         available_nodes = self.manager.listNodes()
         # Randomize static nodes order
         random.shuffle(available_nodes)
-        for node in available_nodes:
-            for node_type in self.request.node_types:
-                if node_type in node["labels"]:
-                    max_concurrency = not self.checkConcurrency(node)
-                    if max_concurrency:
-                        continue
-                    static_node = node
-                    ntype = node_type
-                    break
+        for available_node in available_nodes:
+            if node_type in available_node["labels"]:
+                if not self._checkConcurrency(available_node):
+                    continue
+                self.static_node = available_node
+                return True
 
-        if len(self.request.node_types) == 1 and static_node:
-            self.log.debug("%s: Assigning static_node %s" % (
-                self.request.id, static_node))
-            node = zk.Node()
-            node.state = zk.READY
-            node.external_id = "static-%s" % self.request.id
-            node.hostname = static_node["name"]
-            node.interface_ip = static_node["name"]
-            node.public_ipv4 = socket.gethostbyname(static_node["name"])
-            node.ssh_port = static_node["ssh-port"]
-            node.host_keys = [static_node["host-key"]]
-            node.provider = self.provider.name
-            node.launcher = self.launcher_id
-            node.allocated_to = self.request.id
-            node.type = ntype
-            self.nodeset.append(node)
-            self.zk.storeNode(node)
-        else:
-            if len(self.request.node_types) != 1:
-                reason = "static provider doesn't handle nodeset > 1"
-            else:
-                reason = "no static nodes available"
-            self.log.info("%s: Declined because %s" % (self.request.id, reason))
-            # When declined because of max_concurrency, don't clear allocation
-            if not max_concurrency:
-                self.request.declined_by.append(self.launcher_id)
-                self.unlockNodeSet(clear_allocation=True)
-            self.zk.storeNodeRequest(self.request)
-            self.zk.unlockNodeRequest(self.request)
-            self.done = True
+    def launch(self, node):
+        self.log.debug("%s: Assigning static_node %s" % (
+            self.request.id, self.static_node))
+        node.state = zk.READY
+        node.external_id = "static-%s" % self.request.id
+        node.hostname = self.static_node["name"]
+        node.interface_ip = self.static_node["name"]
+        node.public_ipv4 = socket.gethostbyname(self.static_node["name"])
+        node.ssh_port = self.static_node["ssh-port"]
+        node.host_keys = [self.static_node["host-key"]]

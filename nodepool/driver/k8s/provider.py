@@ -18,7 +18,10 @@ import time
 import urllib.request
 
 from nodepool.driver import Provider
-from nodepool.nodeutils import keyscan
+
+
+class PodCreateError(Exception):
+    pass
 
 
 class KubernetesProvider(Provider):
@@ -53,8 +56,13 @@ class KubernetesProvider(Provider):
             self.api_url, namespace, objname, name)
         self.log.debug("HTTP DELETE request: %s" % url)
         req = urllib.request.Request(url, method='DELETE')
-        with urllib.request.urlopen(req) as response:
-            return response.code ==  200
+        try:
+            with urllib.request.urlopen(req) as response:
+                return response.code ==  200
+        except urllib.error.HTTPError as e:
+            if e.code != 404:
+                raise
+
 
     # High level api
     def configmap(self, namespace, action, name):
@@ -70,29 +78,15 @@ class KubernetesProvider(Provider):
                     name, namespace
                 ))
 
-    def pod(self, namespace, action, name, port=None, image=None, user=None):
+    def pod(self, namespace, action, name, port=None, label=None):
         if action == 'create':
             if not self.api_post(namespace, "pods", self.render_pod(
-                    namespace, name, port, image, user)):
-                self.log.error("Couldn't create pod %s in %s" % (name,
-                                                                 namespace))
-                return None
-            # TODO: refactor this logic to a request handler asynchronous code
-            for retry in range(10):
-                status = self.api_get(namespace, "pods", name).get('status', {})
-                if status.get('phase') == 'Running':
-                    break
-                self.log.debug("Pod %s is %s" % (name, status.get('phase')))
-                time.sleep(1)
-            if retry == 9:
-                self.log.error("Couldn't create pod %s in %s: %s" % (
-                    name, namespace, status.get('phase')
-                ))
-                return None
-            self.log.info("Created pod %s in %s: %s" % (
-                name, namespace, status.get('hostIP')
-            ))
-            return status.get('hostIP')
+                    namespace, name, port, label)):
+                raise PodCreateError("Couldn't create pod %s in %s" % (
+                    name, namespace))
+            return name
+        elif action == 'get':
+            return self.api_get(namespace, "pods", name).get('status', {})
         elif action == 'delete':
             if namespace is None:
                 namespaces = [pool.namespace
@@ -156,7 +150,7 @@ class KubernetesProvider(Provider):
         # TODO: track pos deletion
         return True
 
-    def createContainer(self, pool, server_id, port, image, username):
+    def createContainer(self, pool, server_id, port, label):
         if not self.ready:
             for retry in range(60):
                 if self.ready:
@@ -166,19 +160,13 @@ class KubernetesProvider(Provider):
                 self.log.warning("Fail to initialize manager")
                 return None
 
-        server_ip = self.pod(pool.namespace, 'create', server_id, port, image,
-                             username)
-        if not server_ip:
-            return None
-        try:
-            key = keyscan(server_ip, port=port, timeout=15)
-        except:
-            self.log.exception("Can't scan container key")
-            return None
-        return (server_ip, key)
+        return self.pod(pool.namespace, 'create', server_id, port, label)
+
+    def getContainer(self, pool, server_id):
+        return self.pod(pool.namespace, 'get', server_id)
 
     @staticmethod
-    def render_pod(namespace, server_id, port, image, username):
+    def render_pod(namespace, server_id, port, label):
         return json.dumps({
             'apiVersion': 'v1',
             'kind': 'Pod',
@@ -189,15 +177,16 @@ class KubernetesProvider(Provider):
             'spec': {
                 'containers': [{
                     'name': server_id,
-                    'image': image,
+                    'image': label['image'],
+                    'imagePullPolicy': label['image_pull'],
                     'ports': [{
                         'containerPort': 22,
                         'hostPort': port,
                     }],
                     'volumeMounts': [{
                         'name': 'config-volume',
-                        'mountPath': '/home/%s/.ssh' % username,
-                    }]
+                        'mountPath': '/home/%s/.ssh' % label['username'],
+                    }],
                 }],
                 'volumes': [{
                     'name': 'config-volume',

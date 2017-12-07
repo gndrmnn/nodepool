@@ -16,11 +16,11 @@
 
 import voluptuous as v
 
-from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPool
 from nodepool.driver import ProviderConfig
 
 
-class OpenContainerPool(ConfigValue):
+class OpenContainerPool(ConfigPool):
     def __eq__(self, other):
         if other.labels != self.labels:
             return False

@@ -14,11 +14,11 @@
 
 import voluptuous as v
 
-from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPool
 from nodepool.driver import ProviderConfig
 
 
-class TestPool(ConfigValue):
+class TestPool(ConfigPool):
     pass
 
 class TestConfig(ProviderConfig):
@@ -35,7 +35,8 @@ class TestConfig(ProviderConfig):
             testpool = TestPool()
             testpool.name = pool['name']
             testpool.provider = self
-            for label in pool['labels']:
+            testpool.labels = pool['labels']
+            for label in testpool.labels:
                 newconfig.labels[label].pools.append(testpool)
             self.pools[pool['name']] = testpool
 

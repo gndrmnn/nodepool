@@ -16,11 +16,11 @@
 
 import voluptuous as v
 
-from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPool
 from nodepool.driver import ProviderConfig
 
 
-class KubernetesPool(ConfigValue):
+class KubernetesPool(ConfigPool):
     def __eq__(self, other):
         if other.labels != self.labels:
             return False
@@ -56,6 +56,7 @@ class KubernetesProviderConfig(ProviderConfig):
                 pp.labels[label['name']] = {
                     'image': label['image'],
                     'username': label.get('username', 'zuul-worker'),
+                    'image_pull': label.get('image_pull', 'Always'),
                 }
                 config.labels[label['name']].pools.append(pp)
 
@@ -63,6 +64,7 @@ class KubernetesProviderConfig(ProviderConfig):
         k8s_label = {
             v.Required('name'): str,
             v.Required('image'): str,
+            'image_pull': str,
             'username': str,
         }
 
