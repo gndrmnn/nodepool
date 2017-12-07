@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_0e8c4134",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2017-12-07T17:02:17Z",
+      "side": 1,
+      "message": "since we default port\u003d22 above, when would this happen?",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 17
+      },
+      "revId": "9d8cccc6dc757257f0fbf409ccf334738437e96a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
