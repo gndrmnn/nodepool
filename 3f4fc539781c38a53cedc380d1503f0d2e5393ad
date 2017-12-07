@@ -177,6 +177,23 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_426a22ee",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2017-12-07T15:28:04Z",
+      "side": 1,
+      "message": "I think this one is important.  I think the refactor is too big to do right now, so I think we should go ahead and add the for-each loop here, because I do think people are going to expect to be able to get more than one static node.",
+      "revId": "3f4fc539781c38a53cedc380d1503f0d2e5393ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_fd9535e5",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 34
