@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_1e72174a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-08T16:31:33Z",
+      "side": 1,
+      "message": "And actually, I think it\u0027s a good idea to turn this into a general exception handler (for Exception) and on exception, add the handler to active_handlers (to try it again next time) and proceed to process the other requests.",
+      "parentUuid": "df87a7cf_405c3fec",
+      "revId": "c8869baa2cd682679f2c7222d399415ba626d6c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_bbb9be15",
         "filename": "nodepool/launcher.py",
         "patchSetId": 1
