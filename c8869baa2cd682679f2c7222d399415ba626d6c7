@@ -16,6 +16,29 @@
       "revId": "c8869baa2cd682679f2c7222d399415ba626d6c7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_bbb9be15",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-08T15:08:11Z",
+      "side": 1,
+      "message": "Perhaps we should clarify this, since this is clearly a scenario that is occurring. Perhaps... \"This helps reduce the chances for the scenario...\"",
+      "range": {
+        "startLine": 434,
+        "startChar": 16,
+        "endLine": 436,
+        "endChar": 37
+      },
+      "revId": "c8869baa2cd682679f2c7222d399415ba626d6c7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
