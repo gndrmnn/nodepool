@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_15a67254",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-08T20:19:44Z",
+      "side": 1,
+      "message": "We actually have a waitForNodeRequestLockDeletion() method already. Let\u0027s use that instead.",
+      "revId": "38466e6b9b3ad81163c806dfd2462c822ee576e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
