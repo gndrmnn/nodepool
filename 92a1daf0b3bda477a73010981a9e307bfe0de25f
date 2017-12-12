@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_981cc078",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-12T06:30:13Z",
+      "side": 1,
+      "message": "In the current code base this method should be private. As agreed on irc this can be made public easily during the refactor.",
+      "parentUuid": "df87a7cf_c7c7c963",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_67291d35",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 18
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "df87a7cf_b81f446a",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-12T06:30:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_67291d35",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df87a7cf_47dbb94d",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 18
@@ -47,6 +83,24 @@
       "writtenOn": "2017-12-12T02:07:48Z",
       "side": 1,
       "message": "nit: probably better to use \"time.monotonic()\", like that it\u0027s not impacted by host time change (e.g. when DST kicks in)",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_5812b863",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-12T06:30:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df87a7cf_47dbb94d",
       "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
