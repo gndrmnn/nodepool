@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_c7c7c963",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-12T02:07:48Z",
+      "side": 1,
+      "message": "In the event the run_handler becomes generic accross driver, would this method better be renamed \"checkCapacity\" ?",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_67291d35",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-12T02:07:48Z",
+      "side": 1,
+      "message": "nit: missing space after \u0027,\u0027",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_47dbb94d",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2017-12-12T02:07:48Z",
+      "side": 1,
+      "message": "nit: probably better to use \"time.monotonic()\", like that it\u0027s not impacted by host time change (e.g. when DST kicks in)",
+      "revId": "92a1daf0b3bda477a73010981a9e307bfe0de25f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
