@@ -16,6 +16,24 @@
       "revId": "93cc99a0b1979e8f6fb3cf4d90a3fec947fce6c2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_38257409",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2017-12-12T06:11:45Z",
+      "side": 1,
+      "message": "That depends on the environment nodepool is running in. The actual failure from shade is already logged so that would be a repetition. However I agree a (info) message that the cache is getting invalidated would still be useful here.",
+      "parentUuid": "df87a7cf_c7aa696f",
+      "revId": "93cc99a0b1979e8f6fb3cf4d90a3fec947fce6c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
