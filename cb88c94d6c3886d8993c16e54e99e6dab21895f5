@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_c74a3782",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "Can we either document the return value or rename this _hasRemainingQuota, or both? It\u0027s not easy to decipher what the return value represents without inspecting the code.",
+      "range": {
+        "startLine": 323,
+        "startChar": 8,
+        "endLine": 323,
+        "endChar": 28
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_475e2746",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "Same suggestion as above.",
+      "range": {
+        "startLine": 347,
+        "startChar": 8,
+        "endLine": 347,
+        "endChar": 27
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_a71133af",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "zk appears to be unused.",
+      "range": {
+        "startLine": 159,
+        "startChar": 37,
+        "endLine": 159,
+        "endChar": 39
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_c7779708",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "Missing description",
+      "range": {
+        "startLine": 204,
+        "startChar": 8,
+        "endLine": 204,
+        "endChar": 18
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_476b871e",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "Missing description",
+      "range": {
+        "startLine": 206,
+        "startChar": 8,
+        "endLine": 206,
+        "endChar": 16
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df87a7cf_47d947f2",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2017-12-13T17:26:19Z",
+      "side": 1,
+      "message": "Missing description",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 223,
+        "endChar": 16
+      },
+      "revId": "cb88c94d6c3886d8993c16e54e99e6dab21895f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
