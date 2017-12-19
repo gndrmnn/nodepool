@@ -16,31 +16,19 @@
 Helper to create a statsd client from environment variables
 """
 
-import os
 import logging
 import statsd
 
 from nodepool import zk
 
 log = logging.getLogger("nodepool.stats")
+config = None
 
 
 def get_client():
-    """Return a statsd client object setup from environment variables; or
-    None if they are not set
-    """
-
-    # note we're just being careful to let the default values fall
-    # through to StatsClient()
-    statsd_args = {}
-    if os.getenv('STATSD_HOST', None):
-        statsd_args['host'] = os.environ['STATSD_HOST']
-    if os.getenv('STATSD_PORT', None):
-        statsd_args['port'] = os.environ['STATSD_PORT']
-    if statsd_args:
-        return statsd.StatsClient(**statsd_args)
-    else:
+    if config is None:
         return None
+    return statsd.StatsClient(**config)
 
 
 class StatsReporter(object):
@@ -63,7 +51,7 @@ class StatsReporter(object):
         :param str node_az: AZ of the launched node
         :param str requestor: Identifier for the request originator
         '''
-        if not self._statsd:
+        if self._statsd is None:
             return
 
         keys = [

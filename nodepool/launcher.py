@@ -676,7 +676,6 @@ class NodePool(threading.Thread):
         self._stopped = False
         self.config = None
         self.zk = None
-        self.statsd = stats.get_client()
         self._pool_threads = {}
         self._cleanup_thread = None
         self._delete_thread = None

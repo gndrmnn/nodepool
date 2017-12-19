@@ -120,7 +120,7 @@ class BaseWorker(threading.Thread):
         self._secure_path = secure_path
         self._zk = zk
         self._hostname = socket.gethostname()
-        self._statsd = stats.get_client()
+        self._statsd = None
         self._interval = interval
         self._builder_id = builder_id
 
@@ -134,6 +134,14 @@ class BaseWorker(threading.Thread):
         if self._config.zookeeper_servers != new_config.zookeeper_servers:
             self.log.debug("Detected ZooKeeper server changes")
             self._zk.resetHosts(list(new_config.zookeeper_servers.values()))
+
+    def loadConfig(self):
+        new_config = nodepool_config.loadConfig(self._config_path)
+        if self._secure_path:
+            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        self._statsd = stats.get_client()
+        self._checkForZooKeeperChanges(new_config)
+        return new_config
 
     @property
     def running(self):
@@ -522,13 +530,9 @@ class CleanupWorker(BaseWorker):
         '''
         Body of run method for exception handling purposes.
         '''
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        new_config = self.loadConfig()
         if not self._config:
             self._config = new_config
-
-        self._checkForZooKeeperChanges(new_config)
         provider_manager.ProviderManager.reconfigure(self._config, new_config,
                                                      use_taskmanager=False)
         self._config = new_config
@@ -810,16 +814,7 @@ class BuildWorker(BaseWorker):
         '''
         Body of run method for exception handling purposes.
         '''
-        # NOTE: For the first iteration, we expect self._config to be None
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
-        if not self._config:
-            self._config = new_config
-
-        self._checkForZooKeeperChanges(new_config)
-        self._config = new_config
-
+        self._config = self.loadConfig()
         self._checkForScheduledImageUpdates()
         self._checkForManualBuildRequest()
 
@@ -836,13 +831,7 @@ class UploadWorker(BaseWorker):
         '''
         Reload the nodepool configuration file.
         '''
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
-        if not self._config:
-            self._config = new_config
-
-        self._checkForZooKeeperChanges(new_config)
+        new_config = self.loadConfig()
         provider_manager.ProviderManager.reconfigure(self._config, new_config,
                                                      use_taskmanager=False)
         self._config = new_config

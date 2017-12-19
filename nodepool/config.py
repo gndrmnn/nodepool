@@ -16,10 +16,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import logging
 import time
 import yaml
 
 from nodepool import zk
+from nodepool import stats
 from nodepool.driver import ConfigValue
 from nodepool.driver import Drivers
 
@@ -99,6 +102,19 @@ def loadConfig(config_path):
     for driver in Drivers.drivers.values():
         driver["config"].reset()
 
+    if os.environ.get("STATSD_HOST"):
+        if (stats.config is None or
+            stats.config.get('host') != os.environ["STATSD_HOST"]):
+            logging.getLogger("nodepool").warning(
+                "STATSD environment variable are deprecated, "
+                "use configuration file instead")
+        stats.config = {
+            'host': os.environ.get('STATSD_HOST'),
+            'port': os.environ.get('STATSD_PORT'),
+        }
+    else:
+        stats.config = config.get('statsd-server')
+
     newconfig = Config()
     newconfig.db = None
     newconfig.webapp = {
@@ -113,7 +129,6 @@ def loadConfig(config_path):
     newconfig.provider_managers = {}
     newconfig.zookeeper_servers = {}
     newconfig.diskimages = {}
-
     for server in config.get('zookeeper-servers', []):
         z = zk.ZooKeeperConnectionConfig(server['host'],
                                          server.get('port', 2181),
