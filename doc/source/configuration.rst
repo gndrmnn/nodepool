@@ -93,6 +93,20 @@ Example::
 
   build-log-retention: 14
 
+.. _statsd-server:
+
+statsd-server
+-------------
+
+If you have a ``statsd`` service, Nodepool can be configured to send information to it.
+The ``statsd-server`` parameter is the place to define the service.
+
+Example::
+
+  statsd-server:
+    host: statsd.example.com
+    port: 8125
+
 zookeeper-servers
 -----------------
 Lists the ZooKeeper servers uses for coordinating information between
