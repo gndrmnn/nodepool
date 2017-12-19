@@ -170,9 +170,13 @@ class OpenStackProvider(Provider):
 
         if self._current_nodepool_quota:
             now = time.monotonic()
+            self.log.debug("TEMPLOG: %s %s %s",
+                           now, self._current_nodepool_quota['timestamp'], MAX_QUOTA_AGE)
             if now < self._current_nodepool_quota['timestamp'] + MAX_QUOTA_AGE:
+                self.log.debug("TEMPLOG: cached")
                 return copy.deepcopy(self._current_nodepool_quota['quota'])
 
+        self.log.debug("TEMPLOG: get limits")
         with shade_inner_exceptions():
             limits = self._client.get_compute_limits()
 
