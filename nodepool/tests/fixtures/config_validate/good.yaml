@@ -21,6 +21,7 @@ labels:
   - name: trusty-static
   - name: kubernetes-namespace
   - name: pod-fedora
+  - name: centos-ami
 
 providers:
   - name: cloud1
@@ -112,6 +113,27 @@ providers:
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28
+
+  - name: ec2-us-east-2
+    driver: aws
+    region-name: us-east-2
+    profile-name: default
+    cloud-images:
+      - name: centos-ami
+        image-id: ami-cfdafaaa
+        username: centos
+    pools:
+      - name: main
+        max-servers: 42
+        security-group-id: sg-8bfe86352e334a80a
+        subnet-id: subnet-bb3605b5f0fa40e1b
+        labels:
+          - name: centos-ami
+            cloud-image: centos-ami
+            flavor-name: t2.micro
+            key-name: zuul
+            volume-type: gp2
+            volume-size: 80
 
 diskimages:
   - name: trusty
