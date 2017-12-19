@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df87a7cf_6505d5c1",
+        "filename": "requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2017-12-19T18:48:41Z",
+      "side": 1,
+      "message": "If we are asserting there are security issues with 1.x we shouldn\u0027t allow it at all. Also if there are known 2.x problems we should probably be \u003e 2.x version where the problems were last known.",
+      "revId": "b96ef8d3e4f481dba5699dd6cfac809851310c57",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
