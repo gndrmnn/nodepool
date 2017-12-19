@@ -17,6 +17,7 @@
 # limitations under the License.
 
 from six.moves import configparser as ConfigParser
+import os
 import time
 import yaml
 
@@ -103,6 +104,10 @@ def loadConfig(config_path):
     newconfig.provider_managers = {}
     newconfig.zookeeper_servers = {}
     newconfig.diskimages = {}
+    newconfig.statsd = config.get('statsd-server')
+    if newconfig.statsd:
+        os.environ["STATSD_HOST"] = newconfig.statsd['host']
+        os.environ["STATSD_PORT"] = newconfig.statsd.get('port', '8125')
 
     for server in config.get('zookeeper-servers', []):
         z = zk.ZooKeeperConnectionConfig(server['host'],

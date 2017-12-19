@@ -58,6 +58,10 @@ class ConfigValidator:
             'webapp': webapp,
             'elements-dir': str,
             'images-dir': str,
+            'statsd-server': {
+                'host': v.Required(str),
+                'port': int,
+            },
             'zookeeper-servers': [{
                 'host': str,
                 'port': int,
