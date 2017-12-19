@@ -116,6 +116,18 @@ providers:
           - name: centos-pod
             image: docker.io/softwarefactoryproject/zuul-worker-centos-7
 
+  - name: ec2-us-east-2
+    driver: aws
+    region: us-east-2
+    zuul-public-key: ssh-rsa AAAA8Fake
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: centos-ami
+            ami: ami-cfdafaaa
+            flavor-name: t2.micro
+
 diskimages:
   - name: trusty
     formats:
