@@ -60,6 +60,10 @@ class ConfigValidator:
             'images-dir': str,
             'build-log-dir': str,
             'build-log-retention': int,
+            'statsd-server': {
+                'host': v.Required(str),
+                'port': int,
+            },
             'zookeeper-servers': [{
                 'host': str,
                 'port': int,
