@@ -17,10 +17,13 @@
 # limitations under the License.
 
 import math
+import os
+import logging
 import time
 import yaml
 
 from nodepool import zk
+from nodepool import stats
 from nodepool.driver import ConfigValue
 from nodepool.driver import Drivers
 
@@ -244,6 +247,19 @@ def loadConfig(config_path):
     # Call driver config reset now to clean global hooks like openstacksdk
     for driver in Drivers.drivers.values():
         driver.reset()
+
+    if os.environ.get("STATSD_HOST"):
+        if (stats.config is None or
+            stats.config.get('host') != os.environ["STATSD_HOST"]):
+            logging.getLogger("nodepool").warning(
+                "STATSD environment variable are deprecated, "
+                "use configuration file instead")
+        stats.config = {
+            'host': os.environ.get('STATSD_HOST'),
+            'port': os.environ.get('STATSD_PORT'),
+        }
+    else:
+        stats.config = config.get('statsd-server')
 
     newconfig = Config()
 

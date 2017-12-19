@@ -85,6 +85,24 @@ Options
    starting a new build).  By default, the last 7 old build logs are
    kept.
 
+.. attr:: statsd-server
+   :type: dict
+
+   If you have a ``statsd`` service, Nodepool can be configured to send
+   information to it.
+
+   .. attr:: host
+      :type: str
+      :required:
+
+      The statsd host.
+
+   .. attr:: port
+      :type: int
+      :default: 8125
+
+      The statsd port.
+
 .. attr:: zookeeper-servers
    :type: list
    :required:
