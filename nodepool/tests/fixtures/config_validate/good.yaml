@@ -19,6 +19,7 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: centos-ami
 
 providers:
   - name: cloud1
@@ -93,6 +94,18 @@ providers:
             connection-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: ec2-us-east-2
+    driver: aws
+    region: us-east-2
+    zuul-public-key: ssh-rsa AAAA8Fake
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: centos-ami
+            ami: ami-cfdafaaa
+            flavor-name: t2.micro
 
 diskimages:
   - name: trusty
