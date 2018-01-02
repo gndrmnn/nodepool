@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f91af0f_58d7d8ee",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-02T16:51:45Z",
+      "side": 1,
+      "message": "Let\u0027s drop this config option so that it\u0027s truly internal only.",
+      "revId": "c5342f161769556781ecc6be8e88218decf7ab0d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
