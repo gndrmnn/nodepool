@@ -75,11 +75,24 @@ class WebApp(threading.Thread):
         if result:
             return result
         if path == '/image-list':
-            output = status.image_list(self.nodepool.getZK())
+            output = status.image_list(self.nodepool.getZK(),
+                                       format='pretty')
+        elif path == '/image-list.json':
+            output = status.image_list(self.nodepool.getZK(),
+                                       format='json')
+        # TODO allow passing of node_id arg in query
+        elif path == '/node-list':
+            output = status.image_list(self.nodepool.getDB(),
+                                       format='pretty')
+        elif path == '/node-list.json':
+            output = status.image_list(self.nodepool.getDB(),
+                                       format='json')
         elif path == '/dib-image-list':
-            output = status.dib_image_list(self.nodepool.getZK())
+            output = status.dib_image_list(self.nodepool.getZK(),
+                                           format='pretty')
         elif path == '/dib-image-list.json':
-            output = status.dib_image_list_json(self.nodepool.getZK())
+            output = status.dib_image_list(self.nodepool.getZK(),
+                                           format='json')
         else:
             return None
         return self.cache.put(path, output)

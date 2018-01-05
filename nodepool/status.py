@@ -31,38 +31,48 @@ def age(timestamp):
     return '%02d:%02d:%02d:%02d' % (d, h, m, s)
 
 
-def node_list(db, node_id=None):
-    t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target",
-                     "Manager", "Hostname", "NodeName", "Server ID",
-                     "IP", "State", "Age", "Comment"])
-    t.align = 'l'
+def node_list(db, node_id=None, format='pretty'):
+    """returns the nodes list, formatted as 'format'."""
+    objs = []
     with db.getSession() as session:
         for node in session.getNodes():
             if node_id and node.id != node_id:
                 continue
-            t.add_row([node.id, node.provider_name, node.az,
-                       node.label_name, node.target_name,
-                       node.manager_name, node.hostname,
-                       node.nodename, node.external_id, node.ip,
-                       nodedb.STATE_NAMES[node.state],
-                       age(node.state_time), node.comment])
+            objs.append({'id': node.id,
+                         'provider': node.provider_name,
+                         'AZ': node.az,
+                         'label': node.label_name,
+                         'target': node.target_name,
+                         'manager': node.manager_name,
+                         'hostname': node.hostname,
+                         'nodename': node.nodename,
+                         'server_id': node.external_id,
+                         'ip': node.ip,
+                         'state': nodedb.STATE_NAMES[node.state],
+                         'age': node.state_time,
+                         'comment': node.comment})
+    if format == 'pretty':
+        t = PrettyTable(["ID", "Provider", "AZ", "Label", "Target",
+                         "Manager", "Hostname", "NodeName", "Server ID",
+                         "IP", "State", "Age", "Comment"])
+        t.align = 'l'
+        for obj in objs:
+            t.add_row([obj['id'], obj['provider'], obj['AZ'],
+                       obj['label'], obj['target'],
+                       obj['manager'], obj['hostname'],
+                       obj['nodename'], obj['server_id'], obj['ip'],
+                       obj['state'],
+                       age(obj['age']), obj['comment']])
+        return str(t)
+    elif format == 'json':
+        return json.dumps(objs)
+    else:
+        raise ValueError('Unknown output format %s' % format)
     return str(t)
 
 
-def dib_image_list(zk):
-    t = PrettyTable(["ID", "Image", "Builder", "Formats",
-                     "State", "Age"])
-    t.align = 'l'
-    for image_name in zk.getImageNames():
-        for build_no in zk.getBuildNumbers(image_name):
-            build = zk.getBuild(image_name, build_no)
-            t.add_row(['-'.join([image_name, build_no]), image_name,
-                       build.builder, ','.join(build.formats),
-                       build.state, age(build.state_time)])
-    return str(t)
-
-
-def dib_image_list_json(zk):
+def dib_image_list(zk, format='pretty'):
+    """returns the DIB image list, formatted as 'format'."""
     objs = []
     for image_name in zk.getImageNames():
         for build_no in zk.getBuildNumbers(image_name):
@@ -74,13 +84,24 @@ def dib_image_list_json(zk):
                          'state': build.state,
                          'age': int(build.state_time)
             })
-    return json.dumps(objs)
+    if format == 'pretty':
+        t = PrettyTable(["ID", "Image", "Builder", "Formats",
+                         "State", "Age"])
+        t.align = 'l'
+        for obj in objs:
+            t.add_row([obj['id'], obj['image'],
+                       obj['builder'], ','.join(obj['formats']),
+                       obj['state'], age(obj['age'])])
+        return str(t)
+    elif format == 'json':
+        return json.dumps(objs)
+    else:
+        raise ValueError('Unknown output format %s' % format)
 
-def image_list(zk):
-    t = PrettyTable(["Build ID", "Upload ID", "Provider", "Image",
-                     "Provider Image Name", "Provider Image ID", "State",
-                     "Age"])
-    t.align = 'l'
+
+def image_list(zk, format='pretty'):
+    """returns the image list, formatted as 'format'."""
+    objs = []
     for image_name in zk.getImageNames():
         for build_no in zk.getBuildNumbers(image_name):
             for provider in zk.getBuildProviders(image_name, build_no):
@@ -88,9 +109,29 @@ def image_list(zk):
                         image_name, build_no, provider):
                     upload = zk.getImageUpload(image_name, build_no,
                                                provider, upload_no)
-                    t.add_row([build_no, upload_no, provider, image_name,
-                               upload.external_name,
-                               upload.external_id,
-                               upload.state,
-                               age(upload.state_time)])
-    return str(t)
+                    objs.append({'id': build_no,
+                                 'upload_id': upload_no,
+                                 'provider': provider,
+                                 'image': image_name,
+                                 'provider_image_name': upload.external_name,
+                                 'provider_image_id': upload.external_id,
+                                 'state': upload.state,
+                                 'age': int(upload.state_time)
+                    })
+    if format == 'pretty':
+        t = PrettyTable(["Build ID", "Upload ID", "Provider", "Image",
+                         "Provider Image Name", "Provider Image ID", "State",
+                         "Age"])
+        t.align = 'l'
+        for obj in objs:
+            t.add_row([obj['id'], obj['upload_id'], obj['provider'],
+                       obj['image'],
+                       obj['provider_image_name'],
+                       obj['provider_image_id'],
+                       obj['state'],
+                       age(obj['age'])])
+        return str(t)
+    elif format == 'json':
+        return json.dumps(objs)
+    else:
+        raise ValueError('Unknown output format %s' % format)
