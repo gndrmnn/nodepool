@@ -44,6 +44,27 @@ class TestWebApp(tests.DBTestCase):
         data = f.read()
         self.assertTrue('fake-image' in data.decode('utf8'))
 
+    def test_image_list_json(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/image-list.json" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        self.assertEqual({}, objs, objs)
+
     def test_dib_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -68,6 +89,71 @@ class TestWebApp(tests.DBTestCase):
         self.assertDictContainsSubset({'id': 'fake-image-0000000001',
                                        'formats': ['qcow2'],
                                        'state': 'ready'}, objs[0])
+
+    def test_node_list_json(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/node-list.json" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        self.assertEqual({}, objs, objs)
+
+    def test_label_list_json(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/label-list.json" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        self.assertEqual({}, objs, objs)
+
+    def test_request_list_json(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        req = request.Request(
+            "http://localhost:%s/request-list.json" % port)
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        # make sure this is valid json and has some of the
+        # non-changing keys
+        self.assertEqual({}, objs, objs)
 
     def test_webapp_config(self):
         configfile = self.setup_config('webapp.yaml')
