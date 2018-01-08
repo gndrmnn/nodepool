@@ -52,6 +52,8 @@ class ConfigValidator:
         webapp = {
             'port': int,
             'listen_address': str,
+            'admin_port': int,
+            'admin_listen_address': str,
         }
 
         top_level = {
