@@ -45,6 +45,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
         self.pool.stop()
         if not self.args.no_webapp:
             self.webapp.stop()
+            if self.admin_webapp:
+                self.admin_webapp.stop()
         sys.exit(0)
 
     def term_handler(self, signum, frame):
@@ -55,8 +57,24 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
                                                self.args.config)
         if not self.args.no_webapp:
             config = self.pool.loadConfig()
+            if (config.webapp.get('admin_port') and
+                config.webapp.get('admin_listen_address')):
+                webconf = config.webapp
+                adminconf = config.webapp
+                adminconf['port'] = adminconf['admin_port']
+                adminconf['listen_address'] = adminconf['admin_listen_address']
+                del webconf['admin_port']
+                del webconf['admin_listen_address']
+                del adminconf['admin_port']
+                del adminconf['admin_listen_address']
+                self.admin_webapp = nodepool.webapp.AdminWebApp(self.pool,
+                                                                **adminconf)
+            else:
+                webconf = config.webapp
+            self.admin_webapp = None
             self.webapp = nodepool.webapp.WebApp(self.pool,
-                                                 **config.webapp)
+                                                 **webconf)
+
 
         signal.signal(signal.SIGINT, self.exit_handler)
         # For back compatibility:
@@ -68,6 +86,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
 
         if not self.args.no_webapp:
             self.webapp.start()
+            if self.admin_webapp:
+                self.admin_webapp.start()
 
         while True:
             signal.pause()

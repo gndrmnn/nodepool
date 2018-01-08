@@ -15,6 +15,7 @@
 
 import json
 import logging
+import re
 import threading
 import time
 from paste import httpserver
@@ -22,6 +23,7 @@ import webob
 from webob import dec
 
 from nodepool import status
+from nodepool import node as nd
 
 """Nodepool main web app.
 
@@ -52,8 +54,8 @@ class Cache(object):
         return res
 
 
-class WebApp(threading.Thread):
-    log = logging.getLogger("nodepool.WebApp")
+class BaseWebApp(threading.Thread):
+    log = logging.getLogger("nodepool.BaseWebApp")
 
     def __init__(self, nodepool, port=8005, listen_address='0.0.0.0',
                  cache_expiry=1):
@@ -73,6 +75,10 @@ class WebApp(threading.Thread):
 
     def stop(self):
         self.server.server_close()
+
+
+class WebApp(BaseWebApp):
+    log = logging.getLogger("nodepool.WebApp")
 
     def get_cache(self, path, params):
         # TODO quick and dirty way to take query parameters
@@ -142,3 +148,53 @@ class WebApp(threading.Thread):
         response.expires = last_modified + self.cache_expiry
 
         return response.conditional_response_app
+
+
+class AdminWebApp(BaseWebApp):
+    log = logging.getLogger("nodepool.AdminWebApp")
+
+    def app(self, request):
+        node_regex = re.compile('^/node/(?P<node_id>[a-zA-Z0-9]+)')
+        matched = node_regex.match(request.path)
+        if not matched:
+            raise webob.exc.HTTPNotFound()
+        else:
+            node_id = matched.groupdict()['node_id']
+            if request.method == 'PUT':
+                try:
+                    nd.hold(self.nodepool.getZK(),
+                            node_id,
+                            reason=request.params.get('reason'))
+                    status = 202
+                except ValueError:
+                    raise webob.exc.HTTPNotFound(
+                        'Node id %s not found' % node_id)
+            elif request.method == 'DELETE':
+                try:
+                    nd.delete(self.nodepool.getZK(),
+                              self.nodepool,
+                              node_id,
+                              now=False)
+                    status = 204
+                except ValueError:
+                    raise webob.exc.HTTPNotFound(
+                        'Node id %s not found' % node_id)
+                except Exception as e:
+                    raise webob.exc.HTTPBadRequest(e.message)
+            elif request.method == 'GET':
+                status = 200
+            else:
+                raise webob.exc.HTTPNotFound("Method not supported")
+        output = status.node_list(self.nodepool.getZK(),
+                                  format='json',
+                                  node_id=node_id)
+
+        content_type = 'application/json'
+
+        response = webob.Response(body=output,
+                                  charset='UTF-8',
+                                  content_type=content_type,
+                                  status=status)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+
+        return response
