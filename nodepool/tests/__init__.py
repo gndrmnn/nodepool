@@ -470,6 +470,11 @@ class DBTestCase(BaseTestCase):
         self.addCleanup(app.stop)
         return app
 
+    def useAdminWebApp(self, *args, **kwargs):
+        app = webapp.AdminWebApp(*args, **kwargs)
+        self.addCleanup(app.stop)
+        return app
+
     def _useBuilder(self, configfile, cleanup_interval=.5):
         self.useFixture(BuilderFixture(configfile, cleanup_interval))
 
