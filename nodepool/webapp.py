@@ -15,6 +15,7 @@
 
 import json
 import logging
+import re
 import threading
 import time
 from paste import httpserver
@@ -22,6 +23,7 @@ import webob
 from webob import dec
 
 from nodepool import status
+from nodepool import node as nd
 
 """Nodepool main web app.
 
@@ -56,10 +58,12 @@ class WebApp(threading.Thread):
     log = logging.getLogger("nodepool.WebApp")
 
     def __init__(self, nodepool, port=8005, listen_address='0.0.0.0',
-                 cache_expiry=1):
+                 cache_expiry=1, admin_listen_address=None, admin_port=None):
         threading.Thread.__init__(self)
         self.nodepool = nodepool
         self.port = port
+        self.admin_listen_address = admin_listen_address
+        self.admin_port = admin_port
         self.listen_address = listen_address
         self.cache = Cache(cache_expiry)
         self.cache_expiry = cache_expiry
@@ -67,12 +71,22 @@ class WebApp(threading.Thread):
         self.server = httpserver.serve(dec.wsgify(self.app),
                                        host=self.listen_address,
                                        port=self.port, start_loop=False)
+        if not (self.admin_listen_address and self.admin_port):
+            self.admin_server = httpserver.serve(
+                dec.wsgify(self.admin_app),
+                host=self.admin_listen_address,
+                port=self.admin_port,
+                start_loop=False)
 
     def run(self):
         self.server.serve_forever()
+        if self.admin_port:
+            self.admin_server.serve_forever()
 
     def stop(self):
         self.server.server_close()
+        if self.admin_port:
+            self.admin_server.server_close()
 
     def get_cache(self, path, params):
         # TODO quick and dirty way to take query parameters
@@ -142,3 +156,50 @@ class WebApp(threading.Thread):
         response.expires = last_modified + self.cache_expiry
 
         return response.conditional_response_app
+
+
+    def admin_app(self, request):
+        node_regex = re.compile('^/node/(?P<node_id>[a-zA-Z0-9]+)')
+        matched = node_regex.match(request.path)
+        if not matched:
+            raise webob.exc.HTTPNotFound()
+        else:
+            node_id = matched.groupdict()['node_id']
+            if request.method == 'PUT':
+                try:
+                    nd.hold(self.nodepool.getZK(),
+                            node_id,
+                            reason=request.params.get('reason'))
+                    status = 202
+                except ValueError:
+                    raise webob.exc.HTTPNotFound(
+                        'Node id %s not found' % node_id)
+            elif request.method == 'DELETE':
+                try:
+                    nd.delete(self.nodepool.getZK(),
+                              self.nodepool,
+                              node_id,
+                              now=False)
+                    status = 204
+                except ValueError:
+                    raise webob.exc.HTTPNotFound(
+                        'Node id %s not found' % node_id)
+                except Exception as e:
+                    raise webob.exc.HTTPBadRequest(e.message)
+            elif request.method == 'GET':
+                status = 200
+            else:
+                raise webob.exc.HTTPNotFound()
+        output = status.node_list(self.nodepool.getZK(),
+                                  format='json',
+                                  node_id=node_id)
+
+        content_type = 'application/json'
+
+        response = webob.Response(body=output,
+                                  charset='UTF-8',
+                                  content_type=content_type,
+                                  status=status)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+
+        return response
