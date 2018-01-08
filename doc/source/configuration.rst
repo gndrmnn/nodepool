@@ -38,6 +38,20 @@ Example::
     port: 8005
     listen_address: '0.0.0.0'
 
+The admin interface is not enabled by default. To enable it, add the following
+admin options::
+
+  webapp:
+    port: 8005
+    listen_address: '0.0.0.0'
+    admin_listen_address: '127.0.0.1'
+    admin_port: 8050
+
+.. attention::
+   The admin interface is not protected. It is advised to limit its access
+   to local connections, and/or to secure it by serving it through an authenticated
+   gateway like Apache.
+
 .. _elements-dir:
 
 elements-dir
