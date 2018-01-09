@@ -22,6 +22,30 @@
       "revId": "477a40044bad9838ce0a17c9c3fe939da1936f96",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_10bbd2c4",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-01-09T21:50:45Z",
+      "side": 1,
+      "message": "FWIW, next(zk_servers.keys()) also works without needing to turn the whole iterator into a list.",
+      "parentUuid": "9f91af0f_50ef1ae8",
+      "range": {
+        "startLine": 880,
+        "startChar": 14,
+        "endLine": 880,
+        "endChar": 40
+      },
+      "revId": "477a40044bad9838ce0a17c9c3fe939da1936f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
