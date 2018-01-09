@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f91af0f_7c432214",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-09T15:38:58Z",
+      "side": 1,
+      "message": "Good idea. Done.",
+      "parentUuid": "9f91af0f_8afa6a40",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f91af0f_eac9b658",
         "filename": "nodepool/config.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-09T04:26:30Z",
       "side": 1,
       "message": "Maybe we can make the number of retries a parameter then when loading secure config we can just return an empty config if it doesn\u0027t load the first time.\n\nUnlike other nodepool config the zk details should be fairly static (as should other secrets) and this speeds up startup by 1.5 seconds.",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_3cad9ae8",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-09T15:38:58Z",
+      "side": 1,
+      "message": "It doesn\u0027t actually take 1.5 seconds on startup. We only call loadSecureConfig() if a secure file is actually specified, so this codepath won\u0027t be executed if we don\u0027t give one.",
+      "parentUuid": "9f91af0f_eac9b658",
       "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9f91af0f_89a10a49",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-09T15:38:58Z",
+      "side": 1,
+      "message": "What do you propose we check for that? I\u0027m not clear on the \"working unexpectedly\" part. If the zookeeper values aren\u0027t read in properly from secure_file_secure.yaml, then nothing is going to work.",
+      "parentUuid": "9f91af0f_aade4ed7",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f91af0f_6a9b6617",
         "filename": "t.yaml",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2018-01-09T04:26:30Z",
       "side": 1,
       "message": "Was this file added intentionally? I can\u0027t see anything using it.",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_493d4229",
+        "filename": "t.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-09T15:38:58Z",
+      "side": 1,
+      "message": "Ugh, no. Removed.",
+      "parentUuid": "9f91af0f_6a9b6617",
       "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
