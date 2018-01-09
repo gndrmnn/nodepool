@@ -125,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "9f91af0f_6d984974",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-09T20:50:50Z",
+      "side": 1,
+      "message": "Addressed with latest patch set.",
+      "parentUuid": "9f91af0f_7c6fa2fb",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f91af0f_6a9b6617",
         "filename": "t.yaml",
         "patchSetId": 3
