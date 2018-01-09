@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f91af0f_8afa6a40",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-01-09T04:26:30Z",
+      "side": 1,
+      "message": "Can we document the use of the -s flag here to complement the -c documented above?",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_eac9b658",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-01-09T04:26:30Z",
+      "side": 1,
+      "message": "Maybe we can make the number of retries a parameter then when loading secure config we can just return an empty config if it doesn\u0027t load the first time.\n\nUnlike other nodepool config the zk details should be fairly static (as should other secrets) and this speeds up startup by 1.5 seconds.",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_aade4ed7",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-01-09T04:26:30Z",
+      "side": 1,
+      "message": "Can we assert the contents of the secure zookeeper config were read in properly here too? Its good that things worked but we probably want to double check that they work because the config is as we expected (and not working unexpectedly for other reasons).",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f91af0f_6a9b6617",
+        "filename": "t.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-01-09T04:26:30Z",
+      "side": 1,
+      "message": "Was this file added intentionally? I can\u0027t see anything using it.",
+      "revId": "a8f5641ff75445b18f95254814dde3776202f44a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
