@@ -21,10 +21,13 @@ import inspect
 import importlib
 import logging
 import os
+import time
+import threading
 
 import six
 
 from nodepool import exceptions
+from nodepool import stats
 from nodepool import zk
 
 
@@ -596,6 +599,51 @@ class NodeRequestHandler(object):
         Handler needs to implement this to launch the node.
         '''
         pass
+
+
+class NodeLauncher(threading.Thread, stats.StatsReporter):
+    '''
+    Class to launch a single node.
+
+    The NodeRequestHandler may return such object to manage asynchronous
+    node creation.
+
+    Subclasses are required to implement the launch method
+    '''
+
+    def __init__(self, handler, node):
+        threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
+        stats.StatsReporter.__init__(self)
+        self.log = logging.getLogger("nodepool.NodeLauncher-%s" % node.id)
+        self.handler = handler
+        self.node = node
+        self.label = handler.pool.labels[node.type]
+        self.pool = self.label.pool
+        self.provider = self.pool.provider
+
+    def run(self):
+        start_time = time.monotonic()
+        statsd_key = 'ready'
+
+        try:
+            self.launch()
+        except Exception as e:
+            self.log.exception("Launch failed for node %s:",
+                               self.node.id)
+            self.node.state = zk.FAILED
+            self.handler.zk.storeNode(self.node)
+
+            if hasattr(e, 'statsd_key'):
+                statsd_key = e.statsd_key
+            else:
+                statsd_key = 'error.unknown'
+
+        try:
+            dt = int((time.monotonic() - start_time) * 1000)
+            self.recordLaunchStats(statsd_key, dt)
+            self.updateNodeStats(self.handler.zk, self.provider)
+        except Exception:
+            self.log.exception("Exception while reporting stats:")
 
 
 class ConfigValue(object):
