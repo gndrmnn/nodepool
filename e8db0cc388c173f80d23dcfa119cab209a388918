@@ -16,6 +16,24 @@
       "revId": "e8db0cc388c173f80d23dcfa119cab209a388918",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_16bcd0da",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-11T19:29:06Z",
+      "side": 1,
+      "message": "See https://review.openstack.org/532931",
+      "parentUuid": "7f96bb07_85a2e899",
+      "revId": "e8db0cc388c173f80d23dcfa119cab209a388918",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
