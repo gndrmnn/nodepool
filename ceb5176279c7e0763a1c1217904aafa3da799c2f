@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_91246ac8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-01-11T20:30:24Z",
+      "side": 1,
+      "message": "Would be nice to check \u003c\u003d 0 too as -1 is a thing people are familiar with doing too.",
+      "range": {
+        "startLine": 540,
+        "startChar": 14,
+        "endLine": 540,
+        "endChar": 40
+      },
+      "revId": "ceb5176279c7e0763a1c1217904aafa3da799c2f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
