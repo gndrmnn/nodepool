@@ -903,6 +903,7 @@ class NodePool(threading.Thread):
                 for key in self._pool_threads.keys():
                     if key not in pool_keys:
                         self._pool_threads[key].stop()
+                        del self._pool_threads[key]
 
                 # Start (or restart) provider threads for each provider in
                 # the config. Removing a provider from the config and then
