@@ -15,6 +15,7 @@ Contents:
    configuration
    operation
    devguide
+   diskimage_builder
 
 Indices and tables
 ==================
