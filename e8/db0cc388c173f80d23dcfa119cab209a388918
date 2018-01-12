@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 12 Jan 2018 18:14:16 +0000
+Reviewed-on: https://review.openstack.org/532857
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
