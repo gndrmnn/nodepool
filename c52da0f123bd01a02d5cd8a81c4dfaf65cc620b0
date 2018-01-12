@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_c5c1ace6",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "Including the word \u0027tripleo\u0027 here feels like jargon and doesn\u0027t add useful information.  It\u0027s enough for someone to know dib exists and where to find more info -- the dib project itself can explain its history if it wants.",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_65b8d875",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "Who\u0027s we?  I think people could choose to run nodepool in all kinds of places.  I\u0027d drop this sentence (and maybe reword the next slightly to compensate, if necessary).",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_85bba470",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "typo: needing",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_25b2d095",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "Nodepool supports clouds that use different image formats.",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_45ad9c2f",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "I would not use the word docker here since they aren\u0027t, to my knowledge, actually usable by nodepool.  Doing so will just raise the question of how to use docker.",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_e5ab881a",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "Let\u0027s not pick on cloud-init.",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_05a79451",
+        "filename": "doc/source/diskimage_builder.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-12T18:27:07Z",
+      "side": 1,
+      "message": "The last sentence doesn\u0027t add anything.\n\nThe actual reason snapshot images were removed is that no one currently working on the software is interested in writing support for them in the new model.  If someone did, we would accept it (the related specs indicate as much too).\n\nThis is an explanation of why we don\u0027t use snapshot builds, but it is not necessarily the case for all users -- and in fact, nodepool does support cloud-supplied images, to which all of the deficiencies you cite here apply.\n\nI think this section is problematic in this document.",
+      "revId": "c52da0f123bd01a02d5cd8a81c4dfaf65cc620b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
