@@ -27,7 +27,7 @@ across many machines, or supply high-availability or redundancy.
 However, since ``nodepool-builder`` allows specification of the number
 of both build and upload threads, it is usually not advantageous to
 run more than a single instance on one machine.  Note that while
-diskimage-builder (which is responsible for building the underlying
+:ref:`diskimage-builder` (which is responsible for building the underlying
 images) generally supports executing multiple builds on a single
 machine simultaneously, some of the elements it uses may not.  To be
 safe, it is recommended to run a single instance of
