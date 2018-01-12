@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_b68dc032",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-12T14:52:15Z",
+      "side": 1,
+      "message": "Which rule is this one? Have to say I don\u0027t like having to do this at all as I prefer the visual delineation it provides.",
+      "range": {
+        "startLine": 252,
+        "startChar": 51,
+        "endLine": 252,
+        "endChar": 53
+      },
+      "revId": "630f09b29d3d6b3aa0f91304b204dce44e9a2ecb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
