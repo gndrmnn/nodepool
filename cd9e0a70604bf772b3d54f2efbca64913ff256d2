@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_b9a8611f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2018-01-12T06:44:43Z",
+      "side": 1,
+      "message": "(nit) it doesn\u0027t have to be graphite",
+      "range": {
+        "startLine": 73,
+        "startChar": 14,
+        "endLine": 73,
+        "endChar": 22
+      },
+      "revId": "cd9e0a70604bf772b3d54f2efbca64913ff256d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
