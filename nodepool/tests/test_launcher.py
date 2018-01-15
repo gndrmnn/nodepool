@@ -904,3 +904,64 @@ class TestLauncher(tests.DBTestCase):
         # wait longer than our watermark_sleep time for the config to change
         time.sleep(1)
         self.assertEqual(1, len(pool._pool_threads))
+
+    def test_failed_provider(self):
+        """Test that broken provider doesn't fail node requests."""
+        configfile = self.setup_config('launcher_two_provider_max_1.yaml')
+        self._useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=.5)
+        pool.start()
+        self.wait_for_config(pool)
+        #self.assertEqual(2, len(pool._pool_threads))
+
+        # Steady state at images available.
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForImage('fake-provider2', 'fake-image')
+        # We have now reached steady state and can manipulate the system to
+        # test failing cloud behavior.
+
+        # Set provider1 run_handler to throw exception to simulate a
+        # broken cloud. Note the pool worker instantiates request handlers on
+        # demand which is why we have a somewhat convoluted monkey patch here.
+        # we can rely on either provider running before the other so we patch
+        # only for the one we want to fail be explicitly checking for it.
+        fake_handler = nodepool.driver.fake.handler.FakeNodeRequestHandler
+        fake_handler._original_hasProviderQuota = \
+                fake_handler._hasProviderQuota
+        def raise_KeyError(self, node_types):
+            if self.provider.name == 'fake-provider':
+                raise KeyError('fake-provider')
+            else:
+                return self._original_hasProviderQuota(node_types)
+
+        with fixtures.MonkeyPatch('nodepool.driver.fake.handler.'
+                                  'FakeNodeRequestHandler._hasProviderQuota',
+                                  raise_KeyError):
+            provider2_worker = pool.getPoolWorkers('fake-provider2')[0]
+            # Prevent provider2_worker from talking to zk until fake-provider
+            # has declined the request.
+            provider2_worker.zk = None
+            # Make request
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.node_types.append('fake-label')
+            self.zk.storeNodeRequest(req)
+
+            # Note this does not work.
+            # Yield to fake-provider
+            time.sleep(0)
+            provider2_worker.zk = pool.getZK()
+
+            # Request is fulfilled by provider 2
+            req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+        # Problem is fake-provider2-main and fake-provider can race each other.
+        # if fake-provider2-main goes first then fake-provider-main doesn't
+        # decline the request.
+        #
+        # THis is a big issue in testing because max-servers doesn't appear to
+        # useable for creating paused requests as I think the existing
+        # paused request doesn't notice that it can run after a config
+        # update increasing max-servers.
+        self.assertEqual(1, len(req.declined_by))
+        self.assertIn('fake-provider-main', req.declined_by[0])
