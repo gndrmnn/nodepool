@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_af22c1b7",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "Sorry I wasn\u0027t clear earlier.  We should drop all ability to dynamically load drivers.  Until we have established a driver interface we intend to support, it should be internal only.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_ef3c49e2",
+        "filename": "nodepool/config.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_8f27c5ca",
+        "filename": "nodepool/config.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "And this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_6f283996",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_4f2d3da6",
+        "filename": "nodepool/tests/fixtures/external_driver.yaml",
+        "patchSetId": 16
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_cf394df2",
+        "filename": "nodepool/tests/test_drivers.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-01-17T17:22:57Z",
+      "side": 1,
+      "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
