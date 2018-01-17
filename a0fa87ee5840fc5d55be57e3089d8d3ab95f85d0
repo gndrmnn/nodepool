@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_40f8b579",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-17T13:51:06Z",
+      "side": 1,
+      "message": "This is assuming that the *other* provider is going to handle the request. It\u0027s entirely possible for a single provider to handle both, forcing it into the paused state.",
+      "range": {
+        "startLine": 932,
+        "startChar": 8,
+        "endLine": 932,
+        "endChar": 56
+      },
+      "revId": "a0fa87ee5840fc5d55be57e3089d8d3ab95f85d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
