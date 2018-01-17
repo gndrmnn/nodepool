@@ -1,0 +1,9 @@
+Code-Review+1: Tristan Cacqueray <tdecacqu@redhat.com>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 17 Jan 2018 17:07:28 +0000
+Reviewed-on: https://review.openstack.org/522945
+Project: openstack-infra/nodepool
+Branch: refs/heads/feature/zuulv3
