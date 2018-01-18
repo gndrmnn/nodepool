@@ -185,3 +185,19 @@ def request_list(zk):
                    ','.join(req.nodes),
                    ','.join(req.declined_by)])
     return str(t)
+
+
+def provider_builds(zk, provider_builds):
+    t = PrettyTable(['Image Name', 'Build IDs'])
+    t.align = 'l'
+    for image, builds in provider_builds.items():
+        t.add_row([image, builds.join(',')])
+    return str(t)
+
+
+def provider_nodes(zk, provider_nodes):
+    t = PrettyTable(['ID', 'Server ID'])
+    t.align = 'l'
+    for node in provider_nodes:
+        t.add_row([node.id, node.external_id])
+    return str(t)
