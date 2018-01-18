@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f96bb07_5268791b",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_af22c1b7",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f96bb07_ef3c49e2",
         "filename": "nodepool/config.py",
         "patchSetId": 16
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-17T17:22:57Z",
       "side": 1,
       "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_32f36d76",
+        "filename": "nodepool/config.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_ef3c49e2",
       "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "7f96bb07_52f63965",
+        "filename": "nodepool/config.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_8f27c5ca",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f96bb07_6f283996",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 16
@@ -64,6 +118,24 @@
       "writtenOn": "2018-01-17T17:22:57Z",
       "side": 1,
       "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_72fc953d",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_6f283996",
       "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "7f96bb07_529b9916",
+        "filename": "nodepool/tests/fixtures/external_driver.yaml",
+        "patchSetId": 16
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_4f2d3da6",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f96bb07_cf394df2",
         "filename": "nodepool/tests/test_drivers.py",
         "patchSetId": 16
@@ -98,6 +188,24 @@
       "writtenOn": "2018-01-17T17:22:57Z",
       "side": 1,
       "message": "Drop this.",
+      "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_928cc1d7",
+        "filename": "nodepool/tests/test_drivers.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-18T01:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f96bb07_cf394df2",
       "revId": "7bb79bfbd0cfb6aca525e8d0aacc1fae2448ef79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
