@@ -17,11 +17,10 @@
 import logging.config
 import sys
 
-from prettytable import PrettyTable
-
 from nodepool import launcher
-from nodepool import provider_manager
 from nodepool import status
+from nodepool import node as nd
+from nodepool import image as img
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
@@ -166,123 +165,40 @@ class NodePoolCmd(NodepoolApp):
 
     def image_build(self, diskimage=None):
         diskimage = diskimage or self.args.image
-        if diskimage not in self.pool.config.diskimages:
-            # only can build disk images, not snapshots
-            raise Exception("Trying to build a non disk-image-builder "
-                            "image: %s" % diskimage)
-
-        if self.pool.config.diskimages[diskimage].pause:
-            raise Exception(
-                "Skipping build request for image %s; paused" % diskimage)
-
-        self.zk.submitBuildRequest(diskimage)
+        img.image_build(self.zk, self.pool, diskimage)
 
     def alien_image_list(self):
-        self.pool.updateConfig()
-
-        t = PrettyTable(["Provider", "Name", "Image ID"])
-        t.align = 'l'
-
-        for provider in self.pool.config.providers.values():
-            if (self.args.provider and
-                    provider.name != self.args.provider):
-                continue
-            manager = self.pool.getProviderManager(provider.name)
-
-            # Build list of provider images as known by the provider
-            provider_images = []
-            try:
-                # Only consider images marked as managed by nodepool.
-                # Prevent cloud-provider images from showing
-                # up in alien list since we can't do anything about them
-                # anyway.
-                provider_images = [
-                    image for image in manager.listImages()
-                    if 'nodepool_build_id' in image['properties']]
-            except Exception as e:
-                log.warning("Exception listing alien images for %s: %s"
-                            % (provider.name, str(e)))
-
-            alien_ids = []
-            uploads = []
-            for image in provider.diskimages:
-                # Build list of provider images as recorded in ZK
-                for bnum in self.zk.getBuildNumbers(image):
-                    uploads.extend(
-                        self.zk.getUploads(image, bnum,
-                                           provider.name,
-                                           states=[zk.READY])
-                    )
-
-            # Calculate image IDs present in the provider, but not in ZK
-            provider_image_ids = set([img['id'] for img in provider_images])
-            zk_image_ids = set([img.external_id for img in uploads])
-            alien_ids = provider_image_ids - zk_image_ids
-
-            for image in provider_images:
-                if image['id'] in alien_ids:
-                    t.add_row([provider.name, image['name'], image['id']])
-
-        print(t)
+        print(status.alien_image_list(self.zk, self.pool, self.args.provider))
 
     def delete(self):
-        node = self.zk.getNode(self.args.id)
-        if not node:
-            print("Node id %s not found" % self.args.id)
+        try:
+            nd.delete(self.zk, self.pool, self.args.id, now=self.args.now)
+        except Exception as e:
+            print(str(e))
             return
-
-        self.zk.lockNode(node, blocking=True, timeout=5)
-
-        if self.args.now:
-            if node.provider not in self.pool.config.providers:
-                print("Provider %s for node %s not defined on this launcher" %
-                      (node.provider, node.id))
-                return
-            provider = self.pool.config.providers[node.provider]
-            manager = provider_manager.get_provider(provider, True)
-            manager.start()
-            launcher.NodeDeleter.delete(self.zk, manager, node)
-            manager.stop()
-        else:
-            node.state = zk.DELETING
-            self.zk.storeNode(node)
-            self.zk.unlockNode(node)
-
-        self.list(node_id=node.id)
+        self.list(node_id=self.args.id)
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
-        build = self.zk.getBuild(image, build_num)
-        if not build:
-            print("Build %s not found" % self.args.id)
+        try:
+            img.dib_image_delete(self.zk, image, build_num)
+            self.dib_image_list()
+        except Exception as e:
+            print(str(e))
             return
-
-        if build.state == zk.BUILDING:
-            print("Cannot delete a build in progress")
-            return
-
-        build.state = zk.DELETING
-        self.zk.storeBuild(image, build, build.id)
 
     def image_delete(self):
         provider_name = self.args.provider
         image_name = self.args.image
         build_id = self.args.build_id
         upload_id = self.args.upload_id
-
-        image = self.zk.getImageUpload(image_name, build_id, provider_name,
-                                       upload_id)
-        if not image:
-            print("Image upload not found")
+        try:
+            img.image_delete(self.zk, provider_name, image_name,
+                             build_id, upload_id)
+            self.image_list()
+        except Exception as e:
+            print(str(e))
             return
-
-        if image.state == zk.UPLOADING:
-            print("Cannot delete because image upload in progress")
-            return
-
-        image.state = zk.DELETING
-        self.zk.storeImageUpload(image.image_name, image.build_id,
-                                 image.provider_name, image, image.id)
 
     def erase(self):
         def do_erase(provider_name, provider_builds, provider_nodes):
@@ -308,24 +224,14 @@ class NodePoolCmd(NodepoolApp):
 
     def info(self):
         provider_name = self.args.provider
-        provider_builds = self.zk.getProviderBuilds(provider_name)
-        provider_nodes = self.zk.getProviderNodes(provider_name)
-
         print("ZooKeeper data for provider %s\n" % provider_name)
 
+        builds, nodes = status.info(self.zk, provider_name)
         print("Image builds:")
-        t = PrettyTable(['Image Name', 'Build IDs'])
-        t.align = 'l'
-        for image, builds in provider_builds.items():
-            t.add_row([image, ','.join(builds)])
-        print(t)
+        print(builds)
 
         print("\nNodes:")
-        t = PrettyTable(['ID', 'Server ID'])
-        t.align = 'l'
-        for node in provider_nodes:
-            t.add_row([node.id, node.external_id])
-        print(t)
+        print(nodes)
 
     def config_validate(self):
         validator = ConfigValidator(self.args.config)
