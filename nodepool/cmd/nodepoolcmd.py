@@ -20,8 +20,8 @@ import sys
 from prettytable import PrettyTable
 
 from nodepool import launcher
-from nodepool import provider_manager
 from nodepool import status
+from nodepool import node as nd
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
@@ -226,29 +226,12 @@ class NodePoolCmd(NodepoolApp):
         print(t)
 
     def delete(self):
-        node = self.zk.getNode(self.args.id)
-        if not node:
-            print("Node id %s not found" % self.args.id)
+        try:
+            nd.delete(self.zk, self.pool, self.args.id, now=self.args.now)
+        except Exception as e:
+            print(e.message)
             return
-
-        self.zk.lockNode(node, blocking=True, timeout=5)
-
-        if self.args.now:
-            if node.provider not in self.pool.config.providers:
-                print("Provider %s for node %s not defined on this launcher" %
-                      (node.provider, node.id))
-                return
-            provider = self.pool.config.providers[node.provider]
-            manager = provider_manager.get_provider(provider, True)
-            manager.start()
-            launcher.NodeDeleter.delete(self.zk, manager, node)
-            manager.stop()
-        else:
-            node.state = zk.DELETING
-            self.zk.storeNode(node)
-            self.zk.unlockNode(node)
-
-        self.list(node_id=node.id)
+        self.list(node_id=self.args.id)
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
