@@ -3,3 +3,5 @@ build-log-dir: '{build_log_dir}'
 webapp:
   port: 8080
   listen_address: '127.0.0.1'
+  admin_port: 8800
+  admin_listen_address: '127.0.0.1'
