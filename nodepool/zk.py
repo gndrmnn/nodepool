@@ -1640,6 +1640,18 @@ class ZooKeeper(object):
                 ret[node.type].append(node)
         return ret
 
+    def getHeldNodes(self):
+        '''
+        Query ZooKeeper for held nodes.
+
+        :returns: a list of held nodes.
+        '''
+        ret = []
+        for node in self.nodeIterator():
+            if node.state == HOLD:
+                ret.append[node]
+        return ret
+
     def nodeIterator(self):
         '''
         Utility generator method for iterating through all nodes.
