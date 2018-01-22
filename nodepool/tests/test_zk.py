@@ -585,6 +585,24 @@ class TestZooKeeper(tests.DBTestCase):
         self.assertEqual(1, len(r['label1']))
         self.assertEqual(n2, r['label1'][0])
 
+    def test_getHeldNodes(self):
+        n1 = self._create_node()
+        n1.type = 'label1'
+        self.zk.storeNode(n1)
+        n2 = self._create_node()
+        n2.state = zk.HOLD
+        n2.type = 'label1'
+        self.zk.storeNode(n2)
+        n3 = self._create_node()
+        n3.state = zk.HOLD
+        n3.type = 'label2'
+        self.zk.storeNode(n3)
+
+        r = self.zk.getHeldNodes()
+        self.assertEqual(2, len[r])
+        self.assertIn(n2, r)
+        self.assertIn(n3, r)
+
     def test_nodeIterator(self):
         n1 = self._create_node()
         i = self.zk.nodeIterator()
