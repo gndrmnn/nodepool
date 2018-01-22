@@ -27,8 +27,11 @@ class TestWebApp(tests.DBTestCase):
 
     def test_image_list(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
+        self._test_image_list(configfile)
+
+    def _test_image_list(self, conf):
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        self._useBuilder(conf)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
@@ -47,8 +50,11 @@ class TestWebApp(tests.DBTestCase):
 
     def test_image_list_json(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
+        self._test_image_list_json(configfile)
+
+    def _test_image_list_json(self, conf):
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        self._useBuilder(conf)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
@@ -71,8 +77,11 @@ class TestWebApp(tests.DBTestCase):
 
     def test_dib_image_list_json(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
+        self._test_dib_image_list_json(configfile)
+
+    def _test_dib_image_list_json(self, conf):
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        self._useBuilder(conf)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
@@ -96,8 +105,11 @@ class TestWebApp(tests.DBTestCase):
 
     def test_node_list_json(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
+        self._test_node_list_json(configfile)
+
+    def _test_node_list_json(self, conf):
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        self._useBuilder(conf)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
@@ -149,6 +161,10 @@ class TestWebApp(tests.DBTestCase):
 
     def test_label_list_json(self):
         configfile = self.setup_config('node.yaml')
+        self._test_label_list_json(configfile)
+
+    def _test_label_list_json(self, conf):
+        configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self._useBuilder(configfile)
         pool.start()
@@ -170,8 +186,11 @@ class TestWebApp(tests.DBTestCase):
 
     def test_request_list_json(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self._useBuilder(configfile)
+        self._test_request_list_json(configfile)
+
+    def _test_request_list_json(self, conf):
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        self._useBuilder(conf)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
@@ -198,6 +217,103 @@ class TestWebApp(tests.DBTestCase):
 
     def test_webapp_config(self):
         configfile = self.setup_config('webapp.yaml')
-        config = yaml.safe_load(open(configfile))
+        self._test_webapp_config(configfile)
+
+    def _test_webapp_config(self, conf):
+        config = yaml.safe_load(open(conf))
         self.assertEqual(config['webapp']['port'], 8080)
         self.assertEqual(config['webapp']['listen_address'], '127.0.0.1')
+
+
+class TestAdminWebApp(TestWebApp):
+    log = logging.getLogger("nodepool.TestAdminWebApp")
+
+    # keep the previous tests to see if adding the admin endpoint config does
+    # not interfere with normal use
+
+    def test_image_list(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_image_list(configfile)
+
+    def test_image_list_json(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_image_list_json(configfile)
+
+    def test_dib_image_list_json(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_dib_image_list_json(configfile)
+
+    def test_node_list_json(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_node_list_json(configfile)
+
+    def test_label_list_json(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_label_list_json(configfile)
+
+    def test_request_list_json(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        self._test_request_list_json(configfile)
+
+    def test_webapp_config(self):
+        configfile = self.setup_config('webapp_admin.yaml')
+        self._test_webapp_config(configfile)
+
+    def _test_webapp_config(self, conf):
+        super(TestAdminWebApp, self)._test_webapp_config(conf)
+        config = yaml.safe_load(open(conf))
+        self.assertEqual(config['webapp']['admin_port'], 8800)
+        self.assertEqual(config['webapp']['admin_listen_address'],
+                         '127.0.0.1')
+
+    def test_node_hold(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        # start webapp
+        adminwebapp = self.useAdminWebApp(pool, port=0)
+        adminwebapp.start()
+        port = adminwebapp.server.socket.getsockname()[1]
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        node_id = nodes[0].id
+        # Hold node 0000000000
+        req = request.Request(
+            "http://localhost:%s/node/%s" % (port, node_id))
+        req.get_method = lambda: 'PUT'
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        self.assertEqual(202, f.getcode())
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        # Assert the state changed to HOLD
+        self.assertEqual(node_id, objs[0]['id'], objs)
+        self.assertEqual('hold', objs[0]['state'], objs)
+
+    def test_node_delete(self):
+        configfile = self.setup_config('node_admin_webapp.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self._useBuilder(configfile)
+        pool.start()
+        # start webapp
+        adminwebapp = self.useAdminWebApp(pool, port=0)
+        adminwebapp.start()
+        port = adminwebapp.server.socket.getsockname()[1]
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        node_id = nodes[0].id
+        # Hold node 0000000000
+        req = request.Request(
+            "http://localhost:%s/node/%s" % (port, node_id))
+        req.get_method = lambda: 'DELETE'
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        self.assertEqual(202, f.getcode())
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        # Assert the state changed to deleting
+        self.assertEqual(node_id, objs[0]['id'], objs)
+        self.assertTrue(objs[0]['state'].startswith('delet'), objs)
