@@ -559,6 +559,54 @@ class CleanupWorker(BaseCleanupWorker):
                                        node.id)
                     zk_conn.unlockNode(node)
 
+    def _cleanupMaxHoldAge(self):
+        '''
+        Delete any held server past their max-hold-age.
+
+        Remove any servers which are longer than max-hold-age in hold state.
+        '''
+        self.log.debug('Cleaning up held nodes...')
+        if self._nodepool.config.max_hold_age <= 0:
+            return
+
+        zk_conn = self._nodepool.getZK()
+        held_nodes = zk_conn.getHeldNodes()
+
+        for node in held_nodes:
+            self.log.debug('Found node %s' % node.id)
+            # Can't do anything if we aren't configured for this provider.
+            if node.provider not in self._nodepool.config.providers:
+                continue
+
+            # check state time against now
+            now = int(time.time())
+            if (now - node.state_time) < self._nodepool.config.max_hold_age:
+                continue
+
+            try:
+                zk_conn.lockNode(node, blocking=False)
+            except exceptions.ZKLockException:
+                continue
+
+            # Double check the state now that we have a lock since it
+            # may have changed on us.
+            if node.state != zk.HOLD:
+                zk_conn.unlockNode(node)
+                continue
+
+            self.log.debug("Node %s exceeds max hold age: %s >= %s",
+                           node.id, now - node.state_time,
+                           self._nodepool.config.max_hold_age)
+
+            # The NodeDeleter thread will unlock and remove the
+            # node from ZooKeeper if it succeeds.
+            try:
+                self._deleteInstance(node)
+            except Exception:
+                self.log.exception("Failure deleting aged node %s:",
+                                   node.id)
+                zk_conn.unlockNode(node)
+
     def _run(self):
         '''
         Catch exceptions individually so that other cleanup routines may
@@ -587,6 +635,12 @@ class CleanupWorker(BaseCleanupWorker):
         except Exception:
             self.log.exception(
                 "Exception in CleanupWorker (max ready age cleanup):")
+
+        try:
+            self._cleanupMaxHoldAge()
+        except Exception:
+            self.log.exception(
+                "Exception in CleanupWorker (max hold age cleanup):")
 
 
 class DeletedNodeWorker(BaseCleanupWorker):
