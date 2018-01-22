@@ -112,6 +112,17 @@ written to run on nodes of a certain label. Example::
     label considered disabled. ``min-ready`` is best-effort based on available
     capacity and is not a guaranteed allocation.
 
+.. _maxholdage:
+
+max-hold-age
+------------
+
+Maximum number of seconds a node shall be in "hold" state. If
+this is exceeded the node will be deleted. A value of 0 disables this.
+Defaults to 0.
+
+This setting is applied to all nodes, regardless of label or provider.
+
 .. _diskimages:
 
 diskimages

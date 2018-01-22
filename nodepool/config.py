@@ -113,6 +113,7 @@ def loadConfig(config_path):
     newconfig.provider_managers = {}
     newconfig.zookeeper_servers = {}
     newconfig.diskimages = {}
+    newconfig.max_hold_age = config.get('max-hold-age', 0)
 
     for server in config.get('zookeeper-servers', []):
         z = zk.ZooKeeperConnectionConfig(server['host'],
