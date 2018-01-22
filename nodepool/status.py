@@ -16,9 +16,14 @@
 
 from collections import OrderedDict
 import json
+import logging
 import time
 
 from prettytable import PrettyTable
+from nodepool import zk as _zk
+
+
+log = logging.getLogger(__name__)
 
 # General notes:
 #
@@ -265,3 +270,93 @@ def label_list(zk):
         objs.append({'label': label})
 
     return (objs, headers_table)
+
+
+def alien_image_list(zk, pool, provider=None):
+    pool.updateConfig()
+
+    headers_table = OrderedDict([
+        ("provider", "Provider"),
+        ("name", "Name"),
+        ("external_id", "Image ID")
+    ])
+
+    objs = []
+
+    for prov in pool.config.providers.values():
+        if (provider and prov.name != provider):
+            continue
+        manager = pool.getProviderManager(prov.name)
+
+        # Build list of provider images as known by the provider
+        provider_images = []
+        try:
+            # Only consider images marked as managed by nodepool.
+            # Prevent cloud-provider images from showing
+            # up in alien list since we can't do anything about them
+            # anyway.
+            provider_images = [
+                image for image in manager.listImages()
+                if 'nodepool_build_id' in image['properties']]
+        except Exception as e:
+            log.warning("Exception listing alien images for %s: %s"
+                        % (prov.name, str(e)))
+
+        alien_ids = []
+        uploads = []
+        for image in prov.diskimages:
+            # Build list of provider images as recorded in ZK
+            for bnum in zk.getBuildNumbers(image):
+                uploads.extend(
+                    zk.getUploads(image, bnum,
+                                  prov.name,
+                                  states=[_zk.READY])
+                )
+
+        # Calculate image IDs present in the provider, but not in ZK
+        provider_image_ids = set([img['id'] for img in provider_images])
+        zk_image_ids = set([img.external_id for img in uploads])
+        alien_ids = provider_image_ids - zk_image_ids
+
+        for image in provider_images:
+            if image['id'] in alien_ids:
+                values = [prov.name, image['name'], image['id']]
+                objs.append(dict(zip(headers_table.keys(),
+                                     values)))
+
+    return (objs, headers_table)
+
+
+def info_builds(zk, provider):
+    provider_builds = zk.getProviderBuilds(provider)
+
+    builds_headers_table = OrderedDict([
+        ("image", "Image Name"),
+        ("build_ids", "Build IDs")
+    ])
+
+    objs = []
+
+    for image, builds in provider_builds.items():
+        values = [image, ','.join(builds)]
+        objs.append(dict(zip(builds_headers_table.keys(),
+                             values)))
+
+    return (objs, builds_headers_table)
+
+
+def info_nodes(zk, provider):
+    provider_nodes = zk.getProviderNodes(provider)
+
+    nodes_headers_table = OrderedDict([
+        ("id", "ID"),
+        ("external_id", "Server ID")
+    ])
+
+    objs = []
+
+    for node in provider_nodes:
+        values = [node.id, node.external_id]
+        objs.append(dict(zip(nodes_headers_table.keys(),
+                             values)))
+    return (objs, nodes_headers_table)
