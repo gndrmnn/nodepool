@@ -16,9 +16,15 @@
 
 from collections import OrderedDict
 import json
+import logging
 import time
 
 from prettytable import PrettyTable
+
+from nodepool import zk as _zk
+
+
+log = logging.getLogger(__name__)
 
 
 def age(timestamp):
@@ -51,6 +57,16 @@ def _to_pretty_table(objs, headers_table):
                     values.append(obj[k])
         t.add_row(values)
     return t
+
+
+def _post_format(objs, headers_table, format):
+    if format == 'pretty':
+        t = _to_pretty_table(objs, headers_table)
+        return str(t)
+    elif format == 'json':
+        return json.dumps(objs)
+    else:
+        raise ValueError('Unknown format "%s"' % format)
 
 
 def node_list(zk, node_id=None, detail=False, format='pretty'):
@@ -125,13 +141,7 @@ def node_list(zk, node_id=None, detail=False, format='pretty'):
             objs.append(dict(zip(headers_table.keys(),
                                  values)))
 
-    if format == 'pretty':
-        t = _to_pretty_table(objs, headers_table)
-        return str(t)
-    elif format == 'json':
-        return json.dumps(objs)
-    else:
-        raise ValueError('Unknown format "%s"' % format)
+    return _post_format(objs, headers_table, format)
 
 
 def label_list(zk, format='pretty'):
@@ -139,6 +149,7 @@ def label_list(zk, format='pretty'):
     for node in zk.nodeIterator():
         labels.setdefault(node.type, 0)
         labels[node.type] += 1
+
     if format == 'pretty':
         t = PrettyTable(["Label", "Count"])
         t.align = 'l'
@@ -170,13 +181,8 @@ def dib_image_list(zk, format='pretty'):
                          'state': build.state,
                          'age': int(build.state_time)
                          })
-    if format == 'pretty':
-        t = _to_pretty_table(objs, headers_table)
-        return str(t)
-    elif format == 'json':
-        return json.dumps(objs)
-    else:
-        raise ValueError('Unknown format "%s"' % format)
+
+    return _post_format(objs, headers_table, format)
 
 
 def image_list(zk, format='pretty'):
@@ -204,13 +210,8 @@ def image_list(zk, format='pretty'):
                               int(upload.state_time)]
                     objs.append(dict(zip(headers_table.keys(),
                                          values)))
-    if format == 'pretty':
-        t = _to_pretty_table(objs, headers_table)
-        return str(t)
-    elif format == 'json':
-        return json.dumps(objs)
-    else:
-        raise ValueError('Unknown format "%s"' % format)
+
+    return _post_format(objs, headers_table, format)
 
 
 def request_list(zk, format='pretty'):
@@ -229,9 +230,98 @@ def request_list(zk, format='pretty'):
                   req.declined_by]
         objs.append(dict(zip(headers_table.keys(),
                              values)))
+
+    return _post_format(objs, headers_table, format)
+
+
+def alien_image_list(zk, pool, provider=None, format='pretty'):
+    pool.updateConfig()
+
+    headers_table = OrderedDict([
+        ("provider", "Provider"),
+        ("name", "Name"),
+        ("external_id", "Image ID")
+    ])
+
+    objs = []
+
+    for prov in pool.config.providers.values():
+        if (provider and prov.name != provider):
+            continue
+        manager = pool.getProviderManager(prov.name)
+
+        # Build list of provider images as known by the provider
+        provider_images = []
+        try:
+            # Only consider images marked as managed by nodepool.
+            # Prevent cloud-provider images from showing
+            # up in alien list since we can't do anything about them
+            # anyway.
+            provider_images = [
+                image for image in manager.listImages()
+                if 'nodepool_build_id' in image['properties']]
+        except Exception as e:
+            log.warning("Exception listing alien images for %s: %s"
+                        % (prov.name, str(e)))
+
+        alien_ids = []
+        uploads = []
+        for image in prov.diskimages:
+            # Build list of provider images as recorded in ZK
+            for bnum in zk.getBuildNumbers(image):
+                uploads.extend(
+                    zk.getUploads(image, bnum,
+                                  prov.name,
+                                  states=[_zk.READY])
+                )
+
+        # Calculate image IDs present in the provider, but not in ZK
+        provider_image_ids = set([img['id'] for img in provider_images])
+        zk_image_ids = set([img.external_id for img in uploads])
+        alien_ids = provider_image_ids - zk_image_ids
+
+        for image in provider_images:
+            if image['id'] in alien_ids:
+                values = [prov.name, image['name'], image['id']]
+                objs.append(dict(zip(headers_table.keys(),
+                                     values)))
+
+    return _post_format(objs, headers_table, format)
+
+
+def info(zk, provider, format='pretty'):
+    provider_builds = zk.getProviderBuilds(provider)
+    provider_nodes = zk.getProviderNodes(provider)
+
+    builds_headers_table = OrderedDict([
+        ("image", "Image Name"),
+        ("build_ids", "Build IDs")
+    ])
+
+    nodes_headers_table = OrderedDict([
+        ("id", "ID"),
+        ("external_id", "Server ID")
+    ])
+
+    objs = {'builds': [], 'nodes': []}
+
+    for image, builds in provider_builds.items():
+        values = [image, ','.join(builds)]
+        objs['builds'].append(dict(zip(builds_headers_table.keys(),
+                                       values)))
+
+    for node in provider_nodes:
+        values = [node.id, node.external_id]
+        objs['builds'].append(dict(zip(nodes_headers_table.keys(),
+                                       values)))
     if format == 'pretty':
-        t = _to_pretty_table(objs, headers_table)
-        return str(t)
+        return (str(_post_format(objs['builds'],
+                                 builds_headers_table,
+                                 'pretty')),
+                str(_post_format(objs['nodes'],
+                                 nodes_headers_table,
+                                 'pretty'))
+               )
     elif format == 'json':
         return json.dumps(objs)
     else:
