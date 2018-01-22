@@ -447,6 +447,7 @@ class Node(BaseModel):
         self.username = None
         self.connection_type = None
         self.host_keys = []
+        self.hold_for = None
 
     def __repr__(self):
         d = self.toDict()
@@ -479,7 +480,8 @@ class Node(BaseModel):
                     self.hold_job == other.hold_job and
                     self.username == other.username and
                     self.connection_type == other.connection_type and
-                    self.host_keys == other.host_keys)
+                    self.host_keys == other.host_keys and
+                    self.hold_for == other.hold_for)
         else:
             return False
 
@@ -513,6 +515,7 @@ class Node(BaseModel):
         d['host_keys'] = self.host_keys
         d['username'] = self.username
         d['connection_type'] = self.connection_type
+        d['hold_for'] = self.hold_for
         return d
 
     @staticmethod
@@ -549,6 +552,7 @@ class Node(BaseModel):
         o.username = d.get('username', 'zuul')
         o.connection_type = d.get('connection_type')
         o.host_keys = d.get('host_keys', [])
+        o.hold_for = d.get('hold_for')
         return o
 
 
@@ -1638,6 +1642,18 @@ class ZooKeeper(object):
                 if node.type not in ret:
                     ret[node.type] = []
                 ret[node.type].append(node)
+        return ret
+
+    def getHeldNodes(self):
+        '''
+        Query ZooKeeper for held nodes.
+
+        :returns: a list of held nodes.
+        '''
+        ret = []
+        for node in self.nodeIterator():
+            if node.state == HOLD:
+                ret.append(node)
         return ret
 
     def nodeIterator(self):
