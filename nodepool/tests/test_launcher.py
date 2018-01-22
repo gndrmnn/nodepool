@@ -665,6 +665,30 @@ class TestLauncher(tests.DBTestCase):
         manager = pool.getProviderManager('fake-provider')
         self.waitForInstanceDeletion(manager, nodes[0].external_id)
 
+    def test_max_hold_age(self):
+        """Test a held node with exceeded max-hold-age is deleted"""
+        configfile = self.setup_config('node_max_hold_age.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.log.debug("Waiting for initial pool...")
+        nodes = self.waitForNodes('fake-label')
+        self.log.debug("...done waiting for initial pool.")
+        node = nodes[0]
+        self.log.debug("Holding node %s..." % node.id)
+        # hold the node
+        node.state = zk.HOLD
+        node.comment = 'testing'
+        self.zk.lockNode(node, blocking=False)
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+        znode = self.zk.getNode(node.id)
+        self.log.debug("Node %s in state '%s'" % (znode.id, znode.state))
+        # Wait for the instance to be cleaned up
+        manager = pool.getProviderManager('fake-provider')
+        self.waitForInstanceDeletion(manager, node.external_id)
+
     def test_label_provider(self):
         """Test that only providers listed in the label satisfy the request"""
         configfile = self.setup_config('node_label_provider.yaml')
