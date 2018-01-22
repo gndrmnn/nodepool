@@ -14,6 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from copy import deepcopy
 import logging
 import os
 import sys
@@ -51,6 +52,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
         self.pool.stop()
         if not self.args.no_webapp:
             self.webapp.stop()
+            if self.admin_webapp:
+                self.admin_webapp.stop()
         sys.exit(0)
 
     def term_handler(self, signum, frame):
@@ -61,8 +64,24 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
                                                self.config_file)
         if not self.args.no_webapp:
             config = self.pool.loadConfig()
+            if (config.webapp.get('admin_port') and
+                config.webapp.get('admin_listen_address')):
+                adminconf = deepcopy(config.webapp)
+                adminconf['port'] = adminconf['admin_port']
+                adminconf['listen_address'] = adminconf['admin_listen_address']
+                del adminconf['admin_port']
+                del adminconf['admin_listen_address']
+                self.admin_webapp = nodepool.webapp.AdminWebApp(self.pool,
+                                                                **adminconf)
+            else:
+                self.admin_webapp = None
+            webconf = deepcopy(config.webapp)
+            if 'admin_port' in config.webapp:
+                del webconf['admin_port']
+            if 'admin_listen_address' in config.webapp:
+                del webconf['admin_listen_address']
             self.webapp = nodepool.webapp.WebApp(self.pool,
-                                                 **config.webapp)
+                                                 **webconf)
 
         signal.signal(signal.SIGINT, self.exit_handler)
         # For back compatibility:
@@ -74,6 +93,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
 
         if not self.args.no_webapp:
             self.webapp.start()
+            if self.admin_webapp:
+                self.admin_webapp.start()
 
         while True:
             signal.pause()

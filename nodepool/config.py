@@ -105,7 +105,10 @@ def loadConfig(config_path):
     newconfig.webapp = {
         'port': config.get('webapp', {}).get('port', 8005),
         'listen_address': config.get('webapp', {}).get('listen_address',
-                                                       '0.0.0.0')
+                                                       '0.0.0.0'),
+        'admin_listen_address': config.get('webapp',
+                                           {}).get('admin_listen_address'),
+        'admin_port': config.get('webapp', {}).get('admin_port'),
     }
     newconfig.providers = {}
     newconfig.labels = {}
