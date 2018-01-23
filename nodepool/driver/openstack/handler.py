@@ -233,10 +233,12 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
                     self._zk.storeNode(self._node)
                 if attempts == self._retries:
                     raise
-                # Invalidate the quota cache if we encountered a quota error.
                 if 'quota exceeded' in str(e).lower():
-                    self.log.info("Quota exceeded, invalidating quota cache")
-                    self._provider_manager.invalidateQuotaCache()
+                    # A quota exception is not directly recoverable so bail
+                    # out immediately with a specific exception.
+                    self.log.exception("Quota exceeded")
+                    raise exceptions.QuotaException("Quota exceeded")
+
                 attempts += 1
 
         self._node.state = zk.READY
@@ -249,6 +251,24 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
 
         try:
             self._run()
+        except exceptions.QuotaException:
+            # We encountered a quota error when trying to launch a
+            # node. In this case we need to do two things:
+            #
+            # 1. Invalidate quota cache as it is likely that foreign
+            #    vms caused us to have less quota as expected and we
+            #    don't yet know about that.
+            # 2. Delete the zNode and abort any further launch attempts
+            #    for this node. This is needed as only the handler
+            #    has knowledge and pause handling for quota. Just
+            #    deleting the zNode should make the handler relaunch
+            #    a new node while recalculating the quota usage.
+            self.log.info("Invalidating quota cache and deleting node %s" %
+                          self._node.id)
+            self._provider_manager.invalidateQuotaCache()
+            self._zk.deleteNode(self._node)
+            statsd_key = 'error.quota'
+
         except Exception as e:
             self.log.exception("Launch failed for node %s:",
                                self._node.id)
