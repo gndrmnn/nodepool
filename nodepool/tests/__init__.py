@@ -149,13 +149,13 @@ class BaseTestCase(testtools.TestCase):
         if test_timeout > 0:
             self.useFixture(fixtures.Timeout(test_timeout, gentle=True))
 
-        if os.environ.get('OS_STDOUT_CAPTURE') in TRUE_VALUES:
+        if os.environ.get('OS_STDOUT_CAPTURE', '1') in TRUE_VALUES:
             stdout = self.useFixture(fixtures.StringStream('stdout')).stream
             self.useFixture(fixtures.MonkeyPatch('sys.stdout', stdout))
-        if os.environ.get('OS_STDERR_CAPTURE') in TRUE_VALUES:
+        if os.environ.get('OS_STDERR_CAPTURE', '1') in TRUE_VALUES:
             stderr = self.useFixture(fixtures.StringStream('stderr')).stream
             self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
-        if os.environ.get('OS_LOG_CAPTURE') in TRUE_VALUES:
+        if os.environ.get('OS_LOG_CAPTURE', '1') in TRUE_VALUES:
             fs = '%(asctime)s %(levelname)s [%(name)s] %(message)s'
             self.useFixture(fixtures.FakeLogger(level=logging.DEBUG,
                                                 format=fs))
