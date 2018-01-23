@@ -25,8 +25,10 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [ 'sphinxcontrib.programoutput' ]
-#extensions = ['sphinx.ext.intersphinx']
+extensions = [
+    'reno.sphinxext',
+    'sphinxcontrib.programoutput'
+]
 #intersphinx_mapping = {'python': ('http://docs.python.org/2.7', None)}
 
 # Add any paths that contain templates here, relative to this directory.

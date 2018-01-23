@@ -1,0 +1,4 @@
+---
+prelude: >
+    In support of Zuul v3, Nodepool now receives requests for nodes over
+    Zookeeper.
