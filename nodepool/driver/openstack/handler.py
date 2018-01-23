@@ -233,10 +233,12 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
                     self._zk.storeNode(self._node)
                 if attempts == self._retries:
                     raise
-                # Invalidate the quota cache if we encountered a quota error.
                 if 'quota exceeded' in str(e).lower():
-                    self.log.info("Quota exceeded, invalidating quota cache")
-                    self._provider_manager.invalidateQuotaCache()
+                    # A quota exception is not directly recoverable so bail
+                    # out immediately with a specific exception.
+                    self.log.exception("Quota exceeded")
+                    raise exceptions.QuotaException("Quota exceeded")
+
                 attempts += 1
 
         self._node.state = zk.READY
@@ -249,6 +251,18 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
 
         try:
             self._run()
+        except exceptions.QuotaException:
+            # We encountered a quota error when trying to launch a
+            # node. In this case we need to abort the launch. The upper
+            # layers will take care of this and reschedule a new node once
+            # the quota is ok again.
+            self.log.info("Invalidating quota cache and deleting node %s" %
+                          self._node.id)
+            self._provider_manager.invalidateQuotaCache()
+            self._node.state = zk.ABORTED
+            self._zk.storeNode(self._node)
+            statsd_key = 'error.quota'
+
         except Exception as e:
             self.log.exception("Launch failed for node %s:",
                                self._node.id)
@@ -429,6 +443,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         # and what was requested. We cannot use set operations here since a
         # node type can appear more than once in the requested types.
         saved_types = collections.Counter([n.type for n in self.nodeset])
+        saved_types = collections.Counter(
+            [n.type for n in self.nodeset if n.state != zk.ABORTED])
         requested_types = collections.Counter(self.request.node_types)
         diff = requested_types - saved_types
         needed_types = list(diff.elements())

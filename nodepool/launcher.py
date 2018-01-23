@@ -227,6 +227,8 @@ class PoolWorker(threading.Thread):
             try:
                 if not r.poll():
                     active_handlers.append(r)
+                    if r.paused:
+                        self.paused_handler = r
                 else:
                     self.log.debug("Removing handler for request %s",
                                    r.request.id)

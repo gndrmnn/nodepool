@@ -22,12 +22,14 @@ import operator
 import time
 
 import shade
+import nodepool.zk
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.nodeutils import iterate_timeout
 from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
+
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list

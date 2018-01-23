@@ -51,6 +51,8 @@ USED = 'used'
 HOLD = 'hold'
 # Initial node state
 INIT = 'init'
+# Aborted due to a transient error like overquota
+ABORTED = 'aborted'
 
 
 class ZooKeeperConnectionConfig(object):
@@ -420,7 +422,7 @@ class Node(BaseModel):
     Class representing a launched node.
     '''
     VALID_STATES = set([BUILDING, TESTING, READY, IN_USE, USED,
-                        HOLD, DELETING, FAILED, INIT])
+                        HOLD, DELETING, FAILED, INIT, ABORTED])
 
     def __init__(self, id=None):
         super(Node, self).__init__(id)

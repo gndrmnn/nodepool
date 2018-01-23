@@ -208,6 +208,11 @@ class NodeRequestHandler(object):
             self.log.debug("Declining node request %s because nodes failed",
                            self.request.id)
             self.decline_request()
+        elif self.launch_manager.aborted_nodes:
+            # we don't need the aborted nodes anymore
+            self.launch_manager.clean_aborted_nodes()
+            self.paused = True
+            return False
         else:
             # The assigned nodes must be added to the request in the order
             # in which they were requested.
@@ -256,6 +261,7 @@ class NodeLaunchManager(object):
         '''
         self._retries = retries
         self._nodes = []
+        self._aborted_nodes = []
         self._failed_nodes = []
         self._ready_nodes = []
         self._threads = []
@@ -273,6 +279,10 @@ class NodeLaunchManager(object):
         return count
 
     @property
+    def aborted_nodes(self):
+        return self._aborted_nodes
+
+    @property
     def failed_nodes(self):
         return self._failed_nodes
 
@@ -280,12 +290,20 @@ class NodeLaunchManager(object):
     def ready_nodes(self):
         return self._ready_nodes
 
+    def clean_aborted_nodes(self):
+        # clean up aborted nodes
+        for node in list(self._nodes):
+            if node.state == zk.ABORTED:
+                self._nodes.remove(node)
+                self._zk.deleteNode(node)
+        self.aborted_nodes.clear()
+
     def poll(self):
         '''
         Check if all launch requests have completed.
 
-        When all of the Node objects have reached a final state (READY or
-        FAILED), we'll know all threads have finished the launch process.
+        When all of the Node objects have reached a final state (READY, FAILED
+        or ABORTED), we'll know all threads have finished the launch process.
         '''
         if not self._threads:
             return True
@@ -298,12 +316,18 @@ class NodeLaunchManager(object):
 
         # NOTE: It very important that NodeLauncher always sets one of
         # these states, no matter what.
-        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
+        if not all(s in (zk.READY, zk.FAILED, zk.ABORTED)
+                   for s in node_states):
             return False
 
         for node in self._nodes:
             if node.state == zk.READY:
                 self._ready_nodes.append(node)
+            elif node.state == zk.ABORTED:
+                # ABORTED is a transient error triggered by overquota. In order
+                # to handle this correct don't count this as failed so the node
+                # is relaunched within this provider.
+                self._aborted_nodes.append(node)
             else:
                 self._failed_nodes.append(node)
 
