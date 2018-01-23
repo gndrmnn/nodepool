@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_4b0826d8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-23T20:55:02Z",
+      "side": 1,
+      "message": "I\u0027m not sure that this is true. Is it? It seems very unsafe to do so.",
+      "range": {
+        "startLine": 245,
+        "startChar": 69,
+        "endLine": 247,
+        "endChar": 72
+      },
+      "revId": "ef633cf4c575e48efd6990c2f2548f865edbd8ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_2b37dab2",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-23T20:55:02Z",
+      "side": 1,
+      "message": "This isn\u0027t going to work because NodeLaunchManager expects either a READY or FAILED node state. Maybe we could try just re-raising the exception at this point? That should cause this provider to decline the request and give another provider a chance to handle the request.",
+      "revId": "ef633cf4c575e48efd6990c2f2548f865edbd8ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
