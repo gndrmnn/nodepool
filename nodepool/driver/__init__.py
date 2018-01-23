@@ -300,6 +300,15 @@ class LabelRecorder(object):
         self.data.remove({'label': label, 'node_id': node_id})
         return node_id
 
+    def remove_node(self, id):
+        '''
+        Remove the node with the specified ID.
+        '''
+        for d in self.data:
+            if d['node_id'] == id:
+                self.data.remove(d)
+                return
+
 
 class NodeRequestHandlerNotifications(object):
     """
@@ -342,6 +351,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.launcher_id = self.pw.launcher_id
 
         self._satisfied_types = LabelRecorder()
+        self._aborted_nodes = []
         self._failed_nodes = []
         self._ready_nodes = []
 
@@ -356,6 +366,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.pool = self.pw.getPoolConfig()
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
+
+    @property
+    def aborted_nodes(self):
+        return self._aborted_nodes
 
     @property
     def failed_nodes(self):
@@ -400,6 +414,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # and what was requested. We cannot use set operations here since a
         # node type can appear more than once in the requested types.
         saved_types = collections.Counter(self._satisfied_types.labels())
+        # saved_types = collections.Counter(
+        #     [n.type for n in self.nodeset if n.state != zk.ABORTED])
         requested_types = collections.Counter(self.request.node_types)
         diff = requested_types - saved_types
         needed_types = list(diff.elements())
@@ -633,6 +649,18 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             self.decline_request()
             self._declinedHandlerCleanup()
 
+    def clean_aborted_nodes(self):
+        # clean up aborted nodes
+        for node in self.nodeset:
+            if node.state == zk.ABORTED:
+                self.nodeset.remove(node)
+                self.zk.deleteNode(node)
+                # We need to remove this node from the satisfied types.
+                # Otherwise the launch will not be retried and the request
+                # will never be fulfilled.
+                self._satisfied_types.remove_node(node.id)
+        self.aborted_nodes.clear()
+
     def poll(self):
         if self.paused:
             return False
@@ -648,6 +676,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         for node in self.nodeset:
             if node.state == zk.READY:
                 self.ready_nodes.append(node)
+            elif node.state == zk.ABORTED:
+                # ABORTED is a transient error triggered by overquota. In order
+                # to handle this correct don't count this as failed so the node
+                # is relaunched within this provider.
+                self.aborted_nodes.append(node)
             else:
                 self.failed_nodes.append(node)
 
@@ -674,6 +707,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             self.log.debug("Declining node request %s because nodes failed",
                            self.request.id)
             self.decline_request()
+        elif self.aborted_nodes:
+            # we don't need the aborted nodes anymore
+            self.clean_aborted_nodes()
+            self.paused = True
+            return False
         else:
             # The assigned nodes must be added to the request in the order
             # in which they were requested.
