@@ -246,11 +246,12 @@ class OpenStackNodeLauncher(NodeLauncher):
                     self.zk.storeNode(self.node)
                 if attempts == self._retries:
                     raise
-                # Invalidate the quota cache if we encountered a quota error.
                 if 'quota exceeded' in str(e).lower():
+                    # A quota exception is not directly recoverable so bail
+                    # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
-                attempts += 1
+                    raise exceptions.QuotaException("Quota exceeded")
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
@@ -380,8 +381,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         '''
         Check if all launch requests have completed.
 
-        When all of the Node objects have reached a final state (READY or
-        FAILED), we'll know all threads have finished the launch process.
+        When all of the Node objects have reached a final state (READY, FAILED
+        or ABORTED), we'll know all threads have finished the launch process.
         '''
         if not self._threads:
             return True
@@ -394,7 +395,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
         # NOTE: It very important that NodeLauncher always sets one of
         # these states, no matter what.
-        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
+        if not all(s in (zk.READY, zk.FAILED, zk.ABORTED)
+                   for s in node_states):
             return False
 
         return True

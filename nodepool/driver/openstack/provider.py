@@ -20,6 +20,7 @@ import operator
 import time
 
 import shade
+import nodepool.zk
 
 from nodepool import exceptions
 from nodepool.driver import Provider
@@ -31,6 +32,7 @@ from nodepool import version
 
 # Import entire module to avoid partial-loading, circular import
 from nodepool.driver.openstack import handler
+
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list
