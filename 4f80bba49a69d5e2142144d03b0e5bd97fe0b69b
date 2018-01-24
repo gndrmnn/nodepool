@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_20f20408",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-01-24T16:10:28Z",
+      "side": 1,
+      "message": "nit: s/Wating/Waiting/",
+      "range": {
+        "startLine": 66,
+        "startChar": 24,
+        "endLine": 66,
+        "endChar": 30
+      },
+      "revId": "4f80bba49a69d5e2142144d03b0e5bd97fe0b69b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
