@@ -1,0 +1,9 @@
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Code-Review+2: Jesse Keating <jkeating@j2solutions.net>
+Workflow+1: Jesse Keating <jkeating@j2solutions.net>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 24 Jan 2018 20:40:13 +0000
+Reviewed-on: https://review.openstack.org/536854
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
