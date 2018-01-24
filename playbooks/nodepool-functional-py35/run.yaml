@@ -4,3 +4,5 @@
       command: tools/check_devstack_plugin.sh {{ ansible_user_dir }}/work/logs/nodepool
       args:
         chdir: '{{ zuul.project.src_dir }}'
+      environment:
+        "NODEPOOL_PAUSE_{{ nodepool_dib_image_target | upper}}_DIB": "false"
