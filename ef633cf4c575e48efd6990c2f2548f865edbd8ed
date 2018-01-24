@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f96bb07_f9ebfe0e",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-01-24T06:56:36Z",
+      "side": 1,
+      "message": "Reading the _waitForNodeSet method closely I believe this should work is a way we can go. This has to be tested though.",
+      "parentUuid": "7f96bb07_4b0826d8",
+      "range": {
+        "startLine": 245,
+        "startChar": 69,
+        "endLine": 247,
+        "endChar": 72
+      },
+      "revId": "ef633cf4c575e48efd6990c2f2548f865edbd8ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f96bb07_2b37dab2",
         "filename": "nodepool/driver/openstack/handler.py",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2018-01-23T20:55:02Z",
       "side": 1,
       "message": "This isn\u0027t going to work because NodeLaunchManager expects either a READY or FAILED node state. Maybe we could try just re-raising the exception at this point? That should cause this provider to decline the request and give another provider a chance to handle the request.",
+      "revId": "ef633cf4c575e48efd6990c2f2548f865edbd8ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_99cbdaa3",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-01-24T06:56:36Z",
+      "side": 1,
+      "message": "You\u0027re right, the NodeLaunchManger needs to handle this situation. However failing the node and causing the provider to decline the request is the thing we want to fix here (we currently fail after 3 retries anyway) as this would only work in a multi provider world.\n\nSo I think I\u0027ll try to set self._node to None and handle this in the NodeLaunchManager.",
+      "parentUuid": "7f96bb07_2b37dab2",
       "revId": "ef633cf4c575e48efd6990c2f2548f865edbd8ed",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
