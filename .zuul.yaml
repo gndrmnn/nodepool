@@ -27,6 +27,9 @@
         s-proxy: false
       devstack_plugins:
         nodepool: https://git.openstack.org/openstack-infra/nodepool
+      # Valid values for nodepool_dib_image_target:
+      #   centos_7, debian_jessie, fedora_26, ubuntu_trusty, ubuntu_xenial
+      nodepool_dib_image_target: ubuntu_xenial
 
 - job:
     name: nodepool-functional-py35

@@ -7,14 +7,11 @@ NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
 NODEPOOL_SECURE=${NODEPOOL_SECURE:-/etc/nodepool/secure.conf}
 NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
 
-# Flags to control which images we build.
-# NOTE(pabelanger): Be sure to also update devstack/settings if you change the
-# defaults.
+# One of these will be set to 'false' in the job run playbook.
 NODEPOOL_PAUSE_CENTOS_7_DIB=${NODEPOOL_PAUSE_CENTOS_7_DIB:-true}
 NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB=${NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB:-true}
-NODEPOOL_PAUSE_FEDORA_25_DIB=${NODEPOOL_PAUSE_FEDORA_25_DIB:-true}
 NODEPOOL_PAUSE_FEDORA_26_DIB=${NODEPOOL_PAUSE_FEDORA_26_DIB:-true}
-NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-false}
+NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-true}
 NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB=${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB:-true}
 
 function waitforimage {
@@ -51,13 +48,6 @@ if [ $NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB = 'false' ]; then
     waitforimage debian-jessie
     # check image was bootable
     waitfornode debian-jessie
-fi
-
-if [ $NODEPOOL_PAUSE_FEDORA_25_DIB = 'false' ]; then
-    # check that image built
-    waitforimage fedora-25
-    # check image was bootable
-    waitfornode fedora-25
 fi
 
 if [ $NODEPOOL_PAUSE_FEDORA_26_DIB = 'false' ]; then
