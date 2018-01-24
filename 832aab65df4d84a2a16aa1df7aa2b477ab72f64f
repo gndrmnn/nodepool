@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_2bffbeab",
+        "filename": ".zuul.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-01-24T14:38:47Z",
+      "side": 1,
+      "message": "Maybe add:\n\n  vars:\n    dib_image_target: ubuntu-xenial",
+      "revId": "832aab65df4d84a2a16aa1df7aa2b477ab72f64f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f96bb07_6bd06620",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-01-24T14:38:47Z",
+      "side": 1,
+      "message": "Instead of the shell stuff, you could probably do something like:\n\n  environment:\n    \"NODEPOOL_PAUSE_{{ dib_target | upper }}\": \"False\"",
+      "revId": "832aab65df4d84a2a16aa1df7aa2b477ab72f64f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

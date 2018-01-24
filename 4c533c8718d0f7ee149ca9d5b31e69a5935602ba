@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f96bb07_6b74e668",
+        "filename": "playbooks/nodepool-functional-py35-src/run.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-01-24T14:38:47Z",
+      "side": 0,
+      "message": "This would be where \u0027dib_image_target\u0027 would go, except...",
+      "revId": "4c533c8718d0f7ee149ca9d5b31e69a5935602ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
