@@ -302,8 +302,17 @@ class PoolWorker(threading.Thread):
             time.sleep(self.watermark_sleep)
 
         # Cleanup on exit
-        if self.paused_handler:
-            self.paused_handler.unlockNodeSet(clear_allocation=True)
+        self._shutdown()
+        self.log.info("%s is stopped" % self.name)
+
+    def _shutdown(self):
+        # Give the other handlers one last chance to report they are done.
+        self._removeCompletedHandlers()
+
+        # Free up any nodes the remaining handlers are holding
+        for r in self.request_handlers:
+            self.log.debug("Aborting handling request %s", r.request.id)
+            r.unlockNodeSet(clear_allocation=True)
 
     def stop(self):
         '''
@@ -911,11 +920,12 @@ class NodePool(threading.Thread):
                     self._delete_thread.start()
 
                 # Stop any PoolWorker threads if the pool was removed
-                # from the config.
+                # from the config, or max-servers was set to < 0.
                 pool_keys = set()
                 for provider in self.config.providers.values():
                     for pool in provider.pools.values():
-                        pool_keys.add(provider.name + '-' + pool.name)
+                        if pool.max_servers > 0:
+                            pool_keys.add(provider.name + '-' + pool.name)
 
                 new_pool_threads = {}
                 for key in self._pool_threads.keys():
