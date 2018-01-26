@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_6e6d2497",
+        "filename": "test-requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-01-26T06:30:37Z",
+      "side": 1,
+      "message": "do we want to list the licenses here?",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "213f99ff33c2266b49920a212add77491617e8fd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
