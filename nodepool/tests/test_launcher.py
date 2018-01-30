@@ -1034,3 +1034,33 @@ class TestLauncher(tests.DBTestCase):
 
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FAILED)
+
+    def test_provider_declines_at_capacity(self):
+        '''
+        A provider should not wedge itself when it is at (1) maximum capacity
+        (# registered nodes == max-servers), (2) all of its current nodes are
+        not being used, and (3) a request comes in with a label that it does
+        not yet have available. Normally, situation (3) combined with (1)
+        would cause the provider to pause until capacity becomes available,
+        but because of (2), it never will and we would wedge the provider.
+        '''
+        configfile = self.setup_config('wedge_test.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Wait for fake-label1 min-ready request to be fulfilled, which will
+        # put us at maximum capacity with max-servers of 1.
+        self.waitForNodes('fake-label1')
+
+        # Now we submit a request for fake-label2, which is not yet available.
+        # Normally, the provider should pause here, but because the fake-label1
+        # node is not being used, it will never be freed and the provider
+        # should recognize that and decline this request.
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label2')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
