@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f93b717_7a77b9a1",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-31T03:58:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f93b717_5df76060",
+      "range": {
+        "startLine": 663,
+        "startChar": 37,
+        "endLine": 663,
+        "endChar": 45
+      },
+      "revId": "53af4ccf723a1715cb9d09844817cb07ec21f883",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f93b717_1da2384c",
         "filename": "nodepool/driver/static/config.py",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5f93b717_ba9b0171",
+        "filename": "nodepool/driver/static/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-31T03:58:51Z",
+      "side": 1,
+      "message": "Indeed, next PS fixes that.",
+      "parentUuid": "5f93b717_1da2384c",
+      "range": {
+        "startLine": 71,
+        "startChar": 12,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "53af4ccf723a1715cb9d09844817cb07ec21f883",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f93b717_f81f5a58",
         "filename": "nodepool/tests/fixtures/static.yaml",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2018-01-30T21:26:37Z",
       "side": 1,
       "message": "what does min-ready mean for static nodes?",
+      "range": {
+        "startLine": 8,
+        "startChar": 4,
+        "endLine": 8,
+        "endChar": 16
+      },
+      "revId": "53af4ccf723a1715cb9d09844817cb07ec21f883",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_9abe45b2",
+        "filename": "nodepool/tests/fixtures/static.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-01-31T03:58:51Z",
+      "side": 1,
+      "message": "Indeed this should be asserted from the number of static nodes and their max parallel jobs settings. Though labels are not driver aware...",
+      "parentUuid": "5f93b717_f81f5a58",
       "range": {
         "startLine": 8,
         "startChar": 4,
