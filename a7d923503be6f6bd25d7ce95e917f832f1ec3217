@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_c87ab5ef",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-01-31T15:05:51Z",
+      "side": 1,
+      "message": "Would it also make sense to add a validation check for \u003c 0?",
+      "revId": "a7d923503be6f6bd25d7ce95e917f832f1ec3217",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
