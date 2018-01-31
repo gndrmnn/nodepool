@@ -82,6 +82,9 @@ class NodePoolCmd(NodepoolApp):
         cmd_hold.add_argument('--reason',
                               help='Reason this node is held',
                               required=True)
+        cmd_hold.add_argument('--hold-for',
+                              help='how long to hold the node for (seconds)',
+                              required=False, default=0)
 
         cmd_delete = subparsers.add_parser(
             'delete',
@@ -220,6 +223,8 @@ class NodePoolCmd(NodepoolApp):
 
         node.state = zk.HOLD
         node.comment = self.args.reason
+        if int(self.args.hold_for) > 0:
+            node.hold_for = int(self.args.hold_for)
         print("Waiting for lock...")
         self.zk.lockNode(node, blocking=True)
         self.zk.storeNode(node)
