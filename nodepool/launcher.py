@@ -566,8 +566,6 @@ class CleanupWorker(BaseCleanupWorker):
         Remove any servers which are longer than max-hold-age in hold state.
         '''
         self.log.debug('Cleaning up held nodes...')
-        if self._nodepool.config.max_hold_age <= 0:
-            return
 
         zk_conn = self._nodepool.getZK()
         held_nodes = zk_conn.getHeldNodes()
@@ -578,9 +576,18 @@ class CleanupWorker(BaseCleanupWorker):
             if node.provider not in self._nodepool.config.providers:
                 continue
 
+            if (node.hold_for is None and
+                self._nodepool.config.max_hold_age <= 0):
+                continue
+
             # check state time against now
             now = int(time.time())
-            if (now - node.state_time) < self._nodepool.config.max_hold_age:
+            # Operator provider TTL overrides default setting
+            if node.hold_for:
+                max_uptime = node.hold_for
+            else:
+                max_uptime = self._nodepool.config.max_hold_age
+            if (now - node.state_time) < max_uptime:
                 continue
 
             try:
@@ -594,9 +601,12 @@ class CleanupWorker(BaseCleanupWorker):
                 zk_conn.unlockNode(node)
                 continue
 
-            self.log.debug("Node %s exceeds max hold age: %s >= %s",
-                           node.id, now - node.state_time,
-                           self._nodepool.config.max_hold_age)
+            self.log.debug("Node %s exceeds max hold age (%s): %s >= %s",
+                           node.id,
+                           ("manual setting" and node.hold_for == max_uptime
+                            or "configuration setting"),
+                           now - node.state_time,
+                           max_uptime)
 
             # The NodeDeleter thread will unlock and remove the
             # node from ZooKeeper if it succeeds.
