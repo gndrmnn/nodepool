@@ -689,6 +689,76 @@ class TestLauncher(tests.DBTestCase):
         manager = pool.getProviderManager('fake-provider')
         self.waitForInstanceDeletion(manager, node.external_id)
 
+    def test_hold_for_without_max_hold_age(self):
+        """Test a held node is deleted when past its operator-specified TTL,
+        no max-hold-age set"""
+        configfile = self.setup_config('node_max_ready_age.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.log.debug("Waiting for initial pool...")
+        nodes = self.waitForNodes('fake-label')
+        self.log.debug("...done waiting for initial pool.")
+        node = nodes[0]
+        self.log.debug("Holding node %s..." % node.id)
+        # hold the node
+        node.state = zk.HOLD
+        node.comment = 'testing'
+        node.hold_for = 5
+        self.zk.lockNode(node, blocking=False)
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+        znode = self.zk.getNode(node.id)
+        self.log.debug("Node %s in state '%s'" % (znode.id, znode.state))
+        # Wait for the instance to be cleaned up
+        manager = pool.getProviderManager('fake-provider')
+        self.waitForInstanceDeletion(manager, node.external_id)
+
+    def test_hold_for_with_max_hold_age(self):
+        """Test a held node is deleted when past its operator-specified TTL,
+        with max-hold-age set in the configuration"""
+        configfile = self.setup_config('node_max_hold_age.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.log.debug("Waiting for initial pool...")
+        nodes = self.waitForNodes('fake-label')
+        self.log.debug("...done waiting for initial pool.")
+        node_custom = nodes[0]
+        # TODO make it a multiple of fixture's max-hold-age
+        hold_for = 20
+        node = nodes[1]
+        self.log.debug("Holding node %s... (default)" % node.id)
+        self.log.debug("Holding node %s...(%s seconds)" % (node_custom.id,
+                                                           hold_for))
+        # hold the nodes
+        node.state = zk.HOLD
+        node.comment = 'testing'
+        node_custom.state = zk.HOLD
+        node_custom.comment = 'testing hold_for'
+        node_custom.hold_for = hold_for
+        self.zk.lockNode(node, blocking=False)
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+        self.zk.storeNode(node_custom)
+        self.zk.unlockNode(node_custom)
+        znode = self.zk.getNode(node.id)
+        self.log.debug("Node %s in state '%s'" % (znode.id, znode.state))
+        znode_custom = self.zk.getNode(node_custom.id)
+        self.log.debug("Node %s in state '%s'" % (znode_custom.id,
+                                                  znode_custom.state))
+        # Wait for the instance to be cleaned up
+        manager = pool.getProviderManager('fake-provider')
+        self.waitForInstanceDeletion(manager, node.external_id)
+        # custom node should still be held
+        held_nodes = self.zk.getHeldNodes()
+        self.assertTrue(any(n.id == node_custom.id for n in held_nodes),
+                        held_nodes)
+        # finally, custom node gets deleted
+        self.waitForInstanceDeletion(manager, node_custom.external_id)
+
     def test_label_provider(self):
         """Test that only providers listed in the label satisfy the request"""
         configfile = self.setup_config('node_label_provider.yaml')

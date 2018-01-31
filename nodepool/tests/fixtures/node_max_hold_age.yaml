@@ -10,7 +10,7 @@ zookeeper-servers:
 
 labels:
   - name: fake-label
-    min-ready: 1
+    min-ready: 2
 
 providers:
   - name: fake-provider
