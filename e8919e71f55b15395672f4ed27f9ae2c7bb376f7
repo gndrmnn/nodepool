@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_3366132c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-02-01T12:03:26Z",
+      "side": 1,
+      "message": "Maybe \"connecting to\"?  A leftover from \"logging onto\", I guess...",
+      "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_737fbbaa",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-02-01T12:03:26Z",
+      "side": 1,
+      "message": "Also \"connecting to\", I think.",
+      "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_53371f00",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-02-01T12:03:26Z",
+      "side": 1,
+      "message": "Hmm, could the default value depend on the connection type, removing the need for people to specify 5986 for winrm?  I don\u0027t know what mechanism would be best - a dictionary with a port per connection type (possibly a defaultdict with 22 as the fallback value), or a function called with the connection type as a parameter, or something else.",
+      "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
