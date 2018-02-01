@@ -50,6 +50,24 @@
       "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_673e10b9",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-02-01T14:40:33Z",
+      "side": 1,
+      "message": "I think we could even just have a simple dict in the code for now:\n\n  mapping\u003d{\u0027ssh\u0027: 22, \u0027winrm\u0027: 5986}\n  i.connection_port \u003d image.get(\n      \u0027connection-port\u0027, mapping.get(i.connection_type))\n\nAnd then it\u0027s easy for us to add additional default ports if we discover additional types with a normal default port.",
+      "parentUuid": "5f93b717_53371f00",
+      "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
