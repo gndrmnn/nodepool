@@ -68,6 +68,24 @@
       "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_2753283b",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-01T15:06:41Z",
+      "side": 1,
+      "message": "Good idea, done",
+      "parentUuid": "5f93b717_673e10b9",
+      "revId": "e8919e71f55b15395672f4ed27f9ae2c7bb376f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
