@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_42e982e3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-02-01T15:23:41Z",
+      "side": 1,
+      "message": "Does this need to be reworded a bit now that 5986 is the default for \"winrm\"?",
+      "revId": "da0b119e29f9809f4439a728e302b94ee4a4900a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_62cd9e83",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 12988
+      },
+      "writtenOn": "2018-02-01T15:23:41Z",
+      "side": 1,
+      "message": "Hmm, I wonder if there should also be tests for the default connection port (unspecified in the configuration) now.",
+      "revId": "da0b119e29f9809f4439a728e302b94ee4a4900a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
