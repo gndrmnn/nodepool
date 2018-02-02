@@ -16,6 +16,24 @@
       "revId": "f92e8d18a38f5961afb59ae29425f7ccb74c2f98",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f93b717_4c299534",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-02T18:58:37Z",
+      "side": 1,
+      "message": "Hrm, true. I can fix that in a follow up.",
+      "parentUuid": "5f93b717_91cc9a35",
+      "revId": "f92e8d18a38f5961afb59ae29425f7ccb74c2f98",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
