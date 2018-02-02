@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_e640c2a7",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-02-02T17:41:42Z",
+      "side": 1,
+      "message": "Should we self.log.exception this, just so we have a clue something went wrong in the log?",
+      "revId": "dc0e6ec1b9fe1af4959035454abd236fca44f1ad",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
