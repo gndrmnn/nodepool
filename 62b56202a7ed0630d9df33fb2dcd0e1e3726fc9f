@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f93b717_80ec382a",
+        "filename": "playbooks/nodepool-zuul-functional/pre.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-03T20:06:37Z",
+      "side": 1,
+      "message": "nit: nameless tasks look a little bit weird to me",
+      "revId": "62b56202a7ed0630d9df33fb2dcd0e1e3726fc9f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
