@@ -1,0 +1,8 @@
+- hosts: all
+  name: Zuul setup for nodepool test
+  tasks:
+
+    - shell:
+        cmd: tools/nodepool-integration-setup.sh
+        chdir: '{{ ansible_user_dir }}/workspace/src/git.openstack.org/openstack-infra/zuul'
+      environment: '{{ zuul | zuul_legacy_vars }}'
