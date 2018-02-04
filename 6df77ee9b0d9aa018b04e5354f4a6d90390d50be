@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_c2b48638",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-04T14:54:46Z",
+      "side": 1,
+      "message": "the hold command has been removed now",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 18
+      },
+      "revId": "6df77ee9b0d9aa018b04e5354f4a6d90390d50be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
