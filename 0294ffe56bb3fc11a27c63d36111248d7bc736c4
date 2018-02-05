@@ -68,6 +68,29 @@
       "revId": "0294ffe56bb3fc11a27c63d36111248d7bc736c4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_c6f2539b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-05T07:27:00Z",
+      "side": 1,
+      "message": "Not sure if we should have that here.",
+      "range": {
+        "startLine": 633,
+        "startChar": 8,
+        "endLine": 633,
+        "endChar": 35
+      },
+      "revId": "0294ffe56bb3fc11a27c63d36111248d7bc736c4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
