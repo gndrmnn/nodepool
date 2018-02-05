@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3fa0c359_0e8fedcc",
+        "filename": "nodepool/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2018-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Rather than storing in the environ I think we should pass the config to where it is needed.\n\nIn my opinion the environ should either be deprecated or be available as and override to the conf file. A conf file should not overwrite an environ variable as that would cause confusion to a user who is trying to set it.",
+      "range": {
+        "startLine": 119,
+        "startChar": 20,
+        "endLine": 119,
+        "endChar": 31
+      },
+      "revId": "8ab51c5d4f20dfdaf0e8663b1d26577dbedb59de",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa0c359_8805347d",
         "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
         "patchSetId": 2
