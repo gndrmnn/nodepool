@@ -22,6 +22,30 @@
       "revId": "b7efdb36f2b26354b880f14e65014205bf919c25",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_39831807",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-02-05T08:08:42Z",
+      "side": 0,
+      "message": "Oops, this was missed in last rebase indeed.",
+      "parentUuid": "3fa0c359_433ab5e7",
+      "range": {
+        "startLine": 534,
+        "startChar": 0,
+        "endLine": 537,
+        "endChar": 61
+      },
+      "revId": "b7efdb36f2b26354b880f14e65014205bf919c25",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
