@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_433ab5e7",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-05T07:25:54Z",
+      "side": 0,
+      "message": "Is it intended that this is missing in the new function?",
+      "range": {
+        "startLine": 534,
+        "startChar": 0,
+        "endLine": 537,
+        "endChar": 61
+      },
+      "revId": "b7efdb36f2b26354b880f14e65014205bf919c25",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
