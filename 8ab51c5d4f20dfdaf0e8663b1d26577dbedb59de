@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_8805347d",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-05T11:35:04Z",
+      "side": 1,
+      "message": "nit: 0.0.0.0 is a good example for a listen address but for a target address I\u0027d prefer something else ;)",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "8ab51c5d4f20dfdaf0e8663b1d26577dbedb59de",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
