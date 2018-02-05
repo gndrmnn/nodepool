@@ -22,6 +22,30 @@
       "revId": "27379ee7483c3f4f83954a4fb9556b324dbf7b30",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_49a2c49c",
+        "filename": "playbooks/nodepool-zuul-functional/pre.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 6547
+      },
+      "writtenOn": "2018-02-05T19:17:18Z",
+      "side": 1,
+      "message": "No - srcdir would be nodepool. We need zuul directory here",
+      "parentUuid": "3fa0c359_29c65869",
+      "range": {
+        "startLine": 8,
+        "startChar": 15,
+        "endLine": 8,
+        "endChar": 82
+      },
+      "revId": "27379ee7483c3f4f83954a4fb9556b324dbf7b30",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
