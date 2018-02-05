@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3fa0c359_9160fc34",
+        "filename": "nodepool/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-02-05T13:23:12Z",
+      "side": 1,
+      "message": "Next PS will set the statsd config in the module directly instead of passing that config object all the way down.\n\nWhen STATSD environ is set, then it log a deprecation message.",
+      "parentUuid": "3fa0c359_0e8fedcc",
+      "range": {
+        "startLine": 119,
+        "startChar": 20,
+        "endLine": 119,
+        "endChar": 31
+      },
+      "revId": "8ab51c5d4f20dfdaf0e8663b1d26577dbedb59de",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa0c359_8805347d",
         "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-05T11:35:04Z",
       "side": 1,
       "message": "nit: 0.0.0.0 is a good example for a listen address but for a target address I\u0027d prefer something else ;)",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 17
+      },
+      "revId": "8ab51c5d4f20dfdaf0e8663b1d26577dbedb59de",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_31556851",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-02-05T13:23:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fa0c359_8805347d",
       "range": {
         "startLine": 9,
         "startChar": 8,
