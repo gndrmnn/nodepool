@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_a1d55f45",
+        "filename": "nodepool/image.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:52:21Z",
+      "side": 1,
+      "message": "You should lock the image build before modifying it. I think it\u0027s a bug that we do not do that in nodepoolcmd.py.",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 17
+      },
+      "revId": "9f613ed4799ad079372b09d798b82cc4180a458a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_61cf57b0",
+        "filename": "nodepool/image.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:52:21Z",
+      "side": 1,
+      "message": "You should lock the image upload before modifying it. Same bug as mentioned above.",
+      "range": {
+        "startLine": 56,
+        "startChar": 7,
+        "endLine": 56,
+        "endChar": 23
+      },
+      "revId": "9f613ed4799ad079372b09d798b82cc4180a458a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_e1b3674c",
+        "filename": "nodepool/node.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:52:21Z",
+      "side": 1,
+      "message": "This isn\u0027t really going to work anywhere outside of Zuul itself, so best to not provide this functionality.",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 8
+      },
+      "revId": "9f613ed4799ad079372b09d798b82cc4180a458a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_417edb6b",
+        "filename": "nodepool/node.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:52:21Z",
+      "side": 1,
+      "message": "If storeNode() fails, you\u0027re going to want to make sure that the node gets unlocked properly. We can get away with that in nodepoolcmd.py because once the program exits, the lock will be released. If you\u0027re making this for reusability, I\u0027m not sure if you can make that same assumption.",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 20
+      },
+      "revId": "9f613ed4799ad079372b09d798b82cc4180a458a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
