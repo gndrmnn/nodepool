@@ -132,6 +132,7 @@ class PoolWorker(threading.Thread):
         self.provider_name = provider_name
         self.pool_name = pool_name
         self.running = False
+        self.stop_event = threading.Event()
         self.paused_handler = None
         self.request_handlers = []
         self.watermark_sleep = nodepool.watermark_sleep
@@ -299,7 +300,7 @@ class PoolWorker(threading.Thread):
                 self._removeCompletedHandlers()
             except Exception:
                 self.log.exception("Error in PoolWorker:")
-            time.sleep(self.watermark_sleep)
+            self.stop_event.wait(self.watermark_sleep)
 
         # Cleanup on exit
         if self.paused_handler:
@@ -315,6 +316,7 @@ class PoolWorker(threading.Thread):
         '''
         self.log.info("%s received stop" % self.name)
         self.running = False
+        self.stop_event.set()
 
 
 class BaseCleanupWorker(threading.Thread):
@@ -323,6 +325,7 @@ class BaseCleanupWorker(threading.Thread):
         self._nodepool = nodepool
         self._interval = interval
         self._running = False
+        self._stop_event = threading.Event()
 
     def _deleteInstance(self, node):
         '''
@@ -361,12 +364,13 @@ class BaseCleanupWorker(threading.Thread):
                 self.log.info("ZooKeeper available. Resuming")
 
             self._run()
-            time.sleep(self._interval)
+            self._stop_event.wait(self._interval)
 
         self.log.info("Stopped")
 
     def stop(self):
         self._running = False
+        self._stop_event.set()
         self.join()
 
 
