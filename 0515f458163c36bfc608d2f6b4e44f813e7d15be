@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_467031a6",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:20:13Z",
+      "side": 1,
+      "message": "This needs to be just before the \u0027diskimages\u0027 section below.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 15
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_c66d2199",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:20:13Z",
+      "side": 1,
+      "message": "Let\u0027s get rid of this, because otherwise it\u0027s going to spam our logs. The debug line you have below is enough.",
+      "range": {
+        "startLine": 569,
+        "startChar": 12,
+        "endLine": 569,
+        "endChar": 53
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_e6a7fda6",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:20:13Z",
+      "side": 1,
+      "message": "If an admin has set a max-hold-age, seems sensible that we should not allow anyone to exceed that value. So probably should be:\n\n    max_uptime \u003d max(node.hold_for, config.max_hold_age)",
+      "range": {
+        "startLine": 581,
+        "startChar": 12,
+        "endLine": 584,
+        "endChar": 63
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_06cc6968",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:20:13Z",
+      "side": 1,
+      "message": "Let\u0027s not bypass the correct way to delete it. Just state node.state \u003d DELETING and storeNode(node).",
+      "range": {
+        "startLine": 609,
+        "startChar": 16,
+        "endLine": 609,
+        "endChar": 42
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_86d2b95b",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-07T18:20:13Z",
+      "side": 1,
+      "message": "I\u0027d prefer this not be in the zk.py file. I eventually want the contents of this file to define a python library that others can incorporate into their own programs. I don\u0027t want to set the precedent of having get*Nodes() methods for each node state. You can just move the code into the launcher.",
+      "range": {
+        "startLine": 1716,
+        "startChar": 8,
+        "endLine": 1716,
+        "endChar": 20
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
