@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "3fa0c359_a9d0d620",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-02-08T09:57:42Z",
+      "side": 1,
+      "message": "My reasoning was that the admin would set a relatively small default max-hold-age, which could be changed to a larger value if more time for debugging is needed. But given that held nodes *should* be rare, we can go with a large max-hold-age instead.\nMaybe a followup patch should be a way to extend a held node\u0027s uptime if the debugger needs extra time.",
+      "parentUuid": "3fa0c359_e6a7fda6",
+      "range": {
+        "startLine": 581,
+        "startChar": 12,
+        "endLine": 584,
+        "endChar": 63
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa0c359_06cc6968",
         "filename": "nodepool/launcher.py",
         "patchSetId": 11
@@ -82,6 +106,30 @@
       "writtenOn": "2018-02-07T18:20:13Z",
       "side": 1,
       "message": "Let\u0027s not bypass the correct way to delete it. Just state node.state \u003d DELETING and storeNode(node).",
+      "range": {
+        "startLine": 609,
+        "startChar": 16,
+        "endLine": 609,
+        "endChar": 42
+      },
+      "revId": "0515f458163c36bfc608d2f6b4e44f813e7d15be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_09878ad9",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-02-08T09:57:42Z",
+      "side": 1,
+      "message": "It\u0027s done this way several times in this file, it\u0027ll have to be cleaned up",
+      "parentUuid": "3fa0c359_06cc6968",
       "range": {
         "startLine": 609,
         "startChar": 16,
