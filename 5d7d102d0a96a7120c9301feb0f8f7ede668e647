@@ -16,6 +16,23 @@
       "revId": "5d7d102d0a96a7120c9301feb0f8f7ede668e647",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_0f5219df",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-02-08T20:45:16Z",
+      "side": 1,
+      "message": "I guess it\u0027s not directly related, but it would be really handy if this were inside the open block and logged the return code in a standard manner as the last thing in the file",
+      "revId": "5d7d102d0a96a7120c9301feb0f8f7ede668e647",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
