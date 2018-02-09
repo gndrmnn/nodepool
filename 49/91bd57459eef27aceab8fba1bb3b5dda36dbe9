@@ -1,0 +1,9 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Workflow+1: Tobias Henkel <tobias.henkel@bmw.de>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 09 Feb 2018 06:53:23 +0000
+Reviewed-on: https://review.openstack.org/541930
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
