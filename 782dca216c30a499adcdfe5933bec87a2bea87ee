@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_2572664a",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-02-11T16:30:56Z",
+      "side": 1,
+      "message": "I suppose this is an operational/installation issue but...\n\nI was doing sudo -u nodepool nodepool list on nodepool.o.o and saw the following (py27) stack trace:\n\n    Traceback (most recent call last):\n      File \"/usr/local/bin/nodepool\", line 6, in \u003cmodule\u003e\n        from nodepool.cmd.nodepoolcmd import main\n      File \"/usr/local/lib/python2.7/dist-packages/nodepool/cmd/__init__.py\", line 30, in \u003cmodule\u003e\n        from nodepool import logconfig\n      File \"/usr/local/lib/python2.7/dist-packages/nodepool/logconfig.py\", line 73\n        def _read_config_file(filename: str):\n                                      ^\n    SyntaxError: invalid syntax\n\nI suppose this is a py3 native syntax but when looking at /usr/local/bin/nodepool, the shebang is #!/usr/bin/python which happens to default to py2 on nodepool.o.o.\n\nnodepool is also installed in /usr/local/lib/python2.7 and not in /usr/local/lib/python3.4 ?\nI guess nodepool.o.o is only used for zookeeper now ?",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 37
+      },
+      "revId": "782dca216c30a499adcdfe5933bec87a2bea87ee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
