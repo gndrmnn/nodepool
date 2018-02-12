@@ -3,3 +3,4 @@ kpartx
 debootstrap
 yum-utils
 zookeeperd
+zypper
