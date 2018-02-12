@@ -1,6 +1,7 @@
 #!/bin/bash -ex
 
-LOGDIR=$1
+# NOTE(ianw): remove this when native only jobs that pass this arg
+LOGDIR=${1:-$WORKSPACE/logs/}
 
 NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/nodepool-venv}
 NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
