@@ -1,14 +1,8 @@
 #!/bin/bash -ex
 
-# NOTE(ianw): remove this and "/opt/stack/new" path when native only
-# jobs that pass this arg
-LOGDIR=${1:-$WORKSPACE/logs/}
+LOGDIR=$1
 
-if [[ -d /opt/stack/nodepool-venv ]]; then
-    NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/nodepool-venv}
-else
-    NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/new/nodepool-venv}
-fi
+NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-/opt/stack/nodepool-venv}
 NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
 NODEPOOL_SECURE=${NODEPOOL_SECURE:-/etc/nodepool/secure.conf}
 NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG -s $NODEPOOL_SECURE"
