@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_60f7d55a",
+        "filename": "nodepool/config.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-13T09:40:21Z",
+      "side": 1,
+      "message": "according to the doc 0 means inf so you need to add\n\n  if newconfig.max_hold_age \u003c\u003d 0:\n      newconfig.max_hold_age \u003d math.inf",
+      "revId": "a586b86ff8a79dd035aca4626c3864df3d8529c4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
