@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_dd42520f",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-13T08:41:19Z",
+      "side": 1,
+      "message": "I think this if/elif/else block can be simplified by using calculations with math.inf and initializing self._nodepool.config.max_hold_age with math.inf if it\u0027s \u003c\u003d0 (similar like it\u0027s done in the quota calculations). That way we don\u0027t need complex if statements.\n\n  if node.hold_expiration is not None and node.hold_expiration \u003e 0:\n      expiration \u003d node.hold_expiration\n  else:\n      expiration \u003d math.inf\n  max_uptime \u003d min(expiration, self._nodepool.config.max_hold_age)\n  if math.isinf(max_uptime):\n      continue",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 55
+      },
+      "revId": "c10776220830c9fbc2b2c079038b7fc3c853d645",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
