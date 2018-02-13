@@ -22,6 +22,30 @@
       "revId": "c10776220830c9fbc2b2c079038b7fc3c853d645",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa0c359_dd15724a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-02-13T09:07:47Z",
+      "side": 1,
+      "message": "Done - nice trick!",
+      "parentUuid": "3fa0c359_dd42520f",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 55
+      },
+      "revId": "c10776220830c9fbc2b2c079038b7fc3c853d645",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
