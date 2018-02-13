@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_6bf7bb8c",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-13T08:09:17Z",
+      "side": 1,
+      "message": "Do we need to scope this by the driver? If the node has an az we can push the stat regardless of the driver right?",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 78
+      },
+      "revId": "0ac1bc2190f1c04849c277d0e0f3de009ba812e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
