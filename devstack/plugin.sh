@@ -200,6 +200,7 @@ EOF
     NODEPOOL_CENTOS_7_MIN_READY=1
     NODEPOOL_DEBIAN_JESSIE_MIN_READY=1
     NODEPOOL_FEDORA_27_MIN_READY=1
+    NODEPOOL_UBUNTU_BEAVER_MIN_READY=1
     NODEPOOL_UBUNTU_TRUSTY_MIN_READY=1
     NODEPOOL_UBUNTU_XENIAL_MIN_READY=1
     NODEPOOL_OPENSUSE_423_MIN_READY=1
@@ -212,6 +213,9 @@ EOF
     fi
     if $NODEPOOL_PAUSE_FEDORA_27_DIB ; then
        NODEPOOL_FEDORA_27_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_UBUNTU_BEAVER_DIB ; then
+       NODEPOOL_UBUNTU_BEAVER_MIN_READY=0
     fi
     if $NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB ; then
        NODEPOOL_UBUNTU_TRUSTY_MIN_READY=0
@@ -241,6 +245,8 @@ labels:
     min-ready: $NODEPOOL_DEBIAN_JESSIE_MIN_READY
   - name: fedora-27
     min-ready: $NODEPOOL_FEDORA_27_MIN_READY
+  - name: ubuntu-beaver
+    min-ready: $NODEPOOL_UBUNTU_BEAVER_MIN_READY
   - name: ubuntu-trusty
     min-ready: $NODEPOOL_UBUNTU_TRUSTY_MIN_READY
   - name: ubuntu-xenial
@@ -262,6 +268,8 @@ providers:
       - name: debian-jessie
         config-drive: true
       - name: fedora-27
+        config-drive: true
+      - name: ubuntu-beaver
         config-drive: true
       - name: ubuntu-trusty
         config-drive: true
@@ -286,6 +294,11 @@ providers:
           - name: fedora-27
             diskimage: fedora-27
             min-ram: 1024
+            flavor-name: 'nodepool'
+            console-log: True
+          - name: ubuntu-beaver
+            diskimage: ubuntu-beaver
+            min-ram: 512
             flavor-name: 'nodepool'
             console-log: True
           - name: ubuntu-trusty
@@ -367,6 +380,32 @@ diskimages:
       DIB_CHECKSUM: '1'
       DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+  - name: ubuntu-beaver
+    pause: $NODEPOOL_PAUSE_UBUNTU_BEAVER_DIB
+    rebuild-age: 86400
+    elements:
+      - ubuntu-minimal
+      - vm
+      - simple-init
+      - devuser
+      - openssh-server
+      - nodepool-setup
+    release: beaver
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      DIB_DEBIAN_COMPONENTS: 'main,universe'
+      # TODO(pabelanger): Add ubuntu-beaver mirrors to AFS.
+      #$DIB_DISTRIBUTION_MIRROR_UBUNTU
+      #$DIB_DEBOOTSTRAP_EXTRA_ARGS
       $DIB_GET_PIP
       $DIB_GLEAN_INSTALLTYPE
       $DIB_GLEAN_REPOLOCATION
