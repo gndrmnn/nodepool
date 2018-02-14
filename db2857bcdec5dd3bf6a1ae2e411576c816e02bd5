@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_b6573827",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-02-14T18:15:00Z",
+      "side": 1,
+      "message": "This needs to be updated for this to actually use fedora 27.",
+      "range": {
+        "startLine": 364,
+        "startChar": 13,
+        "endLine": 364,
+        "endChar": 15
+      },
+      "revId": "db2857bcdec5dd3bf6a1ae2e411576c816e02bd5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
