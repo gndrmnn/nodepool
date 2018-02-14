@@ -25,6 +25,7 @@ fi
 NODEPOOL_PAUSE_CENTOS_7_DIB=${NODEPOOL_PAUSE_CENTOS_7_DIB:-True}
 NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB=${NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB:-True}
 NODEPOOL_PAUSE_FEDORA_27_DIB=${NODEPOOL_PAUSE_FEDORA_27_DIB:-True}
+NODEPOOL_PAUSE_UBUNTU_BEAVER_DIB=${NODEPOOL_PAUSE_UBUNTU_BEAVER_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB=${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB:-True}
 NODEPOOL_PAUSE_OPENSUSE_423_DIB=${NODEPOOL_PAUSE_OPENSUSE_423_DIB:-True}
@@ -70,6 +71,13 @@ if [ ${NODEPOOL_PAUSE_FEDORA_27_DIB,,} = 'false' ]; then
     waitforimage fedora-27
     # check image was bootable
     waitfornode fedora-27
+fi
+
+if [ ${NODEPOOL_PAUSE_UBUNTU_BEAVER_DIB,,} = 'false' ]; then
+    # check that image built
+    waitforimage ubuntu-beaver
+    # check image was bootable
+    waitfornode ubuntu-beaver
 fi
 
 if [ ${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB,,} = 'false' ]; then
