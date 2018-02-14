@@ -55,6 +55,7 @@
     run: playbooks/nodepool-functional-py35/run.yaml
     vars:
       devstack_localrc:
+        NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB: false
         NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB: false
 
 - job:
@@ -75,6 +76,7 @@
     parent: nodepool-functional-py35-src-base
     vars:
       devstack_localrc:
+        NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB: false
         NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB: false
 
 # Distro functional tests.  This is used by projects such as
@@ -100,6 +102,7 @@
     parent: nodepool-functional-py35-src-base
     vars:
       devstack_localrc:
+        NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB: false
         NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB: false
         NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB: false
 
