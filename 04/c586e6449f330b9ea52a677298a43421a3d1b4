@@ -1,0 +1,9 @@
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 15 Feb 2018 23:39:43 +0000
+Reviewed-on: https://review.openstack.org/545113
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
