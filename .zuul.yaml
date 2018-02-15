@@ -6,6 +6,7 @@
 
       This test runs the zuul project ``nodepool`` environment.
     pre-run: playbooks/nodepool-zuul-functional/pre.yaml
+    post-run: playbooks/nodepool-zuul-functional/post.yaml
     required-projects:
       - openstack-infra/nodepool
       - openstack-infra/zuul
