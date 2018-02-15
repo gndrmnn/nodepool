@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_b6339162",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-02-15T23:24:33Z",
+      "side": 1,
+      "message": "Maybe use $NODEPOOL_KEY_NAME here so that everything stays in sync?",
+      "range": {
+        "startLine": 296,
+        "startChar": 22,
+        "endLine": 296,
+        "endChar": 26
+      },
+      "revId": "04c586e6449f330b9ea52a677298a43421a3d1b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
