@@ -12,6 +12,8 @@
     vars:
       zuul_work_dir: "{{ zuul.projects['git.openstack.org/openstack-infra/zuul'].src_dir }}"
       tox_envlist: nodepool
+    zuul_copy_output:
+      '/tmp/nodepool/logs': 'logs'
 
 # NOTE(ianw): this job doesn't really do anything unless you set
 # "NODEPOOL_PAUSE_something_DIB: false" to unpause one or more builds.
