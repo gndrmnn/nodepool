@@ -1,5 +1,7 @@
 - hosts: all
   name: Zuul setup for nodepool test
+  roles:
+    - legacy-copy-jenkins-scripts
   tasks:
 
     - name: Run tools/nodepool-integration-setup.sh from zuul
