@@ -1,0 +1,7 @@
+- hosts: all
+  tasks:
+    - include_role:
+        name: stage-output
+      vars:
+        zuul_copy_output:
+          '/tmp/nodepool/logs': 'logs'
