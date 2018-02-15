@@ -1,0 +1,6 @@
+- hosts: all
+  tasks:
+    - name: Copy nodepool logs
+      synchronize:
+        src: '/tmp/nodepool/logs'
+        dest: '{{ zuul.executor.log_root }}'
