@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_8a929e9e",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-20T13:37:11Z",
+      "side": 1,
+      "message": "Please see https://review.openstack.org/546146 because we really shouldn\u0027t be deleting this way. You may need to either rebase on that, or just wait for it to merge and adjust the code here to set the node state to DELETING.",
+      "range": {
+        "startLine": 612,
+        "startChar": 0,
+        "endLine": 612,
+        "endChar": 42
+      },
+      "revId": "5e36ef4ebb1a33e071613f879fa400a449e0711e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
