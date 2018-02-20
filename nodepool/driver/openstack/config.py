@@ -116,6 +116,8 @@ class OpenStackProviderConfig(ProviderConfig):
         self.launch_timeout = self.provider.get('launch-timeout', 3600)
         self.launch_retries = self.provider.get('launch-retries', 3)
         self.clean_floating_ips = self.provider.get('clean-floating-ips')
+        self.sticky_availability_zone = self.provider.get(
+            'sticky-availability-zone', True)
         self.hostname_format = self.provider.get(
             'hostname-format',
             '{label.name}-{provider.name}-{node.id}'

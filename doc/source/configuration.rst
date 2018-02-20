@@ -479,9 +479,14 @@ Example::
     of availability zones, supply a list of availability zone names
     in this setting.
 
-    Nodepool chooses an availability zone from the list at random
-    when creating nodes but ensures that all nodes for a given
-    request are placed in the same availability zone.
+    Nodepool chooses an availability zone from the list at random when creating
+    nodes. Unless `sticky-availability-zone` is set to False, it will ensure
+    that all nodes for a given request are placed in the same availability
+    zone.
+
+  ``sticky-availability-zone`` (bool)
+    Set this to False to allow requests to be satisfied with ready nodes from
+    different availability zones. The default value is True.
 
   ``networks`` (list)
     Specify custom Neutron networks that get attached to each

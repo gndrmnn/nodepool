@@ -446,8 +446,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                         continue
                     if node.pool != self.pool.name:
                         continue
-                    if self.chosen_az and node.az != self.chosen_az:
-                        continue
+                    if self.provider.sticky_availability_zone:
+                        if self.chosen_az and node.az != self.chosen_az:
+                            continue
 
                     try:
                         self.zk.lockNode(node, blocking=False)
