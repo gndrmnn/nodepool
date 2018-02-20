@@ -69,9 +69,11 @@ function install_nodepool {
     install_diskimage_builder
     install_glean
 
+    USE_PYTHON3=True
     setup_develop $DEST/nodepool
     $NODEPOOL_INSTALL/bin/pip install $DEST/nodepool
     $NODEPOOL_INSTALL/bin/pbr freeze
+    USE_PYTHON3=False
 }
 
 # requires some globals from devstack, which *might* not be stable api
