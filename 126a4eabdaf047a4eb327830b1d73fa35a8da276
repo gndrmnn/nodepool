@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_c1e880b4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-02-20T21:38:45Z",
+      "side": 0,
+      "message": "by dropping nodepool, this is going to mean we need to update logging.conf now right?  What is we kept nodepool and removed builder",
+      "revId": "126a4eabdaf047a4eb327830b1d73fa35a8da276",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
