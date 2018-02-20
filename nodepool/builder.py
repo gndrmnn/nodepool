@@ -112,7 +112,7 @@ class DibImageFile(object):
 class BaseWorker(threading.Thread):
     def __init__(self, builder_id, config_path, secure_path, interval, zk):
         super(BaseWorker, self).__init__()
-        self.log = logging.getLogger("nodepool.builder.BaseWorker")
+        self.log = logging.getLogger("builder.BaseWorker")
         self.daemon = True
         self._running = False
         self._stop_event = threading.Event()
@@ -156,7 +156,7 @@ class CleanupWorker(BaseWorker):
         super(CleanupWorker, self).__init__(builder_id, config_path,
                                             secure_path, interval, zk)
         self.log = logging.getLogger(
-            "nodepool.builder.CleanupWorker.%s" % name)
+            "builder.CleanupWorker.%s" % name)
         self.name = 'CleanupWorker.%s' % name
 
     def _buildUploadRecencyTable(self):
@@ -172,6 +172,14 @@ class CleanupWorker(BaseWorker):
             image2:
                 providerC: [ (build_id, upload_id, upload_time), ...  ]
         '''
+        def pretty_table(d):
+            s = "\n"
+            for image in d.keys():
+                s += "%s:\n" % image
+                for provider in d[image]:
+                    s += "   %s: %s\n" % (provider, d[image][provider])
+            return s.rstrip()
+
         self._rtable = {}
         for image in self._zk.getImageNames():
             self._rtable[image] = {}
@@ -191,6 +199,8 @@ class CleanupWorker(BaseWorker):
             for p in self._rtable[i].keys():
                 self._rtable[i][p].sort(key=lambda x: x[2], reverse=True)
                 self._rtable[i][p] = self._rtable[i][p][:2]
+
+        self.log.debug("Upload recency table: %s", pretty_table(self._rtable))
 
     def _isRecentUpload(self, image, provider, build_id, upload_id):
         '''
@@ -322,6 +332,7 @@ class CleanupWorker(BaseWorker):
                     "Unable to delete image %s from %s:",
                     upload.external_name, upload.provider_name)
             else:
+                self.log.debug("Deleting image upload: %s", upload)
                 self._zk.deleteUpload(upload.image_name, upload.build_id,
                                       upload.provider_name, upload.id)
 
@@ -543,7 +554,7 @@ class BuildWorker(BaseWorker):
                  interval, zk, dib_cmd):
         super(BuildWorker, self).__init__(builder_id, config_path, secure_path,
                                           interval, zk)
-        self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
+        self.log = logging.getLogger("builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
         self.dib_cmd = dib_cmd
 
@@ -859,7 +870,7 @@ class UploadWorker(BaseWorker):
                  interval, zk):
         super(UploadWorker, self).__init__(builder_id, config_path,
                                            secure_path, interval, zk)
-        self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
+        self.log = logging.getLogger("builder.UploadWorker.%s" % name)
         self.name = 'UploadWorker.%s' % name
 
     def _reloadConfig(self):
@@ -1109,7 +1120,7 @@ class NodePoolBuilder(object):
 
         * Start and maintain the working state of each worker thread.
     '''
-    log = logging.getLogger("nodepool.builder.NodePoolBuilder")
+    log = logging.getLogger("builder.NodePoolBuilder")
 
     def __init__(self, config_path, secure_path=None,
                  num_builders=1, num_uploaders=4, fake=False):
