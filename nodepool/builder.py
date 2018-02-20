@@ -172,6 +172,14 @@ class CleanupWorker(BaseWorker):
             image2:
                 providerC: [ (build_id, upload_id, upload_time), ...  ]
         '''
+        def pretty_table(d):
+            s = "\n"
+            for image in d.keys():
+                s += "%s:\n" % image
+                for provider in d[image]:
+                    s += "   %s: %s\n" % (provider, d[image][provider])
+            return s.rstrip()
+
         self._rtable = {}
         for image in self._zk.getImageNames():
             self._rtable[image] = {}
@@ -191,6 +199,8 @@ class CleanupWorker(BaseWorker):
             for p in self._rtable[i].keys():
                 self._rtable[i][p].sort(key=lambda x: x[2], reverse=True)
                 self._rtable[i][p] = self._rtable[i][p][:2]
+
+        self.log.debug("Upload recency table: %s", pretty_table(self._rtable))
 
     def _isRecentUpload(self, image, provider, build_id, upload_id):
         '''
@@ -322,6 +332,7 @@ class CleanupWorker(BaseWorker):
                     "Unable to delete image %s from %s:",
                     upload.external_name, upload.provider_name)
             else:
+                self.log.debug("Deleting image upload: %s", upload)
                 self._zk.deleteUpload(upload.image_name, upload.build_id,
                                       upload.provider_name, upload.id)
 
