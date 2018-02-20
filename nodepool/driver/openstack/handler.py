@@ -393,8 +393,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return pool_quota.non_negative()
 
     def checkReusableNode(self, node):
-        if self.chosen_az and node.az != self.chosen_az:
-            return False
+        if self.provider.sticky_availability_zone:
+            if self.chosen_az and node.az != self.chosen_az:
+                return False
         return True
 
     def nodeReusedNotification(self, node):
@@ -419,10 +420,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         Select grouping AZ if we didn't set AZ from a selected,
         pre-existing node
         """
-        if not self.chosen_az:
-            self.chosen_az = random.choice(
-                self.pool.azs or self.manager.getAZs())
-        node.az = self.chosen_az
+        if self.provider.sticky_availability_zone:
+            if not self.chosen_az:
+                self.chosen_az = random.choice(
+                    self.pool.azs or self.manager.getAZs())
+            node.az = self.chosen_az
         node.cloud = self.provider.cloud_config.name
         node.region = self.provider.region_name
 
