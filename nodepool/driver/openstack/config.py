@@ -286,6 +286,8 @@ class OpenStackProviderConfig(ProviderConfig):
             'port-cleanup-interval',
             600
         )
+        self.sticky_availability_zone = self.provider.get(
+            'sticky-availability-zone', True)
         self.hostname_format = self.provider.get(
             'hostname-format',
             '{label.name}-{provider.name}-{node.id}'

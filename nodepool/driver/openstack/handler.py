@@ -393,8 +393,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return pool_quota.non_negative()
 
     def checkReusableNode(self, node):
-        if self.chosen_az and node.az != self.chosen_az:
-            return False
+        if self.provider.sticky_availability_zone:
+            if self.chosen_az and node.az != self.chosen_az:
+                return False
         return True
 
     def nodeReusedNotification(self, node):
