@@ -79,9 +79,6 @@ class NodePoolCmd(NodepoolApp):
             help='place a node in the DELETE state')
         cmd_delete.set_defaults(func=self.delete)
         cmd_delete.add_argument('id', help='node id')
-        cmd_delete.add_argument('--now',
-                                action='store_true',
-                                help='delete the node in the foreground')
 
         cmd_image_delete = subparsers.add_parser(
             'image-delete',
@@ -232,20 +229,10 @@ class NodePoolCmd(NodepoolApp):
             return
 
         self.zk.lockNode(node, blocking=True, timeout=5)
-
-        if self.args.now:
-            if node.provider not in self.pool.config.providers:
-                print("Provider %s for node %s not defined on this launcher" %
-                      (node.provider, node.id))
-                return
-            provider = self.pool.config.providers[node.provider]
-            manager = provider_manager.get_provider(provider, True)
-            manager.start()
-            launcher.NodeDeleter.delete(self.zk, manager, node)
-            manager.stop()
-        else:
-            node.state = zk.DELETING
+        node.state = zk.DELETING
+        try:
             self.zk.storeNode(node)
+        finally:
             self.zk.unlockNode(node)
 
         self.list(node_id=node.id)

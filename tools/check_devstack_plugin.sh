@@ -127,7 +127,7 @@ set -o errexit
 $NODEPOOL list
 
 # Try to delete the nodes that were just built
-$NODEPOOL delete --now 0000000000
+$NODEPOOL delete 0000000000
 
 # show the deleted nodes (and their replacements may be building)
 $NODEPOOL list

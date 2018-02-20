@@ -222,38 +222,6 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Assert the node is gone
         self.assert_listed(configfile, ['list'], 0, nodes[0].id, 0)
 
-    def test_delete_now(self):
-        configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
-
-        # (Shrews): This is a hack to avoid a race with the DeletedNodeWorker
-        # thread where it may see that our direct call to NodeDeleter.delete()
-        # has changed the node state to DELETING and lock the node during the
-        # act of deletion, but *after* the lock znode child has been deleted
-        # and *before* kazoo has fully removed the node znode itself. This race
-        # causes the rare kazoo.exceptions.NotEmptyError in this test because
-        # a new lock znode gets created (that the original delete does not see)
-        # preventing the node znode from being deleted.
-        pool.delete_interval = 5
-
-        pool.start()
-        self.waitForImage('fake-provider', 'fake-image')
-        nodes = self.waitForNodes('fake-label')
-        self.assertEqual(len(nodes), 1)
-
-        # Assert one node exists and it is node 1 in a ready state.
-        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
-        self.assert_nodes_listed(configfile, 1, zk.READY)
-
-        # Delete node
-        self.patch_argv('-c', configfile, 'delete', '--now', nodes[0].id)
-        nodepoolcmd.main()
-        self.waitForNodeDeletion(nodes[0])
-
-        # Assert the node is gone
-        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 0)
-
     def test_image_build(self):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
