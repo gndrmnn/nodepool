@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_b9b57df0",
+        "filename": "playbooks/nodepool-zuul-functional/pre.yaml",
+        "patchSetId": 14
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-02-20T09:17:01Z",
+      "side": 1,
+      "message": "nit: the ordering in ansible playbooks when roles and tasks are involved is not obvious to the not so ansible experienced folks maybe it makes sense to use just roles in the future",
+      "revId": "5195ccb70a4e9412a7b8d4574d9d432fb1efa221",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
