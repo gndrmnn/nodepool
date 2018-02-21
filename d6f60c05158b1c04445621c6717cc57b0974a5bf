@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa0c359_98ac22ee",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2018-02-21T04:18:16Z",
+      "side": 1,
+      "message": "I\u0027m not sure if modifying this module variable from outside is a good side-effect. Wouldn\u0027t it be better to pass the config into get_client?",
+      "range": {
+        "startLine": 25,
+        "startChar": 9,
+        "endLine": 25,
+        "endChar": 13
+      },
+      "revId": "d6f60c05158b1c04445621c6717cc57b0974a5bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
