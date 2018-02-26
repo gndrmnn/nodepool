@@ -134,9 +134,6 @@ class NodepoolApp(object):
         return self._do_run()
 
     def _do_run(self):
-        # NOTE(jamielennox): setup logging a bit late so it's not done until
-        # after a DaemonContext is created.
-        self.setup_logging()
         return self.run()
 
     @classmethod
@@ -170,7 +167,19 @@ class NodepoolDaemonApp(NodepoolApp):
         self.pidfile = self.get_path(args.pidfile)
         return args
 
+    def _logging_handlers(self, logger):
+        """Get logger files to preserve when daemonizing"""
+        handles = []
+        for handler in logger.handlers:
+            handles.append(handler.stream.fileno())
+        if logger.parent:
+            handles += self._get_logging_handlers(logger.parent)
+        return handles
+
     def _do_run(self):
+        log = logging.getLogger(__name__)
+        self.setup_logging()
+
         if self.args.nodaemon:
             return super(NodepoolDaemonApp, self)._do_run()
 
@@ -185,7 +194,9 @@ class NodepoolDaemonApp(NodepoolApp):
             with pid:
                 pass
 
-            with daemon.DaemonContext(pidfile=pid):
+            log_handlers = self._logging_handlers(log)
+            with daemon.DaemonContext(pidfile=pid,
+                                      files_preserve=log_handlers):
                 return super(NodepoolDaemonApp, self)._do_run()
 
     @classmethod
