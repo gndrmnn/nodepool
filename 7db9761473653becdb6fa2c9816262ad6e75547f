@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f9dbf25_64efc087",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-27T12:58:59Z",
+      "side": 1,
+      "message": "I really don\u0027t understand what is happening with this anymore. https://review.openstack.org/535563 alternated between counts and no counts until settling on the latter. Can we get some agreement on this and what is required?",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 32
+      },
+      "revId": "7db9761473653becdb6fa2c9816262ad6e75547f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
