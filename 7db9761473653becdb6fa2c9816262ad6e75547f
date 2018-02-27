@@ -46,6 +46,30 @@
       "revId": "7db9761473653becdb6fa2c9816262ad6e75547f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9dbf25_4e409608",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-02-27T22:57:59Z",
+      "side": 1,
+      "message": "Agree, from discussions it looks like this isn\u0027t serving it\u0027s intended purpose.  I\u0027ll propose taking this out, pending re-implementation.",
+      "parentUuid": "1f9dbf25_64efc087",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 32
+      },
+      "revId": "7db9761473653becdb6fa2c9816262ad6e75547f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
