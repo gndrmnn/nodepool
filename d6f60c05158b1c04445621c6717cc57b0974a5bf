@@ -22,6 +22,30 @@
       "revId": "d6f60c05158b1c04445621c6717cc57b0974a5bf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9dbf25_249e9807",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-02-27T13:00:26Z",
+      "side": 1,
+      "message": "We can do that, but this will change a lot more code just to pass the global config down to the handlers. I think this is similar to a singleton or the previous environ usage.",
+      "parentUuid": "3fa0c359_98ac22ee",
+      "range": {
+        "startLine": 25,
+        "startChar": 9,
+        "endLine": 25,
+        "endChar": 13
+      },
+      "revId": "d6f60c05158b1c04445621c6717cc57b0974a5bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
