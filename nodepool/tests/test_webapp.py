@@ -166,7 +166,7 @@ class TestWebApp(tests.DBTestCase):
                          'application/json')
         data = f.read()
         objs = json.loads(data.decode('utf8'))
-        self.assertEqual(['fake-label'], objs)
+        self.assertEqual([{'label': 'fake-label', 'count': 1}], objs)
 
     def test_request_list_json(self):
         configfile = self.setup_config('node.yaml')
