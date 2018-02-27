@@ -285,7 +285,11 @@ class PoolWorker(threading.Thread):
                 self.log.info("ZooKeeper available. Resuming")
 
             # Make sure we're always registered with ZK
-            self.zk.registerLauncher(self.launcher_id)
+            launcher = zk.Launcher()
+            launcher.id = self.launcher_id
+            launcher.supported_labels = list(
+                self.nodepool.config.labels.keys())
+            self.zk.registerLauncher(launcher)
 
             try:
                 if not self.paused_handler:
