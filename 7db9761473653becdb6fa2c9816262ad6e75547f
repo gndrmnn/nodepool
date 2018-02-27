@@ -22,6 +22,30 @@
       "revId": "7db9761473653becdb6fa2c9816262ad6e75547f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9dbf25_8f09c5de",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-27T13:25:48Z",
+      "side": 1,
+      "message": "FWIW, and as a reminder to myself mostly, this was also discussed a bit in #zuul: http://eavesdrop.openstack.org/irclogs/%23zuul/%23zuul.2018-02-07.log.html#t2018-02-07T19:12:32",
+      "parentUuid": "1f9dbf25_64efc087",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 32
+      },
+      "revId": "7db9761473653becdb6fa2c9816262ad6e75547f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
