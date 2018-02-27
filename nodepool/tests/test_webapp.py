@@ -21,7 +21,6 @@ from six.moves.urllib import request
 from nodepool import tests
 from nodepool import zk
 
-
 class TestWebApp(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestWebApp")
 
