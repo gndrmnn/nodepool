@@ -108,8 +108,9 @@ def node_list_json(zk):
 
 def label_list(zk):
     labels = set()
-    for node in zk.nodeIterator():
-        labels.add(node.type)
+    for launcher in zk.getRegisteredLaunchers():
+        for label in launcher.supported_labels():
+            labels.add(label)
     t = PrettyTable(["Label"])
     for label in sorted(labels.keys()):
         t.add_row((label,))
