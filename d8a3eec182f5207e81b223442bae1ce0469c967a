@@ -22,6 +22,30 @@
       "revId": "d8a3eec182f5207e81b223442bae1ce0469c967a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9dbf25_4cd094f8",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-02-28T15:17:34Z",
+      "side": 1,
+      "message": "Nevermind this. Sets can\u0027t be sorted (unless converted to a list anyway).",
+      "parentUuid": "1f9dbf25_53f27f08",
+      "range": {
+        "startLine": 162,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 46
+      },
+      "revId": "d8a3eec182f5207e81b223442bae1ce0469c967a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
