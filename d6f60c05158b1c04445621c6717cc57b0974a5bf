@@ -46,6 +46,30 @@
       "revId": "d6f60c05158b1c04445621c6717cc57b0974a5bf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f9dbf25_06224ea5",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-03-01T22:05:34Z",
+      "side": 1,
+      "message": "I have to second Joshua. Even if we change more code we should pass the config to get_client. Zuul does it the same way:\n\n  def get_statsd_config(config):\n      statsd_host \u003d get_default(config, \u0027statsd\u0027, \u0027server\u0027)\n      statsd_port \u003d int(get_default(config, \u0027statsd\u0027, \u0027port\u0027, 8125))\n      statsd_prefix \u003d get_default(config, \u0027statsd\u0027, \u0027prefix\u0027)\n      return (statsd_host, statsd_port, statsd_prefix)\n\n\n  def get_statsd(config):\n      (statsd_host, statsd_port, statsd_prefix) \u003d get_statsd_config(config)\n      if statsd_host is None:\n          return None\n      import statsd\n      return statsd.StatsClient(statsd_host, statsd_port, statsd_prefix)",
+      "parentUuid": "1f9dbf25_249e9807",
+      "range": {
+        "startLine": 25,
+        "startChar": 9,
+        "endLine": 25,
+        "endChar": 13
+      },
+      "revId": "d6f60c05158b1c04445621c6717cc57b0974a5bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
