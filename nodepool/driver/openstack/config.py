@@ -170,6 +170,7 @@ class OpenStackProviderConfig(ProviderConfig):
             pp.max_servers = pool.get('max-servers', math.inf)
             pp.max_ram = pool.get('max-ram', math.inf)
             pp.azs = pool.get('availability-zones')
+            pp.zz = pool.get('zuul-zone', 'default')
             pp.networks = pool.get('networks', [])
             pp.auto_floating_ip = bool(pool.get('auto-floating-ip', True))
             pp.labels = {}
@@ -258,6 +259,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'max-ram': int,
             'labels': [pool_label],
             'availability-zones': [str],
+            'zuul-zone': str,
         }
 
         return v.Schema({

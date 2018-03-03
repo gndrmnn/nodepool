@@ -448,6 +448,8 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                         continue
                     if self.chosen_az and node.az != self.chosen_az:
                         continue
+                    if node.zz != self.pool.zz:
+                        continue
 
                     try:
                         self.zk.lockNode(node, blocking=False)
@@ -504,6 +506,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 node.provider = self.provider.name
                 node.pool = self.pool.name
                 node.az = self.chosen_az
+                node.zz = self.pool.zz
                 node.cloud = self.provider.cloud_config.name
                 node.region = self.provider.region_name
                 node.launcher = self.launcher_id
