@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff6b8bd7_14c29334",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-06T15:42:12Z",
+      "side": 1,
+      "message": "nit: s/indempotent/idempotent/",
+      "range": {
+        "startLine": 728,
+        "startChar": 47,
+        "endLine": 728,
+        "endChar": 58
+      },
+      "revId": "3bf3962421cc9808cc2ca8ece3e3aca54b3a39a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff6b8bd7_14a9337a",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-06T15:42:12Z",
+      "side": 1,
+      "message": "nit: s/Indepotent/Idempotent/",
+      "range": {
+        "startLine": 757,
+        "startChar": 37,
+        "endLine": 757,
+        "endChar": 48
+      },
+      "revId": "3bf3962421cc9808cc2ca8ece3e3aca54b3a39a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

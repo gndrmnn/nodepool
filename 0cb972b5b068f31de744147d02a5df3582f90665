@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff6b8bd7_b6272c65",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-06T15:42:12Z",
+      "side": 0,
+      "message": "This check was necessary because building an image will take a long time and we needed to make sure that we still had our lock on the ImageBuild. See change: I646a0f7696a9adb4dbfbb224441b9fb411c2953d\n\nDoesn\u0027t look like we have that information now with the retry in place, so this may be a source of problems.",
+      "range": {
+        "startLine": 756,
+        "startChar": 0,
+        "endLine": 759,
+        "endChar": 40
+      },
+      "revId": "0cb972b5b068f31de744147d02a5df3582f90665",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
