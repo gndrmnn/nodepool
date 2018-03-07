@@ -22,6 +22,30 @@
       "revId": "0cb972b5b068f31de744147d02a5df3582f90665",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df7087c5_02c83053",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-03-07T02:19:15Z",
+      "side": 0,
+      "message": "Actually I don\u0027t think this matter. If builder01 lost the connection during the build, then another builder may try to build the image and both will store the image as READY. Is that really an issue?\n\nMoreover let\u0027s consider this scenario: builder01 takes a very long time to build the image (e.g. slow disk i/o) and lost the connection during the build, it will eventually write the image state as FAILED. What happens if builder02 grab the lock, build the image faster than builder01 and write the image state as READY. Wouldn\u0027t builder01 over-write builder02 results, resulting in the image state being FAILED, even though both builder created one?\n\nIf this scenario repeats, then the image state may never be READY...",
+      "parentUuid": "ff6b8bd7_b6272c65",
+      "range": {
+        "startLine": 756,
+        "startChar": 0,
+        "endLine": 759,
+        "endChar": 40
+      },
+      "revId": "0cb972b5b068f31de744147d02a5df3582f90665",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
