@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df7087c5_2651b1d9",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-03-07T20:01:54Z",
+      "side": 1,
+      "message": "Needing to check the driver implementation here in order to know how to get the labels from the driver config seems like a bug in our driver implementation. We should look into either making configs consistent enough to get that info from the driver config in one way or extend the driver api to have a method to call in order to get this info.\n\nI don\u0027t think we need to solve that here as this is a preexisting situation with the drivers, but before we add in more drivers would be good to address it.",
+      "revId": "6bf7e993974ced65d890b391bda4974855bd33cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
