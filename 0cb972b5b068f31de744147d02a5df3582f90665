@@ -46,6 +46,30 @@
       "revId": "0cb972b5b068f31de744147d02a5df3582f90665",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df7087c5_fbfef9ac",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-07T16:04:09Z",
+      "side": 0,
+      "message": "It would not be overwritten. We use sequences for the image builds, so the 2nd builder would get a new znode. And as long as the first builder holds a lock for that particular image build, the 2nd builder would not start trying to build the same image. If we did lose the lock, that\u0027s when we have to assume that another build for that image could be happening, so we have to mark the first one as failed (thus the reason for the check above).",
+      "parentUuid": "df7087c5_02c83053",
+      "range": {
+        "startLine": 756,
+        "startChar": 0,
+        "endLine": 759,
+        "endChar": 40
+      },
+      "revId": "0cb972b5b068f31de744147d02a5df3582f90665",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
