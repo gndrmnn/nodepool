@@ -475,6 +475,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - ca-certificates-java
     release: xenial
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
