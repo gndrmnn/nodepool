@@ -1,0 +1,9 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 08 Mar 2018 03:01:31 +0000
+Reviewed-on: https://review.openstack.org/548376
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
