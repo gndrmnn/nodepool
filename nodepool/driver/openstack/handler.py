@@ -146,6 +146,9 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
         self._node.connection_type = connection_type
 
         # Checkpoint save the updated node info
+        if not zk.checkLock(self._node.lock):
+            raise exceptions.ZKSessionLost(
+                "Lost ZK Session during node launch")
         self._zk.storeNode(self._node)
 
         self.log.debug("Waiting for server %s for node id: %s" %
@@ -185,6 +188,9 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             self._node.private_ipv4 = server.public_v4
 
         # Checkpoint save the updated node info
+        if not zk.checkLock(self._node.lock):
+            raise exceptions.ZKSessionLost(
+                "Lost ZK Session during node launch")
         self._zk.storeNode(self._node)
 
         self.log.debug(
@@ -207,6 +213,9 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             raise
 
         self._node.host_keys = host_keys
+        if not zk.checkLock(self._node.lock):
+            raise exceptions.ZKSessionLost(
+                "Lost ZK Session during node launch")
         self._zk.storeNode(self._node)
 
     def _run(self):
@@ -215,6 +224,10 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             try:
                 self._launchNode()
                 break
+            except exceptions.ZKSessionLost:
+                # If we lost our ZooKeeper session, we've lost our node lock
+                # so there's no need to continue.
+                raise
             except Exception as e:
                 if attempts <= self._retries:
                     self.log.exception(
@@ -243,8 +256,8 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             self._node.state = zk.READY
             self.log.info("Node id %s is ready", self._node.id)
         else:
-            self._node.state = zk.BUILDING
-            self.log.info("Lock lost while launching %s" % self._node.id)
+            raise exceptions.ZKSessionLost(
+                "Lock lost while launching %s" % self._node.id)
         self._zk.storeNode(self._node)
 
     def run(self):
@@ -253,6 +266,15 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
 
         try:
             self._run()
+        except exceptions.ZKSessionLost:
+            # Our node lock is gone, leaving the node state as BUILDING.
+            # This will get cleaned up in ZooKeeper automatically, but we
+            # must still set our cached node state to FAILED for the
+            # NodeLaunchManager's poll() method.
+            self.log.error(
+                "Lost ZooKeeper session trying to launch for node %s",
+                self._node.id)
+            self._node.state = zk.FAILED
         except Exception as e:
             self.log.exception("Launch failed for node %s:",
                                self._node.id)

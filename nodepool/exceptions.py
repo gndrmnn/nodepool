@@ -71,3 +71,7 @@ class ZKException(Exception):
 
 class ZKLockException(ZKException):
     pass
+
+
+class ZKSessionLost(ZKException):
+    statsd_key = 'error.zksession'
