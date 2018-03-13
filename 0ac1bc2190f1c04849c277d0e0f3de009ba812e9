@@ -22,6 +22,30 @@
       "revId": "0ac1bc2190f1c04849c277d0e0f3de009ba812e9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df7087c5_327421fe",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-03-13T07:09:10Z",
+      "side": 1,
+      "message": "Indeed, no need to check for driver type.",
+      "parentUuid": "3fa0c359_6bf7bb8c",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 78
+      },
+      "revId": "0ac1bc2190f1c04849c277d0e0f3de009ba812e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
