@@ -90,6 +90,25 @@ providers:
             username: zuul
             max-parallel-jobs: 1
 
+  - name: cloud-azure
+    driver: azure
+    zuul-public-key: ssh-rsa AAAA8Fake
+    location: westus
+    subnet_id: fake-id
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: trusty-external
+            username: zuul
+            imageReference:
+              sku: 16.04-LTS
+              publisher: Canonical
+              version: latest
+              offer: UbuntuServer
+            hardwareProfile:
+              vmSize: Standard_D1_v2
+
 diskimages:
   - name: trusty
     formats:
