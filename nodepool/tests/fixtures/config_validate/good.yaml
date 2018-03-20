@@ -19,6 +19,7 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: centos
 
 providers:
   - name: cloud1
@@ -89,6 +90,19 @@ providers:
             ssh-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: vsphere
+    driver: vmware
+    resource_pool: NODEPOOL
+    pools:
+      - name: main
+        max-servers: 42
+        labels:
+          - name: centos
+            template: centos-7.4-x86_64
+            username: zuul
+            num_cpu: 1
+            memory_mb: 1024
 
 diskimages:
   - name: trusty
