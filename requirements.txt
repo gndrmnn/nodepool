@@ -1,4 +1,5 @@
 pbr>=1.3
+azure
 
 PyYAML
 paramiko>=2.0.1
