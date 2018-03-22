@@ -354,6 +354,7 @@ diskimages:
       - centos-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -374,6 +375,7 @@ diskimages:
       - debian-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -399,6 +401,7 @@ diskimages:
       - fedora-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -419,6 +422,7 @@ diskimages:
       - ubuntu-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -447,6 +451,7 @@ diskimages:
       - ubuntu-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -472,6 +477,7 @@ diskimages:
       - ubuntu-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -497,6 +503,7 @@ diskimages:
       - opensuse-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
@@ -517,6 +524,7 @@ diskimages:
       - opensuse-minimal
       - vm
       - simple-init
+      - growroot
       - devuser
       - openssh-server
       - nodepool-setup
