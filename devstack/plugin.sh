@@ -213,6 +213,7 @@ EOF
     NODEPOOL_UBUNTU_XENIAL_MIN_READY=1
     NODEPOOL_OPENSUSE_423_MIN_READY=1
     NODEPOOL_OPENSUSE_TUMBLEWEED_MIN_READY=1
+    NODEPOOL_GENTOO_17_0_SYSTEMD_MIN_READY=1
 
     if $NODEPOOL_PAUSE_CENTOS_7_DIB ; then
        NODEPOOL_CENTOS_7_MIN_READY=0
@@ -237,6 +238,9 @@ EOF
     fi
     if $NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB ; then
         NODEPOOL_OPENSUSE_TUMBLEWEED_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB; then
+        NODEPOOL_GENTOO_17_0_SYSTEMD_MIN_READY=0
     fi
 
     cat > /tmp/nodepool.yaml <<EOF
@@ -267,6 +271,8 @@ labels:
     min-ready: $NODEPOOL_OPENSUSE_423_MIN_READY
   - name: opensuse-tumbleweed
     min-ready: $NODEPOOL_OPENSUSE_TUMBLEWEED_MIN_READY
+  - name: gentoo-17-0-systemd
+    min-ready: $NODEPOOL_GENTOO_17_0_SYSTEMD_MIN_READY
 
 providers:
   - name: devstack
@@ -292,6 +298,8 @@ providers:
       - name: opensuse-423
         config-drive: true
       - name: opensuse-tumbleweed
+        config-drive: true
+      - name: gentoo-17-0-systemd
         config-drive: true
     pools:
       - name: main
@@ -341,6 +349,12 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
           - name: opensuse-tumbleweed
             diskimage: opensuse-tumbleweed
+            min-ram: 512
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: $NODEPOOL_KEY_NAME
+          - name: gentoo-17-0-systemd
+            diskimage: gentoo-17-0-systemd
             min-ram: 512
             flavor-name: 'nodepool'
             console-log: True
@@ -530,6 +544,34 @@ diskimages:
       $DIB_GLEAN_INSTALLTYPE
       $DIB_GLEAN_REPOLOCATION
       $DIB_GLEAN_REPOREF
+  - name: gentoo-17-0-systemd
+    pause: $NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB
+    rebuild-age: 86400
+    elements:
+      - gentoo
+      - vm
+      - simple-init
+      - devuser
+      - openstack-repos
+      - nodepool-setup
+      - growroot
+      - infra-package-needs
+      - openssh-server
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+      DIB_INSTALLTYPE_pip_and_virtualenv: 'package'
+      DIB_INSTALLTYPE_simple_init: 'repo'
+      GENTOO_PORTAGE_CLEANUP: 'True'
+      GENTOO_PYTHON_TARGETS: 'python2_7 python3_5'
+      GENTOO_PYTHON_ACTIVE_VERSION: 'python3.5'
+      GENTOO_PROFILE: 'default/linux/amd64/17.0/systemd'
 EOF
 
     sudo mv /tmp/nodepool.yaml $NODEPOOL_CONFIG
