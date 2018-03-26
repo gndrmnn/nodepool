@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_f77101e2",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-26T23:57:51Z",
+      "side": 1,
+      "message": "because of profile 17.0 here, does that mean it is really gentoo 17.0? I;m trying to see if we should maybe name this NODEPOOL_PAUSE_GENTOO_170_SYSTEMD_DIB, so when we eventually bring profile 18.0(or what ever is next for testing)",
+      "revId": "312a8ff8e883e79f7535f0fceaf60ffc96156b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_f7a3414e",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-26T23:57:51Z",
+      "side": 1,
+      "message": "NODEPOOL_PAUSE_GENTOO_SYSTEMD_DIB",
+      "revId": "312a8ff8e883e79f7535f0fceaf60ffc96156b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
