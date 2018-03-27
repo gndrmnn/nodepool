@@ -207,6 +207,7 @@ EOF
 
     NODEPOOL_CENTOS_7_MIN_READY=1
     NODEPOOL_DEBIAN_JESSIE_MIN_READY=1
+    NODEPOOL_DEBIAN_SID_MIN_READY=1
     NODEPOOL_FEDORA_27_MIN_READY=1
     NODEPOOL_UBUNTU_BIONIC_MIN_READY=1
     NODEPOOL_UBUNTU_TRUSTY_MIN_READY=1
@@ -219,6 +220,9 @@ EOF
     fi
     if $NODEPOOL_PAUSE_DEBIAN_JESSIE_DIB ; then
        NODEPOOL_DEBIAN_JESSIE_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_DEBIAN_SID_DIB ; then
+       NODEPOOL_DEBIAN_SID_MIN_READY=0
     fi
     if $NODEPOOL_PAUSE_FEDORA_27_DIB ; then
        NODEPOOL_FEDORA_27_MIN_READY=0
@@ -255,6 +259,8 @@ labels:
     min-ready: $NODEPOOL_CENTOS_7_MIN_READY
   - name: debian-jessie
     min-ready: $NODEPOOL_DEBIAN_JESSIE_MIN_READY
+  - name: debian-sid
+    min-ready: $NODEPOOL_DEBIAN_SID_MIN_READY
   - name: fedora-27
     min-ready: $NODEPOOL_FEDORA_27_MIN_READY
   - name: ubuntu-bionic
@@ -281,6 +287,8 @@ providers:
         config-drive: true
       - name: debian-jessie
         config-drive: true
+      - name: debian-sid
+        config-drive: true
       - name: fedora-27
         config-drive: true
       - name: ubuntu-bionic
@@ -305,6 +313,12 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
           - name: debian-jessie
             diskimage: debian-jessie
+            min-ram: 512
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: $NODEPOOL_KEY_NAME
+          - name: debian-sid
+            diskimage: debian-sid
             min-ram: 512
             flavor-name: 'nodepool'
             console-log: True
@@ -388,6 +402,29 @@ diskimages:
       DIB_DEBIAN_COMPONENTS: 'main'
       $DIB_DISTRIBUTION_MIRROR_DEBIAN
       $DIB_DEBOOTSTRAP_EXTRA_ARGS
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+  - name: debian-sid
+    pause: $NODEPOOL_PAUSE_DEBIAN_SID_DIB
+    rebuild-age: 86400
+    elements:
+      - debian-minimal
+      - vm
+      - simple-init
+      - devuser
+      - openssh-server
+      - nodepool-setup
+    release: sid
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      DIB_DEBIAN_COMPONENTS: 'main'
       $DIB_GET_PIP
       $DIB_GLEAN_INSTALLTYPE
       $DIB_GLEAN_REPOLOCATION
