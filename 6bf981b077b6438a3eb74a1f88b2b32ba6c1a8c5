@@ -16,6 +16,23 @@
       "revId": "6bf981b077b6438a3eb74a1f88b2b32ba6c1a8c5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_be6d8499",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 14288
+      },
+      "writtenOn": "2018-03-27T20:41:27Z",
+      "side": 1,
+      "message": "Yes,  we\u0027ve had instances of pip really messing up the system in gentoo before (we went as far as to disallow system installs in our pip package).\npip now has a use flag that disables this patching (which the pip_and_virtualenv stuff sets).\nAnother reason we did this is because having random untracked files/programs messing with system state is frowned upon.  Just had a developer package glean for that reason...\n\nIf we do need to change from the default (to \u0027package\u0027) we should remove $DIB_GET_PIP though.  otherwise we should remove DIB_INSTALLTYPE_pip_and_virtualenv",
+      "revId": "6bf981b077b6438a3eb74a1f88b2b32ba6c1a8c5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
