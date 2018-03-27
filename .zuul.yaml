@@ -118,26 +118,4 @@
 - project:
     check:
       jobs:
-        - tox-cover
-        - tox-pep8
-        - tox-py35
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
-        - build-sphinx-docs:
-            vars:
-              sphinx_python: python3
-    gate:
-      jobs:
-        - tox-pep8
-        - tox-py35
-        - build-sphinx-docs:
-            vars:
-              sphinx_python: python3
-    post:
-      jobs:
-        - publish-zuul-docs
-        - publish-openstack-sphinx-docs-infra-python3
+        - nodepool-functional-py35-debian-src
