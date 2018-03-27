@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "bf659307_662222a7",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 14288
+      },
+      "writtenOn": "2018-03-27T02:56:56Z",
+      "side": 1,
+      "message": "Why\u0027s that?  All the ones listed here are down below already.",
+      "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf659307_a3634c1a",
         "filename": "devstack/plugin.sh",
         "patchSetId": 6
@@ -65,6 +82,23 @@
         "endLine": 573,
         "endChar": 47
       },
+      "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_8625f6ad",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 14288
+      },
+      "writtenOn": "2018-03-27T02:56:56Z",
+      "side": 1,
+      "message": "Currently the python variables are set to the defauts, but I wanted this to match what openstack supported (for personal use I go with py35 or py36 only)\nThe gentoo_portage_cleanup defaults to false.  It shinks the image down by removing /usr/portage/* (users are expected to sync portage first thing)\nThe default profile is NOT systemd, but systemd is probably the best for integrating with the rest of openstack (particularly OSA).",
       "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
