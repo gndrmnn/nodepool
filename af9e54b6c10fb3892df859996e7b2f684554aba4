@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_43ad902f",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T02:48:08Z",
+      "side": 1,
+      "message": "we\u0027ll want to use these elements below.",
+      "range": {
+        "startLine": 533,
+        "startChar": 0,
+        "endLine": 536,
+        "endChar": 22
+      },
+      "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_a3634c1a",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T02:48:08Z",
+      "side": 1,
+      "message": "for here",
+      "range": {
+        "startLine": 553,
+        "startChar": 0,
+        "endLine": 559,
+        "endChar": 22
+      },
+      "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_23773cd7",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T02:48:08Z",
+      "side": 1,
+      "message": "what happens if these are not set? is there sane defaults for gentoo?",
+      "range": {
+        "startLine": 571,
+        "startChar": 0,
+        "endLine": 573,
+        "endChar": 47
+      },
+      "revId": "af9e54b6c10fb3892df859996e7b2f684554aba4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
