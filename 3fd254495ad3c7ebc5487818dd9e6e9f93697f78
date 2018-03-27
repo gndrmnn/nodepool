@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_475d86e7",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 7
+      },
+      "lineNbr": 567,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T16:31:49Z",
+      "side": 1,
+      "message": "we also want to remove this, and default to the same settings other images are using.",
+      "range": {
+        "startLine": 566,
+        "startChar": 0,
+        "endLine": 567,
+        "endChar": 41
+      },
+      "revId": "3fd254495ad3c7ebc5487818dd9e6e9f93697f78",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
