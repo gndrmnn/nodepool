@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_60b8ca75",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T01:44:51Z",
+      "side": 1,
+      "message": "we need to add gentoo-17-0-systemd here",
+      "revId": "f170fef8232aea805aece92efe7fb917012bcb93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_20b2d295",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T01:44:51Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "f170fef8232aea805aece92efe7fb917012bcb93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
