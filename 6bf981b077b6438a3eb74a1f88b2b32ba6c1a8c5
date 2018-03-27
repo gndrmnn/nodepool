@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_fe121c58",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-03-27T20:28:05Z",
+      "side": 1,
+      "message": "Any reason we need this? All our other will install pip and virtualenv using $DIB_GET_PIP above.",
+      "revId": "6bf981b077b6438a3eb74a1f88b2b32ba6c1a8c5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
