@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_21811f4b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-29T14:56:46Z",
+      "side": 1,
+      "message": "Perhaps mention that this only affects the OpenStack driver.",
+      "range": {
+        "startLine": 511,
+        "startChar": 31,
+        "endLine": 511,
+        "endChar": 70
+      },
+      "revId": "2286f2432c0d9ba8afbb42a6892a4a3dff384ee5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
