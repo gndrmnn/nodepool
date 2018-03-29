@@ -22,6 +22,30 @@
       "revId": "2286f2432c0d9ba8afbb42a6892a4a3dff384ee5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_4130d39f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-03-29T15:01:02Z",
+      "side": 1,
+      "message": "Oh, this is already under the proper driver section. Ignore this.",
+      "parentUuid": "bf659307_21811f4b",
+      "range": {
+        "startLine": 511,
+        "startChar": 31,
+        "endLine": 511,
+        "endChar": 70
+      },
+      "revId": "2286f2432c0d9ba8afbb42a6892a4a3dff384ee5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
