@@ -1,0 +1,9 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 02 Apr 2018 16:37:32 +0000
+Reviewed-on: https://review.openstack.org/558015
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
