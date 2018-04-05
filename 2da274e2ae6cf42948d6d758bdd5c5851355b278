@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_49e5e6db",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-05T04:32:30Z",
+      "side": 1,
+      "message": "this seem a little odd now with host-key-checking setting. Maybe we should just default it to False for connection_type !\u003d \u0027ssh\u0027.\n\nOr we maybe update docs for !ssh connection to set host-key-checking false in config.",
+      "revId": "2da274e2ae6cf42948d6d758bdd5c5851355b278",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
