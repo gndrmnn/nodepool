@@ -16,6 +16,24 @@
       "revId": "2da274e2ae6cf42948d6d758bdd5c5851355b278",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_0af91d4c",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-04-05T07:46:26Z",
+      "side": 1,
+      "message": "There is an important difference between gather_hostkeys\u003dfalse and the host-key-checking option:\n\nThe host-key-checking option doesn\u0027t do any connection attempt at all and thus cannot determine if the node is fully booted and reachable.\n\nThe gather_hostkeys\u003dfalse instead just doesn\u0027t do *ssh-keyscan* but still waits until the node is reachable and a connection can be made.\n\nThis difference is essential and I think the host-key-checking option has a bad name now as its purpose is not to inhibit host-key-checking but inhibit any connection attempt.",
+      "parentUuid": "bf659307_49e5e6db",
+      "revId": "2da274e2ae6cf42948d6d758bdd5c5851355b278",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
