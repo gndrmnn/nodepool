@@ -210,6 +210,7 @@ EOF
     NODEPOOL_DEBIAN_JESSIE_MIN_READY=1
     NODEPOOL_DEBIAN_STRETCH_MIN_READY=1
     NODEPOOL_FEDORA_27_MIN_READY=1
+    NODEPOOL_FEDORA_28_MIN_READY=1
     NODEPOOL_UBUNTU_BIONIC_MIN_READY=1
     NODEPOOL_UBUNTU_TRUSTY_MIN_READY=1
     NODEPOOL_UBUNTU_XENIAL_MIN_READY=1
@@ -228,6 +229,9 @@ EOF
     fi
     if $NODEPOOL_PAUSE_FEDORA_27_DIB ; then
        NODEPOOL_FEDORA_27_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_FEDORA_28_DIB ; then
+       NODEPOOL_FEDORA_28_MIN_READY=0
     fi
     if $NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB ; then
        NODEPOOL_UBUNTU_BIONIC_MIN_READY=0
@@ -268,6 +272,8 @@ labels:
     min-ready: $NODEPOOL_DEBIAN_STRETCH_MIN_READY
   - name: fedora-27
     min-ready: $NODEPOOL_FEDORA_27_MIN_READY
+  - name: fedora-28
+    min-ready: $NODEPOOL_FEDORA_28_MIN_READY
   - name: ubuntu-bionic
     min-ready: $NODEPOOL_UBUNTU_BIONIC_MIN_READY
   - name: ubuntu-trusty
@@ -297,6 +303,8 @@ providers:
       - name: debian-stretch
         config-drive: true
       - name: fedora-27
+        config-drive: true
+      - name: fedora-28
         config-drive: true
       - name: ubuntu-bionic
         config-drive: true
@@ -334,6 +342,12 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
           - name: fedora-27
             diskimage: fedora-27
+            min-ram: 1024
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: $NODEPOOL_KEY_NAME
+          - name: fedora-28
+            diskimage: fedora-28
             min-ram: 1024
             flavor-name: 'nodepool'
             console-log: True
@@ -462,6 +476,28 @@ diskimages:
       - openssh-server
       - nodepool-setup
     release: 27
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+  - name: fedora-28
+    pause: $NODEPOOL_PAUSE_FEDORA_28_DIB
+    rebuild-age: 86400
+    elements:
+      - fedora-minimal
+      - vm
+      - simple-init
+      - growroot
+      - devuser
+      - openssh-server
+      - nodepool-setup
+    release: 28
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
