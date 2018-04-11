@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_24b84de3",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-04-11T16:58:27Z",
+      "side": 1,
+      "message": "Let\u0027s change the casing on these new methods to match the camel case style used on other methods.\n\nI know run_handler() is an exception to the model. We should fix that.",
+      "range": {
+        "startLine": 596,
+        "startChar": 8,
+        "endLine": 596,
+        "endChar": 19
+      },
+      "revId": "7e3557382bea92d6fa920938dcd4b716526b0d45",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_84fa7940",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-04-11T16:58:27Z",
+      "side": 1,
+      "message": "This seems to be a change in functionality here and not mentioned in the commit message. What\u0027s the reasoning behind it?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 37
+      },
+      "revId": "7e3557382bea92d6fa920938dcd4b716526b0d45",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

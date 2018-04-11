@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_97b94916",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-04-11T16:58:27Z",
+      "side": 0,
+      "message": "Though I do not recall the reason, I do remember that these checks were important. I do not see equivalent checks elsewhere in the new code. Did I miss them? If they have not been kept, I worry that we introduce a bug here.",
+      "range": {
+        "startLine": 294,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 69
+      },
+      "revId": "c5e317e84af59fb581718aa5d84a4dd6f12823f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
