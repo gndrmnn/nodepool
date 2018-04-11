@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_444d4198",
+        "filename": "nodepool/status.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-04-11T16:28:36Z",
+      "side": 1,
+      "message": "The format argument is not used.",
+      "revId": "f672f665fafd7d3dc0f022a87a61223138d9290e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
