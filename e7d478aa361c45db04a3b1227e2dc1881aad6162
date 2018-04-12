@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_277b4b28",
+        "filename": "etc/nodepool-launcher.service",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-12T18:11:43Z",
+      "side": 1,
+      "message": "because we are having nodepool use daemon logic, I think we want this to be Type\u003dforking:\n  https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type\u003d\n\nWe could keep it simple if we use -d below, but we should first confirm with jeblair.",
+      "revId": "e7d478aa361c45db04a3b1227e2dc1881aad6162",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_c7736f4d",
+        "filename": "etc/nodepool-launcher.service",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-12T18:11:43Z",
+      "side": 1,
+      "message": "-d here allows for type\u003dsimple above",
+      "revId": "e7d478aa361c45db04a3b1227e2dc1881aad6162",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
