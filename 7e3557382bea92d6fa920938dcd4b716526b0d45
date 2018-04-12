@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bf659307_fe5f353e",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-04-12T02:50:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf659307_24b84de3",
+      "range": {
+        "startLine": 596,
+        "startChar": 8,
+        "endLine": 596,
+        "endChar": 19
+      },
+      "revId": "7e3557382bea92d6fa920938dcd4b716526b0d45",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf659307_84fa7940",
         "filename": "nodepool/driver/static/handler.py",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2018-04-11T16:58:27Z",
       "side": 1,
       "message": "This seems to be a change in functionality here and not mentioned in the commit message. What\u0027s the reasoning behind it?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 37
+      },
+      "revId": "7e3557382bea92d6fa920938dcd4b716526b0d45",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_de27d1c6",
+        "filename": "nodepool/driver/static/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-04-12T02:50:08Z",
+      "side": 1,
+      "message": "This functionality was previously handled by the custom waitForNodeSet where reused nodes didn\u0027t called the checkConcurrency method. With this proposed refactor, we need to differentiate requests that force node creation and the one that can reuse a node. I\u0027ve modified the condition to check for request.reuse instead of min-ready requestor.",
+      "parentUuid": "bf659307_84fa7940",
       "range": {
         "startLine": 32,
         "startChar": 0,

@@ -22,6 +22,30 @@
       "revId": "c5e317e84af59fb581718aa5d84a4dd6f12823f0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_de7911c5",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-04-12T02:50:08Z",
+      "side": 0,
+      "message": "These check were introduced by https://review.openstack.org/#/c/535550/ which was needed for the static driver that wasn\u0027t using a launch_manager. This change makes all drivers use a launch_manager, thus we don\u0027t need those checks anymore.",
+      "parentUuid": "bf659307_97b94916",
+      "range": {
+        "startLine": 294,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 69
+      },
+      "revId": "c5e317e84af59fb581718aa5d84a4dd6f12823f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
