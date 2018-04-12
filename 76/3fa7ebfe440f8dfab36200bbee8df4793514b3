@@ -1,0 +1,10 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+1: Tristan Cacqueray <tdecacqu@redhat.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 12 Apr 2018 18:03:29 +0000
+Reviewed-on: https://review.openstack.org/552538
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
