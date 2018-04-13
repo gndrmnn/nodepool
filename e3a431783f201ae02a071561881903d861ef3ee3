@@ -34,6 +34,24 @@
       "revId": "e3a431783f201ae02a071561881903d861ef3ee3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_6f25795b",
+        "filename": "etc/nodepool-launcher.service",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-13T19:29:15Z",
+      "side": 1,
+      "message": "Ah, confusing, since we use nodepool-builder.pid. Agree we might want to update that in a follow up to avoid confusion.",
+      "parentUuid": "bf659307_0fb87d0e",
+      "revId": "e3a431783f201ae02a071561881903d861ef3ee3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
