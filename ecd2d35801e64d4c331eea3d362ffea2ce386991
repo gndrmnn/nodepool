@@ -22,6 +22,30 @@
       "revId": "ecd2d35801e64d4c331eea3d362ffea2ce386991",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf659307_9d94ca8c",
+        "filename": "nodepool/tests/fixtures/static.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-04-13T15:45:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf659307_6227d5c8",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "ecd2d35801e64d4c331eea3d362ffea2ce386991",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
