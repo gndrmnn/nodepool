@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf659307_0ce96be1",
+        "filename": "etc/nodepool-launcher.service",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-13T18:45:54Z",
+      "side": 1,
+      "message": "I think we want nodepool-launcher.pid here",
+      "revId": "e3a431783f201ae02a071561881903d861ef3ee3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
