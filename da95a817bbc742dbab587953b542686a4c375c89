@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f6a8fd7_49aba3d5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2018-04-16T11:22:49Z",
+      "side": 1,
+      "message": "Am I missing something because it looks like this removes the ssh-port option?\n\nWe should keep the config validation while the deprecation is supported too.",
+      "revId": "da95a817bbc742dbab587953b542686a4c375c89",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
