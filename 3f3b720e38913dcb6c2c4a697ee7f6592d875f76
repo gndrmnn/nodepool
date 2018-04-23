@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f6a8fd7_c89b8070",
+        "filename": "tox.ini",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-04-23T20:41:56Z",
+      "side": 1,
+      "message": "This is more informational than anything else. This nested env inclusion doesn\u0027t appear to work with tox 2.8.0. I had to upgrade to latest tox (3.0.0) for it to work.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "3f3b720e38913dcb6c2c4a697ee7f6592d875f76",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
