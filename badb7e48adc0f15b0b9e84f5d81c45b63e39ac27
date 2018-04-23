@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f6a8fd7_afbf3b5f",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-04-23T15:30:33Z",
+      "side": 0,
+      "message": "Removing this seems to have been a mistake. self.log is used within these methods, and I don\u0027t see it being set elsewhere.",
+      "range": {
+        "startLine": 304,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 29
+      },
+      "revId": "badb7e48adc0f15b0b9e84f5d81c45b63e39ac27",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
