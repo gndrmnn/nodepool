@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f6a8fd7_8a27a4ca",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-04-24T20:39:55Z",
+      "side": 1,
+      "message": "This is causing the code to execute and the result is None which then is attempted to be called on line 625 which fails.\n\nThis appears to be why the tests are failing.",
+      "range": {
+        "startLine": 380,
+        "startChar": 36,
+        "endLine": 380,
+        "endChar": 38
+      },
+      "revId": "4f5595d0aab14e36041b0329e9940e2ff58402ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
