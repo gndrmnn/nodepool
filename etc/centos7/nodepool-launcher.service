@@ -1,0 +1,13 @@
+[Unit]
+Description=Nodepool Launcher Service
+After=network.target
+
+[Service]
+Type=simple
+User=nodepool
+Group=nodepool
+SyslogIdentifier=nodepool-launcher
+ExecStart=/usr/bin/nodepool-launcher -d -c /etc/nodepool/nodepool.yaml -s /etc/nodepool/secure.conf -l /etc/nodepool/launcher-logging.conf
+
+[Install]
+WantedBy=multi-user.target
