@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f6a8fd7_0836efb5",
+        "filename": "etc/fedora27/nodepool-launcher.service",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-04-27T20:00:49Z",
+      "side": 1,
+      "message": "So, I don\u0027t think we actually need 2 nodepool-launcher.service files, what we likely can do is create the following:\n\n  etc/nodepool-launcher.service.d/centos.conf\n  [Service]\n  ExecStart\u003d\n  ExecStart\u003d/usr/bin/nodepool-launcher\n\nA user would then install that into:\n\n  /etc/systemd/system/nodepool-launcher.service.d/centos.conf\n\nThen, when systemd starts, it will combined both files and use the proper path for centos.",
+      "revId": "fab307a286d1dfaf61babe6366fd8791b99badb6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
