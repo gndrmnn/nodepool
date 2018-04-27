@@ -1,0 +1,10 @@
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Workflow+1: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 27 Apr 2018 14:05:17 +0000
+Reviewed-on: https://review.openstack.org/535555
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
