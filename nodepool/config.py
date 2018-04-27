@@ -178,3 +178,10 @@ def loadSecureConfig(config, secure_config_path):
                                          server.get('chroot', None))
         name = z.host + '_' + str(z.port)
         config.zookeeper_servers[name] = z
+
+    for diskimage in secure.get('diskimages', []):
+        if diskimage['name'] not in config.diskimages:
+            raise Exception('%s: unknown diskimage %s' %
+                            (secure_config_path, diskimage['name']))
+        config.diskimages[diskimage['name']].env_vars.update(
+            diskimage['env-vars'])

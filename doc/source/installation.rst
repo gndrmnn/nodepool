@@ -58,8 +58,9 @@ The Nodepool configuration file is described in :ref:`configuration`.
 
 There is support for a secure file that is used to store nodepool
 configurations that contain sensitive data. It currently only supports
-specifying ZooKeeper credentials. If ZooKeeper credentials are defined in
-both configuration files, the data in the secure file takes precedence.
+specifying ZooKeeper credentials and diskimage env-vars.
+If ZooKeeper credentials or diskimage env-vars are defined in both
+configuration files, the data in the secure file takes precedence.
 The secure file location can be changed with the ``-s`` option and follows
 the same file format as the Nodepool configuration file.
 
