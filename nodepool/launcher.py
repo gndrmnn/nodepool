@@ -98,6 +98,7 @@ class NodeDeleter(threading.Thread, stats.StatsReporter):
                 node.id, node.state, node.external_id)
             # This also effectively releases the lock
             zk_conn.deleteNode(node)
+            manager.nodeDeletedNotification(zk_conn, node)
 
     def run(self):
         # Since leaked instances won't have an actual node in ZooKeeper,
@@ -824,6 +825,8 @@ class NodePool(threading.Thread):
         config = self.loadConfig()
         provider_manager.ProviderManager.reconfigure(self.config, config)
         self.reconfigureZooKeeper(config)
+        for pm in config.provider_managers.values():
+            pm.configReadNotification(self.zk)
         self.setConfig(config)
 
     def removeCompletedRequests(self):

@@ -138,6 +138,23 @@ class Provider(object, metaclass=abc.ABCMeta):
     def listNodes(self):
         pass
 
+    def configReadNotification(self, zk_conn):
+        '''
+        Called when the launcher reads/re-reads the configuration file.
+
+        :param ZooKeeper zk_conn: The ZooKeeper connection object.
+        '''
+        pass
+
+    def nodeDeletedNotification(self, zk_conn, node):
+        '''
+        Called when the ZooKeeper znode for a Node is deleted.
+
+        :param ZooKeeper zk_conn: The ZooKeeper connection object.
+        :param Node node: The Node object that was deleted from ZooKeeper.
+        '''
+        pass
+
 
 class LabelRecorder(object):
     def __init__(self):
@@ -288,7 +305,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                         self.nodeset.append(node)
                         self._satisfied_types.add(ntype, node.id)
                         # Notify driver handler about node re-use
-                        self.nodeReused(node)
+                        self.nodeReusedNotification(node)
                         break
 
             # Could not grab an existing node, so launch a new one.
@@ -555,7 +572,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         '''
         return True
 
-    def nodeReused(self, node):
+    def nodeReusedNotification(self, node):
         '''
         Handler may implement this to be notified when a node is re-used.
         The OpenStack handler uses this to set the choozen_az.
