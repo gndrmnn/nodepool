@@ -15,7 +15,6 @@
 import logging
 import random
 
-from nodepool import nodeutils
 from nodepool import zk
 from nodepool.driver import NodeRequestHandler
 
@@ -46,6 +45,15 @@ class StaticNodeRequestHandler(NodeRequestHandler):
         return True
 
     def launch(self, node):
+        # NOTE: We do not expect this to be called since hasRemainingQuota()
+        # returning False should prevent the call.
+        raise Exception("Node launching not supported by static driver.")
+
+    def hasRemainingQuota(self, ntype):
+        # We are always at quota since we cannot launch a new node.
+        return False
+
+    def _launch(self, node):
         static_node = None
         available_nodes = self.manager.listNodes()
         # Randomize static nodes order
@@ -59,18 +67,16 @@ class StaticNodeRequestHandler(NodeRequestHandler):
         if static_node:
             self.log.debug("%s: Assigning static_node %s" % (
                 self.request.id, static_node))
-            node.state = zk.READY
             node.external_id = "static-%s" % self.request.id
-            node.hostname = static_node["name"]
-            node.username = static_node["username"]
-            node.interface_ip = static_node["name"]
-            node.connection_port = static_node["connection-port"]
-            node.connection_type = static_node["connection-type"]
-            nodeutils.set_node_ip(node)
-            node.host_keys = self.manager.nodes_keys[static_node["name"]]
             self.zk.storeNode(node)
 
     def pollLauncher(self):
+        '''
+        We don't wait on a launch since we never actually launch.
+        '''
+        return True
+
+    def _pollLauncher(self):
         waiting_node = False
         for node in self.nodeset:
             if node.state == zk.READY:

@@ -5,13 +5,13 @@ zookeeper-servers:
 
 labels:
   - name: fake-label
-    min-ready: 2
+    min-ready: 0
 
   - name: fake-concurrent-label
-    min-ready: 2
+    min-ready: 0
 
   - name: fake-windows-label
-    min-ready: 2
+    min-ready: 0
 
 providers:
   - name: static-provider
