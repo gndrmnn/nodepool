@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import math
-import os_client_config
+import openstack.config
 import voluptuous as v
 
 from nodepool.driver import ProviderConfig
@@ -153,7 +153,7 @@ class ProviderPool(ConfigPool):
 
 
 class OpenStackProviderConfig(ProviderConfig):
-    os_client_config = None
+    openstack_config = None
 
     def __init__(self, *args, **kwargs):
         self.__pools = {}
@@ -200,14 +200,14 @@ class OpenStackProviderConfig(ProviderConfig):
 
     @staticmethod
     def reset():
-        OpenStackProviderConfig.os_client_config = None
+        OpenStackProviderConfig.openstack_config = None
 
     def load(self, config):
-        if OpenStackProviderConfig.os_client_config is None:
-            OpenStackProviderConfig.os_client_config = \
-                os_client_config.OpenStackConfig()
+        if OpenStackProviderConfig.openstack_config is None:
+            OpenStackProviderConfig.openstack_config = \
+                openstack.config.OpenStackConfig()
         cloud_kwargs = self._cloudKwargs()
-        self.cloud_config = self.os_client_config.get_one_cloud(**cloud_kwargs)
+        self.cloud_config = self.openstack_config.get_one(**cloud_kwargs)
 
         self.image_type = self.cloud_config.config['image_format']
         self.region_name = self.provider.get('region-name')
