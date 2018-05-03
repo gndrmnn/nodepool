@@ -204,6 +204,36 @@ EOF
         DIB_DISTRIBUTION_MIRROR_DEBIAN="DIB_DISTRIBUTION_MIRROR: $NODEPOOL_DEBIAN_MIRROR"
         DIB_DISTRIBUTION_MIRROR_UBUNTU="DIB_DISTRIBUTION_MIRROR: $NODEPOOL_UBUNTU_MIRROR"
         DIB_DEBOOTSTRAP_EXTRA_ARGS="DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'"
+        DIB_YUM_MINIMAL_BOOTSTRAP_REPOS_FEDORA="DIB_YUM_MINIMAL_BOOTSTRAP_REPOS: /tmp/fedora-yum.repos.d"
+
+        mkdir -p /tmp/fedora-yum.repos.d
+
+        cat <<EOF > /tmp/fedora-yum.repos.d/dib-mirror-fedora.repo
+[fedora]
+name=Fedora \$releasever - \$basearch
+failovermethod=priority
+baseurl=$NODEPOOL_FEDORA_MIRROR/releases/\$releasever/Everything/\$basearch/os/
+enabled=1
+metadata_expire=7d
+gpgcheck=0
+skip_if_unavailable=False
+deltarpm=False
+deltarpm_percentage=0
+EOF
+
+        cat <<EOF > /tmp/fedora-yum.repos.d/dib-mirror-fedora-updates.repo
+[updates]
+name=Fedora \$releasever - \$basearch - Updates
+failovermethod=priority
+baseurl=$NODEPOOL_FEDORA_MIRROR/updates/\$releasever/\$basearch/
+enabled=1
+gpgcheck=0
+metadata_expire=6h
+skip_if_unavailable=False
+deltarpm=False
+deltarpm_percentage=0
+EOF
+
     fi
 
     NODEPOOL_CENTOS_7_MIN_READY=1
@@ -429,6 +459,7 @@ diskimages:
       DIB_SHOW_IMAGE_USAGE: '1'
       DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
       DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_YUM_MINIMAL_BOOTSTRAP_REPOS_FEDORA
       $DIB_GET_PIP
       $DIB_GLEAN_INSTALLTYPE
       $DIB_GLEAN_REPOLOCATION
