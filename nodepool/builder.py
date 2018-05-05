@@ -732,6 +732,13 @@ class BuildWorker(BaseWorker):
 
         img_elements = diskimage.elements
         img_types = ",".join(diskimage.image_types)
+        if not img_types:
+            raise exceptions.BuilderError(
+                "Failed to build image %s, type is unknown. "
+                "Associate diskimage with the provider "
+                "or specify item.formats in the configuration."
+                % (diskimage.name)
+            )
 
         qemu_img_options = ''
         if 'qcow2' in img_types:
