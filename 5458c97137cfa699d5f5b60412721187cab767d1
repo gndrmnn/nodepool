@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_0d57d704",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-05-07T02:23:30Z",
+      "side": 1,
+      "message": "I\u0027d really like to see some caveats on this ...\n\nIt\u0027s only as secure as your log output, because it will be stamped all over the build logs unredacted \n\nObviously it\u0027s used in the image however you use it, but there\u0027s also other things like [1] that writes out all the DIB_* environment variables into /etc (it should be root only, but still, it\u0027s there).  So it may well persist into the image, perhaps unexpectedly. \n\nIf you keep your logs safe, and audit you don\u0027t leak it as non-root somehow, and ensure the only jobs you run are non-root, it *might* stay secret ... so yeah, just quite a few potential ways to shoot yourself in the proverbial foot.  \n\n[1] https://git.openstack.org/cgit/openstack/diskimage-builder/tree/diskimage_builder/elements/manifests/cleanup.d/01-copy-manifests-dir#n32",
+      "revId": "5458c97137cfa699d5f5b60412721187cab767d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
