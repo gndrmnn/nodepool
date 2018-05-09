@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_8f3f1f24",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-09T15:06:48Z",
+      "side": 1,
+      "message": "You can remove LIBS_FROM_GIT now.",
+      "revId": "8ee25d07e4a4578c82454a96eee26d16cc19c3d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
