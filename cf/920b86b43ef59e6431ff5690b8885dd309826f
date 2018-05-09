@@ -1,0 +1,9 @@
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 09 May 2018 18:03:40 +0000
+Reviewed-on: https://review.openstack.org/566886
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
