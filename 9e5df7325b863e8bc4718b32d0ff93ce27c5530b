@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_72c2755b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-05-11T19:21:41Z",
+      "side": 0,
+      "message": "Note that the OpenStack driver used a dict and the static driver used a set (neither was a list). This is the beginning of coalescing label type to support multiple labels.",
+      "range": {
+        "startLine": 698,
+        "startChar": 0,
+        "endLine": 698,
+        "endChar": 24
+      },
+      "revId": "9e5df7325b863e8bc4718b32d0ff93ce27c5530b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
