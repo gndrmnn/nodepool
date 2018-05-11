@@ -24,11 +24,49 @@ from nodepool.driver import ConfigPool
 
 
 class ProviderDiskImage(ConfigValue):
+    def __init__(self):
+        self.name = None
+        self.pause = False
+        self.config_drive = None
+        self.connection_type = None
+        self.connection_port = None
+        self.meta = None
+
+    def __eq__(self, other):
+        if isinstance(other, ProviderDiskImage):
+            return (self.name == other.name and
+                    self.pause == other.pause and
+                    self.config_drive == other.config_drive and
+                    self.connection_type == other.connection_type and
+                    self.connection_port == other.connection_port and
+                    self.meta == other.meta)
+        return False
+
     def __repr__(self):
         return "<ProviderDiskImage %s>" % self.name
 
 
 class ProviderCloudImage(ConfigValue):
+    def __init__(self):
+        self.name = None
+        self.config_drive = None
+        self.image_id = None
+        self.image_name = None
+        self.username = None
+        self.connection_type = None
+        self.connection_port = None
+
+    def __eq__(self, other):
+        if isinstance(other, ProviderCloudImage):
+            return (self.name == other.name and
+                    self.config_drive == other.config_drive and
+                    self.image_id == other.image_id and
+                    self.image_name == other.image_name and
+                    self.username == other.username and
+                    self.connection_type == other.connection_type and
+                    self.connection_port == other.connection_port)
+        return False
+
     def __repr__(self):
         return "<ProviderCloudImage %s>" % self.name
 
@@ -47,30 +85,70 @@ class ProviderCloudImage(ConfigValue):
 
 
 class ProviderLabel(ConfigValue):
+    def __init__(self):
+        self.name = None
+        self.diskimage = None
+        self.cloud_image = None
+        self.min_ram = None
+        self.flavor_name = None
+        self.key_name = None
+        self.console_log = False
+        self.boot_from_volume = False
+        self.volume_size = None
+        # The ProviderPool object that owns this label.
+        self.pool = None
+
     def __eq__(self, other):
-        if (other.diskimage != self.diskimage or
-            other.cloud_image != self.cloud_image or
-            other.min_ram != self.min_ram or
-            other.flavor_name != self.flavor_name or
-            other.key_name != self.key_name):
-            return False
-        return True
+        if isinstance(other, ProviderLabel):
+            # NOTE(Shrews): We intentionally do not compare 'pool' here
+            # since this causes recursive checks with ProviderPool.
+            return (other.diskimage == self.diskimage and
+                    other.cloud_image == self.cloud_image and
+                    other.min_ram == self.min_ram and
+                    other.flavor_name == self.flavor_name and
+                    other.key_name == self.key_name and
+                    other.name == self.name and
+                    other.console_log == self.console_log and
+                    other.boot_from_volume == self.boot_from_volume and
+                    other.volume_size == self.volume_size)
+        return False
 
     def __repr__(self):
         return "<ProviderLabel %s>" % self.name
 
 
 class ProviderPool(ConfigPool):
+    def __init__(self):
+        self.name = None
+        self.labels = None
+        self.max_cores = None
+        self.max_ram = None
+        self.azs = None
+        self.networks = None
+        self.auto_floating_ip = True
+        self.host_key_checking = True
+        self.labels = None
+        # The OpenStackProviderConfig object that owns this pool.
+        self.provider = None
+
+        # Initialize base class attributes
+        super().__init__()
+
     def __eq__(self, other):
-        if (other.labels != self.labels or
-            other.max_cores != self.max_cores or
-            other.max_servers != self.max_servers or
-            other.max_ram != self.max_ram or
-            other.azs != self.azs or
-            other.host_key_checking != self.host_key_checking or
-            other.networks != self.networks):
-            return False
-        return True
+        if isinstance(other, ProviderPool):
+            # NOTE(Shrews): We intentionally do not compare 'provider' here
+            # since this causes recursive checks with OpenStackProviderConfig.
+            return (super().__eq__(other) and
+                    other.name == self.name and
+                    other.labels == self.labels and
+                    other.max_cores == self.max_cores and
+                    other.max_ram == self.max_ram and
+                    other.azs == self.azs and
+                    other.networks == self.networks and
+                    other.auto_floating_ip == self.auto_floating_ip and
+                    other.host_key_checking == self.host_key_checking and
+                    other.labels == self.labels)
+        return False
 
     def __repr__(self):
         return "<ProviderPool %s>" % self.name

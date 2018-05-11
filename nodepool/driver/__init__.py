@@ -682,12 +682,10 @@ class NodeLauncher(threading.Thread, stats.StatsReporter):
             self.log.exception("Exception while reporting stats:")
 
 
-class ConfigValue(object):
+class ConfigValue(object, metaclass=abc.ABCMeta):
+    @abc.abstractmethod
     def __eq__(self, other):
-        if isinstance(other, ConfigValue):
-            if other.__dict__ == self.__dict__:
-                return True
-        return False
+        pass
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -698,9 +696,21 @@ class ConfigPool(ConfigValue):
         self.labels = []
         self.max_servers = math.inf
 
+    def __eq__(self, other):
+        if isinstance(other, ConfigPool):
+            return (self.labels == other.labels and
+                    self.max_servers == other.max_servers)
+        return False
+
 
 class Driver(ConfigValue):
-    pass
+    def __init__(self):
+        self.name = None
+
+    def __eq__(self, other):
+        if isinstance(other, Driver):
+            return self.name == other.name
+        return False
 
 
 class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
@@ -733,10 +743,6 @@ class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
         '''
         Return True if provider manages external images, False otherwise.
         '''
-        pass
-
-    @abc.abstractmethod
-    def __eq__(self, other):
         pass
 
     @abc.abstractmethod
