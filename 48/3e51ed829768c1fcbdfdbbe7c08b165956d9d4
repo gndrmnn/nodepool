@@ -1,0 +1,8 @@
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 14 May 2018 01:18:09 +0000
+Reviewed-on: https://review.openstack.org/566437
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
