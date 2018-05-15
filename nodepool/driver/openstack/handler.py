@@ -22,7 +22,7 @@ from kazoo import exceptions as kze
 from nodepool import exceptions
 from nodepool import nodeutils as utils
 from nodepool import zk
-from nodepool.driver import NodeLauncher
+from nodepool.driver.utils import NodeLauncher
 from nodepool.driver import NodeRequestHandler
 from nodepool.driver.openstack.provider import QuotaInformation
 
@@ -244,6 +244,15 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
     def __init__(self, pw, request):
         super().__init__(pw, request)
         self.chosen_az = None
+        self._threads = []
+
+    @property
+    def alive_thread_count(self):
+        count = 0
+        for t in self._threads:
+            if t.isAlive():
+                count += 1
+        return count
 
     def imagesAvailable(self):
         '''
@@ -348,5 +357,30 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         node.cloud = self.provider.cloud_config.name
         node.region = self.provider.region_name
 
+    def launchesComplete(self):
+        '''
+        Check if all launch requests have completed.
+
+        When all of the Node objects have reached a final state (READY or
+        FAILED), we'll know all threads have finished the launch process.
+        '''
+        if not self._threads:
+            return True
+
+        # Give the NodeLaunch threads time to finish.
+        if self.alive_thread_count:
+            return False
+
+        node_states = [node.state for node in self.nodeset]
+
+        # NOTE: It very important that NodeLauncher always sets one of
+        # these states, no matter what.
+        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
+            return False
+
+        return True
+
     def launch(self, node):
-        return OpenStackNodeLauncher(self, node, self.provider.launch_retries)
+        thd = OpenStackNodeLauncher(self, node, self.provider.launch_retries)
+        thd.start()
+        self._threads.append(thd)

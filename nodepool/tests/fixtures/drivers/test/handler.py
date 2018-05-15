@@ -21,7 +21,16 @@ from nodepool.driver import NodeRequestHandler
 class TestHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.test.TestHandler")
 
+    @property
+    def alive_thread_count(self):
+        return 1
+
     def imagesAvailable(self):
+        return True
+
+    def launchesComplete(self):
+        for node in self.nodeset:
+            self.ready_nodes.append(node)
         return True
 
     def launch(self, node):
