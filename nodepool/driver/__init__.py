@@ -22,14 +22,9 @@ import importlib
 import logging
 import math
 import os
-import time
-import threading
-
-from kazoo import exceptions as kze
 
 from nodepool import zk
 from nodepool import exceptions
-from nodepool import stats
 
 
 class Drivers:
@@ -168,7 +163,6 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
 
         self._failed_nodes = []
         self._ready_nodes = []
-        self._threads = []
 
     def _setFromPoolWorker(self):
         '''
@@ -181,14 +175,6 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         self.pool = self.pw.getPoolConfig()
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
-
-    @property
-    def alive_thread_count(self):
-        count = 0
-        for t in self._threads:
-            if t.isAlive():
-                count += 1
-        return count
 
     @property
     def failed_nodes(self):
@@ -315,10 +301,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                 self.zk.storeNode(node)
 
                 self.nodeset.append(node)
-                thread = self.launch(node)
-                if thread:
-                    thread.start()
-                    self._threads.append(thread)
+                self.launch(node)
 
     def _runHandler(self):
         '''
@@ -458,101 +441,9 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                                    self.request.id)
             self.done = True
 
-    def poll(self):
-        '''
-        Check if the request has been handled.
-
-        Once the request has been handled, the 'nodeset' attribute will be
-        filled with the list of nodes assigned to the request, or it will be
-        empty if the request could not be fulfilled.
-
-        :returns: True if we are done with the request, False otherwise.
-        '''
-        if self.paused:
-            return False
-
-        if self.done:
-            return True
-
-        if not self.pollLauncher():
-            return False
-
-        # If the request has been pulled, unallocate the node set so other
-        # requests can use them.
-        if not self.zk.getNodeRequest(self.request.id):
-            self.log.info("Node request %s disappeared", self.request.id)
-            for node in self.nodeset:
-                node.allocated_to = None
-                self.zk.storeNode(node)
-            self.unlockNodeSet()
-            try:
-                self.zk.unlockNodeRequest(self.request)
-            except exceptions.ZKLockException:
-                # If the lock object is invalid that is "ok" since we no
-                # longer have a request either. Just do our best, log and
-                # move on.
-                self.log.debug("Request lock invalid for node request %s "
-                               "when attempting to clean up the lock",
-                               self.request.id)
-            return True
-
-        if self.failed_nodes:
-            self.log.debug("Declining node request %s because nodes failed",
-                           self.request.id)
-            self.decline_request()
-        else:
-            # The assigned nodes must be added to the request in the order
-            # in which they were requested.
-            assigned = []
-            for requested_type in self.request.node_types:
-                for node in self.nodeset:
-                    if node.id in assigned:
-                        continue
-                    if node.type == requested_type:
-                        # Record node ID in the request
-                        self.request.nodes.append(node.id)
-                        assigned.append(node.id)
-
-            self.log.debug("Fulfilled node request %s",
-                           self.request.id)
-            self.request.state = zk.FULFILLED
-
-        self.unlockNodeSet()
-        self.zk.storeNodeRequest(self.request)
-        self.zk.unlockNodeRequest(self.request)
-        return True
-
     # ---------------------------------------------------------------
     # Driver Implementation
     # ---------------------------------------------------------------
-    def pollLauncher(self):
-        '''
-        Check if all launch requests have completed.
-
-        When all of the Node objects have reached a final state (READY or
-        FAILED), we'll know all threads have finished the launch process.
-        '''
-        if not self._threads:
-            return True
-
-        # Give the NodeLaunch threads time to finish.
-        if self.alive_thread_count:
-            return False
-
-        node_states = [node.state for node in self.nodeset]
-
-        # NOTE: It very important that NodeLauncher always sets one of
-        # these states, no matter what.
-        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
-            return False
-
-        for node in self.nodeset:
-            if node.state == zk.READY:
-                self._ready_nodes.append(node)
-            else:
-                self._failed_nodes.append(node)
-
-        return True
 
     def hasProviderQuota(self, node_types):
         '''
@@ -595,6 +486,23 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         '''
         pass
 
+    @property
+    @abc.abstractmethod
+    def alive_thread_count(self):
+        '''
+        Return the number of active node launching threads in use by this
+        request handler.
+
+        This is used to limit request handling threads for a provider.
+
+        This is an approximate, top-end number for alive threads, since some
+        threads obviously may have finished by the time we finish the
+        calculation.
+
+        :returns: A count (integer) of active threads.
+        '''
+        pass
+
     @abc.abstractmethod
     def imagesAvailable(self):
         '''
@@ -612,64 +520,24 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         '''
         pass
 
+    @abc.abstractmethod
+    def poll(self):
+        '''
+        Handler needs to implement this to check if all nodes are ready.
 
-class NodeLauncher(threading.Thread, stats.StatsReporter):
-    '''
-    Class to launch a single node.
+        It is expected that the implementation will check if every Node
+        placed into self.nodeset is READY and, if so, set self.request.nodes
+        with the node IDs in the order in which they were requested. If any
+        nodes have failed to launch, this method should call decline_request().
 
-    The NodeRequestHandler may return such object to manage asynchronous
-    node creation.
+        At request completion (for either failure or success), the nodeset
+        must be unlocked and the node request updated.
 
-    Subclasses are required to implement the launch method
-    '''
+        Implementation must also deal with a node request that disappears.
 
-    def __init__(self, handler, node):
-        threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
-        stats.StatsReporter.__init__(self)
-        self.log = logging.getLogger("nodepool.NodeLauncher-%s" % node.id)
-        self.handler = handler
-        self.node = node
-        self.label = handler.pool.labels[node.type]
-        self.pool = self.label.pool
-        self.provider_config = self.pool.provider
-
-    def storeNode(self):
-        """Store the node state in Zookeeper"""
-        self.handler.zk.storeNode(self.node)
-
-    def run(self):
-        start_time = time.monotonic()
-        statsd_key = 'ready'
-
-        try:
-            self.launch()
-        except kze.SessionExpiredError:
-            # Our node lock is gone, leaving the node state as BUILDING.
-            # This will get cleaned up in ZooKeeper automatically, but we
-            # must still set our cached node state to FAILED for the
-            # NodeLaunchManager's poll() method.
-            self.log.error(
-                "Lost ZooKeeper session trying to launch for node %s",
-                self.node.id)
-            self.node.state = zk.FAILED
-            statsd_key = 'error.zksession'
-        except Exception as e:
-            self.log.exception("Launch failed for node %s:",
-                               self.node.id)
-            self.node.state = zk.FAILED
-            self.handler.zk.storeNode(self.node)
-
-            if hasattr(e, 'statsd_key'):
-                statsd_key = e.statsd_key
-            else:
-                statsd_key = 'error.unknown'
-
-        try:
-            dt = int((time.monotonic() - start_time) * 1000)
-            self.recordLaunchStats(statsd_key, dt)
-            self.updateNodeStats(self.handler.zk, self.provider_config)
-        except Exception:
-            self.log.exception("Exception while reporting stats:")
+        :returns: True if we are done with the request, False otherwise.
+        '''
+        pass
 
 
 class ConfigValue(object, metaclass=abc.ABCMeta):

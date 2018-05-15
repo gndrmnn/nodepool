@@ -22,7 +22,7 @@ from kazoo import exceptions as kze
 from nodepool import exceptions
 from nodepool import nodeutils as utils
 from nodepool import zk
-from nodepool.driver import NodeLauncher
+from nodepool.driver.utils import NodeLauncher
 from nodepool.driver import NodeRequestHandler
 from nodepool.driver.openstack.provider import QuotaInformation
 
@@ -244,6 +244,15 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
     def __init__(self, pw, request):
         super().__init__(pw, request)
         self.chosen_az = None
+        self._threads = []
+
+    @property
+    def alive_thread_count(self):
+        count = 0
+        for t in self._threads:
+            if t.isAlive():
+                count += 1
+        return count
 
     def imagesAvailable(self):
         '''
@@ -348,5 +357,91 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         node.cloud = self.provider.cloud_config.name
         node.region = self.provider.region_name
 
+    def pollLauncher(self):
+        '''
+        Check if all launch requests have completed.
+
+        When all of the Node objects have reached a final state (READY or
+        FAILED), we'll know all threads have finished the launch process.
+        '''
+        if not self._threads:
+            return True
+
+        # Give the NodeLaunch threads time to finish.
+        if self.alive_thread_count:
+            return False
+
+        node_states = [node.state for node in self.nodeset]
+
+        # NOTE: It very important that NodeLauncher always sets one of
+        # these states, no matter what.
+        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
+            return False
+
+        for node in self.nodeset:
+            if node.state == zk.READY:
+                self._ready_nodes.append(node)
+            else:
+                self._failed_nodes.append(node)
+
+        return True
+
     def launch(self, node):
-        return OpenStackNodeLauncher(self, node, self.provider.launch_retries)
+        thd = OpenStackNodeLauncher(self, node, self.provider.launch_retries)
+        thd.start()
+        self._threads.append(thd)
+
+    def poll(self):
+        if self.paused:
+            return False
+
+        if self.done:
+            return True
+
+        if not self.pollLauncher():
+            return False
+
+        # If the request has been pulled, unallocate the node set so other
+        # requests can use them.
+        if not self.zk.getNodeRequest(self.request.id):
+            self.log.info("Node request %s disappeared", self.request.id)
+            for node in self.nodeset:
+                node.allocated_to = None
+                self.zk.storeNode(node)
+            self.unlockNodeSet()
+            try:
+                self.zk.unlockNodeRequest(self.request)
+            except exceptions.ZKLockException:
+                # If the lock object is invalid that is "ok" since we no
+                # longer have a request either. Just do our best, log and
+                # move on.
+                self.log.debug("Request lock invalid for node request %s "
+                               "when attempting to clean up the lock",
+                               self.request.id)
+            return True
+
+        if self.failed_nodes:
+            self.log.debug("Declining node request %s because nodes failed",
+                           self.request.id)
+            self.decline_request()
+        else:
+            # The assigned nodes must be added to the request in the order
+            # in which they were requested.
+            assigned = []
+            for requested_type in self.request.node_types:
+                for node in self.nodeset:
+                    if node.id in assigned:
+                        continue
+                    if node.type == requested_type:
+                        # Record node ID in the request
+                        self.request.nodes.append(node.id)
+                        assigned.append(node.id)
+
+            self.log.debug("Fulfilled node request %s",
+                           self.request.id)
+            self.request.state = zk.FULFILLED
+
+        self.unlockNodeSet()
+        self.zk.storeNodeRequest(self.request)
+        self.zk.unlockNodeRequest(self.request)
+        return True
