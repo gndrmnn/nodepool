@@ -24,8 +24,8 @@ from nodepool import zk
 from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 
 
-class TestNodeLaunchManager(tests.DBTestCase):
-    log = logging.getLogger("nodepool.TestNodeLaunchManager")
+class TestNodeLauncher(tests.DBTestCase):
+    log = logging.getLogger("nodepool.TestNodeLauncher")
 
     def _setup(self, configfile):
         # Need a builder for the launch code to work and to access
@@ -53,6 +53,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
             launcher_id = 'Test'
 
         class FakeRequest:
+            id = None
             requestor = 'zuul'
 
         class FakeProvider:
@@ -67,9 +68,7 @@ class TestNodeLaunchManager(tests.DBTestCase):
 
     def _launch(self, handler, node):
         # Mock NodeRequest runHandler method
-        thread = handler.launch(node)
-        thread.start()
-        handler._threads.append(thread)
+        handler.launch(node)
         handler.nodeset.append(node)
 
     def test_successful_launch(self):
@@ -81,10 +80,8 @@ class TestNodeLaunchManager(tests.DBTestCase):
         n1.state = zk.BUILDING
         n1.type = 'fake-label'
         self._launch(handler, n1)
-        while not handler.pollLauncher():
+        while not handler.launchesComplete():
             time.sleep(0)
-        self.assertEqual(len(handler.ready_nodes), 1)
-        self.assertEqual(len(handler.failed_nodes), 0)
         nodes = handler.manager.listNodes()
         self.assertEqual(nodes[0]['metadata']['groups'],
                          'fake-provider,fake-image,fake-label')
@@ -101,10 +98,8 @@ class TestNodeLaunchManager(tests.DBTestCase):
         n1.state = zk.BUILDING
         n1.type = 'fake-label'
         self._launch(handler, n1)
-        while not handler.pollLauncher():
+        while not handler.launchesComplete():
             time.sleep(0)
-        self.assertEqual(len(handler.failed_nodes), 1)
-        self.assertEqual(len(handler.ready_nodes), 0)
 
     @mock.patch('nodepool.driver.openstack.handler.'
                 'OpenStackNodeLauncher._launchNode')
@@ -122,7 +117,5 @@ class TestNodeLaunchManager(tests.DBTestCase):
         n2.type = 'fake-label'
         self._launch(handler, n1)
         self._launch(handler, n2)
-        while not handler.pollLauncher():
+        while not handler.launchesComplete():
             time.sleep(0)
-        self.assertEqual(len(handler._failed_nodes), 1)
-        self.assertEqual(len(handler._ready_nodes), 1)
