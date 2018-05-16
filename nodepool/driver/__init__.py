@@ -161,6 +161,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         self.paused = False
         self.launcher_id = self.pw.launcher_id
 
+        self._satisfied_types = []
         self._failed_nodes = []
         self._ready_nodes = []
 
@@ -218,7 +219,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
         # we need to calculate the difference between our current node set
         # and what was requested. We cannot use set operations here since a
         # node type can appear more than once in the requested types.
-        saved_types = collections.Counter([n.type for n in self.nodeset])
+        saved_types = collections.Counter(self._satisfied_types)
         requested_types = collections.Counter(self.request.node_types)
         diff = requested_types - saved_types
         needed_types = list(diff.elements())
@@ -255,6 +256,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                         node.allocated_to = self.request.id
                         self.zk.storeNode(node)
                         self.nodeset.append(node)
+                        self._satisfied_types.append(ntype)
                         # Notify driver handler about node re-use
                         self.nodeReused(node)
                         break
@@ -301,6 +303,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                 self.zk.storeNode(node)
 
                 self.nodeset.append(node)
+                self._satisfied_types.append(ntype)
                 self.launch(node)
 
     def _runHandler(self):
@@ -490,7 +493,7 @@ class NodeRequestHandler(object, metaclass=abc.ABCMeta):
                 for node in self.nodeset:
                     if node.id in assigned:
                         continue
-                    if node.type == requested_type:
+                    if node.type[0] == requested_type:
                         # Record node ID in the request
                         self.request.nodes.append(node.id)
                         assigned.append(node.id)
