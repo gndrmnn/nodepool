@@ -499,6 +499,50 @@ class CleanupWorker(BaseWorker):
                         self.log.error("Unable to delete build %s because"
                                        " uploads still remain.", build)
 
+    def _cleanupLeakedImages(self, known_providers):
+        '''
+        Delete any leaked images
+
+        Remove any images we find in providers we know about that are not
+        recorded in the Zookeeper data.
+        '''
+
+        for provider in known_providers:
+            if not provider.manage_images:
+                # This provider doesn't manage images
+                continue
+
+            # Build list of provider images marked as managed by this provider
+            provider_images = []
+            for image in provider.listImages():
+                if 'nodepool_provider_name' in image['properties']:
+                    if image['properties'] == provider.name:
+                        provider_images.append(image)
+
+            uploads = []
+            for image in provider.diskimages:
+                # Build list of provider images as recorded in ZK
+                for bnum in self._zk.getBuildNumbers(image):
+                    uploads.extend(
+                        self._zk.getUploads(image, bnum,
+                                            provider.name)
+                    )
+
+            # Calculate image IDs present in the provider, but not in ZK
+            # TODO: don't rely on external_id here to avoid races with
+            # in progress uploads
+            provider_image_ids = set([img['id'] for img in provider_images])
+            zk_image_ids = set([img.external_id for img in uploads])
+            alien_ids = provider_image_ids - zk_image_ids
+
+            for image in provider_images:
+                if image['id'] in alien_ids:
+                    self.log.warning(
+                        "Deleting leaked image %s",
+                        image['name']
+                    )
+                    provider.deleteImage(image['name'])
+
     def run(self):
         '''
         Start point for the CleanupWorker thread.
@@ -931,6 +975,8 @@ class UploadWorker(BaseWorker):
         meta = provider_image.meta.copy()
         meta['nodepool_build_id'] = build_id
         meta['nodepool_upload_id'] = upload_id
+        meta['nodepool_image_name'] = image_name
+        meta['nodepool_provider_name'] = provider.name
 
         try:
             external_id = manager.uploadImage(
