@@ -375,6 +375,7 @@ class CleanupWorker(BaseCleanupWorker):
         self._tasks = [
             (self._cleanupNodeRequestLocks, 'node request lock cleanup'),
             (self._cleanupLeakedInstances, 'leaked instance cleanup'),
+            (self._cleanupLeakedImages, 'leaked image cleanup'),
             (self._cleanupLostRequests, 'lost request cleanup'),
             (self._cleanupMaxReadyAge, 'max ready age cleanup'),
             (self._cleanupMaxHoldAge, 'max hold age cleanup'),
@@ -464,6 +465,52 @@ class CleanupWorker(BaseCleanupWorker):
                 continue
             if (now - lock_stat.stat.mtime / 1000) > LOCK_CLEANUP:
                 zk.deleteNodeRequestLock(lock_stat.lock_id)
+
+    def _cleanupLeakedImages(self):
+        '''
+        Delete any leaked images
+
+        Remove any images we find in providers we know about that are not
+        recorded in the Zookeeper data.
+        '''
+        zk_conn = self._nodepool.getZK()
+
+        for provider in self._nodepool.config.providers.values():
+            manager = self._nodepool.getProviderManager(provider.name)
+
+            # Build list of provider images marked as managed by this provider
+            provider_images = []
+            if not hasattr(manager, 'listImages'):
+                continue
+
+            for image in manager.listImages():
+                if 'nodepool_provider_name' in image['properties']:
+                    if image['properties'] == provider.name:
+                        provider_images.append(image)
+
+            alien_ids = []
+            uploads = []
+            for image in provider.diskimages:
+                # Build list of provider images as recorded in ZK
+                for bnum in self.zk.getBuildNumbers(image):
+                    uploads.extend(
+                        self.zk.getUploads(image, bnum,
+                                           provider.name,
+                                           states=[zk.READY])
+                    )
+
+            # Calculate image IDs present in the provider, but not in ZK
+            provider_image_ids = set([img['id'] for img in provider_images])
+            zk_image_ids = set([img.external_id for img in uploads])
+            alien_ids = provider_image_ids - zk_image_ids
+
+            for image in provider_images:
+                if image['id'] in alien_ids:
+                    self.log.warning(
+                        "Deleting leaked image %s",
+                        image['name']
+                    )
+                    manager.deleteImage(image['name'])
 
     def _cleanupLeakedInstances(self):
         '''

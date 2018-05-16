@@ -931,6 +931,7 @@ class UploadWorker(BaseWorker):
         meta = provider_image.meta.copy()
         meta['nodepool_build_id'] = build_id
         meta['nodepool_upload_id'] = upload_id
+        meta['nodepool_provider_name'] = provider.name
 
         try:
             external_id = manager.uploadImage(
