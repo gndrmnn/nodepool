@@ -52,6 +52,24 @@
       "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_3dff8135",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-05-17T15:58:38Z",
+      "side": 1,
+      "message": "So, that suggestion would basically undo most of the changes I have here, if we keep thread handling in the common code, which I thought was confusing and complicated the API. So I *really* don\u0027t want to revert to that. And putting it into utils.py means we\u0027d need something that does what the old NodeLaunchManager did (manages threads and tells us how many are in use).\n\nThe thing that led to these changes is the fact that NodeLauncher makes assumptions on the provider config structure (it references the pool.labels list in the handler). My goal was to totally move that within the OpenStack driver. But the suggestion was made to keep that reusable, thus the new utils.py. What it doesn\u0027t do is remove that config dependency, so I think maybe it\u0027s too early to consider that reusable.\n\nI don\u0027t want to make too many unrelated changes in this single review, so maybe what I should do is move NodeLauncher into the OpenStack driver, then in a later review try to introduce something that is more reusable?",
+      "parentUuid": "5f7c97a3_372002b1",
+      "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
