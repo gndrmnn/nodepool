@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_4fae5199",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-05-17T00:52:05Z",
+      "side": 1,
+      "message": "Could the above additions be part of the driver.utils module ? It seems like other drivers using the NodeLauncher object will likely need to use the _threads logic.",
+      "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
