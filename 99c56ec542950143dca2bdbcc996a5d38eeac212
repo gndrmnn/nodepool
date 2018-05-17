@@ -16,6 +16,24 @@
       "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_a92fd7a5",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-05-17T13:36:19Z",
+      "side": 1,
+      "message": "That\u0027s exactly what the original NodeLaunchManager class did (managed the threads for launches). Are you suggesting we add that class back? I\u0027m actually not sure which would be better (allowing the driver to manage as it sees fit, or the manager class). Are any of the drivers you have up making use of threads in this way?",
+      "parentUuid": "5f7c97a3_4fae5199",
+      "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
