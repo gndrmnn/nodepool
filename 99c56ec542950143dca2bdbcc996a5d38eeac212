@@ -34,6 +34,24 @@
       "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_372002b1",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-05-17T14:39:39Z",
+      "side": 1,
+      "message": "I\u0027m suggesting we keep the NodeLaunchManager logic in the common drivers code or in a utils module so that other drivers doesn\u0027t have to re-implement it. Actually all the other drivers I proposed make use of threads this way.\n\nThe original NodeLaunchManager required drivers to implement a subclass and instantiate it for each node request handlers.",
+      "parentUuid": "5f7c97a3_a92fd7a5",
+      "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
