@@ -70,6 +70,24 @@
       "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_7c8731b8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-05-18T01:47:11Z",
+      "side": 1,
+      "message": "If the issue is the pool configuration assumptions, then why not make the nodelauncher be able to work without pool?\n\nOtherwise I\u0027m fine with this change and I don\u0027t mind copying those edits to the others drivers that uses NodeLauncher threads.",
+      "parentUuid": "5f7c97a3_3dff8135",
+      "revId": "99c56ec542950143dca2bdbcc996a5d38eeac212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
