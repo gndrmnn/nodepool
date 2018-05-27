@@ -14,3 +14,4 @@ voluptuous
 kazoo
 Paste
 WebOb>=1.2.3
+openshift
