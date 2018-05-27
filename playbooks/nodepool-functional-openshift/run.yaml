@@ -1,0 +1,11 @@
+- hosts: launcher
+  roles:
+    - install-nodepool
+
+- hosts: cluster
+  roles:
+    - deploy-openshift
+
+- hosts: launcher
+  roles:
+    - nodepool-openshift-functional
