@@ -19,6 +19,8 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: openshift-project
+  - name: openshift-pod
 
 providers:
   - name: cloud1
@@ -95,6 +97,18 @@ providers:
             connection-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: openshift
+    driver: openshift
+    context: "/hostname:8443/developer"
+    pools:
+      - name: main
+        labels:
+          - name: openshift-project
+            type: project
+          - name: openshift-pod
+            type: pod
+            image: docker.io/fedora:28
 
 diskimages:
   - name: trusty
