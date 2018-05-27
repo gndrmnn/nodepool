@@ -1093,3 +1093,111 @@ that can creates pods, services, configmaps, ...
 Pod labels provide a dedicated namespace with a single pod created using the
 ``image`` parameter and it is configured with a service account that can
 exec and get the logs of the pod.
+
+
+Openshift Driver
+----------------
+
+An Openshift provider's resources are partitioned into groups called "pool"
+(see :ref:`openshift_pools` for details), and within a pool, the node types
+which are to be made available are listed
+(see :ref:`openshift_labels` for details).
+
+Example::
+
+  providers:
+    - name: cluster
+      driver: openshift
+      context: context-name
+      pools:
+        - name: main
+          labels:
+            - name: openshift-project
+              type: project
+            - name: openshift-pod
+              type: pod
+              image: docker.io/fedora:28
+
+**required**
+
+  ``context``
+  Name of the context configured in ``kube/config``.
+
+  Before using the driver, Nodepool services need a ``kube/config`` file
+  manually installed with self-provisioner (the service account needs to
+  be able to create project) context.
+
+**optional**
+
+  ``launch-retries``
+
+    The number of times to retry launching a node before considering the job
+    failed.
+
+    Default 3.
+
+  ``max-projects``
+
+    Maximum number of projects that can be used.
+
+
+.. _openshift_pools:
+
+Openshift Pools
+^^^^^^^^^^^^^^^
+
+A pool defines a group of resources from an Openshift provider.
+
+Example::
+
+  pools:
+    - name: main
+      labels: []
+
+
+**required**
+
+  ``name``
+
+  Project's name are prefixed with the pool's name.
+
+
+.. _openshift_labels:
+
+Openshift Labels
+^^^^^^^^^^^^^^^^
+
+Each entry in a pool`s `labels` section indicates that the
+corresponding label is available for use in this pool.
+
+Example::
+
+  labels:
+    - name: openshift-project
+      type: project
+    - name: openshift-pod
+      type: pod
+      image: docker.io/fedora:28
+      memory: 1024
+      cpu: 1
+
+
+Openshift provider support two types of labels:
+
+Project labels provide an empty project configured with a service account
+that can creates pods, services, configmaps, ...
+
+Pod labels provide a dedicated project with a single pod created using the
+``image`` parameter and it is configured with a service account that can
+exec and get the logs of the pod.
+
+
+**optional pod options**
+
+  ``cpu``
+
+    The number of cpu resources to request.
+
+  ``memory``
+
+    The number of memory in MB to request.
