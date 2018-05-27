@@ -19,6 +19,7 @@ labels:
   - name: trusty-external
     min-ready: 1
   - name: trusty-static
+  - name: openshift-project
 
 providers:
   - name: cloud1
@@ -95,6 +96,14 @@ providers:
             connection-port: 22022
             username: zuul
             max-parallel-jobs: 1
+
+  - name: openshift
+    driver: openshift
+    config-file: ~/.kube/config
+    pools:
+      - name: main
+        labels:
+          - name: openshift-project
 
 diskimages:
   - name: trusty
