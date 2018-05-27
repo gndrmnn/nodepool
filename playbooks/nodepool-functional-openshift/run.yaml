@@ -1,0 +1,17 @@
+- hosts: launcher
+  roles:
+    - install-nodepool
+
+- hosts: cluster
+  roles:
+    - deploy-openshift
+  tasks:
+    - name: Copy openshift kube config
+      synchronize:
+        src: '{{ ansible_user_dir }}/.kube/config'
+        dest: '{{ zuul.executor.log_root }}/kube-config'
+        mode: pull
+
+- hosts: launcher
+  roles:
+    - nodepool-openshift-functional
