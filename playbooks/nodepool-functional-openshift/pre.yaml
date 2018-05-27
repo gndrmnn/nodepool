@@ -1,0 +1,18 @@
+- hosts: launcher
+  roles:
+    - role: bindep
+      bindep_profile: dev
+
+  tasks:
+    - name: Ensure nodepool services directories
+      file:
+        path: '{{ ansible_user_dir }}/{{ item }}'
+        state: directory
+      with_items:
+        - work/logs/nodepool
+        - work/etc
+        - work/images
+
+- hosts: cluster
+  roles:
+    - install-openshift
