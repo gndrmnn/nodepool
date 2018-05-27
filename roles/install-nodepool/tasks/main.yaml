@@ -2,12 +2,27 @@
   package:
     name: zookeeperd
   become: yes
+  ignore_errors: yes
+
+- name: Install zookeeper (other name)
+  package:
+    name: zookeeper
+  become: yes
+  ignore_errors: yes
+
+- name: Setup zoo.cfg
+  command: cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
+  become: yes
+  ignore_errors: yes
 
 - name: Start zookeeper
   service:
     name: zookeeper
     state: started
   become: yes
+
+- name: Debug zookeeper service
+  command: systemctl status zookeeper
 
 - name: Install nodepool
   command: pip3 install .
