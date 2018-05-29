@@ -328,6 +328,8 @@ Example::
             - az1
           networks:
             - some-network-name
+          security_groups:
+            - zuul-security-group
           labels:
             - name: trusty
               min-ram: 8192
@@ -447,6 +449,8 @@ Example::
         - az1
       networks:
         - some-network-name
+      security_groups:
+        - zuul-security-group
       auto-floating-ip: False
       host-key-checking: True
       labels:
@@ -498,6 +502,10 @@ Example::
   ``networks`` (list)
     Specify custom Neutron networks that get attached to each
     node. Specify the name or id of the network as a string.
+
+  ``security_groups`` (list)
+    Specify custom Neutron security groups that get attached to each
+    node. Specify the name or id of the security_group as a string.
 
   ``auto-floating-ip`` (bool)
     Specify custom behavior of allocating floating ip for each node.

@@ -117,6 +117,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             nodepool_node_label=self.node.type,
             nodepool_image_name=image_name,
             networks=self.pool.networks,
+            security_groups=self.pool.security_groups,
             boot_from_volume=self.label.boot_from_volume,
             volume_size=self.label.volume_size)
 
@@ -166,6 +167,9 @@ class OpenStackNodeLauncher(NodeLauncher):
         # the public.
         if not self.node.private_ipv4:
             self.node.private_ipv4 = server.public_v4
+
+        if not self.node.security_groups:
+            self.node.security_groups = server.security_groups
 
         # Checkpoint save the updated node info
         self.storeNode()
