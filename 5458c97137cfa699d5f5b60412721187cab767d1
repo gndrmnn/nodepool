@@ -16,6 +16,24 @@
       "revId": "5458c97137cfa699d5f5b60412721187cab767d1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_2b56bb5d",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-05-29T23:45:44Z",
+      "side": 1,
+      "message": "Those concerns sounds like a diskimage-builder issue. At least it seems like the environment isn\u0027t dumped into build log without DIB_DEBUG.",
+      "parentUuid": "5f7c97a3_0d57d704",
+      "revId": "5458c97137cfa699d5f5b60412721187cab767d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
