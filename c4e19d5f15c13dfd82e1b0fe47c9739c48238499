@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_819a5911",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-29T16:39:56Z",
+      "side": 1,
+      "message": "Can you use a hyphen here -- all of the nodepool config options are hyphenated.",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_e188edc6",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-29T16:39:56Z",
+      "side": 1,
+      "message": "This will need to be hyphenated too.",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_018649ba",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-29T16:39:56Z",
+      "side": 1,
+      "message": "Do we need to store this in zookeeper?  For comparison, we don\u0027t store boot-from-volume in zk.",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_41a0c142",
+        "filename": "nodepool/tests/fixtures/node_security_group.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-29T16:39:56Z",
+      "side": 1,
+      "message": "Hyphenate.",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_219b4517",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-05-29T16:39:56Z",
+      "side": 1,
+      "message": "If we don\u0027t store the sg on the node, this check won\u0027t work, but that\u0027s okay.  We\u0027ve at least exercised the code.\n\n(If we want, we could modify the fake client to store the security group, and then we can verify that it got the argument correctly.  But I don\u0027t think that\u0027s necessary.)",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
