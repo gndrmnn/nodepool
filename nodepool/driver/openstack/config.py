@@ -68,7 +68,8 @@ class ProviderPool(ConfigPool):
             other.max_ram != self.max_ram or
             other.azs != self.azs or
             other.host_key_checking != self.host_key_checking or
-            other.networks != self.networks):
+            other.networks != self.networks or
+            other.security_groups != self.security_groups):
             return False
         return True
 
@@ -195,6 +196,7 @@ class OpenStackProviderConfig(ProviderConfig):
             pp.max_ram = pool.get('max-ram', math.inf)
             pp.azs = pool.get('availability-zones')
             pp.networks = pool.get('networks', [])
+            pp.security_groups = pool.get('security-groups', [])
             pp.auto_floating_ip = bool(pool.get('auto-floating-ip', True))
             pp.host_key_checking = bool(pool.get('host-key-checking', True))
             pp.labels = {}
@@ -286,6 +288,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'max-ram': int,
             'labels': [pool_label],
             'availability-zones': [str],
+            'security-groups': [str]
         }
 
         return v.Schema({
