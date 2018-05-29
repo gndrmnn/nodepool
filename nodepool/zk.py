@@ -489,6 +489,7 @@ class Node(BaseModel):
         self.private_ipv4 = None
         self.public_ipv6 = None
         self.interface_ip = None
+        self.security_groups = []
         self.connection_port = 22
         self.image_id = None
         self.launcher = None
@@ -524,6 +525,7 @@ class Node(BaseModel):
                     self.private_ipv4 == other.private_ipv4 and
                     self.public_ipv6 == other.public_ipv6 and
                     self.interface_ip == other.interface_ip and
+                    set(self.security_groups) == set(other.security_groups) and
                     self.image_id == other.image_id and
                     self.launcher == other.launcher and
                     self.created_time == other.created_time and
@@ -555,6 +557,7 @@ class Node(BaseModel):
         d['private_ipv4'] = self.private_ipv4
         d['public_ipv6'] = self.public_ipv6
         d['interface_ip'] = self.interface_ip
+        d['security_groups'] = self.security_groups
         d['connection_port'] = self.connection_port
         # TODO(tobiash): ssh_port is kept for backwards compatibility reasons
         # to zuul. It should be removed after some deprecation time.
@@ -596,6 +599,7 @@ class Node(BaseModel):
         o.private_ipv4 = d.get('private_ipv4')
         o.public_ipv6 = d.get('public_ipv6')
         o.interface_ip = d.get('interface_ip')
+        o.security_groups = d.get('security_groups', [])
         o.connection_port = d.get('connection_port', d.get('ssh_port', 22))
         o.image_id = d.get('image_id')
         o.launcher = d.get('launcher')

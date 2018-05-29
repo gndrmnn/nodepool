@@ -491,6 +491,22 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[0].type, 'fake-label')
         self.assertEqual(nodes[0].username, 'zuul')
 
+    def test_node_security_group(self):
+        """Test that an image and node are created with sec_group specified"""
+        configfile = self.setup_config('node_security_group.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        nodes2 = self.waitForNodes('fake-label2')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(len(nodes2), 1)
+        self.assertEqual(nodes[0].provider, 'fake-provider')
+        self.assertEqual(nodes[0].security_groups, ['fake-sg'])
+        self.assertEqual(nodes2[0].provider, 'fake-provider')
+        self.assertEqual(nodes2[0].security_groups, [])
+
     def test_node_flavor_name(self):
         """Test that a node is created with a flavor name"""
         configfile = self.setup_config('node_flavor_name.yaml')
