@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_21e345da",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 27900
+      },
+      "writtenOn": "2018-05-29T16:28:33Z",
+      "side": 1,
+      "message": "Done. I think this is a bug in the latest Atom update. It was working before, but now on undo commit (ammend) it removes empty lines before the change-id",
+      "parentUuid": "5f7c97a3_618a9d1b",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 61
+      },
+      "revId": "efe41f5ea4b8f1c94d930d84ee22c009a4cab552",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_a19af56b",
         "filename": "nodepool/driver/openstack/handler.py",
         "patchSetId": 1
