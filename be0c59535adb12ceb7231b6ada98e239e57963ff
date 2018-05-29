@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_1cc8f0a5",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-05-29T17:03:17Z",
+      "side": 1,
+      "message": "Maybe this should be renamed to not be thread-specific?",
+      "range": {
+        "startLine": 554,
+        "startChar": 8,
+        "endLine": 554,
+        "endChar": 26
+      },
+      "revId": "be0c59535adb12ceb7231b6ada98e239e57963ff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
