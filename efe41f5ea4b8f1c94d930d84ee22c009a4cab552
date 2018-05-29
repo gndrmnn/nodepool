@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_618a9d1b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-05-29T16:22:26Z",
+      "side": 1,
+      "message": "The reason Gerrit didn\u0027t update the old change is that the change id line is expected to be in the last paragraph of the commit message otherwise Gerrit ignores it.\n\nThis resulted in the new change id below and the new change rather than an updated change.\n\nIf you end up needing to push a new patchset removing the highlighted change id above would be a nice cleanup.",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 61
+      },
+      "revId": "efe41f5ea4b8f1c94d930d84ee22c009a4cab552",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_a19af56b",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-05-29T16:22:26Z",
+      "side": 1,
+      "message": "Is this conditional check necessary? I think we can always set this value on the zk node?",
+      "revId": "efe41f5ea4b8f1c94d930d84ee22c009a4cab552",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
