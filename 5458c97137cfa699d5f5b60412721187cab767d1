@@ -34,6 +34,24 @@
       "revId": "5458c97137cfa699d5f5b60412721187cab767d1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_068bb667",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-05-30T00:19:37Z",
+      "side": 1,
+      "message": "nodepool unconditionally runs disk-image-create with \"-x\" which really tries to dump almost everything, so it\u0027s default \"unsafe\" in that respect.",
+      "parentUuid": "5f7c97a3_2b56bb5d",
+      "revId": "5458c97137cfa699d5f5b60412721187cab767d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
