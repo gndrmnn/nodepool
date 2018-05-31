@@ -51,3 +51,8 @@ its most important pieces::
                  | BuildWorker |               | UploadWorker |
                  +-------------+               +--------------+
 
+Drivers
+-------
+
+.. autoclass:: nodepool.driver.Provider
+   :members:
