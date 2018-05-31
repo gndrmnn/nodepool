@@ -28,6 +28,7 @@ from nodepool.nodeutils import iterate_timeout
 from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
 from nodepool import version
+from nodepool.driver.openstack.handler import OpenStackNodeRequestHandler
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list
@@ -129,6 +130,9 @@ class OpenStackProvider(Provider):
     def join(self):
         if self._taskmanager:
             self._taskmanager.join()
+
+    def getRequestHandler(self, poolworker, request):
+        return OpenStackNodeRequestHandler(poolworker, request)
 
     @property
     def _flavors(self):
