@@ -14,8 +14,12 @@
 
 from nodepool.driver import Driver
 from nodepool.driver.fake.config import FakeProviderConfig
+from nodepool.driver.fake.provider import FakeProvider
 
 
 class FakeDriver(Driver):
     def getProviderConfig(self, provider):
         return FakeProviderConfig(provider)
+
+    def getProvider(self, provider_config, use_taskmanager):
+        return FakeProvider(self, provider_config, use_taskmanager)

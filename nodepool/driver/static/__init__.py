@@ -14,8 +14,12 @@
 
 from nodepool.driver import Driver
 from nodepool.driver.static.config import StaticProviderConfig
+from nodepool.driver.static.provider import StaticProvider
 
 
 class StaticDriver(Driver):
     def getProviderConfig(self, provider):
         return StaticProviderConfig(provider)
+
+    def getProvider(self, provider_config, use_taskmanager):
+        return StaticProvider(self, provider_config, use_taskmanager)

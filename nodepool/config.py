@@ -201,7 +201,7 @@ def get_provider_config(provider):
     # Ensure legacy configuration still works when using fake cloud
     if provider.get('name', '').startswith('fake'):
         provider['driver'] = 'fake'
-    driver = Drivers._get(provider['driver'])
+    driver = Drivers.get(provider['driver'])
     return driver.getProviderConfig(provider)
 
 

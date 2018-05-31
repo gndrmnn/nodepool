@@ -121,7 +121,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
             return fake_client
 
         self.useFixture(fixtures.MockPatchObject(
-            Drivers.get('fake')['provider'], '_getClient',
+            fakeprovider, '_getClient',
             get_fake_client))
 
         configfile = self.setup_config('node.yaml')

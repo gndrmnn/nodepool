@@ -32,7 +32,6 @@ class Drivers:
 
     log = logging.getLogger("nodepool.driver.Drivers")
     drivers = {}
-    _drivers = {}  # TODO: replace drivers
     drivers_paths = None
 
     @staticmethod
@@ -73,19 +72,6 @@ class Drivers:
                    "__init__.py" not in os.listdir(driver_path):
                     continue
                 Drivers.log.debug("%s: loading driver" % driver_path)
-                driver_obj = {}
-                for name, parent_class in (
-                        ("provider", Provider),
-                ):
-                    driver_obj[name] = Drivers._load_class(
-                        driver, os.path.join(driver_path, "%s.py" % name),
-                        parent_class)
-                    if not driver_obj[name]:
-                        break
-                if not driver_obj[name]:
-                    Drivers.log.error("%s: skipping incorrect driver" %
-                                      driver_path)
-                    continue
                 Drivers.drivers[driver] = driver_obj
                 driver_obj = Drivers._load_class(
                     driver, os.path.join(driver_path, "__init__.py"),
@@ -100,16 +86,6 @@ class Drivers:
             Drivers.load()
         try:
             return Drivers.drivers[name]
-        except KeyError:
-            raise RuntimeError("%s: unknown driver" % name)
-
-    # TODO: replace get
-    @staticmethod
-    def _get(name):
-        if not Drivers._drivers:
-            Drivers.load()
-        try:
-            return Drivers._drivers[name]
         except KeyError:
             raise RuntimeError("%s: unknown driver" % name)
 
@@ -137,6 +113,18 @@ class Driver(object, metaclass=abc.ABCMeta):
         """Return a ProviderConfig instance
 
         :arg dict provider: The parsed provider configuration
+        """
+        pass
+
+    @abc.abstractmethod
+    def getProvider(self, provider_config, use_taskmanager):
+        """Return a Provider instance
+
+        :arg dict provider_config: A ProviderConfig instance
+
+        :arg bool use_taskmanager: Whether this provider should use a
+           task manager (i.e., perform synchronous or asynchronous
+           operations).
         """
         pass
 
