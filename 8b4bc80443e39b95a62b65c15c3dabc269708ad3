@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_b132140f",
+        "filename": "doc/source/devguide.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-05-31T22:14:14Z",
+      "side": 1,
+      "message": "As a followup we may want to explain which of these are required to implement a new driver (I think all of them currently are?)",
+      "revId": "8b4bc80443e39b95a62b65c15c3dabc269708ad3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
