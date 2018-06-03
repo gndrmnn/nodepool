@@ -102,6 +102,24 @@
       "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_f53a98c2",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-06-03T08:45:37Z",
+      "side": 1,
+      "message": "I\u0027d be in favor of extending the fake client to store the security groups. Otherwise we may exercise the code but we only test that it\u0027s not crashing and not if the security groups really arrive at the nodes. In case this breaks in the future this would be a severe (and maybe hard to debug) issue for anyone relying on this feature.",
+      "parentUuid": "5f7c97a3_219b4517",
+      "revId": "c4e19d5f15c13dfd82e1b0fe47c9739c48238499",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
