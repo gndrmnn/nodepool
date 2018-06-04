@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_e49f444f",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-06-04T04:33:36Z",
+      "side": 1,
+      "message": "We should test for the correct security groups here. After having a look you already have everything which is needed to check that in the fake client:\n\n        client \u003d pool.getProviderManager(\u0027fake-provider\u0027)._getClient()\n        for server in client._server_list:\n            if server.id \u003d\u003d nodes[0].external_id:\n                self.assertEqual(server.security_groups, [\u0027fake-sg\u0027])",
+      "revId": "7f717e4338b181945860c88cb6ded116201c8ded",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
