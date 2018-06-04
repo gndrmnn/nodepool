@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_a92ef7a8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-06-04T16:08:49Z",
+      "side": 1,
+      "message": "Do we need the circular import just for the QuotaInformation? Does it make sense to just move the QuotaInformation class somewhere else? Maybe even into some driver-utils as this could be generic enough to be used by other upcoming dynamic node drivers.",
+      "revId": "ae0f54abeb9b95d8684193ec61135e8bfd275a16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
