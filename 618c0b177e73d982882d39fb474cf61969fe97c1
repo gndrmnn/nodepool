@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_cc07c1c9",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-06-04T16:27:45Z",
+      "side": 1,
+      "message": "nit: determine",
+      "range": {
+        "startLine": 600,
+        "startChar": 43,
+        "endLine": 600,
+        "endChar": 53
+      },
+      "revId": "618c0b177e73d982882d39fb474cf61969fe97c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
