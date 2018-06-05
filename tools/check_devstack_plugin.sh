@@ -27,6 +27,7 @@ NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB=${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB:-True}
 NODEPOOL_PAUSE_OPENSUSE_423_DIB=${NODEPOOL_PAUSE_OPENSUSE_423_DIB:-True}
 NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB=${NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB:-True}
+NODEPOOL_PAUSE_OPENSUSE_15_DIB=${NODEPOOL_PAUSE_OPENSUSE_15_DIB:-True}
 NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB=${NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB:-True}
 
 function sshintonode {
@@ -142,6 +143,7 @@ if [ ${NODEPOOL_PAUSE_OPENSUSE_423_DIB,,} = 'false' ]; then
     # check ssh for root user
     sshintonode opensuse-423
 fi
+
 if [ ${NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB,,} = 'false' ]; then
     # check that image built
     waitforimage opensuse-tumbleweed
@@ -150,6 +152,16 @@ if [ ${NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB,,} = 'false' ]; then
     # check ssh for root user
     sshintonode opensuse-tumbleweed
 fi
+
+if [ ${NODEPOOL_PAUSE_OPENSUSE_15_DIB,,} = 'false' ]; then
+    # check that image built
+    waitforimage opensuse-15
+    # check image was bootable
+    waitfornode opensuse-15
+    # check ssh for root user
+    sshintonode opensuse-15
+fi
+
 if [ ${NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB,,} = 'false' ]; then
     # check that image built
     waitforimage gentoo-17-0-systemd

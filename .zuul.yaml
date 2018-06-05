@@ -95,6 +95,7 @@
       devstack_localrc:
         NODEPOOL_PAUSE_OPENSUSE_423_DIB: false
         NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB: false
+        NODEPOOL_PAUSE_OPENSUSE_15_DIB: false
 
 - job:
     name: nodepool-functional-py35-gentoo-src
