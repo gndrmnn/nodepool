@@ -57,29 +57,30 @@ class StaticNodeRequestHandler(NodeRequestHandler):
         return True
 
     def launch(self, node):
-        static_node = None
-        available_nodes = self.manager.listNodes()
-        # Randomize static nodes order
-        random.shuffle(available_nodes)
-        for available_node in available_nodes:
-            if node.type[0] in available_node["labels"]:
-                if self._checkConcurrency(available_node):
-                    static_node = available_node
-                    break
+        with self.manager.launch_lock:
+            static_node = None
+            available_nodes = self.manager.listNodes()
+            # Randomize static nodes order
+            random.shuffle(available_nodes)
+            for available_node in available_nodes:
+                if node.type[0] in available_node["labels"]:
+                    if self._checkConcurrency(available_node):
+                        static_node = available_node
+                        break
 
-        if static_node:
-            self.log.debug("%s: Assigning static_node %s" % (
-                self.request.id, static_node))
-            node.state = zk.READY
-            node.external_id = "static-%s" % self.request.id
-            node.hostname = static_node["name"]
-            node.username = static_node["username"]
-            node.interface_ip = static_node["name"]
-            node.connection_port = static_node["connection-port"]
-            node.connection_type = static_node["connection-type"]
-            nodeutils.set_node_ip(node)
-            node.host_keys = self.manager.nodes_keys[static_node["name"]]
-            self.zk.storeNode(node)
+            if static_node:
+                self.log.debug("%s: Assigning static_node %s" % (
+                    self.request.id, static_node))
+                node.state = zk.READY
+                node.external_id = "static-%s" % self.request.id
+                node.hostname = static_node["name"]
+                node.username = static_node["username"]
+                node.interface_ip = static_node["name"]
+                node.connection_port = static_node["connection-port"]
+                node.connection_type = static_node["connection-type"]
+                nodeutils.set_node_ip(node)
+                node.host_keys = self.manager.nodes_keys[static_node["name"]]
+                self.zk.storeNode(node)
 
     def launchesComplete(self):
         '''

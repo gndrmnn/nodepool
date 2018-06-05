@@ -13,6 +13,7 @@
 # under the License.
 
 import logging
+import threading
 
 from nodepool import exceptions
 from nodepool.driver import Provider
@@ -33,6 +34,7 @@ class StaticNodeProvider(Provider):
         self.pools = {}
         self.static_nodes = {}
         self.nodes_keys = {}
+        self.launch_lock = threading.Lock()
 
     def checkHost(self, node):
         # Check node is reachable
