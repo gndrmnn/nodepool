@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_5593ff5c",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-06T17:46:51Z",
+      "side": 1,
+      "message": "Yup, ignore the 1st comment.",
+      "parentUuid": "5f7c97a3_f5d48b21",
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_95dbd74d",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 2
