@@ -733,6 +733,10 @@ class BuildWorker(BaseWorker):
         img_elements = diskimage.elements
         img_types = ",".join(diskimage.image_types)
 
+        # Ensure at least qcow2 is set to be passed to qemu-img
+        if not img_types:
+            img_types = ['qcow2']
+
         qemu_img_options = ''
         if 'qcow2' in img_types:
             qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
