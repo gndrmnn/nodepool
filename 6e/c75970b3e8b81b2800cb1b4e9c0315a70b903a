@@ -1,0 +1,10 @@
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Code-Review+1: Artem Goncharov <artem.goncharov@gmail.com>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 06 Jun 2018 21:18:02 +0000
+Reviewed-on: https://review.openstack.org/572836
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
