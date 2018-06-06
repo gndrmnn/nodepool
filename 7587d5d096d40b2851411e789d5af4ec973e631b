@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_c68d2b2b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-06T14:50:53Z",
+      "side": 1,
+      "message": "Do we want to force implementation, or just remove this bit and allow a driver to overload it if they need to? Neither the static nor fake drivers define it, so that\u0027s a problem that must be fixed if it remains abstract.",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 23
+      },
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
