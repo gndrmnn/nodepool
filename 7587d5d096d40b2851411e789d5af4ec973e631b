@@ -49,6 +49,40 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_f5d48b21",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-06-06T17:44:13Z",
+      "side": 1,
+      "message": "I don\u0027t follow the first comment -- this shouldn\u0027t affect Drivers.drivers at all (we\u0027re just reusing a varible name, not modifying anything).\n\nAgree with your second comment about handling the failure.",
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_95dbd74d",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-06-06T17:44:13Z",
+      "side": 1,
+      "message": "This needs to be driver_obj().  But we also need to fix the reset issue you point out.",
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_c68d2b2b",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 2
@@ -66,6 +100,23 @@
         "endLine": 128,
         "endChar": 23
       },
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_b5de133c",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-06-06T17:44:13Z",
+      "side": 1,
+      "message": "Oh, yeah, removing it sounds good.",
       "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
