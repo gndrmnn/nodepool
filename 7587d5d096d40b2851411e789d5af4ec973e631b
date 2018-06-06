@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_a6010f6d",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-06T14:54:18Z",
+      "side": 1,
+      "message": "Also, _load_class() can return False on failure to load, so should likely handle that case here.",
+      "parentUuid": "5f7c97a3_c6dbeb1e",
+      "range": {
+        "startLine": 90,
+        "startChar": 16,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_c68d2b2b",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 2
