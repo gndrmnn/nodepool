@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f7c97a3_c6dbeb1e",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-06T14:52:32Z",
+      "side": 1,
+      "message": "This is changing the value for drivers[driver] (line above). Not sure that it\u0027s a problem just yet, but is at least confusing.",
+      "range": {
+        "startLine": 90,
+        "startChar": 16,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "7587d5d096d40b2851411e789d5af4ec973e631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_c68d2b2b",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 2
