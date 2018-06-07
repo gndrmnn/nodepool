@@ -16,6 +16,24 @@
       "revId": "86101915a61f62f37b3c158cf45836feca4c9afb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_08f79cd6",
+        "filename": "nodepool/tests/test_webapp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-06-07T08:47:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f7c97a3_777f1566",
+      "revId": "86101915a61f62f37b3c158cf45836feca4c9afb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
