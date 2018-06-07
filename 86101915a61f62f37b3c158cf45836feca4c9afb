@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_777f1566",
+        "filename": "nodepool/tests/test_webapp.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-06-07T05:37:00Z",
+      "side": 1,
+      "message": "This note is not needed here.",
+      "revId": "86101915a61f62f37b3c158cf45836feca4c9afb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
