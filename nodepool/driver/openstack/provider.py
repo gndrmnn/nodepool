@@ -21,11 +21,11 @@ import operator
 import time
 
 import shade
+from openstack.task_manager import TaskManagerStopped
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.nodeutils import iterate_timeout
-from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
 from nodepool import version
 
@@ -417,7 +417,7 @@ class OpenStackProvider(Provider):
                 image = self.getImage(image_id)
             except exceptions.NotFound:
                 continue
-            except ManagerStoppedException:
+            except TaskManagerStopped:
                 raise
             except Exception:
                 self.log.exception('Unable to list images while waiting for '

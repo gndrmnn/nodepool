@@ -26,54 +26,13 @@ from openstack import task_manager as openstack_task_manager
 from nodepool import stats
 
 
-class ManagerStoppedException(Exception):
-    pass
-
-
-class TaskManager(openstack_task_manager.TaskManager):
+class TaskManager(openstack_task_manager.RateLimitingTaskManager):
     log = logging.getLogger("nodepool.TaskManager")
 
     def __init__(self, name, rate, workers=5):
         super(TaskManager, self).__init__(
             name=name, client=client, workers=workers)
-        self.daemon = True
-        self.queue = queue.Queue()
-        self._running = True
-        self.rate = float(rate)
         self.statsd = stats.get_client()
-        self._thread = threading.Thread(target=self.run)
-
-    def start(self):
-        self._thread.start()
-
-    def stop(self):
-        self._running = False
-        self.queue.put(None)
-
-    def join(self):
-        self._thread.join()
-
-    def run(self):
-        last_ts = 0
-        try:
-            while True:
-                task = self.queue.get()
-                if not task:
-                    if not self._running:
-                        break
-                    continue
-                while True:
-                    delta = time.time() - last_ts
-                    if delta >= self.rate:
-                        break
-                    time.sleep(self.rate - delta)
-                self.log.debug("Manager %s queue size: %s)" %
-                               (self.name, self.queue.qsize()))
-                self.run_task(task)
-                self.queue.task_done()
-        except Exception:
-            self.log.exception("Task manager died.")
-            raise
 
     def post_run_task(self, elapsed_time, task):
         super(TaskManager, self).post_run_task(elapsed_time, task)
@@ -82,10 +41,3 @@ class TaskManager(openstack_task_manager.TaskManager):
             key = 'nodepool.task.%s.%s' % (self.name, task.name)
             self.statsd.timing(key, int(elapsed_time * 1000))
             self.statsd.incr(key)
-
-    def submit_task(self, task, raw=False):
-        if not self._running:
-            raise ManagerStoppedException(
-                "Manager %s is no longer running" % self.name)
-        self.queue.put(task)
-        return task.wait()
