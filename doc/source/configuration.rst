@@ -738,7 +738,8 @@ corresponding label.
 **required**
 
   ``name``
-  The hostname or ip address of the static node.
+  The hostname or ip address of the static node. This must be unique
+  across all nodes defined within the configuration file.
 
   ``labels`` (list)
   The list of labels associated with the node.
