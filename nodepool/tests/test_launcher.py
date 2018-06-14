@@ -1370,3 +1370,51 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(1, mock_poll.call_count)
         self.assertEqual(0, len(
             pool._pool_threads["fake-provider-main"].request_handlers))
+
+    def test_exception_causing_decline_of_paused_request(self):
+        """
+        Test that a paused request, that later gets declined because of
+        an exception, unpauses and removes the request handler.
+        """
+
+        # First config has max-servers set to 2
+        configfile = self.setup_config('pause_declined_1.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Create a request that uses all capacity (2 servers)
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 2)
+
+        # Now that we have 2 nodes in use, create another request that
+        # requests two nodes, which should cause the request to pause.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+        req2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req2)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        # Force an exception within the run handler.
+        pool_worker = pool.getPoolWorkers('fake-provider')
+        pool_worker[0].paused_handler.hasProviderQuota = mock.Mock(
+            side_effect=Exception('mock exception')
+        )
+
+        # Because the second request asked for 2 nodes, but that now exceeds
+        # max-servers, req2 should get declined now, and transition to FAILED
+        req2 = self.waitForNodeRequest(req2, (zk.FAILED,))
+        self.assertNotEqual(req2.declined_by, [])
+
+        # The exception handling should make sure that we unpause AND remove
+        # the request handler.
+        self.assertIsNone(pool_worker[0].paused_handler)
+        self.assertEqual(0, len(pool_worker[0].request_handlers))
