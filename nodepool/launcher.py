@@ -42,9 +42,6 @@ WATERMARK_SLEEP = 10
 # When to delete node request lock znodes
 LOCK_CLEANUP = 8 * HOURS
 
-# How long to wait between checks for ZooKeeper connectivity if it disappears.
-SUSPEND_WAIT_TIME = 30
-
 
 class NodeDeleter(threading.Thread, stats.StatsReporter):
     log = logging.getLogger("nodepool.NodeDeleter")
@@ -278,15 +275,6 @@ class PoolWorker(threading.Thread):
         self.running = True
 
         while self.running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self.zk and (self.zk.suspended or self.zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             # Make sure we're always registered with ZK
             launcher = zk.Launcher()
             launcher.id = self.launcher_id
@@ -340,16 +328,6 @@ class BaseCleanupWorker(threading.Thread):
         self._running = True
 
         while self._running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            zk_conn = self._nodepool.getZK()
-            while zk_conn and (zk_conn.suspended or zk_conn.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
             self._run()
             self._stop_event.wait(self._interval)
 
@@ -954,15 +932,6 @@ class NodePool(threading.Thread):
         while not self._stopped:
             try:
                 self.updateConfig()
-
-                # Don't do work if we've lost communication with the ZK cluster
-                did_suspend = False
-                while self.zk and (self.zk.suspended or self.zk.lost):
-                    did_suspend = True
-                    self.log.info("ZooKeeper suspended. Waiting")
-                    time.sleep(SUSPEND_WAIT_TIME)
-                if did_suspend:
-                    self.log.info("ZooKeeper available. Resuming")
 
                 self.createMinReady()
 
