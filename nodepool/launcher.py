@@ -424,6 +424,7 @@ class CleanupWorker(BaseCleanupWorker):
         when nodepool exited. We need to look for these (they'll be unlocked)
         and disassociate any nodes we've allocated to the request and reset
         the request state to REQUESTED so it will be processed again.
+        Also remove request left in FAILED or FULFILLED state.
         '''
         zk_conn = self._nodepool.getZK()
         for req in zk_conn.nodeRequestIterator():
@@ -440,6 +441,18 @@ class CleanupWorker(BaseCleanupWorker):
                                        req.id)
 
                 zk_conn.unlockNodeRequest(req)
+            if req.state in (zk.FAILED, zk.FULFILLED):
+                try:
+                    zk_conn.lockNodeRequest(req, blocking=False)
+                except exceptions.ZKLockException:
+                    continue
+
+                # Reset node allocated_to
+                for node_id in req.nodes:
+                    node = self.zk.getNode(node_id)
+                    node.allocated_to = None
+                    self.zk.storeNode(node)
+                self.zk.deleteNodeRequest(req)
 
     def _cleanupNodeRequestLocks(self):
         '''
