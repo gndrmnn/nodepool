@@ -16,6 +16,24 @@
       "revId": "9de68b83ddafce08595c5c0cc066ce217b02c662",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_22991e1e",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-21T18:00:00Z",
+      "side": 1,
+      "message": "Indeed. Will handle in a follow up review.",
+      "parentUuid": "5f7c97a3_f147ba1d",
+      "revId": "9de68b83ddafce08595c5c0cc066ce217b02c662",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
