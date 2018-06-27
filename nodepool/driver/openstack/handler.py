@@ -275,6 +275,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         '''
         if self.provider.manage_images:
             for label in self.request.node_types:
+                if not self.pool.labels.get(label):
+                    # This label is available in another pool
+                    return False
                 if self.pool.labels[label].cloud_image:
                     if not self.manager.labelReady(self.pool.labels[label]):
                         return False
