@@ -19,7 +19,7 @@ import threading
 import time
 import uuid
 
-import shade
+import openstack
 
 from nodepool import exceptions
 from nodepool.driver.openstack.provider import OpenStackProvider
@@ -39,11 +39,11 @@ class Dummy(object):
             setattr(self, k, v)
         try:
             if self.should_fail:
-                raise shade.OpenStackCloudException('This image has '
-                                                    'SHOULD_FAIL set to True.')
+                raise openstack.exceptions.OpenStackCloudException(
+                    'This image has SHOULD_FAIL set to True.')
             if self.over_quota:
-                raise shade.exc.OpenStackCloudHTTPError(
-                    'Quota exceeded for something', 403)
+                raise openstack.exceptions.HttpException(
+                    message='Quota exceeded for something', http_status=403)
         except AttributeError:
             pass
 
@@ -197,6 +197,19 @@ class FakeOpenStackCloud(object):
         else:
             time.sleep(delay)
         obj.status = status
+
+    def get_flavor(self, name_or_id, filters=None, get_extra=True):
+        for f in self._flavor_list:
+            if name_or_id in (f['name'], f['id']):
+                return f
+        raise Exception("Unable to find flavor: %s" % name_or_id)
+
+    def get_flavor_by_ram(self, ram, include=None, get_extra=True):
+        for f in self._flavor_list:
+            if (f['ram'] >= ram
+                    and (not include or include in f['name'])):
+                return f
+        raise Exception("Unable to find flavor with min ram: %s" % ram)
 
     def create_image(self, **kwargs):
         return self._create(
