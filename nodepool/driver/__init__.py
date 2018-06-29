@@ -446,6 +446,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 # If we calculate that we're at capacity, pause until nodes
                 # are released by Zuul and removed by the DeletedNodeWorker.
                 if not self.hasRemainingQuota(ntype):
+                    self.log.info(
+                        "Not enough quota remaining to satisfy request %s",
+                        self.request)
                     if not self.paused:
                         self.log.debug(
                             "Pausing request handling to satisfy request %s",
