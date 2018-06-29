@@ -112,6 +112,7 @@ def node_list(zk, node_id=None):
     headers_table = [
         ("id", "ID"),
         ("provider", "Provider"),
+        ("pool", "Pool"),
         ("label", "Label"),
         ("server_id", "Server ID"),
         ("public_ipv4", "Public IPv4"),
@@ -142,6 +143,7 @@ def node_list(zk, node_id=None):
         values = [
             node.id,
             node.provider,
+            node.pool,
             node.type,
             node.external_id,
             node.public_ipv4,

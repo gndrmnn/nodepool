@@ -157,7 +157,7 @@ class NodePoolCmd(NodepoolApp):
         if hasattr(self.args, 'detail'):
             detail = self.args.detail
 
-        fields = ['id', 'provider', 'label', 'server_id',
+        fields = ['id', 'provider', 'pool', 'label', 'server_id',
                   'public_ipv4', 'ipv6', 'state', 'age', 'locked']
         if detail:
             fields.extend(['hostname', 'private_ipv4', 'AZ',
