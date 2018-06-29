@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_dd18a377",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-29T16:42:51Z",
+      "side": 1,
+      "message": "Would it be better to just log the request ID here (and I think also in the \"Pausing request...\" debug line below) to eliminate some log noise? The full request is logged at INFO level when it\u0027s assigned.",
+      "range": {
+        "startLine": 451,
+        "startChar": 24,
+        "endLine": 451,
+        "endChar": 36
+      },
+      "revId": "8d5ea2bae670ab4e7e2115f88268dd57bc5d801a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
