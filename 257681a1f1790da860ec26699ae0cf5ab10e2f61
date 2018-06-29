@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_464da997",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-06-29T13:52:22Z",
+      "side": 1,
+      "message": "Add this to the detail section to keep the non-detail output simple.",
+      "range": {
+        "startLine": 160,
+        "startChar": 36,
+        "endLine": 160,
+        "endChar": 42
+      },
+      "revId": "257681a1f1790da860ec26699ae0cf5ab10e2f61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
