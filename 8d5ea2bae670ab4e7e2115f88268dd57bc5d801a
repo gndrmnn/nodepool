@@ -22,6 +22,30 @@
       "revId": "8d5ea2bae670ab4e7e2115f88268dd57bc5d801a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_3a78b0bf",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-07-01T01:13:38Z",
+      "side": 1,
+      "message": "Yes good idea.",
+      "parentUuid": "5f7c97a3_dd18a377",
+      "range": {
+        "startLine": 451,
+        "startChar": 24,
+        "endLine": 451,
+        "endChar": 36
+      },
+      "revId": "8d5ea2bae670ab4e7e2115f88268dd57bc5d801a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
