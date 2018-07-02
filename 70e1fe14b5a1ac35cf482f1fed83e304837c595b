@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_43a7b7bd",
+        "filename": "nodepool/provider_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-02T14:15:27Z",
+      "side": 1,
+      "message": "Need a :param: section for this below.",
+      "range": {
+        "startLine": 34,
+        "startChar": 20,
+        "endLine": 34,
+        "endChar": 38
+      },
+      "revId": "70e1fe14b5a1ac35cf482f1fed83e304837c595b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
