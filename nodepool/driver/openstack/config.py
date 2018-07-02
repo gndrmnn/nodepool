@@ -73,7 +73,7 @@ class ProviderCloudImage(ConfigValue):
     def external(self):
         '''External identifier to pass to the cloud.'''
         if self.image_id:
-            return dict(id=self.image_id)
+            return self.image_id
         else:
             return self.image_name or self.name
 
