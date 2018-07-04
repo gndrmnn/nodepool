@@ -5,6 +5,7 @@ zookeeper-servers:
 
 labels:
   - name: fake-label
+  - name: fake-label-unresolvable
 
 providers:
   - name: static-provider
@@ -12,6 +13,11 @@ providers:
     pools:
       - name: main
         nodes:
+          - name: unresolvable.unresolvable.unresolvable
+            labels: fake-label-unresolvable
+            timeout: 13
+            connection-port: 22022
+            username: zuul
           - name: fake-host-1
             labels: fake-label
             host-key: ssh-rsa FAKEKEY
