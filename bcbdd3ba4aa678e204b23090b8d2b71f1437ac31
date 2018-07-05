@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_eb444c1b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-05T18:31:51Z",
+      "side": 1,
+      "message": "s/remove_node/removeNode/",
+      "range": {
+        "startLine": 303,
+        "startChar": 8,
+        "endLine": 303,
+        "endChar": 19
+      },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_0be0a8ca",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-05T18:31:51Z",
+      "side": 1,
+      "message": "I don\u0027t think you need this method. See my comment about utilizing DeletedNodeWorker. I think you still need the satisfied_types removal though.",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 660,
+        "endChar": 34
+      },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_6bdfdc0b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-05T18:31:51Z",
+      "side": 1,
+      "message": "If this code never gets reached (launcher termination, etc) then these nodes will never get cleaned up. I think it would be better to just mark them ABORTED, unlock them, then modify the DeletedNodeWorker to delete unlocked ABORTED nodes.",
+      "range": {
+        "startLine": 710,
+        "startChar": 0,
+        "endLine": 710,
+        "endChar": 38
+      },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
