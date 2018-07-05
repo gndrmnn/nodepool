@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_0b3f48df",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-05T18:41:48Z",
+      "side": 1,
+      "message": "Do we need to add these? They seem like they might be left over from the caching-rework version?",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 71
+      },
+      "revId": "b28707e979a309e29a2ab596dd533265cdbc9831",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_aba1743c",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-05T18:41:48Z",
+      "side": 1,
+      "message": "Leftover debugging?",
+      "revId": "b28707e979a309e29a2ab596dd533265cdbc9831",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
