@@ -356,12 +356,6 @@ class OpenStackProvider(Provider):
             if not self.getServer(server_id):
                 return
 
-    def waitForImage(self, image_id, timeout=3600):
-        return self._client.wait_for_image(
-            image={'id': image_id},
-            timeout=timeout
-        )
-
     def createImage(self, server, image_name, meta):
         return self._client.create_image_snapshot(
             image_name, server, **meta)
