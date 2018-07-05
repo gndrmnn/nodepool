@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_813019a0",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-05T20:45:49Z",
+      "side": 1,
+      "message": "The openstacksdk wait_for_image() is radically different to what was going on here, which would normally concern me, but this method doesn\u0027t seem to be called anywhere. Put up a review to remove it: https://review.openstack.org/580487",
+      "range": {
+        "startLine": 352,
+        "startChar": 0,
+        "endLine": 356,
+        "endChar": 9
+      },
+      "revId": "e9b36f6899f733de02c70eec6be54c894069948a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
