@@ -25,7 +25,6 @@ from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import QuotaInformation
 from nodepool.nodeutils import iterate_timeout
-from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
 from nodepool import version
 
