@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_140bdb2a",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-07-06T14:33:17Z",
+      "side": 0,
+      "message": "Can someone explain this change to me?",
+      "revId": "3e0a822bf67139c13f61c74160f655f8f8388788",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
