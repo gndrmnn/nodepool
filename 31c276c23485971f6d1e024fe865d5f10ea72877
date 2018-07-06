@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_cd56315f",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-06T17:16:16Z",
+      "side": 1,
+      "message": "Left over debug line. Should be removed in a followup.",
+      "range": {
+        "startLine": 309,
+        "startChar": 12,
+        "endLine": 309,
+        "endChar": 36
+      },
+      "revId": "31c276c23485971f6d1e024fe865d5f10ea72877",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_0dc66917",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-06T17:16:16Z",
+      "side": 1,
+      "message": "Seems like another leftover.",
+      "range": {
+        "startLine": 311,
+        "startChar": 8,
+        "endLine": 311,
+        "endChar": 42
+      },
+      "revId": "31c276c23485971f6d1e024fe865d5f10ea72877",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
