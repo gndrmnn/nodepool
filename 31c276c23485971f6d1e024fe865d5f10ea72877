@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f7c97a3_4d8d41d2",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-06T17:21:21Z",
+      "side": 1,
+      "message": "Since you remove these from the nodeset, this isn\u0027t necessary now.",
+      "range": {
+        "startLine": 399,
+        "startChar": 44,
+        "endLine": 399,
+        "endChar": 56
+      },
+      "revId": "31c276c23485971f6d1e024fe865d5f10ea72877",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_cd56315f",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 10
