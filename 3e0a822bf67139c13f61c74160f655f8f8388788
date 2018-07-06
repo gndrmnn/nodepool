@@ -16,6 +16,24 @@
       "revId": "3e0a822bf67139c13f61c74160f655f8f8388788",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_659db707",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 27900
+      },
+      "writtenOn": "2018-07-06T16:25:10Z",
+      "side": 0,
+      "message": "everything, what is required is now taken using `config\u003dself.provider.cloud_config` in previous lines directly",
+      "parentUuid": "5f7c97a3_140bdb2a",
+      "revId": "3e0a822bf67139c13f61c74160f655f8f8388788",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
