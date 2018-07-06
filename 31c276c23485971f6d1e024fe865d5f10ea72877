@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f7c97a3_8d7599ce",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-06T17:25:40Z",
+      "side": 1,
+      "message": "Was this necessary?",
+      "range": {
+        "startLine": 658,
+        "startChar": 20,
+        "endLine": 658,
+        "endChar": 35
+      },
+      "revId": "31c276c23485971f6d1e024fe865d5f10ea72877",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_4d8d41d2",
         "filename": "nodepool/driver/openstack/handler.py",
         "patchSetId": 10
