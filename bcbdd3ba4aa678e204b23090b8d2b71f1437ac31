@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_e01c6278",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-06T05:41:01Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "5f7c97a3_eb444c1b",
+      "range": {
+        "startLine": 303,
+        "startChar": 8,
+        "endLine": 303,
+        "endChar": 19
+      },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_0be0a8ca",
         "filename": "nodepool/driver/__init__.py",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-05T18:31:51Z",
       "side": 1,
       "message": "I don\u0027t think you need this method. See my comment about utilizing DeletedNodeWorker. I think you still need the satisfied_types removal though.",
+      "range": {
+        "startLine": 650,
+        "startChar": 0,
+        "endLine": 660,
+        "endChar": 34
+      },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_800d6e41",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-06T05:41:01Z",
+      "side": 1,
+      "message": "will try that",
+      "parentUuid": "5f7c97a3_0be0a8ca",
       "range": {
         "startLine": 650,
         "startChar": 0,
@@ -65,6 +113,24 @@
         "endLine": 710,
         "endChar": 38
       },
+      "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_467c5770",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-06T05:41:01Z",
+      "side": 1,
+      "message": "good idea, will try that",
+      "parentUuid": "5f7c97a3_6bdfdc0b",
       "revId": "bcbdd3ba4aa678e204b23090b8d2b71f1437ac31",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
