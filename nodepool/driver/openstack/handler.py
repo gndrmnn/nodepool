@@ -305,7 +305,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         cloud_quota.subtract(needed_quota)
         self.log.debug("Predicted remaining tenant quota: %s", cloud_quota)
 
-        if not cloud_quota.non_negative():
+        self.log.debug("Ignore quota is set to: %s", self.pool.ignore_quota)
+
+        if (not self.pool.ignore_quota) and (not cloud_quota.non_negative()):
             return False
 
         # Now calculate pool specific quota. Values indicating no quota default
@@ -320,7 +322,10 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         pool_quota.subtract(needed_quota)
         self.log.debug("Predicted remaining pool quota: %s", pool_quota)
 
-        return pool_quota.non_negative()
+        if self.pool.ignore_quota:
+            return True
+        else:
+            return pool_quota.non_negative()
 
     def hasProviderQuota(self, node_types):
         needed_quota = QuotaInformation()
@@ -332,7 +337,9 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         cloud_quota = self.manager.estimatedNodepoolQuota()
         cloud_quota.subtract(needed_quota)
 
-        if not cloud_quota.non_negative():
+        self.log.debug("Ignore quota is set to: %s", self.pool.ignore_quota)
+
+        if (not self.pool.ignore_quota) and (not cloud_quota.non_negative()):
             return False
 
         # Now calculate pool specific quota. Values indicating no quota default
@@ -342,7 +349,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                                       ram=self.pool.max_ram,
                                       default=math.inf)
         pool_quota.subtract(needed_quota)
-        return pool_quota.non_negative()
+
+        if self.pool.ignore_quota:
+            return True
+        else:
+            return pool_quota.non_negative()
 
     def checkReusableNode(self, node):
         if self.chosen_az and node.az != self.chosen_az:
