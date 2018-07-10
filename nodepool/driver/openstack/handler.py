@@ -296,6 +296,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return True
 
     def hasRemainingQuota(self, ntype):
+
+        if self.pool.ignore_quota:
+            self.log.debug("Provider quota ignored due to ignore_quota.")
+            return True
+
         needed_quota = self.manager.quotaNeededByNodeType(ntype, self.pool)
 
         # Calculate remaining quota which is calculated as:
@@ -323,6 +328,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return pool_quota.non_negative()
 
     def hasProviderQuota(self, node_types):
+
+        if self.pool.ignore_quota:
+            self.log.debug("Provider quota ignored due to ignore_quota.")
+            return True
+
         needed_quota = QuotaInformation()
 
         for ntype in node_types:
