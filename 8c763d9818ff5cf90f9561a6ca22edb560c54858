@@ -22,6 +22,30 @@
       "revId": "8c763d9818ff5cf90f9561a6ca22edb560c54858",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_795e8de9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-10T13:38:49Z",
+      "side": 1,
+      "message": "I mean that it should ignore the provider\u0027s quota, and *only* check against the pool\u0027s max-servers/max-cores/max-ram settings.",
+      "parentUuid": "5f7c97a3_f93e1db7",
+      "range": {
+        "startLine": 10,
+        "startChar": 34,
+        "endLine": 10,
+        "endChar": 58
+      },
+      "revId": "8c763d9818ff5cf90f9561a6ca22edb560c54858",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
