@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_dc3c6a31",
+        "filename": "README.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-10T17:55:53Z",
+      "side": 1,
+      "message": "On a mac (to be verified):\n\nbrew install zookeeper gnu-getopt\nzkServer start\ntox -e py36",
+      "revId": "d4fa302d288e94cf3a4406f8a10e3c534b1c29f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
