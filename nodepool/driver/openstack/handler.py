@@ -296,17 +296,22 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return True
 
     def hasRemainingQuota(self, ntype):
+
         needed_quota = self.manager.quotaNeededByNodeType(ntype, self.pool)
 
-        # Calculate remaining quota which is calculated as:
-        # quota = <total nodepool quota> - <used quota> - <quota for node>
-        cloud_quota = self.manager.estimatedNodepoolQuota()
-        cloud_quota.subtract(self.manager.estimatedNodepoolQuotaUsed(self.zk))
-        cloud_quota.subtract(needed_quota)
-        self.log.debug("Predicted remaining tenant quota: %s", cloud_quota)
+        if not self.pool.ignore_quota:
+            # Calculate remaining quota which is calculated as:
+            # quota = <total nodepool quota> - <used quota> - <quota for node>
+            cloud_quota = self.manager.estimatedNodepoolQuota()
+            cloud_quota.subtract(
+                self.manager.estimatedNodepoolQuotaUsed(self.zk))
+            cloud_quota.subtract(needed_quota)
+            self.log.debug("Predicted remaining tenant quota: %s", cloud_quota)
 
-        if not cloud_quota.non_negative():
-            return False
+            if not cloud_quota.non_negative():
+                return False
+        else:
+            self.log.debug("Pool set to ignore cloud quota.")
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
@@ -323,17 +328,21 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return pool_quota.non_negative()
 
     def hasProviderQuota(self, node_types):
+
         needed_quota = QuotaInformation()
 
-        for ntype in node_types:
-            needed_quota.add(
-                self.manager.quotaNeededByNodeType(ntype, self.pool))
+        if not self.pool.ignore_quota:
+            for ntype in node_types:
+                needed_quota.add(
+                    self.manager.quotaNeededByNodeType(ntype, self.pool))
 
-        cloud_quota = self.manager.estimatedNodepoolQuota()
-        cloud_quota.subtract(needed_quota)
+            cloud_quota = self.manager.estimatedNodepoolQuota()
+            cloud_quota.subtract(needed_quota)
 
-        if not cloud_quota.non_negative():
-            return False
+            if not cloud_quota.non_negative():
+                return False
+        else:
+            self.log.debug("Pool set to ignore cloud quota.")
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
