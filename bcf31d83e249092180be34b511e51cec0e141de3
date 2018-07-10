@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_1e22da54",
+        "filename": "README.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-10T16:12:12Z",
+      "side": 1,
+      "message": "I don\u0027t see this as very useful for a developer. Yes, it confirms that services will start, but nothing else. Our unit tests also do that and more. This code is only used with zuul so that it can run it\u0027s zuul/tests/nodepool/* tests.\n\nIs there another testing use-case I should be considering?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 93
+      },
+      "revId": "bcf31d83e249092180be34b511e51cec0e141de3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
