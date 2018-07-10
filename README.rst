@@ -7,27 +7,30 @@ of devstack images on a cloud server for use in OpenStack project testing.
 Developer setup
 ===============
 
-Make sure you have pip installed:
+Requirements:
+
+* An Ubuntu 16.04 LTS (Xenial Xerus) or later host
+
+Make sure you have python 3.5+ and pip3 installed:
 
 .. code-block:: bash
 
     wget https://bootstrap.pypa.io/get-pip.py
-    sudo python get-pip.py
+    sudo python3 get-pip.py
 
 Install dependencies:
 
 .. code-block:: bash
 
-    sudo pip install bindep
-    sudo apt-get install $(bindep -b nodepool)
+    sudo pip3 install bindep
+    sudo apt-get install $(bindep -b test)
 
     mkdir src
     cd ~/src
-    git clone git://git.openstack.org/openstack-infra/system-config
     git clone git://git.openstack.org/openstack-infra/nodepool
     cd nodepool
-    sudo pip install -U -r requirements.txt
-    sudo pip install -e .
+    sudo pip3 install -U -r requirements.txt
+    sudo pip3 install -e .
 
 If you're testing a specific patch that is already in gerrit, you will also
 want to install git-review and apply that patch while in the nodepool
@@ -37,6 +40,15 @@ directory, ie:
 
     git review -x XXXXX
 
+Test with the fake provider:
+
+.. code-block:: bash
+
+    ./tools/zuul-nodepool-integration/start.sh
+
+This will start the nodepool services, with all logging and other data in ``/tmp/nodepool/``.
+
+Alternatively, build your own configuration:
 
 Create or adapt a nodepool yaml file. You can adapt an infra/system-config one, or
 fake.yaml as desired. Note that fake.yaml's settings won't Just Work - consult
