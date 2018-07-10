@@ -296,6 +296,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return True
 
     def hasRemainingQuota(self, ntype):
+
+        self.log.debug("Ignore quota is set to: %s", self.pool.ignore_quota)
+        if self.pool.ignore_quota:
+            return True
+
         needed_quota = self.manager.quotaNeededByNodeType(ntype, self.pool)
 
         # Calculate remaining quota which is calculated as:
@@ -323,6 +328,11 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return pool_quota.non_negative()
 
     def hasProviderQuota(self, node_types):
+
+        self.log.debug("Ignore quota is set to: %s", self.pool.ignore_quota)
+        if self.pool.ignore_quota:
+            return True
+
         needed_quota = QuotaInformation()
 
         for ntype in node_types:
@@ -342,6 +352,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                                       ram=self.pool.max_ram,
                                       default=math.inf)
         pool_quota.subtract(needed_quota)
+
         return pool_quota.non_negative()
 
     def checkReusableNode(self, node):
