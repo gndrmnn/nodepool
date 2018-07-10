@@ -22,6 +22,30 @@
       "revId": "bcf31d83e249092180be34b511e51cec0e141de3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_7e4d0e97",
+        "filename": "README.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-10T16:33:50Z",
+      "side": 1,
+      "message": "I was thinking much the same, but it\u0027s not obvious to me how one runs *any* tests - unit or otherwise. If you could clue me in, then I\u0027d be glad to update this review.",
+      "parentUuid": "5f7c97a3_1e22da54",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 93
+      },
+      "revId": "bcf31d83e249092180be34b511e51cec0e141de3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
