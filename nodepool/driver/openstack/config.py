@@ -113,6 +113,7 @@ class ProviderPool(ConfigPool):
         self.name = None
         self.max_cores = None
         self.max_ram = None
+        self.ignore_quota = False
         self.azs = None
         self.networks = None
         self.security_groups = None
@@ -133,6 +134,7 @@ class ProviderPool(ConfigPool):
                     other.name == self.name and
                     other.max_cores == self.max_cores and
                     other.max_ram == self.max_ram and
+                    other.ignore_quota == self.ignore_quota and
                     other.azs == self.azs and
                     other.networks == self.networks and
                     other.security_groups == self.security_groups and
@@ -264,6 +266,18 @@ class OpenStackProviderConfig(ProviderConfig):
             pp.max_cores = pool.get('max-cores', math.inf)
             pp.max_servers = pool.get('max-servers', math.inf)
             pp.max_ram = pool.get('max-ram', math.inf)
+            pp.ignore_quota = pool.get('ignore-quota', False)
+
+            if pp.ignore_quota:
+                if ((pp.max_cores == math.inf) and
+                    (pp.max_servers == math.inf) and
+                    (pp.max_ram == math.inf)):
+                        raise ValueError(
+                            "pool %s has ignore_quota set to %s but has no"
+                            " other limits. At least one limit must be set"
+                            " using max-servers, max-ram or max-cores" %
+                            (pp.name, pp.ignore_quota))
+
             pp.azs = pool.get('availability-zones')
             pp.networks = pool.get('networks', [])
             pp.security_groups = pool.get('security-groups', [])
@@ -353,6 +367,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'networks': [str],
             'auto-floating-ip': bool,
             'host-key-checking': bool,
+            'ignore-quota': bool,
             'max-cores': int,
             'max-servers': int,
             'max-ram': int,
