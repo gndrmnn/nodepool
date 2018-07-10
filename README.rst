@@ -12,13 +12,13 @@ Make sure you have pip installed:
 .. code-block:: bash
 
     wget https://bootstrap.pypa.io/get-pip.py
-    sudo python get-pip.py
+    sudo python3 get-pip.py
 
 Install dependencies:
 
 .. code-block:: bash
 
-    sudo pip install bindep
+    sudo pip3 install bindep
     sudo apt-get install $(bindep -b nodepool)
 
     mkdir src
@@ -26,8 +26,8 @@ Install dependencies:
     git clone git://git.openstack.org/openstack-infra/system-config
     git clone git://git.openstack.org/openstack-infra/nodepool
     cd nodepool
-    sudo pip install -U -r requirements.txt
-    sudo pip install -e .
+    sudo pip3 install -U -r requirements.txt
+    sudo pip3 install -e .
 
 If you're testing a specific patch that is already in gerrit, you will also
 want to install git-review and apply that patch while in the nodepool
