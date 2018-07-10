@@ -488,6 +488,11 @@ Example::
     ram allocated by nodepool. If not defined nodepool can use as much ram as
     the tenant allows.
 
+  ``ignore-quota``
+    Ignore the cloud quota and only use the values of ``max-cores``,
+    ``max-servers`` and ``max-ram`` for this pool. This may be useful in
+    circumstances where the cloud is incorrectly calculating quota.
+
   ``availability-zones`` (list)
     A list of availability zones to use.
 
