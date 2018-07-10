@@ -1436,3 +1436,48 @@ class TestLauncher(tests.DBTestCase):
         while pool_worker[0].paused_handler:
             time.sleep(0.1)
         self.assertEqual(0, len(pool_worker[0].request_handlers))
+
+    def test_ignore_quota(self):
+        '''
+        Test that a node request get fulfilled with ignore-quota set to true.
+        '''
+
+        # Set max-cores quota value to 0 to force "out of quota". Note that
+        # the fake provider checks the number of instances during server
+        # creation to decide if it should throw an over quota exception,
+        # but it doesn't check cores.
+        def fake_get_quota():
+            return (0, 20, 1000000)
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        configfile = self.setup_config('ignore_quota_false.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Create a request with ignore-quota set to false that should fail
+        # because it will decline the request because "it would exceed quota".
+        self.log.debug("Submitting request with ignore-quota False")
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+
+        # Now set ignore-quota to True and try the same request.
+        self.log.debug("Replacing config with ignore-quota True")
+        self.replace_config(configfile, 'ignore_quota_true.yaml')
+
+        self.log.debug("Submitting request with ignore-quota True")
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
