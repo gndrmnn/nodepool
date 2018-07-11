@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_cc257c18",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-11T17:00:20Z",
+      "side": 1,
+      "message": "I still think this should be like this:\n\n    def hasProviderQuota(self, node_types):\n        needed_quota \u003d QuotaInformation()\n\n        for ntype in node_types:\n            needed_quota.add(\n                self.manager.quotaNeededByNodeType(ntype, self.pool))\n\n        if not self.pool.ignore_provider_quota:        \n            cloud_quota \u003d self.manager.estimatedNodepoolQuota()\n            cloud_quota.subtract(needed_quota)\n\n            if not cloud_quota.non_negative():\n                return False\n\n        # Now calculate pool specific quota. Values indicating no quota default\n        # to math.inf representing infinity that can be calculated with.\n        pool_quota \u003d QuotaInformation(cores\u003dself.pool.max_cores,\n                                      instances\u003dself.pool.max_servers,\n                                      ram\u003dself.pool.max_ram,\n                                      default\u003dmath.inf)\n        pool_quota.subtract(needed_quota)\n        return pool_quota.non_negative()\n\nOtherwise you don\u0027t count the configured pool quota. We should only ignore the cloud quota calculation not the pool quota calculation. Note that this method checks if the requested nodeset could fit into the provider at all regardless of the current usage (so it can decline it because it will never ever be able to fulfill the request). So if you have a pool with max-server 5 and you get a node request with 6 servers this method will deny this.\n\nSo sorry I was wrong with the suggested test case to test this issue. To test this you need to e.g. set max-servers to 1 and request a nodeset with two nodes.",
+      "parentUuid": "5f7c97a3_6c754833",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 73
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_f8e7d70e",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 10
