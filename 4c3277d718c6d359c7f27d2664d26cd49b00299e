@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_6c754833",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:48:31Z",
+      "side": 1,
+      "message": "If I\u0027ve missed something obvious or if you can suggest how this could be done better to take the concern into account, please let me know!",
+      "parentUuid": "5f7c97a3_ecbb98e1",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 73
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_f8e7d70e",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 10
