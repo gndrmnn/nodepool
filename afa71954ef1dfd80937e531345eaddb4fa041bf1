@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_afdcb245",
+        "filename": "releasenotes/notes/ignore-provider-quota-aa19e7a7271ee106.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-11T17:36:35Z",
+      "side": 1,
+      "message": "nit: something wrong with the backticks?",
+      "range": {
+        "startLine": 4,
+        "startChar": 32,
+        "endLine": 4,
+        "endChar": 55
+      },
+      "revId": "afa71954ef1dfd80937e531345eaddb4fa041bf1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
