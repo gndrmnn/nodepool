@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_f86ef762",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f7c97a3_3d6ea1fe",
+      "range": {
+        "startLine": 493,
+        "startChar": 4,
+        "endLine": 493,
+        "endChar": 50
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_d88bfb66",
         "filename": "nodepool/driver/openstack/handler.py",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-11T16:04:41Z",
       "side": 1,
       "message": "nit: While you\u0027re at it we may standardize this to \u0027Predicted remaining provider quota...\u0027.",
+      "range": {
+        "startLine": 308,
+        "startChar": 48,
+        "endLine": 308,
+        "endChar": 54
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_b8b71fd8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f7c97a3_d88bfb66",
       "range": {
         "startLine": 308,
         "startChar": 48,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_58e4cba8",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "I think I see what you mean. Let me add a test case to validate as you suggest and I\u0027ll adjust this and validate that it all still works right.",
+      "parentUuid": "5f7c97a3_d85d3b17",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 73
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_f8e7d70e",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 10
@@ -82,6 +154,30 @@
       "writtenOn": "2018-07-11T16:04:41Z",
       "side": 1,
       "message": "I think these are two test cases in one (ignore \u003d True and False). To be easier to read I think this could be split into two test cases.",
+      "range": {
+        "startLine": 1440,
+        "startChar": 8,
+        "endLine": 1440,
+        "endChar": 34
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_187173e0",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "No problem - can do that.",
+      "parentUuid": "5f7c97a3_f8e7d70e",
       "range": {
         "startLine": 1440,
         "startChar": 8,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_982b439a",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 1492,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "Good idea, will do thanks.",
+      "parentUuid": "5f7c97a3_7840a707",
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_d8c3fb57",
         "filename": "releasenotes/notes/ignore-provider-quota-aa19e7a7271ee106.yaml",
         "patchSetId": 10
@@ -122,6 +236,30 @@
       "writtenOn": "2018-07-11T16:04:41Z",
       "side": 1,
       "message": "The backticks look broken.",
+      "range": {
+        "startLine": 4,
+        "startChar": 32,
+        "endLine": 4,
+        "endChar": 59
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_38a9cf24",
+        "filename": "releasenotes/notes/ignore-provider-quota-aa19e7a7271ee106.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T16:22:49Z",
+      "side": 1,
+      "message": "Good spot, thanks.",
+      "parentUuid": "5f7c97a3_d8c3fb57",
       "range": {
         "startLine": 4,
         "startChar": 32,
