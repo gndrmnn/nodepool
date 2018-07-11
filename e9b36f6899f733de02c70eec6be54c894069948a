@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f7c97a3_e95dcf16",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-11T13:13:02Z",
+      "side": 1,
+      "message": "crap. this isn\u0027t actually an argument yet in sdk.\n\nhttps://review.openstack.org/577616 adds it. Lemme land that and cut another release real quick.",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 28
+      },
+      "revId": "e9b36f6899f733de02c70eec6be54c894069948a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_813019a0",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 5

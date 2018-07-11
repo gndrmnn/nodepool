@@ -34,6 +34,24 @@
       "revId": "3e0a822bf67139c13f61c74160f655f8f8388788",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_09b04b40",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-11T13:13:02Z",
+      "side": 0,
+      "message": "Yes, that\u0027s exactly right. **self.provider.cloud_config.config was an old workaround that\u0027s no longer needed.",
+      "parentUuid": "5f7c97a3_659db707",
+      "revId": "3e0a822bf67139c13f61c74160f655f8f8388788",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
