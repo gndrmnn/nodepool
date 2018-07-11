@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_c301d509",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1491,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T11:45:04Z",
+      "side": 1,
+      "message": "I\u0027d appreciate some help with what the assertion should be here. This should fail to load the configuration due to the validation check in https://review.openstack.org/#/c/581329/7/nodepool/driver/openstack/config.py",
+      "range": {
+        "startLine": 1485,
+        "startChar": 0,
+        "endLine": 1491,
+        "endChar": 74
+      },
+      "revId": "c76b40751c309760b1317cc3cecb022ea33fe032",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
