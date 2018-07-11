@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_6f19ba21",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2018-07-11T17:34:22Z",
+      "side": 1,
+      "message": "Aha, that now makes much more sense to me. :) The next PS does this and adds a multi-node test as well to validate that this works as expected. Thanks again!",
+      "parentUuid": "5f7c97a3_cc257c18",
+      "range": {
+        "startLine": 331,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 73
+      },
+      "revId": "4c3277d718c6d359c7f27d2664d26cd49b00299e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_f8e7d70e",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 10
