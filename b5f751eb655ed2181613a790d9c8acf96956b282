@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_a9e3573a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-11T13:13:34Z",
+      "side": 1,
+      "message": "Since quota isn\u0027t totally ignored, maybe ignore-provider-quota is a better name.",
+      "range": {
+        "startLine": 491,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 16
+      },
+      "revId": "b5f751eb655ed2181613a790d9c8acf96956b282",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_a97ef76a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-11T13:13:34Z",
+      "side": 1,
+      "message": "Let\u0027s state here that limits from the provider are not used for computation, and we only compare these max-* values against what nodepool can calculate/estimate from its stored data (but maybe with better words).",
+      "range": {
+        "startLine": 492,
+        "startChar": 0,
+        "endLine": 494,
+        "endChar": 67
+      },
+      "revId": "b5f751eb655ed2181613a790d9c8acf96956b282",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
