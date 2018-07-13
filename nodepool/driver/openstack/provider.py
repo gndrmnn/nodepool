@@ -19,13 +19,12 @@ import logging
 import operator
 import time
 
-import shade
+import openstack
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import QuotaInformation
 from nodepool.nodeutils import iterate_timeout
-from nodepool.task_manager import ManagerStoppedException
 from nodepool.task_manager import TaskManager
 from nodepool import version
 
@@ -44,7 +43,7 @@ class OpenStackProvider(Provider):
         self.provider = provider
         self._images = {}
         self._networks = {}
-        self.__flavors = {}
+        self.__flavors = {}  # TODO(gtema): caching
         self.__azs = None
         self._use_taskmanager = use_taskmanager
         self._taskmanager = None
@@ -68,6 +67,7 @@ class OpenStackProvider(Provider):
     def getRequestHandler(self, poolworker, request):
         return handler.OpenStackNodeRequestHandler(poolworker, request)
 
+    # TODO(gtema): caching
     @property
     def _flavors(self):
         if not self.__flavors:
@@ -79,12 +79,12 @@ class OpenStackProvider(Provider):
             manager = self._taskmanager
         else:
             manager = None
-        return shade.OpenStackCloud(
-            cloud_config=self.provider.cloud_config,
-            manager=manager,
+        return openstack.connection.Connection(
+            config=self.provider.cloud_config,
+            task_manager=manager,
             app_name='nodepool',
-            app_version=version.version_info.version_string(),
-            **self.provider.cloud_config.config)
+            app_version=version.version_info.version_string()
+        )
 
     def quotaNeededByNodeType(self, ntype, pool):
         provider_label = pool.labels[ntype]
@@ -205,11 +205,9 @@ class OpenStackProvider(Provider):
         flavors.sort(key=operator.itemgetter('ram'))
         return flavors
 
-    # TODO(mordred): These next three methods duplicate logic that is in
-    #                shade, but we can't defer to shade until we're happy
-    #                with using shade's resource caching facility. We have
-    #                not yet proven that to our satisfaction, but if/when
-    #                we do, these should be able to go away.
+    # TODO(gtema): These next three methods duplicate logic that is in
+    #              openstacksdk, caching is not enabled there by default
+    #              Remove it when caching is default
     def _findFlavorByName(self, flavor_name):
         for f in self._flavors:
             if flavor_name in (f['name'], f['id']):
@@ -227,6 +225,16 @@ class OpenStackProvider(Provider):
         # Note: this will throw an error if the provider is offline
         # but all the callers are in threads (they call in via CreateServer) so
         # the mainloop won't be affected.
+        # TODO(gtema): enable commented block when openstacksdk has caching
+        # enabled by default
+        # if min_ram:
+        #     return self._client.get_flavor_by_ram(
+        #         ram=min_ram,
+        #         include=flavor_name,
+        #         get_extra=False)
+        # else:
+        #     return self._client.get_flavor(flavor_name, get_extra=False)
+
         if min_ram:
             return self._findFlavorByRam(min_ram, flavor_name)
         else:
@@ -315,14 +323,14 @@ class OpenStackProvider(Provider):
 
         try:
             return self._client.create_server(wait=False, **create_args)
-        except shade.OpenStackCloudBadRequest:
+        except openstack.exceptions.BadRequestException:
             # We've gotten a 400 error from nova - which means the request
             # was malformed. The most likely cause of that, unless something
             # became functionally and systemically broken, is stale image
             # or flavor cache. Log a message, invalidate the caches so that
             # next time we get new caches.
             self._images = {}
-            self.__flavors = {}
+            self.__flavors = {}  # TODO(gtema): caching
             self.log.info(
                 "Clearing flavor and image caches due to 400 error from nova")
             raise
@@ -333,7 +341,7 @@ class OpenStackProvider(Provider):
     def getServerConsole(self, server_id):
         try:
             return self._client.get_server_console(server_id)
-        except shade.OpenStackCloudException:
+        except openstack.exceptions.OpenStackCloudException:
             return None
 
     def waitForServer(self, server, timeout=3600, auto_ip=True):
@@ -349,41 +357,10 @@ class OpenStackProvider(Provider):
                 return
 
     def waitForImage(self, image_id, timeout=3600):
-        last_status = None
-        for count in iterate_timeout(
-                timeout, exceptions.ImageCreateException, "image creation"):
-            try:
-                image = self.getImage(image_id)
-            except exceptions.NotFound:
-                continue
-            except ManagerStoppedException:
-                raise
-            except Exception:
-                self.log.exception('Unable to list images while waiting for '
-                                   '%s will retry' % (image_id))
-                continue
-
-            # shade returns None when not found
-            if not image:
-                continue
-
-            status = image['status']
-            if (last_status != status):
-                self.log.debug(
-                    'Status of image in {provider} {id}: {status}'.format(
-                        provider=self.provider.name,
-                        id=image_id,
-                        status=status))
-                if status == 'ERROR' and 'fault' in image:
-                    self.log.debug(
-                        'ERROR in {provider} on {id}: {resason}'.format(
-                            provider=self.provider.name,
-                            id=image_id,
-                            resason=image['fault']['message']))
-            last_status = status
-            # Glance client returns lower case statuses - but let's be sure
-            if status.lower() in ['active', 'error']:
-                return image
+        return self._client.wait_for_image(
+            image={'id': image_id},
+            timeout=timeout
+        )
 
     def createImage(self, server, image_name, meta):
         return self._client.create_image_snapshot(
