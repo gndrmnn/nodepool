@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_61618a38",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-15T07:21:40Z",
+      "side": 1,
+      "message": "We need to clear the az cache here as well but that isn\u0027t topic for this change -\u003e https://review.openstack.org/582746",
+      "revId": "fc1f80b6d17e001c30c6ba8736589102df7db5e2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
