@@ -328,6 +328,7 @@ class OpenStackProvider(Provider):
             # or flavor cache. Log a message, invalidate the caches so that
             # next time we get new caches.
             self._images = {}
+            self.__azs = {}
             self.__flavors = {}  # TODO(gtema): caching
             self.log.info(
                 "Clearing flavor and image caches due to 400 error from nova")
