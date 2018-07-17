@@ -1,0 +1,10 @@
+Code-Review+1: Artem Goncharov <artem.goncharov@gmail.com>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 17 Jul 2018 13:38:21 +0000
+Reviewed-on: https://review.openstack.org/572829
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
