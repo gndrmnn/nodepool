@@ -344,6 +344,7 @@ class ImageUpload(BaseModel):
         self.username = username
         self.external_id = None      # Provider ID of the image
         self.external_name = None    # Provider name of the image
+        self.baremetal = False
 
     def __repr__(self):
         d = self.toDict()
@@ -360,7 +361,8 @@ class ImageUpload(BaseModel):
                     self.provider_name == other.provider_name and
                     self.build_id == other.build_id and
                     self.image_name == other.image_name and
-                    self.format == other.format)
+                    self.format == other.format and
+                    self.baremetal == other.baremetal)
         else:
             return False
 
@@ -373,6 +375,7 @@ class ImageUpload(BaseModel):
         d['external_name'] = self.external_name
         d['format'] = self.format
         d['username'] = self.username
+        d['baremetal'] = self.baremetal
         return d
 
     @staticmethod
@@ -394,6 +397,7 @@ class ImageUpload(BaseModel):
         o.external_name = d.get('external_name')
         o.format = d.get('format')
         o.username = d.get('username', 'zuul')
+        o.baremetal = d.get('baremetal', False)
         return o
 
 

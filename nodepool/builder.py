@@ -28,6 +28,7 @@ from nodepool import exceptions
 from nodepool import provider_manager
 from nodepool import stats
 from nodepool import zk
+from nodepool.config import BAREMETAL_IMAGE_TYPES
 
 
 MINS = 60
@@ -57,6 +58,7 @@ class DibImageFile(object):
         self.md5_file = None
         self.sha256 = None
         self.sha256_file = None
+        self.baremetal = False
 
     @staticmethod
     def from_path(path):
@@ -71,7 +73,10 @@ class DibImageFile(object):
             if os.path.isfile(os.path.join(images_dir, image_filename)):
                 image = DibImageFile.from_path(image_filename)
                 if image.image_id == image_id:
-                        images.append(image)
+                    filename = os.path.join(images_dir, image_filename)
+                    bm_tag = '.'.join([filename, 'baremetal'])
+                    image.baremetal = os.path.isfile(bm_tag)
+                    images.append(image)
         return images
 
     @staticmethod
@@ -268,6 +273,8 @@ class CleanupWorker(BaseWorker):
                 path, ext = filename.rsplit('.', 1)
                 manifest_dir = path + ".d"
             items = [filename, f.md5_file, f.sha256_file]
+            if f.baremetal:
+                items.append('.'.join([filename, 'baremetal']))
             list(map(self._removeDibItem, items))
 
         try:
@@ -319,6 +326,15 @@ class CleanupWorker(BaseWorker):
                     self.log.info("Deleting image build %s from %s" %
                                   (base, upload.provider_name))
                     manager.deleteImage(upload.external_name)
+                    # Clean up baremetal subimages if they exist
+                    if upload.baremetal:
+                        for bm_image_type in BAREMETAL_IMAGE_TYPES:
+                            subimage_name = ".".join([
+                                upload.external_name,
+                                bm_image_type])
+                            self.log.info("Deleting subimage %s" %
+                                          (subimage_name))
+                            manager.deleteImage(subimage_name)
             except Exception:
                 self.log.exception(
                     "Unable to delete image %s from %s:",
@@ -732,10 +748,14 @@ class BuildWorker(BaseWorker):
             env[k] = v
 
         img_elements = diskimage.elements
-        img_types = ",".join(diskimage.image_types)
+        image_set = diskimage.image_types.copy()
+        if diskimage.baremetal:
+            for bm_img_type in BAREMETAL_IMAGE_TYPES:
+                image_set.discard(bm_img_type)
+        img_types = ",".join(image_set)
 
         qemu_img_options = ''
-        if 'qcow2' in img_types:
+        if 'qcow2' in image_set:
             qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
 
         cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
@@ -801,9 +821,16 @@ class BuildWorker(BaseWorker):
             build_data.state = zk.READY
             build_data.formats = list(diskimage.image_types)
 
+            # Create '.baremetal' tags so we can later check if metadata
+            # fixup is required.
+            if diskimage.baremetal:
+                for ext in build_data.formats:
+                    bm_tag = '.'.join([filename, ext, 'baremetal'])
+                    open(bm_tag, 'a').close()
+
             if self._statsd:
                 # record stats on the size of each image we create
-                for ext in img_types.split(','):
+                for ext in build_data.formats:
                     key = 'nodepool.dib_image_build.%s.%s.size' % (
                         diskimage.name, ext)
                     # A bit tricky because these image files may be sparse
@@ -935,6 +962,37 @@ class UploadWorker(BaseWorker):
         meta['nodepool_upload_id'] = upload_id
 
         try:
+            if image.baremetal:
+                properties = {}
+                for subimg in images:
+                    upload = False
+                    if subimg.extension == 'vmlinuz':
+                        subimg_id = 'kernel_id'
+                        upload = True
+                    elif subimg.extension == 'initrd':
+                        subimg_id = 'ramdisk_id'
+                        upload = True
+                    if not upload:
+                        continue
+                    subimg_name = provider.image_name_format.format(
+                        image_name=image_name,
+                        timestamp=str(timestamp)
+                    )
+                    subimg_name = '.'.join([subimg_name, subimg.extension])
+                    subimg_filename = subimg.to_path(
+                        self._config.imagesdir,
+                        with_extension=True
+                    )
+                    self.log.info("Uploading subimage %s" % subimg_name)
+                    subimg_meta = meta.copy()
+                    properties[subimg_id] = manager.uploadImage(
+                        subimg_name, subimg_filename,
+                        image_type=subimg.extension,
+                        meta=subimg_meta,
+                        md5=subimg.md5,
+                        sha256=subimg.sha256,
+                    )
+                meta.update(properties)
             external_id = manager.uploadImage(
                 ext_image_name, filename,
                 image_type=image.extension,
@@ -943,8 +1001,9 @@ class UploadWorker(BaseWorker):
                 sha256=image.sha256,
             )
         except Exception:
-            self.log.exception("Failed to upload image %s to provider %s" %
-                               (image_name, provider.name))
+            self.log.exception("Failed to upload image %s to provider %s "
+                               "from DIB image %s" %
+                               (image_name, provider.name, ext_image_name))
             data = zk.ImageUpload()
             data.state = zk.FAILED
             return data
@@ -966,6 +1025,7 @@ class UploadWorker(BaseWorker):
         data.external_name = ext_image_name
         data.format = image.extension
         data.username = username
+        data.baremetal = image.baremetal
 
         return data
 

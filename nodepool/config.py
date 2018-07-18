@@ -25,6 +25,9 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import Drivers
 
 
+BAREMETAL_IMAGE_TYPES = ['vmlinuz', 'initrd']
+
+
 class Config(ConfigValue):
     '''
     Class representing the nodepool configuration.
@@ -104,8 +107,10 @@ class Config(ConfigValue):
             d = DiskImage()
             d.name = diskimage['name']
             if 'elements' in diskimage:
+                d.baremetal = 'baremetal' in diskimage['elements']
                 d.elements = u' '.join(diskimage['elements'])
             else:
+                d.baremetal = False
                 d.elements = ''
             # must be a string, as it's passed as env-var to
             # d-i-b, but might be untyped in the yaml and
@@ -116,6 +121,9 @@ class Config(ConfigValue):
             if not isinstance(d.env_vars, dict):
                 d.env_vars = {}
             d.image_types = set(diskimage.get('formats', []))
+            if d.baremetal:
+                for bm_img_type in BAREMETAL_IMAGE_TYPES:
+                    d.image_types.add(bm_img_type)
             d.pause = bool(diskimage.get('pause', False))
             d.username = diskimage.get('username', 'zuul')
             self.diskimages[d.name] = d
@@ -171,6 +179,7 @@ class DiskImage(ConfigValue):
         self.image_types = None
         self.pause = False
         self.username = None
+        self.baremetal = False
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
@@ -181,7 +190,8 @@ class DiskImage(ConfigValue):
                     other.env_vars == self.env_vars and
                     other.image_types == self.image_types and
                     other.pause == self.pause and
-                    other.username == self.username)
+                    other.username == self.username and
+                    other.baremetal == self.baremetal)
         return False
 
     def __repr__(self):

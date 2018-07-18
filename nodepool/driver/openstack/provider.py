@@ -397,8 +397,15 @@ class OpenStackProvider(Provider):
         #              a shade-level fake-async interface later
         if not meta:
             meta = {}
-        if image_type:
+        if image_type == 'initrd':
+            meta['disk_format'] = 'ari'
+            meta['container_format'] = 'ari'
+        elif image_type == 'vmlinuz':
+            meta['disk_format'] = 'aki'
+            meta['container_format'] = 'aki'
+        elif image_type:
             meta['disk_format'] = image_type
+
         image = self._client.create_image(
             name=image_name,
             filename=filename,
