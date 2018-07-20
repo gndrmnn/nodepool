@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 20 Jul 2018 23:58:54 +0000
+Reviewed-on: https://review.openstack.org/582732
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
