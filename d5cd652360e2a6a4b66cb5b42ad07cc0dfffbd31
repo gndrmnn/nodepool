@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_088dc033",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-20T21:32:05Z",
+      "side": 1,
+      "message": "Default for this is set to .5 in useNodepool(). I don\u0027t see a need to increase it here.",
+      "range": {
+        "startLine": 691,
+        "startChar": 8,
+        "endLine": 691,
+        "endChar": 33
+      },
+      "revId": "d5cd652360e2a6a4b66cb5b42ad07cc0dfffbd31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_28a43cb7",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-20T21:32:05Z",
+      "side": 1,
+      "message": "This is a bit racey with the min-ready node being recreated (which I suspect is why you chose a longish sleep time here). I think it would be better to have a config file that does not use min-ready and just manually submit a request (several examples in this file). We could reduce that sleep time a bit then (I hate using artificial sleeps, but don\u0027t see a way around this one).\n\nAnd that would also be clearer to understand b/c it took me looking through the logs to figure out why we\u0027d expect 2 nodes (obvious now, but not so much at first glance).\n\nAlso, let\u0027s make sure that the node state is DELETING, as we are expecting it to be.",
+      "range": {
+        "startLine": 700,
+        "startChar": 0,
+        "endLine": 702,
+        "endChar": 52
+      },
+      "revId": "d5cd652360e2a6a4b66cb5b42ad07cc0dfffbd31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
