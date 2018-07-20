@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_b400ac04",
+        "filename": ".gitignore",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-20T21:02:46Z",
+      "side": 1,
+      "message": "Why was this needed? Accidental \u0027git add\u0027?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 5
+      },
+      "revId": "c9ba230b106aecea9d47798b881d6d33ed9159ab",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_e83de4bb",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-20T21:02:46Z",
+      "side": 1,
+      "message": "Perhaps we should also validate that the node assigned to the request has one of the new AZs.",
+      "revId": "c9ba230b106aecea9d47798b881d6d33ed9159ab",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
