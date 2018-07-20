@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f7c97a3_4b0ad277",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-07-20T23:20:44Z",
+      "side": 1,
+      "message": "It would probably be better to use a negative value for this so that you can actually enforce no retries by setting it to 0.",
+      "revId": "660f5024181a79e9583cb6dc745600c520bfd461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_88b8f0c6",
         "filename": "nodepool/driver/openstack/handler.py",
         "patchSetId": 1
@@ -13,6 +30,23 @@
       "writtenOn": "2018-07-20T21:33:13Z",
       "side": 1,
       "message": "How many attempts is the nodepool server ( in question) configured for?",
+      "revId": "660f5024181a79e9583cb6dc745600c520bfd461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_cbf10266",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-07-20T23:20:44Z",
+      "side": 1,
+      "message": "This check means that we will not retry forever if a quota exception is hit. I expect that will also cause problems for your single cloud results in NODE_FAILURE case.",
       "revId": "660f5024181a79e9583cb6dc745600c520bfd461",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
