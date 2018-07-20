@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_88b8f0c6",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 9592
+      },
+      "writtenOn": "2018-07-20T21:33:13Z",
+      "side": 1,
+      "message": "How many attempts is the nodepool server ( in question) configured for?",
+      "revId": "660f5024181a79e9583cb6dc745600c520bfd461",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
