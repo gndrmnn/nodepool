@@ -220,8 +220,9 @@ class OpenStackNodeLauncher(NodeLauncher):
         self.zk.storeNode(self.node)
 
     def launch(self):
-        attempts = 1
-        while attempts <= self._retries:
+        attempts = 0
+        while True:
+            attempts += 1
             try:
                 self._launchNode()
                 break
@@ -230,10 +231,14 @@ class OpenStackNodeLauncher(NodeLauncher):
                 # so there's no need to continue.
                 raise
             except Exception as e:
-                if attempts <= self._retries:
+                if self._retries:
                     self.log.exception(
                         "Launch attempt %d/%d failed for node %s:",
                         attempts, self._retries, self.node.id)
+                else:
+                    self.log.exception(
+                        "Launch attempt %d failed for node %s, retrying:",
+                        attempts, self.node.id)
                 # If we created an instance, delete it.
                 if self.node.external_id:
                     self.handler.manager.cleanupNode(self.node.external_id)
@@ -252,7 +257,6 @@ class OpenStackNodeLauncher(NodeLauncher):
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
                     raise exceptions.QuotaException("Quota exceeded")
-                attempts += 1
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
