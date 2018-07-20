@@ -649,6 +649,51 @@ class TestLauncher(tests.DBTestCase):
         # retries in config is set to 2, so 2 attempts to create a server
         self.assertEqual(0, manager.createServer_fails)
 
+    def test_node_zero_launch_retries(self):
+        configfile = self.setup_config('node_zero_launch_retry.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.wait_for_config(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager.createServer_fails = 1
+        self.waitForImage('fake-provider', 'fake-image')
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+
+        # retries in config is set to 0, so 0 attempts to create a server
+        self.assertEqual(0, manager.createServer_fails)
+
+    def test_node_indefinitely_launch_retries(self):
+        configfile = self.setup_config('node_inf_launch_retry.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.wait_for_config(pool)
+        manager = pool.getProviderManager('fake-provider')
+        # How do we better simulate inf?  10 > 3 (default) but not forever.
+        manager.createServer_fails = 10
+        self.waitForImage('fake-provider', 'fake-image')
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        # TODO(pabelanger): This currenty fails, due to how fake driver works,
+        # need some idea.
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+
+        # retries in config is set to 0, so 0 attempts to create a server
+        self.assertEqual(0, manager.createServer_fails)
+
     def test_node_delete_failure(self):
         def fail_delete(self, name):
             raise RuntimeError('Fake Error')
