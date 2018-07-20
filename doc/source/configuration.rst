@@ -409,7 +409,9 @@ Example::
   ``launch-retries``
 
     The number of times to retry launching a server before considering the job
-    failed.
+    failed. By setting launch-retries to -1, nodepool will retry indefinitely and
+    never consider a job failed. When set to 0, nodepool will not retry a launch
+    and mark the job failed.
 
     Default 3.
 

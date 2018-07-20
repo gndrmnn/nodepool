@@ -220,8 +220,9 @@ class OpenStackNodeLauncher(NodeLauncher):
         self.zk.storeNode(self.node)
 
     def launch(self):
-        attempts = 1
-        while attempts <= self._retries:
+        attempts = 0
+        while True:
+            attempts += 1
             try:
                 self._launchNode()
                 break
@@ -230,10 +231,17 @@ class OpenStackNodeLauncher(NodeLauncher):
                 # so there's no need to continue.
                 raise
             except Exception as e:
-                if attempts <= self._retries:
+                if not self._retries:
+                    # User has set launch-retries to 0, exit loop.
+                    raise
+                elif self._retries > 0:
                     self.log.exception(
                         "Launch attempt %d/%d failed for node %s:",
                         attempts, self._retries, self.node.id)
+                else:
+                    self.log.exception(
+                        "Launch attempt %d failed for node %s, retrying:",
+                        attempts, self.node.id)
                 # If we created an instance, delete it.
                 if self.node.external_id:
                     self.handler.manager.cleanupNode(self.node.external_id)
@@ -244,15 +252,16 @@ class OpenStackNodeLauncher(NodeLauncher):
                     self.node.public_ipv6 = None
                     self.node.interface_ip = None
                     self.zk.storeNode(self.node)
+
                 if attempts == self._retries:
                     raise
+
                 if 'quota exceeded' in str(e).lower():
                     # A quota exception is not directly recoverable so bail
                     # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
                     raise exceptions.QuotaException("Quota exceeded")
-                attempts += 1
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
