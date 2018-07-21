@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f7c97a3_41e393d7",
+        "filename": ".gitignore",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-21T05:15:15Z",
+      "side": 1,
+      "message": "\u0027tox -e cover\u0027 generates a cover folder with an html report that is not ignored. But you\u0027re right, this is unrelated to this change and should go into its own change.",
+      "parentUuid": "5f7c97a3_b400ac04",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 5
+      },
+      "revId": "c9ba230b106aecea9d47798b881d6d33ed9159ab",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f7c97a3_e83de4bb",
         "filename": "nodepool/tests/test_launcher.py",
         "patchSetId": 6
@@ -36,6 +60,24 @@
       "writtenOn": "2018-07-20T21:02:46Z",
       "side": 1,
       "message": "Perhaps we should also validate that the node assigned to the request has one of the new AZs.",
+      "revId": "c9ba230b106aecea9d47798b881d6d33ed9159ab",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_01c91b4f",
+        "filename": "nodepool/tests/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-07-21T05:15:15Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "5f7c97a3_e83de4bb",
       "revId": "c9ba230b106aecea9d47798b881d6d33ed9159ab",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
