@@ -1,0 +1,9 @@
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 23 Jul 2018 14:16:38 +0000
+Reviewed-on: https://review.openstack.org/581348
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
