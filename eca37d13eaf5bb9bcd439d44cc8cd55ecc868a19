@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_b218a083",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-23T14:40:02Z",
+      "side": 1,
+      "message": "For follow up, but agree with ianw original comment. This is a good start, but I think we should make this into a larger NOTE / WARNING, something to move the users eyes too.\n\nWhile placing a variable in secure.yaml, I wouldn\u0027t want to expose nodepool-builder logs to the public, changes are high it will be leaked into those log files.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 23
+      },
+      "revId": "eca37d13eaf5bb9bcd439d44cc8cd55ecc868a19",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
