@@ -22,6 +22,30 @@
       "revId": "3cf4c61e4fa1354500c77c820e2aaf0c95546c3d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_a1958c3f",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-24T15:24:22Z",
+      "side": 1,
+      "message": "Yup. Doing and squashing into parent.",
+      "parentUuid": "5f7c97a3_21597cfc",
+      "range": {
+        "startLine": 81,
+        "startChar": 24,
+        "endLine": 81,
+        "endChar": 33
+      },
+      "revId": "3cf4c61e4fa1354500c77c820e2aaf0c95546c3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
