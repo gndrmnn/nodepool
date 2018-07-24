@@ -76,7 +76,10 @@ class TaskManager(openstack_task_manager.TaskManager):
             raise
 
     def post_run_task(self, elapsed_time, task):
-        super(TaskManager, self).post_run_task(elapsed_time, task)
+        self.log.debug(
+            "Manager %s ran task %s in %ss" %
+            (self.name, task.name, elapsed_time))
+
         if self.statsd:
             # sdk sets task.name to something like "compute.DELETE.servers"
             task_name = "".join([
