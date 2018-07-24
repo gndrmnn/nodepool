@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_817ad0b8",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-07-24T15:38:29Z",
+      "side": 1,
+      "message": "task_name",
+      "range": {
+        "startLine": 32,
+        "startChar": 47,
+        "endLine": 32,
+        "endChar": 56
+      },
+      "revId": "26c89b19655839be7225970d3e8ca6824f81f572",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
