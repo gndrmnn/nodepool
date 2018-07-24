@@ -78,8 +78,11 @@ class TaskManager(openstack_task_manager.TaskManager):
     def post_run_task(self, elapsed_time, task):
         super(TaskManager, self).post_run_task(elapsed_time, task)
         if self.statsd:
+            # sdk sets task.name to something like "compute.DELETE.servers"
+            task_name = "".join([
+                part.lower().capitalize() for part in task.name.split('.')])
             # nodepool.task.PROVIDER.TASK_NAME
-            key = 'nodepool.task.%s.%s' % (self.name, task.name)
+            key = 'nodepool.task.%s.%s' % (self.name, task_name)
             self.statsd.timing(key, int(elapsed_time * 1000))
             self.statsd.incr(key)
 
