@@ -16,6 +16,24 @@
       "revId": "a5f78ff0609b1655a80a63c10f8c1e41ea51034d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_913446ad",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 25733
+      },
+      "writtenOn": "2018-07-25T14:39:32Z",
+      "side": 1,
+      "message": "Yep, this definitely causes an itch in my brain. Treating the elements as anything but opaque is.... painful.",
+      "parentUuid": "5f7c97a3_0eefb1b2",
+      "revId": "a5f78ff0609b1655a80a63c10f8c1e41ea51034d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
