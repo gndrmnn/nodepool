@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_0eefb1b2",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-25T14:06:15Z",
+      "side": 1,
+      "message": "This to me feels like the wrong approach, while today the baremetal element is implemented to produce 3 images, I don\u0027t think we want to have nodepool base code off of it.",
+      "revId": "a5f78ff0609b1655a80a63c10f8c1e41ea51034d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
