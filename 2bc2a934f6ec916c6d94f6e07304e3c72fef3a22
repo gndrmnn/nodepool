@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_3f75c7c9",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-27T12:14:41Z",
+      "side": 1,
+      "message": "I think it might be worth changing the name of this and or adding a comment for clarity.\n\nMy understanding is that boto3.client is a low-level client, while boto3.resource is the higher-level OO style client. For folks who don\u0027t use boto3 frequently, the distinction may not be immediately apparent.\n\nDoesn\u0027t look like we use ec2_client for anything other than this keypairs operation, so perhaps call it raw_ec2_client and don\u0027t assign it to self would clear it up?",
+      "revId": "2bc2a934f6ec916c6d94f6e07304e3c72fef3a22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_9f32db0d",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-07-27T12:14:41Z",
+      "side": 1,
+      "message": "Any reason this is embedded in the method? It doesn\u0027t look like it\u0027s a closure",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 26
+      },
+      "revId": "2bc2a934f6ec916c6d94f6e07304e3c72fef3a22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
