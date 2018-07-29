@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f7c97a3_4b2c6e00",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-29T13:37:18Z",
+      "side": 1,
+      "message": "we should put key-name here",
+      "revId": "b38c16f9a00508c69aba1d06c105d36666327726",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_eb2c5a01",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-29T13:37:18Z",
+      "side": 1,
+      "message": "and remove this",
+      "revId": "b38c16f9a00508c69aba1d06c105d36666327726",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_0b32f65d",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-29T13:37:18Z",
+      "side": 1,
+      "message": "I\u0027d rather not have nodepool create a keypair for AWS, this would be different then how the openstack driver works. Even thought different providers, we should try and keep them the same a possible",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 71
+      },
+      "revId": "b38c16f9a00508c69aba1d06c105d36666327726",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_8b3da62a",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-29T13:37:18Z",
+      "side": 1,
+      "message": "Should get this from label.key-name",
+      "revId": "b38c16f9a00508c69aba1d06c105d36666327726",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f7c97a3_ab3ae231",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-07-29T13:37:18Z",
+      "side": 1,
+      "message": "and here",
+      "revId": "b38c16f9a00508c69aba1d06c105d36666327726",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
