@@ -1408,6 +1408,41 @@ class TestLauncher(tests.DBTestCase):
             time.sleep(0)
 
     @mock.patch(
+        'nodepool.driver.openstack.handler.'
+        'OpenStackNodeLauncher.__server_ready')
+    @mock.patch(
+        'nodepool.driver.openstack.provider.'
+        'OpenStackProvider.deleteServer')
+    def test_launchNode_delete_error(self, mock_delete, mock_sr):
+        '''
+        Test that the launcher keeps trying to spawn a node in case of a
+         delete error
+        '''
+        # Raise once, succeed next
+        mock_sr.side_effect = [Exception('failure to spawn server'),
+                               mock.DEFAULT]
+        mock_delete.side_effect = [Exception('failure to delete'),
+                                   mock.DEFAULT]
+
+        configfile = self.setup_config('node_launch_retry.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.cleanup_interval = 60
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        # if the loop is not broken, mock_sr will be called a second time
+        self.assertEqual(2, mock_sr.call_count)
+        # failures to delete should not matter
+        self.assertTrue(mock_delete.call_count >= 1, mock_delete.call_count)
+
+    @mock.patch(
         'nodepool.driver.openstack.handler.OpenStackNodeRequestHandler.poll')
     def test_handler_poll_session_expired(self, mock_poll):
         '''
