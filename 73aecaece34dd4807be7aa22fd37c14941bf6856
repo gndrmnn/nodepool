@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_ed8da231",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-08-08T12:32:03Z",
+      "side": 1,
+      "message": "This is not ideal as this relies on nodepool\u0027s cleanup thread to delete this node later. In the meantime this might lead to hitting quotas. Should there be a \"cleanup_retries\" parameter?",
+      "revId": "73aecaece34dd4807be7aa22fd37c14941bf6856",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
