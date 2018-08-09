@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_bbd81d7f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-08-09T16:59:52Z",
+      "side": 1,
+      "message": "You don\u0027t need this mapping. These zk state values are already the strings you are mapping to.",
+      "range": {
+        "startLine": 822,
+        "startChar": 0,
+        "endLine": 825,
+        "endChar": 13
+      },
+      "revId": "778bde3ddff4e2e1eb339a390e8feee46a8780d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
