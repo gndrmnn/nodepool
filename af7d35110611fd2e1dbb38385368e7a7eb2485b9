@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_5b6ea995",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-08-09T17:03:36Z",
+      "side": 1,
+      "message": "I\u0027d suggest to use the \u0027.. stat::\u0027 attributes and also attach the metric type [1] like in zuul.\n\n[1] https://zuul-ci.org/docs/zuul/_sources/admin/monitoring.rst.txt",
+      "revId": "af7d35110611fd2e1dbb38385368e7a7eb2485b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
