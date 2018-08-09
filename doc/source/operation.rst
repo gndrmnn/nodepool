@@ -272,3 +272,102 @@ launchers, all will provide the same information.
    :reqheader Accept: ``application/json`` or ``text/*``
    :resheader Content-Type: ``application/json`` or ``text/plain``
                             depending on the :http:header:`Accept` header
+
+Monitoring
+----------
+
+Nodepool provides monitoring information to statsd. See
+:ref:`statsd_configuration` to learn how to enable statsd support. Currently,
+these metrics are supported:
+
+Nodepool builder
+~~~~~~~~~~~~~~~~
+
+**nodepool.dib_image_build.<diskimage_name>.<ext>.size**
+
+This stat reports the size of the built image in bytes.
+
+**nodepool.image_update.<image name>.<provider name>**
+
+Time in seconds it takes to upload a built image to a specific provider in the
+cloud.
+
+Nodepool launcher
+~~~~~~~~~~~~~~~~~
+
+**nodepool.provider.<provider>.max_servers**
+
+Current setting of the max-server configuration parameter for the respective
+provider.
+
+.. _nodepool_nodes:
+
+**nodepool.nodes.<state>**
+
+Number of nodes in a specific state.
+
+state can be:
+
+* building
+* deleting
+* failed
+* in-use
+* ready
+* used
+
+**nodepool.provider.<provider>.nodes.<state>**
+
+Number of nodes per provider that are in one specific state. See
+:ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+
+**nodepool.label.<label>.nodes.<state>**
+
+Number of nodes with a specific label in a specific state. See
+:ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+
+**nodepool.task.<provider>.<task>**
+
+*counter*: Number of tasks executed per provider.
+
+*timer*: Time in ms of the task execution.
+
+.. _nodepool_launch:
+
+**nodepool.launch.<result>**
+
+*counter*: Number of launches, categorized by the launch result.
+
+*timer*: Time in ms of a launch, categorized by the launch result.
+
+*result* can be:
+
+* ready: launch was successful
+* error.zksession: Zookeeper session was lost
+* error.quota: Quota of the provider was reached
+* error.unknown: Some other error during launch
+
+**nodepool.launch.provider.<provider>.<az>.<result>**
+
+*counter*: Number of launches per provider per availability zone, categorized
+by the launch result.
+
+*timer*: Time in ms of a launch per provider per availability zone, categorized
+by the launch result.
+
+See :ref:`nodepool.launch <nodepool_launch>` for a list of possible results.
+
+**nodepool.launch.image.<image>.<result>**
+
+*counter*: Number of launches per image, categorized by the launch result.
+
+*timer*: Time in ms of a launch per image, categorized by the launch result.
+
+See :ref:`nodepool.launch <nodepool_launch>` for a list of possible results.
+
+**nodepool.launch.requestor.<requestor>.<result>**
+
+*counter*: Number of launches per requestor, categorized by the launch result.
+
+*timer*: Time in ms of a launch per requestor, categorized by the launch result.
+
+See :ref:`nodepool.launch <nodepool_launch>` for a list of possible results.
