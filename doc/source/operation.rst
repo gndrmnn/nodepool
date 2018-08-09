@@ -294,6 +294,16 @@ Nodepool builder
    Time in seconds it takes to upload a built image to a specific provider in
    the cloud.
 
+.. zuul:stat:: nodepool.builder.dib_image_build.<diskimage_name>.<ext>.<result>
+   :type: counter
+
+   Number of builds executed for a specific image.
+
+   *result* is one of
+
+   * ready: Image was successfully built.
+   * failed: Image failed to build.
+
 Nodepool launcher
 ~~~~~~~~~~~~~~~~~
 
