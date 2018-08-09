@@ -16,6 +16,29 @@
       "revId": "73aecaece34dd4807be7aa22fd37c14941bf6856",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_362f4940",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-08-09T14:07:34Z",
+      "side": 1,
+      "message": "I think it was a mistake on our part to allow the delete to occur here and not in the DeletedNodeWorker thread. We should just create a new node in DELETING state that points to the instance and allow that worker to handle the delete.",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 1
+      },
+      "revId": "73aecaece34dd4807be7aa22fd37c14941bf6856",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
