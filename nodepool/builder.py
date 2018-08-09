@@ -817,6 +817,17 @@ class BuildWorker(BaseWorker):
                                    (diskimage.name, filename, ext, size))
                     self._statsd.gauge(key, size)
 
+        if self._statsd:
+            # report result to statsd
+            state_string = {
+                zk.READY: 'ready',
+                zk.FAILED: 'failed'
+            }
+            for ext in img_types.split(','):
+                key = 'nodepool.dib_image_build.%s.%s.%s' % (
+                    diskimage.name, ext, state_string[build_data.state])
+                self._statsd.incr(key)
+
         return build_data
 
     def run(self):
