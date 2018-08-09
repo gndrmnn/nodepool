@@ -29,6 +29,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinxcontrib.programoutput',
     'sphinxcontrib.httpdomain',
+    'zuul_sphinx',
+    'zuul.sphinx.zuul',
     'reno.sphinxext']
 #extensions = ['sphinx.ext.intersphinx']
 #intersphinx_mapping = {'python': ('http://docs.python.org/2.7', None)}
