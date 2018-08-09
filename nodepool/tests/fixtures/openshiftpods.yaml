@@ -1,0 +1,17 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: pod-fedora
+
+providers:
+  - name: openshift
+    driver: openshiftpods
+    context: service-account.local
+    pools:
+      - name: main
+        labels:
+          - name: pod-fedora
+            image: docker.io/fedora:28

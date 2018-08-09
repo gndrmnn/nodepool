@@ -124,6 +124,16 @@ providers:
             type: pod
             image: docker.io/fedora:28
 
+  - name: openshift-single-project
+    driver: openshiftpods
+    context: "/hostname:8443/developer"
+    pools:
+      - name: project-name
+        labels:
+          - name: openshift-pod
+            image: docker.io/fedora:28
+
+
 diskimages:
   - name: trusty
     formats:
