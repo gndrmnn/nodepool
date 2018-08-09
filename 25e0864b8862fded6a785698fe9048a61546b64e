@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_21037e0f",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-08-09T18:01:47Z",
+      "side": 1,
+      "message": "You shouldn\u0027t copy self.node. We need a *new* node so that it will get a new node ID. The call to storeNode() with a new node without a node ID should assign a new ID to it.",
+      "range": {
+        "startLine": 240,
+        "startChar": 20,
+        "endLine": 241,
+        "endChar": 69
+      },
+      "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
