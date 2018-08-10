@@ -46,6 +46,30 @@
       "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_13f1e695",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-08-10T09:04:36Z",
+      "side": 1,
+      "message": "Right, this will assign a new node id. But I think we don\u0027t want all information there (at least not allocated_to because that might have a side effect on the algorithm) but just the info that is needed to delete the node.",
+      "parentUuid": "3f79a3b5_d38b6e1c",
+      "range": {
+        "startLine": 240,
+        "startChar": 20,
+        "endLine": 241,
+        "endChar": 69
+      },
+      "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
