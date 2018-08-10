@@ -22,6 +22,30 @@
       "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_d38b6e1c",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-08-10T08:59:13Z",
+      "side": 1,
+      "message": "fromDict seems to assign a new node ID if called without the o_id argument: http://git.openstack.org/cgit/openstack-infra/nodepool/tree/nodepool/zk.py#n601\n\nBut I might have misread something, please correct me if I\u0027m wrong.\nHowever it\u0027s a static method so I should fix zk.Node() into zk.Node",
+      "parentUuid": "3f79a3b5_21037e0f",
+      "range": {
+        "startLine": 240,
+        "startChar": 20,
+        "endLine": 241,
+        "endChar": 69
+      },
+      "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
