@@ -70,6 +70,30 @@
       "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_3f52a0df",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-08-10T14:33:15Z",
+      "side": 1,
+      "message": "Right, we only want the info needed to delete properly. Other attributes can have side effects. So copying self.node is the wrong thing to do.",
+      "parentUuid": "3f79a3b5_13f1e695",
+      "range": {
+        "startLine": 240,
+        "startChar": 20,
+        "endLine": 241,
+        "endChar": 69
+      },
+      "revId": "25e0864b8862fded6a785698fe9048a61546b64e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
