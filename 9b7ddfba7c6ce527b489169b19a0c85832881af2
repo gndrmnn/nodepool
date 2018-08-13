@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_9a439f13",
+        "filename": "bindep.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-08-13T13:12:34Z",
+      "side": 1,
+      "message": "zuul-sphinx is a python depend, so you should add it to test-requirements.txt rather than here (this is only for distro requirements)",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 25
+      },
+      "revId": "9b7ddfba7c6ce527b489169b19a0c85832881af2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
