@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_e06bf2ed",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2018-08-14T10:16:55Z",
+      "side": 1,
+      "message": "Not super satisfied with this intrusive way to do things, but the mocking is tricky for this use case since we need to get an external node id THEN raise. Please let me know if there is a better way to do it.",
+      "revId": "d9d7e4a3075d5b4d9929bf2a07e2e388304c2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
