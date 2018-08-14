@@ -16,6 +16,24 @@
       "revId": "d9d7e4a3075d5b4d9929bf2a07e2e388304c2a08",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_699d8a64",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-08-14T14:57:32Z",
+      "side": 1,
+      "message": "You could instead hook intp FakeOpenStackCloud [1]. This also already simulates quota failures and should be easy to extend to simulate various failures.\n\n[1] http://git.zuul-ci.org/cgit/nodepool/tree/nodepool/driver/fake/provider.py#n70",
+      "parentUuid": "3f79a3b5_e06bf2ed",
+      "revId": "d9d7e4a3075d5b4d9929bf2a07e2e388304c2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
