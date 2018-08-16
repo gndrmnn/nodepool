@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_9faa666e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-08-16T11:02:19Z",
+      "side": 1,
+      "message": "would this be better as a gauge?  it was either last successful or last failed and i\u0027m not sure it makes sense to average it out?",
+      "revId": "4ead287f05045e450fb632b5c99e6dc92f1893cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
