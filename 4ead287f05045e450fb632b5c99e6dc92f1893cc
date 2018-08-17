@@ -34,6 +34,23 @@
       "revId": "4ead287f05045e450fb632b5c99e6dc92f1893cc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_b22653ba",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-08-17T14:27:31Z",
+      "side": 1,
+      "message": "The advantage of increment is that you get a distinct value for each build.  It can tell you the success/failure rate, as well how many builds have occurred and when.  It is slightly harder (but possible) to get it to tell you whether the build is currently broken.  If we want that too, maybe keep this and add a new gauge?  However, you can do everything you can do with a counter with a timer as well, *plus* they give you timing info.  So what we actually might want to do is change this to a timer which indicates how long the build took (and then, optionally, if we want an easy success/failure flag, add the gauge).\n\nGauges did exist when the nodepool statsd code was written.  However, events did not.  We may want to consider adding those too.",
+      "revId": "4ead287f05045e450fb632b5c99e6dc92f1893cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
