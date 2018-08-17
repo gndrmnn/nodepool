@@ -16,6 +16,24 @@
       "revId": "4ead287f05045e450fb632b5c99e6dc92f1893cc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_e61735a3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 27719
+      },
+      "writtenOn": "2018-08-17T11:36:50Z",
+      "side": 1,
+      "message": "In the end, all I need is some way to figure out if something went wrong. I\u0027ve chosen a counter since that seemed to be in line with how other \"event-like\" metrics are measured in nodepool, e.g. image upload. If this is just due to the fact that gauges are a relatively new feature of statsd, we can also turn this into a gauge. @Shrews, do you have an opinion?",
+      "parentUuid": "3f79a3b5_9faa666e",
+      "revId": "4ead287f05045e450fb632b5c99e6dc92f1893cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
