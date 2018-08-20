@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_25cbbc53",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-08-20T15:02:31Z",
+      "side": 1,
+      "message": "we should add boot-timeout / launch-retries here, like in openstack driver.",
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_05eec0b3",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-08-20T15:02:31Z",
+      "side": 1,
+      "message": "We should get this info from launch_retries setting in provider.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 24
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_85e970b8",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-08-20T15:02:31Z",
+      "side": 1,
+      "message": "this should be moved into nodepool.yaml, same as we do for openstack driver.",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 31
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_85d3b0d5",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-08-20T15:02:31Z",
+      "side": 1,
+      "message": "Should be pulled from cloud / disk image section in nodepool.",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 38
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_45d598b6",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2018-08-20T15:02:31Z",
+      "side": 1,
+      "message": "same, cloud / disk image section so we can support winrm.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 41
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
