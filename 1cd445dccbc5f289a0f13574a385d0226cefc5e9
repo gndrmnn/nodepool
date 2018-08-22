@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_15e303db",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-22T21:19:30Z",
+      "side": 1,
+      "message": "When testing, this is throwing an exception I think because self.pools is a property (line 48), not an attribute ? Yet when looking at other drivers, it seems like this is done so I\u0027m not exactly sure what\u0027s going on here.\n\nRemoving this line allows me to continue without the traceback.\n\n    Traceback (most recent call last):\n    File \"/opt/rh/rh-python35/root/usr/bin/nodepool-launcher\", line 10, in \u003cmodule\u003e\n        sys.exit(main())\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/launcher.py\", line 83, in main\n        return NodePoolLauncherApp.main()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/__init__.py\", line 194, in main\n        return super(NodepoolDaemonApp, cls).main(argv)\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/__init__.py\", line 144, in main\n        return cls()._main(argv\u003dargv)\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/__init__.py\", line 134, in _main\n        return self._do_run()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/__init__.py\", line 175, in _do_run\n        return super(NodepoolDaemonApp, self)._do_run()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/__init__.py\", line 140, in _do_run\n        return self.run()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/cmd/launcher.py\", line 63, in run\n        config \u003d self.pool.loadConfig()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/launcher.py\", line 773, in loadConfig\n        config \u003d nodepool_config.loadConfig(self.configfile)\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/config.py\", line 272, in loadConfig\n        newconfig.setProviders(config.get(\u0027providers\u0027))\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/config.py\", line 152, in setProviders\n        p.load(self)\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/driver/aws/config.py\", line 69, in load\n        self.pools \u003d {}\n    AttributeError: can\u0027t set attribute",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 23
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_25cbbc53",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 7
@@ -36,6 +59,29 @@
       "writtenOn": "2018-08-20T15:02:31Z",
       "side": 1,
       "message": "we should add boot-timeout / launch-retries here, like in openstack driver.",
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_f08a1519",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-22T21:19:30Z",
+      "side": 1,
+      "message": "I think this method is expected to have a \"pool_name\" argument (as is implemented in other drivers\u0027 config):\n\n    Traceback (most recent call last):\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/driver/__init__.py\", line 640, in run\n        self._runHandler()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/driver/__init__.py\", line 520, in _runHandler\n        invalid_types \u003d self._invalidNodeTypes()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/driver/__init__.py\", line 388, in _invalidNodeTypes\n        valid \u003d self.provider.getSupportedLabels(self.pool.name)\n    TypeError: getSupportedLabels() takes 1 positional argument but 2 were given",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 26
+      },
       "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -128,6 +174,23 @@
         "endLine": 89,
         "endChar": 41
       },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_50b2e94a",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-22T21:19:30Z",
+      "side": 1,
+      "message": "I\u0027m seeing a traceback on this line when nodepool picks up a node request:\n\n    2018-08-22 20:59:19,315 INFO nodepool.PoolWorker.opstest-main: Assigning node request \u003cNodeRequest {\u0027id\u0027: \u0027200-0000000002\u0027, \u0027stat\u0027: ZnodeStat(czxid\u003d86, mzxid\u003d86, ctime\u003d1534971554725, mtime\u003d1534971554725, version\u003d0, cversion\u003d0, aversion\u003d0, ephemeralOwner\u003d100595226211450895, dataLength\u003d167, numChildren\u003d0, pzxid\u003d86), \u0027state\u0027: \u0027requested\u0027, \u0027reuse\u0027: True, \u0027requestor\u0027: \u0027managesf.ci\u0027, \u0027nodes\u0027: [], \u0027declined_by\u0027: [], \u0027node_types\u0027: [\u0027centos-ami\u0027], \u0027state_time\u0027: 1534971554.7249627}\u003e\n    2018-08-22 20:59:19,315 ERROR nodepool.PoolWorker.opstest-main: Error in PoolWorker:\n    Traceback (most recent call last):\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/launcher.py\", line 290, in run\n        self._assignHandlers()\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/launcher.py\", line 209, in _assignHandlers\n        rh \u003d pm.getRequestHandler(self, req)\n    File \"/opt/rh/rh-python35/root/usr/lib/python3.5/site-packages/nodepool/driver/aws/provider.py\", line 48, in getRequestHandler\n        return AwsNodeRequestHandler(poolworker, request)\n    TypeError: Can\u0027t instantiate abstract class AwsNodeRequestHandler with abstract methods imagesAvailable\n\nI\u0027ve worked around it for the time being by manually adding the method in the handler like in the test driver https://github.com/openstack-infra/nodepool/blob/711d5f7b0e816963a8d51f7376cff6dd52e8862d/nodepool/driver/test/handler.py#L28-L29",
       "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
