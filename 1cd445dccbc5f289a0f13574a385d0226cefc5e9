@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f79a3b5_d5290b37",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-22T20:26:39Z",
+      "side": 1,
+      "message": "Is this good ?\nThe example config in the test fixture doesn\u0027t supply a \"zuul-public-key\" key and we later retrieve \u0027key-name\u0027 from the pool.",
+      "range": {
+        "startLine": 67,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 63
+      },
+      "revId": "1cd445dccbc5f289a0f13574a385d0226cefc5e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_25cbbc53",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 7
