@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_c22a9a8f",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-23T14:20:53Z",
+      "side": 1,
+      "message": "Need to have this query AWS to see if the requested AMI really exists",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "revId": "6d96512ea49d23f11fbe34d04d0d44306aa1841b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_0225f2c1",
+        "filename": "nodepool/tests/fixtures/config_validate/good.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 9061
+      },
+      "writtenOn": "2018-08-23T14:20:53Z",
+      "side": 1,
+      "message": "This needs security-group-id and subnet-id",
+      "range": {
+        "startLine": 100,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 3
+      },
+      "revId": "6d96512ea49d23f11fbe34d04d0d44306aa1841b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
