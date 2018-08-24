@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_2016dc4a",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-08-24T01:05:32Z",
+      "side": 1,
+      "message": "why not using \u0027-\u0027, to be consistent with the other config options?",
+      "range": {
+        "startLine": 86,
+        "startChar": 50,
+        "endLine": 86,
+        "endChar": 51
+      },
+      "revId": "e227c1ff5bc0b5d822a34b95c43306303b5f12f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_603934d5",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-08-24T01:05:32Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be set only if Ebs is in the mapping?",
+      "revId": "e227c1ff5bc0b5d822a34b95c43306303b5f12f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
