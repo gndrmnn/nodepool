@@ -143,10 +143,6 @@ class AwsProvider(Provider):
         # volume -- we basically need to ensure DeleteOnTermination is true
         if hasattr(image, 'block_device_mappings'):
             bdm = image.block_device_mappings
-            # TODO: Not sure how to handle more than one volume yet
-            if len(bdm) > 1:
-                raise Exception("AMIs with more than one volume aren't supported yet")
-
             mapping = bdm[0]
             if 'Ebs' in mapping:
                 mapping['Ebs']['DeleteOnTermination'] = True
