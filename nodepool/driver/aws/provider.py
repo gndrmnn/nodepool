@@ -136,6 +136,7 @@ class AwsProvider(Provider):
 
         # Default block device mapping parameters are embedded in AMIs.
         # We might need to supply our own mapping before lauching the instance.
+<<<<<<< HEAD
         # We basically want to make sure DeleteOnTermination is true and be
         # able to set the volume type and size.
         image = self.getImage(image_name)
@@ -148,6 +149,10 @@ class AwsProvider(Provider):
                 raise Exception("AMIs with more than one volume aren't supported yet")
 
             mapping = bdm[0]
+        block_device_mappings = self.getImage(label.ami).block_device_mappings
+
+        if block_device_mappings:
+            mapping = block_device_mappings[0]
             if 'Ebs' in mapping:
                 mapping['Ebs']['DeleteOnTermination'] = True
                 if label.volume_size:
