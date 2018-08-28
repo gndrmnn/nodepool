@@ -31,6 +31,8 @@ class ProviderCloudImage(ConfigValue):
         self.connection_type = None
         self.connection_port = None
 
+class AwsLabel(ConfigValue):
+    diskimage = None
     def __eq__(self, other):
         if isinstance(other, ProviderCloudImage):
             return (self.name == other.name and
