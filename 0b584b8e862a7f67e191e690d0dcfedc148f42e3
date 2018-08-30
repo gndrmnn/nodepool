@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_6ae2eaa2",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-08-30T14:16:19Z",
+      "side": 1,
+      "message": "The host keys returned by `self.checkHost()` are stored in `node.host_keys`. That\u0027s why they are added in line #142 and used for checking if the node needs to be updated.\n\nBut the host key from the config is not directly used (see line #106/#121 above)",
+      "parentUuid": "3f79a3b5_ea3efa89",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_c739b73f",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 2
@@ -161,6 +179,42 @@
       "side": 1,
       "message": "What happens when a static driver is removed from the config, aren\u0027t the created node leaked?",
       "parentUuid": "3f79a3b5_a786fbb9",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_8a7bc6bc",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-08-30T14:16:19Z",
+      "side": 1,
+      "message": "I was not aware that a single provider can only be managed by one launcher. Now that you mention that: I think there was a race - at least with the static driver - that made us reduce the launcher instances to one in our setup.",
+      "parentUuid": "3f79a3b5_6a6bca84",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_caac5e37",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-08-30T14:16:19Z",
+      "side": 1,
+      "message": "Yes, currently if a static driver is removed from the config the nodes are leaked.",
+      "parentUuid": "3f79a3b5_4a636eb2",
       "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
