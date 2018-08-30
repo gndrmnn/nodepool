@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_c739b73f",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-08-30T13:25:15Z",
+      "side": 1,
+      "message": "You need to lock the node before calling this. And then unlock after.",
+      "range": {
+        "startLine": 158,
+        "startChar": 12,
+        "endLine": 158,
+        "endChar": 35
+      },
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
