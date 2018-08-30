@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_aa39e2d8",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-08-30T13:41:40Z",
+      "side": 1,
+      "message": "AFAIK those are only used in `self.checkHost()` but not stored in the ZNode.",
+      "parentUuid": "3f79a3b5_a7afdb29",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_c739b73f",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 2
@@ -70,6 +88,24 @@
       "writtenOn": "2018-08-30T13:32:17Z",
       "side": 1,
       "message": "Not relevant to this change, but it shouldn\u0027t re-create since at start up we compare what is registered in ZK with the config.",
+      "parentUuid": "3f79a3b5_c750d761",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_8a30a6ea",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-08-30T13:41:40Z",
+      "side": 1,
+      "message": "I think that will not work when you have multiple launcher instances running, right?!",
       "parentUuid": "3f79a3b5_c750d761",
       "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
