@@ -22,6 +22,23 @@
       "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_c750d761",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-08-30T13:27:49Z",
+      "side": 1,
+      "message": "Shouldn\u0027t node be deregistered when driver stop? Like that, config change would auto re-create the node?",
+      "revId": "0b584b8e862a7f67e191e690d0dcfedc148f42e3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
