@@ -16,6 +16,24 @@
       "revId": "608a64cc31da7bbeaa0aa30d4b7866af4dcf650a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_bbd49dbc",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-09-03T06:05:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_faf6a4d8",
+      "revId": "608a64cc31da7bbeaa0aa30d4b7866af4dcf650a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
