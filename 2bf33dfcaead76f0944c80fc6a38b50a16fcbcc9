@@ -46,6 +46,30 @@
       "revId": "2bf33dfcaead76f0944c80fc6a38b50a16fcbcc9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_f0f3ee07",
+        "filename": "doc/requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2472
+      },
+      "writtenOn": "2018-09-04T19:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_a57a1a21",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 13
+      },
+      "revId": "2bf33dfcaead76f0944c80fc6a38b50a16fcbcc9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
