@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_85e6fe15",
+        "filename": "doc/requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-04T18:50:23Z",
+      "side": 1,
+      "message": "Let\u0027s just set the min to \u003e1.5.6 (worked for me in testing).",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 13
+      },
+      "revId": "2bf33dfcaead76f0944c80fc6a38b50a16fcbcc9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
