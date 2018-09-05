@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_48fea805",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-05T14:24:46Z",
+      "side": 1,
+      "message": "Although this works, it\u0027s more direct, efficient, and easier to read if you just do:\n\n  deleting_node \u003d zk.Node()\n  deleting_node.provider \u003d self.node.provider\n  deleting_node.external_id \u003d self.node.external_id",
+      "range": {
+        "startLine": 240,
+        "startChar": 0,
+        "endLine": 243,
+        "endChar": 67
+      },
+      "revId": "cb263d4f69732e80125f6d1142b248dfb6988b99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
