@@ -296,7 +296,21 @@ class StaticNodeProvider(Provider):
         pass
 
     def nodeLivenessProbe(self):
-        pass
+        registered = self.getRegisteredNodeHostnames()
+        for pool in self.provider.pools.values():
+            for node in pool.nodes:
+                if node["name"] not in registered:
+                    continue
+
+                try:
+                    nodeutils.nodescan(node["name"],
+                                       port=node["connection-port"],
+                                       timeout=node["timeout"],
+                                       gather_hostkeys=False)
+                except Exception:
+                    self.log.exception("Failed to connect to node %s:",
+                                       node["name"])
+                    self.deregisterNode(registered[node["name"]], node["name"])
 
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)
