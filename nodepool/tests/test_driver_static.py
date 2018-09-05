@@ -294,3 +294,25 @@ class TestDriverStatic(tests.DBTestCase):
         with mock.patch("nodepool.nodeutils.nodescan") as nodescan_mock:
             nodescan_mock.side_effect = OSError
             self.waitForNodeDeletion(nodes[0])
+
+    def test_leaked_static_node(self):
+        """Test that a leaked static node is deleted"""
+        configfile = self.setup_config('static-2-nodes.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for initial nodes")
+        nodes = self.waitForNodes('fake-label', 2)
+        self.assertEqual(len(nodes), 2)
+
+        self.zk.deleteNode(nodes[0])
+
+        self.log.debug("Waiting for node to transition to ready again")
+        nodes = self.waitForNodes('fake-label', 2)
+        self.assertEqual(len(nodes), 2)
+
+        node = nodes[0]
+        self.zk.storeNode(node.fromDict(node.toDict()))
+
+        nodes = self.waitForNodes('fake-label', 2)
+        self.assertEqual(len(nodes), 2)
