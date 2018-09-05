@@ -43,6 +43,9 @@ class TestProvider(Provider):
     def cleanupLeakedResources(self):
         pass
 
+    def nodeLivenessProbe(self):
+        pass
+
     def listNodes(self):
         return []
 

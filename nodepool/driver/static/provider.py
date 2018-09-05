@@ -295,6 +295,9 @@ class StaticNodeProvider(Provider):
     def cleanupLeakedResources(self):
         pass
 
+    def nodeLivenessProbe(self):
+        pass
+
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)
 

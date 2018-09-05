@@ -442,6 +442,9 @@ class OpenStackProvider(Provider):
         if self.provider.clean_floating_ips:
             self._client.delete_unattached_floating_ips()
 
+    def nodeLivenessProbe(self):
+        pass
+
     def getAZs(self):
         if self.__azs is None:
             self.__azs = self._client.list_availability_zone_names()

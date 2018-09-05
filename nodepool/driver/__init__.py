@@ -256,6 +256,16 @@ class Provider(ProviderNotifications, metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def nodeLivenessProbe(self):
+        """Check nodes for liveness
+
+        This is called periodically to give the provider a chance to
+        check nodes for liveness (e.g. network connectivity of static
+        nodes)
+        """
+        pass
+
+    @abc.abstractmethod
     def getRequestHandler(self, poolworker, request):
         """Return a NodeRequestHandler for the supplied request
         """

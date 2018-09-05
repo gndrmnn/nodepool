@@ -749,6 +749,25 @@ class DeletedNodeWorker(BaseCleanupWorker):
             self.log.exception("Exception in DeletedNodeWorker:")
 
 
+class LivenessWorker(BaseCleanupWorker):
+
+    def __init__(self, nodepool, interval):
+        super(LivenessWorker, self).__init__(
+            nodepool, interval, name='LivenessWorker')
+        self.log = logging.getLogger("nodepool.LivenessWorker")
+
+    def _run(self):
+        try:
+            self._livenessProbe()
+        except Exception:
+            self.log.exception("Exception in LivenessWorker:")
+
+    def _livenessProbe(self):
+        for provider in self._nodepool.config.providers.values():
+            manager = self._nodepool.getProviderManager(provider.name)
+            manager.nodeLivenessProbe()
+
+
 class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
@@ -760,6 +779,7 @@ class NodePool(threading.Thread):
         self.watermark_sleep = watermark_sleep
         self.cleanup_interval = 60
         self.delete_interval = 5
+        self.liveness_interval = 180
         self._stopped = False
         self._stop_event = threading.Event()
         self.config = None
@@ -768,6 +788,7 @@ class NodePool(threading.Thread):
         self._pool_threads = {}
         self._cleanup_thread = None
         self._delete_thread = None
+        self._liveness_thread = None
         self._submittedRequests = {}
 
     def stop(self):
@@ -787,6 +808,10 @@ class NodePool(threading.Thread):
         if self._delete_thread:
             self._delete_thread.stop()
             self._delete_thread.join()
+
+        if self._liveness_thread:
+            self._liveness_thread.stop()
+            self._liveness_thread.join()
 
         # Don't let stop() return until all pool threads have been
         # terminated.
@@ -997,6 +1022,11 @@ class NodePool(threading.Thread):
                     self._delete_thread = DeletedNodeWorker(
                         self, self.delete_interval)
                     self._delete_thread.start()
+
+                if not self._liveness_thread:
+                    self._liveness_thread = LivenessWorker(
+                        self, self.liveness_interval)
+                    self._liveness_thread.start()
 
                 # Stop any PoolWorker threads if the pool was removed
                 # from the config.

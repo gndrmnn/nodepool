@@ -207,6 +207,7 @@ class BaseTestCase(testtools.TestCase):
                      'fake-provider3',
                      'CleanupWorker',
                      'DeletedNodeWorker',
+                     'LivenessWorker',
                      'pydevd.CommandThread',
                      'pydevd.Reader',
                      'pydevd.Writer',
@@ -226,6 +227,8 @@ class BaseTestCase(testtools.TestCase):
                 if t.name.startswith("BuildWorker"):
                     continue
                 if t.name.startswith("CleanupWorker"):
+                    continue
+                if t.name.startswith("LivenessWorker"):
                     continue
                 if t.name.startswith("PoolWorker"):
                     continue
@@ -516,6 +519,7 @@ class DBTestCase(BaseTestCase):
         pool = launcher.NodePool(*args, **kwargs)
         pool.cleanup_interval = .5
         pool.delete_interval = .5
+        pool.liveness_interval = .5
         self.addCleanup(pool.stop)
         return pool
 
