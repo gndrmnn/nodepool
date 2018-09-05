@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_2e0fbf39",
+        "filename": "nodepool/tests/test_builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-05T07:30:47Z",
+      "side": 1,
+      "message": "We might want to add an assert for the timer as well",
+      "range": {
+        "startLine": 310,
+        "startChar": 8,
+        "endLine": 311,
+        "endChar": 40
+      },
+      "revId": "3b4b98fd3d1bf828cd242e71624943cc7b25eadc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
