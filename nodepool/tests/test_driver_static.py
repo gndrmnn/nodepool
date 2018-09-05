@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import logging
+import mock
 import os
 
 from nodepool import config as nodepool_config
@@ -277,3 +278,19 @@ class TestDriverStatic(tests.DBTestCase):
         new_nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(new_nodes), 1)
         self.assertEqual(nodes[0].hostname, new_nodes[0].hostname)
+
+    def test_static_liveness_probe(self):
+        '''
+        Test that removing nodes from the config removes nodes.
+        '''
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for initial nodes")
+        nodes = self.waitForNodes('fake-label', 1)
+        self.assertEqual(len(nodes), 1)
+
+        with mock.patch("nodepool.nodeutils.nodescan") as nodescan_mock:
+            nodescan_mock.side_effect = OSError
+            self.waitForNodeDeletion(nodes[0])
