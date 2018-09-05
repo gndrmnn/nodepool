@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_a3175d46",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-05T14:58:08Z",
+      "side": 1,
+      "message": "Is it really OSError for every possible connection issue? Like timeout, dns error,...\n\nMaybe better to switch to Exception here?",
+      "range": {
+        "startLine": 310,
+        "startChar": 23,
+        "endLine": 310,
+        "endChar": 30
+      },
+      "revId": "844cb618b9f777bfdbbb66efea46e311a504caa7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_681e0471",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-05T14:58:08Z",
+      "side": 1,
+      "message": "Copy paste mistake?",
+      "range": {
+        "startLine": 284,
+        "startChar": 8,
+        "endLine": 284,
+        "endChar": 63
+      },
+      "revId": "844cb618b9f777bfdbbb66efea46e311a504caa7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
