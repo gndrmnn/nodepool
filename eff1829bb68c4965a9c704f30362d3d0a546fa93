@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_ab7bc1bc",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-05T06:22:22Z",
+      "side": 1,
+      "message": "This actually should be time.monotonic() to be correct.",
+      "range": {
+        "startLine": 752,
+        "startChar": 21,
+        "endLine": 752,
+        "endChar": 32
+      },
+      "revId": "eff1829bb68c4965a9c704f30362d3d0a546fa93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_2b41f163",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-05T06:22:22Z",
+      "side": 1,
+      "message": "This also should be time.monotonic()",
+      "range": {
+        "startLine": 788,
+        "startChar": 21,
+        "endLine": 788,
+        "endChar": 32
+      },
+      "revId": "eff1829bb68c4965a9c704f30362d3d0a546fa93",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
