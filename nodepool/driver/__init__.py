@@ -374,6 +374,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
     def ready_nodes(self):
         return self._ready_nodes
 
+    def getReadyNodesOfTypes(self, needed_types):
+        return self.zk.getReadyNodesOfTypes(needed_types)
+
     def _invalidNodeTypes(self):
         '''
         Return any node types that are invalid for this provider.
@@ -413,7 +416,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         diff = requested_types - saved_types
         needed_types = list(diff.elements())
 
-        ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+        ready_nodes = self.getReadyNodesOfTypes(needed_types)
 
         for ntype in needed_types:
             # First try to grab from the list of already available nodes.
