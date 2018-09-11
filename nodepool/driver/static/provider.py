@@ -78,6 +78,30 @@ class StaticNodeProvider(Provider):
             nodes.append(node)
         return nodes
 
+    def getReadyNodesOfTypes(self, needed_types):
+        nodes = {}
+        pool_nodes = self.poolNodes()
+        typed_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+        for label, ready_nodes in typed_nodes.items():
+            nodes[label] = []
+            for node in ready_nodes:
+                pool_node = pool_nodes.get(node.hostname)
+                if pool_node is None:
+                    continue
+
+                try:
+                    nodeutils.nodescan(pool_node["name"],
+                                       port=pool_node["connection-port"],
+                                       timeout=pool_node["timeout"],
+                                       gather_hostkeys=False)
+                except Exception:
+                    self.log.exception("Failed to connect to node %s:",
+                                       pool_node["name"])
+                    self.deregisterNode(count=1, node_name=pool_node["name"])
+                else:
+                    nodes[label].append(node)
+        return nodes
+
     def getRegisteredNodeHostnames(self):
         '''
         Get hostnames for all registered static nodes.
