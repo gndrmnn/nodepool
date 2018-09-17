@@ -1,0 +1,9 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: David Shrewsbury <shrewsbury.dave@gmail.com>
+Workflow+1: David Shrewsbury <shrewsbury.dave@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 17 Sep 2018 17:54:32 +0000
+Reviewed-on: https://review.openstack.org/602253
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
