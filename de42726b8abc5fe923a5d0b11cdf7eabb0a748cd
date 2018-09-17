@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_0a367db5",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-17T17:30:58Z",
+      "side": 1,
+      "message": "I think maybe we want to catch any exceptions that may occur from trying to deregister the node and log it. If we do not, that exception would filter up and cause us to decline the request, even though we might still be able to satisfy it with other nodes.",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 95,
+        "endChar": 71
+      },
+      "revId": "de42726b8abc5fe923a5d0b11cdf7eabb0a748cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
