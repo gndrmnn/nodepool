@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_2a0a5989",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-17T17:46:04Z",
+      "side": 1,
+      "message": "This is unused by the test and can be removed.",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 317,
+        "endChar": 55
+      },
+      "revId": "ebdc35fc5e96a15f83b29f031c54e159f7dfa04b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_6ad291ff",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-09-17T17:46:04Z",
+      "side": 1,
+      "message": "dito",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 78
+      },
+      "revId": "ebdc35fc5e96a15f83b29f031c54e159f7dfa04b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
