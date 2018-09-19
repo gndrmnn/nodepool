@@ -97,9 +97,21 @@ class TaskManager(openstack_task_manager.TaskManager):
             self.statsd.timing(key, int(elapsed_time * 1000))
             self.statsd.incr(key)
 
+    def _run_task(self, task):
+        pass
+
     def submit_task(self, task, raw=False):
         if not self._running:
             raise ManagerStoppedException(
                 "Manager %s is no longer running" % self.name)
         self.queue.put(task)
-        return task.wait()
+        if task.run_async:
+            # Async tasks run the wait lower in the stack because the wait
+            # is just returning the concurrent Future object. That future
+            # object handles the exception shifting across threads.
+            return self.executor.submit(self._run_task_wait, task)
+        else:
+            # It's important that we call task.wait() here, rather than in
+            # the run_task call stack below here, since subclasses may
+            # cause run_task to be called from a different thread.
+            return task.wait()
