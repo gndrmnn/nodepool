@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_5602a90a",
+        "filename": "nodepool/task_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-09-19T17:23:03Z",
+      "side": 1,
+      "message": "This should probably be moved into the else block as the async tasks are return a futures object for running the task already and do not need to have self.run_task() called on them above?",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 28
+      },
+      "revId": "db9de7fa5d2617c1e7b8a39fa30d080e3760e1af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
