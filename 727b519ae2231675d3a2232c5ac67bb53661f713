@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_499e8eb8",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-19T18:20:35Z",
+      "side": 1,
+      "message": "Sorry if I\u0027m being dense here...\n\nI\u0027m having a difficult time trying to understand your definition of \"leaked node\" for the static driver. I understand the test below about a missing static node (because it went offline and got deregistered). But I can\u0027t see how we\u0027d get into this situation for this test with an additional ZK node that our config says we should not have. Decreasing the max-parallel-jobs in our config would give us this situation, but we already have a test for that (test_static_parallel_decrease), so what\u0027s the value of this test?\n\nAgain, sorry if I\u0027m missing something obvious. Perhaps a concrete example would help me understand.",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 38
+      },
+      "revId": "727b519ae2231675d3a2232c5ac67bb53661f713",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
