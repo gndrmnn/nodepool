@@ -70,6 +70,30 @@
       "revId": "727b519ae2231675d3a2232c5ac67bb53661f713",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_afe2b0d2",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-09-20T14:24:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_99c62249",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 38
+      },
+      "revId": "727b519ae2231675d3a2232c5ac67bb53661f713",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
