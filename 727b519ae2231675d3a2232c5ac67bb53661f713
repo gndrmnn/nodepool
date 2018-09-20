@@ -22,6 +22,30 @@
       "revId": "727b519ae2231675d3a2232c5ac67bb53661f713",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_b2077e17",
+        "filename": "nodepool/tests/test_driver_static.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-09-20T05:40:00Z",
+      "side": 1,
+      "message": "Sorry for the term overloading. I just went with that because of the name of the cleanup hook (cleanupLeakedResources) without considering the meaning in the OpenStack context.\n\nTBH I can\u0027t quite remember if there ever was such a case were we had more znodes than we should. I think I just added the test because the \"resource cleanup\" is also capable of handling this kind situation.\n\nI\u0027m fine with renaming or removing the test. I can also extend the docstring to make it clear that this is not a real use case.",
+      "parentUuid": "3f79a3b5_499e8eb8",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 38
+      },
+      "revId": "727b519ae2231675d3a2232c5ac67bb53661f713",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
