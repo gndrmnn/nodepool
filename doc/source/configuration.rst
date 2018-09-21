@@ -1,5 +1,7 @@
 .. _configuration:
 
+.. default-domain:: zuul
+
 Configuration
 =============
 
@@ -19,143 +21,154 @@ and ``providers`` sections::
 .. note:: The builder daemon creates a UUID to uniquely identify itself and
           to mark image builds in ZooKeeper that it owns. This file will be
           named ``builder_id.txt`` and will live in the directory named by the
-          :ref:`images-dir` option. If this file does not exist, it will be
+          :attr:`images-dir` option. If this file does not exist, it will be
           created on builder startup and a UUID will be created automatically.
 
 The following sections are available.  All are required unless
 otherwise indicated.
 
-.. _webapp-conf:
+.. attr:: webapp
 
-webapp
-------
+   Define the webapp endpoint port and listen address
 
-Define the webapp endpoint port and listen address.
+   .. attr:: port
+      :default: 8005
+      :type: int
 
-Example::
+      The port to provide basic status information
 
-  webapp:
-    port: 8005
-    listen_address: '0.0.0.0'
+   .. attr:: listen_address
+      :default: 0.0.0.0
 
-.. _elements-dir:
+      Listen address for web app
 
-elements-dir
-------------
+.. attr:: elements-dir
+   :example: /path/to/elements/dir
+   :type: str
 
-If an image is configured to use diskimage-builder and glance to locally
-create and upload images, then a collection of diskimage-builder elements
-must be present. The ``elements-dir`` parameter indicates a directory
-that holds one or more elements.
+   If an image is configured to use diskimage-builder and glance to locally
+   create and upload images, then a collection of diskimage-builder elements
+   must be present. The ``elements-dir`` parameter indicates a directory
+   that holds one or more elements.
 
-Example::
+.. attr:: images-dir
+   :example: /path/to/images/dir
+   :type: str
 
-  elements-dir: /path/to/elements/dir
+   When we generate images using diskimage-builder they need to be
+   written to somewhere. The ``images-dir`` parameter is the place to
+   write them.
 
-.. _images-dir:
+.. attr:: build-log-dir
+   :example: /path/to/log/dir
+   :type: str
 
-images-dir
-----------
+   The builder will store build logs in this directory.  It will create
+   one file for each build, named `<image>-<build-id>.log`; for example,
+   `fedora-0000000004.log`.  It defaults to ``/var/log/nodepool/builds``.
 
-When we generate images using diskimage-builder they need to be
-written to somewhere. The ``images-dir`` parameter is the place to
-write them.
+.. attr:: build-log-retention
+   :default: 7
+   :type: int
 
-Example::
+   At the start of each build, the builder will remove old build logs if
+   they exceed this value.  This option specifies how many will be
+   kept (usually you will see one more, as deletion happens before
+   starting a new build).  By default, the last 7 old build logs are
+   kept.
 
-  images-dir: /path/to/images/dir
+.. attr:: zookeeper-servers
+   :type: list
 
-.. _build-log-dir:
+   Lists the ZooKeeper servers uses for coordinating information between
+   nodepool workers.
 
-build-log-dir
--------------
+   .. code-block:: yaml
 
-The builder will store build logs in this directory.  It will create
-one file for each build, named `<image>-<build-id>.log`; for example,
-`fedora-0000000004.log`.  It defaults to ``/var/log/nodepool/builds``.
+      zookeeper-servers:
+        - host: zk1.example.com
+          port: 2181
+          chroot: /nodepool
 
-Example::
+   Each entry is a dictionary with the following values
 
-  build-log-dir: /path/to/log/dir
+   .. attr:: host
+      :type: str
+      :example: zk1.example.com
+      :required:
 
-.. _build-log-retention:
+      A zookeeper host
 
-build-log-retention
--------------------
+   .. attr:: port
+      :default: 2181
+      :type: int
 
-At the start of each build, the builder will remove old build logs if
-they exceed a certain number.  This option specifies how many will be
-kept (usually you will see one more, as deletion happens before
-starting a new build).  By default, the last 7 old build logs are
-kept.
+      Port to talk to zookeeper
 
-Example::
+   .. attr:: chroot
+      :type: int
+      :example: /nodepool
 
-  build-log-retention: 14
-
-zookeeper-servers
------------------
-Lists the ZooKeeper servers uses for coordinating information between
-nodepool workers. Example::
-
-  zookeeper-servers:
-    - host: zk1.example.com
-      port: 2181
-      chroot: /nodepool
-
-The ``port`` key is optional (default: 2181).
-
-The ``chroot`` key, used for interpreting ZooKeeper paths relative to
-the supplied root path, is also optional and has no default.
+      The ``chroot`` key, used for interpreting ZooKeeper paths
+      relative to the supplied root path, is also optional and has no
+      default.
 
 .. _labels:
 
-labels
-------
+.. attr:: labels
+   :type: list
 
-Defines the types of nodes that should be created.  Jobs should be
-written to run on nodes of a certain label. Example::
+    Defines the types of nodes that should be created.  Jobs should be
+    written to run on nodes of a certain label. Example
 
-  labels:
-    - name: my-precise
-      max-ready-age: 3600
-      min-ready: 2
-    - name: multi-precise
-      min-ready: 2
+    .. code-block:: yaml
 
-**required**
+        labels:
+         - name: my-precise
+           max-ready-age: 3600
+           min-ready: 2
+         - name: multi-precise
+           min-ready: 2
 
-  ``name``
-    Unique name used to tie jobs to those instances.
+    Each label is a dictionary of the following type
 
-**optional**
+    .. attr:: name
+       :type: string
+       :required:
 
-  ``max-ready-age`` (int)
-    Maximum number of seconds the node shall be in ready state. If
-    this is exceeded the node will be deleted. A value of 0 disables this.
-    Defaults to 0.
+       Unique name used to tie jobs to those instances.
 
-  ``min-ready`` (default: 0)
-    Minimum number of instances that should be in a ready
-    state. Nodepool always creates more nodes as necessary in response
-    to demand, but setting ``min-ready`` can speed processing by
-    attempting to keep nodes on-hand and ready for immedate use.
-    ``min-ready`` is best-effort based on available capacity and is
-    not a guaranteed allocation.  The default of 0 means that nodepool
-    will only create nodes of this label when there is demand.  Set
-    to -1 to have the label considered disabled, so that no nodes will
-    be created at all.
+    .. attr:: max-ready-age
+       :type: int
+       :default: 0
 
-.. _maxholdage:
+        Maximum number of seconds the node shall be in ready state. If
+        this is exceeded the node will be deleted. A value of 0 disables
+        this.
 
-max-hold-age
-------------
+    .. attr:: min-ready
+       :type: int
+       :default: 0
 
-Maximum number of seconds a node shall be in "hold" state. If
-this is exceeded the node will be deleted. A value of 0 disables this.
-Defaults to 0.
+       Minimum number of instances that should be in a ready
+       state. Nodepool always creates more nodes as necessary in response
+       to demand, but setting ``min-ready`` can speed processing by
+       attempting to keep nodes on-hand and ready for immedate use.
+       ``min-ready`` is best-effort based on available capacity and is
+       not a guaranteed allocation.  The default of 0 means that nodepool
+       will only create nodes of this label when there is demand.  Set
+       to -1 to have the label considered disabled, so that no nodes will
+       be created at all.
 
-This setting is applied to all nodes, regardless of label or provider.
+
+.. attr:: max-hold-age
+   :type: int
+   :default: 0
+
+   Maximum number of seconds a node shall be in "hold" state. If
+   this is exceeded the node will be deleted. A value of 0 disables this.
+
+   This setting is applied to all nodes, regardless of label or provider.
 
 .. _diskimages:
 
@@ -230,7 +243,7 @@ Example configuration::
 
   ``name``
     Identifier to reference the disk image in :ref:`provider_diskimages`
-    and :ref:`labels`.
+    and :attr:`labels`.
 
 **optional**
 
@@ -251,7 +264,7 @@ Example configuration::
 
   ``elements`` (list)
     Enumerates all the elements that will be included when building the image,
-    and will point to the :ref:`elements-dir` path referenced in the same
+    and will point to the :attr:`elements-dir` path referenced in the same
     config file.
 
   ``env-vars`` (dict)
@@ -556,7 +569,7 @@ Example configuration::
 **required**
 
   ``name``
-    Identifier to refer this image from :ref:`labels` and :ref:`diskimages`
+    Identifier to refer this image from :attr:`labels` and :ref:`diskimages`
     sections.
 
 **optional**
@@ -589,7 +602,7 @@ Example configuration::
 cloud-images
 ~~~~~~~~~~~~
 
-Each cloud-image entry in :ref:`labels` refers to an entry in this section.
+Each cloud-image entry in :attr:`labels` refers to an entry in this section.
 This is a way for modifying launch parameters of the nodes (currently only
 config-drive).
 
@@ -605,7 +618,7 @@ Example configuration::
 **required**
 
   ``name``
-    Identifier to refer this cloud-image from :ref:`labels` section.
+    Identifier to refer this cloud-image from :attr:`labels` section.
     Since this name appears elsewhere in the nodepool configuration
     file, you may want to use your own descriptive name here and use
     one of ``image-id`` or ``image-name`` to specify the cloud image
@@ -662,7 +675,7 @@ Example configuration::
 **required**
 
   ``name``
-    Identifier to refer this image from :ref:`labels` and :ref:`diskimages`
+    Identifier to refer this image from :attr:`labels` and :ref:`diskimages`
     sections.
 
 **one of**
