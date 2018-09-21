@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_66ccb333",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-09-21T06:46:59Z",
+      "side": 1,
+      "message": "See comments in https://review.openstack.org/#/c/603988/ for the reasons behind wanting this (required reading for following to make sense ...)\n\nI *think* in the immediate case, we should be fine to set the property for glean to ignore network configuration on all hosts in in all regions for OVH.  \"pre-upgrade\" regions are not exposing networking config in metadata so it will not matter that glean ignores it.  glean will see this property on post-upgrade hosts and ignore the new network configuration.\n\nbut we should perhaps consider that we may need to inject properties for hosts in only one region.  again, I *think* what you\u0027d have to do is split up your config to not have multiple regions under the one provider.  thoughts on that welcome.",
+      "revId": "7015bd9af4bcb8c494cf5f860e2c64e0698de999",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
