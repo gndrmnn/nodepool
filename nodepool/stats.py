@@ -110,7 +110,10 @@ class StatsReporter(object):
                 key = 'nodepool.label.%s.nodes.%s' % (label, state)
                 states[key] = 0
 
-        for node in zk_conn.nodeIterator():
+        # Note that we intentionally don't use caching here because we don't
+        # know when the next update will happen and thus need to report the
+        # correct most recent state.
+        for node in zk_conn.nodeIterator(cached=False):
             # nodepool.nodes.STATE
             key = 'nodepool.nodes.%s' % node.state
             states[key] += 1
