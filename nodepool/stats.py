@@ -110,7 +110,9 @@ class StatsReporter(object):
                 key = 'nodepool.label.%s.nodes.%s' % (label, state)
                 states[key] = 0
 
-        for node in zk_conn.nodeIterator():
+        # Note that while functionally this could be cached we don't for now
+        # as this causes test races that are hard to fix.
+        for node in zk_conn.nodeIterator(cached=False):
             # nodepool.nodes.STATE
             key = 'nodepool.nodes.%s' % node.state
             states[key] += 1
