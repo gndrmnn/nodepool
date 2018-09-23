@@ -1831,7 +1831,9 @@ class ZooKeeper(object):
         MAX_DELETE_AGE = 5 * 60
 
         candidates = []
-        for node in self.nodeIterator():
+        # We need to double check each node we work on anyway so we can safely
+        # iterate on cached nodes.
+        for node in self.nodeIterator(cached=True):
             if node.provider == provider_name and node.pool == pool_name:
                 # A READY node that has been allocated will not be considered
                 # a candidate at this point. If allocated_to gets reset during
