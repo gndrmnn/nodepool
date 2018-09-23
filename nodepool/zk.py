@@ -1912,7 +1912,7 @@ class ZooKeeper(object):
         :param str pool_name: The pool name.
         '''
         count = 0
-        for node in self.nodeIterator():
+        for node in self.nodeIterator(cached=True):
             if node.provider == provider_name and node.pool == pool_name:
                 count = count + 1
         return count
