@@ -149,7 +149,9 @@ class OpenStackProvider(Provider):
         '''
         used_quota = QuotaInformation()
 
-        for node in self._zk.nodeIterator():
+        # Quota handling is racy by design and we can handle that so it is safe
+        # here to iterate over cached nodes.
+        for node in self._zk.nodeIterator(cached=True):
             if node.provider == self.provider.name:
                 if pool and not node.pool == pool.name:
                     continue
