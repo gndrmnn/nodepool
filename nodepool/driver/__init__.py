@@ -414,7 +414,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         needed_types = list(diff.elements())
 
         if self.request.reuse:
-            ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+            # We need to lock any ready node before working on it anyway. So it
+            # is safe to iterate over cached nodes.
+            ready_nodes = self.zk.getReadyNodesOfTypes(
+                needed_types, cached=True)
         else:
             ready_nodes = []
 
