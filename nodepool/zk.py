@@ -1789,11 +1789,12 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             pass
 
-    def getReadyNodesOfTypes(self, labels):
+    def getReadyNodesOfTypes(self, labels, cached=False):
         '''
         Query ZooKeeper for unused/ready nodes.
 
         :param list labels: The node types we want.
+        :param bool cached: Work on cached nodes.
 
         :returns: A dictionary, keyed by node type, with lists of Node objects
             that are ready, or an empty dict if none are found. A node may
@@ -1801,7 +1802,7 @@ class ZooKeeper(object):
             those labels.
         '''
         ret = {}
-        for node in self.nodeIterator():
+        for node in self.nodeIterator(cached=cached):
             if node.state != READY or node.allocated_to:
                 continue
             for label in labels:

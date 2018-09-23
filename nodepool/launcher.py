@@ -487,7 +487,10 @@ class CleanupWorker(BaseCleanupWorker):
                 label_names.append(label_name)
 
         zk_conn = self._nodepool.getZK()
-        ready_nodes = zk_conn.getReadyNodesOfTypes(label_names)
+        # We are locking and re-fetching any node we operate on. So it is safe
+        # to work on cached nodes which might be a few milliseconds behind
+        # the truth.
+        ready_nodes = zk_conn.getReadyNodesOfTypes(label_names, cached=True)
 
         for label_name in ready_nodes:
             # get label from node
