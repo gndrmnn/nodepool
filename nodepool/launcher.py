@@ -392,7 +392,9 @@ class CleanupWorker(BaseCleanupWorker):
         if req.state != zk.PENDING:
             return
 
-        for node in zk_conn.nodeIterator():
+        # Don't use the cache here as we need sequential consistency with the
+        # node request here.
+        for node in zk_conn.nodeIterator(cached=False):
             if node.allocated_to == req.id:
                 try:
                     zk_conn.lockNode(node)
@@ -542,7 +544,9 @@ class CleanupWorker(BaseCleanupWorker):
         self.log.debug('Cleaning up held nodes...')
 
         zk_conn = self._nodepool.getZK()
-        held_nodes = [n for n in zk_conn.nodeIterator() if n.state == zk.HOLD]
+        # This is done asynchronously and is safe for caching.
+        held_nodes = [n for n in zk_conn.nodeIterator(cached=True)
+                      if n.state == zk.HOLD]
         for node in held_nodes:
             # Can't do anything if we aren't configured for this provider.
             if node.provider not in self._nodepool.config.providers:
@@ -643,7 +647,8 @@ class DeletedNodeWorker(BaseCleanupWorker):
                           zk.DELETING, zk.ABORTED)
 
         zk_conn = self._nodepool.getZK()
-        for node in zk_conn.nodeIterator():
+        # This does a delayed cleanup so we can safely work on cached data.
+        for node in zk_conn.nodeIterator(cached=True):
             # If a ready node has been allocated to a request, but that
             # request is now missing, deallocate it.
             if (node.state == zk.READY and node.allocated_to
