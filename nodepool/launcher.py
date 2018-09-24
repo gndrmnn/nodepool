@@ -643,7 +643,8 @@ class DeletedNodeWorker(BaseCleanupWorker):
                           zk.DELETING, zk.ABORTED)
 
         zk_conn = self._nodepool.getZK()
-        for node in zk_conn.nodeIterator():
+        # This does a delayed cleanup so we can safely work on cached data.
+        for node in zk_conn.nodeIterator(cached=True):
             # If a ready node has been allocated to a request, but that
             # request is now missing, deallocate it.
             if (node.state == zk.READY and node.allocated_to
