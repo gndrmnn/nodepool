@@ -303,6 +303,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: debian-stretch
             diskimage: debian-stretch
             min-ram: 512
@@ -311,6 +312,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: fedora-27
             diskimage: fedora-27
             min-ram: 1024
@@ -319,6 +321,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: ubuntu-bionic
             diskimage: ubuntu-bionic
             min-ram: 512
@@ -327,6 +330,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: ubuntu-trusty
             diskimage: ubuntu-trusty
             min-ram: 512
@@ -335,6 +339,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: ubuntu-xenial
             diskimage: ubuntu-xenial
             min-ram: 512
@@ -343,6 +348,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: opensuse-423
             diskimage: opensuse-423
             min-ram: 512
@@ -351,6 +357,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: opensuse-150
             diskimage: opensuse-150
             min-ram: 512
@@ -359,6 +366,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: opensuse-tumbleweed
             diskimage: opensuse-tumbleweed
             min-ram: 512
@@ -367,6 +375,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
           - name: gentoo-17-0-systemd
             diskimage: gentoo-17-0-systemd
             min-ram: 512
@@ -375,6 +384,7 @@ providers:
             key-name: $NODEPOOL_KEY_NAME
             instance-properties:
               nodepool_devstack: testing
+              glean_ignore_interfaces: True
 
 diskimages:
   - name: centos-7
