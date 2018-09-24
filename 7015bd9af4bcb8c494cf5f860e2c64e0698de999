@@ -16,6 +16,24 @@
       "revId": "7015bd9af4bcb8c494cf5f860e2c64e0698de999",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a10fe7de",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-09-24T16:51:00Z",
+      "side": 1,
+      "message": "OpenStack Infra\u0027s config does use different providers for each region so this should be fine.\n\nThis is pretty normal because flavor sizes and such don\u0027t always line up across cloud regions within the same cloud.",
+      "parentUuid": "3f79a3b5_66ccb333",
+      "revId": "7015bd9af4bcb8c494cf5f860e2c64e0698de999",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
