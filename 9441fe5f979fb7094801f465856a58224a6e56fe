@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_80d8b324",
+        "filename": "doc/requirements.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-09-24T06:37:15Z",
+      "side": 1,
+      "message": "Note this this so we can get a CI run with the updated formatting",
+      "revId": "9441fe5f979fb7094801f465856a58224a6e56fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_e0d2c7fd",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-09-24T06:37:15Z",
+      "side": 1,
+      "message": "Note this is the only bit I\u0027m a little unhappy with, but I think it\u0027s OK unless someone wants to do a lot of work on zuul-sphinx.\n\nWithout this, you\u0027ll get conflicts between, say :attr:`providers.pool` for the static and openstack driver.  By doing this we have :attr:`providers.openstack.pool` and :attr:`providers.static.pool`",
+      "revId": "9441fe5f979fb7094801f465856a58224a6e56fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
