@@ -58,10 +58,13 @@ class OpenStackProvider(Provider):
             self._taskmanager.start()
         self.resetClient()
         self._zk = zk_conn
+        self._running = True
 
     def stop(self):
+        self.log.debug('STOP PROVIDER: %s', id(self))
         if self._taskmanager:
             self._taskmanager.stop()
+        self._running = False
 
     def join(self):
         if self._taskmanager:

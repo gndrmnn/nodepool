@@ -150,6 +150,9 @@ class ProviderNotifications(object):
 
 
 class Provider(ProviderNotifications, metaclass=abc.ABCMeta):
+
+    _running = False
+
     """The Provider interface
 
     Drivers implement this interface to supply Providers.  Each
@@ -187,6 +190,11 @@ class Provider(ProviderNotifications, metaclass=abc.ABCMeta):
 
         """
         pass
+
+    @property
+    def running(self):
+        """Get running state of this provider"""
+        return self._running
 
     @abc.abstractmethod
     def join(self):
@@ -669,9 +677,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             else:
                 self.failed_nodes.append(node)
 
-        # If the request has been pulled, unallocate the node set so other
-        # requests can use them.
-        if not self.zk.getNodeRequest(self.request.id):
+        # If the request has been pulled or the manager has been stopped,
+        # unallocate the node set so other requests can use them.
+        if not self.zk.getNodeRequest(self.request.id) \
+                or not self.manager.running:
+
             self.log.info("Node request %s disappeared", self.request.id)
             for node in self.nodeset:
                 node.allocated_to = None
