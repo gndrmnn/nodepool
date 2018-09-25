@@ -2,4 +2,4 @@ sphinx>=1.6.1
 sphinxcontrib-programoutput
 sphinxcontrib-httpdomain
 reno>=2.5.0 # Apache-2.0
--e git+https://git.openstack.org/openstack-infra/zuul-sphinx@refs/changes/67/604267/1#egg=zuul-sphinx
+-e git+https://git.openstack.org/openstack-infra/zuul-sphinx@refs/changes/80/604980/1#egg=zuul-sphinx
