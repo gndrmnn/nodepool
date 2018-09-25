@@ -290,11 +290,13 @@ class StaticNodeProvider(Provider):
     def start(self, zk_conn):
         try:
             self._start(zk_conn)
+            self._running = True
         except Exception:
             self.log.exception("Cannot start static provider:")
 
     def stop(self):
         self.log.debug("Stopping")
+        self._running = False
 
     def listNodes(self):
         registered = self.getRegisteredNodeHostnames()
