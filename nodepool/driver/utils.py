@@ -25,6 +25,7 @@ from kazoo import exceptions as kze
 from nodepool import exceptions
 from nodepool import stats
 from nodepool import zk
+from nodepool.task_manager import ManagerStoppedException
 
 
 class NodeLauncher(threading.Thread,
@@ -80,6 +81,23 @@ class NodeLauncher(threading.Thread,
             self.node.state = zk.ABORTED
             self.zk.storeNode(self.node)
             statsd_key = 'error.quota'
+        except ManagerStoppedException:
+            # If we encountered this exception the manager was stopped most
+            # likely due to a config change. In single cloud use cases we may
+            # not fail the node in this case because this will fail the
+            # request. Instead abort the node and treat it like a quota failure
+            # so it can be retried with the new manager.
+            self.log.info("Aborting node %s due to stopped manager" %
+                          self.node.id)
+            self.node.state = zk.ABORTED
+            self.zk.storeNode(self.node)
+            statsd_key = 'error.stopped_manager'
+
+            # TODO: To make this work we need to detach all existing nodes from
+            # the node request, pretend that we never worked on this request
+            # and unlock it. In this case it should be possible for the new
+            # same provider to lock and fulfill the node request again.
+            raise Exception('unimplemented')
         except Exception as e:
             self.log.exception(
                 "Launch failed for node %s:", self.node.hostname)
