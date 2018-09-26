@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_37144741",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 836,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-26T13:44:46Z",
+      "side": 1,
+      "message": "Looks like this is causing the docs job to fail:\n\n  \"(if the link has no caption the label must precede a section header)\"",
+      "range": {
+        "startLine": 836,
+        "startChar": 0,
+        "endLine": 836,
+        "endChar": 15
+      },
+      "revId": "cf5cdba13e75af9e057fe56e9432fd6909500199",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_17182b1c",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-26T13:44:46Z",
+      "side": 1,
+      "message": "Other attributes (image, image_pull, etc) appear to be set in load() that need to be considered here.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "cf5cdba13e75af9e057fe56e9432fd6909500199",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_d7863317",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-26T13:44:46Z",
+      "side": 1,
+      "message": "We should make this configurable.",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 25
+      },
+      "revId": "cf5cdba13e75af9e057fe56e9432fd6909500199",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
