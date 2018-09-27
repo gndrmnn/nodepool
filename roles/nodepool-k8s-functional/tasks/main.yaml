@@ -1,0 +1,45 @@
+- name: debug context names
+  command: kubectl config get contexts
+
+- name: Get kube context name
+  shell: kubectl config get-contexts | awk '/*/ { print $2 }'
+  register: k8s_context
+
+- name: Update nodepool.yaml
+  content: |
+    zookeeper-servers:
+      - host: localhost
+    images-dir: "{{ ansible_user_dir }}/work/images/"
+    build-log-dir: "{{ ansible_user_dir }}/work/logs/nodepool/"
+    labels:
+      - name: kubernetes-namespace
+        min-ready: 1
+      - name: pod-fedora
+        min-ready: 1
+    providers:
+      - name: minikube
+        driver: kubernetes
+        context: {{ k8s_context.stdout }}
+        pools:
+          - name: main
+            labels:
+              - name: kubernetes-namespace
+                type: namespace
+              - name: pod-fedora
+                type: pod
+                image: docker.io/fedora:28
+  dest: "{{ ansible_user_dir }}/work/etc/nodepool.yaml"
+
+- name: Set nodepool_command facts
+  set_fact:
+    nodepool_command: nodepool -c "{{ ansible_user_dir }}/work/etc/nodepool.yaml"
+
+- name: Wait for nodes
+  command: "{{ nodepool_command }} list"
+  register: nodepool_list
+  until: nodepool_list.stdout
+  retries: 120
+  delay: 2
+
+- name: Show nodes
+  command: "{{ nodepool_command }} list"
