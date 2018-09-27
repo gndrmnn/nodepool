@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_957dfab3",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-09-27T13:38:52Z",
+      "side": 1,
+      "message": "Oops! I was looking in the wrong class. Nevermind. :)",
+      "parentUuid": "3f79a3b5_5a279864",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 46
+      },
+      "revId": "cf5cdba13e75af9e057fe56e9432fd6909500199",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_d7863317",
         "filename": "nodepool/driver/kubernetes/handler.py",
         "patchSetId": 12
