@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_711e2bbc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "Can you elaborate on this a bit?  What exactly isn\u0027t implemented yet?  Maybe we could just omit this, or turn it into a TODO.  Mostly I\u0027m wondering what\u0027s the most helpful thing to tell users here.",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_911987d2",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "pool\u0027s (wrong quote)",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_3176730e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "Can you avoid the ellipsis?  It looks unfinished.  Maybe \"and other kubernetes resources\"?",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_5179aff8",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "This is a dictionary, not a port number.  (see below)",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_f17f9bdc",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "This is the name of the pod (which is the same as the label), not an IP address.\n\nIt\u0027s okay to extend the information in the zk node structure to support new kinds of information -- we don\u0027t need to re-use IP and port.  Or is that what the k8s module expects in the Ansible inventory?  Can you write a code comment that describes the information and schema that we need to send back for Zuul to use (in both cases), and how it fits into the ZK node structure and Ansible inventory?",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_d11fffb5",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-09-27T17:55:40Z",
+      "side": 1,
+      "message": "Maybe we should have a non-zuul-specific username here.  Perhaps \"nodepool\" or \"admin\"?",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
