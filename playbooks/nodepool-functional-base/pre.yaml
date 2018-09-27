@@ -5,7 +5,11 @@
       bindep_profile: default
 
   tasks:
-    - name: Ensure nodepool output log directory
+    - name: Ensure nodepool services directories
       file:
-        path: '{{ ansible_user_dir }}/work/logs/nodepool'
+        path: '{{ ansible_user_dir }}/work/{{ item }}'
         state: directory
+      with_items:
+        - logs/nodepool
+        - etc
+        - images
