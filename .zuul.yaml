@@ -119,6 +119,13 @@
       devstack_localrc:
         NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB: false
 
+- job:
+    description: |
+      Test that nodepool works with kubernetes.
+    name: nodepool-functional-k8s
+    run: playbooks/nodepool-functional-k8s/run.yaml
+    nodeset: ubuntu-xenial
+
 - project:
     check:
       jobs:
@@ -132,6 +139,7 @@
             voting: false
         - nodepool-functional-py35-src:
             voting: false
+        - nodepool-functional-k8s
         - pbrx-build-container-images:
             vars:
               pbrx_prefix: zuul

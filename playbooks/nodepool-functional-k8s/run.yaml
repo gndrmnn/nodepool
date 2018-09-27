@@ -1,0 +1,26 @@
+- hosts: all
+  #roles:
+  #  - install-docker
+
+  tasks:
+    - name: Check if kubernetes is installed
+      stat: path=/etc/kubernetes/admin.conf
+      register: admin_conf
+
+    - name: Install apt key
+      apt_key:
+        url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+        state: present
+      when: not admin_conf.stat.exists
+
+    - name: Add kubernetes repo
+      apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+      when: not admin_conf.stat.exists
+
+    - name: Install kubernetes packages
+      apt:
+        name: kubectl
+        update_cache: yes
+      when: not admin_conf.stat.exists
