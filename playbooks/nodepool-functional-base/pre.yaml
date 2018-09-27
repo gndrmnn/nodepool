@@ -1,9 +1,7 @@
 - hosts: all
   roles:
-    - run-devstack
     - role: bindep
       bindep_profile: default
-
   tasks:
     - name: Ensure nodepool output log directory
       file:

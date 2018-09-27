@@ -119,22 +119,32 @@
       devstack_localrc:
         NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB: false
 
+- job:
+    description: |
+      Test that nodepool works with kubernetes.
+    name: nodepool-functional-k8s
+    pre-run: playbooks/nodepool-functional-k8s/pre.yaml
+    run: playbooks/nodepool-functional-k8s/run.yaml
+    nodeset: ubuntu-xenial
+
 - project:
     check:
       jobs:
-        - tox-cover
-        - tox-docs
-        - tox-pep8
-        - tox-py35
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
-        - pbrx-build-container-images:
-            vars:
-              pbrx_prefix: zuul
+        # disabled until k8s job works
+        #- tox-cover
+        #- tox-docs
+        #- tox-pep8
+        #- tox-py35
+        #- nodepool-zuul-functional:
+        #    voting: false
+        #- nodepool-functional-py35:
+        #    voting: false
+        #- nodepool-functional-py35-src:
+        #    voting: false
+        - nodepool-functional-k8s
+        #- pbrx-build-container-images:
+        #    vars:
+        #      pbrx_prefix: zuul
     gate:
       jobs:
         - tox-docs
