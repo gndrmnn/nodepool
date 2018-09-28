@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_27d38e39",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "Per pool max-namespace is not implemented yet. Right now, labels use the pool name only for external id. When max-namespace is implemented, then it will more easy to understand pool concept for k8s.",
+      "parentUuid": "3f79a3b5_711e2bbc",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_911987d2",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 13
@@ -30,6 +48,24 @@
       "writtenOn": "2018-09-27T17:55:40Z",
       "side": 1,
       "message": "pool\u0027s (wrong quote)",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_67e8a6de",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "above openstack pool has the same typo, i thought it was on purpose or something :)",
+      "parentUuid": "3f79a3b5_911987d2",
       "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_47c6ca6a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "yes, there is a finite amount of access that are configured. maybe the acl should be part of label definition?",
+      "parentUuid": "3f79a3b5_3176730e",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_5179aff8",
         "filename": "nodepool/driver/kubernetes/handler.py",
         "patchSetId": 13
@@ -64,6 +118,24 @@
       "writtenOn": "2018-09-27T17:55:40Z",
       "side": 1,
       "message": "This is a dictionary, not a port number.  (see below)",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a78c7e39",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "yes, to keep things simple, all resources informations are stored in the connection_port. This could be expanded to the znode schema.",
+      "parentUuid": "3f79a3b5_5179aff8",
       "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_c7ae5a80",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "It\u0027s the name of the pod, and this what is expected by the kubectl connection plugin. I re-used existing schema (interface_ip and connection_port) to keep the code simple, but we could make explicit znode fields if you prefer, however this would need more logic in zuul. We are looking at:\n\n* namespace: the name of the namespace\n* host: the k8s endpoint host (including port)\n* skiptls: api tls verification boolean\n* user: the service account name\n* token: the service account token\n* ca_crt: needed by kubectl if skiptls is false\n* interface_ip: the pod name\n\nThis is what we need to enable executor to use k8s namespace.\n\nThe pod name may be randomized, especially if we enable nodepool to use a single namespace, in that case each pod name should contain the nodepool_node_id.",
+      "parentUuid": "3f79a3b5_f17f9bdc",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_d11fffb5",
         "filename": "nodepool/driver/kubernetes/provider.py",
         "patchSetId": 13
@@ -98,6 +188,24 @@
       "writtenOn": "2018-09-27T17:55:40Z",
       "side": 1,
       "message": "Maybe we should have a non-zuul-specific username here.  Perhaps \"nodepool\" or \"admin\"?",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_e7aa7682",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-09-28T03:07:15Z",
+      "side": 1,
+      "message": "That\u0027s the user name of the token used by zuul. Nodepool or admin user may already be in used, by nodepool or the admin... It seems less confusing to name it zuul (or in this case, zuul-worker).",
+      "parentUuid": "3f79a3b5_d11fffb5",
       "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
