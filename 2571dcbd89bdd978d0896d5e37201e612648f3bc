@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_8f203b9c",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-01T21:08:48Z",
+      "side": 1,
+      "message": "But how is zuul supposed to know this isn\u0027t an interface IP anymore? This is all information that zuul is not expecting and currently doesn\u0027t know how to use.",
+      "parentUuid": "3f79a3b5_c7ae5a80",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_d11fffb5",
         "filename": "nodepool/driver/kubernetes/provider.py",
         "patchSetId": 13
