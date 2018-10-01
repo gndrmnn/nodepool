@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_cfeb930f",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-01T21:20:50Z",
+      "side": 1,
+      "message": "Ok, nevermind. Had to go back and re-read the zuul spec. I suppose zuul could determine the information that is in interface_ip based on connection type?",
+      "parentUuid": "3f79a3b5_8f203b9c",
+      "revId": "2571dcbd89bdd978d0896d5e37201e612648f3bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_d11fffb5",
         "filename": "nodepool/driver/kubernetes/provider.py",
         "patchSetId": 13
