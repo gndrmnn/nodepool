@@ -126,6 +126,8 @@
         - tox-docs
         - tox-pep8
         - tox-py35
+        - tox-py36:
+            nodeset: ubuntu-bionic
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-py35:
@@ -140,6 +142,8 @@
         - tox-docs
         - tox-pep8
         - tox-py35
+        - tox-py36:
+            nodeset: ubuntu-bionic
         - pbrx-build-container-images:
             vars:
               pbrx_prefix: zuul
