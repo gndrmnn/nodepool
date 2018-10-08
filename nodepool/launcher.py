@@ -470,8 +470,13 @@ class CleanupWorker(BaseCleanupWorker):
         Allow each provider manager a chance to cleanup resources.
         '''
         for provider in self._nodepool.config.providers.values():
-            manager = self._nodepool.getProviderManager(provider.name)
-            manager.cleanupLeakedResources()
+            try:
+                manager = self._nodepool.getProviderManager(provider.name)
+                manager.cleanupLeakedResources()
+            except KeyError:
+                # The provider manager has been removed under us. This can be
+                # ignored.
+                pass
 
     def _cleanupMaxReadyAge(self):
         '''
