@@ -38,6 +38,10 @@ class K8SLauncher(NodeLauncher):
             resource = self.handler.manager.createPod(
                 self.node, self.handler.pool.name, self.label)
 
+        # We need to set a node type/label so we can use some methods of
+        # our API in zk.py (e.g., getReadyNodesOfTypes()).
+        self.node.type = "kubernetes"
+
         self.node.state = zk.READY
         # NOTE: resource access token may be encrypted here
         self.node.connection_port = resource
