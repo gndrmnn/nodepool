@@ -136,7 +136,7 @@
         - tox-docs
         - tox-pep8
         - tox-py35
-        - tox-py36:
+        - tox-py36
             nodeset: ubuntu-bionic
         - nodepool-zuul-functional:
             voting: false
