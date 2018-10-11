@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added a resource cleanup phase to the OpenStack driver that will delete
+    any ports reported in the DOWN state. This cleanup happens every 3 minutes
+    by default.
