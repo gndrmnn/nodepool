@@ -50,6 +50,8 @@ class OpenStackProvider(Provider):
         self._taskmanager = None
         self._current_nodepool_quota = None
         self._zk = None
+        self._down_ports = None
+        self._last_port_cleanup = None
 
     def start(self, zk_conn):
         if self._use_taskmanager:
@@ -417,6 +419,21 @@ class OpenStackProvider(Provider):
             **meta)
         return image.id
 
+    def listPorts(self, status=None):
+        '''
+        List known ports.
+
+        :param str status: A valid port status. E.g., 'ACTIVE' or 'DOWN'.
+        '''
+        if status:
+            ports = self._client.list_ports(filters={'status': status})
+        else:
+            ports = self._client.list_ports()
+        return ports
+
+    def deletePort(self, port):
+        self._client.delete_port(port.id)
+
     def listImages(self):
         return self._client.list_images()
 
@@ -444,7 +461,7 @@ class OpenStackProvider(Provider):
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
 
-    def cleanupLeakedResources(self):
+    def cleanupLeakedInstances(self):
         '''
         Delete any leaked server instances.
 
@@ -492,6 +509,33 @@ class OpenStackProvider(Provider):
                 node.state = zk.DELETING
                 self._zk.storeNode(node)
 
+    def cleanupLeakedPorts(self):
+        if not self._last_port_cleanup:
+            self._last_port_cleanup = time.monotonic()
+            return
+
+        # Return if not enough time has passed between cleanup
+        last_check_in_secs = int(time.monotonic() - self._last_port_cleanup)
+        if last_check_in_secs <= 3 * 60:
+            return
+
+        ports = self.listPorts(status='DOWN')
+        current_set = set([(p.id, p.status) for p in ports])
+
+        if not self._down_ports:
+            self._down_ports = current_set
+            return
+
+        remove_set = current_set & self._down_ports
+
+        for port in remove_set:
+            self.log.debug("Removing DOWN port %s", port[0])
+            self.deletePort(port[0])
+            self._down_ports = self._down_ports - set([port])
+
+    def cleanupLeakedResources(self):
+        self.cleanupLeakedInstances()
+        self.cleanupLeakedPorts()
         if self.provider.clean_floating_ips:
             self._client.delete_unattached_floating_ips()
 
