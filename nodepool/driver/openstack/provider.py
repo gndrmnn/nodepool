@@ -417,6 +417,14 @@ class OpenStackProvider(Provider):
             **meta)
         return image.id
 
+    def listDownPorts(self):
+        # TODO(Shrews): Test this
+        return self._client.list_ports(filters={'status': 'DOWN'})
+
+    def deletePort(self, port):
+        # TODO(Shrews): Test this
+        self._client.delete_port(port.id)
+
     def listImages(self):
         return self._client.list_images()
 
@@ -444,7 +452,7 @@ class OpenStackProvider(Provider):
         self.log.debug('Deleting server %s' % server_id)
         self.deleteServer(server_id)
 
-    def cleanupLeakedResources(self):
+    def cleanupLeakedInstances(self):
         '''
         Delete any leaked server instances.
 
@@ -492,6 +500,21 @@ class OpenStackProvider(Provider):
                 node.state = zk.DELETING
                 self._zk.storeNode(node)
 
+    def cleanupLeakedPorts(self):
+        if not self.down_ports:
+            self.down_ports = self.listDownPorts()
+
+        # if not enough time (3m?) has passed between calls to check down ports
+        #    return
+        # down = self.listDownPorts()
+        # remove_ports = intersection(self.down, down)
+        # for port in remove_ports:
+        #    self.deletePort(port)
+
+
+    def cleanupLeakedResources(self):
+        self.cleanupLeakedInstances()
+        self.cleanupLeakedPorts()
         if self.provider.clean_floating_ips:
             self._client.delete_unattached_floating_ips()
 
