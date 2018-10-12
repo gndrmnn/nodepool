@@ -534,7 +534,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # For min-ready requests, which do not re-use READY nodes, let's
         # decline if this provider is already at capacity. Otherwise, we
         # could end up wedged until another request frees up a node.
-        if self.pool.max_servers is not None and \
+        if self.pool.max_servers < math.inf and \
            self.request.requestor == "NodePool:min-ready":
             current_count = self.zk.countPoolNodes(self.provider.name,
                                                    self.pool.name)
