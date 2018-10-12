@@ -1,0 +1,11 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 12 Oct 2018 20:21:09 +0000
+Reviewed-on: https://review.openstack.org/610090
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
