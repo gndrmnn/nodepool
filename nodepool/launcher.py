@@ -148,14 +148,18 @@ class PoolWorker(threading.Thread):
     # Private methods
     # ---------------------------------------------------------------
 
-    def _assignHandlers(self):
+    def _assignHandlers(self, timeout=15):
         '''
         For each request we can grab, create a NodeRequestHandler for it.
 
         The NodeRequestHandler object will kick off any threads needed to
         satisfy the request, then return. We will need to periodically poll
         the handler for completion.
+
+        If exceeds the timeout it yields during iteration in order to give us
+        time to call _removeCompletedHandlers.
         '''
+        start = time.monotonic()
         provider = self.getProviderConfig()
         if not provider:
             self.log.info("Missing config. Deleted provider?")
@@ -214,6 +218,11 @@ class PoolWorker(threading.Thread):
             if rh.paused:
                 self.paused_handler = rh
             self.request_handlers.append(rh)
+
+            # if we exceeded the timeout stop iterating here
+            if time.monotonic() - start > timeout:
+                yield
+                start = time.monotonic()
 
     def _removeCompletedHandlers(self):
         '''
@@ -299,7 +308,12 @@ class PoolWorker(threading.Thread):
 
             try:
                 if not self.paused_handler:
-                    self._assignHandlers()
+                    for _ in self._assignHandlers():
+                        # _assignHandlers can take quite some time on a busy
+                        # system so sprinkle _removeCompletedHandlers in
+                        # between such that we have a chance to fulfill
+                        # requests that already have all nodes.
+                        self._removeCompletedHandlers()
                 else:
                     # If we are paused, one request handler could not
                     # satisfy its assigned request, so give it
