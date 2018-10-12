@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_c79cf35c",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-12T00:01:48Z",
+      "side": 1,
+      "message": "I used this pause+compare externally in OSC, but since we\u0027re inside nodepool, we could actually correlate the port -\u003e instance mapping against active hosts, and then just purge any DOWN ports that are against instances we don\u0027t know about?\n\npossibly to make this easier the handler should put the associated port in after the create in [1], and we should track any DOWN ports no seen by that?\n\nI feel like it would be good to emit stats on this; i feel like we want to graph this because it indicates something is going wrong\n\nThe other thing is -- if this turns out to be a neutron bug in a very specific release/situation, either fixing it there and not worrying about it in nodepool -- or doing something with a cleanup function in OSC directly so everyone can use it (like delete_unattached_floating_ips) might be more appropriate.\n\n[1] https://git.openstack.org/cgit/openstack-infra/nodepool/tree/nodepool/driver/openstack/handler.py#n125",
+      "revId": "e54a506a53d5fe72979611b533345a287738c79c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
