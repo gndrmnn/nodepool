@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_83634141",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-10-12T13:35:34Z",
+      "side": 1,
+      "message": "Maybe it would be better to make `assignHandlers()` a generator (instead of returning False you would yield):\n\n    for _ in self._assignHandlers():\n        self._removeCompletedHandlers()\n\nThis way you don\u0027t refresh the the requests from ZK. Otherwise it might be that you will be stuck in this loop for quite some time as long as there are new requests and don\u0027t check self.runnning.",
+      "revId": "e45eaa971f3526974701cd7228e43b0261645ffc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
