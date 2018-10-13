@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_1a66a4ef",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2018-10-13T07:31:38Z",
+      "side": 1,
+      "message": "I think you should refresh the start time here. Otherwise this will yield after every loop iteration.",
+      "revId": "3759658427a891a278f049879e724b8622068e00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
