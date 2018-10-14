@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_06e406de",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-14T22:48:23Z",
+      "side": 1,
+      "message": "Looks like it has been this way since the original commit [1], so perhaps max_servers got changed from a default None to a math.inf and this just got missed?  So that\u0027s ok ...\n\nHowever, looking at this; we can probably agree no cloud has infinite resources :)  It\u0027s either a manually configured max_servers or we have a quota to be working within.\n\nSo this means a \"quota calculated cloud\" (i.e. max-servers unset, which is documented as using the cloud quotas, and thus \u003d\u003d math.inf) has always effectively skipped this check, as \"current_count \u003e\u003d self.pool.max_servers\" below would never be true.  So it has always fallen into self._waitForNodeSet() for min-ready nodes.  In short, a \"quota calculated cloud\" will *always* accept a min-ready request.\n\nAfter writing the above and reading the comments, including the TODO: below, I\u0027m clearly not the first person to think that this should interact with the quota calculations :)\n\nDoing a bit of digging, to my eyes it looks like this check became redundant when  \nI18594ab76949faddade3164b6027dd3b82771c95 introduced the self.hasProviderQuota() check above?  \n\nThus could we consider if this check is even relevant any more?  I don\u0027t see why we would explicitly make it such that clouds who we calculate quota for always accept min-ready requests, but those that set max-servers have this extra check. \n\n[1] https://review.openstack.org/#/c/535554/",
+      "revId": "e00685351cc9a1b85f82c9a45736395048c491a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
