@@ -16,6 +16,24 @@
       "revId": "e00685351cc9a1b85f82c9a45736395048c491a7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_383596a8",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-10-15T11:59:34Z",
+      "side": 1,
+      "message": "Hrm, I think we can remove this here but the idea of this looks to me like don\u0027t satisfy min-ready at all if we\u0027re at quota (which makes sense). So we actually should move the requestor \u003d\u003d \"NodePool:min-ready\" check to the quota checking and decline the request instead of pausing the handler.",
+      "parentUuid": "3f79a3b5_06e406de",
+      "revId": "e00685351cc9a1b85f82c9a45736395048c491a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
