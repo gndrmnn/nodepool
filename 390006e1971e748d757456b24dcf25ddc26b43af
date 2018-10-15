@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_4ff2fc6a",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-15T23:42:08Z",
+      "side": 1,
+      "message": "\"which do not re-use READY nodes\" ... that isn\u0027t quite right here?  If this request was satisfied by a ready node above, we wouldn\u0027t have got here.\n\nI\u0027m also not sure what \"wedged\" means in this context? That implies to me that there\u0027s a deadlock-y type situation which I don\u0027t think occurs.\n\nMy suggestion for this comment, if I\u0027m understanding, might be\n\n\"The point of the min-ready nodes is to have nodes on standby for future requests.  When at capacity, it doesn\u0027t make sense to wait for and use resources to speculatively create a node.  Decline this so someone else with capacity can take it\"",
+      "range": {
+        "startLine": 460,
+        "startChar": 1,
+        "endLine": 462,
+        "endChar": 35
+      },
+      "revId": "390006e1971e748d757456b24dcf25ddc26b43af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}

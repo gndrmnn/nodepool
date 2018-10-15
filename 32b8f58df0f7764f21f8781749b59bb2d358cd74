@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_af987019",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-15T23:42:08Z",
+      "side": 0,
+      "message": "at first I thought this was checking live quota, but now I read it, this check seems to be more \"this provider has 4 nodes and you\u0027ve requested 5, it\u0027s never going to fit\".",
+      "range": {
+        "startLine": 526,
+        "startChar": 8,
+        "endLine": 526,
+        "endChar": 64
+      },
+      "revId": "32b8f58df0f7764f21f8781749b59bb2d358cd74",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
