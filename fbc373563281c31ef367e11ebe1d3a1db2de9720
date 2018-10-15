@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_867576cb",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-15T00:28:51Z",
+      "side": 1,
+      "message": "Interesting ... presumably this is to allow installation from our mirror, but as you point out, package installation has already happened before this point.  So I\u0027m not sure what it\u0027s doing ...",
+      "revId": "fbc373563281c31ef367e11ebe1d3a1db2de9720",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
