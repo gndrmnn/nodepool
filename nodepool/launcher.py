@@ -373,6 +373,7 @@ class CleanupWorker(BaseCleanupWorker):
         # List of callable tasks we want to perform during cleanup, and a
         # brief description of the task.
         self._tasks = [
+            (self._cleanupDeclinedRequests, 'declined node request cleanup'),
             (self._cleanupNodeRequestLocks, 'node request lock cleanup'),
             (self._cleanupLeakedInstances, 'leaked instance cleanup'),
             (self._cleanupLostRequests, 'lost request cleanup'),
@@ -419,6 +420,47 @@ class CleanupWorker(BaseCleanupWorker):
         zk_conn.storeNodeRequest(req)
         self.log.info("Reset lost request %s", req.id)
 
+    def _failDeclinedRequest(self, zk_conn, req, launchers):
+        '''
+        Fail the request if it has been declined by all current providers.
+
+        :param ZooKeeper zk_conn: A ZooKeeper connection object.
+        :param NodeRequest req: The node request object
+        :param set launchers: A set with cached launcher ids
+        '''
+
+        # Check the state
+        if req.state != zk.REQUESTED:
+            return
+
+        if not launchers.issubset(set(req.declined_by)):
+            return
+
+        # Now we know that this is a candidate to fail so double check with
+        # lock and current data if this is still true.
+        try:
+            zk_conn.lockNodeRequest(req, blocking=False)
+        except exceptions.ZKLockException:
+            return
+
+        try:
+            # Double check the state
+            _req = zk_conn.getNodeRequest(req.id)
+            if _req.state != zk.REQUESTED:
+                return
+
+            # Double check the launchers
+            launchers = set([x.id for x in zk_conn.getRegisteredLaunchers()])
+            if not launchers.issubset(set(_req.declined_by)):
+                return
+
+            # All launchers have declined it
+            self.log.debug("Failing declined node request %s", req.id)
+            req.state = zk.FAILED
+            zk_conn.storeNodeRequest(req)
+        finally:
+            zk_conn.unlockNodeRequest(req)
+
     def _cleanupLostRequests(self):
         '''
         Look for lost requests and reset them.
@@ -443,6 +485,26 @@ class CleanupWorker(BaseCleanupWorker):
                                        req.id)
 
                 zk_conn.unlockNodeRequest(req)
+
+    def _cleanupDeclinedRequests(self):
+        '''
+        Look for declined requests and fail them.
+
+        In some corner cases (removing a provider) a node request can be left
+        in a state where all current providers did decline the request but one
+        that should have declined afterwards was removed from the configuration
+        before it had a chance to do so. Therefore we need to check for
+        requests that are declined by all currently running providers and
+        fail them if no provider is left.
+        '''
+        zk_conn = self._nodepool.getZK()
+        launchers = set([x.id for x in zk_conn.getRegisteredLaunchers()])
+        for req in zk_conn.nodeRequestIterator():
+            try:
+                self._failDeclinedRequest(zk_conn, req, launchers)
+            except Exception:
+                self.log.exception("Error failing declined request %s:",
+                                   req.id)
 
     def _cleanupNodeRequestLocks(self):
         '''
