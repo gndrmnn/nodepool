@@ -1444,10 +1444,35 @@ class TestLauncher(tests.DBTestCase):
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FULFILLED)
 
+    def test_launcher_declined_cleanup(self):
+        '''
+        Tests that requests that have been declined by all current providers
+        but weren't failed get cleaned up and failed (This can happen if a
+        provider has been removed from the config).
+        '''
+        configfile = self.setup_config('node.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.waitForImage('fake-provider', 'fake-image')
+        pw = pool._pool_threads.get('fake-provider-main')
+
+        # Now we submit a request for fake-label that simulates that it has
+        # been already declined by all currently active providers.
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label4')
+        req.declined_by = [pw.launcher_id]
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+
     def test_launcher_registers_config_change(self):
         '''
         Launchers register themselves and some config info with ZooKeeper.
-        Validate that a config change will propogate to ZooKeeper.
+        Validate that a config change will propagate to ZooKeeper.
         '''
         configfile = self.setup_config('launcher_reg1.yaml')
         self.useBuilder(configfile)
