@@ -22,6 +22,30 @@
       "revId": "390006e1971e748d757456b24dcf25ddc26b43af",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_45017438",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-10-16T09:24:54Z",
+      "side": 1,
+      "message": "The \u0027wedged until...\u0027 means if we\u0027re creating a min-ready node instead of a different requested node we pause until we have capacity again. So that\u0027s just different words for the same you meant.\n\nBut yes, I think your comment is easier to understand and I\u0027ll take it :)",
+      "parentUuid": "3f79a3b5_4ff2fc6a",
+      "range": {
+        "startLine": 460,
+        "startChar": 1,
+        "endLine": 462,
+        "endChar": 35
+      },
+      "revId": "390006e1971e748d757456b24dcf25ddc26b43af",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
