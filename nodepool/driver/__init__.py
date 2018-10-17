@@ -413,7 +413,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         diff = requested_types - saved_types
         needed_types = list(diff.elements())
 
-        ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+        if self.request.reuse:
+            ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
+        else:
+            ready_nodes = []
 
         for ntype in needed_types:
             # First try to grab from the list of already available nodes.
