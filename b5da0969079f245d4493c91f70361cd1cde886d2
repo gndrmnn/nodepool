@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_b1a4274e",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-17T13:56:19Z",
+      "side": 1,
+      "message": "Perhaps we could optimize a bit and not do this calculation if self.request.reuse is False? By moving the min-ready check, it\u0027s now going to do this unnecessarily for those requests.",
+      "range": {
+        "startLine": 416,
+        "startChar": 8,
+        "endLine": 416,
+        "endChar": 64
+      },
+      "revId": "b5da0969079f245d4493c91f70361cd1cde886d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
