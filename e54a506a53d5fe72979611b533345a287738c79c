@@ -16,6 +16,24 @@
       "revId": "e54a506a53d5fe72979611b533345a287738c79c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a9d6de25",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-18T18:48:33Z",
+      "side": 1,
+      "message": "In order to compare a port against known nodes, we would have to iterate through all nodes from ZK, then compare the port IPs with all IPs from the ZK nodes. That\u0027s kind of a heavy operation to do every 60s (default interval for the cleanup thread). I feel like spacing this out a bit might be better.\n\nAs for putting the port into the ZK node after server create, if the server data returned from the create operation contained that info, I might be on board with it. But it doesn\u0027t have it. We would need additional queries to determine the port, and whatever lag time that required for it to appear.\n\nAnd we can totally emit stats.",
+      "parentUuid": "3f79a3b5_c79cf35c",
+      "revId": "e54a506a53d5fe72979611b533345a287738c79c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
