@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_916a0eea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-10-19T19:26:15Z",
+      "side": 1,
+      "message": "This is probably a good throttle anyway since the problem this alleviates is new hosts not booting because ports are leaking and we run out of quota.",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_b12b8a99",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-10-19T19:26:15Z",
+      "side": 1,
+      "message": "This check will cause us to go through two cleanup intervals before deleting any ports. The first to set _last_port_cleanup and the second to set _down_ports.\n\nWould be nice to set both _last_port_cleanup and _down_ports on the first pass through so that we start cleaning up as quickly as possible.",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_b114ea51",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-10-19T19:26:15Z",
+      "side": 1,
+      "message": "If this raises we probably want to keep trying to delete the other ports. Should probably be wrapped in a try: block to do that?",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_f1282299",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-10-19T19:26:15Z",
+      "side": 1,
+      "message": "This assumes that the port is actually deleted. I\u0027m skeptical we can rely on that because yay openstack. Maybe do another self.listPorts(status\u003d\u0027DOWN\u0027) after this loop instead?",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
