@@ -55,7 +55,7 @@ class OpenStackProvider(Provider):
         if self._use_taskmanager:
             self._taskmanager = TaskManager(self.provider.name,
                                             self.provider.rate)
-            self._taskmanager.start()
+            self._taskamanger.start()
         self.resetClient()
         self._zk = zk_conn
 
