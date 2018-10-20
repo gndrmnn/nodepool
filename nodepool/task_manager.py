@@ -50,9 +50,12 @@ class TaskManager(openstack_task_manager.TaskManager):
         self.statsd = stats.get_client()
         self._thread = threading.Thread(name=name, target=self.run)
         self._thread.daemon = True
+        self._started = False
 
     def start(self):
-        self._thread.start()
+        if not self._started:
+            self._started = True
+            self._thread.start()
 
     def stop(self):
         self._running = False
