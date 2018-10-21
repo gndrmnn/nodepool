@@ -43,12 +43,20 @@ function install_glean {
 }
 
 
+function install_openstacksdk {
+    if use_library_from_git "openstacksdk"; then
+        git_clone_by_name "openstacksdk"
+        $NODEPOOL_INSTALL/bin/pip install $DEST/openstacksdk
+    fi
+}
+
 # Install nodepool code
 function install_nodepool {
     VENV="virtualenv -p python3"
     $VENV $NODEPOOL_INSTALL
     install_diskimage_builder
     install_glean
+    install_openstacksdk
 
     setup_develop $DEST/nodepool
     $NODEPOOL_INSTALL/bin/pip install $DEST/nodepool
