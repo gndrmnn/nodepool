@@ -25,11 +25,8 @@ from nodepool import zk
 log = logging.getLogger("nodepool.stats")
 
 
-def get_client():
-    """Return a statsd client object setup from environment variables; or
-    None if they are not set
-    """
-
+def get_args():
+    """Return statsd client arguments."""
     # note we're just being careful to let the default values fall
     # through to StatsClient()
     statsd_args = {}
@@ -37,6 +34,14 @@ def get_client():
         statsd_args['host'] = os.environ['STATSD_HOST']
     if os.getenv('STATSD_PORT', None):
         statsd_args['port'] = os.environ['STATSD_PORT']
+    return statsd_args
+
+
+def get_client():
+    """Return a statsd client object setup from environment variables; or
+    None if they are not set
+    """
+    statsd_args = get_args()
     if statsd_args:
         return statsd.StatsClient(**statsd_args)
     else:

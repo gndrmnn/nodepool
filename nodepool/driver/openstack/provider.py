@@ -25,7 +25,7 @@ from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import QuotaInformation
 from nodepool.nodeutils import iterate_timeout
-from nodepool.task_manager import TaskManager
+from nodepool import stats
 from nodepool import version
 from nodepool import zk
 
@@ -46,26 +46,18 @@ class OpenStackProvider(Provider):
         self._networks = {}
         self.__flavors = {}  # TODO(gtema): caching
         self.__azs = None
-        self._use_taskmanager = use_taskmanager
-        self._taskmanager = None
         self._current_nodepool_quota = None
         self._zk = None
 
     def start(self, zk_conn):
-        if self._use_taskmanager:
-            self._taskmanager = TaskManager(self.provider.name,
-                                            self.provider.rate)
-            self._taskmanager.start()
         self.resetClient()
         self._zk = zk_conn
 
     def stop(self):
-        if self._taskmanager:
-            self._taskmanager.stop()
+        pass
 
     def join(self):
-        if self._taskmanager:
-            self._taskmanager.join()
+        pass
 
     def getRequestHandler(self, poolworker, request):
         return handler.OpenStackNodeRequestHandler(poolworker, request)
@@ -78,13 +70,18 @@ class OpenStackProvider(Provider):
         return self.__flavors
 
     def _getClient(self):
-        if self._use_taskmanager:
-            manager = self._taskmanager
+        # The rate_limit paramter is in requests-per-second. The nodepool
+        # config value is in seconds of wait between requests.
+        if self.provider.rate:
+            rate_limit = 1.0 / self.provider.rate
         else:
-            manager = None
+            rate_limit = self.provider.rate
+        statsd_args = stats.get_args()
         return openstack.connection.Connection(
             config=self.provider.cloud_config,
-            task_manager=manager,
+            rate_limit=rate_limit,
+            statsd_host=stastd_args.get('host'),
+            statsd_port=stastd_args.get('port'),
             app_name='nodepool',
             app_version=version.version_info.version_string()
         )
