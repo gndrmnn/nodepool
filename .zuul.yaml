@@ -69,6 +69,9 @@
       - openstack-infra/nodepool
       - openstack/diskimage-builder
       - openstack/openstacksdk
+    vars:
+      devstack_localrc:
+        LIBS_FROM_GIT: openstacksdk
 
 - job:
     name: nodepool-functional-py35-src
