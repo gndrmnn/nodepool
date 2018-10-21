@@ -338,10 +338,10 @@ class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
 class FakeProvider(OpenStackProvider):
     fake_cloud = FakeOpenStackCloud
 
-    def __init__(self, provider, use_taskmanager):
+    def __init__(self, provider):
         self.createServer_fails = 0
         self.__client = FakeProvider.fake_cloud()
-        super(FakeProvider, self).__init__(provider, use_taskmanager)
+        super(FakeProvider, self).__init__(provider)
 
     def _getClient(self):
         return self.__client

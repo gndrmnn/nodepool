@@ -59,8 +59,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
         config = nodepool_config.loadConfig(configfile)
         self.assertIn('real-provider', config.providers)
-        pm = provider_manager.get_provider(
-            config.providers['real-provider'], use_taskmanager=False)
+        pm = provider_manager.get_provider(config.providers['real-provider'])
         pm.start(None)
         self.assertEqual(pm._client.auth, auth_data)
 
