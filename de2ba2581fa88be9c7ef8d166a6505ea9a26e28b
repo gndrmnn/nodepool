@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_7bc04c2c",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-10-22T20:47:53Z",
+      "side": 1,
+      "message": "The case described by this comment should be what would happen if we use cached data in the lost request handler and therefore fail to deallocate a node there.",
+      "revId": "de2ba2581fa88be9c7ef8d166a6505ea9a26e28b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
