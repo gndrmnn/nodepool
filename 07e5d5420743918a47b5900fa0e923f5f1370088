@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_a940e933",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-22T14:44:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_b12b8a99",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_b114ea51",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 4
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_09c79d9a",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-22T14:44:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_b114ea51",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_f1282299",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 4
@@ -64,6 +100,24 @@
       "writtenOn": "2018-10-19T19:26:15Z",
       "side": 1,
       "message": "This assumes that the port is actually deleted. I\u0027m skeptical we can rely on that because yay openstack. Maybe do another self.listPorts(status\u003d\u0027DOWN\u0027) after this loop instead?",
+      "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_090a3dd0",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-22T14:44:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_f1282299",
       "revId": "07e5d5420743918a47b5900fa0e923f5f1370088",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
