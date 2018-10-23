@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_4daee8e4",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-10-23T13:07:33Z",
+      "side": 1,
+      "message": "It would be better to constrain this a bit so that we don\u0027t ignore other KeyErrors.  I think the most reliable thing to do would be to change getProviderManager to return None in the case that there is none, and then check for that here.",
+      "revId": "3e06f8dffcade9d6c3906cfe7991156d381cc1f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
