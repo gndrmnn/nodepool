@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_44379ee5",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-23T15:13:09Z",
+      "side": 1,
+      "message": "This is a bit misleading for someone new to this code since a request gets failed elsewhere when declined by all providers. This should describe the edge case it is designed to clean up. I think your description in the commit message would be good to have here.",
+      "range": {
+        "startLine": 425,
+        "startChar": 8,
+        "endLine": 425,
+        "endChar": 74
+      },
+      "revId": "d10a4c35b2199633f2585c1ef4040a2aa3df5f3b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
