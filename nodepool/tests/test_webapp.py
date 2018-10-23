@@ -145,7 +145,9 @@ class TestWebApp(tests.DBTestCase):
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
 
+        print("wait for image")
         self.waitForImage('fake-provider', 'fake-image')
+        print("wait for node")
         self.waitForNodes('fake-label')
 
         req = request.Request(

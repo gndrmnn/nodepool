@@ -215,6 +215,7 @@ class BaseTestCase(testtools.TestCase):
         while True:
             done = True
             for t in threading.enumerate():
+                print(t.name)
                 if t.name.startswith("Thread-"):
                     # Kazoo
                     continue
@@ -379,8 +380,10 @@ class DBTestCase(BaseTestCase):
 
     def waitForImage(self, provider_name, image_name, ignore_list=None):
         while True:
+            print("waiting for an image")
             self.wait_for_threads()
             image = self.zk.getMostRecentImageUpload(image_name, provider_name)
+            print("waited for image: " + str(image))
             if image:
                 if ignore_list and image not in ignore_list:
                     break
