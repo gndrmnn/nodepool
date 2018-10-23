@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_6493afa5",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-23T23:34:39Z",
+      "side": 1,
+      "message": "I think it\u0027s fairly important we add a stat output at this point (and update our tracing graphs for it after).  We really don\u0027t have a concrete idea of where this is happening, it seems to be a multiple provider issue but we\u0027re not 100% sure.  Seeing this triggering in grafana is going to help I think.",
+      "revId": "078f97a91bff6999ee0bfdd3b155b3fa7f6bcc33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a4754788",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-23T23:34:39Z",
+      "side": 1,
+      "message": "I think overall we need a better approach for separating logs out per-provider, because trying to trace things through on something with a lot of providers like on nl04 is a nightmare.\n\nCould we add the provider to this debug message?  it would make it a lot more greppable",
+      "revId": "078f97a91bff6999ee0bfdd3b155b3fa7f6bcc33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
