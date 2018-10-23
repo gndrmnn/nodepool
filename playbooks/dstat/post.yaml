@@ -1,0 +1,11 @@
+- hosts: all
+  tasks:
+    - name: Run dstat_graph
+      shell: "/tmp/dstat_graph/generate_page.sh /tmp/dstat.csv > /tmp/dstat.html"
+      args:
+        chdir: "/tmp/dstat_graph"
+    - name: Collect dstat graph
+      synchronize:
+        dest: "{{ zuul.executor.log_root }}"
+        mode: pull
+        src: "/tmp/dstat.html"

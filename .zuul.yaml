@@ -124,8 +124,12 @@
       jobs:
         - tox-docs
         - tox-pep8
-        - tox-py35
+        - tox-py35:
+            pre-run: playbooks/dstat/pre.yaml
+            post-run: playbooks/dstat/post.yaml
         - tox-py36:
+            pre-run: playbooks/dstat/pre.yaml
+            post-run: playbooks/dstat/post.yaml
             nodeset: ubuntu-bionic
         - nodepool-zuul-functional:
             voting: false

@@ -1,0 +1,15 @@
+- hosts: all
+  tasks:
+    - name: Clone dstat_graph
+      git:
+        repo: https://github.com/Dabz/dstat_graph
+        dest: "/tmp/dstat_graph"
+    - name: Install dstat
+      package:
+        name: dstat
+        state: present
+      become: true
+    - name: Run dstat
+      shell: "dstat -tcmndrylpg --tcp --output /tmp/dstat.csv >& /dev/null &"
+      args:
+        executable: /bin/bash
