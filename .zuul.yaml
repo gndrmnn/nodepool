@@ -122,8 +122,8 @@
 - project:
     check:
       jobs:
-        - tox-docs
-        - tox-pep8
+#        - tox-docs
+#        - tox-pep8
         - tox-py35:
             pre-run: playbooks/dstat/pre.yaml
             post-run: playbooks/dstat/post.yaml
@@ -131,16 +131,16 @@
             pre-run: playbooks/dstat/pre.yaml
             post-run: playbooks/dstat/post.yaml
             nodeset: ubuntu-bionic
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
-        - pbrx-build-container-images:
-            vars:
-              pbrx_prefix: zuul
-        - zuul-quick-start
+#        - nodepool-zuul-functional:
+#            voting: false
+#        - nodepool-functional-py35:
+#            voting: false
+#        - nodepool-functional-py35-src:
+#            voting: false
+#        - pbrx-build-container-images:
+#            vars:
+#              pbrx_prefix: zuul
+#        - zuul-quick-start
     gate:
       jobs:
         - tox-docs
