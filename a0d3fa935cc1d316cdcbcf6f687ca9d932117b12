@@ -16,6 +16,24 @@
       "revId": "a0d3fa935cc1d316cdcbcf6f687ca9d932117b12",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_e8d7a2f3",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-10-23T13:58:31Z",
+      "side": 1,
+      "message": "good idea, thanks",
+      "parentUuid": "3f79a3b5_ade1bcd1",
+      "revId": "a0d3fa935cc1d316cdcbcf6f687ca9d932117b12",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
