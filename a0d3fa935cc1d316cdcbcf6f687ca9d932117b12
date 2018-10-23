@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_ade1bcd1",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-10-23T13:21:53Z",
+      "side": 1,
+      "message": "This will end up locking all pending requests every time it runs.  It would probably be more efficient to get the list of launchers at the start of this loop and use that to decide whether we should fail the request.  If you want, after we make that decision, we can update the list of launchers again to double check it hasn\u0027t changed.",
+      "revId": "a0d3fa935cc1d316cdcbcf6f687ca9d932117b12",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
