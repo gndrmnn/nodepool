@@ -16,7 +16,9 @@ import abc
 import copy
 import logging.config
 import json
+import io
 import os
+import traceback
 
 import yaml
 
@@ -25,7 +27,7 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
     'version': 1,
     'formatters': {
         'simple': {
-            'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'
+            '()': 'nodepool.logconfig.exception_collection_formatter_factory',
         },
     },
     'handlers': {
@@ -68,6 +70,73 @@ _DEFAULT_SERVER_FILE_HANDLERS = {
         'formatter': 'simple',
     },
 }
+
+
+class ExceptionCollectorFormatter(logging.Formatter):
+    '''Prefix multi-line exception output with formatting
+
+    This is a customised version of the standard logging.Formatter
+    that prefixes all lines of exception traceback with the time,
+    level and thread that it came from.  On a very busy,
+    multi-threaded app like nodepool this can be a real help in the
+    logs.
+    '''
+    def __init__(self):
+        # Note, if you change this, need to change prefix line in
+        # formatException as well.
+        fmt = '%(asctime)s %(levelname)s %(name)s: %(message)s'
+        super().__init__(fmt)
+
+    def formatException(self, record):
+        ei = record.exc_info
+        sio = io.StringIO()
+        tb = ei[2]
+        traceback.print_exception(ei[0], ei[1], tb, None, sio)
+        s = sio.getvalue()
+        sio.close()
+        if s[-1:] == '\n':
+            s = s[:-1]
+        # Now go through, and prepend the info from the record to each
+        # line
+        sfull = []
+        for l in s.split('\n'):
+            # Note this is offset couple of extra spaces, it looks like
+            #
+            #  Exception in main loop:
+            #    Traceback (most recent call last)
+            #      File "/path" ...
+            sfull.append("%s %s %s    %s" %
+                         (record.asctime, record.levelname, record.name, l))
+        sfull = '\n'.join(sfull)
+        return sfull
+
+    def format(self, record):
+        record.message = record.getMessage()
+        if self.usesTime():
+            record.asctime = self.formatTime(record, self.datefmt)
+        s = self.formatMessage(record)
+        # This is the only magic compared to the regular format()
+        # function ... the original just passes record.exc_text to
+        # formatException() which means it does not not have the
+        # time/level/thread info from the record.  Here we pass the
+        # full record and our formatException() will prefix exception
+        # lines with the right details.
+        if record.exc_info:
+            if not record.exc_text:
+                record.exc_text = self.formatException(record)
+        if record.exc_text:
+            if s[-1:] != "\n":
+                s = s + "\n"
+            s = s + record.exc_text
+        if record.stack_info:
+            if s[-1:] != "\n":
+                s = s + "\n"
+            s = s + self.formatStack(record.stack_info)
+        return s
+
+
+def exception_collection_formatter_factory():
+    return ExceptionCollectorFormatter()
 
 
 def _read_config_file(filename: str):
