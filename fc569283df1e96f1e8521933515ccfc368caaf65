@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_f2052116",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-25T05:16:28Z",
+      "side": 1,
+      "message": "I also thought about a deliminator like\n\n\n\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786: Request 200-0006859935: Launch attempt 1/3 failed for node 0003412786:\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  | Traceback (most recent call last):\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |   File \"/usr/local/lib/python3.5/dist-packages/nodepool/driver/openstack/handler.py\", line 227, in launch\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |     self._launchNode()\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |   File \"/usr/local/lib/python3.5/dist-packages/nodepool/driver/openstack/handler.py\", line 157, in _launchNode\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |     auto_ip\u003dself.pool.auto_floating_ip)\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |   File \"/usr/local/lib/python3.5/dist-packages/nodepool/driver/openstack/provider.py\", line 356, in waitForServer\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |     reuse\u003dFalse, timeout\u003dtimeout)\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |   File \"/usr/local/lib/python3.5/dist-packages/openstack/cloud/openstackcloud.py\", line 6881, in wait_for_server\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |   File \"/usr/local/lib/python3.5/dist-packages/openstack/cloud/openstackcloud.py\", line 6895, in get_active_server\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  |     kwargs[\u0027user_data\u0027] \u003d self._encode_server_userdata(user_data)\n 2018-10-25 05:11:53,515 ERROR nodepool.NodeLauncher-0003412786:  | openstack.exceptions.SDKException: Error in creating the server: No valid host was found. There are not enough hosts available.\n\nbut probably a bit much",
+      "revId": "fc569283df1e96f1e8521933515ccfc368caaf65",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
