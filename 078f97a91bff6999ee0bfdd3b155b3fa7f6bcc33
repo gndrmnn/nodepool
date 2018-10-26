@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_92ae029f",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-26T17:43:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_6493afa5",
+      "revId": "078f97a91bff6999ee0bfdd3b155b3fa7f6bcc33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_a4754788",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2018-10-23T23:34:39Z",
       "side": 1,
       "message": "I think overall we need a better approach for separating logs out per-provider, because trying to trace things through on something with a lot of providers like on nl04 is a nightmare.\n\nCould we add the provider to this debug message?  it would make it a lot more greppable",
+      "revId": "078f97a91bff6999ee0bfdd3b155b3fa7f6bcc33",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_b2b1be02",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-10-26T17:43:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_a4754788",
       "revId": "078f97a91bff6999ee0bfdd3b155b3fa7f6bcc33",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
