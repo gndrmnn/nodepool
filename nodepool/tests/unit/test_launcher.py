@@ -26,6 +26,8 @@ import nodepool.launcher
 
 from kazoo import exceptions as kze
 
+from nodepool.stats import StatsReporter
+
 
 class TestLauncher(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestLauncher")
@@ -35,6 +37,7 @@ class TestLauncher(tests.DBTestCase):
         Successful node launch should have unlocked nodes in READY state
         and assigned to the request.
         '''
+        StatsReporter.provider_stats = {}
         configfile = self.setup_config('node_no_min_ready.yaml')
         self.useBuilder(configfile)
         image = self.waitForImage('fake-provider', 'fake-image')
@@ -51,6 +54,10 @@ class TestLauncher(tests.DBTestCase):
 
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FULFILLED)
+        self.assertReportedStat('nodepool.nodes.ready', value='1', kind='g')
+        self.assertReportedStat('nodepool.nodes.building', value='0', kind='g')
+        self.assertReportedStat('nodepool.label.fake-label.nodes.ready',
+                                value='1', kind='g')
 
         self.assertNotEqual(req.nodes, [])
         for node_id in req.nodes:
@@ -79,10 +86,6 @@ class TestLauncher(tests.DBTestCase):
         )
         self.zk.deleteNodeRequest(req)
         self.waitForNodeRequestLockDeletion(req.id)
-        self.assertReportedStat('nodepool.nodes.ready', value='1', kind='g')
-        self.assertReportedStat('nodepool.nodes.building', value='0', kind='g')
-        self.assertReportedStat('nodepool.label.fake-label.nodes.ready',
-                                value='1', kind='g')
 
         # Verify that we correctly initialized unused label stats to 0
         self.assertReportedStat('nodepool.label.fake-label2.nodes.building',
