@@ -19,10 +19,14 @@ Helper to create a statsd client from environment variables
 import os
 import logging
 import statsd
+import time
 
 from nodepool import zk
+from threading import Timer
 
 log = logging.getLogger("nodepool.stats")
+
+STATS_INTERVAL = 15
 
 
 def get_client():
@@ -44,6 +48,10 @@ def get_client():
 
 
 class StatsReporter(object):
+
+    # This holds a tuple of (last_sent, <True if scheduled>) per provider
+    provider_stats = {}
+
     '''
     Class adding statsd reporting functionality.
     '''
@@ -85,14 +93,35 @@ class StatsReporter(object):
             pipeline.incr(key)
         pipeline.send()
 
-    def updateNodeStats(self, zk_conn, provider):
+    def updateNodeStats(self, zk_conn, provider, force=False):
         '''
         Refresh statistics for all known nodes.
 
         :param ZooKeeper zk_conn: A ZooKeeper connection object.
         :param Provider provider: A config Provider object.
+        :param: bool force: Force update
         '''
         if not self._statsd:
+            return
+
+        if not force:
+            last_sent, scheduled = StatsReporter.provider_stats.get(
+                provider.name, (None, False))
+            if scheduled:
+                # There is already a scheduled update so nothing to do here
+                return
+
+            if not last_sent:
+                last_sent = time.time() - STATS_INTERVAL
+
+            wait_time = max((last_sent + STATS_INTERVAL) - time.time(), 1)
+            timer = Timer(wait_time, self.updateNodeStats,
+                          args=[zk_conn, provider, True])
+
+            # Flag that the next update is scheduled
+            StatsReporter.provider_stats[provider.name] = (last_sent, True)
+            timer.daemon = True
+            timer.start()
             return
 
         states = {}
@@ -110,36 +139,43 @@ class StatsReporter(object):
                 key = 'nodepool.label.%s.nodes.%s' % (label, state)
                 states[key] = 0
 
-        # Note that we intentionally don't use caching here because we don't
-        # know when the next update will happen and thus need to report the
-        # correct most recent state. Otherwise we can end up in reporting
-        # a gauge with a node in state deleting = 1 and never update this for
-        # a long time.
-        # TODO(tobiash): Changing updateNodeStats to just run periodically will
-        # resolve this and we can operate on cached data.
-        for node in zk_conn.nodeIterator(cached=False):
-            # nodepool.nodes.STATE
-            key = 'nodepool.nodes.%s' % node.state
-            states[key] += 1
+        try:
+            # Note that we intentionally don't use caching here because we
+            # don't know when the next update will happen and thus need to
+            # report the correct most recent state. Otherwise we can end up in
+            # reporting a gauge with a node in state deleting = 1 and never
+            # update this for a long time.
+            # TODO(tobiash): Changing updateNodeStats to just run periodically will
+            # resolve this and we can operate on cached data.
+            for node in zk_conn.nodeIterator(cached=False):
+                # nodepool.nodes.STATE
+                key = 'nodepool.nodes.%s' % node.state
+                states[key] += 1
 
-            # nodepool.label.LABEL.nodes.STATE
-            # nodes can have several labels
-            for label in node.type:
-                key = 'nodepool.label.%s.nodes.%s' % (label, node.state)
-                # It's possible we could see node types that aren't in our
+                # nodepool.label.LABEL.nodes.STATE
+                # nodes can have several labels
+                for label in node.type:
+                    key = 'nodepool.label.%s.nodes.%s' % (label, node.state)
+                    # It's possible we could see node types that aren't in our
+                    # config
+                    if key in states:
+                        states[key] += 1
+                    else:
+                        states[key] = 1
+
+                # nodepool.provider.PROVIDER.nodes.STATE
+                key = 'nodepool.provider.%s.nodes.%s' % (node.provider,
+                                                         node.state)
+                # It's possible we could see providers that aren't in our
                 # config
                 if key in states:
                     states[key] += 1
                 else:
                     states[key] = 1
-
-            # nodepool.provider.PROVIDER.nodes.STATE
-            key = 'nodepool.provider.%s.nodes.%s' % (node.provider, node.state)
-            # It's possible we could see providers that aren't in our config
-            if key in states:
-                states[key] += 1
-            else:
-                states[key] = 1
+        except AttributeError:
+            # zk throws an AttributeError if it is shutdown. This is normally
+            # caused by a nodepool shutdown.
+            return
 
         pipeline = self._statsd.pipeline()
         for key, count in states.items():
@@ -151,3 +187,7 @@ class StatsReporter(object):
                            if p.max_servers])
         pipeline.gauge(key, max_servers)
         pipeline.send()
+
+        # Record reported time and reset scheduled flag
+        StatsReporter.provider_stats[provider.name] = (time.time(), False)
+        log.info('Updated node stats of provider %s', provider.name)
