@@ -257,7 +257,7 @@ class BaseTestCase(testtools.TestCase):
             self.assertNotEqual(kind, None)
 
         start = time.time()
-        while time.time() < (start + 5):
+        while time.time() < (start + 20):
             # Note our fake statsd just queues up results in a queue.
             # We just keep going through them until we find one that
             # matches, or fail out.  If statsd pipelines are used,
