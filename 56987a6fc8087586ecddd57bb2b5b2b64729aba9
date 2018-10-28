@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_d6c6a015",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-10-28T14:07:14Z",
+      "side": 1,
+      "message": "why store status in the set? p.status shoujld always \u003d\u003d \u0027DOWN\u0027 based on the filter.",
+      "range": {
+        "startLine": 519,
+        "startChar": 43,
+        "endLine": 519,
+        "endChar": 51
+      },
+      "revId": "56987a6fc8087586ecddd57bb2b5b2b64729aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_76c9cc21",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-10-28T14:07:14Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 528,
+        "startChar": 33,
+        "endLine": 528,
+        "endChar": 43
+      },
+      "revId": "56987a6fc8087586ecddd57bb2b5b2b64729aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_96cca833",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-10-28T14:07:14Z",
+      "side": 1,
+      "message": "same - and port_status isn\u0027t consumed in this loop",
+      "range": {
+        "startLine": 532,
+        "startChar": 22,
+        "endLine": 532,
+        "endChar": 33
+      },
+      "revId": "56987a6fc8087586ecddd57bb2b5b2b64729aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_36d7d4c2",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-10-28T14:07:14Z",
+      "side": 1,
+      "message": "and same",
+      "range": {
+        "startLine": 552,
+        "startChar": 39,
+        "endLine": 552,
+        "endChar": 47
+      },
+      "revId": "56987a6fc8087586ecddd57bb2b5b2b64729aba9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
