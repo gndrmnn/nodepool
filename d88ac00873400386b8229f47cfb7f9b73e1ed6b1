@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_2a43e798",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-10-29T06:35:03Z",
+      "side": 1,
+      "message": "Maybe this is something we want to have as info or even warning as this might indicate a problem with the cloud?",
+      "range": {
+        "startLine": 540,
+        "startChar": 25,
+        "endLine": 540,
+        "endChar": 30
+      },
+      "revId": "d88ac00873400386b8229f47cfb7f9b73e1ed6b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
