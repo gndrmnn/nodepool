@@ -1792,5 +1792,6 @@ class TestLauncher(tests.DBTestCase):
         while manager.listPorts(status='DOWN'):
             time.sleep(1)
 
-        self.assertReportedStat('nodepool.provider.fake-provider.downPorts',
-                                value='2', kind='c')
+        self.assertReportedStat(
+            'nodepool.provider.fake-provider.leaked.ports',
+            value='2', kind='c')
