@@ -210,7 +210,13 @@ class PoolWorker(threading.Thread):
 
             pm = self.getProviderManager()
             rh = pm.getRequestHandler(self, req)
+            start = time.monotonic()
             rh.run()
+            if self.nodepool.statsd:
+                # report duration of request handler run
+                end = time.monotonic()
+                key = 'nodepool.provider.%s.request_handler'
+                self.nodepool.statsd.timing(key, end - start)
             if rh.paused:
                 self.paused_handler = rh
             self.request_handlers.append(rh)
