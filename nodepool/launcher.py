@@ -217,6 +217,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # accept the request, but we're still not sure yet.  We
             # must lock the request before calling .run().
             rh = pm.getRequestHandler(self, req)
+            start = time.monotonic()
             reasons_to_decline = rh.getDeclinedReasons()
 
             if self.paused_handler and not reasons_to_decline:
@@ -273,6 +274,12 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     for node_type in node.type:
                         with contextlib.suppress(KeyError):
                             label_quota[node_type] -= 1
+
+            if self.nodepool.statsd:
+                # report duration of request handler run
+                elapsed = time.monotonic() - start
+                key = f'nodepool.provider.{provider.name}.request_handler'
+                self.nodepool.statsd.timing(key, elapsed * 1000)
 
             if rh.paused:
                 self.paused_handler = rh
