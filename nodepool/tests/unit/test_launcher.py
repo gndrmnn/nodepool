@@ -2172,8 +2172,9 @@ class TestLauncher(tests.DBTestCase):
                 # ports not cleaned up yet, retry
                 pass
 
-        self.assertReportedStat('nodepool.provider.fake-provider.downPorts',
-                                value='2', kind='c')
+        self.assertReportedStat(
+            'nodepool.provider.fake-provider.leaked.ports',
+            value='2', kind='c')
 
     def test_deleteRawNode_exception(self):
         configfile = self.setup_config('node.yaml')
