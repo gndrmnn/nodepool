@@ -511,6 +511,10 @@ class OpenStackProvider(Provider):
                 node.provider = self.provider.name
                 node.state = zk.DELETING
                 self._zk.storeNode(node)
+                if self._statsd:
+                    key = ('nodepool.provider.%s.leakedNodes'
+                           % self.provider.name)
+                    self._statsd.incr(key)
 
     def filterComputePorts(self, ports):
         '''
@@ -555,7 +559,7 @@ class OpenStackProvider(Provider):
                                port_id, self.provider.name)
 
         if self._statsd and removed_count:
-            key = 'nodepool.provider.%s.downPorts' % (self.provider.name)
+            key = 'nodepool.provider.%s.leakedPorts' % (self.provider.name)
             self._statsd.incr(key, removed_count)
 
         self._last_port_cleanup = time.monotonic()
@@ -570,7 +574,17 @@ class OpenStackProvider(Provider):
         self.cleanupLeakedInstances()
         self.cleanupLeakedPorts()
         if self.provider.clean_floating_ips:
-            self._client.delete_unattached_floating_ips()
+            did_clean = self._client.delete_unattached_floating_ips()
+            if did_clean:
+                # some openstacksdk's return True if any port was
+                # cleaned, rather than the count.  Just set it to 1 to
+                # indicate something happened.
+                if type(did_clean) == bool:
+                    did_clean = 1
+                if self._statsd:
+                    key = ('nodepool.provider.%s.leakedFloatingIPs'
+                           % self.provider.name)
+                    self._statsd.incr(key, did_clean)
 
     def getAZs(self):
         if self.__azs is None:
