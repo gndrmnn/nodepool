@@ -248,6 +248,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             log.info("Assigning node request %s" % req)
 
             rh = pm.getRequestHandler(self, req)
+            start = time.monotonic()
             rh.run()
 
             if has_quota_support:
@@ -260,6 +261,12 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     for node_type in node.type:
                         with contextlib.suppress(KeyError):
                             label_quota[node_type] -= 1
+
+            if self.nodepool.statsd:
+                # report duration of request handler run
+                elapsed = time.monotonic() - start
+                key = 'nodepool.provider.%s.request_handler' % provider.name
+                self.nodepool.statsd.timing(key, elapsed * 1000)
 
             if rh.paused:
                 self.paused_handler = rh
