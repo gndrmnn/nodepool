@@ -52,6 +52,24 @@
       "revId": "005a4adb04703d09c729e9a08e0a89dd7679ffcd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_73054178",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-10-30T09:37:29Z",
+      "side": 1,
+      "message": "But I don\u0027t think we can just use it if this is not set? We don\u0027t necessarily have a statsd configured.",
+      "parentUuid": "3f79a3b5_98191cd3",
+      "revId": "005a4adb04703d09c729e9a08e0a89dd7679ffcd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
