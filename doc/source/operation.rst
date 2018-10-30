@@ -410,6 +410,8 @@ these metrics are supported:
 Nodepool builder
 ~~~~~~~~~~~~~~~~
 
+The following metrics are produced by a ``nodepool-builder`` process:
+
 .. zuul:stat:: nodepool.dib_image_build.<diskimage_name>.<ext>.size
    :type: gauge
 
@@ -444,11 +446,7 @@ Nodepool builder
 Nodepool launcher
 ~~~~~~~~~~~~~~~~~
 
-.. zuul:stat:: nodepool.provider.<provider>.max_servers
-   :type: gauge
-
-   Current setting of the max-server configuration parameter for the respective
-   provider.
+The following metrics are produced by a ``nodepool-launcher`` process:
 
 .. _nodepool_nodes:
 
@@ -466,11 +464,20 @@ Nodepool launcher
    * ready
    * used
 
-.. zuul:stat:: nodepool.provider.<provider>.downPorts
+.. zuul:stat:: nodepool.label.<label>.nodes.<state>
    :type: counter
 
-   Number of ports in the DOWN state that have been removed automatically
-   in the cleanup resources phase of the OpenStack driver.
+   Number of nodes with a specific label in a specific state. See
+   :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+
+Provider Metrics
+^^^^^^^^^^^^^^^^
+
+.. zuul:stat:: nodepool.provider.<provider>.max_servers
+   :type: gauge
+
+   Current setting of the max-server configuration parameter for the respective
+   provider.
 
 .. zuul:stat:: nodepool.provider.<provider>.nodes.<state>
    :type: gauge
@@ -478,17 +485,31 @@ Nodepool launcher
    Number of nodes per provider that are in one specific state. See
    :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
 
-.. zuul:stat:: nodepool.label.<label>.nodes.<state>
+.. zuul:stat:: nodepool.provider.<provider>.leaked.ports
    :type: counter
 
-   Number of nodes with a specific label in a specific state. See
-   :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+   Number of ports in the DOWN state that have been removed
+   automatically in the cleanup resources phase of the OpenStack
+   driver.  Non-zero values indicate an error situation as ports
+   should be cleaned up automatically.
 
-.. zuul:stat:: nodepool.task.<provider>.<task>
-   :type: counter, timer
+.. zuul:stat:: nodepool.provider.<provider>.leaked.instances
+   :type: counter
 
-   Number of tasks executed per provider plus the duration of the task
-   execution.
+   Number of nodes not correctly recorded in Zookeeper that nodepool
+   has cleaned up automatically.  Non-zero values indicate an error
+   situation as instances should be cleaned automatically.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.floatingips
+   :type: counter
+
+   Records the number of unattached floating IPs removed automatically
+   by nodepool.  Elevated rates indicate an error situation as
+   floating IPs should be managed automatically.
+
+
+Launch metrics
+^^^^^^^^^^^^^^
 
 .. _nodepool_launch:
 
@@ -529,8 +550,8 @@ Nodepool launcher
 
    See :ref:`nodepool.launch <nodepool_launch>` for a list of possible results.
 
-OpenStack API stats
-~~~~~~~~~~~~~~~~~~~
+OpenStack API metrics
+^^^^^^^^^^^^^^^^^^^^^
 
 Low level details on the timing of OpenStack API calls will be logged
 by ``openstacksdk``. These calls are logged under
