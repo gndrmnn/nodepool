@@ -22,6 +22,30 @@
       "revId": "89d4e9be5ccc33d7b1cb3d9ba3baab4980dd7bb1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_7b3e618b",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-10-31T08:54:41Z",
+      "side": 1,
+      "message": "\u003e Maybe it even makes sense to structure this like nodepool.provider.\u003cprovider\u003e.leaked.(ports|instances|floatingips)\n\nAgree, done, thanks",
+      "parentUuid": "3f79a3b5_5a060377",
+      "range": {
+        "startLine": 354,
+        "startChar": 44,
+        "endLine": 354,
+        "endChar": 55
+      },
+      "revId": "89d4e9be5ccc33d7b1cb3d9ba3baab4980dd7bb1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
