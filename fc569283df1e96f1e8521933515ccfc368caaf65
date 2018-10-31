@@ -16,6 +16,24 @@
       "revId": "fc569283df1e96f1e8521933515ccfc368caaf65",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_6f76a395",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7069
+      },
+      "writtenOn": "2018-10-31T02:19:53Z",
+      "side": 1,
+      "message": "I like the deliminator, but happy either way",
+      "parentUuid": "3f79a3b5_f2052116",
+      "revId": "fc569283df1e96f1e8521933515ccfc368caaf65",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
