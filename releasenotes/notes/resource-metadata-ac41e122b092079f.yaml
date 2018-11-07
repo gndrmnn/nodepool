@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The zookeeper data structure has a new optional field `resources` on the
+    node object that is intended to forward resource usage of nodes to zuul.
+    This change is fully backwards compatible so there is no total shutdown
+    nodepool required to upgrade.
