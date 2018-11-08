@@ -132,6 +132,16 @@ providers:
             memory: 512
             cpu: 2
 
+  - name: openshift-single-project
+    driver: openshiftpods
+    context: "/hostname:8443/developer"
+    pools:
+      - name: project-name
+        labels:
+          - name: openshift-pod
+            image: docker.io/fedora:28
+
+
 diskimages:
   - name: trusty
     formats:
