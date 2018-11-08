@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_5b2df78d",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-08T14:24:16Z",
+      "side": 1,
+      "message": "This is a superfluous \u0027resources\u0027",
+      "range": {
+        "startLine": 74,
+        "startChar": 16,
+        "endLine": 74,
+        "endChar": 29
+      },
+      "revId": "55cb1581debd178d2c5e9baf275890a735b004e2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
