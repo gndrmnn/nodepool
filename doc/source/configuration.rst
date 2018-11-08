@@ -1201,3 +1201,43 @@ exec and get the logs of the pod.
   ``memory``
 
     The number of memory in MB to request.
+
+
+Openshift Pods Driver
+---------------------
+
+The Openshift Pods driver is similar to the Openshift driver, but it
+only provides simple pods created in a single project. This enable
+using an unprivileged service account that doesn't requires the
+self-provisioner role.
+
+Example::
+
+  providers:
+    - name: cluster
+      driver: openshiftpods
+      context: unprivileged-context-name
+      pools:
+        - name: main
+          labels:
+            - name: openshift-pod
+              image: docker.io/fedora:28
+
+**required**
+
+  ``context``
+  Name of the context configured in ``kube/config``.
+
+
+**optional**
+
+  ``launch-retries``
+
+    The number of times to retry launching a node before considering the job
+    failed.
+
+    Default 3.
+
+  ``max-pods``
+
+    Maximum number of pods that can be used.
