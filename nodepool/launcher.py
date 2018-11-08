@@ -512,8 +512,7 @@ class CleanupWorker(BaseCleanupWorker):
                 # Double check the state now that we have a lock since it
                 # may have changed on us. We keep using the original node
                 # since it's holding the lock.
-                _node = zk_conn.getNode(node.id)
-                if _node.state != zk.READY:
+                if node.state != zk.READY:
                     zk_conn.unlockNode(node)
                     continue
 
@@ -566,8 +565,7 @@ class CleanupWorker(BaseCleanupWorker):
             # Double check the state now that we have a lock since it
             # may have changed on us. We keep using the original node
             # since it's holding the lock.
-            _node = zk_conn.getNode(node.id)
-            if _node.state != zk.HOLD:
+            if node.state != zk.HOLD:
                 zk_conn.unlockNode(node)
                 continue
 
@@ -679,8 +677,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
                 # Double check the state now that we have a lock since it
                 # may have changed on us. We keep using the original node
                 # since it's holding the lock.
-                _node = zk_conn.getNode(node.id)
-                if _node.state not in cleanup_states:
+                if node.state not in cleanup_states:
                     zk_conn.unlockNode(node)
                     continue
 
