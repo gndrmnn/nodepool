@@ -358,6 +358,13 @@ Options
          openshift driver, see the separate section
          :attr:`providers.[openshift]`
 
+      .. value:: openshiftpods
+
+         For details on the extra options required and provided by the
+         openshiftpods driver, see the separate section
+         :attr:`providers.[openshiftpods]`
+
+
 
 OpenStack Driver
 ----------------
@@ -1259,3 +1266,32 @@ Selecting the openshift driver adds the following options to the
          Only used by the
          :value:`providers.[openshift].labels.type.pod` label type;
          specifies the amount of memory in MB to request for the pod.
+
+
+Openshift Pods Driver
+---------------------
+
+Selecting the openshift pods driver adds the following options to the
+:attr:`providers` section of the configuration.
+
+.. attr:: providers.[openshiftpods]
+   :type: list
+
+   The Openshift Pods driver is similar to the Openshift driver, but it
+   only support pod label to be created in a single project. This enable
+   using an unprivileged service account that doesn't requires the
+   self-provisioner role.
+
+   Example:
+
+   .. code-block:: yaml
+
+     providers:
+       - name: cluster
+         driver: openshiftpods
+         context: unprivileged-context-name
+         pools:
+           - name: main
+             labels:
+               - name: openshift-pod
+                 image: docker.io/fedora:28

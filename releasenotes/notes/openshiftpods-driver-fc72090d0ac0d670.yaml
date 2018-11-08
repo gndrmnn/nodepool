@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    A new driver is available to support unprivileged Openshift cluster as a
+    resources provider to enable pod creation within a developper project.
