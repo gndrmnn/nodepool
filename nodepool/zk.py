@@ -1631,6 +1631,13 @@ class ZooKeeper(object):
         request.lock.release()
         request.lock = None
 
+    def isNodeLocked(self, node):
+        path = self._nodeLockPath(node.id)
+        try:
+            return bool(self.client.get_children(path))
+        except kze.NoNodeError:
+            return False
+
     def lockNode(self, node, blocking=True, timeout=None):
         '''
         Lock a node.
