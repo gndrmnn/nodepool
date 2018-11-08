@@ -854,9 +854,9 @@ class TestLauncher(tests.DBTestCase):
         node = nodes[0]
         self.log.debug("Holding node %s..." % node.id)
         # hold the node
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         znode = self.zk.getNode(node.id)
@@ -879,10 +879,10 @@ class TestLauncher(tests.DBTestCase):
         node = nodes[0]
         self.log.debug("Holding node %s..." % node.id)
         # hold the node
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
         node.hold_expiration = 1
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         znode = self.zk.getNode(node.id)
@@ -905,10 +905,10 @@ class TestLauncher(tests.DBTestCase):
         node = nodes[0]
         self.log.debug("Holding node %s..." % node.id)
         # hold the node
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
         node.hold_expiration = '1'
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         znode = self.zk.getNode(node.id)
@@ -930,10 +930,10 @@ class TestLauncher(tests.DBTestCase):
         node = nodes[0]
         self.log.debug("Holding node %s..." % node.id)
         # hold the node
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
         node.hold_expiration = 'notanumber'
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         znode = self.zk.getNode(node.id)
@@ -959,15 +959,15 @@ class TestLauncher(tests.DBTestCase):
         self.log.debug("Holding node %s...(%s seconds)" % (node_custom.id,
                                                            hold_expiration))
         # hold the nodes
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
-        node_custom.state = zk.HOLD
-        node_custom.comment = 'testing hold_expiration'
-        node_custom.hold_expiration = hold_expiration
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         self.zk.lockNode(node_custom, blocking=False)
+        node_custom.state = zk.HOLD
+        node_custom.comment = 'testing hold_expiration'
+        node_custom.hold_expiration = hold_expiration
         self.zk.storeNode(node_custom)
         self.zk.unlockNode(node_custom)
         znode = self.zk.getNode(node.id)
@@ -1004,15 +1004,15 @@ class TestLauncher(tests.DBTestCase):
         self.log.debug("Holding node %s...(%s seconds)" % (node_custom.id,
                                                            hold_expiration))
         # hold the nodes
+        self.zk.lockNode(node, blocking=False)
         node.state = zk.HOLD
         node.comment = 'testing'
-        node_custom.state = zk.HOLD
-        node_custom.comment = 'testing hold_expiration'
-        node_custom.hold_expiration = hold_expiration
-        self.zk.lockNode(node, blocking=False)
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
         self.zk.lockNode(node_custom, blocking=False)
+        node_custom.state = zk.HOLD
+        node_custom.comment = 'testing hold_expiration'
+        node_custom.hold_expiration = hold_expiration
         self.zk.storeNode(node_custom)
         self.zk.unlockNode(node_custom)
         znode = self.zk.getNode(node.id)
