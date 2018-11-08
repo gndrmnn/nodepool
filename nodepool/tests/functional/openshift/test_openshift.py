@@ -48,3 +48,12 @@ class TestOpenShift(tests.DBTestCase):
         nodes = self.waitForNodes("openshift-pod", 1)
         self.assertEqual(1, len(nodes))
         self.assertEqual(nodes[0].connection_type, "kubectl")
+
+    def test_pods(self):
+        configfile = self.setup_config('pods.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        nodes = self.waitForNodes("openshift-pod", 1)
+        self.assertEqual(1, len(nodes))
+        self.assertEqual(nodes[0].connection_type, "kubectl")
