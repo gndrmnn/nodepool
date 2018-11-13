@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_85fc45bd",
+        "filename": "releasenotes/notes/resource-metadata-ac41e122b092079f.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-11-13T15:50:16Z",
+      "side": 1,
+      "message": "Hrm.  This isn\u0027t really user visible -- maybe we should remove this.",
+      "revId": "110092b5372a6518b5208c3264f06178917ad849",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
