@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_d0fc2fbe",
+        "filename": "playbooks/nodepool-functional-k8s/pre.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-11-14T08:21:08Z",
+      "side": 1,
+      "message": "want to rebase the revert on this for whenever it\u0027s fixed",
+      "revId": "fce2ffb502e78d56887b6083d14be85137442a6a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
