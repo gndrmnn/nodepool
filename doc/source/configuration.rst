@@ -408,6 +408,7 @@ Selecting the OpenStack driver adds the following options to the
               max-servers: 96
               availability-zones:
                 - az1
+              executor-zone: 'provider1.region1'
               networks:
                 - some-network-name
               security-groups:
@@ -765,6 +766,15 @@ Selecting the OpenStack driver adds the following options to the
         when creating nodes but ensures that all nodes for a given
         request are placed in the same availability zone.
 
+     .. attr:: executor-zone
+        :type: string
+        :default: None
+
+        It is possible for nodepool nodes to exist in a cloud without public
+        accessable IP address. By adding a provider to a executor-zone one or
+        more zuul-executors can be configured in the same executor-zone forcing
+        all jobs that run on nodes in that zone through theses executors.
+
      .. attr:: networks
         :type: list
 
@@ -937,6 +947,7 @@ Selecting the static driver adds the following options to the
           driver: static
           pools:
             - name: main
+              executor-zone: 'provider1.region1'
               nodes:
                 - name: trusty.example.com
                   labels: trusty-static
@@ -966,6 +977,15 @@ Selecting the static driver adds the following options to the
 
          The hostname or ip address of the static node. This must be
          unique across all nodes defined within the configuration file.
+
+      .. attr:: executor-zone
+         :type: string
+         :default: None
+
+         It is possible for nodepool nodes to exist in a cloud without public
+         accessable IP address. By adding a provider to a executor-zone one or
+         more zuul-executors can be configured in the same executor-zone forcing
+         all jobs that run on nodes in that zone through theses executors.
 
       .. attr:: labels
          :type: list

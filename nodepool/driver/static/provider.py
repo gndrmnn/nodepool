@@ -115,7 +115,7 @@ class StaticNodeProvider(Provider):
         return registered
 
     def registerNodeFromConfig(self, count, provider_name, pool_name,
-                               static_node):
+                               pool_executor_zone, static_node):
         '''
         Register a static node from the config with ZooKeeper.
 
@@ -134,6 +134,7 @@ class StaticNodeProvider(Provider):
             node.state = zk.READY
             node.provider = provider_name
             node.pool = pool_name
+            node.executor_zone = pool_executor_zone
             node.launcher = "static driver"
             node.type = static_node["labels"]
             node.hostname = static_node["name"]
@@ -244,7 +245,8 @@ class StaticNodeProvider(Provider):
         if current_count < node["max-parallel-jobs"]:
             register_cnt = node["max-parallel-jobs"] - current_count
             self.registerNodeFromConfig(
-                register_cnt, self.provider.name, pool.name, node)
+                register_cnt, self.provider.name, pool.name,
+                pool.executor_zone, node)
 
         # De-register nodes to synchronize with our configuration.
         # This case covers an existing node, but with a decreased
@@ -363,6 +365,6 @@ class StaticNodeProvider(Provider):
 
         try:
             self.registerNodeFromConfig(
-                1, node.provider, node.pool, static_node)
+                1, node.provider, node.pool, node.executor_zone, static_node)
         except Exception:
             self.log.exception("Cannot re-register deleted node %s", node)

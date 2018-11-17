@@ -117,6 +117,7 @@ class ProviderPool(ConfigPool):
         self.max_ram = None
         self.ignore_provider_quota = False
         self.azs = None
+        self.executor_zone = None
         self.networks = None
         self.security_groups = None
         self.auto_floating_ip = True
@@ -139,6 +140,7 @@ class ProviderPool(ConfigPool):
                     other.ignore_provider_quota == (
                         self.ignore_provider_quota) and
                     other.azs == self.azs and
+                    other.executor_zone == self.executor_zone and
                     other.networks == self.networks and
                     other.security_groups == self.security_groups and
                     other.auto_floating_ip == self.auto_floating_ip and
@@ -271,6 +273,7 @@ class OpenStackProviderConfig(ProviderConfig):
             pp.max_ram = pool.get('max-ram', math.inf)
             pp.ignore_provider_quota = pool.get('ignore-provider-quota', False)
             pp.azs = pool.get('availability-zones')
+            pp.executor_zone = pool.get('executor-zone')
             pp.networks = pool.get('networks', [])
             pp.security_groups = pool.get('security-groups', [])
             pp.auto_floating_ip = bool(pool.get('auto-floating-ip', True))
@@ -358,6 +361,7 @@ class OpenStackProviderConfig(ProviderConfig):
                            v.Any(label_diskimage, label_cloud_image))
 
         pool = {
+            'executor-zone': str,
             'name': str,
             'networks': [str],
             'auto-floating-ip': bool,

@@ -483,6 +483,23 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[0].username, 'zuul')
         self.assertNotEqual(nodes[0].host_keys, [])
 
+    def test_node_executor_zone(self):
+        """Test that an image and node are created"""
+        configfile = self.setup_config('node-executor-zone.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        image = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
+        nodes = self.waitForNodes('fake-label')
+
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(nodes[0].provider, 'fake-provider')
+        self.assertEqual(nodes[0].type, ['fake-label'])
+        self.assertEqual(nodes[0].username, 'zuul')
+        self.assertEqual(nodes[0].executor_zone, 'private.vpn')
+        self.assertNotEqual(nodes[0].host_keys, [])
+
     def test_node_host_key_checking_false(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('node-host-key-checking.yaml')

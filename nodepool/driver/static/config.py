@@ -68,6 +68,7 @@ class StaticProviderConfig(ProviderConfig):
             pp.name = pool['name']
             pp.provider = self
             self.pools[pp.name] = pp
+            pp.executor_zone = pool.get('executor-zone')
             # WARNING: This intentionally changes the type!
             pp.labels = set()
             for node in pool.get('nodes', []):
@@ -105,6 +106,7 @@ class StaticProviderConfig(ProviderConfig):
         }
         pool = {
             'name': str,
+            'executor-zone': str,
             'nodes': [pool_node],
         }
         return v.Schema({'pools': [pool]})

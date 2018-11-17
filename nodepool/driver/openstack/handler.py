@@ -387,6 +387,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                 self.pool.azs or self.manager.getAZs())
         node.az = self.chosen_az
         node.cloud = self.provider.cloud_config.name
+        node.executor_zone = self.pool.executor_zone
         node.region = self.provider.region_name
 
     def launchesComplete(self):
