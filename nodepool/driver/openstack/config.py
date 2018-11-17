@@ -201,6 +201,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.cloud_config = openstack_config.get_one(**cloud_kwargs)
 
         self.image_type = self.cloud_config.config['image_format']
+        self.executor_zone = self.provider.get('executor-zone')
         self.region_name = self.provider.get('region-name')
         self.rate = float(self.provider.get('rate', 1.0))
         self.boot_timeout = self.provider.get('boot-timeout', 60)

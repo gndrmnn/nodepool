@@ -389,6 +389,7 @@ Selecting the OpenStack driver adds the following options to the
         - name: provider1
           driver: openstack
           cloud: example
+          executor-zone: 'provider1.region1'
           region-name: 'region1'
           rate: 1.0
           boot-timeout: 120
@@ -473,6 +474,15 @@ Selecting the OpenStack driver adds the following options to the
       Once an instance is active, how long to try connecting to the
       image via SSH.  If the timeout is exceeded, the node launch is
       aborted and the instance deleted.
+
+   .. attr:: executor-zone
+      :type: string
+      :default: None
+
+      It is possible for nodepool nodes to exist in a cloud without public
+      accessable IP address. By adding a provider to a executor-zone one or
+      more zuul-executors can also be installed on the same private network,
+      allowing jobs to now connect.
 
    .. attr:: launch-timeout
       :type: int seconds
