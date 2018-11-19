@@ -22,6 +22,7 @@ fi
 NODEPOOL_PAUSE_CENTOS_7_DIB=${NODEPOOL_PAUSE_CENTOS_7_DIB:-True}
 NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB=${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB:-True}
 NODEPOOL_PAUSE_FEDORA_28_DIB=${NODEPOOL_PAUSE_FEDORA_28_DIB:-True}
+NODEPOOL_PAUSE_FEDORA_29_DIB=${NODEPOOL_PAUSE_FEDORA_29_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB=${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB=${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB:-True}
@@ -115,6 +116,15 @@ if [ ${NODEPOOL_PAUSE_FEDORA_28_DIB,,} = 'false' ]; then
     waitfornode fedora-28
     # check ssh for root user
     sshintonode fedora-28
+fi
+
+if [ ${NODEPOOL_PAUSE_FEDORA_29_DIB,,} = 'false' ]; then
+    # check that image built
+    waitforimage fedora-29
+    # check image was bootable
+    waitfornode fedora-29
+    # check ssh for root user
+    sshintonode fedora-29
 fi
 
 if [ ${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB,,} = 'false' ]; then
