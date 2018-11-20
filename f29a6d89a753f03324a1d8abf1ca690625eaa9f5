@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_78612ba2",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-11-20T16:32:14Z",
+      "side": 1,
+      "message": "\"can be configured in the same executor-zone forcing all jobs that run on nodes in that zone through these executors.\"\n\nI don\u0027t know if I actually like that either, but it would be good to try and convey that you have to configure the executor in the same executor zone to line everything up.",
+      "range": {
+        "startLine": 484,
+        "startChar": 26,
+        "endLine": 485,
+        "endChar": 34
+      },
+      "revId": "f29a6d89a753f03324a1d8abf1ca690625eaa9f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
