@@ -22,7 +22,7 @@ from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
 from kazoo.handlers.threading import KazooTimeoutError
 from kazoo.recipe.lock import Lock
-from kazoo.recipe.cache import TreeCache
+from kazoo.recipe.cache import TreeCache, TreeEvent
 
 from nodepool import exceptions as npe
 
@@ -698,6 +698,7 @@ class ZooKeeper(object):
         self._last_retry_log = 0
         self._node_cache = None
         self._request_cache = None
+        self._cached_nodes = {}
 
     # =======================================================================
     # Private Methods
@@ -889,6 +890,8 @@ class ZooKeeper(object):
                     self.logConnectionRetryEvent()
 
             self._node_cache = TreeCache(self.client, self.NODE_ROOT)
+            self._node_cache.listen_fault(self.cacheFaultListener)
+            self._node_cache.listen(self.nodeCacheListener)
             self._node_cache.start()
 
             self._request_cache = TreeCache(self.client, self.REQUEST_ROOT)
@@ -1780,25 +1783,21 @@ class ZooKeeper(object):
 
         :returns: The node data, or None if the node was not found.
         '''
-        path = self._nodePath(node)
-        data = None
-        stat = None
         if cached:
-            cached_data = self._node_cache.get_data(path)
-            if cached_data:
-                data = cached_data.data
-                stat = cached_data.stat
+            node = self._cached_nodes.get(node)
+            if node:
+                return node
 
-        # If data is empty we either didn't use the cache or the cache didn't
+        # We got here we either didn't use the cache or the cache didn't
         # have the node (yet). Note that even if we use caching we need to
         # do a real query if the cached data is empty because the node data
         # might not be in the cache yet when it's listed by the get_children
         # call.
-        if not data:
-            try:
-                data, stat = self.client.get(path)
-            except kze.NoNodeError:
-                return None
+        try:
+            path = self._nodePath(node)
+            data, stat = self.client.get(path)
+        except kze.NoNodeError:
+            return None
 
         if not data:
             return None
@@ -2064,3 +2063,45 @@ class ZooKeeper(object):
         '''
         for node in provider_nodes:
             self.deleteNode(node)
+
+    def cacheFaultListener(self, e):
+        self.log.exception(e)
+
+    def nodeCacheListener(self, event):
+
+        if hasattr(event.event_data, 'path'):
+            # Ignore root node
+            path = event.event_data.path
+            if path == self.NODE_ROOT:
+                return
+
+            # Ignore lock nodes
+            if '/lock' in path:
+                return
+
+        # Ignore any non-node related events such as connection events here
+        if event.event_type not in (TreeEvent.NODE_ADDED,
+                                    TreeEvent.NODE_UPDATED,
+                                    TreeEvent.NODE_REMOVED):
+            return
+
+        path = event.event_data.path
+        node_id = path.rsplit('/', 1)[1]
+
+        if event.event_type in (TreeEvent.NODE_ADDED, TreeEvent.NODE_UPDATED):
+            node = Node.fromDict(
+                self._bytesToDict(event.event_data.data), node_id)
+            node.stat = event.event_data.stat
+
+            # Note we intentionally don't update the cached node inplace but
+            # replace it in order to not provoke any data races if a different
+            # thread is doing something with a node it already got from the
+            # cache.
+            self._cached_nodes[node_id] = node
+
+        elif event.event_type == TreeEvent.NODE_REMOVED:
+            try:
+                del self._cached_nodes[node_id]
+            except KeyError:
+                # If it's already gone, don't care
+                pass
