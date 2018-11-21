@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_81bcbd07",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-11-21T17:42:56Z",
+      "side": 1,
+      "message": "Another case of copied docstring I think.",
+      "revId": "bcd7253230a26a4c45b8288ff8012f0e716664b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
