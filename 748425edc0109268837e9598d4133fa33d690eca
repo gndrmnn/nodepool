@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_2efd9809",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-11-21T17:27:42Z",
+      "side": 1,
+      "message": "Why switch centos 7 to network manager?",
+      "revId": "748425edc0109268837e9598d4133fa33d690eca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
