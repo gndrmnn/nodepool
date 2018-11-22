@@ -1,0 +1,9 @@
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Workflow+1: Tobias Henkel <tobias.henkel@bmw.de>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 22 Nov 2018 20:12:10 +0000
+Reviewed-on: https://review.openstack.org/617699
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
