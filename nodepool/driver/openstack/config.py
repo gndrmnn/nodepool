@@ -172,6 +172,7 @@ class ProviderPool(ConfigPool):
         self.networks = pool_config.get('networks', [])
         self.security_groups = pool_config.get('security-groups', [])
         self.auto_floating_ip = bool(pool_config.get('auto-floating-ip', True))
+        self.ip_pool = pool_config.get('ip-pool')
         self.host_key_checking = bool(pool_config.get('host-key-checking',
                                                       True))
 

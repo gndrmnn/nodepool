@@ -804,6 +804,13 @@ Selecting the OpenStack driver adds the following options to the
         deployed in the same internal private network, set the option
         to False to save floating ip for cloud provider.
 
+     .. attr:: ip-pool
+        : type: string
+
+        Specify the floating ip pool from which Nodepool will fetch
+        an ip to be attached to the node. If not specified the first
+        pool found will be selected.
+
      .. attr:: host-key-checking
         :type: bool
         :default: True
