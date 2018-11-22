@@ -274,6 +274,7 @@ class OpenStackProviderConfig(ProviderConfig):
             pp.networks = pool.get('networks', [])
             pp.security_groups = pool.get('security-groups', [])
             pp.auto_floating_ip = bool(pool.get('auto-floating-ip', True))
+            pp.ip_pool = pool.get('ip-pool')
             pp.host_key_checking = bool(pool.get('host-key-checking', True))
 
             for label in pool.get('labels', []):
