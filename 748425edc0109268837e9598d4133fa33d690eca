@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f79a3b5_597695d8",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-11-22T04:52:34Z",
+      "side": 1,
+      "message": "it looks like the test is too long with two fedora builds.  I had wanted to keep f28 in here as it\u0027s rhel8-ish, but probably not necessary",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 26
+      },
+      "revId": "748425edc0109268837e9598d4133fa33d690eca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_2efd9809",
         "filename": "devstack/plugin.sh",
         "patchSetId": 6
@@ -13,6 +36,24 @@
       "writtenOn": "2018-11-21T17:27:42Z",
       "side": 1,
       "message": "Why switch centos 7 to network manager?",
+      "revId": "748425edc0109268837e9598d4133fa33d690eca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_9970addd",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-11-22T04:52:34Z",
+      "side": 1,
+      "message": "This was actually intentional (I hadn\u0027t updated the change, sorry, the underlying glean was still wip).  I think we\u0027re better off keeping support uniform across our rpm distros.  NetworkManager is the default so it\u0027s a realistic environment to test.",
+      "parentUuid": "3f79a3b5_2efd9809",
       "revId": "748425edc0109268837e9598d4133fa33d690eca",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
