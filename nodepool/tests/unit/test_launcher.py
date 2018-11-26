@@ -484,7 +484,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertNotEqual(nodes[0].host_keys, [])
 
     def test_node_executor_zone(self):
-        """Test that an image and node are created"""
+        """Test that an image and node are created with zone info"""
         configfile = self.setup_config('node-executor-zone.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
