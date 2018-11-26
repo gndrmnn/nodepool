@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_26fa6210",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-26T18:06:45Z",
+      "side": 1,
+      "message": "will change",
+      "parentUuid": "3f79a3b5_5b25f7be",
+      "revId": "efc5424d95010fe1fce2d5c247edaf1e5a682807",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_7b20f3ae",
         "filename": "nodepool/zk.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2018-11-26T17:58:38Z",
       "side": 1,
       "message": "Perhaps we should update in place.  After all, if a thread wants to avoid having the data change under it, it should hold the lock.  If it is going to use the data without the lock, it\u0027s probably not doing anything important.  For example, iterating over nodes for one to allocate, or requests for one to handle, are things we may do without the lock.  If we find one of those, we\u0027re going to lock it and update it anyway (and there are already checks to handle data changing between the scan and lock).  We might iterate over nodes for stats, but that doesn\u0027t matter.\n\nOhhh.\n\nIs this here because we might get a delayed event to update a node even after we\u0027ve locked it?  Ie, Zuul updates a node in ZK, nodepool provider thread locks the node and updates it from ZK, then this thread processes the update event from zuul and updates the data out from under the provider thread?\n\nI think znodes have version numbers, so perhaps it\u0027s okay to update in-place as long as the version number for the change is \u003e the current version number of our object in memory?",
+      "revId": "efc5424d95010fe1fce2d5c247edaf1e5a682807",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a66432e7",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2100,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-26T18:06:45Z",
+      "side": 1,
+      "message": "yes, my thinking was because of delayed events that should not modify already existing nodes. But yes, using version numbers could make this more efficient.",
+      "parentUuid": "3f79a3b5_7b20f3ae",
       "revId": "efc5424d95010fe1fce2d5c247edaf1e5a682807",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
