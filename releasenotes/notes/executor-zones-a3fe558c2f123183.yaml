@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Nodepool now supports executor-zone for provider pools. For this setting
+    to work, you also need to be running at least version 3.4.0 of Zuul.
+upgrade:
+  - |
+    If enabling an executor-zone in a provider pool, please delete existing
+    READY nodes after you have restarted nodepool. This is because the
+    existing nodes will not have the proper metadata and could result in unsed
+    nodes.
