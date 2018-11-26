@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "3f79a3b5_d3dc8b44",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-26T21:42:31Z",
+      "side": 1,
+      "message": "nit: s/accessable/accessible/",
+      "range": {
+        "startLine": 774,
+        "startChar": 8,
+        "endLine": 774,
+        "endChar": 18
+      },
+      "revId": "bcd7253230a26a4c45b8288ff8012f0e716664b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_33b7fffa",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-26T21:42:31Z",
+      "side": 1,
+      "message": "nit: s/theses/these/",
+      "range": {
+        "startLine": 776,
+        "startChar": 56,
+        "endLine": 776,
+        "endChar": 62
+      },
+      "revId": "bcd7253230a26a4c45b8288ff8012f0e716664b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_f3ac27a9",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 986,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-26T21:42:31Z",
+      "side": 1,
+      "message": "nit: s/accessable/accessible/",
+      "range": {
+        "startLine": 986,
+        "startChar": 9,
+        "endLine": 986,
+        "endChar": 19
+      },
+      "revId": "bcd7253230a26a4c45b8288ff8012f0e716664b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_13b0c3fb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-26T21:42:31Z",
+      "side": 1,
+      "message": "nit: s/theses/these/",
+      "range": {
+        "startLine": 988,
+        "startChar": 57,
+        "endLine": 988,
+        "endChar": 63
+      },
+      "revId": "bcd7253230a26a4c45b8288ff8012f0e716664b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_81bcbd07",
         "filename": "nodepool/tests/unit/test_launcher.py",
         "patchSetId": 2
