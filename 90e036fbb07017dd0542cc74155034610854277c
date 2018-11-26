@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_1b477f7c",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1591,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-11-26T17:55:51Z",
+      "side": 1,
+      "message": "doh!  \"node\" :)",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_3b4a7b81",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1600,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-11-26T17:55:51Z",
+      "side": 1,
+      "message": "I think we may want to remove the exception handler to let this propogate.  I\u0027m going to +2 this though for consistency, and because return seems okay for now (since we have a lock and it really should exist).",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_db3ca7eb",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1822,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-11-26T17:55:51Z",
+      "side": 1,
+      "message": "Probably want to remove this too.",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
