@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_3b183b81",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1591,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-26T18:40:33Z",
+      "side": 1,
+      "message": "oops",
+      "parentUuid": "3f79a3b5_1b477f7c",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_3b4a7b81",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_6677fad3",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1600,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-26T18:40:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_3b4a7b81",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_db3ca7eb",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2018-11-26T17:55:51Z",
       "side": 1,
       "message": "Probably want to remove this too.",
+      "revId": "90e036fbb07017dd0542cc74155034610854277c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_867256e0",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1822,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-26T18:40:33Z",
+      "side": 1,
+      "message": "Done in parent",
+      "parentUuid": "3f79a3b5_db3ca7eb",
       "revId": "90e036fbb07017dd0542cc74155034610854277c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
