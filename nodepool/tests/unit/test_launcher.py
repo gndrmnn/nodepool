@@ -22,6 +22,7 @@ import mock
 from nodepool import tests
 from nodepool import zk
 from nodepool.driver.fake import provider as fakeprovider
+from nodepool.nodeutils import iterate_timeout
 import nodepool.launcher
 
 from kazoo import exceptions as kze
@@ -1030,7 +1031,8 @@ class TestLauncher(tests.DBTestCase):
         manager = pool.getProviderManager('fake-provider')
         self.waitForInstanceDeletion(manager, node.external_id)
         # custom node should be deleted as well
-        held_nodes = [n for n in self.zk.nodeIterator() if n.state == zk.HOLD]
+        held_nodes = [n for n in self.zk.nodeIterator(cached=False)
+                      if n.state == zk.HOLD]
         self.assertEqual(0, len(held_nodes), held_nodes)
 
     def test_label_provider(self):
