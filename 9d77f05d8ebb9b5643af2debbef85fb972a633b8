@@ -22,6 +22,30 @@
       "revId": "9d77f05d8ebb9b5643af2debbef85fb972a633b8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_d07308b2",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-27T17:54:46Z",
+      "side": 1,
+      "message": "Oh, nm. This isn\u0027t the same connection used by the launcher. I\u0027m ok with this.",
+      "parentUuid": "3f79a3b5_b0220ca5",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 50
+      },
+      "revId": "9d77f05d8ebb9b5643af2debbef85fb972a633b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
