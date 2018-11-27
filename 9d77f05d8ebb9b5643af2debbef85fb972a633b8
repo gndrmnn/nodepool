@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_b0220ca5",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-27T17:51:03Z",
+      "side": 1,
+      "message": "I\u0027m not so certain disabling cache in the tests is the right thing to do here. We need some test coverage of that code path.",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 50
+      },
+      "revId": "9d77f05d8ebb9b5643af2debbef85fb972a633b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
