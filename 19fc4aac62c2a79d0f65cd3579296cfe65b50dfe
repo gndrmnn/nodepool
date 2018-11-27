@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_5ed8707b",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-27T14:42:54Z",
+      "side": 1,
+      "message": "This could be greatly simplified by just using the cached\u003dFalse setting to nodeIterator().",
+      "range": {
+        "startLine": 1034,
+        "startChar": 0,
+        "endLine": 1042,
+        "endChar": 20
+      },
+      "revId": "19fc4aac62c2a79d0f65cd3579296cfe65b50dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
