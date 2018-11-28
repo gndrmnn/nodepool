@@ -501,7 +501,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 node.launcher = self.launcher_id
                 node.allocated_to = self.request.id
 
-                self.setNodeMetadata(node)
+                # This sets static data defined in the config file in the
+                # ZooKeeper Node object.
+                node.metadata = self.pool.node_metadata
+
+                self.setDriverMetadata(node)
 
                 # Note: It should be safe (i.e., no race) to lock the node
                 # *after* it is stored since nodes in INIT state are not
@@ -754,10 +758,12 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         '''
         return True
 
-    def setNodeMetadata(self, node):
+    def setDriverMetadata(self, node):
         '''
-        Handler may implement this to store metadata before building the node.
-        The OpenStack handler uses this to set az, cloud and region.
+        Handler may implement this to store driver-specific metadata in the
+        Node object before building the node. This data is normally dynamically
+        calculated during runtime. The OpenStack handler uses this to set az,
+        cloud and region.
         '''
         pass
 
@@ -822,11 +828,13 @@ class ConfigPool(ConfigValue):
     def __init__(self):
         self.labels = {}
         self.max_servers = math.inf
+        self.node_metadata = None
 
     def __eq__(self, other):
         if isinstance(other, ConfigPool):
             return (self.labels == other.labels and
-                    self.max_servers == other.max_servers)
+                    self.max_servers == other.max_servers and
+                    self.node_metadata == other.node_metadata)
         return False
 
 

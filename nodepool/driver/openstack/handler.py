@@ -382,7 +382,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         if not self.chosen_az and node.az:
             self.chosen_az = node.az
 
-    def setNodeMetadata(self, node):
+    def setDriverMetadata(self, node):
         """
         Select grouping AZ if we didn't set AZ from a selected,
         pre-existing node
