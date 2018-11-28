@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_38ab2870",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2018-11-28T21:00:31Z",
+      "side": 1,
+      "message": "Bikeshed: This word, especially as a sibling to networks and security groups, makes me think it\u0027s going to be added to the created instance as metadata in openstack.\n\nPerhaps label-metadata or pool-metadata or something smarter?",
+      "range": {
+        "startLine": 703,
+        "startChar": 12,
+        "endLine": 703,
+        "endChar": 26
+      },
+      "revId": "6f68dcfeb0fbd09323c649322522b633fd29067f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
