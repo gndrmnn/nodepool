@@ -22,6 +22,30 @@
       "revId": "6f68dcfeb0fbd09323c649322522b633fd29067f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_d38e9531",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-11-28T22:04:13Z",
+      "side": 1,
+      "message": "Will change it to node-attribute.",
+      "parentUuid": "3f79a3b5_38ab2870",
+      "range": {
+        "startLine": 703,
+        "startChar": 12,
+        "endLine": 703,
+        "endChar": 26
+      },
+      "revId": "6f68dcfeb0fbd09323c649322522b633fd29067f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
