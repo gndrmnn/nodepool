@@ -22,6 +22,30 @@
       "revId": "19fc4aac62c2a79d0f65cd3579296cfe65b50dfe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_1050955e",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-28T06:57:42Z",
+      "side": 1,
+      "message": "I tried that and it actually doesn\u0027t fix the race. Actually the race is not in the check but nodepool that can possibly delete the custom_node slightly after the other node.\n\nI\u0027ll change the hold_expiration to be much larger than the max-hold-age so we can iterate here and give nodepool a few extra seconds to clean this up.",
+      "parentUuid": "3f79a3b5_5ed8707b",
+      "range": {
+        "startLine": 1034,
+        "startChar": 0,
+        "endLine": 1042,
+        "endChar": 20
+      },
+      "revId": "19fc4aac62c2a79d0f65cd3579296cfe65b50dfe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
