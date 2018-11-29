@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_a547017a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-11-29T15:43:26Z",
+      "side": 1,
+      "message": "I think this needs to happen after the signaled check, otherwise there\u0027s a slight race.\n\nAlso, you can do this without a timeout if you have the stop method set the event.  We use that pattern elsewhere.",
+      "revId": "d0e2d3fe39c56960a5af778b86e7e7743c819549",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
