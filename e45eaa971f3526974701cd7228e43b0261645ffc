@@ -34,6 +34,24 @@
       "revId": "e45eaa971f3526974701cd7228e43b0261645ffc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_294c2bc9",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-29T18:00:07Z",
+      "side": 1,
+      "message": "Now in combination with the relative priority we actually want to restart the loop. Otherwise we will often skip requests due to lock contention.",
+      "parentUuid": "3f79a3b5_a3f51d54",
+      "revId": "e45eaa971f3526974701cd7228e43b0261645ffc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
