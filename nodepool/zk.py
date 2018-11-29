@@ -486,7 +486,7 @@ class NodeRequest(BaseModel):
         return o
 
     def updateFromDict(self, d):
-        super().fromDict(d)
+        super().updateFromDict(d)
         self.declined_by = d.get('declined_by', [])
         self.node_types = d.get('node_types', [])
         self.nodes = d.get('nodes', [])
@@ -637,7 +637,7 @@ class Node(BaseModel):
 
         :param dict d: The dictionary
         '''
-        super().fromDict(d)
+        super().updateFromDict(d)
         self.cloud = d.get('cloud')
         self.provider = d.get('provider')
         self.pool = d.get('pool')
