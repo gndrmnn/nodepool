@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_01257bc0",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2018-11-30T06:19:14Z",
+      "side": 1,
+      "message": "Using super().fromDict() was intentionally and not a typo because super().fromDict (aka BaseModel.fromDict) already works in-place.\n\nThough I see that this is probably a bit misleading. So maybe we should rename BaseModel.fromDict() into BaseModel.updateFromDict()",
+      "range": {
+        "startLine": 489,
+        "startChar": 8,
+        "endLine": 489,
+        "endChar": 33
+      },
+      "revId": "4ebb436b81e94abbb918ffdf3698cf05e69ad39c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
