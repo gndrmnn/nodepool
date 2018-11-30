@@ -1,0 +1,8 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 30 Nov 2018 01:58:40 +0000
+Reviewed-on: https://review.openstack.org/620954
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
