@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Workflow+1: Paul Belanger <pabelanger@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Sat, 01 Dec 2018 04:14:46 +0000
+Reviewed-on: https://review.openstack.org/621305
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
