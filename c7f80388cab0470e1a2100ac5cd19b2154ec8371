@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_6af5dc51",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-12-04T16:37:39Z",
+      "side": 1,
+      "message": "Should we also check for \"node.state is None\"?",
+      "range": {
+        "startLine": 707,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 43
+      },
+      "revId": "c7f80388cab0470e1a2100ac5cd19b2154ec8371",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
