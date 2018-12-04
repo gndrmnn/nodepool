@@ -22,6 +22,23 @@
       "revId": "c7f80388cab0470e1a2100ac5cd19b2154ec8371",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_76e861df",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2018-12-04T18:25:07Z",
+      "side": 1,
+      "message": "That would have been my first choice, but the fromDict method in BaseModel doesn\u0027t overwrite data with None if nothing is present, so state always persists.  We could change that, but I was trying to be minimal here.",
+      "revId": "c7f80388cab0470e1a2100ac5cd19b2154ec8371",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
