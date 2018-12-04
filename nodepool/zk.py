@@ -57,6 +57,8 @@ INIT = 'init'
 # Aborted due to a transient error like overquota that should not count as a
 # failed launch attempt
 ABORTED = 'aborted'
+# The node has actually been deleted and the Znode should be deleted
+DELETED = 'deleted'
 
 
 # NOTE(Shrews): Importing this from nodepool.config causes an import error
@@ -1889,6 +1891,13 @@ class ZooKeeper(object):
             return
 
         path = self._nodePath(node.id)
+
+        # Set the node state to deleted before we start deleting
+        # anything so that we can detect a race condition where the
+        # lock is removed before the node deletion occurs.
+        node.state = DELETED
+        self.client.set(path, node.serialize())
+
         try:
             self.client.delete(path, recursive=True)
         except kze.NoNodeError:
