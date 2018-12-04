@@ -258,6 +258,9 @@ class OpenStackNodeLauncher(NodeLauncher):
                     deleting_node.external_id = self.node.external_id
                     deleting_node.state = zk.DELETING
                     self.zk.storeNode(deleting_node)
+                    # Re-store the node to set it's id attribute in znode
+                    # This enables the NodeDeleter to actually delete the znode
+                    self.zk.storeNode(deleting_node)
                     self.log.info(
                         "Request %s: Node %s scheduled for cleanup",
                         self.handler.request.id, deleting_node.external_id)
