@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_f4c31430",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2018-12-04T13:43:56Z",
+      "side": 1,
+      "message": "Not sure exactly what you are seeing, but the first storeNode() should absolutely be creating a node.id value for a new node.",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 52
+      },
+      "revId": "1fbc98b2704d57ec0b494d4b912db52aa1719d9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
