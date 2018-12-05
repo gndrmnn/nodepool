@@ -1,0 +1,10 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+1: Melvin Hillsman <mrhillsman@gmail.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 05 Dec 2018 21:17:34 +0000
+Reviewed-on: https://review.openstack.org/623046
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
