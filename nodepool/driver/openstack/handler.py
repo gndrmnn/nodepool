@@ -189,6 +189,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             raise exceptions.LaunchNetworkException(
                 "Unable to find public IP of server")
 
+        self.node.host_id = server.host_id
         self.node.interface_ip = interface_ip
         self.node.public_ipv4 = server.public_v4
         self.node.public_ipv6 = server.public_v6
