@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_07b26409",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-13T03:47:50Z",
+      "side": 1,
+      "message": "The nodeset \"openstack-signle-node-xenial\" was not found.",
+      "range": {
+        "startLine": 19,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 0
+      },
+      "revId": "dcfd83a46e0b2dbc437cdf03e34c0a2214039ea1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
