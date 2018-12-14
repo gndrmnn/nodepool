@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_b6870716",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 33
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-12-14T04:55:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_b39e44f8",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 71
+      },
+      "revId": "bdbe7f09b0677b09627ffdda42a287cb1cb06afe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_5e29f736",
         "filename": "playbooks/nodepool-functional-openshift/post.yaml",
         "patchSetId": 33
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3f79a3b5_769f2f4e",
+        "filename": "playbooks/nodepool-functional-openshift/post.yaml",
+        "patchSetId": 33
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-12-14T04:55:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_5e29f736",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "bdbe7f09b0677b09627ffdda42a287cb1cb06afe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f79a3b5_7ebb93be",
         "filename": "playbooks/nodepool-functional-openshift/run.yaml",
         "patchSetId": 33
@@ -59,6 +107,30 @@
       "writtenOn": "2018-12-13T17:18:40Z",
       "side": 1,
       "message": "I think instead of doing this, we should modify our bindep.txt to support centos/fedora platforms for zookeeper. That would prevent us from potentially having to copy this code elsewhere.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 24
+      },
+      "revId": "bdbe7f09b0677b09627ffdda42a287cb1cb06afe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_16aefb82",
+        "filename": "playbooks/nodepool-functional-openshift/run.yaml",
+        "patchSetId": 33
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2018-12-14T04:55:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f79a3b5_7ebb93be",
       "range": {
         "startLine": 13,
         "startChar": 0,
