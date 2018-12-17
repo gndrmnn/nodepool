@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_c96c4c36",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Unknown project github.com/sqlalchemy/dogpile.cache",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 77,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_e967c84e",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 78,
+        "startChar": 2,
+        "endLine": 86,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_a95b1086",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 87,
+        "startChar": 2,
+        "endLine": 94,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_49527c6c",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 95,
+        "startChar": 2,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_6955f850",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 104,
+        "startChar": 2,
+        "endLine": 110,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_094c84c8",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 111,
+        "startChar": 2,
+        "endLine": 119,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f79a3b5_8958948c",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2018-12-17T01:49:49Z",
+      "side": 1,
+      "message": "Job nodepool-functional-py35-src-base not defined",
+      "range": {
+        "startLine": 120,
+        "startChar": 2,
+        "endLine": 126,
+        "endChar": 0
+      },
+      "revId": "b73da711aff33c75d88ae3a3b0725d76d75b78cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
