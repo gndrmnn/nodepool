@@ -1,0 +1,9 @@
+Code-Review+2: Jens Harbott (frickler) <j.harbott@x-ion.de>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 17 Dec 2018 17:44:13 +0000
+Reviewed-on: https://review.openstack.org/624855
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
