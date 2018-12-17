@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - name: Pull dogpile.cache repo
+      git: repo='git://github.com/sqlalchemy/dogpile.cache'
+           dest=/opt/stack/dogpile.cache
