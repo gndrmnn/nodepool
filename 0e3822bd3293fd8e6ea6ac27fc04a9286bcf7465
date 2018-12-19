@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_f9c9a122",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2018-12-19T02:50:44Z",
+      "side": 1,
+      "message": "I think I\u0027d have to -1 this, because I have put notes on hold before, ssh tunneled a local port to 6080 on the remote host, got the console URL from \"openstack console show\" and then connected up to view the console during boot.\n\nYes, it sucks but your options are super limited when debugging glean or other dib early boot failures.",
+      "revId": "0e3822bd3293fd8e6ea6ac27fc04a9286bcf7465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
