@@ -1,0 +1,17 @@
+- hosts: all
+  pre_tasks:
+    # Clear out the devstack package install files for the -src job
+    # runs.  In this mode we set the "-bindep" flags to tell devstack
+    # to run & install from bindep.txt for nodepool and the libraries
+    # we install.  Thus we don't need devsatck to pre-install these
+    # packages for us.
+    #
+    # Thus this is ensuring some better test coverage of the
+    # bindep.txt dependencies in these jobs.
+    #
+    # Note that in the non-src job, where we're installing these
+    # libraries from pypi and have no insight into their binary
+    # dependencies, we still need devstack to pre-install the
+    # packages.
+    - name: Remove devstack binary install files
+      command:  rm -rf "{{ zuul.projects['git.openstack.org/openstack-infra/nodepool'].src_dir }}/devstack/files
