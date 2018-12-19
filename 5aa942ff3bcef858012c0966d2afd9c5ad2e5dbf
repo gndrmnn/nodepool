@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f79a3b5_d1382a3a",
+        "filename": "devstack/plugin.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2018-12-19T18:31:26Z",
+      "side": 1,
+      "message": "There is also a cirros256 flavor which is slightly smaller that should work. (cirros will boot in 64MB memory even, but we don\u0027t seem to get that flavor in devstack by default).",
+      "range": {
+        "startLine": 696,
+        "startChar": 79,
+        "endLine": 696,
+        "endChar": 91
+      },
+      "revId": "5aa942ff3bcef858012c0966d2afd9c5ad2e5dbf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
