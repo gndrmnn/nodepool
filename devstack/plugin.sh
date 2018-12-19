@@ -26,7 +26,7 @@ function install_diskimage_builder {
         GITDIR["diskimage-builder"]=$DEST/diskimage-builder
         GITBRANCH["diskimage-builder"]=$DISKIMAGE_BUILDER_REPO_REF
         git_clone_by_name "diskimage-builder"
-        setup_dev_lib "diskimage-builder"
+        setup_dev_lib -bindep "diskimage-builder"
         $NODEPOOL_INSTALL/bin/pip install $DEST/diskimage-builder
     fi
 }
@@ -57,7 +57,7 @@ function install_nodepool {
     install_diskimage_builder
     install_glean
 
-    setup_develop $DEST/nodepool
+    setup_develop -bindep $DEST/nodepool
     $NODEPOOL_INSTALL/bin/pip install $DEST/nodepool
 
     # TODO(mordred) Install openstacksdk after nodepool so that if we're
