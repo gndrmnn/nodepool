@@ -691,6 +691,9 @@ function start_nodepool {
         openstack --os-project-name demo --os-username demo security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
     fi
 
+    # start an unmanaged vm that should be ignored by nodepool
+    openstack --os-project-name demo --os-username demo server create --flavor nodepool-512 --image cirros unmanaged-vm
+
     # create root keypair to use with glean for devstack cloud.
     nova --os-project-name demo --os-username demo \
         keypair-add --pub-key $NODEPOOL_PUBKEY $NODEPOOL_KEY_NAME
