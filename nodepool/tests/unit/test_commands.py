@@ -38,7 +38,9 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def assert_listed(self, configfile, cmd, col, val, count, col_count=0):
         log = logging.getLogger("tests.PrettyTableMock")
-        self.patch_argv("-c", configfile, *cmd)
+        self.patch_argv("-c", configfile,
+                        "-s", self.setup_secure('zookeeper-auth.yaml'),
+                        *cmd)
         for _ in iterate_timeout(10, AssertionError, 'assert listed'):
             try:
                 with mock.patch('prettytable.PrettyTable.add_row') as \
