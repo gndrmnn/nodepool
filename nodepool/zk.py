@@ -945,7 +945,7 @@ class ZooKeeper(object):
     def resetLostFlag(self):
         self._became_lost = False
 
-    def connect(self, host_list, read_only=False):
+    def connect(self, host_list, read_only=False, auth_data=None):
         '''
         Establish a connection with ZooKeeper cluster.
 
@@ -956,11 +956,17 @@ class ZooKeeper(object):
             :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
             (one per server) defining the ZooKeeper cluster servers.
         :param bool read_only: If True, establishes a read-only connection.
+        :param ZKAuth auth_data: A ZKAuth object representing the auth data
 
         '''
         if self.client is None:
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            args = dict(hosts=hosts,
+                        read_only=read_only)
+            if auth_data:
+                args['auth_data'] = auth_data.getAuthData()
+                args['default_acl'] = auth_data.getACL()
+            self.client = KazooClient(**args)
             self.client.add_listener(self._connection_listener)
             # Manually retry initial connection attempt
             while True:
