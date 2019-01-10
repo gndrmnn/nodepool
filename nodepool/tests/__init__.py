@@ -31,6 +31,7 @@ import time
 
 import fixtures
 import kazoo.client
+import kazoo.security
 import testtools
 
 from nodepool import builder
@@ -67,10 +68,13 @@ class ZookeeperServerFixture(fixtures.Fixture):
 
 
 class ChrootedKazooFixture(fixtures.Fixture):
-    def __init__(self, zookeeper_host, zookeeper_port):
+    def __init__(self, zookeeper_host, zookeeper_port, auth_data):
         super(ChrootedKazooFixture, self).__init__()
         self.zookeeper_host = zookeeper_host
         self.zookeeper_port = zookeeper_port
+        self.acl = (kazoo.security.make_acl(
+            auth_data[0], auth_data[1], all=True),)
+        self.auth_data = (auth_data,)
 
     def _setUp(self):
         # Make sure the test chroot paths do not conflict
@@ -83,7 +87,9 @@ class ChrootedKazooFixture(fixtures.Fixture):
 
         # Ensure the chroot path exists and clean up any pre-existing znodes.
         _tmp_client = kazoo.client.KazooClient(
-            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port))
+            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port),
+            auth_data=self.auth_data,
+            default_acl=self.acl)
         _tmp_client.start()
 
         if _tmp_client.exists(self.zookeeper_chroot):
@@ -99,7 +105,9 @@ class ChrootedKazooFixture(fixtures.Fixture):
         '''Remove the chroot path.'''
         # Need a non-chroot'ed client to remove the chroot path
         _tmp_client = kazoo.client.KazooClient(
-            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port))
+            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port),
+            auth_data=self.auth_data,
+            default_acl=self.acl)
         _tmp_client.start()
         _tmp_client.delete(self.zookeeper_chroot, recursive=True)
         _tmp_client.stop()
@@ -562,6 +570,8 @@ class DBTestCase(BaseTestCase):
 
     def useNodepool(self, *args, **kwargs):
         secure_conf = kwargs.pop('secure_conf', None)
+        if not secure_conf:
+            secure_conf = self.setup_secure('zookeeper-auth.yaml')
         args = (secure_conf,) + args
         pool = launcher.NodePool(*args, **kwargs)
         pool.cleanup_interval = .5
@@ -587,16 +597,19 @@ class DBTestCase(BaseTestCase):
         self.useFixture(f)
         self.zookeeper_host = f.zookeeper_host
         self.zookeeper_port = f.zookeeper_port
+        self.auth_data = ("sasl", "super:adminsecret")
 
         kz_fxtr = self.useFixture(ChrootedKazooFixture(
             self.zookeeper_host,
-            self.zookeeper_port))
+            self.zookeeper_port,
+            self.auth_data))
         self.zookeeper_chroot = kz_fxtr.zookeeper_chroot
         self.zk = zk.ZooKeeper(enable_cache=False)
         host = zk.ZooKeeperConnectionConfig(
             self.zookeeper_host, self.zookeeper_port, self.zookeeper_chroot
         )
-        self.zk.connect([host])
+
+        self.zk.connect([host], auth_data=auth_data)
         self.addCleanup(self.zk.disconnect)
 
     def printZKTree(self, node):
