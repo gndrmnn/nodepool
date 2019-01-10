@@ -10,6 +10,11 @@ zookeeper-servers:
     port: 2181
     chroot: /test
 
+zookeeper-auth:
+  scheme: sasl
+  username: super
+  password: adminsecret
+
 labels:
   - name: trusty
     max-ready-age: 3600
