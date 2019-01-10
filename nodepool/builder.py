@@ -1217,7 +1217,9 @@ class NodePoolBuilder(object):
 
             # All worker threads share a single ZooKeeper instance/connection.
             self.zk = zk.ZooKeeper(enable_cache=False)
-            self.zk.connect(list(self._config.zookeeper_servers.values()))
+            self.zk.connect(
+                list(self._config.zookeeper_servers.values()),
+                self._config.zookeeper_auth)
 
             self.log.debug('Starting listener for build jobs')
 

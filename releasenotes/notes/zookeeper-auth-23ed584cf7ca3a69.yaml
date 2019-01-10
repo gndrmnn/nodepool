@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Zookeeper authentication can be configured using the zookeeper-auth
+    option.
+upgrade:
+  - |
+    Before changing zookeeper-auth, use the zookeeper-update-auth script
+    to update node acls.

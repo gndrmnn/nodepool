@@ -910,7 +910,7 @@ class NodePool(threading.Thread):
         if not self.zk and configured:
             self.log.debug("Connecting to ZooKeeper servers")
             self.zk = zk.ZooKeeper()
-            self.zk.connect(configured)
+            self.zk.connect(configured, auth_data=config.zookeeper_auth)
         else:
             self.log.debug("Detected ZooKeeper server changes")
             self.zk.resetHosts(configured)

@@ -24,6 +24,7 @@ from kazoo.handlers.threading import KazooTimeoutError
 from kazoo.recipe.lock import Lock
 from kazoo.recipe.cache import TreeCache, TreeEvent
 from kazoo.recipe.election import Election
+import kazoo.security
 
 from nodepool import exceptions as npe
 
@@ -898,7 +899,7 @@ class ZooKeeper(object):
     def resetLostFlag(self):
         self._became_lost = False
 
-    def connect(self, host_list, read_only=False):
+    def connect(self, host_list, read_only=False, auth_data=None):
         '''
         Establish a connection with ZooKeeper cluster.
 
@@ -909,11 +910,22 @@ class ZooKeeper(object):
             :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
             (one per server) defining the ZooKeeper cluster servers.
         :param bool read_only: If True, establishes a read-only connection.
+        :param tuple auth_data: authentication data ("scheme", "credential")
 
         '''
         if self.client is None:
+            if auth_data:
+                acl = (kazoo.security.make_acl(
+                    auth_data[0], auth_data[1], all=True),)
+                auth_data = (auth_data,)
+            else:
+                acl = None
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            self.client = KazooClient(
+                hosts=hosts,
+                read_only=read_only,
+                auth_data=auth_data,
+                default_acl=acl)
             self.client.add_listener(self._connection_listener)
             # Manually retry initial connection attempt
             while True:
