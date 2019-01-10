@@ -12,6 +12,7 @@
 - hosts: launcher
   roles:
     - role: bindep
+    - role: test-setup
   tasks:
     - name: Ensure nodepool services directories
       file:
