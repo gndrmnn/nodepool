@@ -15,6 +15,38 @@
       become: yes
       ignore_errors: yes
 
+    - name: Configure auth
+      lineinfile:
+        path: /etc/zookeeper/zoo.cfg
+        line: "{{ item }}"
+      with_items:
+        - "requireClientAuthScheme=sasl"
+        - "authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider"
+      become: yes
+
+    - name: Add jaas file
+      copy:
+        content: |
+          Client {
+            org.apache.zookeeper.server.auth.DigestLoginModule required
+              username="super"
+              password="adminsecret";
+          };
+          Server {
+             org.apache.zookeeper.server.auth.DigestLoginModule required
+               user_super="adminsecret";
+          };
+        dest: /etc/zookeeper/auth.cfg
+      become: yes
+
+    - name: Add jvm flag
+      copy:
+        content: |
+          SERVER_JVMFLAGS="-Djava.security.auth.login.config=/etc/zookeeper/auth.conf"
+        dest: /etc/zookeeper/zookeeper-env.sh
+        mode: 0755
+      become: yes
+
     - name: Start zookeeper
       service:
         name: zookeeper
