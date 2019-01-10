@@ -16,6 +16,7 @@ import yaml
 
 from nodepool.driver import ProviderConfig
 from nodepool.config import get_provider_config
+import nodepool.zk_auth
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +71,7 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
+            'zookeeper-auth': nodepool.zk_auth.schema,
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],
@@ -112,6 +114,12 @@ class ConfigValidator:
                         log.error("diskimage %s in provider %s "
                                   "not in top-level labels" %
                                   (label['name'], provider['name']))
+
+        if config.get('zookeeper-auth') and \
+           not nodepool.zk_auth.validate(config['zookeeper-auth']):
+            log.error('Invalid Zookeeper auth scheme: %s' %
+                      config['zookeeper-auth'])
+            errors = True
 
         if errors is True:
             return 1
