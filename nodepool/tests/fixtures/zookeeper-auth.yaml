@@ -1,0 +1,4 @@
+zookeeper-auth:
+  scheme: sasl
+  username: super
+  password: adminsecret
