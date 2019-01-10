@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfd5e7cf_f1225201",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1196,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "nit: projects",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_912186fe",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "nit: can create",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_b11ccac1",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "In which project the pod will be spawned?",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_5179def9",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1258,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "The image-pull setting is missing",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_717c22eb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1265,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "The unit is missing (millicores?)",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_118356ce",
+        "filename": "nodepool/driver/openshift/handler.py",
+        "patchSetId": 37
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "Idea for later enhancement: In multinode requests we may want to launch all pods in the same project.",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_31869add",
+        "filename": "nodepool/driver/openshift/handler.py",
+        "patchSetId": 37
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "nit: It\u0027s",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfd5e7cf_d16cee37",
+        "filename": "nodepool/driver/openshift/handler.py",
+        "patchSetId": 37
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-10T06:56:47Z",
+      "side": 1,
+      "message": "Later we probably should check for unique projects of the nodes instead of relying on the fact that every node has its own project.",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
