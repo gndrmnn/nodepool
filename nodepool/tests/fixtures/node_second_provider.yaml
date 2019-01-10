@@ -6,6 +6,11 @@ zookeeper-servers:
     port: {zookeeper_port}
     chroot: {zookeeper_chroot}
 
+zookeeper-auth:
+  scheme: sasl
+  username: super
+  password: adminsecret
+
 labels:
   - name: fake-label
     min-ready: 0
