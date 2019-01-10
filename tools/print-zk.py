@@ -26,12 +26,17 @@ parser = argparse.ArgumentParser(description='Print the zookeeper tree')
 parser.add_argument('-c', dest='config',
                     default='/etc/nodepool/nodepool.yaml',
                     help='path to config file')
+parser.add_argument('-s', dest='secure',
+                    help='path to secure file')
 args = parser.parse_args()
 
 config = nodepool.config.loadConfig(args.config)
+if args.secure:
+    nodepool.config.loadSecureConfig(config, args.secure)
 
 zk = nodepool.zk.ZooKeeper(enable_cache=False)
-zk.connect(list(config.zookeeper_servers.values()))
+zk.connect(
+    list(config.zookeeper_servers.values()), auth_data=config.zookeeper_auth)
 
 def join(a, b):
     if a.endswith('/'):
