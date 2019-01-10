@@ -122,6 +122,23 @@ Options
       relative to the supplied root path, is also optional and has no
       default.
 
+.. attr:: zookeeper-auth
+   :type: dict
+
+   Zookeeper authentication:
+
+   .. attr:: scheme
+      :type: string
+      :required:
+
+      The authentication scheme, can be "digest" or "sasl".
+
+   .. attr:: credential
+      :type: string
+      :required:
+
+      The authentication credential.
+
 .. attr:: labels
    :type: list
 

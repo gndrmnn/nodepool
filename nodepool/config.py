@@ -38,6 +38,7 @@ class Config(ConfigValue):
         self.providers = {}
         self.provider_managers = {}
         self.zookeeper_servers = {}
+        self.zookeeper_auth = None
         self.elementsdir = None
         self.imagesdir = None
         self.build_log_dir = None
@@ -84,6 +85,11 @@ class Config(ConfigValue):
             'port': webapp_cfg.get('port', 8005),
             'listen_address': webapp_cfg.get('listen_address', '0.0.0.0')
         }
+
+    def setZooKeeperAuth(self, zk_auth):
+        if not zk_auth:
+            return
+        self.zookeeper_auth = (zk_auth['scheme'], zk_auth['credential'])
 
     def setZooKeeperServers(self, zk_cfg):
         if not zk_cfg:
@@ -251,6 +257,7 @@ def loadConfig(config_path):
     newconfig.setMaxHoldAge(config.get('max-hold-age'))
     newconfig.setWebApp(config.get('webapp'))
     newconfig.setZooKeeperServers(config.get('zookeeper-servers'))
+    newconfig.setZooKeeperAuth(config.get('zookeeper-auth'))
     newconfig.setDiskImages(config.get('diskimages'))
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
@@ -274,7 +281,8 @@ def loadSecureConfig(config, secure_config_path):
     if secure.get('zookeeper-servers', []):
         config.zookeeper_servers = {}
 
-    # TODO(Shrews): Support ZooKeeper auth
     config.setZooKeeperServers(secure.get('zookeeper-servers'))
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
+
+    config.setZooKeeperAuth(secure.get('zookeeper-auth'))
