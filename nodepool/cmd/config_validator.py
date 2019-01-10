@@ -70,6 +70,11 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
+            'zookeeper-auth': {
+                'scheme': str,
+                'username': str,
+                'password': str,
+            },
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],
@@ -112,6 +117,11 @@ class ConfigValidator:
                         log.error("diskimage %s in provider %s "
                                   "not in top-level labels" %
                                   (label['name'], provider['name']))
+
+        if config.get('zookeeper-auth') and \
+           config["zookeeper-auth"].get("scheme") not in ("digest", "sasl"):
+            log.error('Zookeeper auth scheme needs to be "digest" or "sasl"')
+            errors = True
 
         if errors is True:
             return 1
