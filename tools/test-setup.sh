@@ -10,4 +10,9 @@
 sudo service zookeeper stop
 DATADIR=$(sed -n -e 's/^dataDir=//p' /etc/zookeeper/conf/zoo.cfg)
 sudo mount -t tmpfs -o nodev,nosuid,size=500M none $DATADIR
+# Enable authentication
+echo 'JVMFLAGS="-Djava.security.auth.login.config=/etc/zookeeper/conf/auth.conf"' | \
+    sudo tee -a /etc/default/zookeeper
+echo 'JAVA_OPTS="-Djava.security.auth.login.config=/etc/zookeeper/conf/auth.conf"' | \
+    sudo tee -a /etc/default/zookeeper
 sudo service zookeeper start
