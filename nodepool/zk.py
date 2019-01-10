@@ -25,6 +25,7 @@ from kazoo.recipe.lock import Lock
 from kazoo.recipe.cache import TreeCache, TreeEvent
 from kazoo.recipe.election import Election
 
+import nodepool.zk_auth
 from nodepool import exceptions as npe
 from nodepool.logconfig import get_annotated_logger
 
@@ -945,7 +946,7 @@ class ZooKeeper(object):
     def resetLostFlag(self):
         self._became_lost = False
 
-    def connect(self, host_list, read_only=False):
+    def connect(self, host_list, read_only=False, auth_data=None):
         '''
         Establish a connection with ZooKeeper cluster.
 
@@ -956,11 +957,15 @@ class ZooKeeper(object):
             :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
             (one per server) defining the ZooKeeper cluster servers.
         :param bool read_only: If True, establishes a read-only connection.
+        :param tuple auth_data: authentication data ("scheme", "credential")
 
         '''
         if self.client is None:
             hosts = buildZooKeeperHosts(host_list)
-            self.client = KazooClient(hosts=hosts, read_only=read_only)
+            self.client = KazooClient(
+                hosts=hosts,
+                read_only=read_only,
+                **nodepool.zk_auth.kazoo_args(auth_data))
             self.client.add_listener(self._connection_listener)
             # Manually retry initial connection attempt
             while True:
