@@ -32,6 +32,10 @@ from nodepool import zk
 
 MINS = 60
 HOURS = 60 * MINS
+
+# How long to wait for an image build
+BUILD_TIMEOUT = 8 * HOURS
+
 # How long to wait for an image save
 IMAGE_TIMEOUT = 6 * HOURS
 
@@ -546,12 +550,13 @@ class CleanupWorker(BaseWorker):
 
 class BuildWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, secure_path,
-                 interval, zk, dib_cmd):
+                 interval, zk, dib_cmd, build_timeout):
         super(BuildWorker, self).__init__(builder_id, config_path, secure_path,
                                           interval, zk)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
         self.dib_cmd = dib_cmd
+        self.build_timeout = build_timeout
 
     def _getBuildLogRoot(self, name):
         log_dir = self._config.build_log_dir
@@ -750,28 +755,38 @@ class BuildWorker(BaseWorker):
         self.log.info('Logging to %s' % (log_fn,))
 
         start_time = time.monotonic()
-        try:
-            p = subprocess.Popen(
-                shlex.split(cmd),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                env=env)
-        except OSError as e:
-            raise exceptions.BuilderError(
-                "Failed to exec '%s'. Error: '%s'" % (cmd, e.strerror)
-            )
 
-        with open(log_fn, 'wb') as log:
-            while True:
-                ln = p.stdout.readline()
-                log.write(ln)
+        # We used to use readline() on stdout to output the lines to the
+        # build log. Unfortunately, this would block as long as the process
+        # ran (with no easy way to timeout the read) and wedge the builder.
+        # Now we write stdout directly to the log and set a timeout on the
+        # wait() call to prevent the wedge.
+        did_timeout = False
+        with open(log_fn, mode='wb', buffering=256) as log:
+            try:
+                p = subprocess.Popen(
+                    shlex.split(cmd),
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    env=env)
+            except OSError as e:
+                raise exceptions.BuilderError(
+                    "Failed to exec '%s'. Error: '%s'" % (cmd, e.strerror)
+                )
+
+            try:
+                rc = p.wait(timeout=self.build_timeout)
+            except subprocess.TimeoutExpired:
+                did_timeout = True
+                rc = 1
+                # flush+fsync necessary to get any unwritten buffered data.
                 log.flush()
-                if not ln:
-                    break
-
-            rc = p.wait()
-            m = "Exit code: %s\n" % rc
-            log.write(m.encode('utf8'))
+                os.fsync(log)
+                m = "ERROR: Build process timeout\n"
+                log.write(m.encode('utf8'))
+            else:
+                m = "Exit code: %s\n" % rc
+                log.write(m.encode('utf8'))
 
         # It's possible the connection to the ZK cluster could have been
         # interrupted during the build. If so, wait for it to return.
@@ -796,9 +811,10 @@ class BuildWorker(BaseWorker):
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
             self._zk.resetLostFlag()
             build_data.state = zk.FAILED
-        elif p.returncode:
+        elif p.returncode or did_timeout:
             self.log.info(
-                "DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
+                "DIB failed creating %s (%s) (timeout=%s)" % (
+                    diskimage.name, p.returncode, did_timeout))
             build_data.state = zk.FAILED
         else:
             self.log.info("DIB image %s is built" % diskimage.name)
@@ -1132,7 +1148,8 @@ class NodePoolBuilder(object):
     log = logging.getLogger("nodepool.builder.NodePoolBuilder")
 
     def __init__(self, config_path, secure_path=None,
-                 num_builders=1, num_uploaders=4, fake=False):
+                 num_builders=1, num_uploaders=4, build_timeout=BUILD_TIMEOUT,
+                 fake=False):
         '''
         Initialize the NodePoolBuilder object.
 
@@ -1140,6 +1157,7 @@ class NodePoolBuilder(object):
         :param str secure_path: Path to secure configuration file.
         :param int num_builders: Number of build workers to start.
         :param int num_uploaders: Number of upload workers to start.
+        :param int build_timeout: Diskimage build timeout in seconds.
         :param bool fake: Whether to fake the image builds.
         '''
         self._config_path = config_path
@@ -1154,6 +1172,7 @@ class NodePoolBuilder(object):
         self.cleanup_interval = 60
         self.build_interval = 10
         self.upload_interval = 10
+        self.build_timeout = build_timeout
         if fake:
             self.dib_cmd = os.path.join(os.path.dirname(__file__), '..',
                                         'nodepool/tests/fake-image-create')
@@ -1225,7 +1244,8 @@ class NodePoolBuilder(object):
             for i in range(self._num_builders):
                 w = BuildWorker(i, builder_id,
                                 self._config_path, self._secure_path,
-                                self.build_interval, self.zk, self.dib_cmd)
+                                self.build_interval, self.zk, self.dib_cmd,
+                                self.build_timeout)
                 w.start()
                 self._build_workers.append(w)
 
