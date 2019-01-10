@@ -1,5 +1,38 @@
 #!/bin/bash
 
+log=
+outfile=
+outtypes=("qcow2")
+
+TEMP=$(getopt -o xo:t: --long qemu-img-options:,no-tmpfs,checksum,logfile: -- "$@")
+if [ $? -ne 0 ]; then
+    echo "Invalid option"
+    exit 1
+fi
+eval set -- "$TEMP"
+while true ; do
+    case "$1" in
+        --checksum)
+            echo " -> set --checksum"; shift 1;;
+        --no-tmpfs)
+            echo " -> set --no-tmpfs"; shift 1;;
+        --qemu-img-options)
+            echo " -> qemu-img-options: $2"; shift 2;;
+	--logfile)
+            echo " -> logfile: $2"; log=$2; shift 2;;
+        -o) outfile=$2; shift 2;;
+        -t) IFS="," read -a outtypes <<< "$2"; shift 2;;
+        -x) echo " -> debugging enabled"; shift;;
+        --) shift ; break ;;
+        *) echo "Unknown option : $1"; exit 1;;
+    esac
+done
+
+# If --logfile was given, direct stdout to it, as well
+if [ ! -z "$log" ]; then
+    exec > >(tee -a ${log})
+fi
+
 echo "*** fake-image-create: start"
 
 echo "arguments:"
@@ -37,31 +70,6 @@ if [[ "${BASE_IMAGE_FILE}" != "Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2" 
     echo "BASE_IMAGE_FILE not set"
     exit 1
 fi
-
-outfile=
-outtypes=("qcow2")
-
-TEMP=$(getopt -o xo:t: --long qemu-img-options:,no-tmpfs,checksum -- "$@")
-if [ $? -ne 0 ]; then
-    echo "Invalid option"
-    exit 1
-fi
-eval set -- "$TEMP"
-while true ; do
-    case "$1" in
-        --checksum)
-            echo " -> set --checksum"; shift 1;;
-        --no-tmpfs)
-            echo " -> set --no-tmpfs"; shift 1;;
-        --qemu-img-options)
-            echo " -> qemu-img-options: $2"; shift 2;;
-        -o) outfile=$2; shift 2;;
-        -t) IFS="," read -a outtypes <<< "$2"; shift 2;;
-        -x) echo " -> debugging enabled"; shift;;
-        --) shift ; break ;;
-        *) echo "Unknown option : $1"; exit 1;;
-    esac
-done
 
 if [ -z "$outfile" ]; then
     echo "No output file specified."
