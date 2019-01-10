@@ -36,6 +36,7 @@ class Config(ConfigValue):
         self.providers = {}
         self.provider_managers = {}
         self.zookeeper_servers = {}
+        self.zookeeper_auth = None
         self.elementsdir = None
         self.imagesdir = None
         self.build_log_dir = None
@@ -82,6 +83,13 @@ class Config(ConfigValue):
             'port': webapp_cfg.get('port', 8005),
             'listen_address': webapp_cfg.get('listen_address', '0.0.0.0')
         }
+
+    def setZooKeeperAuth(self, zk_auth):
+        if not zk_auth:
+            return
+        self.zookeeper_auth = (
+            zk_auth['scheme'],
+            "%s:%s" % (zk_auth['username'], zk_auth['password']))
 
     def setZooKeeperServers(self, zk_cfg):
         if not zk_cfg:
@@ -262,6 +270,7 @@ def loadConfig(config_path):
     newconfig.setDiskImages(config.get('diskimages'))
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
+    newconfig.setZooKeeperAuth(config.get('zookeeper-auth'))
 
     # Ensure at least qcow2 is set to be passed to qemu-img.
     # Note that this needs to be after setting the providers as they
@@ -282,7 +291,8 @@ def loadSecureConfig(config, secure_config_path):
     if secure.get('zookeeper-servers', []):
         config.zookeeper_servers = {}
 
-    # TODO(Shrews): Support ZooKeeper auth
     config.setZooKeeperServers(secure.get('zookeeper-servers'))
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
+
+    config.setZooKeeperAuth(secure.get('zookeeper-auth'))
