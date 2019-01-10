@@ -63,6 +63,11 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
+            'zookeeper-auth': {
+                'scheme': str,
+                'username': str,
+                'password': str,
+            },
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],
@@ -78,3 +83,8 @@ class ConfigValidator:
         for provider_dict in config.get('providers', []):
             provider_schema = get_provider_config(provider_dict).getSchema()
             provider_schema.extend(provider)(provider_dict)
+
+        if config.get('zookeeper-auth') and \
+           config["zookeeper-auth"].get("scheme") not in ("digest", "sasl"):
+            raise Exception(
+                'Zookeeper auth scheme needs to be "digest" or "sasl"')
