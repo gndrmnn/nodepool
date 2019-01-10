@@ -59,6 +59,11 @@ class ConfigValidator:
             'listen_address': str,
         }
 
+        zk_auth = dict(
+            username=v.Required(str),
+            password=v.Required(str),
+        )
+
         top_level = {
             'webapp': webapp,
             'elements-dir': str,
@@ -70,6 +75,7 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
+            'zookeeper-auth': zk_auth,
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],

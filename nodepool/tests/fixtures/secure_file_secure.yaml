@@ -3,6 +3,10 @@ zookeeper-servers:
     port: {zookeeper_port}
     chroot: {zookeeper_chroot}
 
+zookeeper-auth:
+  username: super
+  password: adminsecret
+
 diskimages:
   - name: fake-image
     env-vars:
