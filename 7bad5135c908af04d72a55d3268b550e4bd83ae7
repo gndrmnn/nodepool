@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_f7460050",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-11T16:29:27Z",
+      "side": 1,
+      "message": "We have an image that takes 8-10 hours regularly. So to not break us we\u0027d need to make this configurable.",
+      "revId": "7bad5135c908af04d72a55d3268b550e4bd83ae7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
