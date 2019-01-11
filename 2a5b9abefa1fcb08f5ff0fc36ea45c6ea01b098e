@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_8983dc04",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-01-11T17:11:30Z",
+      "side": 1,
+      "message": "Maybe you want to flush and fsync here after writing the end messages?",
+      "revId": "2a5b9abefa1fcb08f5ff0fc36ea45c6ea01b098e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
