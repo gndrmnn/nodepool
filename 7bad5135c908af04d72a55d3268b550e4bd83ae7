@@ -16,6 +16,24 @@
       "revId": "7bad5135c908af04d72a55d3268b550e4bd83ae7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_29199078",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-01-11T16:56:46Z",
+      "side": 1,
+      "message": "8 hours seems like a good default, then maybe we can set it as a per diskimage configuration item if say tobiash needs it to be 12 hours instead for a particular image?",
+      "parentUuid": "bfdaf3ff_f7460050",
+      "revId": "7bad5135c908af04d72a55d3268b550e4bd83ae7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
