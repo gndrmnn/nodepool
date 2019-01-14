@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_b80dab3f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-14T14:09:59Z",
+      "side": 1,
+      "message": "Actually, I guess we can just append the rc to the log file after normal exit without issue and keep that part the same. And we can just log the new timeout message to the builder log. I think that\u0027d be ok?",
+      "parentUuid": "bfdaf3ff_38621b40",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_87abb1d4",
         "filename": "nodepool/builder.py",
         "patchSetId": 4
