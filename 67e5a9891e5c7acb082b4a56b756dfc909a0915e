@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_077b418c",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-01-14T04:19:58Z",
+      "side": 1,
+      "message": "dib has a --logfile option; perhaps this is suggesting that it would be easier to just point it\u0027s --logfile argument to the right place, rather than capture here and write it out?",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_87abb1d4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-01-14T04:19:58Z",
+      "side": 1,
+      "message": "So AFAICS, this doesn\u0027t then give the backgrounded dib process any graceful exit opportunity?\n\nI\u0027d suggest if dib is stuck, it\u0027s probably something related to I/O, which probably means we have all sorts of chroots open and devices mounted, and exiting is going to be iffy at best.  \n\nHowever, SIGINT here would at least give dib a chance to unravel and *maybe* leave the builder in a less broken state.\n\n(ps. not defending dib here, but it\u0027s abnormal exit case varies from \"cleans up perfectly\" to \"hard exits and leaves mounts and temporary files\" depending on what state it\u0027s in and what it\u0027s currently doing)",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
