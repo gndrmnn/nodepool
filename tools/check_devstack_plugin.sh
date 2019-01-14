@@ -61,6 +61,17 @@ function sshintonode {
     fi
 }
 
+function showserver {
+    name=$1
+    state='ready'
+
+    node_id=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f5 | tr -d ' '`
+    cat `pwd`/clouds.yaml
+    export OS_CLIENT_CONFIG_FILE=`pwd`/clouds.yaml
+    openstack --os-project-name demo --os-username demo server show $node_id -f shell
+
+}
+
 function checknm {
     name=$1
     state='ready'
@@ -116,6 +127,8 @@ if [ ${NODEPOOL_PAUSE_CENTOS_7_DIB,,} = 'false' ]; then
     sshintonode centos-7
     # networkmanager check
     checknm centos-7
+    # userdata check
+    showserver centos-7
 fi
 
 if [ ${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB,,} = 'false' ]; then
@@ -125,6 +138,8 @@ if [ ${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB,,} = 'false' ]; then
     waitfornode debian-stretch
     # check ssh for root user
     sshintonode debian-stretch
+    # userdata check
+    showserver debian-stretch
 fi
 
 if [ ${NODEPOOL_PAUSE_FEDORA_29_DIB,,} = 'false' ]; then
@@ -136,6 +151,8 @@ if [ ${NODEPOOL_PAUSE_FEDORA_29_DIB,,} = 'false' ]; then
     sshintonode fedora-29
     # networkmanager check
     checknm fedora-29
+    # userdata check
+    showserver fedora-29
 fi
 
 if [ ${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB,,} = 'false' ]; then
@@ -145,6 +162,8 @@ if [ ${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB,,} = 'false' ]; then
     waitfornode ubuntu-bionic
     # check ssh for root user
     sshintonode ubuntu-bionic
+    # userdata check
+    showserver ubuntu-bionic
 fi
 
 if [ ${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB,,} = 'false' ]; then
@@ -154,6 +173,8 @@ if [ ${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB,,} = 'false' ]; then
     waitfornode ubuntu-trusty
     # check ssh for root user
     sshintonode ubuntu-trusty
+    # userdata check
+    showserver ubuntu-trusty
 fi
 
 if [ ${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB,,} = 'false' ]; then
@@ -163,6 +184,8 @@ if [ ${NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB,,} = 'false' ]; then
     waitfornode ubuntu-xenial
     # check ssh for root user
     sshintonode ubuntu-xenial
+    # userdata check
+    showserver ubuntu-xenial
 fi
 
 if [ ${NODEPOOL_PAUSE_OPENSUSE_423_DIB,,} = 'false' ]; then
@@ -172,6 +195,8 @@ if [ ${NODEPOOL_PAUSE_OPENSUSE_423_DIB,,} = 'false' ]; then
     waitfornode opensuse-423
     # check ssh for root user
     sshintonode opensuse-423
+    # userdata check
+    showserver opensuse-423
 fi
 if [ ${NODEPOOL_PAUSE_OPENSUSE_150_DIB,,} = 'false' ]; then
     # check that image built
@@ -180,6 +205,8 @@ if [ ${NODEPOOL_PAUSE_OPENSUSE_150_DIB,,} = 'false' ]; then
     waitfornode opensuse-150
     # check ssh for root user
     sshintonode opensuse-150
+    # userdata check
+    showserver opensuse-150
 fi
 if [ ${NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB,,} = 'false' ]; then
     # check that image built
@@ -188,6 +215,8 @@ if [ ${NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB,,} = 'false' ]; then
     waitfornode opensuse-tumbleweed
     # check ssh for root user
     sshintonode opensuse-tumbleweed
+    # userdata check
+    showserver opensuse-tumbleweed
 fi
 if [ ${NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB,,} = 'false' ]; then
     # check that image built
@@ -196,6 +225,8 @@ if [ ${NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB,,} = 'false' ]; then
     waitfornode gentoo-17-0-systemd
     # check ssh for root user
     sshintonode gentoo-17-0-systemd
+    # userdata check
+    showserver gentoo-17-0-systemd
 fi
 
 set -o errexit
