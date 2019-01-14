@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_aa3d4abc",
+        "filename": "nodepool/cmd/builder.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-01-14T20:41:30Z",
+      "side": 1,
+      "message": "I think instead of the CLI arg, we should add something to the config file.  We have a couple of \"global\" arguments (like build dir, etc), and this could be one.  Or, we could make it a per-image argument (so Tobias can say that his 25 hour build can take 25 hours, but other builds can only take 8).  That\u0027s probably the better option, even though it\u0027s a bit more code.\n\nThe reason I don\u0027t think we should have it on the CLI as it makes it much more difficult to change in some circumstances (eg, image-based deployments), and ultimately, this is related to the content of the system (the specific images that are being built) and not as much to the architecture of the deployment.",
+      "revId": "f5448b1bb251afa278ac791ae7fa4374e5078a6b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
