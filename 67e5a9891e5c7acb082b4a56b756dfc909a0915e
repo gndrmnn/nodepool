@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_58a6ffc3",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-14T13:49:16Z",
+      "side": 1,
+      "message": "Umm, that would be easier, wouldn\u0027t it?  :)",
+      "parentUuid": "bfdaf3ff_077b418c",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_87abb1d4",
         "filename": "nodepool/builder.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2019-01-14T04:19:58Z",
       "side": 1,
       "message": "So AFAICS, this doesn\u0027t then give the backgrounded dib process any graceful exit opportunity?\n\nI\u0027d suggest if dib is stuck, it\u0027s probably something related to I/O, which probably means we have all sorts of chroots open and devices mounted, and exiting is going to be iffy at best.  \n\nHowever, SIGINT here would at least give dib a chance to unravel and *maybe* leave the builder in a less broken state.\n\n(ps. not defending dib here, but it\u0027s abnormal exit case varies from \"cleans up perfectly\" to \"hard exits and leaves mounts and temporary files\" depending on what state it\u0027s in and what it\u0027s currently doing)",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_b87dab1d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-14T13:49:16Z",
+      "side": 1,
+      "message": "I tried p.kill() and p.terminate() here. Both cause the builder to hang, and I\u0027m not entirely certain why. Perhaps because of the signal handling we are already doing? If you know how to solve that, I\u0027d be happy to add it here.",
+      "parentUuid": "bfdaf3ff_87abb1d4",
       "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
