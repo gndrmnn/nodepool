@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_93fa0840",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-14T14:52:45Z",
+      "side": 1,
+      "message": "This is done in the most recent patch set.",
+      "parentUuid": "bfdaf3ff_b80dab3f",
+      "revId": "67e5a9891e5c7acb082b4a56b756dfc909a0915e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_87abb1d4",
         "filename": "nodepool/builder.py",
         "patchSetId": 4
