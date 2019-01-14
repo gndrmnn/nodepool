@@ -914,6 +914,15 @@ Selecting the OpenStack driver adds the following options to the
            ``meta-data`` on the active server (e.g. within
            ``config-drive:openstack/latest/meta_data.json``)
 
+        .. attr:: userdata
+           :type: str
+           :default: None
+
+           A multiline string of cloud-config for a node. It requires
+           cloud-init package to be installed on image to work.
+           Additional info about options in cloud-config:
+           https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+
 
 Static Driver
 -------------
