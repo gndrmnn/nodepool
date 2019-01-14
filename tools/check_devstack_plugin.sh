@@ -59,6 +59,13 @@ function sshintonode {
         FAILURE_REASON="Failed to find meta-data in config-drive for $node"
         RETURN=1
     fi
+    /tmp/ssh_wrapper $node \
+        "grep -q testpassed /etc/testfile_nodepool_userdata"
+    if [[ $? -ne 0 ]]; then
+        echo "*** Failed to find userdata"
+        FAILURE_REASON="Failed to find userdata for $node"
+        RETURN=1
+    fi
 }
 
 function checknm {
