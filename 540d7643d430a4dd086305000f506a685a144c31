@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_245bb554",
+        "filename": "nodepool/driver/packet/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-15T21:21:04Z",
+      "side": 1,
+      "message": "All of this should be moved to the nodepool driver documentation, where you\u0027ll also want to describe your driver configuration options. There are existing examples to follow.",
+      "revId": "540d7643d430a4dd086305000f506a685a144c31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
