@@ -16,6 +16,52 @@
       "revId": "540d7643d430a4dd086305000f506a685a144c31",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_b74a7552",
+        "filename": "nodepool/driver/packet/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-15T21:27:07Z",
+      "side": 1,
+      "message": "It\u0027s best to move all instance CRUD within provider.py since that file is expected to define the manager dealing with all of those actions. You\u0027ll also find it can make writing tests easier when those actions are isolated behind ProviderManager.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 18
+      },
+      "revId": "540d7643d430a4dd086305000f506a685a144c31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_97797194",
+        "filename": "nodepool/driver/packet/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-15T21:27:07Z",
+      "side": 1,
+      "message": "Ditto from above.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 61
+      },
+      "revId": "540d7643d430a4dd086305000f506a685a144c31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
