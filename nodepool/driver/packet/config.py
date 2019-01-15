@@ -14,13 +14,11 @@
 
 import logging
 
-import packet
+#import packet
 
 from nodepool.driver import ProviderConfig
 from nodepool.driver import ConfigValue
 from nodepool.driver import ConfigPool
-
-
 
 class PacketProviderConfig(ProviderConfig):
 
@@ -96,6 +94,7 @@ class ProviderPool(ConfigPool):
     def __repr__(self):
         return "<ProviderPool %s>" % self.name
 
+
 class ProviderLabel(ConfigValue):
     def __init__(self):
         self.name = None
@@ -114,5 +113,3 @@ class ProviderLabel(ConfigValue):
 
     def __repr__(self):
         return "<ProviderLabel %s>" % self.name
-
-

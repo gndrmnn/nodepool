@@ -37,17 +37,17 @@ class PacketProvider(Provider):
         self.use_task_manager = use_taskmanager
 
     def labelReady(self, name):
-#
-# TODO
-#
-# On Packet, a label is ready if:
-#   facility exists
-#   plan exists
-#   operating_system exists
-#
-# No checking for quota/capacity is performed
-# No checking tht the specific plan exists at the specific facility
-#
+        #
+        # TODO
+        #
+        # On Packet, a label is ready if:
+        #   facility exists
+        #   plan exists
+        #   operating_system exists
+        #
+        # No checking for quota/capacity is performed
+        # No checking tht the specific plan exists at the specific facility
+        #
         return True
 
     def cleanupNode(self, server_id):
@@ -57,17 +57,15 @@ class PacketProvider(Provider):
           device.delete()
         except packet.baseapi.Error as e:  
             if e.args[0] == 'Error 404: Not found':
+                return
+            if e.args[0] == 
+                'Error 422: Cannot delete a device while it is provisioning':
                 return 
-            if e.args[0] == 'Error 422: Cannot delete a device while it is provisioning':
-                return 
-            if e.args[0] == 'Error 403: You are not authorized to view this device':
-                return 
+            if e.args[0] == 
+                'Error 403: You are not authorized to view this device':
+                return
             else:
                 raise e
-
-
-    def getRequestHandler(self, poolworker, request):
-        return handler.PacketNodeRequestHandler(poolworker, request)
 
     def getRequestHandler(self, poolworker, request):
         return handler.PacketNodeRequestHandler(poolworker, request)
@@ -123,18 +121,19 @@ class PacketProvider(Provider):
         manager = packet.Manager(self.provider.auth_token)
 
         try:
-          for count in iterate_timeout(timeout,
-                                       packet.baseapi.Error,
-                                       "server %s deletion" % server_id):
-              self.cleanupNode(server_id)
-              device = manager.get_device(server_id)
+            for count in iterate_timeout(timeout,
+                                         packet.baseapi.Error,
+                                         "server %s deletion" % server_id):
+                self.cleanupNode(server_id)
+                device = manager.get_device(server_id)
+                device.delete()
         except packet.baseapi.Error as e:  
-          if e.args[0] == 'Error 404: Not found':
-              return 
-          if e.args[0] == 'Error 403: You are not authorized to view this device':
-              return 
-          else:
-              raise e
+            if e.args[0] == 'Error 404: Not found':
+                return 
+            if e.args[0] == 'Error 403: You are not authorized to view this device':
+                return 
+            else:
+                raise e
 
     def stop(self):
         """Stop this provider
