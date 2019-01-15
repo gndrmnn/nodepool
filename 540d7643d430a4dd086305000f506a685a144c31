@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_b7b8352a",
+        "filename": "nodepool/driver/packet/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-15T21:29:15Z",
+      "side": 1,
+      "message": "err, s/ProviderManager/Provider/",
+      "parentUuid": "bfdaf3ff_b74a7552",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 18
+      },
+      "revId": "540d7643d430a4dd086305000f506a685a144c31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_97797194",
         "filename": "nodepool/driver/packet/handler.py",
         "patchSetId": 7
