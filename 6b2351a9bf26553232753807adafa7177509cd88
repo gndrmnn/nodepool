@@ -16,6 +16,24 @@
       "revId": "6b2351a9bf26553232753807adafa7177509cd88",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_64445d1c",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 11
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-15T20:33:38Z",
+      "side": 1,
+      "message": "Stupid autoindenting vim. Fixed.",
+      "parentUuid": "bfdaf3ff_c1bf3bf9",
+      "revId": "6b2351a9bf26553232753807adafa7177509cd88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
