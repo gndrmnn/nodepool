@@ -14,7 +14,7 @@
 
 import logging
 
-#import packet
+import packet
 
 from nodepool.driver import ProviderConfig
 from nodepool.driver import ConfigValue

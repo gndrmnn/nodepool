@@ -15,14 +15,10 @@
 # limitations under the License.
 
 import logging
-import threading
-import time
-import uuid
 
 import packet
 
 
-from nodepool import exceptions
 from nodepool.nodeutils import iterate_timeout
 from nodepool.driver import Provider
 
@@ -53,19 +49,18 @@ class PacketProvider(Provider):
     def cleanupNode(self, server_id):
         manager = packet.Manager(self.provider.auth_token)
         try:
-          device = manager.get_device(server_id)
-          device.delete()
-        except packet.baseapi.Error as e:  
+            device = manager.get_device(server_id)
+            device.delete()
+        except packet.baseapi.Error as e:
             if e.args[0] == 'Error 404: Not found':
-                return
-            if e.args[0] == 
-                'Error 422: Cannot delete a device while it is provisioning':
                 return 
-            if e.args[0] == 
-                'Error 403: You are not authorized to view this device':
+            if e.args[0] == 'Error 422: Cannot delete a device while it is provisioning':
+                return 
+            if e.args[0] == 'Error 403: You are not authorized to view this device':
                 return
             else:
                 raise e
+        return
 
     def getRequestHandler(self, poolworker, request):
         return handler.PacketNodeRequestHandler(poolworker, request)
@@ -126,12 +121,11 @@ class PacketProvider(Provider):
                                          "server %s deletion" % server_id):
                 self.cleanupNode(server_id)
                 device = manager.get_device(server_id)
-                device.delete()
-        except packet.baseapi.Error as e:  
+        except packet.baseapi.Error as e:
             if e.args[0] == 'Error 404: Not found':
                 return 
             if e.args[0] == 'Error 403: You are not authorized to view this device':
-                return 
+                return
             else:
                 raise e
 
