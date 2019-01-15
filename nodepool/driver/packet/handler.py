@@ -34,11 +34,11 @@ class PacketNodeRequestHandler(NodeRequestHandler):
         manager = packet.Manager(self.provider.auth_token)
 
         try:
-          device = manager.create_device(project_id=self.provider.project_id,
-                                         hostname=node.id,
-                                         plan=label.plan,
-                                         facility=self.provider.facility,
-                                         operating_system=label.operating_system)
+            device = manager.create_device(project_id=self.provider.project_id,
+                                       hostname=node.id,
+                                       plan=label.plan,
+                                       facility=self.provider.facility,
+                                       operating_system=label.operating_system)
         except packet.baseapi.Error as e:
             self.log.info("Node id %s failed %s", e.args[0])
             node.state = zk.FAILED
@@ -91,12 +91,14 @@ class PacketNodeRequestHandler(NodeRequestHandler):
                     areLaunchesComplete = False
                 self.zk.storeNode(node)
             except packet.baseapi.Error as e:
-                # if we can't find it then the launch is completed (even if it failed)
+                # if we can't find it
+                # then the launch is completed
+                # (even if it failed)
                 self.log.info(e.args[0])
 
-            if device.state != "active":
-                areLaunchesComplete = False
+        if device.state != "active":
+            areLaunchesComplete = False
 
-            self.log.info("device %s state %s", node.external_id, device.state)
+        self.log.info("device %s state %s", node.external_id, device.state)
 
         return areLaunchesComplete

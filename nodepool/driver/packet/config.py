@@ -14,11 +14,10 @@
 
 import logging
 
-#import packet
-
 from nodepool.driver import ProviderConfig
 from nodepool.driver import ConfigValue
 from nodepool.driver import ConfigPool
+
 
 class PacketProviderConfig(ProviderConfig):
 
