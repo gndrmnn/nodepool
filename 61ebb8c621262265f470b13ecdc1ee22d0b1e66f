@@ -22,6 +22,29 @@
       "revId": "61ebb8c621262265f470b13ecdc1ee22d0b1e66f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_fa70d2de",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-16T18:11:45Z",
+      "side": 1,
+      "message": "Similarly, a call to ProviderConfig.getCommonSchemaDict() is needed.",
+      "range": {
+        "startLine": 271,
+        "startChar": 8,
+        "endLine": 271,
+        "endChar": 20
+      },
+      "revId": "61ebb8c621262265f470b13ecdc1ee22d0b1e66f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
