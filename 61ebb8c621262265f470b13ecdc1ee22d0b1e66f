@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_da5cee7f",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-16T18:06:08Z",
+      "side": 1,
+      "message": "max-servers is part of ConfigPool and that schema is defined there. You need to call ConfigPool.getCommonSchemaDict(), then update the returned dict with your driver attributes.",
+      "range": {
+        "startLine": 254,
+        "startChar": 0,
+        "endLine": 254,
+        "endChar": 43
+      },
+      "revId": "61ebb8c621262265f470b13ecdc1ee22d0b1e66f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
