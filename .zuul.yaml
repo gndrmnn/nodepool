@@ -19,10 +19,7 @@
 - job:
     name: nodepool-functional-base
     parent: devstack
-    # NOTE(ianw): for now, keep these jobs as Xenial only.  We will
-    # add bionic variants, but we want to keep Xenial testing around
-    # whilst we still run Xenial for upstream nodepool-builders too
-    nodeset: openstack-single-node-xenial
+    nodeset: openstack-single-node-bionic
     pre-run: playbooks/nodepool-functional-base/pre.yaml
     post-run: playbooks/nodepool-functional-base/post.yaml
     timeout: 5400
@@ -68,6 +65,13 @@
     vars:
       devstack_localrc:
         NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB: false
+
+- job:
+    # NOTE(ianw): 01-2019 -- keeping the xenial base test around for
+    # coverage until all the builders are moved to bionic
+    name: nodepool-functional-py35-xenial
+    parent: nodepool-functional-py35
+    nodeset: openstack-single-node-xenial
 
 - job:
     name: nodepool-functional-py35-src-base
@@ -152,6 +156,8 @@
         - nodepool-functional-py35:
             voting: false
         - nodepool-functional-py35-src:
+            voting: false
+        - nodepool-functional-py35-xenial:
             voting: false
         - nodepool-functional-k8s
         - pbrx-build-container-images:
