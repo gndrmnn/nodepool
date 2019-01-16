@@ -70,6 +70,11 @@
         NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB: false
 
 - job:
+    name: nodepool-functional-py35-bionic
+    parent: nodepool-functional-py35
+    nodeset: openstack-single-node-bionic
+
+- job:
     name: nodepool-functional-py35-src-base
     parent: nodepool-functional-base
     run: playbooks/nodepool-functional-py35-src/run.yaml
@@ -150,6 +155,8 @@
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-py35:
+            voting: false
+        - nodepool-functional-py35-bionic:
             voting: false
         - nodepool-functional-py35-src:
             voting: false
