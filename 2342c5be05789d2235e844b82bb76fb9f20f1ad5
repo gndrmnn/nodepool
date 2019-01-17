@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_c214f5a2",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 18
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T13:16:13Z",
+      "side": 1,
+      "message": "perhaps use mktemp instead of hardcoded path",
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
