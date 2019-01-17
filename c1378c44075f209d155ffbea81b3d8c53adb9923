@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_6b3f2f25",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1196,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd5e7cf_f1225201",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfd5e7cf_912186fe",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 37
@@ -30,6 +48,24 @@
       "writtenOn": "2019-01-10T06:56:47Z",
       "side": 1,
       "message": "nit: can create",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_4b44abb7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd5e7cf_912186fe",
       "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_ab0e778a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "A new project will be created too. Next PS will mention that.",
+      "parentUuid": "dfd5e7cf_b11ccac1",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfd5e7cf_5179def9",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 37
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "bfdaf3ff_ab83d7cb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1258,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd5e7cf_5179def9",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfd5e7cf_717c22eb",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 37
@@ -81,6 +153,24 @@
       "writtenOn": "2019-01-10T06:56:47Z",
       "side": 1,
       "message": "The unit is missing (millicores?)",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_8b685321",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 37
+      },
+      "lineNbr": 1265,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "it\u0027s actually the cpu unit.",
+      "parentUuid": "dfd5e7cf_717c22eb",
       "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -115,6 +205,24 @@
       "writtenOn": "2019-01-10T06:56:47Z",
       "side": 1,
       "message": "nit: It\u0027s",
+      "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfdaf3ff_cb5f3b70",
+        "filename": "nodepool/driver/openshift/handler.py",
+        "patchSetId": 37
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-01-17T05:19:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd5e7cf_31869add",
       "revId": "c1378c44075f209d155ffbea81b3d8c53adb9923",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
