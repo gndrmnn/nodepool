@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bfdaf3ff_3505f214",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 18
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-01-17T18:44:13Z",
+      "side": 1,
+      "message": "This is actually a configurable devstack value. We may want to source the openrc `source openrc [username] [projectname]` to set these values for us instead.\n\nAlso we may want to use osc instead if that supports the admin showing of the user_data field. Should be more future proof.",
+      "range": {
+        "startLine": 72,
+        "startChar": 18,
+        "endLine": 72,
+        "endChar": 29
+      },
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_c214f5a2",
         "filename": "tools/check_devstack_plugin.sh",
         "patchSetId": 18
