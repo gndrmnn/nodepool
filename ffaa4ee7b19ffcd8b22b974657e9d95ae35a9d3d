@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_e759f28d",
+        "filename": "requirements.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-18T13:48:09Z",
+      "side": 1,
+      "message": "Since there were issues with dogpile 0.7.0 (avoided beginning with 0.21.0), I\u0027m fine with changing this to \u003e\u003d0.21.0",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 29
+      },
+      "revId": "ffaa4ee7b19ffcd8b22b974657e9d95ae35a9d3d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
