@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfdaf3ff_fc3ae4c9",
+        "filename": "nodepool/driver/openshiftpods/config.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-01-18T15:06:46Z",
+      "side": 1,
+      "message": "None of these are documented. Although it is pointed out that the drivers are similar in your doc change, we should still explicitly document the options (and max-pods seems to be unique to this driver).",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 28
+      },
+      "revId": "ce432d50cc9a5de0ba01526e78e894213d2645f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
