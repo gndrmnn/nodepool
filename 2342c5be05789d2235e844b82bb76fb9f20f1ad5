@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fdfeff1_bb2dd2a9",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 18
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-01-19T16:05:03Z",
+      "side": 1,
+      "message": "This is incorrect. userdata is generically available to anything in the image that will read it. cloud-init is just the most popular, most common consumer of userdata. It also doesn\u0027t have to be multiline.",
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_3505f214",
         "filename": "tools/check_devstack_plugin.sh",
         "patchSetId": 18
