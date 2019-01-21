@@ -154,6 +154,37 @@
     required-projects:
       - openstack-infra/nodepool
 
+- job:
+    name: nodepool-build-image
+    parent: zuul-build-image
+    description: Build Docker images.
+    vars: &nodepool_image_vars
+      docker_images:
+        - context: .
+          repository: zuul/nodepool-base
+          target: nodepool-base
+        - context: .
+          repository: zuul/nodepool
+          target: nodepool
+        - context: .
+          repository: zuul/nodepool-launcher
+          target: nodepool-launcher
+        - context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+
+- job:
+    name: nodepool-upload-image
+    parent: zuul-upload-image
+    description: Build Docker images and upload to Docker Hub.
+    vars: *nodepool_image_vars
+
+- job:
+    name: nodepool-promote-image
+    parent: zuul-promote-image
+    description: Promote previously uploaded Docker images.
+    vars: *nodepool_image_vars
+
 - project:
     check:
       jobs:
@@ -170,9 +201,7 @@
             voting: false
         - nodepool-functional-k8s
         - nodepool-functional-openshift
-        - pbrx-build-container-images:
-            vars:
-              pbrx_prefix: zuul
+        - nodepool-build-image
         - zuul-quick-start
     gate:
       jobs:
@@ -181,17 +210,14 @@
         - tox-py35
         - tox-py36:
             nodeset: ubuntu-bionic
-        - pbrx-build-container-images:
-            vars:
-              pbrx_prefix: zuul
         - zuul-quick-start
+        - nodepool-upload-image
     post:
       jobs:
         - publish-zuul-docs
-        - openstackzuul-pbrx-push-container-images:
-            vars:
-              pbrx_prefix: zuul
-
+    promote:
+      jobs:
+        - nodepool-promote-image
     experimental:
       jobs:
         - nodepool-functional-py35-debian-src
