@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_f1e84417",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2019-01-21T23:15:20Z",
+      "side": 1,
+      "message": "Job zuul-build-image not defined",
+      "range": {
+        "startLine": 157,
+        "startChar": 2,
+        "endLine": 175,
+        "endChar": 0
+      },
+      "revId": "92373bdba9973b311562ba51f27b971a4fc49736",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_11ee2822",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2019-01-21T23:15:20Z",
+      "side": 1,
+      "message": "Job zuul-upload-image not defined",
+      "range": {
+        "startLine": 176,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "92373bdba9973b311562ba51f27b971a4fc49736",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_b1f2bc05",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2019-01-21T23:15:20Z",
+      "side": 1,
+      "message": "Job zuul-promote-image not defined",
+      "range": {
+        "startLine": 182,
+        "startChar": 2,
+        "endLine": 187,
+        "endChar": 0
+      },
+      "revId": "92373bdba9973b311562ba51f27b971a4fc49736",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
