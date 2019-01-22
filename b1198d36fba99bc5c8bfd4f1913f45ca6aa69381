@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_6cda2918",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:43:21Z",
+      "side": 1,
+      "message": "nit: I guess diskimage is not yet a thing in this version.",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_8cd74dee",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:43:21Z",
+      "side": 1,
+      "message": "Question: Shall we use aws terminology (elastic ip) in this driver or stick to openstack terminology? I lean towards aws terminology as this should match to the aws entities and it will be easier for new users to use it.",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_2c066188",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:43:21Z",
+      "side": 1,
+      "message": "Similar to the openstack handler this needs to be guarded with:\n\n  if self.pool.host_key_checking:\n    ...\n\nFurther we need to set the keyword argument \u0027gather_host_keys\u0027 to True if the connection_type is ssh, else it must be False.\n\nnit: the return should be \u0027keys\u0027 as nodescan returns a list",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
