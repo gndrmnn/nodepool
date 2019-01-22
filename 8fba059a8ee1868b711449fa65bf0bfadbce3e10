@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_26d2fd5d",
+        "filename": "nodepool/driver/runc/handler.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T20:58:38Z",
+      "side": 1,
+      "message": "nit: this can be simplified to:\n\n len(pool.containers) \u003c pool.max_servers",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_66e6c547",
+        "filename": "nodepool/driver/runc/playbooks/library/zuul_console.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T20:58:38Z",
+      "side": 1,
+      "message": "I feel very bad about forking this script from zuul here. It\u0027s almost guarenteed that if we change something in the zuul variant we forget it here. However I have no better idea atm.",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_86e3a933",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T20:58:38Z",
+      "side": 1,
+      "message": "Should we fix this todo before landing?",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
