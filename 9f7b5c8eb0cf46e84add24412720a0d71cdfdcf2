@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_cc3d55bc",
+        "filename": "tools/print-zk.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:16:18Z",
+      "side": 1,
+      "message": "I think we shoud add a default value here too and later check for the file existence like in the zookeeper-update-auth script so the behavior is consistent.",
+      "revId": "9f7b5c8eb0cf46e84add24412720a0d71cdfdcf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_ec561907",
+        "filename": "tools/zookeeper-update-auth.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:16:18Z",
+      "side": 1,
+      "message": "I don\u0027t see an entry for this script in setup.cfg. As this imports nodepool stuff it can be hard or inconvenient to run it depending on the deployment. So I think we should install this script along with nodepool.",
+      "revId": "9f7b5c8eb0cf46e84add24412720a0d71cdfdcf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_0c5cbd23",
+        "filename": "tools/zookeeper-update-auth.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:16:18Z",
+      "side": 1,
+      "message": "Copy paste issue",
+      "revId": "9f7b5c8eb0cf46e84add24412720a0d71cdfdcf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_ac401137",
+        "filename": "tools/zookeeper-update-auth.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-22T18:16:18Z",
+      "side": 1,
+      "message": "nit: If we ask for confirmation I\u0027d expect a choice between yes and no.",
+      "revId": "9f7b5c8eb0cf46e84add24412720a0d71cdfdcf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
