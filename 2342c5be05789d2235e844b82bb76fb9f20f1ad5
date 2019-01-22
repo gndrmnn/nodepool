@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_204bca84",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 18
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 10969
+      },
+      "writtenOn": "2019-01-22T16:24:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fdfeff1_bb2dd2a9",
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_3505f214",
         "filename": "tools/check_devstack_plugin.sh",
         "patchSetId": 18
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_03f3300c",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 18
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 10969
+      },
+      "writtenOn": "2019-01-22T16:24:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfdaf3ff_3505f214",
+      "range": {
+        "startLine": 72,
+        "startChar": 18,
+        "endLine": 72,
+        "endChar": 29
+      },
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfdaf3ff_c214f5a2",
         "filename": "tools/check_devstack_plugin.sh",
         "patchSetId": 18
@@ -53,6 +95,24 @@
       "writtenOn": "2019-01-17T13:16:13Z",
       "side": 1,
       "message": "perhaps use mktemp instead of hardcoded path",
+      "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_a38ee475",
+        "filename": "tools/check_devstack_plugin.sh",
+        "patchSetId": 18
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 10969
+      },
+      "writtenOn": "2019-01-22T16:24:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfdaf3ff_c214f5a2",
       "revId": "2342c5be05789d2235e844b82bb76fb9f20f1ad5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
