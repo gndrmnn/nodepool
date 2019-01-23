@@ -125,6 +125,9 @@ class AwsProvider(Provider):
         if label.pool.subnet_id:
             args['NetworkInterfaces'][0]['SubnetId'] = label.pool.subnet_id
 
+        if label.userdata:
+            args['UserData'] = label.userdata
+
         # Default block device mapping parameters are embedded in AMIs.
         # We might need to supply our own mapping before lauching the instance.
         # We basically want to make sure DeleteOnTermination is true and be
