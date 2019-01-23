@@ -52,6 +52,7 @@ class ProviderCloudImage(ConfigValue):
         self.image_id = None
         self.image_name = None
         self.username = None
+        self.user_data = None
         self.connection_type = None
         self.connection_port = None
 
@@ -62,6 +63,7 @@ class ProviderCloudImage(ConfigValue):
                     self.image_id == other.image_id and
                     self.image_name == other.image_name and
                     self.username == other.username and
+                    self.user_data == other.user_data and
                     self.connection_type == other.connection_type and
                     self.connection_port == other.connection_port)
         return False

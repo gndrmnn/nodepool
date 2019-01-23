@@ -670,6 +670,12 @@ Selecting the OpenStack driver adds the following options to the
         The username that a consumer should use when connecting to the
         node.
 
+    .. attr:: user_data
+        :type: str
+
+        If this is provided, the content is used as a cloud-init user data
+        script when creating the node.
+
      .. attr:: connection-type
         :type: str
 

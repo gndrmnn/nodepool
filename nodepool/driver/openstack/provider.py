@@ -280,7 +280,7 @@ class OpenStackProvider(Provider):
                      nodepool_image_name=None,
                      networks=None, security_groups=None,
                      boot_from_volume=False, volume_size=50,
-                     instance_properties=None):
+                     instance_properties=None, user_data=None):
         if not networks:
             networks = []
         if not isinstance(image, dict):
@@ -291,7 +291,8 @@ class OpenStackProvider(Provider):
         create_args = dict(name=name,
                            image=image,
                            flavor=flavor,
-                           config_drive=config_drive)
+                           config_drive=config_drive,
+                           user_data=user_data)
         if boot_from_volume:
             create_args['boot_from_volume'] = boot_from_volume
             create_args['volume_size'] = volume_size

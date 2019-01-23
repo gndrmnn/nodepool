@@ -88,6 +88,7 @@ class OpenStackNodeLauncher(NodeLauncher):
                 upload_id=cloud_image.id)
             image_name = diskimage.name
             username = cloud_image.username
+            user_data = None
             connection_type = diskimage.connection_type
             connection_port = diskimage.connection_port
 
@@ -105,6 +106,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             image_id = self.label.cloud_image.name
             image_name = self.label.cloud_image.name
             username = self.label.cloud_image.username
+            user_data = self.label.cloud_image.user_data
             connection_type = self.label.cloud_image.connection_type
             connection_port = self.label.cloud_image.connection_port
 
@@ -139,7 +141,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                 security_groups=self.pool.security_groups,
                 boot_from_volume=self.label.boot_from_volume,
                 volume_size=self.label.volume_size,
-                instance_properties=self.label.instance_properties)
+                instance_properties=self.label.instance_properties,
+                user_data=user_data)
         except openstack.cloud.exc.OpenStackCloudCreateException as e:
             if e.resource_id:
                 self.node.external_id = e.resource_id
