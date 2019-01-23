@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_3f13ca5e",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-23T17:58:48Z",
+      "side": 1,
+      "message": "I\u0027d be in favor of dropping it and adding it together with the support for diskimages.",
+      "parentUuid": "9fdfeff1_0481df8f",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_8cd74dee",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 19
@@ -64,6 +82,24 @@
       "writtenOn": "2019-01-23T17:48:07Z",
       "side": 1,
       "message": "Agree with that. I think it should make sense to an AWS-experienced person first and foremost, both in-code and in the config format.",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_bf281a86",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-01-23T17:58:48Z",
+      "side": 1,
+      "message": "In this case the variable is unused anyway and could be just removed.",
+      "parentUuid": "9fdfeff1_247c23b4",
       "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
