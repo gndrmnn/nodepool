@@ -10,6 +10,7 @@ labels:
   - name: ubuntu1404-by-capitalized-filters
   - name: ubuntu1404-bad-config
   - name: ubuntu1404-non-host-key-checking
+  - name: ubuntu1404-userdata
 
 providers:
   - name: ec2-us-west-2
@@ -67,6 +68,11 @@ providers:
             cloud-image: ubuntu1404-bad-config
             instance-type: t3.medium
             key-name: zuul
+          - name: ubuntu1404-userdata
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+            userdata: fake-user-data
       - name: non-host-key-checking
         max-servers: 1
         subnet-id: null

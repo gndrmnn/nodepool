@@ -12,6 +12,7 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import base64
 
 import fixtures
 import logging
@@ -40,6 +41,7 @@ class TestDriverAws(tests.DBTestCase):
         self.useFixture(
             fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
 
+        ec2_resource = boto3.resource('ec2', region_name='us-west-2')
         ec2 = boto3.client('ec2', region_name='us-west-2')
 
         # TEST-NET-3
@@ -68,7 +70,8 @@ class TestDriverAws(tests.DBTestCase):
 
         def _test_run_node(label,
                            is_valid_config=True,
-                           host_key_checking=True):
+                           host_key_checking=True,
+                           userdata=None):
             with tempfile.NamedTemporaryFile() as tf:
                 tf.write(yaml.safe_dump(
                     raw_config, default_flow_style=False).encode('utf-8'))
@@ -105,6 +108,14 @@ class TestDriverAws(tests.DBTestCase):
                             port=22,
                             timeout=180,
                             gather_hostkeys=True)
+                    if userdata:
+                        instance = ec2_resource.Instance(node.external_id)
+                        response = instance.describe_attribute(
+                            Attribute='userData')
+                        self.assertIn('UserData', response)
+                        userdata = base64.b64decode(
+                            response['UserData']['Value']).decode()
+                        self.assertEqual('fake-user-data', userdata)
 
                     # A new request will be paused and for lack of quota
                     # until this one is deleted
@@ -143,9 +154,12 @@ class TestDriverAws(tests.DBTestCase):
             {"label": "ubuntu1404-bad-config", "is_valid_config": False},
             {"label": "ubuntu1404-non-host-key-checking",
              "host_key_checking": False},
+            {"label": "ubuntu1404-userdata", 'userdata': True},
         ]
 
         for cloud_image in cloud_images:
             _test_run_node(cloud_image["label"],
                            cloud_image.get("is_valid_config"),
-                           cloud_image.get("host_key_checking"))
+                           cloud_image.get("host_key_checking"),
+                           cloud_image.get('userdata'),
+                           )
