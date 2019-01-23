@@ -115,7 +115,7 @@ class AwsProvider(Provider):
             KeyName=label.key_name,
             InstanceType=label.instance_type,
             NetworkInterfaces=[{
-                'AssociatePublicIpAddress': True,
+                'AssociatePublicIpAddress': label.pool.public_ip,
                 'DeviceIndex': 0}])
 
         if label.pool.security_group_id:

@@ -67,7 +67,7 @@ class AwsInstanceLauncher(NodeLauncher):
             raise exceptions.LaunchStatusException(
                 "Instance %s failed to start: %s" % (instance_id, state))
 
-        server_ip = instance.public_ip_address
+        server_ip = instance.public_ip_address or instance.private_ip_address
         if not server_ip:
             raise exceptions.LaunchStatusException(
                 "Instance %s doesn't have a public ip" % instance_id)
