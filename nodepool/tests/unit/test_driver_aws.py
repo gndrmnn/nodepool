@@ -27,16 +27,28 @@ import yaml
 
 from nodepool import tests
 from nodepool import zk
+from nodepool.nodeutils import iterate_timeout
 
 
 class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
 
+    def _wait_for_provider(self, nodepool, provider):
+        for _ in iterate_timeout(
+                30, Exception, 'wait for provider'):
+            try:
+                provider_manager = nodepool.getProviderManager(provider)
+                if provider_manager.ec2 is not None:
+                    break
+            except Exception:
+                pass
+
     @mock_ec2
     def _test_ec2_machine(self, label,
                           is_valid_config=True,
                           host_key_checking=True,
-                          userdata=None):
+                          userdata=None,
+                          public_ip=True):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -70,6 +82,8 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][2]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
@@ -78,6 +92,28 @@ class TestDriverAws(tests.DBTestCase):
             configfile = self.setup_config(tf.name)
             pool = self.useNodepool(configfile, watermark_sleep=1)
             pool.start()
+
+            self._wait_for_provider(pool, 'ec2-us-west-2')
+            provider_manager = pool.getProviderManager('ec2-us-west-2')
+
+            # Note: boto3 doesn't handle private ip addresses correctly
+            # when in fake mode so we need to intercept the
+            # create_instances call and validate the args we supply.
+            def _fake_create_instances(*args, **kwargs):
+                self.assertIsNotNone(kwargs.get('NetworkInterfaces'))
+                interfaces = kwargs.get('NetworkInterfaces')
+                self.assertEqual(1, len(interfaces))
+                if not public_ip:
+                    self.assertEqual(
+                        False,
+                        interfaces[0].get('AssociatePublicIpAddress'))
+                return provider_manager.ec2.create_instances_orig(
+                    *args, **kwargs)
+
+            provider_manager.ec2.create_instances_orig = \
+                provider_manager.ec2.create_instances
+            provider_manager.ec2.create_instances = _fake_create_instances
+
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
             req.node_types.append(label)
@@ -169,3 +205,7 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_userdata(self):
         self._test_ec2_machine('ubuntu1404-userdata',
                                userdata=True)
+
+    def test_ec2_machine_private_ip(self):
+        self._test_ec2_machine('ubuntu1404-private-ip',
+                               public_ip=False)

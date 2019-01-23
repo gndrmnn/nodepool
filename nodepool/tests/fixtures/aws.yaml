@@ -10,6 +10,7 @@ labels:
   - name: ubuntu1404-by-capitalized-filters
   - name: ubuntu1404-bad-config
   - name: ubuntu1404-non-host-key-checking
+  - name: ubuntu1404-private-ip
   - name: ubuntu1404-userdata
 
 providers:
@@ -80,6 +81,16 @@ providers:
         host-key-checking: false
         labels:
           - name: ubuntu1404-non-host-key-checking
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+      - name: private-ip-address
+        max-servers: 1
+        subnet-id: null
+        security-group-id: null
+        public-ip-address: false
+        labels:
+          - name: ubuntu1404-private-ip
             cloud-image: ubuntu1404
             instance-type: t3.medium
             key-name: zuul
