@@ -55,6 +55,7 @@ class ProviderLabel(ConfigValue):
         self.key_name = None
         self.volume_size = None
         self.volume_type = None
+        self.userdata = None
         # The ProviderPool object that owns this label.
         self.pool = None
 
@@ -67,7 +68,9 @@ class ProviderLabel(ConfigValue):
                     and other.instance_type == self.instance_type
                     and other.key_name == self.key_name
                     and other.volume_size == self.volume_size
-                    and other.volume_type == self.volume_type)
+                    and other.volume_type == self.volume_type
+                    and other.userdata == self.userdata
+                    )
         return False
 
     def __repr__(self):
@@ -120,6 +123,7 @@ class ProviderPool(ConfigPool):
             pl.key_name = label['key-name']
             pl.volume_type = label.get('volume-type')
             pl.volume_size = label.get('volume-size')
+            pl.userdata = label.get('userdata', None)
             full_config.labels[label['name']].pools.append(self)
 
     def __eq__(self, other):
@@ -207,7 +211,8 @@ class AwsProviderConfig(ProviderConfig):
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
             'volume-type': str,
-            'volume-size': int
+            'volume-size': int,
+            'userdata': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()
