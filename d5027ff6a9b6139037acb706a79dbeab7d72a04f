@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_96798afd",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 6816
+      },
+      "writtenOn": "2019-01-23T12:50:30Z",
+      "side": 1,
+      "message": "I may be wrong, but it seems to me that the openstacksdk accepts \u0027user_data\u0027 as an argument, not \u0027userdata\u0027.",
+      "revId": "d5027ff6a9b6139037acb706a79dbeab7d72a04f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
