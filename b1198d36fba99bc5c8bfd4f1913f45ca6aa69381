@@ -120,6 +120,23 @@
       "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_2b082790",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-01-28T17:51:56Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "b1198d36fba99bc5c8bfd4f1913f45ca6aa69381",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
