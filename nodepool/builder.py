@@ -750,6 +750,7 @@ class BuildWorker(BaseWorker):
         self.log.info('Logging to %s' % (log_fn,))
 
         start_time = time.monotonic()
+
         try:
             p = subprocess.Popen(
                 shlex.split(cmd),
@@ -761,17 +762,42 @@ class BuildWorker(BaseWorker):
                 "Failed to exec '%s'. Error: '%s'" % (cmd, e.strerror)
             )
 
-        with open(log_fn, 'wb') as log:
-            while True:
-                ln = p.stdout.readline()
-                log.write(ln)
-                log.flush()
-                if not ln:
-                    break
+        did_timeout = False
 
-            rc = p.wait()
-            m = "Exit code: %s\n" % rc
-            log.write(m.encode('utf8'))
+        with open(log_fn, 'wb') as log:
+            rc = None
+            while True:
+                try:
+                    (stdout_data, _) = p.communicate(timeout=10)
+                except subprocess.TimeoutExpired:
+                    # Subprocess did not yet terminate so we can safely try
+                    # reading stdout again.
+                    pass
+                else:
+                    # Subprocess terminated.
+                    rc = p.wait()
+                finally:
+                    if stdout_data:
+                        log.write(stdout_data)
+                        log.flush()
+
+                    if not rc:
+                        # Subprocess not finished; check build timeout
+                        build_time = time.monotonic() - start_time
+                        if build_time > diskimage.build_timeout:
+                            did_timeout = True
+                            self.log.error(
+                                "Build timeout for image %s, build %s "
+                                "(log: %s)",
+                                diskimage.name, build_id, log_fn)
+                            p.kill()
+                            break
+                    else:
+                        # Subprocess finished, write return code
+                        m = "Exit code: %s\n" % rc
+                        log.write(m.encode('utf8'))
+                        log.flush()
+                        break
 
         # It's possible the connection to the ZK cluster could have been
         # interrupted during the build. If so, wait for it to return.
@@ -796,9 +822,10 @@ class BuildWorker(BaseWorker):
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
             self._zk.resetLostFlag()
             build_data.state = zk.FAILED
-        elif p.returncode:
+        elif p.returncode or did_timeout:
             self.log.info(
-                "DIB failed creating %s (%s)" % (diskimage.name, p.returncode))
+                "DIB failed creating %s (%s) (timeout=%s)" % (
+                    diskimage.name, p.returncode, did_timeout))
             build_data.state = zk.FAILED
         else:
             self.log.info("DIB image %s is built" % diskimage.name)
