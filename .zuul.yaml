@@ -28,6 +28,8 @@
     timeout: 5400
     required-projects:
       - openstack-infra/nodepool
+    roles:
+      - zuul: openstack/diskimage-builder
     vars:
       devstack_localrc:
         USE_PYTHON3: True
