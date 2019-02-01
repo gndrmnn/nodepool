@@ -28,6 +28,8 @@
     timeout: 5400
     required-projects:
       - openstack-infra/nodepool
+    roles:
+      - zuul: openstack/diskimage-builder
     vars:
       devstack_localrc:
         USE_PYTHON3: True
@@ -74,10 +76,10 @@
     parent: nodepool-functional-base
     run: playbooks/nodepool-functional-py35-src/run.yaml
     required-projects:
+      - name: openstack/diskimage-builder
       - name: github.com/sqlalchemy/dogpile.cache
       - name: openstack-infra/glean
       - name: openstack-infra/nodepool
-      - name: openstack/diskimage-builder
       - name: openstack/openstacksdk
 
 - job:

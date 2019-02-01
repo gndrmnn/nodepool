@@ -473,6 +473,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
@@ -523,6 +524,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: 29
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
@@ -546,6 +548,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: bionic
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
@@ -573,6 +576,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: trusty
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
@@ -600,6 +604,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: xenial
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
