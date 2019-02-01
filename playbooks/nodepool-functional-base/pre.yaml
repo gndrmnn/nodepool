@@ -1,5 +1,6 @@
 - hosts: all
   roles:
+    - dib-setup-gate-mirrors
     - run-devstack
     - role: bindep
       bindep_profile: default
