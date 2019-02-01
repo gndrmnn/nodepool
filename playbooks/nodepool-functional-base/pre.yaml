@@ -1,6 +1,12 @@
 - hosts: all
   roles:
-    - run-devstack
+    - dib-setup-gate-mirrors
+    - role: run-devstack
+      devstack_localrc:
+        # NOTE(ianw): this is provided by dib-setup-gate-mirrors, and
+        # is a directory with valid repo files that point to the
+        # current mirrors
+        DIB_OS_CI_MIRROR_REPOS: "{{ dib_gate_mirror_repos|default(omit) }}"
     - role: bindep
       bindep_profile: default
 

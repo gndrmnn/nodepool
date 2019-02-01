@@ -212,6 +212,15 @@ EOF
         DIB_DEBOOTSTRAP_EXTRA_ARGS="DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'"
     fi
 
+    # NOTE(ianw): In the gate, the dib-setup-gate-mirrors role has put
+    # bootstrap repos that point to local mirrors in here.  This
+    # variable will tell the openstack-ci-mirrors element to use them
+    # for our yum/dnf builds.  If not in the gate, this is all just a
+    # no-op
+    if [ -n "${DIB_OS_CI_MIRROR_REPOS:-}" ]; then
+        DIB_OS_CI_YUM_REPOS="DIB_OS_CI_YUM_REPOS: ${DIB_OS_CI_MIRROR_REPOS}"
+    fi
+
     NODEPOOL_CENTOS_7_MIN_READY=1
     NODEPOOL_DEBIAN_STRETCH_MIN_READY=1
     NODEPOOL_FEDORA_29_MIN_READY=1
@@ -473,7 +482,9 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     env-vars:
+      ${DIB_OS_CI_YUM_REPOS:-""}
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
       DIB_SHOW_IMAGE_USAGE: '1'
@@ -523,8 +534,10 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: 29
     env-vars:
+      ${DIB_OS_CI_YUM_REPOS:-""}
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
       DIB_SHOW_IMAGE_USAGE: '1'
@@ -546,6 +559,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: bionic
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
@@ -573,6 +587,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: trusty
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
@@ -600,6 +615,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
+      - openstack-ci-mirrors
     release: xenial
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
