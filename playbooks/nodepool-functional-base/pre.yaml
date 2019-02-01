@@ -1,10 +1,26 @@
 - hosts: all
-  roles:
-    - run-devstack
-    - role: bindep
-      bindep_profile: default
 
   tasks:
+    - include_role:
+        name: dib-setup-gate-mirrors
+
+    - debug:
+        var: devstack_localrc
+
+    - set_fact:
+        devstack_localrc: "{{ devstack_localrc | combine( {'DIB_OS_CI_MIRROR_REPOS': dib_gate_mirror_repos } ) }}"
+
+    - debug:
+        var: devstack_localrc
+
+    - include_role:
+        name: run-devstack
+
+    - include_role:
+        name: bindep
+      vars:
+        bindep_profile: default
+
     - name: Ensure nodepool output log directory
       file:
         path: '{{ ansible_user_dir }}/work/logs/nodepool'
