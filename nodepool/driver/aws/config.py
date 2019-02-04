@@ -26,7 +26,6 @@ class ProviderCloudImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.image_id = None
-        self.image_name = None
         self.username = None
         self.connection_type = None
         self.connection_port = None
@@ -35,7 +34,6 @@ class ProviderCloudImage(ConfigValue):
         if isinstance(other, ProviderCloudImage):
             return (self.name == other.name
                     and self.image_id == other.image_id
-                    and self.image_name == other.image_name
                     and self.username == other.username
                     and self.connection_type == other.connection_type
                     and self.connection_port == other.connection_port)
@@ -47,7 +45,7 @@ class ProviderCloudImage(ConfigValue):
     @property
     def external_name(self):
         '''Human readable version of external.'''
-        return self.image_id or self.image_name or self.name
+        return self.image_id or self.name
 
 
 class ProviderLabel(ConfigValue):
@@ -83,7 +81,6 @@ class ProviderPool(ConfigPool):
         self.max_cores = None
         self.max_ram = None
         self.ignore_provider_quota = False
-        self.availability_zone = None
         self.subnet_id = None
         self.security_group_id = None
         self.host_key_checking = True
@@ -99,11 +96,8 @@ class ProviderPool(ConfigPool):
         self.name = pool_config['name']
         self.provider = provider
 
-        self.max_cores = pool_config.get('max-cores', math.inf)
-        self.max_ram = pool_config.get('max-ram', math.inf)
         self.ignore_provider_quota = pool_config.get(
             'ignore-provider-quota', False)
-        self.availability_zone = pool_config.get('availability-zone')
         self.security_group_id = pool_config.get('security-group-id')
         self.subnet_id = pool_config.get('subnet-id')
         self.host_key_checking = bool(
@@ -138,11 +132,8 @@ class ProviderPool(ConfigPool):
             # since this causes recursive checks with OpenStackProviderConfig.
             return (super().__eq__(other)
                     and other.name == self.name
-                    and other.max_cores == self.max_cores
-                    and other.max_ram == self.max_ram
                     and other.ignore_provider_quota == (
                         self.ignore_provider_quota)
-                    and other.availability_zone == self.availability_zone
                     and other.subnet_id == self.subnet_id
                     and other.security_group_id == self.security_group_id
                     and other.host_key_checking == self.host_key_checking
@@ -219,7 +210,6 @@ class AwsProviderConfig(ProviderConfig):
             i = ProviderCloudImage()
             i.name = image['name']
             i.image_id = image.get('image-id', None)
-            i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
@@ -246,8 +236,6 @@ class AwsProviderConfig(ProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [pool_label],
-            'max-cores': int,
-            'max-ram': int,
             'availability-zone': str,
             'security-group-id': str,
             'subnet-id': str,
