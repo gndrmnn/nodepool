@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fdfeff1_5b44e61b",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-02-04T19:08:14Z",
+      "side": 1,
+      "message": "This is no longer needed.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 11
+      },
+      "revId": "94466de3dd4781014ac1c100efc70ab547c766f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_5ba866da",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 1
