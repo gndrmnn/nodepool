@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Workflow+1: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 04 Feb 2019 18:35:22 +0000
+Reviewed-on: https://review.openstack.org/632704
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
