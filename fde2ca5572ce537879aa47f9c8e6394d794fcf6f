@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_c4ca3219",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-05T05:07:56Z",
+      "side": 1,
+      "message": "image-name does not exist",
+      "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_64cfc629",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1417,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-05T05:07:56Z",
+      "side": 1,
+      "message": "nit: trailing whitespace",
+      "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_84d42abf",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-05T05:07:56Z",
+      "side": 1,
+      "message": "This line needs to be indented by two less spaces. Otherwise everything that follows is part of the code block.",
+      "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_24d9bef3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1503,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-05T05:07:56Z",
+      "side": 1,
+      "message": "Should we change this to instance-type as long as we don\u0027t have users and docs yet?",
+      "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
