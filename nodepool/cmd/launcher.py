@@ -58,7 +58,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
 
     def run(self):
         self.pool = nodepool.launcher.NodePool(self.secure_file,
-                                               self.config_file)
+                                               self.config_file,
+                                               tracer=self.tracer)
         if not self.args.no_webapp:
             config = self.pool.loadConfig()
             self.webapp = nodepool.webapp.WebApp(self.pool,

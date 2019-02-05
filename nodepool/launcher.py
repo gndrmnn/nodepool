@@ -26,6 +26,9 @@ import time
 
 from kazoo import exceptions as kze
 
+from opentracing import follows_from
+from opentracing.propagation import Format
+
 from nodepool import exceptions
 from nodepool import provider_manager
 from nodepool import stats
@@ -228,6 +231,16 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             pm = self.getProviderManager()
             rh = pm.getRequestHandler(self, req)
+
+            parent_span = self.nodepool.tracer.extract(Format.TEXT_MAP,
+                                                       req.span)
+            span = self.nodepool.tracer.start_span("handle-request",
+                                                   child_of=parent_span)
+            rh.span = span
+            span.set_tag("noderequest", req.id)
+            span.set_tag("provider", self.provider_name)
+            span.set_tag("launcher", self.launcher_id)
+
             rh.run()
             if rh.paused:
                 self.paused_handler = rh
@@ -252,6 +265,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 else:
                     self.log.debug("Removing handler for request %s",
                                    r.request.id)
+                    r.span.finish()
             except kze.SessionExpiredError:
                 # If we lost our ZooKeeper session, we've lost our NodeRequest
                 # lock so it's no longer active
@@ -837,7 +851,8 @@ class NodePool(threading.Thread):
     log = logging.getLogger("nodepool.NodePool")
 
     def __init__(self, securefile, configfile,
-                 watermark_sleep=WATERMARK_SLEEP):
+                 watermark_sleep=WATERMARK_SLEEP,
+                 tracer=None):
         threading.Thread.__init__(self, name='NodePool')
         self.securefile = securefile
         self.configfile = configfile
@@ -855,6 +870,7 @@ class NodePool(threading.Thread):
         self._delete_thread = None
         self._stats_thread = None
         self._submittedRequests = {}
+        self.tracer = tracer
 
     def stop(self):
         self._stopped = True

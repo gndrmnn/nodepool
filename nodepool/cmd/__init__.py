@@ -26,6 +26,8 @@ import sys
 import threading
 import traceback
 
+from jaeger_client import Config
+
 from nodepool.version import version_info as npd_version_info
 from nodepool import logconfig
 
@@ -111,6 +113,20 @@ class NodepoolApp(object):
         return args
 
     def setup_logging(self):
+        config = Config(
+            config={  # usually read from some yaml config
+                'sampler': {
+                    'type': 'const',
+                    'param': 1,
+                },
+                'logging': True,
+            },
+            service_name=self.app_name,
+            validate=True,
+        )
+        # this call also sets opentracing.tracer
+        self.tracer = config.initialize_tracer()
+
         if self.logconfig:
             logging_config = logconfig.load_config(self.logconfig)
         else:

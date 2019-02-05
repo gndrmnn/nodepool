@@ -24,6 +24,9 @@ import math
 import os
 import voluptuous as v
 
+from opentracing import follows_from
+from opentracing.propagation import Format
+
 from nodepool import zk
 from nodepool import exceptions
 
@@ -350,6 +353,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.done = False
         self.paused = False
         self.launcher_id = self.pw.launcher_id
+        self.tracer = pw.nodepool.tracer
+        self.span = None
 
         self._satisfied_types = LabelRecorder()
         self._failed_nodes = []
@@ -643,7 +648,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         fulfilled. The node set is saved and added to between calls.
         '''
         try:
-            self._runHandler()
+            with self.tracer.start_span("run-handler", child_of=self.span):
+                self._runHandler()
         except Exception:
             self.log.exception(
                 "Declining node request %s due to exception in "

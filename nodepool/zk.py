@@ -473,6 +473,7 @@ class NodeRequest(BaseModel):
         d['reuse'] = self.reuse
         d['requestor'] = self.requestor
         d['relative_priority'] = self.relative_priority
+        d['span'] = self.span
         return d
 
     @staticmethod
@@ -498,6 +499,7 @@ class NodeRequest(BaseModel):
         self.reuse = d.get('reuse', True)
         self.requestor = d.get('requestor')
         self.relative_priority = d.get('relative_priority', 0)
+        self.span = d.get("span")
 
 
 class Node(BaseModel):
