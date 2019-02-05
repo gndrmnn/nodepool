@@ -465,6 +465,7 @@ diskimages:
   - name: centos-7
     pause: $NODEPOOL_PAUSE_CENTOS_7_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - centos-minimal
       - vm
@@ -488,6 +489,7 @@ diskimages:
   - name: debian-stretch
     pause: $NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - debian-minimal
       - vm
@@ -515,6 +517,7 @@ diskimages:
   - name: fedora-29
     pause: $NODEPOOL_PAUSE_FEDORA_29_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - fedora-minimal
       - vm
@@ -538,6 +541,7 @@ diskimages:
   - name: ubuntu-bionic
     pause: $NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - ubuntu-minimal
       - vm
@@ -565,6 +569,7 @@ diskimages:
   - name: ubuntu-trusty
     pause: $NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - ubuntu-minimal
       - vm
@@ -592,6 +597,7 @@ diskimages:
   - name: ubuntu-xenial
     pause: $NODEPOOL_PAUSE_UBUNTU_XENIAL_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - ubuntu-minimal
       - vm
@@ -619,6 +625,7 @@ diskimages:
   - name: opensuse-423
     pause: $NODEPOOL_PAUSE_OPENSUSE_423_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - opensuse-minimal
       - vm
@@ -641,6 +648,7 @@ diskimages:
   - name: opensuse-150
     pause: $NODEPOOL_PAUSE_OPENSUSE_150_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - opensuse-minimal
       - vm
@@ -663,6 +671,7 @@ diskimages:
   - name: opensuse-tumbleweed
     pause: $NODEPOOL_PAUSE_OPENSUSE_TUMBLEWEED_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - opensuse-minimal
       - vm
@@ -685,6 +694,7 @@ diskimages:
   - name: gentoo-17-0-systemd
     pause: $NODEPOOL_PAUSE_GENTOO_17_0_SYSTEMD_DIB
     rebuild-age: 86400
+    build-timeout: 10
     elements:
       - gentoo
       - vm
