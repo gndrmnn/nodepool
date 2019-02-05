@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_9088e022",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-02-05T10:34:06Z",
+      "side": 1,
+      "message": "example of it working for centos is [1]\n\nubuntu builds [2]\n\n[1] http://logs.openstack.org/66/634366/18/experimental/nodepool-functional-py35-redhat-src/c7f17e6/controller/logs/builds/centos-7-0000000001_log.txt.gz#_2019-02-05_09_25_48_256\n\n[2] http://logs.openstack.org/66/634366/18/check/nodepool-functional-py35/11c507b/controller/logs/builds/ubuntu-xenial-0000000001_log.txt.gz#_2019-02-05_09_11_58_356",
+      "revId": "35df40c01e5c7b91505351f5b878ba2f0cd8b37d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
