@@ -116,7 +116,7 @@ class ProviderPool(ConfigPool):
             else:
                 cloud_image = None
             pl.cloud_image = cloud_image
-            pl.instance_type = label.get('instance-type', label['flavor-name'])
+            pl.instance_type = label['instance-type']
             pl.key_name = label['key-name']
             pl.volume_type = label.get('volume-type')
             pl.volume_size = label.get('volume-size')
@@ -204,8 +204,7 @@ class AwsProviderConfig(ProviderConfig):
         pool_label = {
             v.Required('name'): str,
             v.Exclusive('cloud-image', 'label-image'): str,
-            v.Exclusive('instance-type', 'instance-type'): str,
-            v.Exclusive('flavor-name', 'instance-type'): str,
+            v.Required('instance-type'): str,
             v.Required('key-name'): str,
             'volume-type': str,
             'volume-size': int
