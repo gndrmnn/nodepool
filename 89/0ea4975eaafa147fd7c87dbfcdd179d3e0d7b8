@@ -1,0 +1,10 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: Monty Taylor <mordred@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 06 Feb 2019 13:16:06 +0000
+Reviewed-on: https://review.openstack.org/633792
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
