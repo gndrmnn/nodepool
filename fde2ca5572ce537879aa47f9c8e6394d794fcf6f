@@ -139,6 +139,24 @@
       "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_48e07a97",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 1503,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-02-06T13:12:44Z",
+      "side": 1,
+      "message": "Still waking up. We\u0027re already using image-id.",
+      "parentUuid": "9fdfeff1_88518265",
+      "revId": "fde2ca5572ce537879aa47f9c8e6394d794fcf6f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
