@@ -108,6 +108,15 @@ class NodepoolApp(object):
     def parse_args(self):
         args = self.parser.parse_args()
         self.logconfig = self.get_path(args.logconfig)
+
+        # The arguments debug and foreground both lead to nodaemon mode so
+        # set nodaemon if one of them is set.
+        if ((hasattr(self.args, 'debug') and self.args.debug) or
+                (hasattr(self.args, 'foreground') and self.args.foreground)):
+            self.args.nodaemon = True
+        else:
+            self.args.nodaemon = False
+
         return args
 
     def setup_logging(self):
@@ -118,7 +127,8 @@ class NodepoolApp(object):
             # config, leave the config set to emit to stdout.
             if hasattr(self.args, 'nodaemon') and self.args.nodaemon:
                 logging_config = logconfig.ServerLoggingConfig()
-                logging_config.setDebug()
+                if hasattr(self.args, 'debug') and self.args.debug:
+                    logging_config.setDebug()
             else:
                 # Setting a server value updates the defaults to use
                 # WatchedFileHandler on /var/log/nodepool/{server}-debug.log
@@ -161,7 +171,11 @@ class NodepoolDaemonApp(NodepoolApp):
                             default='/var/run/nodepool/%s.pid' % self.app_name)
 
         parser.add_argument('-d',
-                            dest='nodaemon',
+                            dest='debug',
+                            action='store_true',
+                            help='do not run as a daemon with debug logging')
+        parser.add_argument('-f',
+                            dest='foreground',
                             action='store_true',
                             help='do not run as a daemon')
 
