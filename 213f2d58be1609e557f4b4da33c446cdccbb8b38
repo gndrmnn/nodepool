@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_d5c05fe3",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-02-07T21:35:57Z",
+      "side": 1,
+      "message": "Both of these help strings are identical. can we make them distinct for ease of use/understanding?",
+      "range": {
+        "startLine": 180,
+        "startChar": 34,
+        "endLine": 180,
+        "endChar": 56
+      },
+      "revId": "213f2d58be1609e557f4b4da33c446cdccbb8b38",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
