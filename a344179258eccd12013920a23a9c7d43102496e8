@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_113b4dc8",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-02-08T15:34:58Z",
+      "side": 1,
+      "message": "I think you need to set self.args here, not args.",
+      "range": {
+        "startLine": 116,
+        "startChar": 1,
+        "endLine": 118,
+        "endChar": 33
+      },
+      "revId": "a344179258eccd12013920a23a9c7d43102496e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
