@@ -27,5 +27,7 @@ CMD ["/usr/local/bin/nodepool"]
 FROM nodepool as nodepool-launcher
 CMD ["/usr/local/bin/nodepool-launcher"]
 
-FROM nodepool as nodepool-builder
+FROM openstack/diskimage-builder as nodepool-builder
+COPY --from=builder /output/ /output
+RUN /output/install-from-bindep
 CMD ["/usr/local/bin/nodepool-builder"]
