@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fdfeff1_a7bec3fc",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-08T17:18:45Z",
+      "side": 1,
+      "message": "Here",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 39
+      },
+      "revId": "a344179258eccd12013920a23a9c7d43102496e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_113b4dc8",
         "filename": "nodepool/cmd/__init__.py",
         "patchSetId": 3
@@ -13,6 +36,30 @@
       "writtenOn": "2019-02-08T15:34:58Z",
       "side": 1,
       "message": "I think you need to set self.args here, not args.",
+      "range": {
+        "startLine": 116,
+        "startChar": 1,
+        "endLine": 118,
+        "endChar": 33
+      },
+      "revId": "a344179258eccd12013920a23a9c7d43102496e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_07c0ef7b",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-02-08T17:18:45Z",
+      "side": 1,
+      "message": "No, it\u0027s correctly args, not self.args (see above). I first had self.args, but that doesn\u0027t exist and breaks the tests.",
+      "parentUuid": "9fdfeff1_113b4dc8",
       "range": {
         "startLine": 116,
         "startChar": 1,
