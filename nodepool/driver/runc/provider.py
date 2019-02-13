@@ -17,6 +17,7 @@ import json
 import socket
 import subprocess
 import os
+import sys
 import time
 
 from nodepool import exceptions
@@ -52,7 +53,7 @@ class RuncProvider(Provider):
                     " ansible_python_interpreter=/usr/bin/python\n"
                     "[localhost]\nlocalhost"
                     " ansible_connection=local"
-                    " ansible_python_interpreter=/usr/bin/python\n")
+                    " ansible_python_interpreter=%s\n" % sys.executable)
 
             if [True for label in pool.labels.values()
                 if label.path == '/']:
