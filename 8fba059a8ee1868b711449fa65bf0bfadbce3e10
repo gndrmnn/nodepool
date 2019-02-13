@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_e4cb1f50",
+        "filename": "nodepool/driver/runc/handler.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fdfeff1_26d2fd5d",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_8f7911fd",
         "filename": "nodepool/driver/runc/playbooks/clean.yml",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2019-02-13T10:40:43Z",
       "side": 1,
       "message": "This causes a failure on an out-of-the-box setup when the \"hypervisor\" is a Fedora 29 image, and Nodepool is configured to launch images from another location that the hypervisor\u0027s rootfs (that\u0027s what I use, I have not checked if it works when launched from rootfs).\n\nEither the docs should be expanded to `mkdir /var/lib/nodepool/runc/` on each of the container hypervisors, or the playbooks should be made to auto-create these when needed.",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_64b88fc7",
+        "filename": "nodepool/driver/runc/playbooks/clean.yml",
+        "patchSetId": 17
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "Good catch, this playbook needs to ensure the directory exists first.",
+      "parentUuid": "9fdfeff1_8f7911fd",
       "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_84e253d4",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "indeed, next PS should fix that.",
+      "parentUuid": "9fdfeff1_af941538",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_8fb831c8",
         "filename": "nodepool/driver/runc/provider.py",
         "patchSetId": 17
@@ -81,6 +135,24 @@
       "writtenOn": "2019-02-13T10:40:43Z",
       "side": 1,
       "message": "This breaks on IPv6-only container hosts (which is exactly the setup that I am trying to run). In my testing, it seemed to be enough to just store it unmodified:\n\n  pool.hostname \u003d hostname\n\nMy config file contained raw IPv6 address literals. The containers were launched, *but* my inventory looked like this:\n\n all:\n  hosts:\n    f29:\n      ansible_connection: ssh\n      ansible_host: 2001:718:1:28:5054:ff:fece:501\n      ansible_port: 51278\n      ansible_user: ci\n      nodepool:\n        az: null\n        cloud: null\n        host_id: null\n        interface_ip: 2001:718:1:28:5054:ff:fece:501\n        label: f29\n        private_ipv4: null\n        provider: potemkin-runc\n        public_ipv4: 2001:718:1:28:5054:ff:fece:501\n        public_ipv6: null\n        region: null\n\nNotice the public_ipv4 vs. public_ipv6 confusion. Am I doing something wrong here?",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_840b338c",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "The inventory looks correct, it\u0027s the nodepool metadata that needs to be adjusted, e.g. L59 of the launcher.py module.",
+      "parentUuid": "9fdfeff1_8fb831c8",
       "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -110,6 +182,30 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_4401cb69",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "yeah, I wished ansible would be smart enough to figure out remote host python. I guess this could be part of the pool configuration.",
+      "parentUuid": "9fdfeff1_8f8a7118",
+      "range": {
+        "startLine": 55,
+        "startChar": 49,
+        "endLine": 55,
+        "endChar": 64
+      },
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_86e3a933",
         "filename": "nodepool/driver/runc/provider.py",
         "patchSetId": 17
@@ -121,6 +217,24 @@
       "writtenOn": "2019-01-22T20:58:38Z",
       "side": 1,
       "message": "Should we fix this todo before landing?",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_e4f9df7f",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-13T14:08:55Z",
+      "side": 1,
+      "message": "indeed.",
+      "parentUuid": "9fdfeff1_86e3a933",
       "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
