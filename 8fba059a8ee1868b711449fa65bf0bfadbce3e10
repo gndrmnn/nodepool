@@ -159,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_adb733f5",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-13T18:25:29Z",
+      "side": 1,
+      "message": "I fixed this in https://review.openstack.org/#/c/636703",
+      "parentUuid": "9fdfeff1_840b338c",
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_8f8a7118",
         "filename": "nodepool/driver/runc/provider.py",
         "patchSetId": 17
@@ -194,6 +212,30 @@
       "side": 1,
       "message": "yeah, I wished ansible would be smart enough to figure out remote host python. I guess this could be part of the pool configuration.",
       "parentUuid": "9fdfeff1_8f8a7118",
+      "range": {
+        "startLine": 55,
+        "startChar": 49,
+        "endLine": 55,
+        "endChar": 64
+      },
+      "revId": "8fba059a8ee1868b711449fa65bf0bfadbce3e10",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_ed8f7b27",
+        "filename": "nodepool/driver/runc/provider.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-13T18:25:29Z",
+      "side": 1,
+      "message": "Actually I am referting to the interpreter at the nodepool machine. See https://review.openstack.org/#/c/636702/1 .",
+      "parentUuid": "9fdfeff1_4401cb69",
       "range": {
         "startLine": 55,
         "startChar": 49,
