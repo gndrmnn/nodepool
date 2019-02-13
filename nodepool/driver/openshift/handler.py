@@ -39,7 +39,8 @@ class OpenShiftLauncher(NodeLauncher):
         resource = self.handler.manager.prepareProject(project)
         if self.label.type == "pod":
             self.handler.manager.createPod(
-                project, self.label)
+                project, self.label.name, self.label)
+            self.handler.manager.waitForPod(project, self.label.name)
             resource['pod'] = self.label.name
             self.node.connection_type = "kubectl"
             self.node.interface_ip = self.label.name

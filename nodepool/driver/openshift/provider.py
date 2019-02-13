@@ -194,7 +194,8 @@ class OpenshiftProvider(Provider):
         self.log.info("%s: project created" % project)
         return resource
 
-    def createPod(self, project, label):
+    def createPod(self, project, pod_name, label):
+        self.log.debug("%s: creating pod in project %s" % (pod_name, project))
         spec_body = {
             'name': label.name,
             'image': label.image,
@@ -215,15 +216,17 @@ class OpenshiftProvider(Provider):
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
-            'metadata': {'name': label.name},
+            'metadata': {'name': pod_name},
             'spec': {
                 'containers': [spec_body],
             },
             'restartPolicy': 'Never',
         }
         self.k8s_client.create_namespaced_pod(project, pod_body)
+
+    def waitForPod(self, project, pod_name):
         for retry in range(300):
-            pod = self.k8s_client.read_namespaced_pod(label.name, project)
+            pod = self.k8s_client.read_namespaced_pod(pod_name, project)
             if pod.status.phase == "Running":
                 break
             self.log.debug("%s: pod status is %s", project, pod.status.phase)
