@@ -311,17 +311,6 @@ class RuncProvider(Provider):
                     ]
                 },
                 {
-                    "destination": "/tmp",
-                    "type": "tmpfs",
-                    "source": "shm",
-                    "options": [
-                        "nosuid",
-                        "nodev",
-                        "mode=1777",
-                        "size=2G"
-                    ]
-                },
-                {
                     "destination": "/var/tmp",
                     "type": "tmpfs",
                     "source": "shm",
@@ -346,9 +335,9 @@ class RuncProvider(Provider):
                 },
                 # Bind mount user's .ssh
                 {
-                    "destination": "/var/tmp/zuul-console",
+                    "destination": "/tmp",
                     "type": "bind",
-                    "source": "/var/tmp/zuul-console",
+                    "source": "/tmp",
                     "options": ["bind", "rw"],
                 },
                 {

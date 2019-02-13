@@ -65,7 +65,6 @@
 
     - name: "Spawn zuul_console daemon"
       zuul_console:
-        path: "/var/tmp/zuul-console/{log_uuid}.log"
 
     - name: Gather network facts
       setup:
