@@ -22,7 +22,7 @@ from nodepool.driver.utils import NodeLauncher
 from nodepool.driver import NodeRequestHandler
 
 
-class OpenShiftLauncher(NodeLauncher):
+class OpenshiftLauncher(NodeLauncher):
     def __init__(self, handler, node, provider_config, provider_label):
         super().__init__(handler.zk, node, provider_config)
         self.handler = handler
@@ -39,7 +39,8 @@ class OpenShiftLauncher(NodeLauncher):
         resource = self.handler.manager.prepareProject(project)
         if self.label.type == "pod":
             self.handler.manager.createPod(
-                project, self.label)
+                project, self.label.name, self.label)
+            self.handler.manager.waitForPod(project, self.label.name)
             resource['pod'] = self.label.name
             self.node.connection_type = "kubectl"
             self.node.interface_ip = self.label.name
@@ -133,6 +134,6 @@ class OpenshiftNodeRequestHandler(NodeRequestHandler):
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]
-        thd = OpenShiftLauncher(self, node, self.provider, label)
+        thd = OpenshiftLauncher(self, node, self.provider, label)
         thd.start()
         self._threads.append(thd)
