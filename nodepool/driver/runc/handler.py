@@ -54,9 +54,10 @@ class RuncLauncher(NodeLauncher):
 
         self.node.state = zk.READY
         self.node.external_id = hostid
-        self.node.hostname = self.pool.name
+        self.node.hostname = self.pool.hostname
         self.node.interface_ip = self.pool.hostname
-        self.node.public_ipv4 = self.pool.hostname
+        self.node.public_ipv4 = self.pool.public_ipv4
+        self.node.public_ipv6 = self.pool.public_ipv6
         self.node.host_keys = key
         self.node.username = self.label.username
         self.node.connection_port = port

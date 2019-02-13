@@ -67,10 +67,19 @@
       zuul_console:
         path: "/var/tmp/zuul-console/{log_uuid}.log"
 
+    - name: Gather network facts
+      setup:
+        gather_subset:
+          - '!all'
+          - '!min'
+          - network
+
     - set_fact:
         hypervisor_info:
           ports: "{{ used_port.stdout_lines }}"
           containers: "{{ running_containers.stdout_lines }}"
+          ipv4: "{{ ansible_default_ipv4.address | default(None) }}"
+          ipv6: "{{ ansible_default_ipv6.address | default(None) }}"
 
 - hosts: localhost
   tasks:

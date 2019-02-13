@@ -41,7 +41,9 @@ class RuncProvider(Provider):
             else:
                 hostname = pool.name
             pool.use_rootfs = False
-            pool.hostname = socket.gethostbyname(hostname)
+            pool.hostname = hostname
+            pool.public_ipv4 = None
+            pool.public_ipv6 = None
             pool.inventory = os.path.join(
                 self.data_path, "%s.inventory" % pool.name)
             pool.info_path = os.path.join(
@@ -100,6 +102,8 @@ class RuncProvider(Provider):
                 return
             inf = json.load(open(pool.info_path))
             pool.containers = set(inf["containers"])
+            pool.public_ipv4 = inf["ipv4"] if len(inf["ipv4"]) else None
+            pool.public_ipv6 = inf["ipv6"] if len(inf["ipv6"]) else None
         self.ready = True
 
     def stop(self):
