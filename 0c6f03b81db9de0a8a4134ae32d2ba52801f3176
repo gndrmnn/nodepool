@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_1bd1c8fb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-14T10:46:10Z",
+      "side": 1,
+      "message": "I wanted to point out that the examples do not contain this key, so I checked and found out that it\u0027s actually not  mandatory. On the other hand, that example from a static node provider listed the SSH host pubkeys. Not a big deal anyway.",
+      "revId": "0c6f03b81db9de0a8a4134ae32d2ba52801f3176",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
