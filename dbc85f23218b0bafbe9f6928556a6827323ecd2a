@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_567e3de4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 21
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-14T18:34:12Z",
+      "side": 1,
+      "message": "I do not think that that change is still needed, but I\u0027m not removing that.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 47
+      },
+      "revId": "dbc85f23218b0bafbe9f6928556a6827323ecd2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_b6576958",
+        "filename": "nodepool/driver/runc/playbooks/init.yml",
+        "patchSetId": 21
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-14T18:34:12Z",
+      "side": 1,
+      "message": "There was one more discrepancy here, as seen by strace:\n\n [pid 12943] openat(AT_FDCWD, \"/tmp/025056e2-0054-d09a-1846-000000000008-f29.log\", O_RDONLY) \u003d -1 ENOENT (No such file or directory)\n [pid 12943] sendto(6, \"[Zuul] Log not found\\n\", 21, 0, NULL, 0) \u003d 21\n\nChanged in next PS.",
+      "revId": "dbc85f23218b0bafbe9f6928556a6827323ecd2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
