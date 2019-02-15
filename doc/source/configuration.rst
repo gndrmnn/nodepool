@@ -977,17 +977,16 @@ Selecting the static driver adds the following options to the
               nodes:
                 - name: trusty.example.com
                   labels: trusty-static
-                  host-key: fake-key
                   timeout: 13
                   connection-port: 22022
                   username: zuul
+                  host-key: fake-key
                   max-parallel-jobs: 1
 
    .. attr:: pools
       :type: list
 
-      Each entry in a pool's nodes section indicates a static node and
-      it's corresponding label.
+      A pool defines a group of statically declared nodes.
 
       .. note::
 
@@ -1001,56 +1000,68 @@ Selecting the static driver adds the following options to the
          :type: str
          :required:
 
-         The hostname or ip address of the static node. This must be
-         unique across all nodes defined within the configuration file.
-
-      .. attr:: labels
+         Pool name
+         
+      .. attr:: nodes
          :type: list
          :required:
 
-         The list of labels associated with the node.
+         Each entry indicates a static node and it's attributes.
+         
+         .. attr:: name
+            :type: str
+            :required:
 
-      .. attr:: username
-         :type: str
-         :default: zuul
+            The hostname or ip address of the static node. This must be
+            unique across all nodes defined within the configuration file.
 
-         The username nodepool will use to validate it can connect to the
-         node.
+         .. attr:: labels
+            :type: list
+            :required:
 
-      .. attr:: timeout
-         :type: int
-         :default: 5
+            The list of labels associated with the node.
 
-         The timeout in second before the ssh ping is considered failed.
+         .. attr:: timeout
+            :type: int
+            :default: 5
 
-      .. attr:: host-key
-         :type: str
+            The timeout in second before the ssh ping is considered failed.
 
-         The ssh host key of the node.
+         .. attr:: connection-type
+            :type: string
 
-      .. attr:: connection-type
-         :type: string
+            The connection type that a consumer should use when connecting
+            to the node.
 
-         The connection type that a consumer should use when connecting
-         to the node.
+            .. value:: winrm
 
-         .. value:: winrm
+            .. value:: ssh
 
-         .. value:: ssh
+         .. attr:: connection-port
+            :type: int
+            :default: 22 / 5986
 
-      .. attr:: connection-port
-         :type: int
-         :default: 22 / 5986
+            The port that a consumer should use when connecting to the node.
+            For most nodes this is not necessary. This defaults to 22 when
+            ``connection-type`` is 'ssh' and 5986 when it is 'winrm'.
 
-         The port that a consumer should use when connecting to the node.
-         For most nodes this is not necessary. This defaults to 22 when
-         ``connection-type`` is 'ssh' and 5986 when it is 'winrm'.
+         .. attr:: username
+            :type: str
+            :default: zuul
 
-      .. attr:: max-parallel-jobs
-         :type: int
-         :default: 1
+            The username nodepool will use to validate it can connect to the
+            node.
 
-         The number of jobs that can run in parallel on this node.
+         .. attr:: host-key
+            :type: str
+
+            The ssh host key of the node.
+
+         .. attr:: max-parallel-jobs
+            :type: int
+            :default: 1
+            
+            The number of jobs that can run in parallel on this node.
 
 
 Kubernetes Driver
