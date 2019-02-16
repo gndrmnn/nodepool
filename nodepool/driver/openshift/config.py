@@ -60,6 +60,7 @@ class OpenshiftPool(ConfigPool):
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
+            pl.python_path = label.get('python-path', '/usr/bin/python2')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -104,6 +105,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'image-pull': str,
             'cpu': int,
             'memory': int,
+            'python-path': str,
         }
 
         pool = {
