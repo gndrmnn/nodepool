@@ -22,6 +22,30 @@
       "revId": "0d67bc8ea0d6fc99ba1c57f32b165eaf5a204232",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_bc0acc86",
+        "filename": "nodepool/driver/runc/handler.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-16T00:02:49Z",
+      "side": 1,
+      "message": "There is an issue indeed. The max-servers configuration is actually provider scope (not pool scope), but the code is using the default pool\u0027s max-server which is inf. The fix would be to make the max-server\u0027s pool scope in the runc/config.py.\n\nAlso, not sure why you got nodes with \"max-ready: 0\".",
+      "parentUuid": "9fdfeff1_55e2a5a1",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 20
+      },
+      "revId": "0d67bc8ea0d6fc99ba1c57f32b165eaf5a204232",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
