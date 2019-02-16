@@ -19,3 +19,4 @@ providers:
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28
+            python-path: '/usr/bin/python3'

@@ -37,6 +37,7 @@ providers:
           - name: fake-label
             cloud-image: fake-image
             min-ram: 8192
+            python-path: /usr/bin/python3
           - name: fake-label-windows
             cloud-image: fake-image-windows
             min-ram: 8192

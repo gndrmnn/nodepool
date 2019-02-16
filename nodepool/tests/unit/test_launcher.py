@@ -65,6 +65,7 @@ class TestLauncher(tests.DBTestCase):
             self.assertEqual(node.username, "zuul")
             self.assertEqual(node.connection_type, 'ssh')
             self.assertEqual(node.connection_port, 22)
+            self.assertEqual(node.python_path, '/usr/bin/python3')
             p = "{path}/{id}".format(
                 path=self.zk._imageUploadPath(image.image_name,
                                               image.build_id,
@@ -145,6 +146,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[1].type, ['fake-label1'])
         self.assertEqual(nodes[2].type, ['fake-label4'])
         self.assertEqual(nodes[3].type, ['fake-label2'])
+        self.assertEqual(nodes[0].python_path, '/usr/bin/python2')
 
     def _test_node_assignment_at_quota(self,
                                        config,
@@ -1280,6 +1282,7 @@ class TestLauncher(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertIsNone(nodes[0].username)
+        self.assertEqual(nodes[0].python_path, '/usr/bin/python3')
 
         nodes = self.waitForNodes('fake-label-windows')
         self.assertEqual(len(nodes), 1)
@@ -1287,6 +1290,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('winrm', nodes[0].connection_type)
         self.assertEqual(5986, nodes[0].connection_port)
         self.assertEqual(nodes[0].host_keys, [])
+        self.assertEqual(nodes[0].python_path, '/usr/bin/python2')
 
         nodes = self.waitForNodes('fake-label-arbitrary-port')
         self.assertEqual(len(nodes), 1)
