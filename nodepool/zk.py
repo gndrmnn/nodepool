@@ -283,6 +283,7 @@ class ImageBuild(BaseModel):
         self.builder = None       # Hostname
         self.builder_id = None    # Unique ID
         self.username = None
+        self.python_path = None
 
     def __repr__(self):
         d = self.toDict()
@@ -315,6 +316,7 @@ class ImageBuild(BaseModel):
         if len(self.formats):
             d['formats'] = ','.join(self.formats)
         d['username'] = self.username
+        d['python_path'] = self.python_path
         return d
 
     @staticmethod
@@ -332,6 +334,7 @@ class ImageBuild(BaseModel):
         o.builder = d.get('builder')
         o.builder_id = d.get('builder_id')
         o.username = d.get('username', 'zuul')
+        o.python_path = d.get('python_path', '/usr/bin/python2')
         # Only attempt the split on non-empty string
         if d.get('formats', ''):
             o.formats = d.get('formats', '').split(',')
@@ -345,13 +348,14 @@ class ImageUpload(BaseModel):
     VALID_STATES = set([UPLOADING, READY, DELETING, FAILED])
 
     def __init__(self, build_id=None, provider_name=None, image_name=None,
-                 upload_id=None, username=None):
+                 upload_id=None, username=None, python_path=None):
         super(ImageUpload, self).__init__(upload_id)
         self.build_id = build_id
         self.provider_name = provider_name
         self.image_name = image_name
         self.format = None
         self.username = username
+        self.python_path = python_path
         self.external_id = None      # Provider ID of the image
         self.external_name = None    # Provider name of the image
 
@@ -383,6 +387,7 @@ class ImageUpload(BaseModel):
         d['external_name'] = self.external_name
         d['format'] = self.format
         d['username'] = self.username
+        d['python_path'] = self.python_path
         return d
 
     @staticmethod
@@ -404,6 +409,7 @@ class ImageUpload(BaseModel):
         o.external_name = d.get('external_name')
         o.format = d.get('format')
         o.username = d.get('username', 'zuul')
+        o.python_path = d.get('python_path', '/usr/bin/python2')
         return o
 
 
@@ -537,6 +543,7 @@ class Node(BaseModel):
         self.hold_expiration = None
         self.resources = None
         self.attributes = None
+        self.python_path = None
 
     def __repr__(self):
         d = self.toDict()
@@ -574,7 +581,8 @@ class Node(BaseModel):
                     self.host_keys == other.host_keys and
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
-                    self.attributes == other.attributes)
+                    self.attributes == other.attributes and
+                    self.python_path == other.python_path)
         else:
             return False
 
@@ -623,6 +631,7 @@ class Node(BaseModel):
         d['hold_expiration'] = self.hold_expiration
         d['resources'] = self.resources
         d['attributes'] = self.attributes
+        d['python_path'] = self.python_path
         return d
 
     @staticmethod
@@ -686,6 +695,7 @@ class Node(BaseModel):
             self.hold_expiration = hold_expiration
         self.resources = d.get('resources')
         self.attributes = d.get('attributes')
+        self.python_path = d.get('python_path')
 
 
 class ZooKeeper(object):
