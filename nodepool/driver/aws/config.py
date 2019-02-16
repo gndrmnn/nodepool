@@ -120,6 +120,7 @@ class ProviderPool(ConfigPool):
             pl.key_name = label['key-name']
             pl.volume_type = label.get('volume-type')
             pl.volume_size = label.get('volume-size')
+            pl.python_path = label.get('python-path', '/usr/bin/python2')
             full_config.labels[label['name']].pools.append(self)
 
     def __eq__(self, other):
@@ -207,7 +208,8 @@ class AwsProviderConfig(ProviderConfig):
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
             'volume-type': str,
-            'volume-size': int
+            'volume-size': int,
+            'python-path': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

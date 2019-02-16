@@ -118,6 +118,7 @@ class Config(ConfigValue):
             d.image_types = set(diskimage.get('formats', []))
             d.pause = bool(diskimage.get('pause', False))
             d.username = diskimage.get('username', 'zuul')
+            d.python_path = diskimage.get('python-path', '/usr/bin/python2')
             d.build_timeout = diskimage.get('build-timeout', (8 * 60 * 60))
             self.diskimages[d.name] = d
 
@@ -180,6 +181,7 @@ class DiskImage(ConfigValue):
         self.image_types = None
         self.pause = False
         self.username = None
+        self.python_path = None
         self.build_timeout = None
 
     def __eq__(self, other):
@@ -192,6 +194,7 @@ class DiskImage(ConfigValue):
                     other.image_types == self.image_types and
                     other.pause == self.pause and
                     other.username == self.username and
+                    other.python_path == self.python_path and
                     other.build_timeout == self.build_timeout)
         return False
 
