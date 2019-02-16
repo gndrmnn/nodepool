@@ -309,6 +309,12 @@ Options
       The username that a consumer should use when connecting to the
       node.
 
+   .. attr:: python-path
+      :type: string
+      :default: /usr/bin/python2
+
+      The path of the default python interpreter.
+
 
 .. attr:: providers
    :type: list
@@ -681,6 +687,12 @@ Selecting the OpenStack driver adds the following options to the
 
         The username that a consumer should use when connecting to the
         node.
+
+     .. attr:: python-path
+        :type: str
+        :default: /usr/bin/python2
+
+        The path of the default python interpreter.
 
      .. attr:: connection-type
         :type: str
@@ -1057,6 +1069,12 @@ Selecting the static driver adds the following options to the
             The username nodepool will use to validate it can connect to the
             node.
 
+         .. attr:: python-path
+            :type: str
+            :default: /usr/bin/python2
+
+            The path of the default python interpreter.
+
          .. attr:: max-parallel-jobs
             :type: int
             :default: 1
@@ -1173,6 +1191,12 @@ Selecting the kubernetes driver adds the following options to the
          Only used by the
          :value:`providers.[kubernetes].labels.type.pod` label type;
          specifies the image name used by the pod.
+
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
 
 
 Openshift Driver
@@ -1294,6 +1318,12 @@ Selecting the openshift driver adds the following options to the
          :type: str
 
          The ImagePullPolicy, can be IfNotPresent, Always or Never.
+
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
 
       .. attr:: cpu
          :type: int
@@ -1436,6 +1466,12 @@ section of the configuration.
          :type: str
 
          The username that a consumer should use when connecting to the node.
+
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
 
       .. attr:: connection-type
          :type: str
