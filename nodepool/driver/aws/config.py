@@ -34,6 +34,7 @@ class ProviderCloudImage(ConfigValue):
             return (self.name == other.name
                     and self.image_id == other.image_id
                     and self.username == other.username
+                    and self.python_path == other.python_path
                     and self.connection_type == other.connection_type
                     and self.connection_port == other.connection_port)
         return False
@@ -189,6 +190,7 @@ class AwsProviderConfig(ProviderConfig):
             i.name = image['name']
             i.image_id = image.get('image-id', None)
             i.username = image.get('username', None)
+            i.python_path = image.get('python-path', '/usr/bin/python2')
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
                 'connection-port',
@@ -224,6 +226,7 @@ class AwsProviderConfig(ProviderConfig):
             'connection-port': int,
             'image-id': str,
             'username': str,
+            'python-path': str,
         }
 
         provider = ProviderConfig.getCommonSchemaDict()

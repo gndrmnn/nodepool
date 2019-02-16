@@ -58,6 +58,7 @@ class StaticPool(ConfigPool):
                 'connection-type': node.get('connection-type', 'ssh'),
                 'username': node.get('username', 'zuul'),
                 'max-parallel-jobs': int(node.get('max-parallel-jobs', 1)),
+                'python-path': node.get('python-path', '/usr/bin/python2'),
             })
             if isinstance(node['labels'], str):
                 for label in node['labels'].split():
@@ -106,6 +107,7 @@ class StaticProviderConfig(ProviderConfig):
             'connection-port': int,
             'connection-type': str,
             'max-parallel-jobs': int,
+            'python-path': str,
         }
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({

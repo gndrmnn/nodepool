@@ -23,6 +23,7 @@ providers:
     rate: 0.0001
     cloud-images:
       - name: fake-image
+        python-path: /usr/bin/python3
       - name: fake-image-windows
         username: zuul
         connection-type: winrm
