@@ -80,6 +80,7 @@ providers:
         config-drive: true
       - name: windows-unmanaged
         username: winzuul
+        python-path: A:/python3.7.exe
         connection-type: winrm
         connection-port: 5986
     pools:
@@ -136,6 +137,7 @@ providers:
           - name: openshift-pod
             type: pod
             image: docker.io/fedora:28
+            python-path: /usr/bin/python3
             memory: 512
             cpu: 2
 
@@ -175,6 +177,7 @@ diskimages:
     release: trusty
     rebuild-age: 3600
     build-timeout: 3600
+    python-path: /bin/python3.6
     env-vars:
       TMPDIR: /opt/dib_tmp
       DIB_IMAGE_CACHE: /opt/dib_cache
