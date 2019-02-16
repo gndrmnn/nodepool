@@ -18,14 +18,14 @@ import math
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
-from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPoolLabel
 from nodepool.driver import ProviderConfig
 
 
-class OpenshiftLabel(ConfigValue):
+class OpenshiftLabel(ConfigPoolLabel):
     def __eq__(self, other):
         if isinstance(other, OpenshiftLabel):
-            return (other.name == self.name and
+            return (super().__eq__(other) and
                     other.type == self.type and
                     other.image_pull == self.image_pull and
                     other.image == self.image and
@@ -35,6 +35,14 @@ class OpenshiftLabel(ConfigValue):
 
     def __repr__(self):
         return "<OpenshiftLabel %s>" % self.name
+
+    def load(self, label, pool, full_config):
+        super().load(label, pool, full_config)
+        self.type = label['type']
+        self.image = label.get('image')
+        self.image_pull = label.get('image-pull', 'IfNotPresent')
+        self.cpu = label.get('cpu')
+        self.memory = label.get('memory')
 
 
 class OpenshiftPool(ConfigPool):
@@ -54,15 +62,7 @@ class OpenshiftPool(ConfigPool):
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = OpenshiftLabel()
-            pl.name = label['name']
-            pl.type = label['type']
-            pl.image = label.get('image')
-            pl.image_pull = label.get('image-pull', 'IfNotPresent')
-            pl.cpu = label.get('cpu')
-            pl.memory = label.get('memory')
-            pl.pool = self
-            self.labels[pl.name] = pl
-            full_config.labels[label['name']].pools.append(self)
+            pl.load(label, self, full_config)
 
 
 class OpenshiftProviderConfig(ProviderConfig):
@@ -97,14 +97,14 @@ class OpenshiftProviderConfig(ProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
-        openshift_label = {
-            v.Required('name'): str,
+        openshift_label = ConfigPoolLabel.getCommonSchemaDict()
+        openshift_label.update({
             v.Required('type'): str,
             'image': str,
             'image-pull': str,
             'cpu': int,
             'memory': int,
-        }
+        })
 
         pool = {
             v.Required('name'): str,

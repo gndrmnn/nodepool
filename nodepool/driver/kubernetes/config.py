@@ -17,14 +17,14 @@
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
-from nodepool.driver import ConfigValue
+from nodepool.driver import ConfigPoolLabel
 from nodepool.driver import ProviderConfig
 
 
-class KubernetesLabel(ConfigValue):
+class KubernetesLabel(ConfigPoolLabel):
     def __eq__(self, other):
         if isinstance(other, KubernetesLabel):
-            return (other.name == self.name and
+            return (super().__eq__(other) and
                     other.type == self.type and
                     other.image_pull == self.image_pull and
                     other.image == self.image)
@@ -32,6 +32,12 @@ class KubernetesLabel(ConfigValue):
 
     def __repr__(self):
         return "<KubternetesLabel %s>" % self.name
+
+    def load(self, label, pool, full_config):
+        super().load(label, pool, full_config)
+        self.type = label['type']
+        self.image = label.get('image')
+        self.image_pull = label.get('image-pull', 'IfNotPresent')
 
 
 class KubernetesPool(ConfigPool):
@@ -51,13 +57,7 @@ class KubernetesPool(ConfigPool):
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = KubernetesLabel()
-            pl.name = label['name']
-            pl.type = label['type']
-            pl.image = label.get('image')
-            pl.image_pull = label.get('image-pull', 'IfNotPresent')
-            pl.pool = self
-            self.labels[pl.name] = pl
-            full_config.labels[label['name']].pools.append(self)
+            pl.load(label, self, full_config)
 
 
 class KubernetesProviderConfig(ProviderConfig):
@@ -91,12 +91,12 @@ class KubernetesProviderConfig(ProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
-        k8s_label = {
-            v.Required('name'): str,
+        k8s_label = ConfigPoolLabel.getCommonSchemaDict()
+        k8s_label.update({
             v.Required('type'): str,
             'image': str,
             'image-pull': str,
-        }
+        })
 
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({

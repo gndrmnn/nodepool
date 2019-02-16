@@ -283,6 +283,7 @@ class OpenStackNodeLauncher(NodeLauncher):
                 attempts += 1
 
         self.node.state = zk.READY
+        self.node.python_path = self.label.python_path
         self.zk.storeNode(self.node)
         self.log.info("Node id %s is ready", self.node.id)
 

@@ -20,6 +20,7 @@ import voluptuous as v
 from nodepool.driver import ProviderConfig
 from nodepool.driver import ConfigValue
 from nodepool.driver import ConfigPool
+from nodepool.driver import ConfigPoolLabel
 
 
 class ProviderDiskImage(ConfigValue):
@@ -75,9 +76,9 @@ class ProviderCloudImage(ConfigValue):
         return self.image_id or self.image_name or self.name
 
 
-class ProviderLabel(ConfigValue):
+class ProviderLabel(ConfigPoolLabel):
     def __init__(self):
-        self.name = None
+        super().__init__()
         self.diskimage = None
         self.cloud_image = None
         self.min_ram = None
@@ -95,12 +96,12 @@ class ProviderLabel(ConfigValue):
         if isinstance(other, ProviderLabel):
             # NOTE(Shrews): We intentionally do not compare 'pool' here
             # since this causes recursive checks with ProviderPool.
-            return (other.diskimage == self.diskimage and
+            return (super().__eq__(other) and
+                    other.diskimage == self.diskimage and
                     other.cloud_image == self.cloud_image and
                     other.min_ram == self.min_ram and
                     other.flavor_name == self.flavor_name and
                     other.key_name == self.key_name and
-                    other.name == self.name and
                     other.console_log == self.console_log and
                     other.boot_from_volume == self.boot_from_volume and
                     other.volume_size == self.volume_size and
@@ -110,6 +111,33 @@ class ProviderLabel(ConfigValue):
 
     def __repr__(self):
         return "<ProviderLabel %s>" % self.name
+
+    def load(self, label, pool, full_config):
+        super().load(label, pool, full_config)
+        diskimage = label.get('diskimage')
+        if diskimage:
+            self.diskimage = full_config.diskimages[diskimage]
+        else:
+            self.diskimage = None
+        cloud_image_name = label.get('cloud-image')
+        if cloud_image_name:
+            cloud_image = pool.provider.cloud_images.get(cloud_image_name)
+            if not cloud_image:
+                raise ValueError(
+                    "cloud-image %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (cloud_image_name, pool.name, self.name))
+        else:
+            cloud_image = None
+        self.cloud_image = cloud_image
+        self.min_ram = label.get('min-ram', 0)
+        self.flavor_name = label.get('flavor-name')
+        self.key_name = label.get('key-name')
+        self.console_log = label.get('console-log', False)
+        self.boot_from_volume = bool(label.get('boot-from-volume', False))
+        self.volume_size = label.get('volume-size', 50)
+        self.instance_properties = label.get('instance-properties')
+        self.userdata = label.get('userdata')
 
 
 class ProviderPool(ConfigPool):
@@ -177,38 +205,7 @@ class ProviderPool(ConfigPool):
 
         for label in pool_config.get('labels', []):
             pl = ProviderLabel()
-            pl.name = label['name']
-            pl.pool = self
-            self.labels[pl.name] = pl
-            diskimage = label.get('diskimage', None)
-            if diskimage:
-                pl.diskimage = full_config.diskimages[diskimage]
-            else:
-                pl.diskimage = None
-            cloud_image_name = label.get('cloud-image', None)
-            if cloud_image_name:
-                cloud_image = provider.cloud_images.get(cloud_image_name, None)
-                if not cloud_image:
-                    raise ValueError(
-                        "cloud-image %s does not exist in provider %s"
-                        " but is referenced in label %s" %
-                        (cloud_image_name, self.name, pl.name))
-            else:
-                cloud_image = None
-            pl.cloud_image = cloud_image
-            pl.min_ram = label.get('min-ram', 0)
-            pl.flavor_name = label.get('flavor-name', None)
-            pl.key_name = label.get('key-name')
-            pl.console_log = label.get('console-log', False)
-            pl.boot_from_volume = bool(label.get('boot-from-volume',
-                                                 False))
-            pl.volume_size = label.get('volume-size', 50)
-            pl.instance_properties = label.get('instance-properties',
-                                               None)
-            pl.userdata = label.get('userdata', None)
-
-            top_label = full_config.labels[pl.name]
-            top_label.pools.append(self)
+            pl.load(label, self, full_config)
 
 
 class OpenStackProviderConfig(ProviderConfig):
@@ -347,8 +344,8 @@ class OpenStackProviderConfig(ProviderConfig):
             'username': str,
         }
 
-        pool_label_main = {
-            v.Required('name'): str,
+        pool_label_main = ConfigPoolLabel.getCommonSchemaDict()
+        pool_label_main.update({
             v.Exclusive('diskimage', 'label-image'): str,
             v.Exclusive('cloud-image', 'label-image'): str,
             'min-ram': int,
@@ -359,7 +356,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'volume-size': int,
             'instance-properties': dict,
             'userdata': str,
-        }
+        })
 
         label_min_ram = v.Schema({v.Required('min-ram'): int}, extra=True)
 

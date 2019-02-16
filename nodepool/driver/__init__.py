@@ -825,6 +825,43 @@ class ConfigValue(object, metaclass=abc.ABCMeta):
         return not self.__eq__(other)
 
 
+class ConfigPoolLabel(ConfigValue, metaclass=abc.ABCMeta):
+    '''
+    Base class for a single pool label as defined in the configuration file.
+    '''
+    def __init__(self):
+        self.name = None
+        self.python_path = None
+
+    def __eq__(self, other):
+        if isinstance(other, ConfigPoolLabel):
+            return (self.name == other.name and
+                    self.python_path == other.python_path)
+        return False
+
+    @classmethod
+    def getCommonSchemaDict(self):
+        '''
+        Return the schema dict for common pool label attributes.
+        '''
+        return {
+            v.Required('name'): str,
+            'python-path': str,
+        }
+
+    @abc.abstractmethod
+    def load(self, label_config, pool, full_config):
+        '''
+        Load pool label config options from the parsed configuration file.
+        '''
+        self.name = label_config['name']
+        self.python_path = label_config.get(
+            'python-path', '/usr/bin/python2')
+        self.pool = pool
+        pool.labels[self.name] = self
+        full_config.labels[self.name].pools.append(pool)
+
+
 class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
     '''
     Base class for a single pool as defined in the configuration file.

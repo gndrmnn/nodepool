@@ -942,6 +942,12 @@ Selecting the OpenStack driver adds the following options to the
            Additional info about options in cloud-config:
            https://cloudinit.readthedocs.io/en/latest/topics/examples.html
 
+        .. attr:: python-path
+           :type: str
+           :default: /usr/bin/python2
+
+           The path of the default python interpreter.
+
 
 Static Driver
 -------------
@@ -1063,6 +1069,12 @@ Selecting the static driver adds the following options to the
 
             The number of jobs that can run in parallel on this node.
 
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
+
 
 Kubernetes Driver
 -----------------
@@ -1173,6 +1185,12 @@ Selecting the kubernetes driver adds the following options to the
          Only used by the
          :value:`providers.[kubernetes].labels.type.pod` label type;
          specifies the image name used by the pod.
+
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
 
 
 Openshift Driver
@@ -1308,6 +1326,13 @@ Selecting the openshift driver adds the following options to the
          Only used by the
          :value:`providers.[openshift].labels.type.pod` label type;
          specifies the amount of memory in MB to request for the pod.
+
+      .. attr:: python-path
+         :type: str
+         :default: /usr/bin/python2
+
+         The path of the default python interpreter.
+
 
 AWS EC2 Driver
 --------------
@@ -1537,6 +1562,12 @@ section of the configuration.
               :type: int
 
               If given, the size of the root EBS volume, in GiB.
+
+          .. attr:: python-path
+             :type: str
+             :default: /usr/bin/python2
+
+             The path of the default python interpreter.
 
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html

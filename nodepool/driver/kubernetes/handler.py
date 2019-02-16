@@ -39,6 +39,7 @@ class K8SLauncher(NodeLauncher):
                 self.node, self.handler.pool.name, self.label)
 
         self.node.state = zk.READY
+        self.node.python_path = self.label.python_path
         # NOTE: resource access token may be encrypted here
         self.node.connection_port = resource
         if self.label.type == "namespace":

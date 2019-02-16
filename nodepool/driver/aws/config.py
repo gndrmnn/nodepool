@@ -17,6 +17,7 @@
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
+from nodepool.driver import ConfigPoolLabel
 from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
@@ -47,9 +48,9 @@ class ProviderCloudImage(ConfigValue):
         return self.image_id or self.name
 
 
-class ProviderLabel(ConfigValue):
+class ProviderLabel(ConfigPoolLabel):
     def __init__(self):
-        self.name = None
+        super().__init__()
         self.cloud_image = None
         self.instance_type = None
         self.key_name = None
@@ -62,7 +63,7 @@ class ProviderLabel(ConfigValue):
         if isinstance(other, ProviderLabel):
             # NOTE(Shrews): We intentionally do not compare 'pool' here
             # since this causes recursive checks with ProviderPool.
-            return (other.name == self.name
+            return (super().__eq__(other)
                     and other.cloud_image == self.cloud_image
                     and other.instance_type == self.instance_type
                     and other.key_name == self.key_name
@@ -72,6 +73,25 @@ class ProviderLabel(ConfigValue):
 
     def __repr__(self):
         return "<ProviderLabel %s>" % self.name
+
+    def load(self, label, pool, full_config):
+        super().load(label, pool, full_config)
+        cloud_image_name = label.get('cloud-image', None)
+        if cloud_image_name:
+            cloud_image = pool.provider.cloud_images.get(
+                cloud_image_name, None)
+            if not cloud_image:
+                raise ValueError(
+                    "cloud-image %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (cloud_image_name, pool.name, self.name))
+        else:
+            cloud_image = None
+        self.cloud_image = cloud_image
+        self.instance_type = label['instance-type']
+        self.key_name = label['key-name']
+        self.volume_type = label.get('volume-type')
+        self.volume_size = label.get('volume-size')
 
 
 class ProviderPool(ConfigPool):
@@ -101,26 +121,7 @@ class ProviderPool(ConfigPool):
 
         for label in pool_config.get('labels', []):
             pl = ProviderLabel()
-            pl.name = label['name']
-            pl.pool = self
-            self.labels[pl.name] = pl
-            cloud_image_name = label.get('cloud-image', None)
-            if cloud_image_name:
-                cloud_image = self.provider.cloud_images.get(
-                    cloud_image_name, None)
-                if not cloud_image:
-                    raise ValueError(
-                        "cloud-image %s does not exist in provider %s"
-                        " but is referenced in label %s" %
-                        (cloud_image_name, self.name, pl.name))
-            else:
-                cloud_image = None
-            pl.cloud_image = cloud_image
-            pl.instance_type = label['instance-type']
-            pl.key_name = label['key-name']
-            pl.volume_type = label.get('volume-type')
-            pl.volume_size = label.get('volume-size')
-            full_config.labels[label['name']].pools.append(self)
+            pl.load(label, self, full_config)
 
     def __eq__(self, other):
         if isinstance(other, ProviderPool):
@@ -201,14 +202,14 @@ class AwsProviderConfig(ProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
-        pool_label = {
-            v.Required('name'): str,
+        pool_label = ConfigPoolLabel.getCommonSchemaDict()
+        pool_label.update({
             v.Exclusive('cloud-image', 'label-image'): str,
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
             'volume-type': str,
             'volume-size': int
-        }
+        })
 
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
