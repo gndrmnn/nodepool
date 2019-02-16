@@ -206,6 +206,7 @@ class ProviderPool(ConfigPool):
             pl.instance_properties = label.get('instance-properties',
                                                None)
             pl.userdata = label.get('userdata', None)
+            pl.python_path = label.get('python-path', '/usr/bin/python2')
 
             top_label = full_config.labels[pl.name]
             top_label.pools.append(self)
@@ -359,6 +360,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'volume-size': int,
             'instance-properties': dict,
             'userdata': str,
+            'python-path': str,
         }
 
         label_min_ram = v.Schema({v.Required('min-ram'): int}, extra=True)

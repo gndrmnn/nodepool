@@ -55,6 +55,7 @@ class KubernetesPool(ConfigPool):
             pl.type = label['type']
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
+            pl.python_path = label.get('python-path', '/usr/bin/python2')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -96,6 +97,7 @@ class KubernetesProviderConfig(ProviderConfig):
             v.Required('type'): str,
             'image': str,
             'image-pull': str,
+            'python-path': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

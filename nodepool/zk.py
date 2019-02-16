@@ -537,6 +537,7 @@ class Node(BaseModel):
         self.hold_expiration = None
         self.resources = None
         self.attributes = None
+        self.python_path = None
 
     def __repr__(self):
         d = self.toDict()
@@ -574,7 +575,8 @@ class Node(BaseModel):
                     self.host_keys == other.host_keys and
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
-                    self.attributes == other.attributes)
+                    self.attributes == other.attributes and
+                    self.python_path == other.python_path)
         else:
             return False
 
@@ -623,6 +625,7 @@ class Node(BaseModel):
         d['hold_expiration'] = self.hold_expiration
         d['resources'] = self.resources
         d['attributes'] = self.attributes
+        d['python_path'] = self.python_path
         return d
 
     @staticmethod
@@ -686,6 +689,7 @@ class Node(BaseModel):
             self.hold_expiration = hold_expiration
         self.resources = d.get('resources')
         self.attributes = d.get('attributes')
+        self.python_path = d.get('python_path')
 
 
 class ZooKeeper(object):
