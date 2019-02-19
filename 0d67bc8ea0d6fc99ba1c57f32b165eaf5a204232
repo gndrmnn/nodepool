@@ -46,6 +46,30 @@
       "revId": "0d67bc8ea0d6fc99ba1c57f32b165eaf5a204232",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_d5fada41",
+        "filename": "nodepool/driver/runc/handler.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-19T11:41:04Z",
+      "side": 1,
+      "message": "I double-checked the config propagation, and it appears to work. When I add extra debugging output to RuncNodeRequestHandler.hasRemainingQuota, the pool.max_servers is correctly set to 1, but pool.containers remains empty.\n\nI checked this with a change that requires 9 jobs and a pool config containing 4 pools (runc hypervisors), each with max-servers: 1.\n\nI also tried queueing two changes at once, each again resulting in 9 jobs. This resulted in 18 containers on 4 hypervisors.\n\nThis looks like a time-of-check, time-of-use issue to me. Stuff gets added into pool.containers only after they are really started via RuncProvider.createContainer(). Perhaps there should be some locking around that? How do other providers handle this?",
+      "parentUuid": "9fdfeff1_bc0acc86",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 20
+      },
+      "revId": "0d67bc8ea0d6fc99ba1c57f32b165eaf5a204232",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
