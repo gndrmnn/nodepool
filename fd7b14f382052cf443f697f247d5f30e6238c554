@@ -16,6 +16,24 @@
       "revId": "fd7b14f382052cf443f697f247d5f30e6238c554",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_c811ca06",
+        "filename": "nodepool/driver/runc/handler.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 13413
+      },
+      "writtenOn": "2019-02-20T08:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fdfeff1_cdc47c11",
+      "revId": "fd7b14f382052cf443f697f247d5f30e6238c554",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
