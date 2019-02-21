@@ -1125,6 +1125,12 @@ Selecting the runC driver adds the following options to the
          be used to limit the number of containers. If not defined
          nodepool can create as many servers the tenant allows.
 
+      .. attr:: rw-overlay
+         :type: bool
+
+         Whether to mount container's rootfs as a writable overlay. If not
+         defined, the root filesystem will be mounted read-only.
+
    .. attr:: labels
       :type: list
 

@@ -26,7 +26,8 @@ class RuncLabel(ConfigValue):
     def __eq__(self, other):
         if (other.username != self.username or
             other.homedir != self.homedir or
-            other.path != self.path):
+            other.path != self.path or
+            other.rw_overlay != self.rw_overlay):
             return False
         return True
 
@@ -58,6 +59,7 @@ class RuncPool(ConfigPool):
             pl.username = label.get('username', 'zuul')
             pl.homedir = label.get('home-dir', '/home/%s' % pl.username)
             pl.path = label.get('path', '/')
+            pl.rw_overlay = label.get('rw-overlay', False)
             full_config.labels[label['name']].pools.append(self)
 
 
@@ -100,6 +102,7 @@ class RuncProviderConfig(ProviderConfig):
             'path': str,
             'username': str,
             'home-dir': str,
+            'rw-overlay': bool,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

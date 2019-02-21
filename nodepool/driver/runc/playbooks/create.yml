@@ -2,9 +2,51 @@
 - hosts: hypervisor
   remote_user: root
   tasks:
+    - name: "Prepare overlay rootfs"
+      file:
+        path: "/var/lib/nodepool/runc/{{ container_id }}/rootfs"
+        state: directory
+        mode: 0755
+        owner: 0
+        group: 0
+      when: use_overlayfs | bool
+
+    - name: "Prepare overlay directories"
+      file:
+        path: "/var/lib/nodepool/runc/{{ container_id }}/{{ item }}"
+        state: directory
+        mode: 0700
+        owner: 0
+        group: 0
+      loop:
+        - upper
+        - work
+      when: use_overlayfs | bool
+
+    - name: "Prepare home dir mountpoint"
+      file:
+        path: "/var/lib/nodepool/runc/{{ container_id }}/homedir"
+        state: directory
+        mode: 0755
+        owner: "{{ worker_username }}"
+        group: "{{ worker_username }}"
+
+    - name: "Mount rootfs R/W overlay"
+      shell: mount overlay -t overlay /var/lib/nodepool/runc/{{ container_id }}/rootfs -o lowerdir={{ rootfs }},upperdir=/var/lib/nodepool/runc/{{ container_id }}/upper,workdir=/var/lib/nodepool/runc/{{ container_id }}/work
+      args:
+        warn: false # https://github.com/ansible/ansible/issues/48134
+      when: use_overlayfs | bool
+
+    # permissions are too strict for some reason
+    - name: "Make rootfs overlay readable"
+      shell: chmod 755 /var/lib/nodepool/runc/{{ container_id }}/rootfs
+      args:
+        warn: false
+      when: use_overlayfs | bool
+
     - name: "Create work directory"
       file:
-        path: "/var/lib/nodepool/runc/{{ container_id }}/.ssh"
+        path: "/var/lib/nodepool/runc/{{ container_id }}/homedir/.ssh"
         state: directory
         mode: 0700
         owner: "{{ worker_username }}"
@@ -13,7 +55,7 @@
     - name: "Copy authorized keys"
       copy:
         src: "{{ worker_homedir }}/.ssh/authorized_keys"
-        dest: "/var/lib/nodepool/runc/{{ container_id }}/.ssh/authorized_keys"
+        dest: "/var/lib/nodepool/runc/{{ container_id }}/homedir/.ssh/authorized_keys"
         owner: "{{ worker_username }}"
         group: "{{ worker_username }}"
         mode: 0600

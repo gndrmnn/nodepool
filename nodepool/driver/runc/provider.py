@@ -195,7 +195,10 @@ class RuncProvider(Provider):
             "container_id=%s" % hostid, "container_spec=%s" % spec_path,
             "worker_username=%s" % label.username,
             "worker_homedir=%s" % label.homedir,
-            "host_addr=%s" % pool.hostname, "container_port=%s" % port])
+            "host_addr=%s" % pool.hostname, "container_port=%s" % port,
+            "use_overlayfs=%s" % label.rw_overlay,
+            "rootfs=%s" % self.rootfsForLabel(label),
+        ])
         os.unlink(spec_path)
         if not created:
             raise exceptions.LaunchNodepoolException(
@@ -213,12 +216,15 @@ class RuncProvider(Provider):
         self.containers[pool.hostname].add(hostid)
         return key
 
-    @staticmethod
-    def render_config(hostid, port, label, zuul_console_dir):
+    @classmethod
+    def rootfsForLabel(cls, label):
         if label.path == '/':
-            rootfs = '/srv/host-rootfs'
+            return '/srv/host-rootfs'
         else:
-            rootfs = label.path
+            return label.path
+
+    @classmethod
+    def render_config(cls, hostid, port, label, zuul_console_dir):
         config = {
             "ociVersion": "1.0.0",
             "process": {
@@ -244,7 +250,11 @@ class RuncProvider(Provider):
                 ],
                 "noNewPrivileges": False
             },
-            "root": {"path": rootfs, "readonly": True},
+            "root": {
+                "path": "/var/lib/nodepool/runc/%s/rootfs" % hostid if
+                label.rw_overlay else cls.rootfsForLabel(label),
+                "readonly": not label.rw_overlay
+            },
             "hostname": "runc",
             "mounts": [
                 {
@@ -351,10 +361,12 @@ class RuncProvider(Provider):
                     "source": "/root/.ssh",
                     "options": ["bind", "ro"]
                 },
+                # Even on a R/W overlay, better place user's home on a separate
+                # mount so that we can pre-populate it with SSH keys etc.
                 {
                     "destination": "%s" % label.homedir,
                     "type": "bind",
-                    "source": "/var/lib/nodepool/runc/%s/" % hostid,
+                    "source": "/var/lib/nodepool/runc/%s/homedir" % hostid,
                     "options": ["bind", "rw", "nodev"],
                 },
             ],
@@ -415,9 +427,15 @@ class RuncProvider(Provider):
             "-o", "UseDNS=no",
             "-o", "PidFile=none",
         ]
+        required_capabilities = ["CAP_SETUID", "CAP_SETGID", "CAP_IPC_LOCK",
+                                 "CAP_CHOWN", "CAP_SYS_CHROOT"]
+        if label.rw_overlay:
+            # The point of R/W rootfs is allowing changes in there. Ansible
+            # uses sudo for this, and that suid binary needs to bypass
+            # capability check on a 0000 /etc/shadow.
+            required_capabilities.append('CAP_DAC_OVERRIDE')
         for cap in config["process"]["capabilities"].values():
-            for cap_need in ("CAP_SETUID", "CAP_SETGID", "CAP_IPC_LOCK",
-                             "CAP_CHOWN", "CAP_SYS_CHROOT"):
+            for cap_need in required_capabilities:
                 if cap_need not in cap:
                     cap.append(cap_need)
         config["hostname"] = hostid

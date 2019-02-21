@@ -14,6 +14,12 @@
         - name: "Delete left-overs"
           command: "runc delete --force {{ container_id }}"
 
+        - name: "Umount overlayfs if mounted"
+          shell: |
+            if mountpoint -q "/var/lib/nodepool/runc/{{ container_id }}/rootfs"; then
+              umount "/var/lib/nodepool/runc/{{ container_id }}/rootfs"
+            fi
+
         - name: "Delete work directory"
           file:
             path: "/var/lib/nodepool/runc/{{ container_id }}"
