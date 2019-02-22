@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_cc520c36",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 29948
+      },
+      "writtenOn": "2019-02-22T09:45:50Z",
+      "side": 1,
+      "message": "A self-correction: if host-key is below username, it could be very likely mistaken for password. Within protocol, host-key is used before username.",
+      "revId": "c4f4279cb358e16d732af0cbf9945499a8f2d757",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
