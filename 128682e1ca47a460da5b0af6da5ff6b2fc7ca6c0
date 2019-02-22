@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fdfeff1_4f584455",
+        "filename": "nodepool/driver/static/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-02-22T19:10:09Z",
+      "side": 1,
+      "message": "I don\u0027t like that we duplicate the default value here (or the schema def below), but I get why (because static labels are a bit different). I don\u0027t have a good solution. Maybe define the default as a ConfigPoolLabel attribute that we can refer to here?",
+      "range": {
+        "startLine": 61,
+        "startChar": 1,
+        "endLine": 61,
+        "endChar": 75
+      },
+      "revId": "128682e1ca47a460da5b0af6da5ff6b2fc7ca6c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
