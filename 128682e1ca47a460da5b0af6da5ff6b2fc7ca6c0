@@ -22,6 +22,30 @@
       "revId": "128682e1ca47a460da5b0af6da5ff6b2fc7ca6c0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_369755ee",
+        "filename": "nodepool/driver/static/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-02-23T01:53:42Z",
+      "side": 1,
+      "message": "It seems like the static driver \"label\" (called nodes) is slightly different from the other drivers as it support multiple labels per request. I think the correct implementation would be to adapt the other driver to use a similar schema. Could we please do that in follow-up though?",
+      "parentUuid": "9fdfeff1_4f584455",
+      "range": {
+        "startLine": 61,
+        "startChar": 1,
+        "endLine": 61,
+        "endChar": 75
+      },
+      "revId": "128682e1ca47a460da5b0af6da5ff6b2fc7ca6c0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
