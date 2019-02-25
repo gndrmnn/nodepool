@@ -94,8 +94,9 @@
     parent: nodepool-functional-py35-src-base
     vars:
       devstack_localrc:
-        NODEPOOL_PAUSE_CENTOS_7_DIB: false
-        NODEPOOL_PAUSE_FEDORA_29_DIB: false
+#        NODEPOOL_PAUSE_CENTOS_7_DIB: false
+#        NODEPOOL_PAUSE_FEDORA_29_DIB: false
+         NODEPOOL_PAUSE_RHEL_8_DIB: false
 
 - job:
     name: nodepool-functional-py35-suse-src
@@ -210,21 +211,22 @@
 - project:
     check:
       jobs:
-        - tox-docs
-        - tox-pep8
-        - tox-py35
-        - tox-py36:
-            nodeset: ubuntu-bionic
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - nodepool-build-image
-        - zuul-quick-start
+        - nodepool-functional-py35-redhat-src
+#        - tox-docs
+#        - tox-pep8
+#        - tox-py35
+#        - tox-py36:
+#            nodeset: ubuntu-bionic
+#        - nodepool-zuul-functional:
+#            voting: false
+#        - nodepool-functional-py35:
+#            voting: false
+#        - nodepool-functional-py35-src:
+#            voting: false
+#        - nodepool-functional-k8s
+#        - nodepool-functional-openshift
+#        - nodepool-build-image
+#        - zuul-quick-start
     gate:
       jobs:
         - tox-docs
