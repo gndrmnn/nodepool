@@ -20,6 +20,7 @@ else
     source /opt/stack/devstack/stackrc
 fi
 NODEPOOL_PAUSE_CENTOS_7_DIB=${NODEPOOL_PAUSE_CENTOS_7_DIB:-True}
+NODEPOOL_PAUSE_RHEL_8_DIB=${NODEPOOL_PAUSE_RHEL_8_DIB:-True}
 NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB=${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB:-True}
 NODEPOOL_PAUSE_FEDORA_29_DIB=${NODEPOOL_PAUSE_FEDORA_29_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB=${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB:-True}
@@ -148,6 +149,19 @@ if [ ${NODEPOOL_PAUSE_CENTOS_7_DIB,,} = 'false' ]; then
     checknm centos-7
     # userdata check
     showserver centos-7
+fi
+
+if [ ${NODEPOOL_PAUSE_RHEL_8_DIB,,} = 'false' ]; then
+    # check that image built
+    waitforimage rhel-8
+    # check image was bootable
+    waitfornode rhel-8
+    # check ssh for root user
+    sshintonode rhel-8
+    # networkmanager check
+    checknm rhel-8
+    # userdata check
+    showserver rhel-8
 fi
 
 if [ ${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB,,} = 'false' ]; then
