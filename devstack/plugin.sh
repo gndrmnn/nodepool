@@ -213,6 +213,7 @@ EOF
     fi
 
     NODEPOOL_CENTOS_7_MIN_READY=1
+    NODEPOOL_RHEL_8_MIN_READY=1
     NODEPOOL_DEBIAN_STRETCH_MIN_READY=1
     NODEPOOL_FEDORA_29_MIN_READY=1
     NODEPOOL_UBUNTU_BIONIC_MIN_READY=1
@@ -225,6 +226,9 @@ EOF
 
     if $NODEPOOL_PAUSE_CENTOS_7_DIB ; then
        NODEPOOL_CENTOS_7_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_RHEL_8_DIB ; then
+        NODEPOOL_RHEL_8_MIN_READY=0
     fi
     if $NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB ; then
        NODEPOOL_DEBIAN_STRETCH_MIN_READY=0
@@ -268,6 +272,8 @@ zookeeper-servers:
 labels:
   - name: centos-7
     min-ready: $NODEPOOL_CENTOS_7_MIN_READY
+  - name: rhel-8
+    min-ready: $NODEPOOL_RHEL_8_MIN_READY
   - name: debian-stretch
     min-ready: $NODEPOOL_DEBIAN_STRETCH_MIN_READY
   - name: fedora-29
@@ -298,6 +304,8 @@ providers:
     diskimages:
       - name: centos-7
         config-drive: true
+      - name: rhel-8
+        config-drive: true
       - name: debian-stretch
         config-drive: true
       - name: fedora-29
@@ -322,6 +330,20 @@ providers:
         labels:
           - name: centos-7
             diskimage: centos-7
+            min-ram: 1024
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: $NODEPOOL_KEY_NAME
+            instance-properties:
+              nodepool_devstack: testing
+            userdata: |
+              #cloud-config
+              write_files:
+              - content: |
+                  testpassed
+                path: /etc/testfile_nodepool_userdata
+          - name: rhel-8
+            diskimage: rhel-8
             min-ram: 1024
             flavor-name: 'nodepool'
             console-log: True
@@ -467,6 +489,29 @@ diskimages:
     rebuild-age: 86400
     elements:
       - centos-minimal
+      - vm
+      - simple-init
+      - growroot
+      - devuser
+      - openssh-server
+      - nodepool-setup
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      $DIB_DISTRIBUTION_MIRROR_CENTOS
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+      DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+  - name: rhel-8
+    pause: $NODEPOOL_PAUSE_RHEL_8_DIB
+    rebuild-age: 86400
+    elements:
+      - rhel-minimal
       - vm
       - simple-init
       - growroot
