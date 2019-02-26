@@ -168,6 +168,12 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         if provider.max_concurrency == 0:
             return True
 
+        # Get the launchers which are currently online.  This may
+        # become out of date as the loop progresses, but it should be
+        # good enough to determine whether we should process requests
+        # which express a preference for a specific provider.
+        launchers = self.zk.getRegisteredLaunchers()
+
         # Sort requests by queue priority, then, for all requests at
         # the same priority, use the relative_priority field to
         # further sort, then finally, the submission order.
@@ -209,6 +215,19 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # Skip it if we've already declined
             if self.launcher_id in req.declined_by:
                 continue
+
+            # Skip this request if it is requesting another provider
+            # which is online
+            if req.provider:
+                # The request is asking for a specific provider
+                candidate_launchers = set(
+                    [x['id'] for x in launchers
+                     if x['provider_name'] == req.provider])
+                if candidate_launchers:
+                    # There is a launcher online which can satisfy the request
+                    if not candidate_launchers.issubset(set(req.declined_by)):
+                        # It has not yet declined the request, so yield to it.
+                        continue
 
             self.log.debug("Locking request %s", req.id)
             try:
