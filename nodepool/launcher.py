@@ -31,6 +31,7 @@ from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
+from nodepool.driver import Drivers
 
 
 MINS = 60
@@ -1130,3 +1131,126 @@ class NodePool(threading.Thread):
                 self.log.exception("Exception in main loop:")
 
             self._stop_event.wait(self.watermark_sleep)
+
+
+class StandaloneLauncher:
+    """A standalone Nodepool driver launcher"""
+    class Labels:
+        pools = []
+
+    class Request:
+        declined_by = []
+        node_types = []
+        nodes = []
+        reuse = True
+        id = "standalone"
+
+    def __init__(self, config):
+        Drivers.load()
+        self.config = config
+        self.providers = {}
+        self.providers_config = {}
+        self.labels = {}
+        self.nodes = {}
+        self.launcher_id = "standalone"
+        self.id = "standalone"
+        for label in config["labels"]:
+            self.labels[label["name"]] = StandaloneLauncher.Labels()
+        for provider in config["providers"]:
+            driver = Drivers.get(provider["driver"])
+            provider_config = driver.getProviderConfig(provider)
+            provider_config.load(self)
+            self.providers_config[provider["name"]] = provider_config
+            self.providers[provider["name"]] = driver.getProvider(
+                provider_config, False)
+            # self.providers[provider["name"]].start(self)
+
+    def getProviderConfig(self):
+        return self.providers_config[self.provider]
+
+    def getPoolConfig(self):
+        return self.pool
+
+    def getZK(self):
+        return self
+
+    def getRegisteredLaunchers(self):
+        return [self]
+
+    def getProviderManager(self):
+        return self.providers[self.provider]
+
+    def launch(self, nodetypes):
+        self.nodeset = None
+        for name, provider in self.providers.items():
+            self.provider = name
+            for pool in provider.provider.pools.values():
+                self.req = StandaloneLauncher.Request()
+                self.req.node_types = nodetypes
+                self.pool = pool
+                handler = provider.getRequestHandler(self, self.req)
+                handler.run()
+                if "standalone" in self.req.declined_by:
+                    continue
+                while True:
+                    print("Check if completed...")
+                    completed = handler.launchesComplete()
+                    if completed:
+                        break
+                    time.sleep(1)
+                if completed:
+                    self.nodeset = handler.nodeset
+                    break
+            if self.nodeset:
+                break
+        return self.nodeset
+
+    def cleanup(self, nodeset):
+        for name, provider in self.providers.items():
+            for node in nodeset:
+                if node.provider == name:
+                    provider.cleanupNode(node.external_id)
+            for node in nodeset:
+                if node.provider == name:
+                    provider.waitForNodeCleanup(node.external_id)
+
+    def storeNodeRequest(self, request):
+        self.req = request
+
+    def storeNode(self, node):
+        self.nodes[node.id] = node
+
+    def getReadyNodesOfTypes(self, types):
+        # Assume no ready nodes
+        return []
+
+    def lockNode(self, node, blocking=False):
+        # No need to lock standalone node
+        pass
+
+    def unlockNodeRequest(self, req):
+        # No need to unlock request
+        pass
+
+
+if __name__ == "__main__":
+    import sys
+    import yaml
+
+    try:
+        config_file = sys.argv[1]
+        node_type = sys.argv[2]
+    except IndexError:
+        print("usage: %s config-file node-type" % sys.argv[0])
+        exit(1)
+
+    logging.basicConfig(
+        format='%(asctime)s %(levelname)-5.5s %(name)s - %(message)s',
+        level=logging.DEBUG)
+    launcher = StandaloneLauncher(yaml.load(open(config_file)))
+    nodeset = launcher.launch([node_type])
+    print("Nodeset is:")
+    for node in nodeset:
+        print(node)
+    input("Press enter to cleanup")
+    launcher.cleanup(nodeset)
