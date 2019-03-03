@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The ``TaskManager`` used by the OpenStack provider has been removed.
+    The ``keystoneauth1`` library underneath ``openstacksdk`` has grown
+    support for rate limiting using a ``FairSemaphore`` instead of a pool
+    of worker threads. This should reduce the overall thread count. However,
+    due to this it is now openstacksdk making the statsd calls, which means
+    the statsd keys are no longer transformed.
