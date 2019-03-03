@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9fdfeff1_62cd7bb6",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-03-03T16:23:02Z",
+      "side": 1,
+      "message": "Whoops!",
+      "parentUuid": "9fdfeff1_0294af8b",
+      "range": {
+        "startLine": 87,
+        "startChar": 35,
+        "endLine": 87,
+        "endChar": 47
+      },
+      "revId": "f090e2d86c0bd4a059e2298c3267ef28ba62eb7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fdfeff1_c28d477d",
         "filename": "releasenotes/notes/task-manager-replaced-12e4b3a0108f9358.yaml",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-03-03T16:15:05Z",
       "side": 1,
       "message": "This is the important part of the upgrade note. What does this mean for the user? We should explain what are the changes here in an incompatible way.",
+      "range": {
+        "startLine": 7,
+        "startChar": 68,
+        "endLine": 9,
+        "endChar": 46
+      },
+      "revId": "f090e2d86c0bd4a059e2298c3267ef28ba62eb7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_c2bb070d",
+        "filename": "releasenotes/notes/task-manager-replaced-12e4b3a0108f9358.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-03-03T16:23:02Z",
+      "side": 1,
+      "message": "Good point.\n\nI think also maybe we should talk about whether this is an acceptable break? We havne\u0027t landed the statsd support patch to openstacksdk - do we think we should support passing in a filtering callable to manipulate the task names?",
+      "parentUuid": "9fdfeff1_c28d477d",
       "range": {
         "startLine": 7,
         "startChar": 68,
