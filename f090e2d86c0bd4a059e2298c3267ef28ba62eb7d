@@ -93,6 +93,23 @@
       "revId": "f090e2d86c0bd4a059e2298c3267ef28ba62eb7d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fdfeff1_39f6b892",
+        "filename": "releasenotes/notes/task-manager-replaced-12e4b3a0108f9358.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-03-04T15:22:17Z",
+      "side": 1,
+      "message": "I think it\u0027s okay for the key names to change, especially since we\u0027re now deferring to an upstream implementation.  It might be worth expanding on the note telling people the pattern for how the keys will be renamed so they can update downstream processing.",
+      "revId": "f090e2d86c0bd4a059e2298c3267ef28ba62eb7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
