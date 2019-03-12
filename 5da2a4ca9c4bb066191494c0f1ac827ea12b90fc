@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc1f717_d5f02700",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-03-12T17:41:32Z",
+      "side": 1,
+      "message": "Based on local testing, I think both of these values have to be contained in lists. Which means we should have testing of this code path to make sure it works since we aren\u0027t catching that here.",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 928,
+        "endChar": 31
+      },
+      "revId": "5da2a4ca9c4bb066191494c0f1ac827ea12b90fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
