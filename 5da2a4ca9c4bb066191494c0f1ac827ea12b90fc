@@ -22,6 +22,30 @@
       "revId": "5da2a4ca9c4bb066191494c0f1ac827ea12b90fc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc1f717_b4c0f32b",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-03-13T05:03:48Z",
+      "side": 1,
+      "message": "Indeed, not sure what happens here, perhaps a rebase issue on my side.",
+      "parentUuid": "5fc1f717_d5f02700",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 928,
+        "endChar": 31
+      },
+      "revId": "5da2a4ca9c4bb066191494c0f1ac827ea12b90fc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
