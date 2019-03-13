@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc1f717_10dea66c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-03-13T16:51:16Z",
+      "side": 1,
+      "message": "Kazoo doesn\u0027t seem to throw any sort of error if you supply an invalid string for the scheme, and you just get authorization errors on znode operations. I think we should catch this up front and error if an invalid value is supplied.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 59
+      },
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc1f717_1042263f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-03-13T16:51:16Z",
+      "side": 1,
+      "message": "We need to describe the format of this string as \"username:password\". It might actually make more sense to have separate config fields for those values and format the credential string ourselves to force the correct format.",
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc1f717_30c40291",
+        "filename": "nodepool/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-03-13T16:51:16Z",
+      "side": 1,
+      "message": "I don\u0027t think we should allow these values in the nodepool.yaml file, only the secure config.",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 260,
+        "endChar": 60
+      },
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
