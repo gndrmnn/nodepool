@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5fc1f717_e1952988",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-03-15T04:35:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fc1f717_10dea66c",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 59
+      },
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fc1f717_1042263f",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 5
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "5fc1f717_8190e596",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-03-15T04:35:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fc1f717_1042263f",
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fc1f717_30c40291",
         "filename": "nodepool/config.py",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2019-03-13T16:51:16Z",
       "side": 1,
       "message": "I don\u0027t think we should allow these values in the nodepool.yaml file, only the secure config.",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 260,
+        "endChar": 60
+      },
+      "revId": "ec6c5980ed1f7e275d4f53a84f2626a89aa03708",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc1f717_21801146",
+        "filename": "nodepool/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-03-15T04:35:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fc1f717_30c40291",
       "range": {
         "startLine": 260,
         "startChar": 0,
