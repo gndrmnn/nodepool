@@ -1,0 +1,9 @@
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Workflow+1: David Shrewsbury <dshrewsb@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 18 Mar 2019 21:35:07 +0000
+Reviewed-on: https://review.openstack.org/643849
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
