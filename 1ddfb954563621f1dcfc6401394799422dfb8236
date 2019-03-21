@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc1f717_4e394a3d",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-03-21T16:28:00Z",
+      "side": 1,
+      "message": "This is only true for the launcher process not all of \"nodepool\".",
+      "range": {
+        "startLine": 224,
+        "startChar": 9,
+        "endLine": 224,
+        "endChar": 75
+      },
+      "revId": "1ddfb954563621f1dcfc6401394799422dfb8236",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
