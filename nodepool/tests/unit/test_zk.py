@@ -125,6 +125,11 @@ class TestZooKeeper(tests.DBTestCase):
         b2 = self.zk.storeBuild(image, zk.ImageBuild())
         self.assertLess(int(b1), int(b2))
 
+    def test_storeBuild_not_found(self):
+        image = "ubuntu-trusty"
+        with testtools.ExpectedException(npe.NotFound):
+            self.zk.storeBuild(image, zk.ImageBuild(), "12345")
+
     def test_store_and_get_build(self):
         image = "ubuntu-trusty"
         orig_data = zk.ImageBuild()

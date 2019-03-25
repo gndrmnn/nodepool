@@ -1222,6 +1222,9 @@ class ZooKeeper(object):
         :param str build_number: The image build number.
 
         :returns: A string for the build number that was updated.
+
+        :raises: NotFound exception if a znode with the given build_number
+            does not exist.
         '''
         # Append trailing / so the sequence node is created as a child node.
         build_path = self._imageBuildsPath(image) + "/"
@@ -1235,7 +1238,10 @@ class ZooKeeper(object):
             build_number = path.split("/")[-1]
         else:
             path = build_path + build_number
-            self.client.set(path, build_data.serialize())
+            try:
+                self.client.set(path, build_data.serialize())
+            except kze.NoNodeError:
+                raise npe.NotFound()
 
         return build_number
 
