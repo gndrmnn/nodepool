@@ -637,19 +637,49 @@ class BuildWorker(BaseWorker):
                         return
 
                     self.log.info("Building image %s" % diskimage.name)
-
-                    data = zk.ImageBuild()
-                    data.state = zk.BUILDING
-                    data.builder_id = self._builder_id
-                    data.builder = self._hostname
-                    data.formats = list(diskimage.image_types)
-
-                    bnum = self._zk.storeBuild(diskimage.name, data)
-                    data = self._buildImage(bnum, diskimage)
-                    self._zk.storeBuild(diskimage.name, data, bnum)
+                    self._buildWrapper(diskimage)
             except exceptions.ZKLockException:
                 # Lock is already held. Skip it.
                 pass
+
+    def _buildWrapper(self, diskimage):
+        '''
+        Wraps logic for disk image building and ZooKeeper recording.
+
+        :returns: The updated ImageBuild data structure.
+        '''
+        data = zk.ImageBuild()
+        data.state = zk.BUILDING
+        data.builder_id = self._builder_id
+        data.builder = self._hostname
+        data.formats = list(diskimage.image_types)
+
+        bnum = self._zk.storeBuild(diskimage.name, data)
+
+        try:
+            data = self._buildImage(bnum, diskimage)
+        except Exception:
+            # If something unexpected happens, make sure we clean up any
+            # build cruft be executing the fallthrough below.
+            self.log.exception("Image build failure:")
+            data.state = zk.FAILED
+
+        # If we lost the session during the long running build, this means
+        # we've lost our lock and the node was possibly cleaned up during the
+        # long build time because state was BUILDING and unlocked. And because
+        # the cleanup likely did not get the inprogress dib build files, we
+        # need to make sure we store the build data again AFTER the build
+        # completes.
+        try:
+            self._zk.storeBuild(diskimage.name, data, bnum)
+        except exceptions.NotFound:
+            # If it disappeared, we need to cleanup the leaked build
+            self.log.warning("Record lost for build %s", bnum)
+            self._deleteLocalBuild(diskimage.name, data)
+            data.state = "FAILED"
+            return data
+
+        return self._zk.getBuild(diskimage.name, bnum)
 
     def _checkForManualBuildRequest(self):
         '''
@@ -688,16 +718,7 @@ class BuildWorker(BaseWorker):
 
                 self.log.info(
                     "Manual build request for image %s" % diskimage.name)
-
-                data = zk.ImageBuild()
-                data.state = zk.BUILDING
-                data.builder_id = self._builder_id
-                data.builder = self._hostname
-                data.formats = list(diskimage.image_types)
-
-                bnum = self._zk.storeBuild(diskimage.name, data)
-                data = self._buildImage(bnum, diskimage)
-                self._zk.storeBuild(diskimage.name, data, bnum)
+                data = self._buildWrapper(diskimage)
 
                 # Remove request on a successful build
                 if data.state == zk.READY:
