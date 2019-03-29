@@ -17,6 +17,7 @@ import os
 import uuid
 import fixtures
 import mock
+import time
 
 from nodepool import builder, exceptions, tests
 from nodepool.driver.fake import provider as fakeprovider
@@ -350,3 +351,38 @@ class TestNodePoolBuilder(tests.DBTestCase):
         builder.BUILD_PROCESS_POLL_TIMEOUT = 500
         self.useBuilder(configfile, cleanup_interval=0)
         self.waitForBuild('fake-image', '0000000001', states=(zk.FAILED,))
+
+    def test_session_loss_during_build(self):
+        # We need to make the image build process pause so we can introduce
+        # a simulated ZK session loss.
+        # TODO: make this use test temp dir
+        pause_file = "/tmp/fake-image-create.pause"
+        def cleanup():
+            if os.path.exists(pause_file):
+                os.remove(pause_file)
+        open(pause_file, 'w')
+        self.addCleanup(cleanup)
+
+        configfile = self.setup_config('node.yaml')
+
+        bldr = self.useBuilder(configfile, cleanup_interval=0)
+        build = self.waitForBuild('fake-image', '0000000001',
+                                  states=(zk.BUILDING,))
+
+        # The build should now be paused just before writing out any DIB files.
+        bldr.zk.storeBuild = mock.Mock(side_effect=Exception('oops'))
+        os.remove(pause_file)
+
+        # Need to wait for subprocess to finish and write out files
+        # TODO: DO THIS BETTER
+        time.sleep(2)
+
+        # There shouldn't be any DIB files
+        images_dir = bldr._config.imagesdir
+
+        # TODO: remove this
+        self.log.debug("Files in %s are %s", images_dir, os.listdir(images_dir))
+
+        image_files = builder.DibImageFile.from_image_id(
+            images_dir, 'fake-image-0000000001')
+        self.assertEqual([], image_files)
