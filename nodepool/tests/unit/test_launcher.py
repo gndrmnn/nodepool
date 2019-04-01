@@ -2013,3 +2013,40 @@ class TestLauncher(tests.DBTestCase):
 
         self.assertReportedStat('nodepool.provider.fake-provider.downPorts',
                                 value='2', kind='c')
+
+    def test_single_provider_config_reload(self):
+        configfile = self.setup_config('launcher_reload1.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.waitForImage('fake-provider', 'fake-image')
+
+        manager = pool.getProviderManager('fake-provider')
+
+        # Pause the cloud so we can create a node request that is in process
+        # while reloading the config.
+        manager._client.pause_creates = True
+
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        req1.relative_priority = 2
+        self.zk.storeNodeRequest(req1)
+
+        while len(manager._client._server_list) == 0:
+            time.sleep(1)
+
+        print("Replacing config")
+        self.replace_config(configfile, 'launcher_reload2.yaml')
+
+        time.sleep(5)
+
+        print(manager._client._server_list)
+
+        manager._client.pause_creates = False
+        for server in manager._client._server_list:
+            server.event.set()
+
+        req1 = self.waitForNodeRequest(req1)
+        self.assertEqual(req1.state, zk.FULFILLED)
