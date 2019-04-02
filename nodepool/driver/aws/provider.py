@@ -54,7 +54,8 @@ class AwsProvider(Provider):
         self.aws = boto3.Session(
             region_name=self.provider.region_name,
             profile_name=self.provider.profile_name)
-        self.ec2 = self.aws.resource('ec2')
+        self.ec2 = self.aws.resource('ec2',
+                                     region_name=self.provider.region_name)
 
     def stop(self):
         self.log.debug("Stopping")
