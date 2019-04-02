@@ -13,11 +13,12 @@
 # under the License.
 
 import logging
+import math
 import time
 
 from nodepool import exceptions
 from nodepool import zk
-from nodepool.driver.utils import NodeLauncher
+from nodepool.driver.utils import NodeLauncher, QuotaInformation
 from nodepool.driver import NodeRequestHandler
 from nodepool.nodeutils import nodescan
 
@@ -126,6 +127,40 @@ class AwsNodeRequestHandler(NodeRequestHandler):
                     if not self.manager.labelReady(self.pool.labels[label]):
                         return False
         return True
+
+    def hasRemainingQuota(self, ntype):
+        '''
+        Apply max_servers check, ignoring other quotas.
+
+        :returns: True if we have room, False otherwise.
+        '''
+        needed_quota = QuotaInformation(cores=1, instances=1, ram=1, default=1)
+        pool_quota = QuotaInformation(
+            cores=math.inf,
+            instances=self.pool.max_servers,
+            ram=math.inf,
+            default=math.inf)
+        pool_quota.subtract(needed_quota)
+        return pool_quota.non_negative()
+
+    def hasProviderQuota(self, node_types):
+        '''
+        Apply max_servers check to a whole request
+
+        :returns: True if we have room, False otherwise.
+        '''
+        needed_quota = QuotaInformation(
+            cores=1,
+            instances=len(node_types),
+            ram=1,
+            default=1)
+        pool_quota = QuotaInformation(
+            cores=math.inf,
+            instances=self.pool.max_servers,
+            ram=math.inf,
+            default=math.inf)
+        pool_quota.subtract(needed_quota)
+        return pool_quota.non_negative()
 
     def launchesComplete(self):
         '''
