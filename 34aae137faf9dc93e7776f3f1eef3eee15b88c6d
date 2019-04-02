@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc1f717_a25eda0f",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-04-02T11:05:49Z",
+      "side": 1,
+      "message": "would it be better to just remove these methods?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 12
+      },
+      "revId": "34aae137faf9dc93e7776f3f1eef3eee15b88c6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
