@@ -214,6 +214,7 @@ EOF
 
     NODEPOOL_CENTOS_7_MIN_READY=1
     NODEPOOL_DEBIAN_STRETCH_MIN_READY=1
+    NODEPOOL_DEBIAN_BUSTER_MIN_READY=1
     NODEPOOL_FEDORA_29_MIN_READY=1
     NODEPOOL_UBUNTU_BIONIC_MIN_READY=1
     NODEPOOL_UBUNTU_TRUSTY_MIN_READY=1
@@ -228,6 +229,9 @@ EOF
     fi
     if $NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB ; then
        NODEPOOL_DEBIAN_STRETCH_MIN_READY=0
+    fi
+    if $NODEPOOL_PAUSE_DEBIAN_BUSTER_DIB ; then
+       NODEPOOL_DEBIAN_STRETCH_BUSTER_READY=0
     fi
     if $NODEPOOL_PAUSE_FEDORA_29_DIB ; then
        NODEPOOL_FEDORA_29_MIN_READY=0
@@ -270,6 +274,8 @@ labels:
     min-ready: $NODEPOOL_CENTOS_7_MIN_READY
   - name: debian-stretch
     min-ready: $NODEPOOL_DEBIAN_STRETCH_MIN_READY
+  - name: debian-buster
+    min-ready: $NODEPOOL_DEBIAN_BUSTER_MIN_READY
   - name: fedora-29
     min-ready: $NODEPOOL_FEDORA_29_MIN_READY
   - name: ubuntu-bionic
@@ -299,6 +305,8 @@ providers:
       - name: centos-7
         config-drive: true
       - name: debian-stretch
+        config-drive: true
+      - name: debian-buster
         config-drive: true
       - name: fedora-29
         config-drive: true
@@ -336,6 +344,20 @@ providers:
                 path: /etc/testfile_nodepool_userdata
           - name: debian-stretch
             diskimage: debian-stretch
+            min-ram: 512
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: $NODEPOOL_KEY_NAME
+            instance-properties:
+              nodepool_devstack: testing
+            userdata: |
+              #cloud-config
+              write_files:
+              - content: |
+                  testpassed
+                path: /etc/testfile_nodepool_userdata
+          - name: debian-buster
+            diskimage: debian-buster
             min-ram: 512
             flavor-name: 'nodepool'
             console-log: True
@@ -497,6 +519,33 @@ diskimages:
       - openssh-server
       - nodepool-setup
     release: stretch
+    env-vars:
+      TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
+      DIB_CHECKSUM: '1'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      DIB_IMAGE_CACHE: $NODEPOOL_DIB_BASE_PATH/cache
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEV_USER_AUTHORIZED_KEYS: $NODEPOOL_PUBKEY
+      DIB_DEBIAN_COMPONENTS: 'main'
+      $DIB_DISTRIBUTION_MIRROR_DEBIAN
+      $DIB_DEBOOTSTRAP_EXTRA_ARGS
+      $DIB_GET_PIP
+      $DIB_GLEAN_INSTALLTYPE
+      $DIB_GLEAN_REPOLOCATION
+      $DIB_GLEAN_REPOREF
+  - name: debian-buster
+    pause: $NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB
+    rebuild-age: 86400
+    elements:
+      - debian-minimal
+      - vm
+      - simple-init
+      - growroot
+      - devuser
+      - openssh-server
+      - nodepool-setup
+    release: buster
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'

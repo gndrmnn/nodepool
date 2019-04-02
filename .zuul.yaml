@@ -128,6 +128,7 @@
     vars:
       devstack_localrc:
         NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB: false
+        NODEPOOL_PAUSE_DEBIAN_BUSTER_DIB: false
 
 - job:
     description: |

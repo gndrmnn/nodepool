@@ -21,6 +21,7 @@ else
 fi
 NODEPOOL_PAUSE_CENTOS_7_DIB=${NODEPOOL_PAUSE_CENTOS_7_DIB:-True}
 NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB=${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB:-True}
+NODEPOOL_PAUSE_DEBIAN_BUSTER_DIB=${NODEPOOL_PAUSE_DEBIAN_BUSTER_DIB:-True}
 NODEPOOL_PAUSE_FEDORA_29_DIB=${NODEPOOL_PAUSE_FEDORA_29_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB=${NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB:-True}
 NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB=${NODEPOOL_PAUSE_UBUNTU_TRUSTY_DIB:-True}
@@ -159,6 +160,17 @@ if [ ${NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB,,} = 'false' ]; then
     sshintonode debian-stretch
     # userdata check
     showserver debian-stretch
+fi
+
+if [ ${NODEPOOL_PAUSE_DEBIAN_BUSTER_DIB,,} = 'false' ]; then
+    # check that image built
+    waitforimage debian-buster
+    # check image was bootable
+    waitfornode debian-buster
+    # check ssh for root user
+    sshintonode debian-buster
+    # userdata check
+    showserver debian-buster
 fi
 
 if [ ${NODEPOOL_PAUSE_FEDORA_29_DIB,,} = 'false' ]; then
