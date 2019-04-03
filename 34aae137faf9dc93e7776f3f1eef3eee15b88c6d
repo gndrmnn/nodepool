@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5fc1f717_889cf96a",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-04-03T21:33:20Z",
+      "side": 1,
+      "message": "Yeah I remember writing this in If8398906a5a7ad3d96e985263b0c841e5dcaf7b5 and the intent was certainly to communicate that these keys will change (as they have :) ... in hindsight I might write \"... across providers and releases of openstacksdk and nodepool\".",
+      "revId": "34aae137faf9dc93e7776f3f1eef3eee15b88c6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fc1f717_a25eda0f",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 6
