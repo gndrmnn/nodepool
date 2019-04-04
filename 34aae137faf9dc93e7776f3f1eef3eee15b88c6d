@@ -39,6 +39,30 @@
       "revId": "34aae137faf9dc93e7776f3f1eef3eee15b88c6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fc1f717_e1334561",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-04-04T15:59:49Z",
+      "side": 1,
+      "message": "They are decorated as abc.abstractmethod, so I think even though these do nothing, we still need them here.",
+      "parentUuid": "5fc1f717_a25eda0f",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 12
+      },
+      "revId": "34aae137faf9dc93e7776f3f1eef3eee15b88c6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
