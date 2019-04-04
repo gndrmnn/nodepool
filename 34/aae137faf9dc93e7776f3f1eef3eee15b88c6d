@@ -1,0 +1,10 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Workflow+1: David Shrewsbury <dshrewsb@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 04 Apr 2019 17:03:12 +0000
+Reviewed-on: https://review.openstack.org/640643
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
