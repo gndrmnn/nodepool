@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fc1f717_d1dda441",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1763,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-04-05T17:08:17Z",
+      "side": 1,
+      "message": "This would be a good place to use iterate_timeout so we get a better error report rather than the test hanging forever if this doesn\u0027t happe.",
+      "revId": "50483d367f53dfc474d1fe0cca884daa3598e49a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
