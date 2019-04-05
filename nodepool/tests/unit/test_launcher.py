@@ -1760,8 +1760,8 @@ class TestLauncher(tests.DBTestCase):
         # time through poll() should handle removing the request handler.
         # And our mock side effect should ensure it does not re-enter
         # request handling before we check it.
-        self.assertEqual(0, len(
-            pool._pool_threads["fake-provider-main"].request_handlers))
+        while len(pool._pool_threads["fake-provider-main"].request_handlers):
+            time.sleep(.1)
 
     def test_exception_causing_decline_of_paused_request(self):
         """

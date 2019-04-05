@@ -1,0 +1,72 @@
+/usr/lib/python3.6/runpy.py:125: RuntimeWarning: 'testtools.run' found in sys.modules after import of package 'testtools', but prior to execution of 'testtools.run'; this may result in unpredictable behaviour
+  warn(RuntimeWarning(msg))
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: CONNECTED
+INFO:nodepool.cmd.config_validator:validating /tmp/tmpdt3pj288/tmppzlnx64i
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: CONNECTED
+DEBUG:nodepool.builder.NodePoolBuilder:Starting listener for build jobs
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.builder.CleanupWorker.0:Upload recency table: {}
+INFO:nodepool.builder.BuildWorker.0:Building image fake-image
+INFO:nodepool.builder.BuildWorker.0:Running nodepool/tests/fake-image-create -x -t qcow2 --checksum --no-tmpfs --qemu-img-options 'compat=0.10' -o /tmp/tmpdt3pj288/tmpsxv583nw/fake-image-0000000001 fedora vm
+INFO:nodepool.builder.BuildWorker.0:Logging to /tmp/tmpdt3pj288/tmpczyay5ti/fake-image-0000000001.log
+INFO:nodepool.builder.BuildWorker.0:DIB image fake-image is built
+DEBUG:nodepool.builder.BuildWorker.0:fake-image created image /tmp/tmpdt3pj288/tmpsxv583nw/fake-image-0000000001.qcow2 (size: 4096) 
+DEBUG:nodepool.builder.UploadWorker.0:Found image file of type qcow2 for image id: fake-image-0000000001
+INFO:nodepool.builder.UploadWorker.0:Uploading DIB image build 0000000001 from /tmp/tmpdt3pj288/tmpsxv583nw/fake-image-0000000001.qcow2 to fake-provider
+DEBUG:nodepool.FakeOpenStackCloud:Pause creates False
+INFO:nodepool.builder.UploadWorker.0:Image build fake-image-0000000001 in fake-provider is ready
+DEBUG:nodepool.builder.CleanupWorker.0:Upload recency table: {'fake-image': {'fake-provider': [('0000000001', '0000000001', 1554482976.5121512)]}}
+DEBUG:nodepool.NodePool:Connecting to ZooKeeper servers
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: CONNECTED
+DEBUG:nodepool.ProviderManager:Creating new ProviderManager object for fake-provider
+DEBUG:nodepool.builder.CleanupWorker.0:Upload recency table: {'fake-image': {'fake-provider': [('0000000001', '0000000001', 1554482976.5121512)]}}
+INFO:nodepool.CleanupWorker:Starting
+INFO:nodepool.DeletedNodeWorker:Starting
+INFO:nodepool.StatsWorker:Starting
+INFO:nodepool.NodePool:Starting PoolWorker.fake-provider-main
+DEBUG:nodepool.CleanupWorker:Cleaning up held nodes...
+DEBUG:nodepool.CleanupWorker:Cleaning up empty nodes...
+DEBUG:nodepool.zk.ZooKeeper:Registered launcher wilddog-23543-PoolWorker.fake-provider-main
+INFO:nodepool.StatsWorker:Won stats reporter election
+DEBUG:nodepool.PoolWorker.fake-provider-main:Locking request 100-0000000000
+INFO:nodepool.PoolWorker.fake-provider-main:Assigning node request <NodeRequest {'state': 'requested', 'state_time': 1554482976.121125, 'declined_by': [], 'node_types': ['fake-label'], 'nodes': [], 'reuse': True, 'requestor': None, 'provider': None, 'relative_priority': 0, 'id': '100-0000000000', 'stat': ZnodeStat(czxid=4611, mzxid=4611, ctime=1554482976123, mtime=1554482976123, version=0, cversion=0, aversion=0, ephemeralOwner=101874535808041216, dataLength=193, numChildren=0, pzxid=4611)}>
+DEBUG:nodepool.driver.openstack.OpenStackProvider:Provider quota for fake-provider: {'compute': {'cores': 100, 'instances': 20, 'ram': 1000000}}
+DEBUG:nodepool.driver.openstack.OpenStackProvider:Available quota for fake-provider: {'compute': {'cores': 100, 'instances': 20, 'ram': 1000000}}
+DEBUG:nodepool.driver.NodeRequestHandler[wilddog-23543-PoolWorker.fake-provider-main]:Accepting node request 100-0000000000
+DEBUG:nodepool.driver.NodeRequestHandler[wilddog-23543-PoolWorker.fake-provider-main]:Predicted remaining provider quota: {'compute': {'cores': 96, 'instances': 19, 'ram': 991808}}
+DEBUG:nodepool.driver.NodeRequestHandler[wilddog-23543-PoolWorker.fake-provider-main]:Current pool quota: {'compute': {'cores': inf, 'instances': 96, 'ram': inf}}
+DEBUG:nodepool.driver.NodeRequestHandler[wilddog-23543-PoolWorker.fake-provider-main]:Predicted remaining pool quota: {'compute': {'cores': inf, 'instances': 95, 'ram': inf}}
+DEBUG:nodepool.driver.NodeRequestHandler[wilddog-23543-PoolWorker.fake-provider-main]:Locked building node 0000000000 for request 100-0000000000
+DEBUG:nodepool.PoolWorker.fake-provider-main:Active requests: []
+INFO:nodepool.NodeLauncher-0000000000:Creating server with hostname fake-label-fake-provider-0000000000 in fake-provider from image fake-image for node id: 0000000000
+DEBUG:nodepool.FakeOpenStackCloud:Pause creates False
+DEBUG:nodepool.NodeLauncher-0000000000:Waiting for server 6354ff833db54117bf65cddf47af4709 for node id: 0000000000
+DEBUG:nodepool.NodeLauncher-0000000000:Node 0000000000 is running [region: fake-region, az: az2, ip: fake ipv4: fake, ipv6: , hostid: fake]
+DEBUG:nodepool.NodeLauncher-0000000000:Gathering host keys for node 0000000000
+INFO:nodepool.CleanupWorker:Stopped
+INFO:nodepool.DeletedNodeWorker:Stopped
+DEBUG:nodepool.StatsWorker:Cancel leader election
+INFO:nodepool.NodeLauncher-0000000000:Node id 0000000000 is ready
+DEBUG:nodepool.builder.CleanupWorker.0:Upload recency table: {'fake-image': {'fake-provider': [('0000000001', '0000000001', 1554482976.5121512)]}}
+INFO:nodepool.StatsWorker:Stopped
+DEBUG:nodepool.NodePool:Stopping pool threads
+INFO:nodepool.PoolWorker.fake-provider-main:PoolWorker.fake-provider-main received stop
+DEBUG:nodepool.NodePool:Waiting for PoolWorker.fake-provider-main
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: LOST
+DEBUG:nodepool.NodePool:Finished stopping
+DEBUG:nodepool.builder.NodePoolBuilder:Stopping. NodePoolBuilder shutting down workers
+DEBUG:nodepool.builder.NodePoolBuilder:Waiting for jobs to complete
+DEBUG:nodepool.builder.CleanupWorker.0:Upload recency table: {'fake-image': {'fake-provider': [('0000000001', '0000000001', 1554482976.5121512)]}}
+DEBUG:nodepool.builder.NodePoolBuilder:Stopping providers
+DEBUG:nodepool.builder.NodePoolBuilder:Terminating ZooKeeper connection
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: LOST
+DEBUG:nodepool.builder.NodePoolBuilder:Finished stopping
+DEBUG:nodepool.zk.ZooKeeper:ZooKeeper connection: LOST
+Tests running...
+
+Ran 1 test in 2.665s
+OK
