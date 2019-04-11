@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fce034c_6c9a50c6",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2019-04-11T09:28:32Z",
+      "side": 1,
+      "message": "or just:\n\n  return (num_nodes \u003c self.pool.max_servers)",
+      "range": {
+        "startLine": 754,
+        "startChar": 0,
+        "endLine": 757,
+        "endChar": 24
+      },
+      "revId": "baba5092959604d569cad1217d2443d4386af7fa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
