@@ -743,10 +743,20 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         Checks if the predicted quota is enough for an additional node of type
         ntype.
 
+        Base class implementation will do a sanity check for max-servers
+        against the local database, but drivers will have to implement more
+        sophisticated logic themselves.
+
         :param ntype: node type for the quota check
         :return: True if there is enough quota, False otherwise
         '''
-        return True
+        num_nodes = 0
+        for node in self.zk.nodeIterator():
+            if (node.provider == self.provider.name and
+                node.pool == self.pool.name and
+                node.state not in (zk.INIT, zk.ABORTED, zk.DELETED)):
+                num_nodes += 1
+        return (num_nodes < self.pool.max_servers)
 
     def checkReusableNode(self, node):
         '''
