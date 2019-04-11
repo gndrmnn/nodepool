@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fce034c_e95e3244",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2019-04-11T09:24:05Z",
+      "side": 1,
+      "message": "doesn\u0027t it always return (self.pool.max_servers - 1 \u003e 0) ?",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 40
+      },
+      "revId": "47b48205edd9def41a7481b9b32092f1f96d77a8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fce034c_a906ea1f",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2019-04-11T09:24:05Z",
+      "side": 1,
+      "message": "same, seems simpler to just return (self.pool.max_servers - len(node_types) \u003e 0)",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 40
+      },
+      "revId": "47b48205edd9def41a7481b9b32092f1f96d77a8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
