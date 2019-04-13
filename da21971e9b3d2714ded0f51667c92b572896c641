@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fce034c_056d7a03",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-04-13T07:11:44Z",
+      "side": 1,
+      "message": "nit: technically QuotaInformation(instances\u003d1, default\u003d0) would be simpler and more correct, but this will work too.",
+      "revId": "da21971e9b3d2714ded0f51667c92b572896c641",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fce034c_2572f6e6",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-04-13T07:11:44Z",
+      "side": 1,
+      "message": "nit: cores and ram can be removed and a default of 0 would be technically more correct.",
+      "revId": "da21971e9b3d2714ded0f51667c92b572896c641",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fce034c_c57692d9",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-04-13T07:11:44Z",
+      "side": 1,
+      "message": "nit: cores and ram can be removed",
+      "revId": "da21971e9b3d2714ded0f51667c92b572896c641",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fce034c_e5738ee6",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-04-13T07:11:44Z",
+      "side": 1,
+      "message": "The openstack driver relies on zk data (combined with cleanup of leaked nodes) which is cached locally instead of listing all nodes every time we want to spawn a node. Using listNodes could eventually result in scaling problems on a provider managing hundreds of nodes. I think this is ok for now but it\u0027s something we should consider.",
+      "revId": "da21971e9b3d2714ded0f51667c92b572896c641",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
