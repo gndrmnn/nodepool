@@ -18,6 +18,7 @@ import math
 import time
 import fixtures
 import mock
+import testtools
 
 from nodepool import tests
 from nodepool import zk
@@ -2025,3 +2026,34 @@ class TestLauncher(tests.DBTestCase):
 
         self.assertReportedStat('nodepool.provider.fake-provider.downPorts',
                                 value='2', kind='c')
+
+    @mock.patch('nodepool.zk.ZooKeeper.deleteRawNode')
+    def test_deleteRawNode_exception(self, mock_deleteraw):
+        configfile = self.setup_config('node.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(1, len(nodes))
+
+        # First call should fail, next should succeed
+        mock_deleteraw.side_effect = [Exception(), None]
+
+        # This call should leave the node in the DELETED state
+        with testtools.ExpectedException(Exception):
+            self.zk.deleteNode(nodes[0])
+
+        node_id = nodes[0].id
+        node = self.zk.getNode(node_id, cached=False)
+        self.assertEqual(zk.DELETED, node.state)
+
+        for _ in iterate_timeout(10, Exception,
+                                 'node %s to be deleted' % node_id):
+            try:
+                self.assertEqual(None, self.zk.getNode(node_id, cached=False))
+                break
+            except AssertionError:
+                pass
+
+        self.assertEqual(2, mock_deleteraw.call_count)
