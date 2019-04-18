@@ -1021,6 +1021,16 @@ Selecting the static driver adds the following options to the
 
             The list of labels associated with the node.
 
+         .. attr:: host-key-checking
+             :type: bool
+             :default: True
+
+             Specify custom behavior of validation of host connection.
+             When set to False, nodepool-launcher will not scan the nodes
+             before they are registered. This might be needed if
+             nodepool-launcher and the static nodes are on isolated
+             networks. The default value is True.
+
          .. attr:: timeout
             :type: int
             :default: 5
