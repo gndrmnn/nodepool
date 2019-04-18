@@ -40,6 +40,8 @@ class StaticNodeProvider(Provider):
         gather_hostkeys = (
             node["connection-type"] == 'ssh' or
             node["connection-type"] == 'network_cli')
+        if gather_hostkeys and not node.get('host-checking', True):
+            return node['host-key']
         try:
             keys = nodeutils.nodescan(node["name"],
                                       port=node["connection-port"],
@@ -84,6 +86,10 @@ class StaticNodeProvider(Provider):
         static_node = self.poolNodes().get(node.hostname)
         if static_node is None:
             return False
+
+        if not static_node.get('host-checking', True):
+            # When host-checking is disabled, assume the node is live
+            return True
 
         try:
             nodeutils.nodescan(static_node["name"],
