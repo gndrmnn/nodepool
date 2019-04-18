@@ -51,6 +51,7 @@ class StaticPool(ConfigPool):
                 'name': node['name'],
                 'labels': as_list(node['labels']),
                 'host-key': as_list(node.get('host-key', [])),
+                'host-key-checking': bool(node.get('host-key-checking', True)),
                 'timeout': int(node.get('timeout', 5)),
                 # Read ssh-port values for backward compat, but prefer port
                 'connection-port': int(
@@ -103,6 +104,7 @@ class StaticProviderConfig(ProviderConfig):
             v.Required('labels'): v.Any(str, [str]),
             'username': str,
             'timeout': int,
+            'host-key-checking': bool,
             'host-key': v.Any(str, [str]),
             'connection-port': int,
             'connection-type': str,
