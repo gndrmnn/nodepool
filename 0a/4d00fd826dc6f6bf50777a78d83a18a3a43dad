@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Workflow+1: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 18 Apr 2019 00:18:31 +0000
+Reviewed-on: https://review.openstack.org/653541
+Project: openstack-infra/nodepool
+Branch: refs/heads/master
