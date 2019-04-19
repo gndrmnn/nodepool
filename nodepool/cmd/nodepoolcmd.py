@@ -24,7 +24,6 @@ from nodepool import provider_manager
 from nodepool import status
 from nodepool import zk
 from nodepool.cmd import NodepoolApp
-from nodepool.cmd.config_validator import ConfigValidator
 
 log = logging.getLogger(__name__)
 
@@ -337,12 +336,6 @@ class NodePoolCmd(NodepoolApp):
         for node in provider_nodes:
             t.add_row([node.id, node.external_id])
         print(t)
-
-    def config_validate(self):
-        validator = ConfigValidator(self.args.config)
-        validator.validate()
-        log.info("Configuration validation complete")
-        # TODO(asselin,yolanda): add validation of secure.conf
 
     def request_list(self):
         results = status.request_list(self.zk)

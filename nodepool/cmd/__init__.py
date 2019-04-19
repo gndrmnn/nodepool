@@ -27,6 +27,7 @@ import sys
 import threading
 import traceback
 
+from nodepool.cmd.config_validator import ConfigValidator
 from nodepool.version import version_info as npd_version_info
 from nodepool import logconfig
 
@@ -120,6 +121,7 @@ class NodepoolApp(object):
 
     app_name = None
     app_description = 'Node pool.'
+    log = logging.getLogger('nodepool.cmd.NodepoolApp')
 
     def __init__(self):
         self.parser = None
@@ -138,15 +140,17 @@ class NodepoolApp(object):
         parser.add_argument('-l',
                             dest='logconfig',
                             help='path to log config file')
-
         parser.add_argument('--version',
                             action='version',
                             version=npd_version_info.version_string())
+        parser.add_argument('-c', dest='config',
+                            default='/etc/nodepool/nodepool.yaml',
+                            help='path to config file')
 
         return parser
 
-    def parse_args(self):
-        self.args = self.parser.parse_args()
+    def parse_args(self, argv=None):
+        self.args = self.parser.parse_args(argv)
         self.logconfig = self.get_path(self.args.logconfig)
 
         # The arguments debug and foreground both lead to nodaemon mode so
@@ -156,6 +160,12 @@ class NodepoolApp(object):
             self.args.nodaemon = True
         else:
             self.args.nodaemon = False
+
+    def config_validate(self):
+        validator = ConfigValidator(self.args.config)
+        validator.validate()
+        self.log.info("Configuration validation complete")
+        # TODO(asselin,yolanda): add validation of secure.conf
 
     def setup_logging(self):
         if self.logconfig:
@@ -180,13 +190,14 @@ class NodepoolApp(object):
             argv = sys.argv[1:]
 
         self.parser = self.create_parser()
-        self.parse_args()
+        self.parse_args(argv)
         return self._do_run()
 
     def _do_run(self):
         # NOTE(jamielennox): setup logging a bit late so it's not done until
         # after a DaemonContext is created.
         self.setup_logging()
+        self.config_validate()
         return self.run()
 
     @classmethod

@@ -33,9 +33,6 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
     def create_parser(self):
         parser = super(NodePoolLauncherApp, self).create_parser()
 
-        parser.add_argument('-c', dest='config',
-                            default='/etc/nodepool/nodepool.yaml',
-                            help='path to config file')
         parser.add_argument('-s', dest='secure',
                             help='path to secure file')
         parser.add_argument('--no-webapp', action='store_true')

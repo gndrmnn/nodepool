@@ -31,9 +31,6 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
     def create_parser(self):
         parser = super(NodePoolBuilderApp, self).create_parser()
 
-        parser.add_argument('-c', dest='config',
-                            default='/etc/nodepool/nodepool.yaml',
-                            help='path to config file')
         parser.add_argument('-s', dest='secure',
                             help='path to secure config file')
         parser.add_argument('--build-workers', dest='build_workers',
