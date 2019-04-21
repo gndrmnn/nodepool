@@ -15,7 +15,7 @@
 # limitations under the License.
 
 from nodepool.driver import Provider
-from nodepool.driver.test import handler
+from nodepool.tests.functional.drivers.test import handler
 
 
 class TestProvider(Provider):

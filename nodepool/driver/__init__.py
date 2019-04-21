@@ -33,7 +33,6 @@ class Drivers:
 
     log = logging.getLogger("nodepool.driver.Drivers")
     drivers = {}
-    drivers_paths = None
 
     @staticmethod
     def _load_class(driver_name, path, parent_class):
@@ -56,37 +55,38 @@ class Drivers:
         return obj[0][1]
 
     @staticmethod
-    def load(drivers_paths=[]):
-        """Load drivers"""
-        if drivers_paths == Drivers.drivers_paths:
-            # Already loaded
-            return
-        Drivers.drivers.clear()
-        for drivers_path in drivers_paths + [os.path.dirname(__file__)]:
-            drivers = os.listdir(drivers_path)
-            for driver in drivers:
-                driver_path = os.path.join(drivers_path, driver)
-                if driver in Drivers.drivers:
-                    Drivers.log.warning("%s: duplicate driver", driver_path)
-                    continue
-                if not os.path.isdir(driver_path) or \
-                   "__init__.py" not in os.listdir(driver_path):
-                    continue
-                driver_obj = Drivers._load_class(
-                    driver, os.path.join(driver_path, "__init__.py"),
-                    Driver)
-                if not driver_obj:
-                    Drivers.log.error(
-                        "%s: skipping incorrect driver from __init__.py",
-                        driver_path)
-                    continue
-                Drivers.drivers[driver] = driver_obj()
-
-        Drivers.drivers_paths = drivers_paths
+    def _load_driver(driver, path):
+        driver_path = os.path.join(path, driver)
+        if driver in Drivers.drivers:
+            Drivers.log.warning("%s: duplicate driver", driver_path)
+            return False
+        if not os.path.isdir(driver_path) or \
+           "__init__.py" not in os.listdir(driver_path):
+            Drivers.log.error("Unable to load driver %s from %s", driver, path)
+            return False
+        driver_obj = Drivers._load_class(
+            driver, os.path.join(driver_path, "__init__.py"),
+            Driver)
+        if not driver_obj:
+            Drivers.log.error(
+                "%s: skipping incorrect driver from __init__.py",
+                driver_path)
+            return False
+        Drivers.drivers[driver] = driver_obj()
+        return True
 
     @staticmethod
-    def get(name):
-        if not Drivers.drivers:
+    def load():
+        """Load Builtin drivers"""
+        drivers = os.listdir(os.path.dirname(__file__))
+        for driver in drivers:
+            Drivers._load_driver(driver, os.path.dirname(__file__))
+
+    @staticmethod
+    def get(name, path=None):
+        if path:
+            Drivers._load_driver(name, path)
+        else:
             Drivers.load()
         try:
             return Drivers.drivers[name]
@@ -912,6 +912,7 @@ class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
         return {
             v.Required('name'): str,
             'driver': str,
+            'driver_path': str,
             'max-concurrency': int
         }
 

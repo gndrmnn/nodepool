@@ -334,6 +334,11 @@ Options
       thread, this can be useful for limiting the number of threads
       used by the nodepool-launcher daemon.
 
+   .. attr:: driver_path
+      :type: string
+
+      Driver module location
+
    .. attr:: driver
       :type: string
       :default: openstack

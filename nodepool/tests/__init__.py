@@ -328,7 +328,8 @@ class DBTestCase(BaseTestCase):
         self.log = logging.getLogger("tests")
         self.setupZK()
 
-    def setup_config(self, filename, images_dir=None, context_name=None):
+    def setup_config(self, filename, images_dir=None, context_name=None,
+                     drivers_dir=None):
         if images_dir is None:
             images_dir = fixtures.TempDir()
             self.useFixture(images_dir)
@@ -345,6 +346,7 @@ class DBTestCase(BaseTestCase):
                 data = config.format(images_dir=images_dir.path,
                                      build_log_dir=build_log_dir.path,
                                      context_name=context_name,
+                                     drivers_dir=drivers_dir,
                                      zookeeper_host=self.zookeeper_host,
                                      zookeeper_port=self.zookeeper_port,
                                      zookeeper_chroot=self.zookeeper_chroot)

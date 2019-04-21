@@ -16,6 +16,7 @@ labels:
 providers:
   - name: test-provider
     driver: test
+    driver_path: {drivers_dir}
     pools:
       - name: test-pool
         labels:

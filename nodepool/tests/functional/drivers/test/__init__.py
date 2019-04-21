@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from nodepool.driver import Driver
-from nodepool.driver.test import config
-from nodepool.driver.test import provider
+from nodepool.tests.functional.drivers.test import config
+from nodepool.tests.functional.drivers.test import provider
 
 
 class TestDriver(Driver):
