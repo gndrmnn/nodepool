@@ -31,10 +31,10 @@ IRC.
 Contributing
 ------------
 
-To browse the latest code, see: https://git.zuul-ci.org/cgit/nodepool/tree/
-To clone the latest code, use `git clone https://git.zuul-ci.org/nodepool`
+To browse the latest code, see: https://opendev.org/zuul/nodepool
+To clone the latest code, use `git clone https://opendev.org/zuul/nodepool`
 
-Bugs are handled at: https://storyboard.openstack.org/#!/project/openstack-infra/nodepool
+Bugs are handled at: https://storyboard.openstack.org/#!/project/zuul/nodepool
 
 Code reviews are handled by gerrit at https://review.openstack.org
 
