@@ -841,6 +841,11 @@ Selecting the OpenStack driver adds the following options to the
                min-ram: 8192
                flavor-name: 'something to match'
                console-log: True
+             - name: trusty
+               min-ram: 8192
+               networks:
+                 - public
+                 - private
 
         Each entry is a dictionary with the following keys
 
@@ -903,6 +908,15 @@ Selecting the OpenStack driver adds the following options to the
 
             If given, the label for use in this pool will create a
             volume from the image and boot the node from it.
+
+        .. attr:: networks
+           :type: list
+
+           Specify custom Neutron networks that get attached to each
+           node. Specify the name or id of the network as a string.
+
+           .. note:: This value will override the value for
+                     :attr:`providers.[openstack].pools.networks`.
 
         .. attr:: key-name
            :type: string

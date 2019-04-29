@@ -119,11 +119,11 @@ class ProviderPool(ConfigPool):
         self.max_ram = None
         self.ignore_provider_quota = False
         self.azs = None
-        self.networks = None
         self.security_groups = None
         self.auto_floating_ip = True
         self.host_key_checking = True
         self.labels = None
+        self._networks = None
         # The OpenStackProviderConfig object that owns this pool.
         self.provider = None
 
@@ -141,7 +141,7 @@ class ProviderPool(ConfigPool):
                     other.ignore_provider_quota == (
                         self.ignore_provider_quota) and
                     other.azs == self.azs and
-                    other.networks == self.networks and
+                    other._networks == self._networks and
                     other.security_groups == self.security_groups and
                     other.auto_floating_ip == self.auto_floating_ip and
                     other.host_key_checking == self.host_key_checking and
@@ -169,7 +169,7 @@ class ProviderPool(ConfigPool):
         self.ignore_provider_quota = pool_config.get('ignore-provider-quota',
                                                      False)
         self.azs = pool_config.get('availability-zones')
-        self.networks = pool_config.get('networks', [])
+        self._networks = pool_config.get('networks', [])
         self.security_groups = pool_config.get('security-groups', [])
         self.auto_floating_ip = bool(pool_config.get('auto-floating-ip', True))
         self.host_key_checking = bool(pool_config.get('host-key-checking',
@@ -206,6 +206,7 @@ class ProviderPool(ConfigPool):
             pl.instance_properties = label.get('instance-properties',
                                                None)
             pl.userdata = label.get('userdata', None)
+            pl.networks = label.get('networks', self._networks)
 
             top_label = full_config.labels[pl.name]
             top_label.pools.append(self)
@@ -359,6 +360,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'volume-size': int,
             'instance-properties': dict,
             'userdata': str,
+            'networks': [str],
         }
 
         label_min_ram = v.Schema({v.Required('min-ram'): int}, extra=True)
