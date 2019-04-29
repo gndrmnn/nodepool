@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_f6f994c7",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2019-04-29T21:30:03Z",
+      "side": 1,
+      "message": "ack, thanks for info. In PS3, I revert back to original way.",
+      "parentUuid": "ffb9cba7_f6dd1470",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 29
+      },
+      "revId": "e6b9807b482cf08f91283e7bcebed31b299ee496",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_63c5e7f0",
         "filename": "nodepool/driver/openstack/config.py",
         "patchSetId": 2
