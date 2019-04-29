@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffb9cba7_23d4cfbc",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-04-29T17:16:47Z",
+      "side": 1,
+      "message": "Why the rename to use _ here? Not seeing what that buys us in the code below, and adds inconsistency to the code.",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 29
+      },
+      "revId": "e6b9807b482cf08f91283e7bcebed31b299ee496",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_63c5e7f0",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-04-29T17:16:47Z",
+      "side": 1,
+      "message": "This should be added to ProviderLabel class definition (and the comparison method there).",
+      "range": {
+        "startLine": 209,
+        "startChar": 15,
+        "endLine": 209,
+        "endChar": 23
+      },
+      "revId": "e6b9807b482cf08f91283e7bcebed31b299ee496",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
