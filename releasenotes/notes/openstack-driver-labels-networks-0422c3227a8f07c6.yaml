@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Provider labels for the OpenStack driver are now able to select which
+    networks to be attached to. This overrides any networks defined by
+    :attr:`providers.[openstack].pools.networks`.

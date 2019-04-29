@@ -8,7 +8,9 @@ zookeeper-servers:
     chroot: {zookeeper_chroot}
 
 labels:
-  - name: fake-label
+  - name: fake-label1
+    min-ready: 1
+  - name: fake-label2
     min-ready: 1
 
 providers:
@@ -26,9 +28,16 @@ providers:
           - 'fake-public-network-name'
           - 'fake-private-network-name'
         labels:
-          - name: fake-label
+          - name: fake-label1
             diskimage: fake-image
             min-ram: 8192
+          - name: fake-label2
+            diskimage: fake-image
+            min-ram: 8192
+            networks:
+              # This activates a flag in fakeprovider to give us an ipv6
+              # network
+              - 'fake-ipv6-network-name'
 
 diskimages:
   - name: fake-image

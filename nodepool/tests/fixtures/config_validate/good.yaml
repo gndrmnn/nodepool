@@ -44,11 +44,16 @@ providers:
         node-attributes:
           key1: value1
           key2: value2
+        networks:
+          - public
+          - private
         labels:
           - name: trusty
             diskimage: trusty
             min-ram: 8192
             console-log: True
+            networks:
+              - public
           - name: trusty-2-node
             diskimage: trusty
             min-ram: 8192
@@ -93,6 +98,9 @@ providers:
           - name: trusty
             diskimage: trusty
             min-ram: 8192
+            networks:
+              - public
+              - private
           - name: trusty-2-node
             diskimage: trusty
             min-ram: 8192
