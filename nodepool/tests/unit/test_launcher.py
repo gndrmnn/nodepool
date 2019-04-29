@@ -636,17 +636,31 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual([], self.zk.getNodes())
 
     def test_node_net_name(self):
-        """Test that a node is created with a net name"""
+        """Test that a node is created with proper net name"""
         configfile = self.setup_config('node_net_name.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
-        nodes = self.waitForNodes('fake-label')
-        self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].provider, 'fake-provider')
-        self.assertEqual(nodes[0].type, ['fake-label'])
-        self.assertEqual(nodes[0].username, 'zuul')
+        label1_nodes = self.waitForNodes('fake-label1')
+        label2_nodes = self.waitForNodes('fake-label2')
+
+        self.assertEqual(len(label1_nodes), 1)
+        self.assertEqual(len(label2_nodes), 1)
+
+        # ipv6 address unavailable
+        self.assertEqual(label1_nodes[0].provider, 'fake-provider')
+        self.assertEqual(label1_nodes[0].public_ipv4, 'fake')
+        self.assertEqual(label1_nodes[0].public_ipv6, '')
+        self.assertEqual(label1_nodes[0].interface_ip, 'fake')
+        self.assertEqual(label1_nodes[0].host_id, 'fake')
+
+        # ipv6 address available
+        self.assertEqual(label2_nodes[0].provider, 'fake-provider')
+        self.assertEqual(label2_nodes[0].public_ipv4, 'fake')
+        self.assertEqual(label2_nodes[0].public_ipv6, 'fake_v6')
+        self.assertEqual(label2_nodes[0].interface_ip, 'fake_v6')
+        self.assertEqual(label2_nodes[0].host_id, 'fake_host_id')
 
     def test_node_security_group(self):
         """Test that an image and node are created with sec_group specified"""
