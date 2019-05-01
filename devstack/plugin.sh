@@ -214,7 +214,7 @@ EOF
 
     NODEPOOL_CENTOS_7_MIN_READY=1
     NODEPOOL_DEBIAN_STRETCH_MIN_READY=1
-    NODEPOOL_FEDORA_29_MIN_READY=1
+    NODEPOOL_FEDORA_30_MIN_READY=1
     NODEPOOL_UBUNTU_BIONIC_MIN_READY=1
     NODEPOOL_UBUNTU_TRUSTY_MIN_READY=1
     NODEPOOL_UBUNTU_XENIAL_MIN_READY=1
@@ -229,8 +229,8 @@ EOF
     if $NODEPOOL_PAUSE_DEBIAN_STRETCH_DIB ; then
        NODEPOOL_DEBIAN_STRETCH_MIN_READY=0
     fi
-    if $NODEPOOL_PAUSE_FEDORA_29_DIB ; then
-       NODEPOOL_FEDORA_29_MIN_READY=0
+    if $NODEPOOL_PAUSE_FEDORA_30_DIB ; then
+       NODEPOOL_FEDORA_30_MIN_READY=0
     fi
     if $NODEPOOL_PAUSE_UBUNTU_BIONIC_DIB ; then
        NODEPOOL_UBUNTU_BIONIC_MIN_READY=0
@@ -270,8 +270,8 @@ labels:
     min-ready: $NODEPOOL_CENTOS_7_MIN_READY
   - name: debian-stretch
     min-ready: $NODEPOOL_DEBIAN_STRETCH_MIN_READY
-  - name: fedora-29
-    min-ready: $NODEPOOL_FEDORA_29_MIN_READY
+  - name: fedora-30
+    min-ready: $NODEPOOL_FEDORA_30_MIN_READY
   - name: ubuntu-bionic
     min-ready: $NODEPOOL_UBUNTU_BIONIC_MIN_READY
   - name: ubuntu-trusty
@@ -300,7 +300,7 @@ providers:
         config-drive: true
       - name: debian-stretch
         config-drive: true
-      - name: fedora-29
+      - name: fedora-30
         config-drive: true
       - name: ubuntu-bionic
         config-drive: true
@@ -348,8 +348,8 @@ providers:
               - content: |
                   testpassed
                 path: /etc/testfile_nodepool_userdata
-          - name: fedora-29
-            diskimage: fedora-29
+          - name: fedora-30
+            diskimage: fedora-30
             min-ram: 1024
             flavor-name: 'nodepool'
             console-log: True
@@ -512,8 +512,8 @@ diskimages:
       $DIB_GLEAN_INSTALLTYPE
       $DIB_GLEAN_REPOLOCATION
       $DIB_GLEAN_REPOREF
-  - name: fedora-29
-    pause: $NODEPOOL_PAUSE_FEDORA_29_DIB
+  - name: fedora-30
+    pause: $NODEPOOL_PAUSE_FEDORA_30_DIB
     rebuild-age: 86400
     elements:
       - fedora-minimal
@@ -523,7 +523,7 @@ diskimages:
       - devuser
       - openssh-server
       - nodepool-setup
-    release: 29
+    release: 30
     env-vars:
       TMPDIR: $NODEPOOL_DIB_BASE_PATH/tmp
       DIB_CHECKSUM: '1'
