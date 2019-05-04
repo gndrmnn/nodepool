@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfbec78f_d950c835",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-05-04T06:47:03Z",
+      "side": 1,
+      "message": "We have essentially the same option in the openstack driver here but with different wording. We should be consistent.\nGiven that we now support more connection types than just ssh I see two options:\n\n* Rename host-key-checking here to host-checking (keeping compatibility and deprecate the old)\n\n* Change the new option in the static driver to host-key-checking.",
+      "revId": "403514745309bfcb53b3a987561265491ba46b40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
