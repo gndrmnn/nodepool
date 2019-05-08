@@ -130,6 +130,10 @@ class NodepoolApp(object):
             return None
         return os.path.abspath(os.path.expanduser(path))
 
+    def _get_version(self):
+        from nodepool.version import version_info as npd_version_info
+        return "Nodepool version: %s" % npd_version_info.release_string()
+
     def create_parser(self):
         parser = argparse.ArgumentParser(
             description=self.app_description,
@@ -139,9 +143,9 @@ class NodepoolApp(object):
                             dest='logconfig',
                             help='path to log config file')
 
-        parser.add_argument('--version',
-                            action='version',
-                            version=npd_version_info.version_string())
+        parser.add_argument('--version', dest='version', action='version',
+                            version=self._get_version(),
+                            help='show nodepool version')
 
         return parser
 
