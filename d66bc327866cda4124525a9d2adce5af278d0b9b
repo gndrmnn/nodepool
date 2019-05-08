@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfbec78f_cb542ecd",
+        "filename": "nodepool/cmd/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-05-08T18:06:31Z",
+      "side": 1,
+      "message": "Why import this here? There is already an import at the top of the file.",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 134,
+        "endChar": 69
+      },
+      "revId": "d66bc327866cda4124525a9d2adce5af278d0b9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
