@@ -182,6 +182,7 @@ class StaticNodeProvider(Provider):
                 node.username = static_node["username"]
                 node.connection_port = static_node["connection-port"]
                 node.connection_type = static_node["connection-type"]
+                node.python_path = static_node["python-path"]
                 nodeutils.set_node_ip(node)
                 node.host_keys = host_keys
             except exceptions.ZKLockException:
