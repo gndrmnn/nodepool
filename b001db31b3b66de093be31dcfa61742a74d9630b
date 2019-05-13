@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfbec78f_deb90515",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 28
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-05-13T17:06:30Z",
+      "side": 1,
+      "message": "Wrong indent, doesn\u0027t render properly in the produced documentation.",
+      "range": {
+        "startLine": 1140,
+        "startChar": 1,
+        "endLine": 1147,
+        "endChar": 23
+      },
+      "revId": "b001db31b3b66de093be31dcfa61742a74d9630b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfbec78f_dee02529",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 28
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-05-13T17:06:30Z",
+      "side": 1,
+      "message": "Missing python-path.",
+      "revId": "b001db31b3b66de093be31dcfa61742a74d9630b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
