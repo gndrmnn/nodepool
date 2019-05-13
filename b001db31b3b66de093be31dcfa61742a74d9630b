@@ -39,6 +39,40 @@
       "revId": "b001db31b3b66de093be31dcfa61742a74d9630b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfbec78f_0149792f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 28
+      },
+      "lineNbr": 1201,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-05-13T22:47:33Z",
+      "side": 1,
+      "message": "This preconfiguration suggests that this driver doesn\u0027t quite match the design of the system.  Nodepool is designed to interact with cloud resource providers, but here we are clearly *implementing* a cloud resource provider within nodepool.  There are other systems which can be used to run containers (k8s comes to mind).  Are we re-implementing those here?  Are there other lighter-weight options which don\u0027t require us to implement a container orchestration engine?",
+      "revId": "b001db31b3b66de093be31dcfa61742a74d9630b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfbec78f_a1518ddb",
+        "filename": "nodepool/driver/runc/playbooks/library/zuul_console.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-05-13T22:47:33Z",
+      "side": 1,
+      "message": "I am very uncomfortable with Nodepool sharing ownership of zuul_console.  It is not at all something that Nodepool should be concerned with.  There shouldn\u0027t be any zuul-specific code in Nodepool.",
+      "revId": "b001db31b3b66de093be31dcfa61742a74d9630b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
