@@ -82,6 +82,23 @@ class TestDriverStatic(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(nodes[0].python_path, "/usr/bin/python3")
 
+    def test_static_multiname(self):
+        '''
+        Test that multi name node registration works.
+        '''
+        configfile = self.setup_config('static-multiname.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for node pre-registration")
+        nodes = self.waitForNodes('fake-label', 2)
+        self.assertEqual(len(nodes), 2)
+
+        self.assertEqual(nodes[0].state, zk.READY)
+        self.assertEqual(nodes[0].username, 'zuul-2')
+        self.assertEqual(nodes[1].state, zk.READY)
+        self.assertEqual(nodes[1].username, 'zuul')
+
     def test_static_unresolvable(self):
         '''
         Test that basic node registration works.
