@@ -1022,8 +1022,8 @@ Selecting the static driver adds the following options to the
       .. note::
 
          Although you may define more than one pool, it is essentially
-         useless to do so since a node's ``name`` must be unique
-         across all pools.
+         useless to do so since a node's ``name``, ``username`` and ``port``
+         must be unique across all pools.
 
       Each entry is a dictionary with entries as follows
 
