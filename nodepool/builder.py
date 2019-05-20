@@ -25,6 +25,8 @@ import time
 import shlex
 import uuid
 
+from pathlib import Path
+
 from nodepool import config as nodepool_config
 from nodepool import exceptions
 from nodepool import provider_manager
@@ -63,55 +65,58 @@ class DibImageFile(object):
         self.sha256 = None
         self.sha256_file = None
 
+        # File extension is compared to image type (sans '.') so we
+        # store it the same way.
+        if self.extension:
+            self.extension = self.extension.lstrip('.')
+
     @staticmethod
     def from_path(path):
-        image_file = os.path.basename(path)
-        image_id, extension = image_file.rsplit('.', 1)
-        return DibImageFile(image_id, extension)
+        if isinstance(path, str):
+            path = Path(path)
+        return DibImageFile(path.stem, path.suffix)
 
     @staticmethod
     def from_image_id(images_dir, image_id):
         images = []
-        for image_filename in os.listdir(images_dir):
-            if os.path.isfile(os.path.join(images_dir, image_filename)):
-                image = DibImageFile.from_path(image_filename)
+        for image_file in Path(images_dir).iterdir():
+            if image_file.is_file():
+                image = DibImageFile.from_path(image_file)
                 if image.image_id == image_id:
                         images.append(image)
         return images
 
     @staticmethod
     def from_images_dir(images_dir):
-        return [DibImageFile.from_path(x) for x in os.listdir(images_dir)]
+        return [DibImageFile.from_path(x) for x in Path(images_dir).iterdir()]
 
     def to_path(self, images_dir, with_extension=True):
-        my_path = os.path.join(images_dir, self.image_id)
+        my_path = Path(images_dir) / self.image_id
         if with_extension:
             if self.extension is None:
                 raise exceptions.BuilderError(
                     'Cannot specify image extension of None'
                 )
-            my_path += '.' + self.extension
+            my_path = my_path.with_suffix('.' + self.extension)
 
-        md5_path = '%s.%s' % (my_path, 'md5')
+        md5_path = my_path.with_suffix('.md5')
         md5 = self._checksum(md5_path)
         if md5:
-            self.md5_file = md5_path
+            self.md5_file = str(md5_path)
             self.md5 = md5[0:32]
 
-        sha256_path = '%s.%s' % (my_path, 'sha256')
+        sha256_path = my_path.with_suffix('.sha256')
         sha256 = self._checksum(sha256_path)
         if sha256:
-            self.sha256_file = sha256_path
+            self.sha256_file = str(sha256_path)
             self.sha256 = sha256[0:64]
 
-        return my_path
+        return str(my_path)
 
     def _checksum(self, filename):
-        if not os.path.isfile(filename):
-            return None
-        with open(filename, 'r') as f:
-            data = f.read()
-        return data
+        if filename.is_file():
+            return filename.read_text()
+        return None
 
 
 class BaseWorker(threading.Thread):
