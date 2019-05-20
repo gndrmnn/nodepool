@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfb3d3c7_1f462925",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-05-20T21:23:32Z",
+      "side": 1,
+      "message": "This can be removed then the if check below on 70 becomes:\n\n  if extension:\n      self.extension \u003d extension.lstrip(\u0027.\u0027)",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 34
+      },
+      "revId": "c3334b769c5b9845be4967d6fef702efebcea07f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfb3d3c7_7f02c5b6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-05-20T21:23:32Z",
+      "side": 1,
+      "message": "Note there is a slight change in behavior here with the old code. Previously foo.qcow2.md5 would be rsplit resulting in foo and qcow2.md5 but with .stem and .suffix you\u0027ll get foo.qcow1 and md5.",
+      "range": {
+        "startLine": 77,
+        "startChar": 28,
+        "endLine": 77,
+        "endChar": 50
+      },
+      "revId": "c3334b769c5b9845be4967d6fef702efebcea07f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
