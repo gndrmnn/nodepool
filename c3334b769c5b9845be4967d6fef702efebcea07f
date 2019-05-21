@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bfb3d3c7_df1cff6b",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-05-21T16:26:02Z",
+      "side": 1,
+      "message": "I decided against that change since this way seems more logical in my mind (I didn\u0027t like the resulting code).",
+      "parentUuid": "bfb3d3c7_bf5fdd3f",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 34
+      },
+      "revId": "c3334b769c5b9845be4967d6fef702efebcea07f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfb3d3c7_7f02c5b6",
         "filename": "nodepool/builder.py",
         "patchSetId": 2
