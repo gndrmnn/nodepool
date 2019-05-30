@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Workflow+1: Clark Boylan <cboylan@sapwetik.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 30 May 2019 16:18:49 +0000
+Reviewed-on: https://review.opendev.org/661866
+Project: zuul/nodepool
+Branch: refs/heads/master
