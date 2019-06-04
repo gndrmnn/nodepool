@@ -206,6 +206,44 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertIn('fake-label', nodes[0].type)
         self.assertIn('fake-label2', nodes[0].type)
 
+    def test_static_labels(self):
+        configfile = self.setup_config('static-labels.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Create 2 node requests for label-A
+        reqA = zk.NodeRequest()
+        reqA.state = zk.REQUESTED
+        reqA.node_types.append('fake-label-A')
+        self.zk.storeNodeRequest(reqA)
+
+        self.log.debug("Waiting for label-A request %s", reqA.id)
+        req = self.waitForNodeRequest(reqA)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 1)
+
+        reqAqueue = zk.NodeRequest()
+        reqAqueue.state = zk.REQUESTED
+        reqAqueue.node_types.append('fake-label-A')
+        self.zk.storeNodeRequest(reqAqueue)
+
+        self.log.debug("Waiting for label-A request %s", reqAqueue.id)
+        # The second one is queued until the first node is released
+        req = self.waitForNodeRequest(reqAqueue, states=["pending"])
+        self.assertEqual(req.state, zk.PENDING)
+        self.assertEqual(len(req.nodes), 0)
+
+        reqB = zk.NodeRequest()
+        reqB.state = zk.REQUESTED
+        reqB.node_types.append('fake-label-B')
+        self.zk.storeNodeRequest(reqB)
+
+        self.log.debug("Waiting for label-B request %s", reqB.id)
+        # Requests for label-B should be fullfilled.
+        req = self.waitForNodeRequest(reqB)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 1)
+
     def test_static_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
