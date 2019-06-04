@@ -1021,9 +1021,8 @@ Selecting the static driver adds the following options to the
 
       .. note::
 
-         Although you may define more than one pool, it is essentially
-         useless to do so since a node's ``name``, ``username`` and ``port``
-         must be unique across all pools.
+         When providing different labels, it is better to have one pool per
+         label to avoid requests being queued when one label is at capacity.
 
       Each entry is a dictionary with entries as follows
 
