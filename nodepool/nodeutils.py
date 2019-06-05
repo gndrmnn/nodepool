@@ -68,12 +68,16 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
             return ['ssh-rsa FAKEKEY']
         else:
             return []
+    keys = []
+    # NOTE(pabelanger): No need to setup socket, if we are not gathering host
+    # keys.
+    if not gather_hostkeys:
+        return keys
 
     addrinfo = socket.getaddrinfo(ip, port)[0]
     family = addrinfo[0]
     sockaddr = addrinfo[4]
 
-    keys = []
     key = None
     for count in iterate_timeout(
             timeout, exceptions.ConnectionTimeoutException,
@@ -84,10 +88,9 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
             sock = socket.socket(family, socket.SOCK_STREAM)
             sock.settimeout(10)
             sock.connect(sockaddr)
-            if gather_hostkeys:
-                t = paramiko.transport.Transport(sock)
-                t.start_client(timeout=timeout)
-                key = t.get_remote_server_key()
+            t = paramiko.transport.Transport(sock)
+            t.start_client(timeout=timeout)
+            key = t.get_remote_server_key()
             break
         except socket.error as e:
             if e.errno not in [errno.ECONNREFUSED, errno.EHOSTUNREACH, None]:
