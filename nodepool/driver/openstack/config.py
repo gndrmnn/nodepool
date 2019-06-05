@@ -91,6 +91,7 @@ class ProviderLabel(ConfigValue):
         self.instance_properties = None
         self.userdata = None
         self.networks = []
+        self.host_key_checking = True
         # The ProviderPool object that owns this label.
         self.pool = None
 
@@ -109,7 +110,8 @@ class ProviderLabel(ConfigValue):
                     other.volume_size == self.volume_size and
                     other.instance_properties == self.instance_properties and
                     other.userdata == self.userdata and
-                    other.networks == self.networks)
+                    other.networks == self.networks and
+                    other.host_key_checking == self.host_key_checking)
         return False
 
     def __repr__(self):
@@ -211,6 +213,8 @@ class ProviderPool(ConfigPool):
                                                None)
             pl.userdata = label.get('userdata', None)
             pl.networks = label.get('networks', self.networks)
+            pl.host_key_checking = label.get(
+                'host-key-checking', self.host_key_checking)
 
             top_label = full_config.labels[pl.name]
             top_label.pools.append(self)
@@ -367,6 +371,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'instance-properties': dict,
             'userdata': str,
             'networks': [str],
+            'host-key-checking': bool,
         }
 
         label_min_ram = v.Schema({v.Required('min-ram'): int}, extra=True)

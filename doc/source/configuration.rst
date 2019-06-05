@@ -926,6 +926,18 @@ Selecting the OpenStack driver adds the following options to the
             If given, the label for use in this pool will create a
             volume from the image and boot the node from it.
 
+        .. attr:: host-key-checking
+           :type: bool
+           :default: True
+
+           Specify custom behavior of validation of SSH host keys.  When set to
+           False, nodepool-launcher will not ssh-keyscan nodes after they are
+           booted. This might be needed if nodepool-launcher and the nodes it
+           launches are on different networks.  The default value is True.
+
+           .. note:: This value will override the value for
+                     :attr:`providers.[openstack].pools.host-key-checking`.
+
         .. attr:: networks
            :type: list
 

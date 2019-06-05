@@ -217,7 +217,7 @@ class OpenStackNodeLauncher(NodeLauncher):
 
         # wait and scan the new node and record in ZooKeeper
         host_keys = []
-        if self.pool.host_key_checking:
+        if self.label.host_key_checking:
             try:
                 self.log.debug(
                     "Gathering host keys for node %s", self.node.id)

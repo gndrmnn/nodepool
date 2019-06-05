@@ -514,21 +514,29 @@ class TestLauncher(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
 
     def test_node_host_key_checking_false(self):
-        """Test that an image and node are created"""
+        """Test that images and nodes are created"""
         configfile = self.setup_config('node-host-key-checking.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
         pool.start()
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
-        nodes = self.waitForNodes('fake-label')
+        label1_nodes = self.waitForNodes('fake-label')
+        label2_nodes = self.waitForNodes('fake-label2')
 
-        self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].provider, 'fake-provider')
-        self.assertEqual(nodes[0].type, ['fake-label'])
-        self.assertEqual(nodes[0].username, 'zuul')
-        # We have no host_keys because host-key-checking is False.
-        self.assertEqual(nodes[0].host_keys, [])
+        self.assertEqual(len(label1_nodes), 1)
+        self.assertEqual(label1_nodes[0].provider, 'fake-provider')
+        self.assertEqual(label1_nodes[0].type, ['fake-label'])
+        self.assertEqual(label1_nodes[0].username, 'zuul')
+        # We have no host_keys because pool.host-key-checking is False.
+        self.assertEqual(label1_nodes[0].host_keys, [])
+
+        self.assertEqual(len(label2_nodes), 1)
+        self.assertEqual(label2_nodes[0].provider, 'fake-provider2')
+        self.assertEqual(label2_nodes[0].type, ['fake-label2'])
+        self.assertEqual(label2_nodes[0].username, 'zuul')
+        # We have no host_keys because label.host-key-checking is False.
+        self.assertEqual(label2_nodes[0].host_keys, [])
 
     def test_multiple_launcher(self):
         """Test that an image and node are created with 2 launchers"""
