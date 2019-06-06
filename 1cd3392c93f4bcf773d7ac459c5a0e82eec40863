@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_dfaa9fd0",
+        "filename": "releasenotes/notes/openstack-driver-labels-host-key-checking-f102c013040f5f15.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-06-06T17:48:00Z",
+      "side": 1,
+      "message": "Copy-pasta error about networks.",
+      "revId": "1cd3392c93f4bcf773d7ac459c5a0e82eec40863",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
