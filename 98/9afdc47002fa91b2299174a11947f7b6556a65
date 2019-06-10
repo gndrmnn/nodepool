@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 10 Jun 2019 19:43:40 +0000
+Reviewed-on: https://review.opendev.org/664415
+Project: zuul/nodepool
+Branch: refs/heads/master
