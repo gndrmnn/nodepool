@@ -266,9 +266,14 @@ class FakeOpenStackCloud(object):
         return server
 
     def wait_for_server(self, server, **kwargs):
+        auto_ip = kwargs.get('auto_ip')
+        ip_pool = kwargs.get('ip_pool')
+
+        # Allocate IP from a custom pool if specified.
+        if ip_pool:
+            server.public_v4 = 'fake_from_custom_pool'
         while server.status == 'BUILD':
             time.sleep(0.1)
-        auto_ip = kwargs.get('auto_ip')
         if not auto_ip:
             server = self._clean_floating_ip(server)
         return server

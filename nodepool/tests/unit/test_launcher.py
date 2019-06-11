@@ -1440,6 +1440,32 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('', label3_nodes[0].public_ipv6)
         self.assertEqual('fake', label3_nodes[0].interface_ip)
 
+    def test_node_floating_ip_pool(self):
+        """Test that floating-ip-pool option works fine."""
+        configfile = self.setup_config('node_floating_ip_pool.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider1', 'fake-image')
+        self.waitForImage('fake-provider2', 'fake-image')
+        label1_nodes = self.waitForNodes('fake-label1')
+        label2_nodes = self.waitForNodes('fake-label2')
+
+        self.assertEqual(1, len(label1_nodes))
+        self.assertEqual(1, len(label2_nodes))
+        print(label1_nodes)
+        print(label2_nodes)
+
+        # floating-ip-pool: 'custom-floating-name'
+        self.assertEqual('fake-provider1',
+                         label1_nodes[0].provider)
+        self.assertEqual('fake_from_custom_pool',
+                         label1_nodes[0].public_ipv4)
+
+        # floating-ip-pool: None
+        self.assertEqual('fake-provider2', label2_nodes[0].provider)
+        self.assertEqual('fake', label2_nodes[0].public_ipv4)
+
     def test_secure_file(self):
         """Test using secure.conf file"""
         configfile = self.setup_config('secure_file_config.yaml')

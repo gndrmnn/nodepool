@@ -365,9 +365,9 @@ class OpenStackProvider(Provider):
         except openstack.exceptions.OpenStackCloudException:
             return None
 
-    def waitForServer(self, server, timeout=3600, auto_ip=True):
+    def waitForServer(self, server, timeout=3600, auto_ip=True, ip_pool=None):
         return self._client.wait_for_server(
-            server=server, auto_ip=auto_ip,
+            server=server, auto_ip=auto_ip, ip_pool=ip_pool,
             reuse=False, timeout=timeout)
 
     def waitForNodeCleanup(self, server_id, timeout=600):

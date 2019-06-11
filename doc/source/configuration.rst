@@ -833,6 +833,14 @@ Selecting the OpenStack driver adds the following options to the
         deployed in the same internal private network, set the option
         to False to save floating ip for cloud provider.
 
+     .. attr:: floating-ip-pool
+        :type: str
+        :default: None
+
+        Specify custom floating ip pool name or id for each node.
+        When set to None, ``nodepool-launcher`` will use first
+        available floating pool to allocate ip.
+
      .. attr:: host-key-checking
         :type: bool
         :default: True
