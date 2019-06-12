@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_e1f685d7",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-06-12T23:37:18Z",
+      "side": 1,
+      "message": "It might be a good idea to return a named tuple (https://docs.python.org/3/library/collections.html#collections.namedtuple) so that we can refer to the attributes of the identifier set by name.",
+      "revId": "a7ef7e69e237641d6f9a9a2cdf0d292926e2d0c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_6134d593",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-06-12T23:37:18Z",
+      "side": 1,
+      "message": "Places like this would likely benefit from the named tuple.\n\nAnother approach would be to directly compare two tuples. For example:\n\n  (node.hostname, node.username, node.connection_port) !\u003d node_tuple",
+      "revId": "a7ef7e69e237641d6f9a9a2cdf0d292926e2d0c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_811a2914",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-06-12T23:37:18Z",
+      "side": 1,
+      "message": "Nit: This function name should probably be plural.\n\n  getRegisteredNodes(self):",
+      "range": {
+        "startLine": 115,
+        "startChar": 21,
+        "endLine": 115,
+        "endChar": 25
+      },
+      "revId": "a7ef7e69e237641d6f9a9a2cdf0d292926e2d0c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
