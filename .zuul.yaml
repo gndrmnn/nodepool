@@ -14,6 +14,70 @@
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
       tox_envlist: nodepool
 
+- job:
+    name: nodepool-functional-openstack
+    description: |
+      Test Nodepool with an OpenStack.
+
+      Sets up a working OpenStack system, builds an image, launches a
+      node, and verifies SSH access to the node.
+
+      .. zuul:jobvar:: nodepool_extra_packages
+         :type: list
+
+         A list of extra packages to install at the start of the job
+         (i.e., anything needed for the DIB build).
+
+      .. zuul:jobvar:: nodepool_diskimage
+         :type: dict
+
+         .. zuul:jobvar:: base_element
+
+            The base element to use when building the disk image.
+
+         .. zuul:jobvar:: release
+
+            The release number or name to use with the base element.
+
+         .. zuul:jobvar:: mirror
+
+            The URL for the package mirror to use when building the
+            disk image.  This is optional.
+
+         .. zuul:jobvar:: env-vars
+            :type: dict
+
+            A dictionary of environment variables and values to add
+            to the DIB environment when building the image.
+
+    timeout: 5400
+    required-projects:
+      - zuul/nodepool
+    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
+    run: playbooks/nodepool-functional-openstack/run.yaml
+    post-run: playbooks/nodepool-functional-openstack/post.yaml
+    vars:
+      zuul_copy_output:
+        /var/log/nodepool: logs
+      nodepool_extra_packages:
+        - rpm
+        - yum-utils
+      nodepool_diskimage:
+        base_element: centos-minimal
+        release: 7
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+
+- job:
+    name: nodepool-functional-openstack-src
+    description: Test Nodepool and OpenStack, with some projects from source
+    parent: nodepool-functional-openstack
+    required-projects:
+      - name: github.com/sqlalchemy/dogpile.cache
+      - name: opendev/glean
+      - name: zuul/nodepool
+      - name: openstack/diskimage-builder
+      - name: openstack/openstacksdk
+
 # NOTE(ianw): this job doesn't really do anything unless you set
 # "NODEPOOL_PAUSE_something_DIB: false" to unpause one or more builds.
 - job:
@@ -219,10 +283,8 @@
         - tox-py36
         - nodepool-zuul-functional:
             voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
+        - nodepool-functional-openstack
+        - nodepool-functional-openstack-src
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
