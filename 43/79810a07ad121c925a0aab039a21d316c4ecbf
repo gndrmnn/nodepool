@@ -1,0 +1,11 @@
+Code-Review+1: chengmei <chengmei@awcloud.com>
+Code-Review+2: Joshua Hesketh <josh@nitrotech.org>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Workflow+1: David Shrewsbury <dshrewsb@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 12 Jun 2019 20:40:30 +0000
+Reviewed-on: https://review.opendev.org/649214
+Project: zuul/nodepool
+Branch: refs/heads/master
