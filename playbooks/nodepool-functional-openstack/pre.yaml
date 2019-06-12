@@ -1,0 +1,21 @@
+- hosts: all
+  roles:
+    - role: bindep
+      bindep_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - role: test-setup
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - install-devstack
+  tasks:
+    # Create the virtualenv so we can control the python version
+    - name: Create virtualenv
+      pip:
+        name: extras
+        virtualenv: "{{ ansible_user_dir }}/.venv"
+        virtualenv_python: python3
+    - name: Install python project from source
+      include_role:
+        name: install-if-python
+      vars:
+        zuul_work_dir: "{{ item.src_dir }}"
+        error_on_failure: true
+      loop: "{{ zuul.projects.values() | selectattr('required') | list }}"
