@@ -14,6 +14,14 @@
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
       tox_envlist: nodepool
 
+- job:
+    name: nodepool-functional-openstack
+    description: TODO
+    required-projects:
+      - zuul/nodepool
+    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
+    run: playbooks/nodepool-functional-openstack/run.yaml
+
 # NOTE(ianw): this job doesn't really do anything unless you set
 # "NODEPOOL_PAUSE_something_DIB: false" to unpause one or more builds.
 - job:
@@ -211,43 +219,4 @@
 - project:
     check:
       jobs:
-        - nodepool-build-image
-        - tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-py35:
-            voting: false
-        - nodepool-functional-py35-src:
-            voting: false
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-    gate:
-      jobs:
-        - nodepool-upload-image
-        - tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - zuul-quick-start:
-            dependencies: nodepool-upload-image
-    post:
-      jobs:
-        - publish-zuul-docs
-        - release-zuul-python
-    promote:
-      jobs:
-        - nodepool-promote-image
-    experimental:
-      jobs:
-        - nodepool-functional-py35-debian-src
-    release:
-      jobs:
-        - release-zuul-python
-        - publish-zuul-docs
+        - nodepool-functional-openstack
