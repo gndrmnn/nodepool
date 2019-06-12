@@ -1,0 +1,30 @@
+- name: Load clouds.yaml
+  become: true
+  slurp:
+    path: /etc/openstack/clouds.yaml
+  register: clouds_yaml
+- name: Parse clouds.yaml
+  set_fact:
+    clouds_yaml: "{{ clouds_yaml.content | b64decode | from_yaml }}"
+- name: Update clouds.yaml
+  vars:
+    new_config:
+      # cache:
+      #   max_age: 3600
+      #   class: dogpile.cache.dbm
+      #   arguments:
+      #     filename: .cache/openstack/shade.dbm
+      #   expiration:
+      #     floating-ip: 5
+      #     server: 5
+      #     port: 5
+      # TODO(pabelanger): Remove once glean fully supports IPv6.
+      client:
+        force_ipv4: True
+  set_fact:
+    clouds_yaml: "{{ clouds_yaml | combine(new_config) }}"
+- name: Save clouds.yaml
+  become: true
+  copy:
+    content: "{{ clouds_yaml | to_nice_yaml }}"
+    dest: /etc/openstack/clouds.yaml
