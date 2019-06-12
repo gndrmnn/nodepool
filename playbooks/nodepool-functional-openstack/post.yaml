@@ -1,0 +1,36 @@
+- hosts: all
+  tasks:
+    - name: Copy nodepool log files
+      synchronize:
+        src: /var/log/nodepool
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+    - name: Copy nodepool config files
+      synchronize:
+        src: /etc/nodepool
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+    - name: Copy libvirt logs
+      become: true
+      synchronize:
+        src: /var/log/libvirt
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+    - name: Export legacy syslog.txt
+      become: true
+      shell:
+        # The journal contains everything running under systemd, we'll
+        # build an old school version of the syslog with just the
+        # kernel and sudo messages.
+        cmd: |
+          journalctl \
+              -t kernel \
+              -t sudo \
+              --no-pager \
+            | gzip - > {{ ansible_user_dir }}/logs/syslog.txt.gz
+    - name: Copy syslog
+      become: True
+      synchronize:
+        src: "{{ ansible_user_dir }}/logs/syslog.txt.gz"
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
