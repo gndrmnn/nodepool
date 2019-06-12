@@ -1,0 +1,26 @@
+# Pre playbook (temporarily here to avoid retries)
+- hosts: all
+  roles:
+    - bindep
+    - test-setup
+    - install-devstack
+  tasks:
+    - name: Install python project from source
+      include_role:
+        name: install-if-python
+      vars:
+        zuul_work_dir: "{{ item }}.src_dir"
+      loop: "{{ zuul.projects.values() | selectattr('required') | list }}"
+
+# - hosts: all
+#   tasks:
+#     - name: Write clouds.yaml
+#     - name: Create nodepool flavor
+#     - name: Create security group
+#     - name: Create unmanaged VM
+#     - name: Create nodepool SSH keypair
+#     - name: Write nodepool elements
+#     - name: Write nodepool config
+#     - name: Validate nodepool config
+#     - name: Start nodepool builder
+#     - name: Start nodepool launcher
