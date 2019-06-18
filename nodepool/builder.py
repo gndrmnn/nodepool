@@ -23,6 +23,7 @@ import subprocess
 import threading
 import time
 import shlex
+import sys
 import uuid
 
 from pathlib import Path
@@ -1262,7 +1263,11 @@ class NodePoolBuilder(object):
             self.dib_cmd = os.path.join(os.path.dirname(__file__), '..',
                                         'nodepool/tests/fake-image-create')
         else:
-            self.dib_cmd = 'disk-image-create'
+            if hasattr(sys, 'real_prefix'):
+                # We're in a virtualenv, use that version of dib
+                self.dib_cmd = '%s/bin/disk-image-create' % (sys.exec_prefix,)
+            else:
+                self.dib_cmd = 'disk-image-create'
         self.zk = None
 
         # This lock is needed because the run() method is started in a
