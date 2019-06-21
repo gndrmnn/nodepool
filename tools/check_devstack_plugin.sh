@@ -273,4 +273,4 @@ $NODEPOOL list
 if [[ -n "${FAILURE_REASON}" ]]; then
     echo "${FAILURE_REASON}"
 fi
-exit $RETURN
+exit 1
