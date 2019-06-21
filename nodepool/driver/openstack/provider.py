@@ -29,6 +29,7 @@ from nodepool.nodeutils import iterate_timeout
 from nodepool import stats
 from nodepool import version
 from nodepool import zk
+from keystoneauth1 import exceptions as keystoneauth_exceptions
 
 # Import entire module to avoid partial-loading, circular import
 from nodepool.driver.openstack import handler
@@ -442,10 +443,16 @@ class OpenStackProvider(Provider):
 
         :param str status: A valid port status. E.g., 'ACTIVE' or 'DOWN'.
         '''
-        if status:
-            ports = self._client.list_ports(filters={'status': status})
-        else:
-            ports = self._client.list_ports()
+        ports = []
+        try:
+            if status:
+                ports = self._client.list_ports(filters={'status': status})
+            else:
+                ports = self._client.list_ports()
+        except keystoneauth_exceptions.catalog.EndpointNotFound as e:
+            msg = ('Network endpoint not found. Provider is running '
+                   'nova-network. Error %s')
+            self.log.exception(msg, e)
         return ports
 
     def deletePort(self, port_id):
