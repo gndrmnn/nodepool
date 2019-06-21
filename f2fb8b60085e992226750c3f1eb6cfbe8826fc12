@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_cae97a80",
+        "filename": ".zuul.yaml",
+        "patchSetId": 30
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 22348
+      },
+      "writtenOn": "2019-06-21T21:05:28Z",
+      "side": 1,
+      "message": "Job nodepool-functional-openstack-xenial not defined",
+      "range": {
+        "startLine": 270,
+        "startChar": 2,
+        "endLine": 275,
+        "endChar": 0
+      },
+      "revId": "f2fb8b60085e992226750c3f1eb6cfbe8826fc12",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
