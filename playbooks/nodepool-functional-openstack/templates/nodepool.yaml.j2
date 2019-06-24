@@ -62,7 +62,9 @@ diskimages:
       DIB_DISABLE_APT_CLEANUP: '1'
       DIB_DEBIAN_COMPONENTS: 'main,universe'
       DIB_DEV_USER_AUTHORIZED_KEYS: {{ NODEPOOL_PUBKEY }}
+{% if 'mirror' in nodepool_diskimage %}
       DIB_DISTRIBUTION_MIRROR: {{ nodepool_diskimage.mirror }}
+{% endif %}
       DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
       # TODO(corvus): cached $DIB_GET_PIP
 {% if zuul.projects.get('opendev.org/opendev/glean', {}).get('required', False) %}
@@ -71,3 +73,6 @@ diskimages:
       DIB_REPOREF_glean: "{{ zuul.projects['opendev.org/opendev/glean'].checkout }}"
 {% endif %}
       DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+{% for k, v in nodepool_diskimage.get('env-vars', {}).items() %}
+      {{ k }}: "{{ v }}"
+{% endfor %}
