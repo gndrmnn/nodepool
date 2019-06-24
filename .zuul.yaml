@@ -36,7 +36,13 @@
          .. zuul:jobvar:: mirror
 
             The URL for the package mirror to use when building the
-            disk image.
+            disk image.  This is optional.
+
+         .. zuul:jobvar:: env-vars
+            :type: dict
+
+            A dictionary of environment variables and values to add
+            to the DIB environment when building the image.
 
     timeout: 5400
     required-projects:
