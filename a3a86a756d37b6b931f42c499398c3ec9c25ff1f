@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_17c24435",
+        "filename": "roles/install-devstack/templates/local.conf.j2",
+        "patchSetId": 37
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-06-24T16:46:47Z",
+      "side": 1,
+      "message": "We also don\u0027t need cinder or swift which are in the default list iirc.",
+      "revId": "a3a86a756d37b6b931f42c499398c3ec9c25ff1f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
