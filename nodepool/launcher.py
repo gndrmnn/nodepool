@@ -232,6 +232,19 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                             req.id, req.provider, candidate_launchers)
                         continue
 
+            # Give waiting node requests a chance to grab needed nodes.
+            # Otherwise we can have a race condition where a label becomes
+            # available while we are processing new node requests. Without this
+            # we would use the node before the waiting requests have a chance
+            # to reserve it. This could lead to starvation of the waiting
+            # requests.
+            # There is still a chance for this to happen when a node type
+            # becomes available after we re-ran the waiting handlers and before
+            # the current handler's run() method is called.
+            for wh in self.request_handlers:
+                if wh.waiting:
+                    wh.run()
+
             self.log.debug("Locking request %s", req.id)
             try:
                 self.zk.lockNodeRequest(req, blocking=False)
