@@ -36,6 +36,11 @@ class StaticNodeRequestHandler(NodeRequestHandler):
         # We are always at quota since we cannot launch new nodes.
         return False
 
+    def pauseOnQuota(self):
+        # We don't want to stop serving other requests since the quota limit
+        # of a single label doesn't affect other labels.
+        return False
+
     def launch(self, node):
         # NOTE: We do not expect this to be called since hasRemainingQuota()
         # returning False should prevent the call.

@@ -240,6 +240,40 @@ class TestDriverStatic(tests.DBTestCase):
         node = self.waitForNodes('fake-label')
         self.assertEqual(len(node), 1)
 
+    def test_static_waiting_handler(self):
+        configfile = self.setup_config('static-2-nodes-multilabel.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+        node = self.zk.getNode(req.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        req_waiting = zk.NodeRequest()
+        req_waiting.state = zk.REQUESTED
+        req_waiting.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req_waiting)
+        req_waiting = self.waitForNodeRequest(req_waiting, zk.PENDING)
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label2')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+
+        req_waiting = self.zk.getNodeRequest(req_waiting.id)
+        self.assertEqual(req_waiting.state, zk.PENDING)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
+        self.waitForNodeRequest(req_waiting, zk.FULFILLED)
+
     def test_static_multinode_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
