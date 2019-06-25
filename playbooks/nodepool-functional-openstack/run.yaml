@@ -23,6 +23,7 @@
           - uuid-runtime
           - yum-utils
           - debootstrap
+          - zypper
     - name: Create cache directory
       file:
         path: .cache/openstack
