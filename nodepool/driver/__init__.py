@@ -345,6 +345,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.nodeset = []
         self.done = False
         self.paused = False
+        self.waiting = False
         self.launcher_id = self.pw.launcher_id
 
         self._satisfied_types = LabelRecorder()
@@ -370,6 +371,17 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
     @property
     def ready_nodes(self):
         return self._ready_nodes
+
+    @property
+    def needed_types(self):
+        # Since the run() method can be called more than once for the same
+        # request, we need to calculate the difference between our current
+        # node set and what was requested. We cannot use set operations here
+        # since a node type can appear more than once in the requested types.
+        saved_types = collections.Counter(self._satisfied_types.labels())
+        requested_types = collections.Counter(self.request.node_types)
+        diff = requested_types - saved_types
+        return list(diff.elements())
 
     def _invalidNodeTypes(self):
         '''
@@ -401,14 +413,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             launcher has already started doing so. This would cause an
             expected failure from the underlying library, which is ok for now.
         '''
-        # Since this code can be called more than once for the same request,
-        # we need to calculate the difference between our current node set
-        # and what was requested. We cannot use set operations here since a
-        # node type can appear more than once in the requested types.
-        saved_types = collections.Counter(self._satisfied_types.labels())
-        requested_types = collections.Counter(self.request.node_types)
-        diff = requested_types - saved_types
-        needed_types = list(diff.elements())
+        needed_types = self.needed_types
 
         if self.request.reuse:
             ready_nodes = self.zk.getReadyNodesOfTypes(needed_types)
@@ -477,6 +482,14 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                     self.log.info(
                         "Not enough quota remaining to satisfy request %s",
                         self.request.id)
+
+                    if not self.pauseOnQuota():
+                        self.log.debug(
+                            "Waiting for node type %s for request %s",
+                            ntype, self.request.id)
+                        self.waiting = True
+                        continue
+
                     if not self.paused:
                         self.log.debug(
                             "Pausing request handling to satisfy request %s",
@@ -520,6 +533,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 self.nodeset.append(node)
                 self._satisfied_types.add(ntype, node.id)
                 self.launch(node)
+
+        if self.waiting and not self.needed_types:
+            self.log.debug("Request %s is no longer waiting for quota",
+                           self.request)
+            self.waiting = False
 
     def _runHandler(self):
         '''
@@ -654,6 +672,11 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         if self.done:
             return True
 
+        if self.waiting:
+            self.run()
+            if self.waiting:
+                return False
+
         # Driver must implement this call
         if not self.launchesComplete():
             return False
@@ -745,6 +768,14 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         :param ntype: node type for the quota check
         :return: True if there is enough quota, False otherwise
+        '''
+        return True
+
+    def pauseOnQuota(self):
+        '''
+        Decide if further request processing should be paused if in quota.
+
+        :return: True if the hansler should be paused, False otherwise
         '''
         return True
 
