@@ -10,12 +10,15 @@
         src: /etc/nodepool
         dest: '{{ zuul.executor.log_root }}'
         mode: pull
-    - name: Copy libvirt logs
+    - synchronize:
       become: true
-      synchronize:
-        src: /var/log/libvirt
+        src: /opt/stack/data/nova/instances
         dest: '{{ zuul.executor.log_root }}'
         mode: pull
+        rsync_opts:
+          - "--include=*/"
+          - "--include=console.log"
+          - "--exclude=*"
     - name: Export legacy syslog.txt
       become: true
       shell:
