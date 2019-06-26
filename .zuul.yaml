@@ -217,6 +217,7 @@
         - tox-py35:
             nodeset: ubuntu-xenial
         - tox-py36
+        - tox-py37
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-py35:
@@ -235,6 +236,7 @@
         - tox-py35:
             nodeset: ubuntu-xenial
         - tox-py36
+        - tox-py37
         - zuul-quick-start:
             dependencies: nodepool-upload-image
     post:
