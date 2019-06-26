@@ -19,3 +19,10 @@
         zuul_work_dir: "{{ item.src_dir }}"
         error_on_failure: true
       loop: "{{ zuul.projects.values() | selectattr('required') | list }}"
+    # We need a fixed debootstrap
+    # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=901977
+    - name: Install updated debootstrap repo
+      become: true
+      shell: |
+        add-apt-repository ppa:openstack-ci-core/debootstrap
+        apt-get update

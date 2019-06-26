@@ -290,44 +290,51 @@
         secret: nodepool-dockerhub
         pass-to-parent: true
 
+- job:
+    name: dib-nodepool-functional-openstack-ubuntu-trusty-src
+    description: |
+      Test building and booting an Ubuntu trusty image with Nodepool
+      and OpenStack
+    parent: nodepool-functional-openstack-src-base
+    vars:
+      nodepool_extra_packages:
+        - debootstrap
+      nodepool_diskimage:
+        base_element: ubuntu-minimal
+        release: 'trusty'
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
+
+- job:
+    name: dib-nodepool-functional-openstack-ubuntu-xenial-src
+    description: |
+      Test building and booting an Ubuntu xenial image with Nodepool
+      and OpenStack
+    parent: nodepool-functional-openstack-src-base
+    vars:
+      nodepool_extra_packages:
+        - debootstrap
+      nodepool_diskimage:
+        base_element: ubuntu-minimal
+        release: 'xenial'
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
+
+- job:
+    name: dib-nodepool-functional-openstack-ubuntu-bionic-src
+    description: |
+      Test building and booting an Ubuntu bionic image with Nodepool
+      and OpenStack
+    parent: nodepool-functional-openstack-src-base
+    vars:
+      nodepool_extra_packages:
+        - debootstrap
+      nodepool_diskimage:
+        base_element: ubuntu-minimal
+        release: 'bionic'
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
+
 - project:
     check:
       jobs:
-        - nodepool-build-image
-        - tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack
-        - nodepool-functional-openstack-src
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-    gate:
-      jobs:
-        - nodepool-upload-image
-        - tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - zuul-quick-start:
-            dependencies: nodepool-upload-image
-    post:
-      jobs:
-        - publish-zuul-docs
-        - release-zuul-python
-    promote:
-      jobs:
-        - nodepool-promote-image
-    experimental:
-      jobs:
-        - nodepool-functional-py35-debian-src
-    release:
-      jobs:
-        - release-zuul-python
-        - publish-zuul-docs
+        - dib-nodepool-functional-openstack-ubuntu-trusty-src
+        - dib-nodepool-functional-openstack-ubuntu-xenial-src
+        - dib-nodepool-functional-openstack-ubuntu-bionic-src
