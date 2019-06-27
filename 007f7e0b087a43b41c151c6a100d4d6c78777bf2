@@ -17,6 +17,23 @@
       "revId": "007f7e0b087a43b41c151c6a100d4d6c78777bf2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_73191020",
+        "filename": ".zuul.yaml",
+        "patchSetId": 47
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-06-27T17:26:36Z",
+      "side": 1,
+      "message": "Yes, but the result is the same, and there are enough patches stacked on this one that I\u0027d like to merge this as-is and fix it in a followup.  I\u0027ll push one up now.",
+      "revId": "007f7e0b087a43b41c151c6a100d4d6c78777bf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
