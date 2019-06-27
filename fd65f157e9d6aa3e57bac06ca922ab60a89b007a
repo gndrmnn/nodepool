@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_a8571758",
+        "filename": "test-requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-06-27T16:56:12Z",
+      "side": 0,
+      "message": "when removing hacking from here we should remove the comment as well",
+      "revId": "fd65f157e9d6aa3e57bac06ca922ab60a89b007a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
