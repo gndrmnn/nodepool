@@ -89,13 +89,7 @@
 - job:
     name: nodepool-functional-openstack-src
     description: Test Nodepool and OpenStack, with some projects from source
-    parent: nodepool-functional-openstack
-    required-projects:
-      - name: github.com/sqlalchemy/dogpile.cache
-      - name: opendev/glean
-      - name: zuul/nodepool
-      - name: openstack/diskimage-builder
-      - name: openstack/openstacksdk
+    parent: nodepool-functional-openstack-src-base
     vars: *nodepool_diskimage_vars
 
 - job:
