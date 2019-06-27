@@ -1,0 +1,22 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_938a8461",
+        "filename": ".zuul.yaml",
+        "patchSetId": 47
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-06-27T17:23:53Z",
+      "side": 1,
+      "message": "should this be based on nodepool-functional-openstack-src-base?",
+      "parentUuid": "",
+      "revId": "007f7e0b087a43b41c151c6a100d4d6c78777bf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
