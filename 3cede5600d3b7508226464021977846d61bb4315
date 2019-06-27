@@ -16,6 +16,24 @@
       "revId": "3cede5600d3b7508226464021977846d61bb4315",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_732cb0ab",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 6593
+      },
+      "writtenOn": "2019-06-27T17:52:52Z",
+      "side": 1,
+      "message": "zuul change is at https://review.opendev.org/#/c/667537/",
+      "parentUuid": "9fb8cfa7_731fd0b6",
+      "revId": "3cede5600d3b7508226464021977846d61bb4315",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
