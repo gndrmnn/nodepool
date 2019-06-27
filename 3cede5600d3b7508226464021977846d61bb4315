@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_731fd0b6",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-06-27T17:41:00Z",
+      "side": 1,
+      "message": "I\u0027m trying to move this project to the zuul tenant, which will not have openstack-* templates; can we just change the existing tox-py36 to tox-py37?  Also, zuul needs to be kept in sync with nodepool, so we\u0027ll need a corresponding change there.",
+      "revId": "3cede5600d3b7508226464021977846d61bb4315",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
