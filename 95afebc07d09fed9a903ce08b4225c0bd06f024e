@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_9dd08121",
+        "filename": "playbooks/nodepool-functional-openstack/post.yaml",
+        "patchSetId": 40
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-06-27T17:47:03Z",
+      "side": 1,
+      "message": "This might need a become: true too.",
+      "revId": "95afebc07d09fed9a903ce08b4225c0bd06f024e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
