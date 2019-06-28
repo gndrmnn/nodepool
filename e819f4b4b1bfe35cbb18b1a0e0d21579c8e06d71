@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fb8cfa7_171f526c",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 6159
+      },
+      "writtenOn": "2019-06-28T13:14:11Z",
+      "side": 1,
+      "message": "Another approach would be to make this an explicit action using a config option. I went with a fallback method to keep backward compatibility and avoid introducing new config options.",
+      "revId": "e819f4b4b1bfe35cbb18b1a0e0d21579c8e06d71",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
