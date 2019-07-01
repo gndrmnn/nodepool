@@ -407,6 +407,12 @@ Options
          static driver, see the separate section
          :attr:`providers.[static]`
 
+      .. value:: azure
+
+         For details on the extra options required and provided by the
+         Azure driver, see the separate section
+         :attr:`providers.[azure]`
+
 
 OpenStack Driver
 ----------------
@@ -2100,3 +2106,166 @@ section of the configuration.
 .. _`Application Default Credentials`: https://cloud.google.com/docs/authentication/production
 .. _`GCE regions and zones`: https://cloud.google.com/compute/docs/regions-zones/
 .. _`GCE machine types`: https://cloud.google.com/compute/docs/machine-types
+
+Azure Compute Driver
+--------------------
+
+Selecting the azure driver adds the following options to the :attr:`providers`
+section of the configuration.
+
+.. attr-overview::
+   :prefix: providers.[azure]
+   :maxdepth: 3
+
+.. attr:: providers.[azure]
+   :type: list
+
+   An Azure provider's resources are partitioned into groups called `pool`
+   (see :attr:`providers.[azure].pools` for details), and within a pool,
+   the node types which are to be made available are listed
+   (see :attr:`providers.[azure].pools.labels` for details).
+
+
+   .. note:: For documentation purposes the option names are prefixed
+             ``providers.[azure]`` to disambiguate from other
+             drivers, but ``[azure]`` is not required in the
+             configuration (e.g. below
+             ``providers.[azure].pools`` refers to the ``pools``
+             key in the ``providers`` section when the ``azure``
+             driver is selected).
+
+   Example:
+
+   .. code-block:: yaml
+
+     providers:
+        - name: azure-central-us
+          driver: azure
+          zuul-public-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAA...
+          resource_group_location: centralus
+          location: centralus
+          resource_group: ZuulCIDev
+          auth_path: /Users/grhayes/.azure/nodepoolCreds.json
+          subnet_id: /subscriptions/<subscription-id>/resourceGroups/ZuulCI/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
+          pools:
+            - name: main
+              max-servers: 10
+              labels:
+                - name: bionic
+                  username: zuul
+                  imageReference:
+                    sku: 18.04-LTS
+                    publisher: Canonical
+                    version: latest
+                    offer: UbuntuServer
+                  hardwareProfile:
+                    vmSize: Standard_D1_v2
+                  tags:
+                    department: R&D
+                    purpose: CI/CD
+
+   .. attr:: name
+      :required:
+
+      A unique name for this provider configuration.
+
+   .. attr:: location
+      :required:
+
+      Name of the Azure region to interact with.
+
+   .. attr:: resource_group_location
+      :required:
+
+      Name of the Azure region to where the home Resource Group is or should be created.
+
+   .. attr:: auth_path
+      :required:
+
+      Path to the JSON file containing the service principal credentials.
+      Create with the `Azure CLI`_ and the ``--sdk-auth`` flag
+
+   .. attr:: subnet_id
+      :required:
+
+      Subnet to create VMs on
+
+   .. attr:: pools
+      :type: list
+
+      A pool defines a group of resources from an AWS provider. Each pool has a
+      maximum number of nodes which can be launched from it, along with a number
+      of cloud-related attributes used when launching nodes.
+
+      .. attr:: name
+         :required:
+
+         A unique name within the provider for this pool of resources.
+
+      .. attr:: labels
+         :type: list
+
+         Each entry in a pool's `labels` section indicates that the
+         corresponding label is available for use in this pool.  When creating
+         nodes for a label, the flavor-related attributes in that label's
+         section will be used.
+
+         .. code-block:: yaml
+
+            labels:
+              - name: bionic
+                imageReference:
+                  sku: 18.04-LTS
+                  publisher: Canonical
+                  version: latest
+                  offer: UbuntuServer
+                hardwareProfile:
+                  vmSize: Standard_D1_v2
+
+         Each entry is a dictionary with the following keys
+
+           .. attr:: name
+              :type: str
+              :required:
+
+              Identifier to refer this label.
+
+           .. attr:: imageReference
+              :type: list
+              :required:
+
+              .. attr:: sku
+                 :type: str
+                 :required:
+
+                 Image SKU
+
+              .. attr:: publisher
+                 :type: str
+                 :required:
+
+                 Image Publisher
+
+              .. attr:: offer
+                 :type: str
+                 :required:
+
+                 Image offers
+
+              .. attr:: version
+                 :type: str
+                 :required:
+
+                 Image version
+
+           .. attr:: hardwareProfile
+              :type: list
+              :required:
+
+              .. attr:: vmSize
+                 :type: str
+                 :required:
+
+                 VM Flavor size name
+
+.. _`Azure CLI`: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest
