@@ -526,8 +526,11 @@ class CleanupWorker(BaseCleanupWorker):
         '''
         Allow each provider manager a chance to cleanup resources.
         '''
+        self.log.warning("HERE")
         for provider in self._nodepool.config.providers.values():
+            self.log.warning(provider.name)
             manager = self._nodepool.getProviderManager(provider.name)
+            self.log.warning(manager)
             if manager:
                 try:
                     manager.cleanupLeakedResources()
