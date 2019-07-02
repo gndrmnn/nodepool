@@ -16,6 +16,24 @@
       "revId": "e819f4b4b1bfe35cbb18b1a0e0d21579c8e06d71",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_45996b6a",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-07-02T12:09:25Z",
+      "side": 1,
+      "message": "This debug message could get annoying for folks running in k8s using this method. Since this is how you\u0027re running, keep an eye on it - maybe the debug log line should go away. But maybe it\u0027s fine.",
+      "parentUuid": "9fb8cfa7_171f526c",
+      "revId": "e819f4b4b1bfe35cbb18b1a0e0d21579c8e06d71",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
