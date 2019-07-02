@@ -34,6 +34,24 @@
       "revId": "e819f4b4b1bfe35cbb18b1a0e0d21579c8e06d71",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_a51e27b8",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 6159
+      },
+      "writtenOn": "2019-07-02T12:22:38Z",
+      "side": 1,
+      "message": "yeah. That\u0027s why I made it `debug` instead of info. I could see why some folks could be annoyed by it but I wanted to make sure we\u0027d highlight that the fallback strategy is being attempted because of the missing file",
+      "parentUuid": "9fb8cfa7_45996b6a",
+      "revId": "e819f4b4b1bfe35cbb18b1a0e0d21579c8e06d71",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
