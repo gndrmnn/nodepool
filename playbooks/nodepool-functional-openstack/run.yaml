@@ -6,6 +6,7 @@
     NODEPOOL_INSTALL: "$HOME/nodepool-venv"
     NODEPOOL_CACHE_GET_PIP: "/opt/stack/cache/files/get-pip.py"
     NODEPOOL_CONFIG: "/etc/nodepool/nodepool.yaml"
+    NODEPOOL_LOGGING_CONFIG: "/etc/nodepool/logging.conf"
     NODEPOOL_DIB_BASE_PATH: "/opt/dib"
   tasks:
     - name: Write clouds.yaml
@@ -104,13 +105,19 @@
     # FIXME: don't use activate once this merges:
     # https://review.opendev.org/666177 Use the DIB installed in the virtualenv if running there
 
+    - name: Write logging config
+      become: true
+      template:
+        src: logging.conf.j2
+        dest: "{{ NODEPOOL_LOGGING_CONFIG }}"
+
     - name: Start nodepool builder
       shell: |
         . ./.venv/bin/activate
-        nodepool-builder -c {{ NODEPOOL_CONFIG }}
+        nodepool-builder -l {{ NODEPOOL_LOGGING_CONFIG }} -c {{ NODEPOOL_CONFIG }}
 
     - name: Start nodepool launcher
-      command: "./.venv/bin/nodepool-launcher -c {{ NODEPOOL_CONFIG }}"
+      command: "./.venv/bin/nodepool-launcher -l {{ NODEPOOL_LOGGING_CONFIG }} -c {{ NODEPOOL_CONFIG }}"
 
     - name: Check nodepool functionality
       command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/playbooks/nodepool-functional-openstack/check.sh"
