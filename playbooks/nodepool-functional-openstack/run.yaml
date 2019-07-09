@@ -1,12 +1,18 @@
 - hosts: all
   vars:
+    nodepool_config_dir: "/etc/nodepool"
+    nodepool_log_dir: "/var/log/nodepool"
     NODEPOOL_KEY: "$HOME/.ssh/id_nodepool"
     NODEPOOL_KEY_NAME: "root"
     NODEPOOL_PUBKEY: "$HOME/.ssh/id_nodepool.pub"
     NODEPOOL_INSTALL: "$HOME/nodepool-venv"
     NODEPOOL_CACHE_GET_PIP: "/opt/stack/cache/files/get-pip.py"
-    NODEPOOL_CONFIG: "/etc/nodepool/nodepool.yaml"
+    NODEPOOL_CONFIG: "{{ nodepool_config_dir }}/nodepool.yaml"
     NODEPOOL_DIB_BASE_PATH: "/opt/dib"
+    launcher_logging_config: "{{ nodepool_config_dir }}/launcher-logging.conf"
+    launcher_logging_arg: "{{ '-l '+ launcher_logging_config if nodepool_debug is defined and nodepool_debug else '' }}"
+    builder_logging_config: "{{ nodepool_config_dir }}/builder-logging.conf"
+    builder_logging_arg: "{{ '-l '+ builder_logging_config if nodepool_debug is defined and nodepool_debug else '' }}"
   tasks:
     - name: Write clouds.yaml
       include_tasks: write_clouds_yaml.yaml
@@ -87,11 +93,6 @@
           sudo mkdir -p {{ NODEPOOL_DIB_BASE_PATH }}/cache
           sudo chown -R {{ ansible_user }}:{{ ansible_user }} {{ NODEPOOL_DIB_BASE_PATH }}
 
-          sudo mkdir -p /var/log/nodepool
-          sudo chown -R {{ ansible_user }}:{{ ansible_user }} /var/log/nodepool
-          sudo mkdir -p /var/run/nodepool
-          sudo chown -R {{ ansible_user }}:{{ ansible_user }} /var/run/nodepool
-
     - name: Write nodepool config
       become: true
       template:
@@ -101,16 +102,45 @@
     - name: Validate nodepool config
       command: "./.venv/bin/nodepool -c {{ NODEPOOL_CONFIG }} config-validate"
 
+    - name: Create nodepool runtime dirs
+      become: true
+      file:
+        path: '{{ item }}'
+        state: directory
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
+      loop:
+        - /var/run/nodepool
+        - '{{ nodepool_log_dir }}'
+
+    - name: Write builder logging config
+      become: true
+      template:
+        src: logging.conf.j2
+        dest: "{{ builder_logging_config }}"
+      vars:
+        log_file: "{{ nodepool_log_dir }}/nodepool-builder.log"
+
+    - name: Write launcher logging config
+      become: true
+      template:
+        src: logging.conf.j2
+        dest: "{{ launcher_logging_config }}"
+      vars:
+        log_file: "{{ nodepool_log_dir }}/nodepool-launcher.log"
+
+    - name: Set debug logging argument
+      when: nodepool_debug
+
     # FIXME: don't use activate once this merges:
     # https://review.opendev.org/666177 Use the DIB installed in the virtualenv if running there
-
     - name: Start nodepool builder
       shell: |
         . ./.venv/bin/activate
-        nodepool-builder -c {{ NODEPOOL_CONFIG }}
+        nodepool-builder {{ builder_logging_arg}} -c {{ NODEPOOL_CONFIG }}
 
     - name: Start nodepool launcher
-      command: "./.venv/bin/nodepool-launcher -c {{ NODEPOOL_CONFIG }}"
+      command: "./.venv/bin/nodepool-launcher {{ launcher_logging_arg }} -c {{ NODEPOOL_CONFIG }}"
 
     - name: Check nodepool functionality
       command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/playbooks/nodepool-functional-openstack/check.sh"

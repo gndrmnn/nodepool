@@ -50,6 +50,12 @@
             A dictionary of environment variables and values to add
             to the DIB environment when building the image.
 
+         .. zuul:jobvar:: nodepool_debug
+
+            Boolean flag to enable debug logging for the nodepool builder
+            and launcher services. By default we log at INFO level and
+            higher. This enables DEBUG and higher. This is optional.
+
     timeout: 5400
     required-projects:
       - zuul/nodepool
