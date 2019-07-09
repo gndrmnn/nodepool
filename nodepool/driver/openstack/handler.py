@@ -235,6 +235,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                 if gather_host_keys and not host_keys:
                     raise exceptions.LaunchKeyscanException(
                         "Unable to gather host keys")
+
+                self._logConsole(self.node.external_id, self.node.hostname)
             except exceptions.ConnectionTimeoutException:
                 self._logConsole(self.node.external_id, self.node.hostname)
                 raise
