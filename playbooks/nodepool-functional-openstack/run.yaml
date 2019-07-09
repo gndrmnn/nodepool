@@ -107,10 +107,10 @@
     - name: Start nodepool builder
       shell: |
         . ./.venv/bin/activate
-        nodepool-builder -c {{ NODEPOOL_CONFIG }}
+        nodepool-builder {{ '-d' if nodepool_debug else '' }} -c {{ NODEPOOL_CONFIG }}
 
     - name: Start nodepool launcher
-      command: "./.venv/bin/nodepool-launcher -c {{ NODEPOOL_CONFIG }}"
+      command: "./.venv/bin/nodepool-launcher {{ '-d' if nodepool_debug else '' }} -c {{ NODEPOOL_CONFIG }}"
 
     - name: Check nodepool functionality
       command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/playbooks/nodepool-functional-openstack/check.sh"
