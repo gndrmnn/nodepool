@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_e77274e3",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-07-10T18:06:30Z",
+      "side": 1,
+      "message": "I fear calling run() here may be problematic. poll() is called to all NodeRequestHandlers and is supposed to run *relatively* quickly so that node requests may be marked fulfilled, declined, failed, etc, as soon as possible, while run() may take as much time as it needs to do the launches.",
+      "range": {
+        "startLine": 675,
+        "startChar": 0,
+        "endLine": 678,
+        "endChar": 28
+      },
+      "revId": "2d667dbfacb31b5385210110fca84c55d2d4f44b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_d941600d",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-07-10T18:06:30Z",
+      "side": 1,
+      "message": "This is misplaced. This method is for only assigning a request to a handler. Iterating through existing handlers to give them a chance to run again should not be its job. We already have code that does that.",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 28
+      },
+      "revId": "2d667dbfacb31b5385210110fca84c55d2d4f44b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
