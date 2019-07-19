@@ -258,6 +258,28 @@ class OpenStackNodeLauncher(NodeLauncher):
                         "Request %s: Launch attempt %d/%d failed for node %s:",
                         self.handler.request.id, attempts,
                         self._retries, self.node.id)
+
+                # If we got an external id we need to fetch the server info
+                # again in order to retrieve the fault reason as this is not
+                # included in the server object we already have.
+                quota_exceeded = False
+                if self.node.external_id:
+                    try:
+                        server = self.handler.manager.getServerById(
+                            self.node.external_id) or {}
+                        fault = server.get('fault', {}).get('message')
+                        if fault:
+                            self.log.error(
+                                'Request %s: Detailed error for node %s: %s',
+                                self.handler.request.id, self.node.external_id,
+                                fault)
+                            if 'quota' in fault:
+                                quota_exceeded = True
+                    except Exception:
+                        self.log.exception(
+                            'Request %s: Failed to retrieve error information '
+                            'for node %s', self.node.external_id)
+
                 # If we created an instance, delete it.
                 if self.node.external_id:
                     deleting_node = zk.Node()
@@ -278,6 +300,9 @@ class OpenStackNodeLauncher(NodeLauncher):
                 if attempts == self._retries:
                     raise
                 if 'quota exceeded' in str(e).lower():
+                    quota_exceeded = True
+
+                if quota_exceeded:
                     # A quota exception is not directly recoverable so bail
                     # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
