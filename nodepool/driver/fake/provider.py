@@ -259,6 +259,9 @@ class FakeOpenStackCloud(object):
         result = self._get(name_or_id, self._server_list)
         return result
 
+    def get_server_by_id(self, server_id):
+        return self.get_server(server_id)
+
     def _clean_floating_ip(self, server):
         server.public_v4 = ''
         server.public_v6 = ''
