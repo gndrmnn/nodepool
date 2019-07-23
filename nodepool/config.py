@@ -107,6 +107,7 @@ class Config(ConfigValue):
                 d.elements = u' '.join(diskimage['elements'])
             else:
                 d.elements = ''
+            d.dib_cmd = str(diskimage.get('dib-cmd', 'disk-image-create'))
             # must be a string, as it's passed as env-var to
             # d-i-b, but might be untyped in the yaml and
             # interpreted as a number (e.g. "21" for fedora)
@@ -175,6 +176,7 @@ class DiskImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.elements = None
+        self.dib_path = None
         self.release = None
         self.rebuild_age = None
         self.env_vars = None
@@ -188,6 +190,7 @@ class DiskImage(ConfigValue):
         if isinstance(other, DiskImage):
             return (other.name == self.name and
                     other.elements == self.elements and
+                    other.dib_path == self.dib_path and
                     other.release == self.release and
                     other.rebuild_age == self.rebuild_age and
                     other.env_vars == self.env_vars and
