@@ -19,6 +19,7 @@ diskimages:
       - fedora
       - vm
     release: 21
+    dib_cmd: nodepool/tests/fake-image-create
     env-vars:
       TMPDIR: /opt/dib_tmp
       DIB_IMAGE_CACHE: /opt/dib_cache
@@ -30,6 +31,7 @@ diskimages:
       - fedora
       - vm
     release: 21
+    dib_cmd: nodepool/tests/fake-image-create
     env-vars:
       TMPDIR: /opt/dib_tmp
       DIB_IMAGE_CACHE: /opt/dib_cache

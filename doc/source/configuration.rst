@@ -315,6 +315,16 @@ Options
 
       The path of the default python interpreter.
 
+   .. attr:: dib_cmd
+      :type: string
+      :default: disk-image-create
+
+      This configures the command called to create this disk image.
+      By default this just ``disk-image-create``; i.e. it will use
+      whatever is found in first in ``$PATH``.  For example, you may
+      want to override this with a fully qualified path to an
+      alternative executable if a custom diskimage-builder is
+      installed in another virutalenv.
 
 .. attr:: providers
    :type: list
