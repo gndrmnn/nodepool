@@ -42,9 +42,6 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
         parser.add_argument('--upload-workers', dest='upload_workers',
                             default=4, help='number of upload workers',
                             type=int)
-        parser.add_argument('--fake', action='store_true',
-                            help='Do not actually run diskimage-builder '
-                            '(used for testing)')
         return parser
 
     def parse_args(self):

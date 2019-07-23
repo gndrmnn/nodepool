@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    A ``diskimage`` can specify the full path to the diskimage-builder
+    command with the ``dib_cmd`` configuration parameter.
