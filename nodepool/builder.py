@@ -558,12 +558,11 @@ class CleanupWorker(BaseWorker):
 
 class BuildWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, secure_path,
-                 interval, zk, dib_cmd):
+                 interval, zk):
         super(BuildWorker, self).__init__(builder_id, config_path, secure_path,
                                           interval, zk)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
-        self.dib_cmd = dib_cmd
 
     def _getBuildLogRoot(self, name):
         log_dir = self._config.build_log_dir
@@ -777,9 +776,13 @@ class BuildWorker(BaseWorker):
         if 'qcow2' in img_types:
             qemu_img_options = DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS
 
+        # A bit of a hack, but useful for CI to pick up the
+        # fake-image-create relative to this file easily
+        dib_cmd = diskimage.dib_cmd.replace("%p", os.path.dirname(__file__))
+
         cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
-               (self.dib_cmd, img_types, qemu_img_options, filename,
-                img_elements))
+               (dib_cmd, img_types, qemu_img_options,
+                filename, img_elements))
 
         self._pruneBuildLogs(diskimage.name)
         log_fn = self._getBuildLog(diskimage.name, build_id)
@@ -969,7 +972,6 @@ class BuildWorker(BaseWorker):
 
         self._checkForZooKeeperChanges(new_config)
         self._config = new_config
-
         self._checkForScheduledImageUpdates()
         self._checkForManualBuildRequest()
 
@@ -1236,7 +1238,7 @@ class NodePoolBuilder(object):
     log = logging.getLogger("nodepool.builder.NodePoolBuilder")
 
     def __init__(self, config_path, secure_path=None,
-                 num_builders=1, num_uploaders=4, fake=False):
+                 num_builders=1, num_uploaders=4):
         '''
         Initialize the NodePoolBuilder object.
 
@@ -1244,7 +1246,6 @@ class NodePoolBuilder(object):
         :param str secure_path: Path to secure configuration file.
         :param int num_builders: Number of build workers to start.
         :param int num_uploaders: Number of upload workers to start.
-        :param bool fake: Whether to fake the image builds.
         '''
         self._config_path = config_path
         self._secure_path = secure_path
@@ -1258,11 +1259,6 @@ class NodePoolBuilder(object):
         self.cleanup_interval = 60
         self.build_interval = 10
         self.upload_interval = 10
-        if fake:
-            self.dib_cmd = os.path.join(os.path.dirname(__file__), '..',
-                                        'nodepool/tests/fake-image-create')
-        else:
-            self.dib_cmd = 'disk-image-create'
         self.zk = None
 
         # This lock is needed because the run() method is started in a
@@ -1329,7 +1325,7 @@ class NodePoolBuilder(object):
             for i in range(self._num_builders):
                 w = BuildWorker(i, builder_id,
                                 self._config_path, self._secure_path,
-                                self.build_interval, self.zk, self.dib_cmd)
+                                self.build_interval, self.zk)
                 w.start()
                 self._build_workers.append(w)
 

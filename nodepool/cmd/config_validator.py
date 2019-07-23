@@ -37,6 +37,7 @@ class ConfigValidator:
 
         diskimage = {
             'name': str,
+            'dib_cmd': str,
             'pause': bool,
             'elements': [str],
             'formats': [str],

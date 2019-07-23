@@ -37,6 +37,7 @@ diskimages:
       - fedora
       - vm
     release: 21
+    dib_cmd: nodepool/tests/fake-image-create
     env-vars:
       SHOULD_FAIL: 'true'
       TMPDIR: /opt/dib_tmp
