@@ -47,6 +47,7 @@ diskimages:
       - fedora
       - vm
     release: 21
+    dib-cmd: nodepool/tests/fake-image-create
     python-path: /usr/bin/python3
     env-vars:
       TMPDIR: /opt/dib_tmp

@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    A ``diskimage`` can specify the full path to the diskimage-builder
+    command with the ``dib-cmd`` configuration parameter.  The
+    ``--fake`` parameter of ``nodepool-builder`` (only used by CI) has
+    been removed and replaced with explicit calls in testing fixtures.
