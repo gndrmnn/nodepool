@@ -80,6 +80,7 @@
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+      nodepool_debug: true
 
 - job:
     name: nodepool-functional-openstack-src-base
