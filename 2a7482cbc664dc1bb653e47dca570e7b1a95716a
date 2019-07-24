@@ -22,6 +22,30 @@
       "revId": "2a7482cbc664dc1bb653e47dca570e7b1a95716a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_0ebd9667",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-07-24T23:28:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7faddb67_fbdb294c",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 26
+      },
+      "revId": "2a7482cbc664dc1bb653e47dca570e7b1a95716a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
