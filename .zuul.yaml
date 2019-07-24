@@ -187,8 +187,12 @@
         - tox-py36
         - nodepool-zuul-functional:
             voting: false
-        - nodepool-functional-openstack
-        - nodepool-functional-openstack-src
+        - nodepool-functional-openstack:
+            vars:
+              nodepool_debug: true
+        - nodepool-functional-openstack-src:
+            vars:
+              nodepool_debug: true
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
