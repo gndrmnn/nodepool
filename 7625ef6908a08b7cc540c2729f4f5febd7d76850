@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_057a6587",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-07-24T06:03:02Z",
+      "side": 1,
+      "message": "I made a comment in I2080dea654c43f7f793fbdf04834a27d76274c69; IMO the only time you look at the logs is when something is wrong; at which point you\u0027re debugging something and almost by definition want the debug logs.  It\u0027s annoying if you might have caught a transient error but then have to run changes back with this turned on to try and catch it.\n\nBut I won\u0027t make a fuss if this is what people want",
+      "revId": "7625ef6908a08b7cc540c2729f4f5febd7d76850",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
