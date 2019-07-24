@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_fbdb294c",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-07-24T11:37:43Z",
+      "side": 1,
+      "message": "instead of here - why don\u0027t we set the flag in the project pipeline definition? That way it\u0027s only debug when it\u0027s triggered by nodepool patches, and we don\u0027t get nodepool debug logs by default on sdk patches or zuul patches when we\u0027re unlikely to be debugging dib related things?",
+      "range": {
+        "startLine": 83,
+        "startChar": 6,
+        "endLine": 83,
+        "endChar": 26
+      },
+      "revId": "2a7482cbc664dc1bb653e47dca570e7b1a95716a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
