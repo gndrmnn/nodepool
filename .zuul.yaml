@@ -16,6 +16,7 @@
 
 - job:
     name: nodepool-functional-openstack-base
+    parent: base-test
     description: |
       Test Nodepool with an OpenStack.
 
