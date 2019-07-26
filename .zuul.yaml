@@ -16,6 +16,7 @@
 
 - job:
     name: nodepool-functional-openstack-base
+    parent: base-test
     description: |
       Test Nodepool with an OpenStack.
 
@@ -102,6 +103,7 @@
     description: |
       Test that nodepool works with kubernetes.
     name: nodepool-functional-k8s
+    parent: base-test
     pre-run: playbooks/nodepool-functional-k8s/pre.yaml
     run: playbooks/nodepool-functional-k8s/run.yaml
     post-run: playbooks/nodepool-functional-k8s/post.yaml
@@ -113,6 +115,7 @@
     description: |
       Test that nodepool works with openshift.
     name: nodepool-functional-openshift
+    parent: base-test
     pre-run: playbooks/nodepool-functional-openshift/pre.yaml
     run: playbooks/nodepool-functional-openshift/run.yaml
     nodeset:
