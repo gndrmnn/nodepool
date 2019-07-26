@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_669bf565",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-07-26T14:19:04Z",
+      "side": 1,
+      "message": "Should use hyphens to match other settings.",
+      "revId": "689e30de6ee55292e95dfa5008f768c266f2df27",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
