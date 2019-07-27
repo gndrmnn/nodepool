@@ -17,7 +17,7 @@ import urllib3
 import time
 
 from kubernetes.config import config_exception as kce
-from kubernetes import client as k8s_client
+from kubernetes import client as k8s_client_lib
 from openshift import config
 
 from nodepool import exceptions
@@ -34,35 +34,38 @@ class KubernetesProvider(Provider):
         self.provider = provider
         self.ready = False
         try:
-            self.k8s_client, self.rbac_client = self._get_client(
-                provider.context)
+            self._client_conf = self._get_client_conf(provider.context)
         except kce.ConfigException:
             self.log.exception("Couldn't load client from config")
             self.log.info("Get context list using this command: "
                           "python3 -c \"from openshift import config; "
                           "print('\\n'.join([i['name'] for i in "
                           "config.list_kube_config_contexts()[0]]))\"")
-            self.k8s_client = None
-            self.rbac_client = None
+            self._client_conf = None
         self.namespace_names = set()
         for pool in provider.pools.values():
             self.namespace_names.add(pool.name)
 
-    def _get_client(self, context):
+    def _get_client_conf(self, context):
         try:
             conf = config.new_client_from_config(context=context)
         except FileNotFoundError:
             self.log.debug("Kubernetes config file not found, attempting "
                            "to load in-cluster configs")
             conf = config.load_incluster_config()
+        return conf
 
-        return (
-            k8s_client.CoreV1Api(conf),
-            k8s_client.RbacAuthorizationV1beta1Api(conf))
+    @property
+    def k8s_client(self):
+        return k8s_client_lib.CoreV1Api(self._client_conf)
+
+    @property
+    def rbac_client(self):
+        return k8s_client_lib.RbacAuthorizationV1beta1Api(self._client_conf)
 
     def start(self, zk_conn):
         self.log.debug("Starting")
-        if self.ready or not self.k8s_client or not self.rbac_client:
+        if self.ready or not self._client_conf:
             return
         self.ready = True
 
