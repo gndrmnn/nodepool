@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Joshua Hesketh <josh@nitrotech.org>
+Workflow+1: Joshua Hesketh <josh@nitrotech.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 31 Jul 2019 02:28:33 +0000
+Reviewed-on: https://review.opendev.org/672412
+Project: zuul/nodepool
+Branch: refs/heads/master
