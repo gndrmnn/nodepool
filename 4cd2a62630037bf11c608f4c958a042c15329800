@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_e331b3ee",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 30637
+      },
+      "writtenOn": "2019-08-02T05:38:28Z",
+      "side": 0,
+      "message": "What about just decreasing log level (e.g. to info) in a concrete configuration?",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 207,
+        "endChar": 64
+      },
+      "revId": "4cd2a62630037bf11c608f4c958a042c15329800",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
