@@ -75,6 +75,7 @@ providers:
     region-name: 'chocolate'
     boot-timeout: 120
     rate: 0.001
+    post-upload-hook: /usr/bin/upload-hook
     diskimages:
       - name: trusty
         pause: False
