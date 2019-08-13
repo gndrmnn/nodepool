@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -eu
+
+echo "*** post-upload-hook: start"
+
+echo "arguments:"
+echo "----"
+echo $*
+echo "----"
+
+PROVIDER=$1
+IMAGE_ID=$2
+LOCAL_IMAGE_FILENAME=$3
+
+STATEFILE="$(dirname $LOCAL_IMAGE_FILENAME)/$(basename $LOCAL_IMAGE_FILENAME).post"
+
+# Tests might need to know when this process is completed
+echo "Creating state file $STATEFILE"
+touch $STATEFILE

@@ -442,6 +442,7 @@ Selecting the OpenStack driver adds the following options to the
           launch-retries: 3
           image-name-format: '{image_name}-{timestamp}'
           hostname-format: '{label.name}-{provider.name}-{node.id}'
+          post-upload-hook: /usr/bin/custom-hook
           diskimages:
             - name: trusty
               meta:
@@ -562,6 +563,20 @@ Selecting the OpenStack driver adds the following options to the
      :default: {image_name}-{timestamp}
 
      Format for image names that are uploaded to providers.
+
+  .. attr:: post-upload-hook
+     :type: string
+     :default: None
+
+     Filename of an optional script that can be called after an image has
+     been uploaded to a provider but before it is taken into use. This is
+     useful to perform last minute validation tests before an image is
+     really used for build nodes. The script will be called as follows:
+
+     ``<SCRIPT> <PROVIDER> <EXTERNAL_IMAGE_ID> <LOCAL_IMAGE_FILENAME>``
+
+     If the script returns with result code 0 it is treated as successful
+     otherwise it is treated as failed and the image gets deleted.
 
   .. attr:: rate
      :type: int seconds
