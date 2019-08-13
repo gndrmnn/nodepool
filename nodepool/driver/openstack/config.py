@@ -234,6 +234,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.cloud_images = {}
         self.hostname_format = None
         self.image_name_format = None
+        self.post_upload_hook = None
         super().__init__(provider)
 
     def __eq__(self, other):
@@ -247,7 +248,8 @@ class OpenStackProviderConfig(ProviderConfig):
                     other.launch_timeout == self.launch_timeout and
                     other.clean_floating_ips == self.clean_floating_ips and
                     other.diskimages == self.diskimages and
-                    other.cloud_images == self.cloud_images)
+                    other.cloud_images == self.cloud_images and
+                    other.post_upload_hook == self.post_upload_hook)
         return False
 
     def _cloudKwargs(self):
@@ -285,6 +287,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'image-name-format',
             '{image_name}-{timestamp}'
         )
+        self.post_upload_hook = self.provider.get('post-upload-hook')
 
         default_port_mapping = {
             'ssh': 22,
@@ -417,6 +420,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'pools': [pool],
             'diskimages': [provider_diskimage],
             'cloud-images': [provider_cloud_images],
+            'post-upload-hook': str,
         })
         return v.Schema(schema)
 
