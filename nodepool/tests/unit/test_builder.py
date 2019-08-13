@@ -447,3 +447,12 @@ class TestNodePoolBuilder(tests.DBTestCase):
         cleanup_mgr.deleteImage = saved_method
         self.waitForUploadRecordDeletion(image.provider_name, image.image_name,
                                          image.build_id, image.id)
+    def test_post_upload_hook(self):
+        configfile = self.setup_config('node_upload_hook.yaml')
+        bldr = self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        images_dir = bldr._config.imagesdir
+        post_file = os.path.join(
+            images_dir, 'fake-image-0000000001.qcow2.post')
+        self.assertTrue(os.path.exists(post_file), 'Post hook file exists')
