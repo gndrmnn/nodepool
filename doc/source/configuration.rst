@@ -1239,6 +1239,12 @@ Selecting the kubernetes driver adds the following options to the
          :value:`providers.[kubernetes].labels.type.pod` label type;
          specifies the image name used by the pod.
 
+      .. attr:: image-pull
+         :default: IfNotPresent
+         :type: str
+
+         The ImagePullPolicy, can be IfNotPresent, Always or Never.
+
       .. attr:: python-path
          :type: str
          :default: /usr/bin/python2
