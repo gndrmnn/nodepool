@@ -1928,18 +1928,29 @@ class ZooKeeper(object):
         This is used to forcefully delete a Node znode that has somehow
         ended up without any actual data. In most cases, you should be using
         deleteNode() instead.
+
+        :returns True if the delete succeeded
         '''
         path = self._nodePath(node_id)
         try:
             self.client.delete(path, recursive=True)
+        except kze.NotEmptyError:
+            # basically, you can have a znode locked, then try to delete it.
+            # Because the lock is part of the znode itself, once the lock data
+            # is deleted, another thread can attempt to lock the znode
+            # before it disappears, causing new lock data to appear.
+            self.log.warning("%s yields NotEmptyError", node_id)
+            return False
         except kze.NoNodeError:
             pass
+        return True
 
     def deleteNode(self, node):
         '''
         Delete a node.
 
         :param Node node: The Node object representing the ZK node to delete.
+        :returns True if the delete succeeded
         '''
         if not node.id:
             return
@@ -1951,7 +1962,7 @@ class ZooKeeper(object):
         # lock is removed before the node deletion occurs.
         node.state = DELETED
         self.client.set(path, node.serialize())
-        self.deleteRawNode(node.id)
+        return self.deleteRawNode(node.id)
 
     def getReadyNodesOfTypes(self, labels, cached=True):
         '''

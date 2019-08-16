@@ -95,8 +95,8 @@ class NodeDeleter(threading.Thread):
                 "Deleting ZK node id=%s, state=%s, external_id=%s",
                 node.id, node.state, node.external_id)
             # This also effectively releases the lock
-            zk_conn.deleteNode(node)
-            manager.nodeDeletedNotification(node)
+            if zk_conn.deleteNode(node):
+                manager.nodeDeletedNotification(node)
 
     def run(self):
         # Since leaked instances won't have an actual node in ZooKeeper,
