@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_af32d5a5",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1940,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-08-16T14:10:48Z",
+      "side": 1,
+      "message": "We have to be careful with this since it\u0027s basically a change in functionality. Before, the error would propagate up to the caller of deleteNode(). Now it\u0027s hidden and we don\u0027t know if the delete is successful or not. For example, the call in NodeDeleter.delete() will immediately call manager.nodeDeletedNotification() after deleteNode() if it was successful. There\u0027s no way to tell if the node was actually deleted or not, so the notification may cause new failures if the node still exists.\n\nOne way I can think of dealing with this is having deleteNode() return True/False on success/failure, then calls to deleteNode() can check the return value.",
+      "range": {
+        "startLine": 1935,
+        "startChar": 0,
+        "endLine": 1940,
+        "endChar": 64
+      },
+      "revId": "8e1571d03a8e71cba60b00b8a95822b5fd3d59eb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
