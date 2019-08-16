@@ -1932,6 +1932,12 @@ class ZooKeeper(object):
         path = self._nodePath(node_id)
         try:
             self.client.delete(path, recursive=True)
+        except kze.NotEmptyError:
+            # basically, you can have a znode locked, then try to delete it.
+            # Because the lock is part of the znode itself, once the lock data
+            # is deleted, another thread can attempt to lock the znode
+            # before it disappears, causing new lock data to appear.
+            self.log.warning("%s yields NotEmptyError", node_id)
         except kze.NoNodeError:
             pass
 
