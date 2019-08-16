@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_c875c199",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 1246,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2019-08-16T23:07:59Z",
+      "side": 1,
+      "message": "could we add a little blurb on what it does? Even if linking to upstream docs: https://kubernetes.io/docs/concepts/containers/images/",
+      "revId": "a10102875ecb632ddff1d08f193c0b94f2820ecd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
