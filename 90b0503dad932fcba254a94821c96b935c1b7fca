@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_c4a80879",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-08-21T19:05:07Z",
+      "side": 1,
+      "message": "is there a needed-by change that uses that trick?",
+      "revId": "90b0503dad932fcba254a94821c96b935c1b7fca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_a4a4ecb9",
+        "filename": "nodepool/tests/fixtures/node_vhd.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-08-21T19:05:07Z",
+      "side": 1,
+      "message": "nit: quotes are not consistent with the rest of the test files.",
+      "revId": "90b0503dad932fcba254a94821c96b935c1b7fca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_64983468",
+        "filename": "releasenotes/notes/dib_cmd-484e473de8454679.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-08-21T19:05:07Z",
+      "side": 1,
+      "message": "In case someone was using the --fake parameter, it should be noted that it has been removed entirely.",
+      "range": {
+        "startLine": 6,
+        "startChar": 4,
+        "endLine": 6,
+        "endChar": 28
+      },
+      "revId": "90b0503dad932fcba254a94821c96b935c1b7fca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
