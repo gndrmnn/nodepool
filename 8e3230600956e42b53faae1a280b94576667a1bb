@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_7ad20c5e",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-08-22T00:55:57Z",
+      "side": 1,
+      "message": "only thing I might say is that it might be better to log the provider here as well, in case like infra you\u0027ve got a bunch of providers and maybe they all have a network named \"internal\" or something , this doesn\u0027t seem to disambiguate.",
+      "revId": "8e3230600956e42b53faae1a280b94576667a1bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
