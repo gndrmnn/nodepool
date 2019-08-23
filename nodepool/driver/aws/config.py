@@ -167,7 +167,9 @@ class AwsProviderConfig(ProviderConfig):
 
     @property
     def manage_images(self):
-        return True
+        # Currently we have no image management for AWS. This should
+        # be updated if that changes.
+        return False
 
     @staticmethod
     def reset():
