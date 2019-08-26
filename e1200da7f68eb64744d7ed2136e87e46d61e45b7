@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_735d1514",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 9
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-08-26T16:58:13Z",
+      "side": 1,
+      "message": "copy pasta",
+      "range": {
+        "startLine": 387,
+        "startChar": 9,
+        "endLine": 387,
+        "endChar": 19
+      },
+      "revId": "e1200da7f68eb64744d7ed2136e87e46d61e45b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_536a5981",
+        "filename": "nodepool/driver/azure/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-08-26T16:58:13Z",
+      "side": 1,
+      "message": "max-servers comes from the \"common\" schema. You should be calling ConfigPool.getCommonSchemaDict() to get those.",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 43
+      },
+      "revId": "e1200da7f68eb64744d7ed2136e87e46d61e45b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_93cc518b",
+        "filename": "nodepool/driver/azure/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-08-26T16:58:13Z",
+      "side": 1,
+      "message": "You are not calling ProviderConfig.getCommonSchemaDict() here to get the common attributes (\u0027name\u0027 and \u0027driver\u0027 among them).",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 9
+      },
+      "revId": "e1200da7f68eb64744d7ed2136e87e46d61e45b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
