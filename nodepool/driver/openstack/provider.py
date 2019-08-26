@@ -270,6 +270,9 @@ class OpenStackProvider(Provider):
             return self._networks[name]
 
         network = self._client.get_network(name)
+        if not network:
+            raise Exception("Unable to find network %s in provider %s" % (
+                name, self.provider.name))
         self._networks[name] = network
         return network
 
