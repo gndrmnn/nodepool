@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Tristan Cacqueray <tdecacqu@redhat.com>
+Workflow+1: Tristan Cacqueray <tdecacqu@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 28 Aug 2019 22:06:34 +0000
+Reviewed-on: https://review.opendev.org/679116
+Project: zuul/nodepool
+Branch: refs/heads/master
