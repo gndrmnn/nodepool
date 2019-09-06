@@ -69,6 +69,30 @@
       "revId": "78e03f87b3a2e060566eeacd90c72f8dc4225a9b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5faad753_a28efe2b",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-09-06T18:14:58Z",
+      "side": 1,
+      "message": "The get_server() call will not get the necessary server details unless you supply the details\u003dTrue option (first calls the /servers compute API, second uses the /servers/detail compute API which would include fault info.\n\nBut since we have the server ID, it is more efficient to use get_server_by_id() anyway.",
+      "parentUuid": "7faddb67_2e06a053",
+      "range": {
+        "startLine": 367,
+        "startChar": 15,
+        "endLine": 367,
+        "endChar": 55
+      },
+      "revId": "78e03f87b3a2e060566eeacd90c72f8dc4225a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
