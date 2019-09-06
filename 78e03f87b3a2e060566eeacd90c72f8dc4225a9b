@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "5faad753_82198289",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-09-06T18:50:10Z",
+      "side": 1,
+      "message": "Missing parameter here (request ID).",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 61
+      },
+      "revId": "78e03f87b3a2e060566eeacd90c72f8dc4225a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7faddb67_eed8881e",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 2
