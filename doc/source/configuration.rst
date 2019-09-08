@@ -1158,7 +1158,7 @@ Selecting the kubernetes driver adds the following options to the
    A Kubernetes provider's resources are partitioned into groups
    called `pools` (see :attr:`providers.[kubernetes].pools` for
    details), and within a pool, the node types which are to be made
-   available are listed (see :attr:`providers.[kubernetes].labels` for
+   available are listed (see :attr:`providers.[kubernetes].pools.labels` for
    details).
 
    .. note:: For documentation purposes the option names are prefixed
@@ -1216,49 +1216,49 @@ Selecting the kubernetes driver adds the following options to the
 
          Namespaces are prefixed with the pool's name.
 
-   .. attr:: labels
-      :type: list
+      .. attr:: labels
+         :type: list
 
-      Each entry in a pool`s `labels` section indicates that the
-      corresponding label is available for use in this pool.
+         Each entry in a pool`s `labels` section indicates that the
+         corresponding label is available for use in this pool.
 
-      Each entry is a dictionary with the following keys
+         Each entry is a dictionary with the following keys
 
-      .. attr:: name
-         :required:
+         .. attr:: name
+            :required:
 
-         Identifier for this label; references an entry in the
-         :attr:`labels` section.
+            Identifier for this label; references an entry in the
+            :attr:`labels` section.
 
-      .. attr:: type
+         .. attr:: type
 
-         The Kubernetes provider supports two types of labels:
+            The Kubernetes provider supports two types of labels:
 
-         .. value:: namespace
+            .. value:: namespace
 
-            Namespace labels provide an empty namespace configured
-            with a service account that can create pods, services,
-            configmaps, etc.
+               Namespace labels provide an empty namespace configured
+               with a service account that can create pods, services,
+               configmaps, etc.
 
-         .. value:: pod
+            .. value:: pod
 
-            Pod labels provide a dedicated namespace with a single pod
-            created using the
-            :attr:`providers.[kubernetes].labels.image` parameter and it
-            is configured with a service account that can exec and get
-            the logs of the pod.
+               Pod labels provide a dedicated namespace with a single pod
+               created using the
+               :attr:`providers.[kubernetes].pools.labels.image` parameter and it
+               is configured with a service account that can exec and get
+               the logs of the pod.
 
-      .. attr:: image
+         .. attr:: image
 
-         Only used by the
-         :value:`providers.[kubernetes].labels.type.pod` label type;
-         specifies the image name used by the pod.
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            specifies the image name used by the pod.
 
-      .. attr:: python-path
-         :type: str
-         :default: /usr/bin/python2
+         .. attr:: python-path
+            :type: str
+            :default: /usr/bin/python2
 
-         The path of the default python interpreter.
+            The path of the default python interpreter.
 
 
 Openshift Driver
