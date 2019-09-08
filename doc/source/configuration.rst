@@ -392,6 +392,7 @@ Options
          :attr:`providers.[aws]`
 
       .. value:: openshiftpods
+
          For details on the extra options required and provided by the
          openshiftpods driver, see the separate section
          :attr:`providers.[openshiftpods]`
