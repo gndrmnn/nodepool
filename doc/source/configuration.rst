@@ -115,7 +115,7 @@ Options
       Port to talk to zookeeper
 
    .. attr:: chroot
-      :type: int
+      :type: str
       :example: /nodepool
 
       The ``chroot`` key, used for interpreting ZooKeeper paths
