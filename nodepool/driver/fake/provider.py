@@ -259,6 +259,9 @@ class FakeOpenStackCloud(object):
         result = self._get(name_or_id, self._server_list)
         return result
 
+    def get_server_by_id(self, server_id):
+        return self.get_server(server_id)
+
     def _clean_floating_ip(self, server):
         server.public_v4 = ''
         server.public_v6 = ''
@@ -324,6 +327,19 @@ class FakeUploadFailCloud(FakeOpenStackCloud):
             raise exceptions.BuilderError("Test fail image upload.")
         else:
             return super(FakeUploadFailCloud, self).create_image(**kwargs)
+
+
+class FakeLaunchAndGetFaultCloud(FakeOpenStackCloud):
+    log = logging.getLogger("nodepool.FakeLaunchAndGetFaultCloud")
+
+    def __init__(self):
+        super().__init__()
+
+    def wait_for_server(self, server, **kwargs):
+        # OpenStack provider launch code specifically looks for 'quota' in
+        # the failure message.
+        server.fault = {'message': 'quota server fault'}
+        raise Exception("wait_for_server failure")
 
 
 class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):

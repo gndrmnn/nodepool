@@ -1721,10 +1721,50 @@ class TestLauncher(tests.DBTestCase):
         while self.zk.countPoolNodes('fake-provider', 'main'):
             time.sleep(0)
 
+    @mock.patch('nodepool.driver.openstack.provider.'
+                'OpenStackProvider.invalidateQuotaCache')
+    def test_launchNode_node_fault_message(self, mock_invalidatequotacache):
+        '''
+        Test failed launch can get detailed node fault info if available.
+        '''
+        fake_client = fakeprovider.FakeLaunchAndGetFaultCloud()
+
+        def get_fake_client(*args, **kwargs):
+            return fake_client
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider, '_getClient',
+            get_fake_client))
+
+        configfile = self.setup_config('node_launch_retry.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.cleanup_interval = 60
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        # We expect the request to go PENDING and pause here because the
+        # wait_for_server() defined in FakeLaunchAndGetFaultCloud should fail
+        # and set the fault.message attribute on the server. When the code in
+        # launch() catches this failure, it looks for the string 'quota' inside
+        # this server attribute and makes the call to invalideQuotaCache()
+        # based on the presence of that string and a QuotaException is raised,
+        # causing request handling to pause.
+        self.waitForNodeRequest(req, (zk.PENDING,))
+        pool_worker = pool.getPoolWorkers('fake-provider')
+        while not pool_worker[0].paused_handler:
+            time.sleep(0.1)
+        self.assertTrue(mock_invalidatequotacache.called)
+
     def test_launchNode_delete_error(self):
         '''
         Test that the launcher keeps trying to spawn a node in case of a
-         delete error
+        delete error
         '''
         fake_client = fakeprovider.FakeLaunchAndDeleteFailCloud(
             times_to_fail=1)

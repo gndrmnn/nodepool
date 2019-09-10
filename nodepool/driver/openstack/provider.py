@@ -366,6 +366,9 @@ class OpenStackProvider(Provider):
     def getServer(self, server_id):
         return self._client.get_server(server_id)
 
+    def getServerById(self, server_id):
+        return self._client.get_server_by_id(server_id)
+
     def getServerConsole(self, server_id):
         try:
             return self._client.get_server_console(server_id)
