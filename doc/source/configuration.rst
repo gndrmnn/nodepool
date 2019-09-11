@@ -857,7 +857,14 @@ Selecting the OpenStack driver adds the following options to the
         set to False, nodepool-launcher will not ssh-keyscan nodes
         after they are booted. This might be needed if
         nodepool-launcher and the nodes it launches are on different
-        networks.  The default value is True.
+        networks.
+
+        Additionally, when set to False, nodepool will no longer validate
+        an interface IP exists for the node. This means interface_ip
+        maybe empty however a job still has access to private_ipv4 /
+        public_ipv4 / public_ipv6 in the inventory file.
+
+        The default value is True.
 
      .. attr:: labels
         :type: list
@@ -954,7 +961,14 @@ Selecting the OpenStack driver adds the following options to the
            Specify custom behavior of validation of SSH host keys.  When set to
            False, nodepool-launcher will not ssh-keyscan nodes after they are
            booted. This might be needed if nodepool-launcher and the nodes it
-           launches are on different networks.  The default value is True.
+           launches are on different networks.
+
+           Additionally, when set to False, nodepool will no longer validate
+           an interface IP exists for the node. This means interface_ip
+           maybe empty however a job still has access to private_ipv4 /
+           public_ipv4 / public_ipv6 in the inventory file.
+
+           The default value is True.
 
            .. note:: This value will override the value for
                      :attr:`providers.[openstack].pools.host-key-checking`.

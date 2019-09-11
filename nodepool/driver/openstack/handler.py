@@ -187,7 +187,10 @@ class OpenStackNodeLauncher(NodeLauncher):
             self.node.az = server.location.zone
 
         interface_ip = server.interface_ip
-        if not interface_ip:
+        # NOTE(pabelanger): If host-key-checking is false for a label we can
+        # skip the check here for interface_ip. It is likely the interface
+        # isn't public to start with.
+        if not interface_ip and self.label.host_key_checking:
             self.log.debug(
                 "Server data for failed IP: %s" % pprint.pformat(
                     server))

@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    When :attr:`providers.[openstack].pools.labels.host-key-checking` is set
+    to False, nodepool will no longer verify the interface IP of the VM is
+    populated.
