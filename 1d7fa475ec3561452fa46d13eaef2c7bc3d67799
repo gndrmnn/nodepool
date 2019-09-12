@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5faad753_1cdb521b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 14885
+      },
+      "writtenOn": "2019-09-12T07:11:13Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be \u0027will no longer validate if an interface IP\u0027?",
+      "range": {
+        "startLine": 862,
+        "startChar": 49,
+        "endLine": 863,
+        "endChar": 23
+      },
+      "revId": "1d7fa475ec3561452fa46d13eaef2c7bc3d67799",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5faad753_9c00a269",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 14885
+      },
+      "writtenOn": "2019-09-12T07:11:13Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 966,
+        "startChar": 68,
+        "endLine": 967,
+        "endChar": 13
+      },
+      "revId": "1d7fa475ec3561452fa46d13eaef2c7bc3d67799",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
