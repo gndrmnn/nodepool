@@ -309,8 +309,12 @@ class CleanupWorker(BaseWorker):
             if not self._inProgressUpload(upload):
                 data = zk.ImageUpload()
                 data.state = zk.DELETING
+
+                # upload.state = zk.DELETING
                 self._zk.storeImageUpload(upload.image_name, upload.build_id,
-                                          upload.provider_name, data,
+                                          upload.provider_name,
+                                          data,
+                                          # upload,
                                           upload.id)
                 deleted = True
 
