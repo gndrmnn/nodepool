@@ -1076,8 +1076,8 @@ class UploadWorker(BaseWorker):
             self._statsd.incr(key)
 
         base = "-".join([image_name, build_id])
-        self.log.info("Image build %s in %s is ready" %
-                      (base, provider.name))
+        self.log.info("Image build %s (external_id %s) in %s is ready" %
+                      (base, external_id, provider.name))
 
         data = zk.ImageUpload()
         data.state = zk.READY
