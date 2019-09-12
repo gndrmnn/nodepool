@@ -303,18 +303,24 @@ class CleanupWorker(BaseWorker):
             self._deleteUpload(upload)
 
     def _deleteUpload(self, upload):
-        deleted = False
-
         if upload.state != zk.DELETING:
             if not self._inProgressUpload(upload):
-                data = zk.ImageUpload()
-                data.state = zk.DELETING
-                self._zk.storeImageUpload(upload.image_name, upload.build_id,
-                                          upload.provider_name, data,
-                                          upload.id)
-                deleted = True
+                try:
+                    with self._zk.imageUploadNumberLock(upload,
+                                                        blocking=False):
+                        upload.state = zk.DELETING
+                        self._zk.storeImageUpload(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload,
+                                                  upload.id)
+                except exceptions.ZKLockException:
+                    # If we can't get a lock, we'll try again later.
+                    self.log.debug("Unable to get lock on image upload: %s",
+                                   upload)
+                    return
 
-        if upload.state == zk.DELETING or deleted:
+        if upload.state == zk.DELETING:
             manager = self._config.provider_managers[upload.provider_name]
             try:
                 # It is possible we got this far, but don't actually have an
@@ -331,8 +337,9 @@ class CleanupWorker(BaseWorker):
                     upload.external_name, upload.provider_name)
             else:
                 self.log.debug("Deleting image upload: %s", upload)
-                self._zk.deleteUpload(upload.image_name, upload.build_id,
-                                      upload.provider_name, upload.id)
+                with self._zk.imageUploadNumberLock(upload, blocking=False):
+                    self._zk.deleteUpload(upload.image_name, upload.build_id,
+                                          upload.provider_name, upload.id)
 
     def _inProgressBuild(self, build, image):
         '''
