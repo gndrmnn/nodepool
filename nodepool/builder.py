@@ -303,18 +303,14 @@ class CleanupWorker(BaseWorker):
             self._deleteUpload(upload)
 
     def _deleteUpload(self, upload):
-        deleted = False
-
         if upload.state != zk.DELETING:
             if not self._inProgressUpload(upload):
-                data = zk.ImageUpload()
-                data.state = zk.DELETING
+                upload.state = zk.DELETING
                 self._zk.storeImageUpload(upload.image_name, upload.build_id,
-                                          upload.provider_name, data,
+                                          upload.provider_name, upload,
                                           upload.id)
-                deleted = True
 
-        if upload.state == zk.DELETING or deleted:
+        if upload.state == zk.DELETING:
             manager = self._config.provider_managers[upload.provider_name]
             try:
                 # It is possible we got this far, but don't actually have an
