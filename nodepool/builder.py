@@ -303,18 +303,25 @@ class CleanupWorker(BaseWorker):
             self._deleteUpload(upload)
 
     def _deleteUpload(self, upload):
-        deleted = False
-
         if upload.state != zk.DELETING:
             if not self._inProgressUpload(upload):
-                data = zk.ImageUpload()
-                data.state = zk.DELETING
-                self._zk.storeImageUpload(upload.image_name, upload.build_id,
-                                          upload.provider_name, data,
-                                          upload.id)
-                deleted = True
+                try:
+                    with self._zk.imageUploadLock(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  blocking=False):
 
-        if upload.state == zk.DELETING or deleted:
+                        upload.state = zk.DELETING
+                        self._zk.storeImageUpload(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload,
+                                                  upload.id)
+                except exceptions.ZKLockException:
+                    # If we can't get a lock, we'll try again later.
+                    return
+
+        if upload.state == zk.DELETING:
             manager = self._config.provider_managers[upload.provider_name]
             try:
                 # It is possible we got this far, but don't actually have an
