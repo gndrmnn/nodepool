@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5faad753_fec8a022",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-09-12T14:57:59Z",
+      "side": 1,
+      "message": "A bit misleading since interface_ip does not necessarily mean a \"public IP\". It is the IP that sdk has decided is best used to communicate with the node, which could be a public IP or as public IP, depending on the cloud.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 39
+      },
+      "revId": "1d7fa475ec3561452fa46d13eaef2c7bc3d67799",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5faad753_1cdb521b",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 2
