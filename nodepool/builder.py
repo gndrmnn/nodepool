@@ -303,36 +303,31 @@ class CleanupWorker(BaseWorker):
             self._deleteUpload(upload)
 
     def _deleteUpload(self, upload):
-        deleted = False
-
         if upload.state != zk.DELETING:
             if not self._inProgressUpload(upload):
-                data = zk.ImageUpload()
-                data.state = zk.DELETING
+                upload.state = zk.DELETING
                 self._zk.storeImageUpload(upload.image_name, upload.build_id,
-                                          upload.provider_name, data,
+                                          upload.provider_name, upload,
                                           upload.id)
-                deleted = True
 
-        if upload.state == zk.DELETING or deleted:
-            manager = self._config.provider_managers[upload.provider_name]
-            try:
-                # It is possible we got this far, but don't actually have an
-                # external_name. This could mean that zookeeper and cloud
-                # provider are some how out of sync.
-                if upload.external_name:
-                    base = "-".join([upload.image_name, upload.build_id])
-                    self.log.info("Deleting image build %s from %s" %
-                                  (base, upload.provider_name))
-                    manager.deleteImage(upload.external_name)
-            except Exception:
-                self.log.exception(
-                    "Unable to delete image %s from %s:",
-                    upload.external_name, upload.provider_name)
-            else:
-                self.log.debug("Deleting image upload: %s", upload)
-                self._zk.deleteUpload(upload.image_name, upload.build_id,
-                                      upload.provider_name, upload.id)
+        manager = self._config.provider_managers[upload.provider_name]
+        try:
+            # It is possible we got this far, but don't actually have an
+            # external_name. This could mean that zookeeper and cloud
+            # provider are some how out of sync.
+            if upload.external_name:
+                base = "-".join([upload.image_name, upload.build_id])
+                self.log.info("Deleting image build %s from %s" %
+                              (base, upload.provider_name))
+                manager.deleteImage(upload.external_name)
+        except Exception:
+            self.log.exception(
+                "Unable to delete image %s from %s:",
+                upload.external_name, upload.provider_name)
+        else:
+            self.log.debug("Deleting image upload: %s", upload)
+            self._zk.deleteUpload(upload.image_name, upload.build_id,
+                                  upload.provider_name, upload.id)
 
     def _inProgressBuild(self, build, image):
         '''

@@ -24,6 +24,7 @@ from pathlib import Path
 from nodepool import builder, exceptions, tests
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool import zk
+from nodepool.nodeutils import iterate_timeout
 
 
 class TestNodepoolBuilderDibImage(tests.BaseTestCase):
@@ -406,3 +407,43 @@ class TestNodePoolBuilder(tests.DBTestCase):
             time.sleep(.1)
             image_files = builder.DibImageFile.from_image_id(
                 images_dir, 'fake-image-0000000001')
+
+    def test_upload_removal_retries_until_success(self):
+        '''
+        If removing an image from a provider fails on the first attempt, make
+        sure that we retry until successful.
+
+        This test starts with two images uploaded to the provider. It then
+        removes one of the images by setting the state to FAILED which should
+        begin the process to delete the image from the provider.
+        '''
+        configfile = self.setup_config('builder_2_diskimages.yaml')
+        bldr = self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image1')
+        image = self.waitForImage('fake-provider', 'fake-image2')
+
+        # Introduce a failure in the upload deletion process by replacing
+        # the cleanup thread's deleteImage() call with one that fails.
+        cleanup_thd = bldr._janitor
+        cleanup_mgr = cleanup_thd._config.provider_managers['fake-provider']
+        saved_method = cleanup_mgr.deleteImage
+        cleanup_mgr.deleteImage = mock.Mock(side_effect=Exception('Conflict'))
+
+        # Manually cause the image to be deleted from the provider. Note that
+        # we set it to FAILED instead of DELETING because that bypasses the
+        # bit of code we want to test here in the CleanupWorker._deleteUpload()
+        # method.
+        image.state = zk.FAILED
+        bldr.zk.storeImageUpload(image.image_name, image.build_id,
+                                 image.provider_name, image, image.id)
+
+        # Pick a call count > 1 to verify we make multiple attempts at
+        # deleting the image in the provider.
+        for _ in iterate_timeout(10, Exception, 'call count to increase'):
+            if cleanup_mgr.deleteImage.call_count >= 5:
+                break
+
+        # Remove the failure to verify deletion.
+        cleanup_mgr.deleteImage = saved_method
+        self.waitForUploadRecordDeletion(image.provider_name, image.image_name,
+                                         image.build_id, image.id)
