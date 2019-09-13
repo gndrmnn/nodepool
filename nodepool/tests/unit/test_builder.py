@@ -406,3 +406,51 @@ class TestNodePoolBuilder(tests.DBTestCase):
             time.sleep(.1)
             image_files = builder.DibImageFile.from_image_id(
                 images_dir, 'fake-image-0000000001')
+
+    def test_upload_removal_retries_until_success(self):
+        '''
+        If removing an image from a provider fails on the first attempt, make
+        sure that we retry until successful.
+
+        This test starts with two images uploaded to the provider. It then
+        removes one of the images from the configuration file, which should
+        begin the process to delete the removed image from the provider.
+        '''
+        def fakeDeleteImage(*args):
+            raise Exception("Conflict")
+
+        configfile = self.setup_config('builder_2_diskimages.yaml')
+        builder = self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image1')
+        image = self.waitForImage('fake-provider', 'fake-image2')
+
+        # Introduce a failure in the upload deletion process
+        #
+        # NOTE(Shrews): I'm not happy about the fact that we have to delve
+        # into Builder internals here to grab a provider manager to introduce
+        # upload failure.
+        cleanup_worker = builder._janitor
+        manager = cleanup_worker._config.provider_managers['fake-provider']
+        saved_method = manager.deleteImage
+        manager.deleteImage = fakeDeleteImage
+
+        self.assertEqual(2, len(manager.listImages()))
+
+        # Manually cause the image to be deleted from the provider. Note that
+        # we set it to FAILED instead of DELETING because that bypasses the
+        # bit of code we are testing here (in the CleanupWorker._deleteUpload()
+        # method) that currently has a bug where the ImageUpload object
+        # representing the upload to delete has several attributes (e.g.,
+        # external_id, external_name) accidentally removed when attempting to
+        # set the state to DELETING. This causes the next attempt to delete
+        # after a failure to remove the ZK record and not the upload.
+        image.state = zk.FAILED
+        builder.zk.storeImageUpload(image.image_name, image.build_id,
+                                    image.provider_name, image, image.id)
+
+        self.waitForUploadRecordDeletion(image.provider_name, image.image_name,
+                                         image.build_id, image.id)
+
+        # This will fail because of the bug where the ZK record is deleted,
+        # but NOT the actual upload.
+        self.assertEqual(1, len(manager.listImages()))
