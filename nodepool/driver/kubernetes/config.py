@@ -85,7 +85,7 @@ class KubernetesProviderConfig(ProviderConfig):
 
     def load(self, config):
         self.launch_retries = int(self.provider.get('launch-retries', 3))
-        self.context = self.provider['context']
+        self.context = self.provider.get('context')
         for pool in self.provider.get('pools', []):
             pp = KubernetesPool()
             pp.load(pool, config)
