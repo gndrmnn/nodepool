@@ -147,7 +147,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[1].type, ['fake-label1'])
         self.assertEqual(nodes[2].type, ['fake-label4'])
         self.assertEqual(nodes[3].type, ['fake-label2'])
-        self.assertEqual(nodes[0].python_path, '/usr/bin/python2')
+        self.assertEqual(nodes[0].python_path, 'auto')
 
     def _test_node_assignment_at_quota(self,
                                        config,
@@ -1331,7 +1331,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('winrm', nodes[0].connection_type)
         self.assertEqual(5986, nodes[0].connection_port)
         self.assertEqual(nodes[0].host_keys, [])
-        self.assertEqual(nodes[0].python_path, '/usr/bin/python2')
+        self.assertEqual(nodes[0].python_path, 'auto')
 
         nodes = self.waitForNodes('fake-label-arbitrary-port')
         self.assertEqual(len(nodes), 1)

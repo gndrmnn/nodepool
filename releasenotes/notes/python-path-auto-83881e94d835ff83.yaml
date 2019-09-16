@@ -1,0 +1,14 @@
+---
+upgrade:
+  - |
+    The default ``python-path`` is now ``auto`` (instead of
+    ``/usr/bin/python2``).  With this, Zuul will set the
+    ``ansible_python_interpreter`` to ``auto`` when using Ansible
+    >=2.8 to use `automated interpreter discovery
+    <https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html>`__.
+    When using earlier Ansible, it will remain the old default of
+    ``/usr/bin/python2``.
+
+    This will remove the need to override python-path explicitly for
+    Python 3-only distributions, which should be detected correctly
+    automatically.

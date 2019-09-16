@@ -311,9 +311,13 @@ Options
 
    .. attr:: python-path
       :type: string
-      :default: /usr/bin/python2
+      :default: auto
 
-      The path of the default python interpreter.
+      The path of the default python interpreter.  Used by Zuul to set
+      ``ansible_python_interpreter``.  The special value ``auto`` will
+      direct Zuul to use inbuilt Ansible logic to select the
+      interpreter on Ansible >=2.8, and default to
+      ``/usr/bin/python2`` for earlier versions.
 
    .. attr:: dib-cmd
       :type: string
@@ -711,9 +715,13 @@ Selecting the OpenStack driver adds the following options to the
 
      .. attr:: python-path
         :type: str
-        :default: /usr/bin/python2
+        :default: auto
 
-        The path of the default python interpreter.
+        The path of the default python interpreter.  Used by Zuul to set
+        ``ansible_python_interpreter``.  The special value ``auto`` will
+        direct Zuul to use inbuilt Ansible logic to select the
+        interpreter on Ansible >=2.8, and default to
+        ``/usr/bin/python2`` for earlier versions.
 
      .. attr:: connection-type
         :type: str
@@ -1134,7 +1142,11 @@ Selecting the static driver adds the following options to the
             :type: str
             :default: /usr/bin/python2
 
-            The path of the default python interpreter.
+            The path of the default python interpreter.  Used by Zuul to set
+            ``ansible_python_interpreter``.  The special value ``auto`` will
+            direct Zuul to use inbuilt Ansible logic to select the
+            interpreter on Ansible >=2.8, and default to
+            ``/usr/bin/python2`` for earlier versions.
 
          .. attr:: max-parallel-jobs
             :type: int
@@ -1257,9 +1269,14 @@ Selecting the kubernetes driver adds the following options to the
 
          .. attr:: python-path
             :type: str
-            :default: /usr/bin/python2
+            :default: auto
 
-            The path of the default python interpreter.
+           The path of the default python interpreter.  Used by Zuul to set
+           ``ansible_python_interpreter``.  The special value ``auto`` will
+           direct Zuul to use inbuilt Ansible logic to select the
+           interpreter on Ansible >=2.8, and default to
+           ``/usr/bin/python2`` for earlier versions.
+
 
 
 Openshift Driver
@@ -1384,9 +1401,13 @@ Selecting the openshift driver adds the following options to the
 
       .. attr:: python-path
          :type: str
-         :default: /usr/bin/python2
+         :default: auto
 
-         The path of the default python interpreter.
+          The path of the default python interpreter.  Used by Zuul to set
+          ``ansible_python_interpreter``.  The special value ``auto`` will
+          direct Zuul to use inbuilt Ansible logic to select the
+          interpreter on Ansible >=2.8, and default to
+          ``/usr/bin/python2`` for earlier versions.
 
       .. attr:: cpu
          :type: int
@@ -1629,9 +1650,13 @@ section of the configuration.
 
       .. attr:: python-path
          :type: str
-         :default: /usr/bin/python2
+         :default: auto
 
-         The path of the default python interpreter.
+         The path of the default python interpreter.  Used by Zuul to set
+         ``ansible_python_interpreter``.  The special value ``auto`` will
+         direct Zuul to use inbuilt Ansible logic to select the
+         interpreter on Ansible >=2.8, and default to
+         ``/usr/bin/python2`` for earlier versions.
 
       .. attr:: connection-type
          :type: str
