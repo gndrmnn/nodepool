@@ -192,7 +192,7 @@ class AwsProviderConfig(ProviderConfig):
             i.name = image['name']
             i.image_id = image.get('image-id', None)
             i.username = image.get('username', None)
-            i.python_path = image.get('python-path', '/usr/bin/python2')
+            i.python_path = image.get('python-path', 'auto')
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
                 'connection-port',

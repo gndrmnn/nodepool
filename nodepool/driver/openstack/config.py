@@ -325,7 +325,7 @@ class OpenStackProviderConfig(ProviderConfig):
             i.image_id = image.get('image-id', None)
             i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
-            i.python_path = image.get('python-path', '/usr/bin/python2')
+            i.python_path = image.get('python-path', 'auto')
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
                 'connection-port',

@@ -119,7 +119,7 @@ class Config(ConfigValue):
             d.image_types = set(diskimage.get('formats', []))
             d.pause = bool(diskimage.get('pause', False))
             d.username = diskimage.get('username', 'zuul')
-            d.python_path = diskimage.get('python-path', '/usr/bin/python2')
+            d.python_path = diskimage.get('python-path', 'auto')
             d.build_timeout = diskimage.get('build-timeout', (8 * 60 * 60))
             self.diskimages[d.name] = d
 
