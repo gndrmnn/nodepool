@@ -311,17 +311,20 @@ class BaseTestCase(testtools.TestCase):
 
 
 class BuilderFixture(fixtures.Fixture):
-    def __init__(self, configfile, cleanup_interval, securefile=None):
+    def __init__(self, configfile, cleanup_interval, securefile=None,
+                 num_uploaders=1):
         super(BuilderFixture, self).__init__()
         self.configfile = configfile
         self.securefile = securefile
         self.cleanup_interval = cleanup_interval
         self.builder = None
+        self.num_uploaders = num_uploaders
 
     def setUp(self):
         super(BuilderFixture, self).setUp()
         self.builder = builder.NodePoolBuilder(
-            self.configfile, secure_path=self.securefile)
+            self.configfile, secure_path=self.securefile,
+            num_uploaders=self.num_uploaders)
         self.builder.cleanup_interval = self.cleanup_interval
         self.builder.build_interval = .1
         self.builder.upload_interval = .1
@@ -544,9 +547,11 @@ class DBTestCase(BaseTestCase):
         self.addCleanup(app.stop)
         return app
 
-    def useBuilder(self, configfile, securefile=None, cleanup_interval=.5):
+    def useBuilder(self, configfile, securefile=None, cleanup_interval=.5,
+                   num_uploaders=1):
         builder_fixture = self.useFixture(
-            BuilderFixture(configfile, cleanup_interval, securefile)
+            BuilderFixture(configfile, cleanup_interval, securefile,
+                           num_uploaders)
         )
         return builder_fixture.builder
 

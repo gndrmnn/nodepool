@@ -733,7 +733,7 @@ class TestLauncher(tests.DBTestCase):
         """Test that an image upload failure is contained."""
         configfile = self.setup_config('node_upload_fail.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
+        self.useBuilder(configfile, num_uploaders=2)
         pool.start()
         self.waitForImage('fake-provider2', 'fake-image')
         nodes = self.waitForNodes('fake-label', 2)
