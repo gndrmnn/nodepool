@@ -63,6 +63,7 @@ class TestDriverAws(tests.DBTestCase):
         }
         raw_config['providers'][0]['pools'][0]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
+        labels = [label['name'] for label in raw_config['labels']]
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
                 raw_config, default_flow_style=False).encode('utf-8'))
@@ -72,7 +73,7 @@ class TestDriverAws(tests.DBTestCase):
             pool.start()
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
-            req.node_types.append('ubuntu1404')
+            [req.node_types.append(label) for label in labels]
             with patch('nodepool.driver.aws.handler.nodescan') as nodescan:
                 nodescan.return_value = 'MOCK KEY'
                 self.zk.storeNodeRequest(req)
@@ -97,7 +98,7 @@ class TestDriverAws(tests.DBTestCase):
                 # one is deleted
                 req2 = zk.NodeRequest()
                 req2.state = zk.REQUESTED
-                req2.node_types.append('ubuntu1404')
+                [req2.node_types.append(label) for label in labels]
                 self.zk.storeNodeRequest(req2)
                 req2 = self.waitForNodeRequest(
                     req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))

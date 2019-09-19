@@ -5,6 +5,7 @@ zookeeper-servers:
 
 labels:
   - name: ubuntu1404
+  - name: ubuntu1404-by-filters
 
 providers:
   - name: ec2-us-west-2
@@ -14,13 +15,23 @@ providers:
       - name: ubuntu1404
         image-id: ami-1e749f67
         username: ubuntu
+      - name: ubuntu1404-by-filters
+        image-filters:
+          - Name: name
+            Values:
+              - ubuntu*
+        username: ubuntu
     pools:
       - name: main
-        max-servers: 1
+        max-servers: 2
         subnet-id: null
         security-group-id: null
         labels:
           - name: ubuntu1404
             cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-by-filters
+            cloud-image: ubuntu1404-by-filters
             instance-type: t3.medium
             key-name: zuul
