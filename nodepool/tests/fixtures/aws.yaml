@@ -13,6 +13,10 @@ providers:
     cloud-images:
       - name: ubuntu1404
         image-id: ami-1e749f67
+        image-filters:
+          - Name: name
+            Values:
+              - special-ami-name
         username: ubuntu
     pools:
       - name: main
