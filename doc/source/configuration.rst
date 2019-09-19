@@ -1598,6 +1598,12 @@ section of the configuration.
            - name: ubuntu1804
              image-id: ami-082fd9a18128c9e8c
              username: ubuntu
+           - name: ubuntu1804-by-filters
+             image-filters:
+               - Name: name
+                 Values:
+                  - named-ami
+             username: ubuntu
            - name: my-custom-win2k3
              connection-type: winrm
              username: admin
@@ -1621,6 +1627,27 @@ section of the configuration.
 
          If this is provided, it is used to select the image from the cloud
          provider by ID.
+
+      .. attr:: image-filters
+         :type: list
+
+         If provided, this is used to select an AMI by filters.  If the filters
+         provided match more than one image, the most recent will be returned.
+         `image-filters` are not valid if `image-id` is also specified.
+
+         Each entry is a dictionary with the following keys
+
+         .. attr:: Name
+            :type: str
+            :required:
+
+            The filter name. See `Boto describe images`_ for a list of valid filters.
+
+         .. attr:: Values
+            :type: list
+            :required:
+
+            A list of str values to filter on
 
       .. attr:: username
          :type: str
@@ -1738,3 +1765,4 @@ section of the configuration.
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html
 .. _`Boto configuration`: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
+.. _`Boto describe images`: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_images
