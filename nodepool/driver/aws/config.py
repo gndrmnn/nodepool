@@ -191,6 +191,7 @@ class AwsProviderConfig(ProviderConfig):
             i = ProviderCloudImage()
             i.name = image['name']
             i.image_id = image.get('image-id', None)
+            i.image_filters = image.get("image-filters", None)
             i.username = image.get('username', None)
             i.python_path = image.get('python-path', '/usr/bin/python2')
             i.connection_type = image.get('connection-type', 'ssh')
@@ -227,6 +228,7 @@ class AwsProviderConfig(ProviderConfig):
             'connection-type': str,
             'connection-port': int,
             'image-id': str,
+            "image-filters": [dict],
             'username': str,
             'python-path': str,
         }
