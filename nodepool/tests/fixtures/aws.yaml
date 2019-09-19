@@ -5,6 +5,10 @@ zookeeper-servers:
 
 labels:
   - name: ubuntu1404
+  - name: ubuntu1404-bad-ami-name
+  - name: ubuntu1404-by-filters
+  - name: ubuntu1404-by-capitalized-filters
+  - name: ubuntu1404-bad-config
 
 providers:
   - name: ec2-us-west-2
@@ -14,6 +18,28 @@ providers:
       - name: ubuntu1404
         image-id: ami-1e749f67
         username: ubuntu
+      - name: ubuntu1404-bad-ami-name
+        image-id: bad-ami-name
+        username: ubuntu
+      - name: ubuntu1404-by-filters
+        image-filters:
+          - name: name
+            values:
+              - ubuntu*
+        username: ubuntu
+      - name: ubuntu1404-by-capitalized-filters
+        image-filters:
+          - Name: name
+            Values:
+              - ubuntu*
+        username: ubuntu
+      - name: ubuntu1404-bad-config
+        image-id: ami-1e749f67
+        image-filters:
+          - name: name
+            values:
+              - ubuntu*
+        username: ubuntu
     pools:
       - name: main
         max-servers: 1
@@ -22,5 +48,21 @@ providers:
         labels:
           - name: ubuntu1404
             cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-bad-ami-name
+            cloud-image: ubuntu1404-bad-ami-name
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-by-filters
+            cloud-image: ubuntu1404-by-filters
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-by-capitalized-filters
+            cloud-image: ubuntu1404-by-capitalized-filters
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-bad-config
+            cloud-image: ubuntu1404-bad-config
             instance-type: t3.medium
             key-name: zuul
