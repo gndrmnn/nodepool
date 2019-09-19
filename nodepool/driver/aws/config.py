@@ -191,6 +191,7 @@ class AwsProviderConfig(ProviderConfig):
             i = ProviderCloudImage()
             i.name = image['name']
             i.image_id = image.get('image-id', None)
+            i.image_filters = image.get("image-filters", None)
             i.username = image.get('username', None)
             i.python_path = image.get('python-path', '/usr/bin/python2')
             i.connection_type = image.get('connection-type', 'ssh')
@@ -222,11 +223,17 @@ class AwsProviderConfig(ProviderConfig):
             'subnet-id': str,
         })
 
+        image_filters = {
+            v.Required('Name'): str,
+            v.Required('Values'): [str]
+        }
+
         provider_cloud_images = {
             'name': str,
             'connection-type': str,
             'connection-port': int,
             'image-id': str,
+            "image-filters": [image_filters],
             'username': str,
             'python-path': str,
         }

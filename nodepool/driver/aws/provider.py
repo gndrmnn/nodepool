@@ -58,6 +58,7 @@ class AwsProvider(Provider):
             region_name=self.provider.region_name,
             profile_name=self.provider.profile_name)
         self.ec2 = self.aws.resource('ec2')
+        self.ec2_client = self.aws.client("ec2")
 
     def stop(self):
         self.log.debug("Stopping")
@@ -92,15 +93,50 @@ class AwsProvider(Provider):
             n += 1
         return n
 
-    def getImage(self, image_id):
-        return self.ec2.Image(image_id)
+    def getLatestImageIdByFilters(self, image_filters):
+        res = self.ec2_client.describe_images(
+            Filters=image_filters
+        ).get("Images")
+
+        images = sorted(
+            res,
+            key=lambda k: k["CreationDate"],
+            reverse=True
+        )
+
+        if not images:
+            msg = "No cloud-image (AMI) matches supplied image filters"
+            raise Exception(msg)
+        else:
+            return images[0].get("ImageId", None)
+
+    def getImage(self, cloud_image):
+        image_id = cloud_image.image_id
+        image_filters = cloud_image.image_filters
+
+        if image_filters is not None:
+            if image_id is not None:
+                self.log.warning(
+                    "Provider %s is configured to use both image-id: %s "
+                    " and image-filters %s. These options conflict "
+                    " and should not be used together. Ignoring image-id"
+                    % (self.provider.name,
+                       cloud_image.image_id,
+                       cloud_image.image_filters))
+            else:
+                image_id_by_filters = self.getLatestImageIdByFilters(
+                    image_filters
+                )
+                return self.ec2.Image(image_id_by_filters)
+
+        return self.ec2.Image(cloud_image.external_name)
 
     def labelReady(self, label):
         if not label.cloud_image:
             msg = "A cloud-image (AMI) must be supplied with the AWS driver."
             raise Exception(msg)
 
-        image = self.getImage(label.cloud_image.external_name)
+        image = self.getImage(label.cloud_image)
         # Image loading is deferred, check if it's really there
         if image.state != 'available':
             self.log.warning(
@@ -152,7 +188,7 @@ class AwsProvider(Provider):
         # We might need to supply our own mapping before lauching the instance.
         # We basically want to make sure DeleteOnTermination is true and be
         # able to set the volume type and size.
-        image = self.getImage(image_id)
+        image = self.getImage(label.cloud_image)
         # TODO: Flavors can also influence whether or not the VM spawns with a
         # volume -- we basically need to ensure DeleteOnTermination is true
         if hasattr(image, 'block_device_mappings'):
