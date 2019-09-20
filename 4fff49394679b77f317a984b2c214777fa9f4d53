@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_9873fab1",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 1635,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-09-20T05:31:42Z",
+      "side": 1,
+      "message": "This entry and image-id should probably both explain what happens if both of them are specified.",
+      "revId": "4fff49394679b77f317a984b2c214777fa9f4d53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_386a06b3",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-09-20T05:31:42Z",
+      "side": 1,
+      "message": "Thought more about this today. Maybe the right thing to do is not to have any special behavior with image-id+image-filters. It could be a way to ensure you don\u0027t ever use an AMI that doesn\u0027t satisfy the filters.. so if you do that.. the label is never available on this nodepool. Basically, make it find the intersection of the ID+filters rather than ignoring one of them.",
+      "revId": "4fff49394679b77f317a984b2c214777fa9f4d53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
