@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_1b1dba0e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-09-20T15:21:48Z",
+      "side": 1,
+      "message": "We shouldn\u0027t actually need the \u0027deleted\u0027 variable anymore, right?",
+      "revId": "dc560951e3bd2242b7e443ff86df9768c991b3ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
