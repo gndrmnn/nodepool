@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_b4a245fb",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-09-24T11:17:01Z",
+      "side": 1,
+      "message": "This is going to sound like a bikeshed - but bear with me ..\n\nThe capitalized key names here are different than the rest of the nodepool config. They make sense though, because they\u0027re sent in this form to Boto and thus will make sense capitalized to AWS users.\n\nMy concern is that it\u0027s a bad user experience to have config file errors resulting from capitalization isssues.\n\nSO - I\u0027m wondering if maybe we could support both. Maybe even keep this as it is - document it capitalized, since that\u0027s in keeping with the interface of AWS on the other side and this is for the AWS driver - but also accept \u0027name\u0027 and \u0027values\u0027",
+      "range": {
+        "startLine": 1603,
+        "startChar": 17,
+        "endLine": 1603,
+        "endChar": 18
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_94494932",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-09-24T11:17:01Z",
+      "side": 1,
+      "message": "Then I think here we do *something* to express that either Name or name is acceptable, but return Name so that the data structure is good for boto.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
