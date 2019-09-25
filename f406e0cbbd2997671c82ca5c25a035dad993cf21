@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_691b7680",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-09-25T19:04:46Z",
+      "side": 1,
+      "message": "+1 for consistency",
+      "parentUuid": "3fa7e38b_b4a245fb",
+      "range": {
+        "startLine": 1603,
+        "startChar": 17,
+        "endLine": 1603,
+        "endChar": 18
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_94494932",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 4
@@ -41,6 +65,52 @@
         "startChar": 12,
         "endLine": 227,
         "endChar": 36
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_a419937a",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-09-25T19:04:46Z",
+      "side": 1,
+      "message": "Shouldn\u0027t an exception be raised if ImageId is None?",
+      "range": {
+        "startLine": 111,
+        "startChar": 44,
+        "endLine": 111,
+        "endChar": 48
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_440bff22",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-09-25T19:04:46Z",
+      "side": 1,
+      "message": "this could be simplified to \"image_id \u003d self.getLatestImageIdByFiltesr(image_filters)\"",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 58
       },
       "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
