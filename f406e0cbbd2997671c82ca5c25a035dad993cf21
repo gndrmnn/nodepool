@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_534c2041",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 30990
+      },
+      "writtenOn": "2019-09-26T00:26:41Z",
+      "side": 1,
+      "message": "Makes complete sense. Will implement for sure.",
+      "parentUuid": "3fa7e38b_691b7680",
+      "range": {
+        "startLine": 1603,
+        "startChar": 17,
+        "endLine": 1603,
+        "endChar": 18
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_94494932",
         "filename": "nodepool/driver/aws/config.py",
         "patchSetId": 4
@@ -60,6 +84,30 @@
       "writtenOn": "2019-09-24T11:17:01Z",
       "side": 1,
       "message": "Then I think here we do *something* to express that either Name or name is acceptable, but return Name so that the data structure is good for boto.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_b3431413",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 30990
+      },
+      "writtenOn": "2019-09-26T00:26:41Z",
+      "side": 1,
+      "message": "Yes, very much agreed!",
+      "parentUuid": "3fa7e38b_94494932",
       "range": {
         "startLine": 227,
         "startChar": 12,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_73491c2f",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 30990
+      },
+      "writtenOn": "2019-09-26T00:26:41Z",
+      "side": 1,
+      "message": "Artifact of an earlier implementation. Thank you!",
+      "parentUuid": "3fa7e38b_a419937a",
+      "range": {
+        "startLine": 111,
+        "startChar": 44,
+        "endLine": 111,
+        "endChar": 48
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_440bff22",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 4
@@ -106,6 +178,30 @@
       "writtenOn": "2019-09-25T19:04:46Z",
       "side": 1,
       "message": "this could be simplified to \"image_id \u003d self.getLatestImageIdByFiltesr(image_filters)\"",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 58
+      },
+      "revId": "f406e0cbbd2997671c82ca5c25a035dad993cf21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_135228df",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 30990
+      },
+      "writtenOn": "2019-09-26T00:26:41Z",
+      "side": 1,
+      "message": ":+1:",
+      "parentUuid": "3fa7e38b_440bff22",
       "range": {
         "startLine": 122,
         "startChar": 0,
