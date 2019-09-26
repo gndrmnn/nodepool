@@ -33,6 +33,24 @@
       "revId": "4fff49394679b77f317a984b2c214777fa9f4d53",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_99653248",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 30990
+      },
+      "writtenOn": "2019-09-26T00:26:41Z",
+      "side": 1,
+      "message": "Ok, so if the specified AMI id doesn\u0027t match the id returned by filtering, then fail out. What do you think should happen if the filters return multiple AMIs, and the specified AMI id matches one of them, but it isn\u0027t the latest? Should this fail out as well, or count as an intersection?",
+      "parentUuid": "3fa7e38b_386a06b3",
+      "revId": "4fff49394679b77f317a984b2c214777fa9f4d53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
