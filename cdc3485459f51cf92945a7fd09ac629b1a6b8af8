@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_9507aa18",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-09-29T08:04:16Z",
+      "side": 1,
+      "message": "I\u0027m a little bit uncomfortable having non-lowercase config keys here as this breaks consistency. However I see the reason for doing this as this makes it possible to just forward the whole struct as filters.",
+      "revId": "cdc3485459f51cf92945a7fd09ac629b1a6b8af8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
