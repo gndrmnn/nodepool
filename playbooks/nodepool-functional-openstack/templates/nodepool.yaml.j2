@@ -46,6 +46,11 @@ diskimages:
     rebuild-age: 86400
     elements:
       - {{ nodepool_diskimage.base_element }}
+{% if 'extra_elements' in nodepool_diskimage %}
+{%   for item in nodepool_diskimage.extra_elements %}
+      - {{ item }}
+{%   endfor %}
+{% endif %}
       - vm
       - simple-init
       - growroot

@@ -35,6 +35,13 @@
 
             The base element to use when building the disk image.
 
+         .. zuul:jobvar:: extra_elements
+            :type: list
+            :default: []
+
+            List of extra DIB elements to be added to image
+            configuration.
+
          .. zuul:jobvar:: release
 
             The release number or name to use with the base element.
