@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_f053656b",
+        "filename": "playbooks/nodepool-functional-openstack/templates/nodepool.yaml.j2",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 30637
+      },
+      "writtenOn": "2019-10-02T06:14:37Z",
+      "side": 1,
+      "message": "nit: I think you may want to add \"-\" {% ... -%} not to get some extra line breaks.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 11
+      },
+      "revId": "c137253e44859828ce96101978e6dd301335aa95",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
