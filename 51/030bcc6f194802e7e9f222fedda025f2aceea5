@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Paul Belanger <pabelanger@redhat.com>
+Workflow+1: Paul Belanger <pabelanger@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 02 Oct 2019 19:22:11 +0000
+Reviewed-on: https://review.opendev.org/686198
+Project: zuul/nodepool
+Branch: refs/heads/master
