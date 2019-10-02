@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_e02b8d7f",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1532,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2019-10-02T16:11:38Z",
+      "side": 1,
+      "message": "Nit, maybe we should use the same argument type for register and deregister launcher methods?",
+      "range": {
+        "startLine": 1532,
+        "startChar": 33,
+        "endLine": 1532,
+        "endChar": 44
+      },
+      "revId": "51030bcc6f194802e7e9f222fedda025f2aceea5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
