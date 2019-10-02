@@ -381,6 +381,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         '''
         self.log.info("%s received stop" % self.name)
         self.running = False
+        self.zk.deregisterLauncher(self.launcher_id)
         self.stop_event.set()
 
 

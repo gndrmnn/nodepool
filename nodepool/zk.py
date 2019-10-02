@@ -1508,9 +1508,10 @@ class ZooKeeper(object):
         '''
         Register an active node launcher.
 
-        The launcher is automatically de-registered once it terminates or
-        otherwise disconnects from ZooKeeper. It will need to re-register
-        after a lost connection. This method is safe to call multiple times.
+        The launcher is de-registered when the launcher process terminates or
+        otherwise disconnects from ZooKeeper, or via deregisterLauncher().
+        It will need to re-register after a lost connection. This method is
+        safe to call multiple times.
 
         :param Launcher launcher: Object describing the launcher.
         '''
@@ -1527,6 +1528,18 @@ class ZooKeeper(object):
             self.client.create(path, value=launcher.serialize(),
                                makepath=True, ephemeral=True)
             self.log.debug("Registered launcher %s", launcher.id)
+
+    def deregisterLauncher(self, launcher_id):
+        '''
+        Deregister an active node launcher.
+
+        :param str launcher_id: ID of the launcher to deregister.
+        '''
+        path = self._launcherPath(launcher_id)
+        try:
+            self.client.delete(path, recursive=True)
+        except kze.NoNodeError:
+            pass
 
     def getRegisteredLaunchers(self):
         '''

@@ -1482,6 +1482,9 @@ class TestLauncher(tests.DBTestCase):
         self.waitForNodes('fake-label')
         self.assertEqual(2, len(pool._pool_threads))
 
+        # We should have two pool workers registered
+        self.assertEqual(2, len(self.zk.getRegisteredLaunchers()))
+
         self.replace_config(configfile, 'launcher_two_provider_remove.yaml')
 
         # Our provider pool thread count should eventually be reduced to 1
@@ -1492,6 +1495,9 @@ class TestLauncher(tests.DBTestCase):
                 break
             except AssertionError:
                 pass
+
+        # We should have one pool worker registered
+        self.assertEqual(1, len(self.zk.getRegisteredLaunchers()))
 
     def test_failed_provider(self):
         """Test that broken provider doesn't fail node requests."""
