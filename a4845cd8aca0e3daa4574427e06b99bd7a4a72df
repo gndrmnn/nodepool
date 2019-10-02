@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_36ad7631",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 30637
+      },
+      "writtenOn": "2019-10-02T08:26:43Z",
+      "side": 1,
+      "message": "nit: \"Path to optional script\" or just \"Optional script\"",
+      "range": {
+        "startLine": 571,
+        "startChar": 5,
+        "endLine": 571,
+        "endChar": 35
+      },
+      "revId": "a4845cd8aca0e3daa4574427e06b99bd7a4a72df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_1675dacc",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 30637
+      },
+      "writtenOn": "2019-10-02T08:26:43Z",
+      "side": 1,
+      "message": "nit: Suggestion: \"The script will be called with following parameters:\"",
+      "range": {
+        "startLine": 574,
+        "startChar": 34,
+        "endLine": 574,
+        "endChar": 71
+      },
+      "revId": "a4845cd8aca0e3daa4574427e06b99bd7a4a72df",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
