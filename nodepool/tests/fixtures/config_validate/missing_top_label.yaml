@@ -1,0 +1,14 @@
+---
+# NOTE(mnaser): The trusty label missing here will fail during runtime.
+labels: []
+
+providers:
+  - name: static
+    driver: openstack
+    cloud: potato
+    pools:
+      - name: main
+        labels:
+          - name: trusty
+            diskimage: trusty
+            min-ram: 8192

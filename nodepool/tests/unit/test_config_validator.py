@@ -39,6 +39,13 @@ class TestConfigValidation(tests.BaseTestCase):
         validator = ConfigValidator(config)
         self.assertRaises(ParserError, validator.validate)
 
+    def test_missing_top_level_label(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate', 'missing_top_label.yaml')
+
+        validator = ConfigValidator(config)
+        self.assertRaises(ParserError, validator.validate)
+
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate',
