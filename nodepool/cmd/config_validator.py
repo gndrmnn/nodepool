@@ -11,6 +11,7 @@
 # under the License.
 
 import logging
+import sys
 import voluptuous as v
 import yaml
 
@@ -80,3 +81,19 @@ class ConfigValidator:
         for provider_dict in config.get('providers', []):
             provider_schema = get_provider_config(provider_dict).getSchema()
             provider_schema.extend(provider)(provider_dict)
+
+        errors = False
+
+        # Ensure diskimages have top-level labels
+        labels = [ x['name'] for x in config.get('labels', []) ]
+        for provider in config.get('providers', []):
+            for pool in provider.get('pools', []):
+                for label in pool.get('labels', []):
+                    if label['name'] not in labels:
+                        errors = True
+                        log.error("diskimage %s not in top-level labels (%s)" %
+                                  (label['name'], labels))
+
+        if errors == True:
+            log.error("Errors found!")
+            sys.exit(1)
