@@ -120,7 +120,7 @@
         - name: cluster
           label: centos-7
         - name: launcher
-          label: fedora-29
+          label: fedora-30
     required-projects:
       - zuul/nodepool
 
