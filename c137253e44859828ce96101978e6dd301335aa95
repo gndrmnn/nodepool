@@ -46,6 +46,30 @@
       "revId": "c137253e44859828ce96101978e6dd301335aa95",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_b4f7fad4",
+        "filename": "playbooks/nodepool-functional-openstack/templates/nodepool.yaml.j2",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-10-04T04:41:41Z",
+      "side": 1,
+      "message": "example config file\n\nhttps://zuul.opendev.org/t/openstack/build/739a085eda19419f84a96e45633dbfb5/log/nodepool/nodepool.yaml#49",
+      "parentUuid": "3fa7e38b_d43cf6c0",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 11
+      },
+      "revId": "c137253e44859828ce96101978e6dd301335aa95",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
