@@ -32,7 +32,8 @@ class TestDriverStatic(tests.DBTestCase):
                               'fixtures', 'config_validate',
                               'static_error.yaml')
         validator = ConfigValidator(config)
-        self.assertRaises(MultipleInvalid, validator.validate)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
 
     def test_static_config(self):
         configfile = self.setup_config('static.yaml')
