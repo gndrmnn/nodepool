@@ -366,7 +366,9 @@ class DBTestCase(BaseTestCase):
         self._config_images_dir = images_dir
         self._config_build_log_dir = build_log_dir
         validator = ConfigValidator(path)
-        validator.validate()
+        ret = validator.validate()
+        if ret != 0:
+            raise ValueError("Config file %s could not be validated" % path)
         return path
 
     def replace_config(self, configfile, filename):

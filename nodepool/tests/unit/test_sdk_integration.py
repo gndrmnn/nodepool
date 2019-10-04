@@ -15,7 +15,6 @@
 import os
 
 import fixtures
-import voluptuous
 import yaml
 
 from nodepool import config as nodepool_config
@@ -45,7 +44,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         # Assert that we get a nodepool error and not an openstacksdk
         # error.
         self.assertRaises(
-            voluptuous.MultipleInvalid,
+            Exception,
             self.setup_config, 'integration_noocc.yaml')
 
     def test_nodepool_occ_config(self):

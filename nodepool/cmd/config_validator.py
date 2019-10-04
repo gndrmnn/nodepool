@@ -27,6 +27,11 @@ class ConfigValidator:
         self.config_file = config_file
 
     def validate(self):
+        '''
+        Validate a configuration file
+
+        :return: 0 for success, non-zero for failure
+        '''
         provider = ProviderConfig.getCommonSchemaDict()
 
         label = {
@@ -72,11 +77,42 @@ class ConfigValidator:
         }
 
         log.info("validating %s" % self.config_file)
-        config = yaml.safe_load(open(self.config_file))
 
-        # validate the overall schema
-        schema = v.Schema(top_level)
-        schema(config)
-        for provider_dict in config.get('providers', []):
-            provider_schema = get_provider_config(provider_dict).getSchema()
-            provider_schema.extend(provider)(provider_dict)
+        try:
+            config = yaml.safe_load(open(self.config_file))
+        except Exception:
+            log.exception('YAML parsing failed')
+            return 1
+
+        try:
+            # validate the overall schema
+            schema = v.Schema(top_level)
+            schema(config)
+            for provider_dict in config.get('providers', []):
+                provider_schema = \
+                    get_provider_config(provider_dict).getSchema()
+                provider_schema.extend(provider)(provider_dict)
+        except Exception:
+            log.exception('Schema validation failed')
+            return 1
+
+        errors = False
+
+        # Ensure in openstack provider sections, diskimages have
+        # top-level labels
+        labels = [x['name'] for x in config.get('labels', [])]
+        for provider in config.get('providers', []):
+            if provider.get('driver', 'openstack') != 'openstack':
+                continue
+            for pool in provider.get('pools', []):
+                for label in pool.get('labels', []):
+                    if label['name'] not in labels:
+                        errors = True
+                        log.error("diskimage %s in provider %s "
+                                  "not in top-level labels" %
+                                  (label['name'], provider['name']))
+
+        if errors is True:
+            return 1
+        else:
+            return 0
