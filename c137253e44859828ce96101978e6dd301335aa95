@@ -22,6 +22,30 @@
       "revId": "c137253e44859828ce96101978e6dd301335aa95",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_d43cf6c0",
+        "filename": "playbooks/nodepool-functional-openstack/templates/nodepool.yaml.j2",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-10-04T04:09:49Z",
+      "side": 1,
+      "message": "i believe ansible turns this on automatically",
+      "parentUuid": "3fa7e38b_f053656b",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 11
+      },
+      "revId": "c137253e44859828ce96101978e6dd301335aa95",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
