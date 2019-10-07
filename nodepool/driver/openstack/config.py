@@ -230,6 +230,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.boot_timeout = None
         self.launch_timeout = None
         self.clean_floating_ips = None
+        self.port_cleanup_interval = None
         self.diskimages = {}
         self.cloud_images = {}
         self.hostname_format = None
@@ -246,6 +247,8 @@ class OpenStackProviderConfig(ProviderConfig):
                     other.boot_timeout == self.boot_timeout and
                     other.launch_timeout == self.launch_timeout and
                     other.clean_floating_ips == self.clean_floating_ips and
+                    other.port_cleanup_interval ==
+                    self.port_cleanup_interval and
                     other.diskimages == self.diskimages and
                     other.cloud_images == self.cloud_images)
         return False
@@ -277,6 +280,10 @@ class OpenStackProviderConfig(ProviderConfig):
         self.launch_timeout = self.provider.get('launch-timeout', 3600)
         self.launch_retries = self.provider.get('launch-retries', 3)
         self.clean_floating_ips = self.provider.get('clean-floating-ips')
+        self.port_cleanup_interval = self.provider.get(
+            'port-cleanup-interval',
+            600
+        )
         self.hostname_format = self.provider.get(
             'hostname-format',
             '{label.name}-{provider.name}-{node.id}'
@@ -414,6 +421,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'hostname-format': str,
             'image-name-format': str,
             'clean-floating-ips': bool,
+            'port-cleanup-interval': int,
             'pools': [pool],
             'diskimages': [provider_diskimage],
             'cloud-images': [provider_cloud_images],
