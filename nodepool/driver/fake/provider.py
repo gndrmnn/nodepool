@@ -23,6 +23,7 @@ import openstack.exceptions
 
 from nodepool import exceptions
 from nodepool.driver.openstack.provider import OpenStackProvider
+from nodepool.driver.fake import db
 from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from openstack.cloud.exc import OpenStackCloudCreateException
 
@@ -77,6 +78,7 @@ class FakeOpenStackCloud(object):
         return 100, 20, 1000000
 
     def __init__(self, images=None, networks=None):
+        self.database = db.Database()
         self.pause_creates = False
         self._image_list = images
         if self._image_list is None:
@@ -97,12 +99,6 @@ class FakeOpenStackCloud(object):
                         dict(id=self.ipv6_network_uuid,
                              name='fake-ipv6-network-name')]
         self.networks = networks
-        self._flavor_list = [
-            Dummy(Dummy.FLAVOR, id=uuid.uuid4().hex, ram=8192,
-                  name='Fake Flavor', vcpus=4),
-            Dummy(Dummy.FLAVOR, id=uuid.uuid4().hex, ram=8192,
-                  name='Unreal Flavor', vcpus=4),
-        ]
         self._azs = ['az1', 'az2']
         self._server_list = []
         self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
@@ -113,6 +109,23 @@ class FakeOpenStackCloud(object):
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner=None),
         ]
+
+    def start_database(self, zk_client):
+        '''
+        Start the fake provider.
+
+        Gives us the chance to initialize the database by creating any
+        cloud resources we might need.
+        '''
+        self.database.setZK(zk_client)
+
+        # Create provider flavors
+        self.database.createFlavor(
+            dict(id=uuid.uuid4().hex, ram=8192, name='Fake Flavor', vcpus=4)
+        )
+        self.database.createFlavor(
+            dict(id=uuid.uuid4().hex, ram=8192, name='Unreal Flavor', vcpus=4)
+        )
 
     def _get(self, name_or_id, instance_list):
         self.log.debug("Get %s in %s" % (name_or_id, repr(instance_list)))
@@ -243,7 +256,7 @@ class FakeOpenStackCloud(object):
             name=name, **metadata)
 
     def list_flavors(self, get_extra=False):
-        return self._flavor_list
+        return self.database.listFlavors()
 
     def get_openstack_vars(self, server):
         server.public_v4 = 'fake'
@@ -385,7 +398,11 @@ class FakeProvider(OpenStackProvider):
         self.createServer_fails = 0
         self.createServer_fails_with_external_id = 0
         self.__client = FakeProvider.fake_cloud()
-        super(FakeProvider, self).__init__(provider)
+        super().__init__(provider)
+
+    def start(self, zk_conn):
+        self.__client.start_database(zk_conn.client)
+        super().start(zk_conn)
 
     def _getClient(self):
         return self.__client

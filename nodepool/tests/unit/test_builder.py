@@ -126,6 +126,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
 
         # Now swap out the upload fake so that the next uploads fail
         fake_client = fakeprovider.FakeUploadFailCloud(times_to_fail=1)
+        fake_client.start_database(self.zk.client)
 
         def get_fake_client(*args, **kwargs):
             return fake_client

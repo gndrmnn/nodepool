@@ -1734,6 +1734,7 @@ class TestLauncher(tests.DBTestCase):
         Test failed launch can get detailed node fault info if available.
         '''
         fake_client = fakeprovider.FakeLaunchAndGetFaultCloud()
+        fake_client.start_database(self.zk.client)
 
         def get_fake_client(*args, **kwargs):
             return fake_client
@@ -1774,6 +1775,7 @@ class TestLauncher(tests.DBTestCase):
         '''
         fake_client = fakeprovider.FakeLaunchAndDeleteFailCloud(
             times_to_fail=1)
+        fake_client.start_database(self.zk.client)
 
         def get_fake_client(*args, **kwargs):
             return fake_client
