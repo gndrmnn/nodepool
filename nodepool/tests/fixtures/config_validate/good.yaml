@@ -33,6 +33,7 @@ providers:
     boot-timeout: 120
     max-concurrency: 10
     launch-retries: 3
+    port-cleanup-interval: 600
     rate: 1
     diskimages:
       - name: trusty
@@ -75,6 +76,7 @@ providers:
     region-name: 'chocolate'
     boot-timeout: 120
     rate: 0.001
+    port-cleanup-interval: 0
     diskimages:
       - name: trusty
         pause: False

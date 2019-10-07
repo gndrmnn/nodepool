@@ -2109,10 +2109,29 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(2, len(down_ports))
         self.log.debug("Down ports: %s", down_ports)
 
-        # Change the port cleanup interval to happen quicker
-        manager._port_cleanup_interval_secs = 2
-        while manager.listPorts(status='DOWN'):
-            time.sleep(1)
+        # Second config decreases cleanup interval to 2 seconds
+        self.replace_config(configfile, 'cleanup-port.yaml')
+        oldmanager = manager
+        manager = pool.getProviderManager('fake-provider')
+        for _ in iterate_timeout(10, Exception, 'assert config updated'):
+            try:
+                self.assertNotEqual(manager, oldmanager)
+                break
+            except AssertionError:
+                # config still hasn't updated, retry
+                manager = pool.getProviderManager('fake-provider')
+        # Reset the client as a new fake client will have been
+        # created.
+        manager.resetClient()
+
+        for _ in iterate_timeout(4, Exception, 'assert ports are cleaned'):
+            try:
+                down_ports = manager.listPorts(status='DOWN')
+                self.assertEqual(0, len(down_ports))
+                break
+            except AssertionError:
+                # ports not cleaned up yet, retry
+                pass
 
         self.assertReportedStat('nodepool.provider.fake-provider.downPorts',
                                 value='2', kind='c')
