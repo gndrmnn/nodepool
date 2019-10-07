@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_5e7240af",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 25733
+      },
+      "writtenOn": "2019-10-07T16:39:52Z",
+      "side": 1,
+      "message": "Note to reviewers: this section seems a bit racey. Specifically it\u0027s trying to assert that there are two ports that have leaked.\n\nI think this check is unnecessary because of the stat check at the end of this check.",
+      "range": {
+        "startLine": 2108,
+        "startChar": 8,
+        "endLine": 2110,
+        "endChar": 52
+      },
+      "revId": "9d060018250cfb9873fc886422f19c9e5db76eac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_be6254d7",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 25733
+      },
+      "writtenOn": "2019-10-07T16:39:52Z",
+      "side": 1,
+      "message": "This assert should cover any possible race conditions. This stat will only be 2 if exactly 2 ports leaked.",
+      "range": {
+        "startLine": 2116,
+        "startChar": 8,
+        "endLine": 2117,
+        "endChar": 52
+      },
+      "revId": "9d060018250cfb9873fc886422f19c9e5db76eac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
