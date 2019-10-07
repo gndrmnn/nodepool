@@ -89,27 +89,28 @@ class FakeOpenStackCloud(object):
                     metadata={})
             ]
         if networks is None:
-            networks = [dict(id='fake-public-network-uuid',
+            self.ipv6_network_uuid = uuid.uuid4().hex
+            networks = [dict(id=uuid.uuid4().hex,
                              name='fake-public-network-name'),
-                        dict(id='fake-private-network-uuid',
+                        dict(id=uuid.uuid4().hex,
                              name='fake-private-network-name'),
-                        dict(id='fake-ipv6-network-uuid',
+                        dict(id=self.ipv6_network_uuid,
                              name='fake-ipv6-network-name')]
         self.networks = networks
         self._flavor_list = [
-            Dummy(Dummy.FLAVOR, id='f1', ram=8192, name='Fake Flavor',
-                  vcpus=4),
-            Dummy(Dummy.FLAVOR, id='f2', ram=8192, name='Unreal Flavor',
-                  vcpus=4),
+            Dummy(Dummy.FLAVOR, id=uuid.uuid4().hex, ram=8192,
+                  name='Fake Flavor', vcpus=4),
+            Dummy(Dummy.FLAVOR, id=uuid.uuid4().hex, ram=8192,
+                  name='Unreal Flavor', vcpus=4),
         ]
         self._azs = ['az1', 'az2']
         self._server_list = []
         self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
             _get_quota()
         self._down_ports = [
-            Dummy(Dummy.PORT, id='1a', status='DOWN',
+            Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner="compute:nova"),
-            Dummy(Dummy.PORT, id='2b', status='DOWN',
+            Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner=None),
         ]
 
@@ -138,7 +139,7 @@ class FakeOpenStackCloud(object):
         # if keyword 'ipv6-uuid' is found in provider config,
         # ipv6 address will be available in public addr dict.
         for nic in nics:
-            if nic['net-id'] != 'fake-ipv6-network-uuid':
+            if nic['net-id'] != self.ipv6_network_uuid:
                 continue
             addresses = dict(
                 public=[dict(version=4, addr='fake'),
