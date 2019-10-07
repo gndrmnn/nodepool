@@ -2110,7 +2110,7 @@ class TestLauncher(tests.DBTestCase):
         self.log.debug("Down ports: %s", down_ports)
 
         # Change the port cleanup interval to happen quicker
-        manager._port_cleanup_interval_secs = 2
+        manager.provider.port_cleanup_interval = 2
         while manager.listPorts(status='DOWN'):
             time.sleep(1)
 
