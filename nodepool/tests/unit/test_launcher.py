@@ -2097,7 +2097,7 @@ class TestLauncher(tests.DBTestCase):
             time.sleep(.1)
 
     def test_leaked_port_cleanup(self):
-        configfile = self.setup_config('node.yaml')
+        configfile = self.setup_config('node_cleanup_port.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = 1
@@ -2109,8 +2109,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(2, len(down_ports))
         self.log.debug("Down ports: %s", down_ports)
 
-        # Change the port cleanup interval to happen quicker
-        manager._port_cleanup_interval_secs = 2
+        # Port cleanup in the fixture is set to 5 seconds
         while manager.listPorts(status='DOWN'):
             time.sleep(1)
 
