@@ -23,6 +23,7 @@ import openstack.exceptions
 
 from nodepool import exceptions
 from nodepool.driver.openstack.provider import OpenStackProvider
+from nodepool.driver.fake import db
 from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from openstack.cloud.exc import OpenStackCloudCreateException
 
@@ -77,6 +78,7 @@ class FakeOpenStackCloud(object):
         return 100, 20, 1000000
 
     def __init__(self, images=None, networks=None):
+        self.database = db.Database()
         self.pause_creates = False
         self._image_list = images
         if self._image_list is None:
@@ -384,7 +386,11 @@ class FakeProvider(OpenStackProvider):
         self.createServer_fails = 0
         self.createServer_fails_with_external_id = 0
         self.__client = FakeProvider.fake_cloud()
-        super(FakeProvider, self).__init__(provider)
+        super().__init__(provider)
+
+    def start(self, zk_conn):
+        super().start(zk_conn)
+        self.__client.database.setZK(zk_conn)
 
     def _getClient(self):
         return self.__client
