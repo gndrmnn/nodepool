@@ -91,6 +91,67 @@ class TestZooKeeper(tests.DBTestCase):
                 ):
                     pass
 
+    def test_imageUploadNumberLock_delete(self):
+        '''
+        Test that deleting an image upload number while we hold the lock
+        on it works properly.
+        '''
+        upload = zk.ImageUpload()
+        upload.image_name = "ubuntu-trusty"
+        upload.build_id = "0000000003"
+        upload.provider_name = "providerA"
+        upload.id = "0000000001"
+        path = self.zk._imageUploadNumberLockPath(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload.id)
+        with self.zk.imageUploadNumberLock(upload, blocking=False):
+            self.assertIsNotNone(self.zk.client.exists(path))
+            self.zk.deleteUpload(upload.image_name,
+                                 upload.build_id,
+                                 upload.provider_name,
+                                 upload.id)
+        self.assertIsNone(self.zk.client.exists(path))
+
+    def test_imageUploadNumberLock(self):
+        upload = zk.ImageUpload()
+        upload.image_name = "ubuntu-trusty"
+        upload.build_id = "0000000003"
+        upload.provider_name = "providerA"
+        upload.id = "0000000001"
+        path = self.zk._imageUploadNumberLockPath(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload.id)
+        with self.zk.imageUploadNumberLock(upload, blocking=False):
+            self.assertIsNotNone(self.zk.client.exists(path))
+
+    def test_imageUploadNumberLock_exception_nonblocking(self):
+        upload = zk.ImageUpload()
+        upload.image_name = "ubuntu-trusty"
+        upload.build_id = "0000000003"
+        upload.provider_name = "providerA"
+        upload.id = "0000000001"
+        with self.zk.imageUploadNumberLock(upload, blocking=False):
+            with testtools.ExpectedException(
+                npe.ZKLockException, "Did not get lock on .*"
+            ):
+                with self.zk.imageUploadNumberLock(upload, blocking=False):
+                    pass
+
+    def test_imageUploadNumberLock_exception_blocking(self):
+        upload = zk.ImageUpload()
+        upload.image_name = "ubuntu-trusty"
+        upload.build_id = "0000000003"
+        upload.provider_name = "providerA"
+        upload.id = "0000000001"
+        with self.zk.imageUploadNumberLock(upload, blocking=False):
+            with testtools.ExpectedException(npe.TimeoutException):
+                with self.zk.imageUploadNumberLock(
+                    upload, blocking=True, timeout=1
+                ):
+                    pass
+
     def test_imageUploadLock(self):
         path = self.zk._imageUploadLockPath("ubuntu-trusty", "0000", "prov1")
         with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",

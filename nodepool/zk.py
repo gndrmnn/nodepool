@@ -781,6 +781,12 @@ class ZooKeeper(object):
         return "%s/lock" % self._imageUploadPath(image, build_number,
                                                  provider)
 
+    def _imageUploadNumberLockPath(self, image, build_number, provider,
+                                   upload_number):
+        return "%s/%s/lock" % (
+            self._imageUploadPath(image, build_number, provider),
+            upload_number)
+
     def _launcherPath(self, launcher):
         return "%s/%s" % (self.LAUNCHER_ROOT, launcher)
 
@@ -831,6 +837,29 @@ class ZooKeeper(object):
             have_lock = False
             self.log.error("Image build number not found for locking: %s, %s",
                            build_number, image)
+
+        # If we aren't blocking, it's possible we didn't get the lock
+        # because someone else has it.
+        if not have_lock:
+            raise npe.ZKLockException("Did not get lock on %s" % lock_path)
+
+        return lock
+
+    def _getImageUploadNumberLock(self, image, build_number, provider,
+                                  upload_number, blocking=True, timeout=None):
+        lock_path = self._imageUploadNumberLockPath(image, build_number,
+                                                    provider, upload_number)
+        try:
+            lock = Lock(self.client, lock_path)
+            have_lock = lock.acquire(blocking, timeout)
+        except kze.LockTimeout:
+            raise npe.TimeoutException(
+                "Timeout trying to acquire lock %s" % lock_path)
+        except kze.NoNodeError:
+            have_lock = False
+            self.log.error("Image upload number %s not found for locking: "
+                           "%s, %s, %s",
+                           upload_number, build_number, provider, image)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
@@ -1040,7 +1069,7 @@ class ZooKeeper(object):
     def imageUploadLock(self, image, build_number, provider,
                         blocking=True, timeout=None):
         '''
-        Context manager to use for locking image builds.
+        Context manager to use for locking image uploads.
 
         Obtains a write lock for the specified image upload.
 
@@ -1060,6 +1089,36 @@ class ZooKeeper(object):
         try:
             lock = self._getImageUploadLock(image, build_number, provider,
                                             blocking, timeout)
+            yield
+        finally:
+            if lock:
+                lock.release()
+
+    @contextmanager
+    def imageUploadNumberLock(self, image_upload, blocking=True, timeout=None):
+        '''
+        Context manager to use for locking _specific_ image uploads.
+
+        Obtains a write lock for the specified image upload number.
+
+        :param ImageUpload image_upload: The object describing the upload
+            to lock.
+        :param bool blocking: Whether or not to block on trying to
+            acquire the lock
+        :param int timeout: When blocking, how long to wait for the lock
+            to get acquired. None, the default, waits forever.
+
+        :raises: TimeoutException if we failed to acquire the lock when
+            blocking with a timeout. ZKLockException if we are not blocking
+            and could not get the lock, or a lock is already held.
+        '''
+        lock = None
+        try:
+            lock = self._getImageUploadNumberLock(image_upload.image_name,
+                                                  image_upload.build_id,
+                                                  image_upload.provider_name,
+                                                  image_upload.id,
+                                                  blocking, timeout)
             yield
         finally:
             if lock:
@@ -1500,7 +1559,8 @@ class ZooKeeper(object):
         path = self._imageUploadPath(image, build_number, provider)
         path = path + "/%s" % upload_number
         try:
-            self.client.delete(path)
+            # NOTE: Need to do recursively to remove lock znodes
+            self.client.delete(path, recursive=True)
         except kze.NoNodeError:
             pass
 
