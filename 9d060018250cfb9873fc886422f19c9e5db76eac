@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_794cf675",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-10-07T17:29:07Z",
+      "side": 1,
+      "message": "Well, the thing about only depending on stats reporting assert is that you are only asserting stats reporting. :)\n\nIf that were the only check, and it failed, you won\u0027t know if it was the stats reporting itself that failed, or something with cleaning up down ports. You\u0027d then have to go back and add asserts to investigate and validate things you are assuming to be true before you get to the stats reporting part. I believe it\u0027s best to assert your assumptions as early as possible for when the test *does* fail.\n\nAlso, I don\u0027t think this is racey in it\u0027s original form. It may be NOW that you are lowering the cleanup interval early.",
+      "parentUuid": "3fa7e38b_5e7240af",
+      "range": {
+        "startLine": 2108,
+        "startChar": 8,
+        "endLine": 2110,
+        "endChar": 52
+      },
+      "revId": "9d060018250cfb9873fc886422f19c9e5db76eac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_be6254d7",
         "filename": "nodepool/tests/unit/test_launcher.py",
         "patchSetId": 5
