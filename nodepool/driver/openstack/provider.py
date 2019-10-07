@@ -51,10 +51,6 @@ class OpenStackProvider(Provider):
         self._zk = None
         self._down_ports = set()
         self._last_port_cleanup = None
-        # Set this long enough to avoid deleting a port which simply
-        # hasn't yet been attached to an instance which is being
-        # created.
-        self._port_cleanup_interval_secs = 600
         self._statsd = stats.get_client()
 
     def start(self, zk_conn):
@@ -554,7 +550,7 @@ class OpenStackProvider(Provider):
 
         # Return if not enough time has passed between cleanup
         last_check_in_secs = int(time.monotonic() - self._last_port_cleanup)
-        if last_check_in_secs <= self._port_cleanup_interval_secs:
+        if last_check_in_secs <= self.port_cleanup_interval:
             return
 
         ports = self.listPorts(status='DOWN')
@@ -588,7 +584,8 @@ class OpenStackProvider(Provider):
 
     def cleanupLeakedResources(self):
         self.cleanupLeakedInstances()
-        self.cleanupLeakedPorts()
+        if self.port_cleanup_interval:
+            self.cleanupLeakedPorts()
         if self.provider.clean_floating_ips:
             self._client.delete_unattached_floating_ips()
 
