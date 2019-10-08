@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_884aa924",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 9
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-10-08T16:47:55Z",
+      "side": 1,
+      "message": "Whoops, values",
+      "revId": "69231c62ded53eff28c445fd5756f15070360d0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_a8452517",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2019-10-08T16:47:55Z",
+      "side": 1,
+      "message": "pep8 says use a def here",
+      "revId": "69231c62ded53eff28c445fd5756f15070360d0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
