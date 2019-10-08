@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import base64
 import logging
 import urllib3
 import time
@@ -153,9 +154,10 @@ class OpenshiftProvider(Provider):
                 for secret_obj in sa.secrets:
                     secret = self.k8s_client.read_namespaced_secret(
                         secret_obj.name, project)
-                    token = secret.metadata.annotations.get(
-                        'openshift.io/token-secret.value')
+                    token = secret.data.get('token')
                     if token:
+                        token = base64.b64decode(
+                            token.encode('utf-8')).decode('utf-8')
                         break
             if token:
                 break

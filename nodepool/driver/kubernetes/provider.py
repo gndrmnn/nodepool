@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import base64
 import logging
 import urllib3
 import time
@@ -171,7 +172,8 @@ class KubernetesProvider(Provider):
                     secret = self.k8s_client.read_namespaced_secret(
                         secret_obj.name, namespace)
                     ca_crt = secret.data.get('ca.crt')
-                    token = secret.data.get('token')
+                    token = base64.b64decode(secret.data.get(
+                        'token').encode('utf-8')).decode('utf-8')
                     if token and ca_crt:
                         break
             if token and ca_crt:
