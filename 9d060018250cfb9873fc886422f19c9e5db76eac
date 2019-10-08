@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_0a41db0b",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 25733
+      },
+      "writtenOn": "2019-10-08T06:58:04Z",
+      "side": 1,
+      "message": "I agree with you on all counts, I was too hasty - an alternative way to model this test is to check if the timeout is semi-accurate by measuring the delay in port cleanup.",
+      "parentUuid": "3fa7e38b_794cf675",
+      "range": {
+        "startLine": 2108,
+        "startChar": 8,
+        "endLine": 2110,
+        "endChar": 52
+      },
+      "revId": "9d060018250cfb9873fc886422f19c9e5db76eac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_be6254d7",
         "filename": "nodepool/tests/unit/test_launcher.py",
         "patchSetId": 5
