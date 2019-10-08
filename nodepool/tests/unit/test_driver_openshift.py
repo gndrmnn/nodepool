@@ -70,8 +70,7 @@ class FakeCoreClient(object):
 
     def read_namespaced_secret(self, name, ns):
         class FakeSecret:
-            class metadata:
-                annotations = {'openshift.io/token-secret.value': 'fake-token'}
+            data = {'ca.crt': 'ZmFrZS1jYQ==', 'token': 'ZmFrZS10b2tlbg=='}
         return FakeSecret
 
     def create_namespaced_pod(self, ns, pod_body):
