@@ -65,7 +65,7 @@ class FakeCoreClient(object):
 
     def read_namespaced_secret(self, name, ns):
         class FakeSecret:
-            data = {'ca.crt': 'fake-ca', 'token': 'fake-token'}
+            data = {'ca.crt': 'ZmFrZS1jYQo=', 'token': 'ZmFrZS10b2tlbgo='}
         return FakeSecret
 
     def create_namespaced_pod(self, ns, pod_body):

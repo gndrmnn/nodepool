@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import base64
 import logging
 import urllib3
 import time
@@ -148,19 +149,22 @@ class OpenshiftProvider(Provider):
         for retry in range(30):
             sa = self.k8s_client.read_namespaced_service_account(
                 user, project)
+            ca_crt = None
             token = None
             if sa.secrets:
                 for secret_obj in sa.secrets:
                     secret = self.k8s_client.read_namespaced_secret(
                         secret_obj.name, project)
-                    token = secret.metadata.annotations.get(
-                        'openshift.io/token-secret.value')
-                    if token:
+                    token = secret.data.get('token')
+                    ca_crt = secret.data.get('ca.crt')
+                    if token and ca_crt:
+                        token = base64.b64decode(
+                            token.encode('utf-8')).decode('utf-8')
                         break
             if token:
                 break
             time.sleep(1)
-        if not token:
+        if not token or not ca_crt:
             raise exceptions.LaunchNodepoolException(
                 "%s: couldn't find token for service account %s" %
                 (project, sa))
@@ -189,6 +193,7 @@ class OpenshiftProvider(Provider):
             'host': self.os_client.api_client.configuration.host,
             'skiptls': not self.os_client.api_client.configuration.verify_ssl,
             'token': token,
+            'ca_crt': ca_crt,
             'user': user,
         }
         self.log.info("%s: project created" % project)
