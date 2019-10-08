@@ -13,6 +13,7 @@
 # under the License.
 
 import logging
+from operator import attrgetter
 
 from collections import Counter
 from collections import namedtuple
@@ -104,7 +105,9 @@ class StaticNodeProvider(Provider):
             ):
                 continue
             nodes.append(node)
-        return nodes
+        return list(
+            sorted(nodes, key=attrgetter("created_time"), reverse=True)
+        )
 
     def checkNodeLiveness(self, node):
         static_node = self.poolNodes().get(node.hostname)
