@@ -375,6 +375,26 @@ class StaticNodeProvider(Provider):
                 except Exception:
                     self.log.exception("Couldn't sync node:")
                     continue
+                try:
+                    self.assignReadyNodes(node, pool)
+                except Exception:
+                    self.log.exception("Couldn't assign ready nodes:")
+
+    def assignReadyNodes(self, node, pool):
+        waiting_nodes = self.getWaitingNodesOfType(node["labels"])
+        if not waiting_nodes:
+            return
+        ready_nodes = self.getRegisteredReadyNodes(nodeTuple(node))
+        if not ready_nodes:
+            return
+
+        leaked_count = min(len(waiting_nodes), len(ready_nodes))
+        self.log.info("Found %s ready node(s) that can be assigned to a "
+                      "waiting node", leaked_count)
+
+        self.deregisterNode(leaked_count, nodeTuple(node))
+        self.registerNodeFromConfig(
+            leaked_count, self.provider.name, pool.name, node)
 
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)

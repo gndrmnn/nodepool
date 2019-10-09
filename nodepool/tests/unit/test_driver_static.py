@@ -274,6 +274,36 @@ class TestDriverStatic(tests.DBTestCase):
         self.waitForNodeDeletion(node)
         self.waitForNodeRequest(req_waiting, zk.FULFILLED)
 
+    def test_static_handler_race_cleanup(self):
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        node = self.waitForNodes('fake-label')[0]
+
+        # Create the result of a race between re-registration of a
+        # ready node and a new building node.
+        data = node.toDict()
+        data.update({
+            "state": zk.BUILDING,
+            "hostname": "",
+            "username": "",
+            "connection_port": 22,
+        })
+        building_node = zk.Node.fromDict(data)
+        self.zk.storeNode(building_node)
+        self.zk.lockNode(building_node)
+
+        # Node will be deregistered and assigned to the building node
+        self.waitForNodeDeletion(node)
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(building_node.id, nodes[0].id)
+
+        building_node.state = zk.USED
+        self.zk.storeNode(building_node)
+        self.zk.unlockNode(building_node)
+        self.waitForNodeDeletion(building_node)
+
     def test_static_multinode_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
