@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_7dc35b8a",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2118,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-10-09T13:59:58Z",
+      "side": 1,
+      "message": "I\u0027d like for us to stop using the while-sleep waiting paradigm. We have something better in nodepool.nodeutils called iterate_timeout() that allows us to set a max wait time and throws an exception if that is exceeded. That prevents tests from running out of control until the max job timeout.",
+      "range": {
+        "startLine": 2115,
+        "startChar": 0,
+        "endLine": 2118,
+        "endChar": 27
+      },
+      "revId": "cffd8bc2f9fe08258f811148b53cfbe4b6824e06",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
