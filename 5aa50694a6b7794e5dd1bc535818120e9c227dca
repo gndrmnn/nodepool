@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_34e0a026",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-10-09T11:07:56Z",
+      "side": 1,
+      "message": "nit: a ValueError might be more precise here than a generic exception.",
+      "revId": "5aa50694a6b7794e5dd1bc535818120e9c227dca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
