@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_71ddbf6e",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 2127,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-10-09T19:01:26Z",
+      "side": 1,
+      "message": "We *might* need to push this up a bit for any slow running VMs, but we can try it as-is for now.",
+      "range": {
+        "startLine": 2127,
+        "startChar": 33,
+        "endLine": 2127,
+        "endChar": 34
+      },
+      "revId": "6789c4b61882782db5eac8c3f5af202fb2c9142e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
