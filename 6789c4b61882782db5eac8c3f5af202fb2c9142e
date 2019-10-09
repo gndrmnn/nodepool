@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3fa7e38b_ca315c5b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-10-09T22:15:25Z",
+      "side": 1,
+      "message": "might be clearer to say `port-cleanup-interval` or just \"the interval\" ... this looks a bit like a separate config option.",
+      "revId": "6789c4b61882782db5eac8c3f5af202fb2c9142e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_71ddbf6e",
         "filename": "nodepool/tests/unit/test_launcher.py",
         "patchSetId": 7
