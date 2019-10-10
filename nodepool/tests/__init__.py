@@ -311,6 +311,8 @@ class BaseTestCase(testtools.TestCase):
 
 
 class BuilderFixture(fixtures.Fixture):
+    log = logging.getLogger("tests.BuilderFixture")
+
     def __init__(self, configfile, cleanup_interval, securefile=None,
                  num_uploaders=1):
         super(BuilderFixture, self).__init__()
@@ -332,6 +334,13 @@ class BuilderFixture(fixtures.Fixture):
         self.addCleanup(self.cleanup)
 
     def cleanup(self):
+        # The NodePoolBuilder.stop() method does not intentionally stop the
+        # upload workers for reasons documented in that method. But we can
+        # safely do so in tests.
+        for worker in self.builder._upload_workers:
+            worker.shutdown()
+            worker.join()
+            self.log.debug("Stopped worker %s", worker.name)
         self.builder.stop()
 
 
