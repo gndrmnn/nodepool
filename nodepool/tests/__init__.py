@@ -549,11 +549,24 @@ class DBTestCase(BaseTestCase):
 
     def useBuilder(self, configfile, securefile=None, cleanup_interval=.5,
                    num_uploaders=1):
+
         builder_fixture = self.useFixture(
             BuilderFixture(configfile, cleanup_interval, securefile,
                            num_uploaders)
         )
-        return builder_fixture.builder
+        builder = builder_fixture.builder
+
+        def stopUploads():
+            for worker in builder._upload_workers:
+                worker.shutdown()
+
+        # The NodePoolBuilder.stop() method does not intentionally stop the
+        # upload workers for reasons documented in that method. But we can
+        # safely do so in tests (and should to avoid random test failures where
+        # we can kill the ZK connection out from under the upload worker).
+        self.addCleanup(stopUploads)
+
+        return builder
 
     def setupZK(self):
         f = ZookeeperServerFixture()
