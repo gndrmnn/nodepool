@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_6f4cf3c7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 25733
+      },
+      "writtenOn": "2019-10-10T09:26:42Z",
+      "side": 1,
+      "message": "Argh, yeah, sorry, this is supposed to be \"the interval\". vermiform appendix from a previous version.",
+      "parentUuid": "3fa7e38b_ca315c5b",
+      "revId": "6789c4b61882782db5eac8c3f5af202fb2c9142e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_71ddbf6e",
         "filename": "nodepool/tests/unit/test_launcher.py",
         "patchSetId": 7
