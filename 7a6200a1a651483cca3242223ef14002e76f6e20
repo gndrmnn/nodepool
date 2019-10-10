@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_8cb93d16",
+        "filename": "nodepool/tests/unit/test_driver_static.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-10-10T07:32:39Z",
+      "side": 1,
+      "message": "I ran the test case locally without the fix and it stayed green.",
+      "revId": "7a6200a1a651483cca3242223ef14002e76f6e20",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
