@@ -88,6 +88,7 @@ class StaticNodeProvider(Provider):
         for node in self.zk.nodeIterator():
             if (node.provider != self.provider.name or
                 node.state != zk.READY or
+                node.allocated_to is not None or
                 nodeTuple(node) != node_tuple
             ):
                 continue
