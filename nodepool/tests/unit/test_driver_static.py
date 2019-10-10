@@ -274,6 +274,32 @@ class TestDriverStatic(tests.DBTestCase):
         self.waitForNodeDeletion(node)
         self.waitForNodeRequest(req_waiting, zk.FULFILLED)
 
+    def test_static_ignore_assigned_ready_nodes(self):
+        """Regression test to not touch assigned READY nodes"""
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+
+        req_waiting = zk.NodeRequest()
+        req_waiting.state = zk.REQUESTED
+        req_waiting.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req_waiting)
+        req_waiting = self.waitForNodeRequest(req_waiting, zk.PENDING)
+
+        # Force a cleanup that should not touch the assigned node
+        manager = pool.getProviderManager('static-provider')
+        manager.cleanupLeakedResources()
+
+        # Make sure we still hold the node
+        node = self.zk.getNode(req.nodes[0])
+        self.assertIsNotNone(node)
+
     def test_static_handler_race_cleanup(self):
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
