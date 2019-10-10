@@ -298,6 +298,48 @@ class TestDriverStatic(tests.DBTestCase):
         node = self.zk.getNode(req.nodes[0])
         self.assertIsNotNone(node)
 
+    def test_static_waiting_handler_order(self):
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+        node = self.zk.getNode(req.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        req_waiting1 = zk.NodeRequest()
+        req_waiting1.state = zk.REQUESTED
+        req_waiting1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req_waiting1)
+        req_waiting1 = self.waitForNodeRequest(req_waiting1, zk.PENDING)
+
+        req_waiting2 = zk.NodeRequest()
+        req_waiting2.state = zk.REQUESTED
+        req_waiting2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req_waiting2)
+        req_waiting2 = self.waitForNodeRequest(req_waiting2, zk.PENDING)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
+
+        req_waiting1 = self.waitForNodeRequest(req_waiting1, zk.FULFILLED)
+        req_waiting2 = self.zk.getNodeRequest(req_waiting2.id)
+        self.assertEqual(req_waiting2.state, zk.PENDING)
+
+        node_waiting1 = self.zk.getNode(req_waiting1.nodes[0])
+        self.zk.lockNode(node_waiting1)
+        node_waiting1.state = zk.USED
+        self.zk.storeNode(node_waiting1)
+        self.zk.unlockNode(node_waiting1)
+
+        self.waitForNodeRequest(req_waiting2, zk.FULFILLED)
+
     def test_static_handler_race_cleanup(self):
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
