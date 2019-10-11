@@ -810,6 +810,45 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('fake-provider', new_nodes[0].provider)
         self.assertNotEqual(nodes[0], new_nodes[0])
 
+    def test_node_delete_DELETED_success(self):
+        """Test we treat a node in DELETING state as deleted"""
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(zk.READY, nodes[0].state)
+        self.assertEqual('fake-provider', nodes[0].provider)
+
+        # Get fake cloud record and set status to DELETING
+        manager = pool.getProviderManager('fake-provider')
+        for instance in manager.listNodes():
+            if instance.id == nodes[0].external_id:
+                instance.status = 'DELETED'
+                break
+
+        nodes[0].state = zk.DELETING
+        self.zk.storeNode(nodes[0])
+
+        # Wait for this one to be deleted
+        self.waitForNodeDeletion(nodes[0])
+
+        api_record_remains = False
+        for instance in manager.listNodes():
+            if instance.id == nodes[0].external_id:
+                api_record_remains = True
+                break
+        self.assertTrue(api_record_remains)
+
+        # Wait for a new one to take it's place
+        new_nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(new_nodes), 1)
+        self.assertEqual(zk.READY, new_nodes[0].state)
+        self.assertEqual('fake-provider', new_nodes[0].provider)
+        self.assertNotEqual(nodes[0], new_nodes[0])
+
     def test_node_launch_retries(self):
         configfile = self.setup_config('node_launch_retry.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

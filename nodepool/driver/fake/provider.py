@@ -206,7 +206,9 @@ class FakeOpenStackCloud(object):
         for maybe in instance_list:
             if maybe.name == name_or_id or maybe.id == name_or_id:
                 instance = maybe
-        if instance:
+        if instance and not instance.status == 'DELETED':
+            # We don't remove DELETED instances as we want to test
+            # they are handled properly.
             instance_list.remove(instance)
         self.log.debug("Deleted from %s" % (repr(instance_list),))
 
