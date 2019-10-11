@@ -380,7 +380,8 @@ class OpenStackProvider(Provider):
         for count in iterate_timeout(
                 timeout, exceptions.ServerDeleteException,
                 "server %s deletion" % server_id):
-            if not self.getServer(server_id):
+            server = self.getServer(server_id)
+            if not server or server.status == "DELETED":
                 return
 
     def createImage(self, server, image_name, meta):
