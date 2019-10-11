@@ -1111,6 +1111,7 @@ Selecting the static driver adds the following options to the
 
          .. attr:: connection-type
             :type: string
+            :default: ssh
 
             The connection type that a consumer should use when connecting
             to the node.
