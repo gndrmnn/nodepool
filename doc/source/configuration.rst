@@ -583,8 +583,8 @@ Selecting the OpenStack driver adds the following options to the
 
      If greater than 0, nodepool will assume it is the only user of the
      OpenStack project and will attempt to clean ports in `DOWN` state after
-     `cleanup-interval` has passed. This value can be reduced if the instance
-     spawn time on the provider is reliably quicker.
+     the cleanup interval has elapsed. This value can be reduced if the
+     instance spawn time on the provider is reliably quicker.
 
   .. attr:: diskimages
      :type: list
