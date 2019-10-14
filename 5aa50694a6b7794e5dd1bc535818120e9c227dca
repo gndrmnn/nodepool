@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "3fa7e38b_16d204d2",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-10-14T14:30:47Z",
+      "side": 1,
+      "message": "Should be log.exception(), otherwise we get the root logger.",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 29
+      },
+      "revId": "5aa50694a6b7794e5dd1bc535818120e9c227dca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_b6dc50e4",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-10-14T14:30:47Z",
+      "side": 1,
+      "message": "Should be log.exception(), otherwise we get the root logger.",
+      "range": {
+        "startLine": 96,
+        "startChar": 12,
+        "endLine": 96,
+        "endChar": 30
+      },
+      "revId": "5aa50694a6b7794e5dd1bc535818120e9c227dca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_34e0a026",
         "filename": "nodepool/tests/__init__.py",
         "patchSetId": 4
