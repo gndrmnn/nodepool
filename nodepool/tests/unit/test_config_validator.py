@@ -16,8 +16,6 @@ import os
 from nodepool.cmd.config_validator import ConfigValidator
 
 from nodepool import tests
-from yaml.parser import ParserError
-from voluptuous import MultipleInvalid
 
 
 class TestConfigValidation(tests.BaseTestCase):
@@ -30,14 +28,25 @@ class TestConfigValidation(tests.BaseTestCase):
                               'fixtures', 'config_validate', 'good.yaml')
 
         validator = ConfigValidator(config)
-        validator.validate()
+        ret = validator.validate()
+        self.assertEqual(ret, 0)
 
     def test_yaml_error(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate', 'yaml_error.yaml')
 
         validator = ConfigValidator(config)
-        self.assertRaises(ParserError, validator.validate)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
+
+    def test_missing_top_level_label(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'missing_top_label.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
 
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
@@ -45,4 +54,5 @@ class TestConfigValidation(tests.BaseTestCase):
                               'schema_error.yaml')
 
         validator = ConfigValidator(config)
-        self.assertRaises(MultipleInvalid, validator.validate)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
