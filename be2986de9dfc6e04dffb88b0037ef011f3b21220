@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_436e642f",
+        "filename": "playbooks/nodepool-functional-k8s/post.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-10-15T19:45:33Z",
+      "side": 1,
+      "message": "\"work\" only exists on the executor, you should omit that if you\u0027re going to rely on the base job to synchronize.",
+      "revId": "be2986de9dfc6e04dffb88b0037ef011f3b21220",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
