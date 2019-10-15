@@ -2,14 +2,32 @@
   vars:
     nodepool_log_dir: '{{ ansible_user_dir }}/work/logs/nodepool'
     nodepool_etc_dir: '{{ ansible_user_dir }}/work/etc'
+    minikube_log: '{{ ansible_user_dir }}/work/logs/minikube.log'
   tasks:
     - name: 'Copy files from {{ nodepool_log_dir }}'
       synchronize:
         src: '{{ nodepool_log_dir }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
+
     - name: 'Copy files from {{ nodepool_etc_dir }}'
       synchronize:
         src: '{{ nodepool_etc_dir }}'
+        dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
+        mode: pull
+
+    - name: Get minikube log output
+      become: yes
+      command: /tmp/minikube logs
+      register: minikube_output
+
+    - name: Copy minikube output to file
+      copy:
+        content: '{{ minikube_output.stdout }}'
+        dest: '{{ minikube_log }}'
+
+    - name: 'Copy minikube log {{ minikube_log }}'
+      synchronize:
+        src: '{{ minikube_log }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
