@@ -8,8 +8,13 @@
         src: '{{ nodepool_log_dir }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
+
     - name: 'Copy files from {{ nodepool_etc_dir }}'
       synchronize:
         src: '{{ nodepool_etc_dir }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
+
+    - name: Get minikube logs
+      become: yes
+      shell: /tmp/minikube logs > ~/logs/minikube.txt
