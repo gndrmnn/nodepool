@@ -2,14 +2,28 @@
   vars:
     nodepool_log_dir: '{{ ansible_user_dir }}/work/logs/nodepool'
     nodepool_etc_dir: '{{ ansible_user_dir }}/work/etc'
+    minikube_log: '{{ ansible_user_dir }}/work/logs/minikube.txt'
   tasks:
     - name: 'Copy files from {{ nodepool_log_dir }}'
       synchronize:
         src: '{{ nodepool_log_dir }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
+
     - name: 'Copy files from {{ nodepool_etc_dir }}'
       synchronize:
         src: '{{ nodepool_etc_dir }}'
         dest: '{{ zuul.executor.log_root }}/{{ inventory_hostname }}'
         mode: pull
+
+    - name: Get minikube logs
+      become: yes
+      shell: '/tmp/minikube logs > {{ minikube_log }}'
+      environment:
+        MINIKUBE_WANTUPDATENOTIFICATION: false
+        MINIKUBE_WANTREPORTERRORPROMPT: false
+        MINIKUBE_WANTNONEDRIVERWARNING: false
+        MINIKUBE_WANTKUBECTLDOWNLOADMSG: false
+        CHANGE_MINIKUBE_NONE_USER: true
+        MINIKUBE_HOME: "{{ ansible_user_dir }}"
+        KUBECONFIG: "{{ ansible_user_dir }}/.kube/config"
