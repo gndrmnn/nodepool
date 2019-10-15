@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_546b78b5",
+        "filename": "playbooks/nodepool-functional-k8s/post.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-10-15T22:03:46Z",
+      "side": 1,
+      "message": "zuul-output/logs",
+      "range": {
+        "startLine": 5,
+        "startChar": 42,
+        "endLine": 5,
+        "endChar": 53
+      },
+      "revId": "50a49b3ca7044536150f314d057cc424b73dc48f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
