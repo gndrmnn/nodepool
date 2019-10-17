@@ -59,7 +59,7 @@ class StaticPool(ConfigPool):
                 'connection-type': node.get('connection-type', 'ssh'),
                 'username': node.get('username', 'zuul'),
                 'max-parallel-jobs': int(node.get('max-parallel-jobs', 1)),
-                'python-path': node.get('python-path', '/usr/bin/python2'),
+                'python-path': node.get('python-path', 'auto'),
             })
             if isinstance(node['labels'], str):
                 for label in node['labels'].split():
