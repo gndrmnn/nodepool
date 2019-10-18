@@ -401,6 +401,12 @@ Options
          openshiftpods driver, see the separate section
          :attr:`providers.[openshiftpods]`
 
+      .. value:: devnest
+
+         For details on the extra options required and provided by the
+         devnest driver, see the separate section
+         :attr:`providers.[devnest]`
+
 
 OpenStack Driver
 ----------------
@@ -1773,3 +1779,77 @@ section of the configuration.
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html
 .. _`Boto configuration`: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
+
+
+Devnest Driver
+---------------------
+
+Selecting the static driver adds the following options to the
+:attr:`providers` section of the configuration.
+
+.. attr-overview::
+   :prefix: providers.[devnest]
+   :maxdepth: 3
+
+.. attr:: providers.[devnest]
+   :type: list
+
+   The devnest provider's resources are partitioned into groups called `pool`
+   (see :attr:`providers.[devnest].pools` for details), and within a pool,
+   the node types which are to be made available are listed
+   (see :attr:`providers.[devnest].pools.labels` for details).
+
+   Each Devnest provider is associated with the devnest group that maps
+   directly to the available Devnest nodes within that group
+   (see :attr:`providers.[devnest].pools.labels.group`).
+
+   See `Devnest Configuration`_ for information on how to configure credentials
+   and other settings for Devnest access in Nodepool's runtime environment.
+
+
+   Example:
+
+   .. code-block:: yaml
+
+      providers:
+        - driver: devnest
+          name: devnest
+          pools:
+          - name: main
+            labels:
+              - name: devnest-virt
+                group: nodepool
+
+
+      .. attr:: name
+         :required:
+
+         A unique name for this provider configuration.
+
+      .. attr:: pools
+        :type: list
+
+        A pool defines a group of resources from an Devnest provider.
+
+      .. attr:: labels
+         :type: list
+
+         Each entry in a pool`s `labels` section indicates that the
+         corresponding group for use in this pool.
+
+         Each entry is a dictionary with the following keys
+
+
+         .. attr:: name
+            :required:
+
+            Identifier for this label; references an entry in the
+            :attr:`labels` section.
+
+         .. attr:: group
+            :required:
+
+            Devnest group from which the node will be reserved.
+
+
+.. _`Devnest configuration`: https://github.com/rhos-infra/devnest/blob/master/README.rst

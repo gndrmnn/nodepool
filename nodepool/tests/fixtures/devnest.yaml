@@ -1,0 +1,16 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: compute
+
+providers:
+  - name: devnest-provider
+    driver: devnest
+    pools:
+      - name: main
+        labels:
+          - name: compute
+            group: jenkins1
