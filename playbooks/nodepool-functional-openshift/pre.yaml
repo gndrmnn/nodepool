@@ -13,15 +13,6 @@
   roles:
     - role: bindep
   tasks:
-    - name: Ensure nodepool services directories
-      file:
-        path: '{{ ansible_user_dir }}/{{ item }}'
-        state: directory
-      with_items:
-        - work/logs/nodepool
-        - work/etc
-        - work/images
-
     - name: Ensure oc client is installed
       package:
         name: origin-clients
