@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_13bac109",
+        "filename": "playbooks/nodepool-functional-openstack/check.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-10-18T18:30:32Z",
+      "side": 1,
+      "message": "In playbooks/nodepool-functional-openstack/run.yaml this is defined as /home/zuul/zuul-output/logs/nodepool/nodepool.yaml",
+      "revId": "7b7fd7a1987d87658cc081c0a67cdc06d55c9ca8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
