@@ -1,15 +1,5 @@
 - hosts: all
   tasks:
-    - name: Copy nodepool log files
-      synchronize:
-        src: /var/log/nodepool
-        dest: '{{ zuul.executor.log_root }}'
-        mode: pull
-    - name: Copy nodepool config files
-      synchronize:
-        src: /etc/nodepool
-        dest: '{{ zuul.executor.log_root }}'
-        mode: pull
     - name: Copy instance console logs
       become: true
       synchronize:
