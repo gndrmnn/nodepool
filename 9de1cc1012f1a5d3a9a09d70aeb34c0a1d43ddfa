@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_b078868f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-10-18T14:43:05Z",
+      "side": 1,
+      "message": "A zuul \"node\".",
+      "revId": "9de1cc1012f1a5d3a9a09d70aeb34c0a1d43ddfa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_506d92ca",
+        "filename": "nodepool/driver/devnest/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-10-18T14:43:05Z",
+      "side": 1,
+      "message": "Is there an option to reserve indefinitely?  I think that would be best since nodepool/zuul may hold on to the node for quite some time, and in the case of a hold, indefinitely.  Nodepool will be able to release the reservation in all cases, so we don\u0027t need to rely on the timeout.",
+      "revId": "9de1cc1012f1a5d3a9a09d70aeb34c0a1d43ddfa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
