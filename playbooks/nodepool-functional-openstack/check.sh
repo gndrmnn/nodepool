@@ -7,7 +7,7 @@ RETURN=0
 FAILURE_REASON=""
 
 NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-~/.venv}
-NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
+NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/home/zuul/zuul-output/logs/nodepool/nodepool.yaml}
 NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG"
 
 cat > /tmp/ssh_wrapper <<EOF

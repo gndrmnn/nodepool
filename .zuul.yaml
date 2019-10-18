@@ -69,9 +69,6 @@
     pre-run: playbooks/nodepool-functional-openstack/pre.yaml
     run: playbooks/nodepool-functional-openstack/run.yaml
     post-run: playbooks/nodepool-functional-openstack/post.yaml
-    vars:
-      zuul_copy_output:
-        /var/log/nodepool: logs
 
 - job:
     name: nodepool-functional-openstack
