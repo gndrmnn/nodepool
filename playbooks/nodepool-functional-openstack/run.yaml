@@ -1,17 +1,16 @@
 - hosts: all
   vars:
-    nodepool_config_dir: "/etc/nodepool"
-    nodepool_log_dir: "/var/log/nodepool"
+    nodepool_log_dir: "{{ ansible_user_dir }}/zuul-output/logs/nodepool"
     NODEPOOL_KEY: "$HOME/.ssh/id_nodepool"
     NODEPOOL_KEY_NAME: "root"
     NODEPOOL_PUBKEY: "$HOME/.ssh/id_nodepool.pub"
     NODEPOOL_INSTALL: "$HOME/nodepool-venv"
     NODEPOOL_CACHE_GET_PIP: "/opt/stack/cache/files/get-pip.py"
-    NODEPOOL_CONFIG: "{{ nodepool_config_dir }}/nodepool.yaml"
+    NODEPOOL_CONFIG: "{{ nodepool_log_dir }}/nodepool.yaml"
     NODEPOOL_DIB_BASE_PATH: "/opt/dib"
-    launcher_logging_config: "{{ nodepool_config_dir }}/launcher-logging.conf"
+    launcher_logging_config: "{{ nodepool_log_dir }}/launcher-logging.conf"
     launcher_logging_arg: "{{ '-l '+ launcher_logging_config if nodepool_debug is defined and nodepool_debug else '' }}"
-    builder_logging_config: "{{ nodepool_config_dir }}/builder-logging.conf"
+    builder_logging_config: "{{ nodepool_log_dir }}/builder-logging.conf"
     builder_logging_arg: "{{ '-l '+ builder_logging_config if nodepool_debug is defined and nodepool_debug else '' }}"
   tasks:
     - name: Write clouds.yaml
@@ -112,6 +111,7 @@
       loop:
         - /var/run/nodepool
         - '{{ nodepool_log_dir }}'
+        - '{{ nodepool_log_dir }}/builds'
 
     - name: Write builder logging config
       become: true

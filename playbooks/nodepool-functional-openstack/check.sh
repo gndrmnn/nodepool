@@ -6,8 +6,9 @@ LOGDIR=/home/zuul/zuul-output/logs
 RETURN=0
 FAILURE_REASON=""
 
+NODEPOOL_BASE="${LOGDIR}/nodepool"
 NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-~/.venv}
-NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
+NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-${NODEPOOL_BASE}/nodepool.yaml}
 NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG"
 
 cat > /tmp/ssh_wrapper <<EOF
@@ -104,7 +105,7 @@ function waitforimage {
         $NODEPOOL image-list > ${LOGDIR}/nodepool-image-list.txt
         $NODEPOOL list --detail > ${LOGDIR}/nodepool-list.txt
 
-        builds=$(ls -l /var/log/nodepool/builds/ | grep $name | wc -l)
+        builds=$(ls -l $NODEPOOL_BASE/builds/ | grep $name | wc -l)
         if [[ ${builds} -ge 4 ]]; then
             echo "*** Build of $name failed at least 3 times, aborting"
             exit 1
