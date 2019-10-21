@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_0faa8a70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 19619
+      },
+      "writtenOn": "2019-10-21T12:09:40Z",
+      "side": 1,
+      "message": "Right, will fix that.",
+      "parentUuid": "3fa7e38b_b078868f",
+      "revId": "9de1cc1012f1a5d3a9a09d70aeb34c0a1d43ddfa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_506d92ca",
         "filename": "nodepool/driver/devnest/provider.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-10-18T14:43:05Z",
       "side": 1,
       "message": "Is there an option to reserve indefinitely?  I think that would be best since nodepool/zuul may hold on to the node for quite some time, and in the case of a hold, indefinitely.  Nodepool will be able to release the reservation in all cases, so we don\u0027t need to rely on the timeout.",
+      "revId": "9de1cc1012f1a5d3a9a09d70aeb34c0a1d43ddfa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_ef912e48",
+        "filename": "nodepool/driver/devnest/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 19619
+      },
+      "writtenOn": "2019-10-21T12:09:40Z",
+      "side": 1,
+      "message": "While there is no such option to reserve indefinitely, there could be an option to reserve for ridiculously long period.\n\nIn devnest there is service responsible for cleanup. The lifecycle outisde of nodepool is as follows:\n\n\n 1. Reservation of the node for X hours\n 2a. If the node was forcefully reserved (there were no free nodes when the request was made) the node is going into reservation pending state and then to \"reserved\" state.\n 2b. Node is in \"reserved\" state\n 3. Release of the node when the job finishes (either Jenkins or Zuul)\n 4. Node goes into \"reprovisioning pending\" state\n 5. Some external provisioner is reinstalling OS and configuring node to become Jenkins and Zuul capable\n 6. The node is brought to \"online\" state.\n\nIn some cases 4-5 is skipped but it\u0027s up to devnest reprovisioner to decide if node should be brought to online state right away or it should be fully reprovisioned.",
+      "parentUuid": "3fa7e38b_506d92ca",
       "revId": "9de1cc1012f1a5d3a9a09d70aeb34c0a1d43ddfa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
