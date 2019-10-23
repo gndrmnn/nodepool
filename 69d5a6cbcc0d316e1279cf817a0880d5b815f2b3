@@ -16,6 +16,24 @@
       "revId": "69d5a6cbcc0d316e1279cf817a0880d5b815f2b3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_f306c821",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-10-23T17:06:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fa7e38b_222e29a5",
+      "revId": "69d5a6cbcc0d316e1279cf817a0880d5b815f2b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
