@@ -205,7 +205,14 @@ class OpenStackProvider(Provider):
                     # It has not leaked.
                     continue
 
-            flavor = flavors.get(server.flavor.id)
+            # In earlier versions of nova, flavor is an id. In later versions
+            # it returns the information we're looking for. If we get the
+            # information, we do not have to attempt to look up the ram or
+            # vcpus.
+            if hasattr(server.flavor, 'id'):
+                flavor = flavors.get(server.flavor.id)
+            else:
+                flavor = server.flavor
             used_quota.add(QuotaInformation.construct_from_flavor(flavor))
 
         return used_quota
