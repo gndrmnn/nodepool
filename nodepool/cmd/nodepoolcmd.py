@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright 2013 OpenStack Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -15,7 +13,6 @@
 # under the License.
 
 import logging.config
-import sys
 
 from prettytable import PrettyTable
 
@@ -384,7 +381,3 @@ class NodePoolCmd(NodepoolApp):
 
 def main():
     return NodePoolCmd.main()
-
-
-if __name__ == "__main__":
-    sys.exit(main())
