@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2012 Hewlett-Packard Development Company, L.P.
 # Copyright 2013 OpenStack Foundation
 #
@@ -80,7 +79,3 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
 
 def main():
     return NodePoolLauncherApp.main()
-
-
-if __name__ == "__main__":
-    sys.exit(main())
