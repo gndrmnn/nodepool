@@ -54,6 +54,28 @@ FROM nodepool-base as nodepool-builder
 # dib needs sudo
 RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
   && chmod 0440 /etc/sudoers.d/nodepool-sudo
+# binary deps; see
+#  https://docs.openstack.org/diskimage-builder/latest/developer/vhd_creation.html
+# about the vhd-util deps
+RUN \
+  apt-get update \
+  && apt-get install -y gnupg2 \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv 2B5DE24F0EC9F98BD2F85CA315B6CE7C018D05F5 \
+  && echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu bionic main" >> /etc/apt/sources.list \
+  && apt-get update \
+  && apt-get install -y \
+      curl \
+      debian-keyring \
+      git \
+      kpartx \
+      qemu-utils \
+      ubuntu-keyring \
+      vhd-util \
+      yum \
+      yum-utils \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 USER 10001
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
