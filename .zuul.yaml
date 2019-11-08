@@ -66,9 +66,9 @@
     timeout: 5400
     required-projects:
       - zuul/nodepool
-    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
-    run: playbooks/nodepool-functional-openstack/run.yaml
-    post-run: playbooks/nodepool-functional-openstack/post.yaml
+    pre-run: playbooks/nodepool-functional-openstack-container/pre.yaml
+    run: playbooks/nodepool-functional-openstack-container/run.yaml
+    post-run: playbooks/nodepool-functional-openstack-container/post.yaml
     vars:
       zuul_copy_output:
         /var/log/nodepool: logs
@@ -103,6 +103,9 @@
     name: nodepool-functional-openstack-src
     description: Test Nodepool and OpenStack, with some projects from source
     parent: nodepool-functional-openstack-src-base
+    dependencies:
+        - system-config-build-image-nodepool-builder
+        - system-config-build-image-nodepool-launcher
     vars: *nodepool_diskimage_vars
 
 - job:
@@ -181,30 +184,18 @@
     secrets:
       - name: docker_credentials
         secret: nodepool-dockerhub
-        pass-to-parent: true
 
 - project:
     check:
       jobs:
-        - nodepool-build-image
-        - zuul-tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
+        - opendev-buildset-registry
+        - system-config-build-image-openstacksdk
+        - system-config-build-image-diskimage-builder
+        - system-config-build-image-nodepool-builder
+        - system-config-build-image-nodepool-launcher
         - nodepool-functional-openstack-src:
             vars:
               nodepool_debug: true
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-        - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
