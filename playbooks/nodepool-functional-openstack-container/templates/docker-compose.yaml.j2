@@ -1,0 +1,11 @@
+services:
+  nodepool-builder:
+    image: zuul/nodepool-builder
+    network_mode: host
+    restart: always
+
+    volumes:
+      - /etc/nodepool
+      - {{ NODEPOOL_CONFIG | dirname }}/elements
+      - {{ NODEPOOL_DIB_BASE_PATH }}/image
+      - /home/zuul
