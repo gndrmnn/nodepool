@@ -66,9 +66,9 @@
     timeout: 5400
     required-projects:
       - zuul/nodepool
-    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
-    run: playbooks/nodepool-functional-openstack/run.yaml
-    post-run: playbooks/nodepool-functional-openstack/post.yaml
+    pre-run: playbooks/nodepool-functional-openstack-container/pre.yaml
+    run: playbooks/nodepool-functional-openstack-container/run.yaml
+    post-run: playbooks/nodepool-functional-openstack-container/post.yaml
     vars:
       zuul_copy_output:
         /var/log/nodepool: logs
@@ -103,6 +103,7 @@
     name: nodepool-functional-openstack-src
     description: Test Nodepool and OpenStack, with some projects from source
     parent: nodepool-functional-openstack-src-base
+    dependencies: nodepool-build-image
     vars: *nodepool_diskimage_vars
 
 - job:
@@ -249,17 +250,9 @@
         - tox-py36
         - nodepool-zuul-functional:
             voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
         - nodepool-functional-openstack-src:
             vars:
               nodepool_debug: true
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-        - build-python-release
     gate:
       jobs:
         - nodepool-upload-zuul-image
