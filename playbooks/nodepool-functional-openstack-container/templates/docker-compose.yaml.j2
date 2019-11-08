@@ -1,0 +1,33 @@
+version: '3.0'
+services:
+  nodepool-builder:
+    image: zuul-jobs.buildset-registry:5000/zuul/nodepool-builder
+    network_mode: host
+    restart: always
+
+    privileged: true
+
+    volumes:
+      # cloud config
+      - /etc/openstack:/etc/openstack:ro
+      # nodepool config
+      - /etc/nodepool:/etc/nodepool:ro
+      # large dib storage area
+      - /opt/dib:/opt/dib
+      # for dib to get source for glean installs, etc.
+      - /home/zuul:/home/zuul
+      # logs (builder + dib build logs under /build)
+      - /var/log/nodepool:/var/log/nodepool
+
+  nodepool-launcher:
+    image: zuul-jobs.buildset-registry:5000/zuul/nodepool-launcher
+    network_mode: host
+    restart: always
+
+    volumes:
+      # cloud config
+      - /etc/openstack:/etc/openstack:ro
+      # nodepool config
+      - /etc/nodepool:/etc/nodepool:ro
+      # logs (builder + dib build logs under /build)
+      - /var/log/nodepool:/var/log/nodepool
