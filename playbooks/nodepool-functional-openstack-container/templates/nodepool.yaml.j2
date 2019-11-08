@@ -1,0 +1,83 @@
+elements-dir: {{ NODEPOOL_CONFIG | dirname }}/elements
+images-dir: {{ NODEPOOL_DIB_BASE_PATH }}/images
+
+zookeeper-servers:
+  - host: localhost
+    port: 2181
+
+labels:
+  - name: test-image
+    min-ready: 1
+
+providers:
+  - name: devstack
+    region-name: RegionOne
+    cloud: devstack
+    # Long boot timeout to deal with potentially nested virt.
+    boot-timeout: 600
+    launch-timeout: 900
+    rate: 0.25
+    diskimages:
+      - name: test-image
+        config-drive: true
+    pools:
+      - name: main
+        max-servers: 5
+        networks:
+          - private
+        labels:
+          - name: test-image
+            diskimage: test-image
+            min-ram: 512
+            flavor-name: 'nodepool'
+            console-log: True
+            key-name: {{ NODEPOOL_KEY_NAME }}
+            instance-properties:
+              nodepool_devstack: testing
+            userdata: |
+              #cloud-config
+              write_files:
+              - content: |
+                  testpassed
+                path: /etc/testfile_nodepool_userdata
+
+diskimages:
+  - name: test-image
+    rebuild-age: 86400
+    elements:
+      - {{ nodepool_diskimage.base_element }}
+{% if 'extra_elements' in nodepool_diskimage %}
+{%   for item in nodepool_diskimage.extra_elements %}
+      - {{ item }}
+{%   endfor %}
+{% endif %}
+      - vm
+      - simple-init
+      - growroot
+      - devuser
+      - openssh-server
+      - nodepool-setup
+      - journal-to-console
+    release: '{{ nodepool_diskimage.release }}'
+    env-vars:
+      TMPDIR: '{{ NODEPOOL_DIB_BASE_PATH }}/tmp'
+      DIB_CHECKSUM: '1'
+      DIB_SHOW_IMAGE_USAGE: '1'
+      DIB_IMAGE_CACHE: '{{ NODEPOOL_DIB_BASE_PATH }}/cache'
+      DIB_APT_LOCAL_CACHE: '0'
+      DIB_DISABLE_APT_CLEANUP: '1'
+      DIB_DEBIAN_COMPONENTS: 'main,universe'
+      DIB_DEV_USER_AUTHORIZED_KEYS: '{{ NODEPOOL_PUBKEY }}'
+{% if 'mirror' in nodepool_diskimage %}
+      DIB_DISTRIBUTION_MIRROR: '{{ nodepool_diskimage.mirror }}'
+{% endif %}
+      DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
+      # TODO(corvus): cached $DIB_GET_PIP
+{% if zuul.projects.get('opendev.org/opendev/glean', {}).get('required', False) %}
+      DIB_INSTALLTYPE_simple_init: 'repo'
+      DIB_REPOLOCATION_glean: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/opendev/glean'].src_dir }}"
+      DIB_REPOREF_glean: "{{ zuul.projects['opendev.org/opendev/glean'].checkout }}"
+{% endif %}
+{% for k, v in nodepool_diskimage.get('env-vars', {}).items() %}
+      {{ k }}: "{{ v }}"
+{% endfor %}
