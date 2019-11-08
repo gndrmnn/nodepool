@@ -66,9 +66,9 @@
     timeout: 5400
     required-projects:
       - zuul/nodepool
-    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
-    run: playbooks/nodepool-functional-openstack/run.yaml
-    post-run: playbooks/nodepool-functional-openstack/post.yaml
+    pre-run: playbooks/nodepool-functional-openstack-container/pre.yaml
+    run: playbooks/nodepool-functional-openstack-container/run.yaml
+    post-run: playbooks/nodepool-functional-openstack-container/post.yaml
     vars:
       zuul_copy_output:
         /var/log/nodepool: logs
@@ -103,6 +103,7 @@
     name: nodepool-functional-openstack-src
     description: Test Nodepool and OpenStack, with some projects from source
     parent: nodepool-functional-openstack-src-base
+    dependencies: nodepool-build-image-siblings
     vars: *nodepool_diskimage_vars
 
 - job:
@@ -164,6 +165,32 @@
           target: nodepool-builder
 
 - job:
+    name: nodepool-build-image-siblings
+    parent: opendev-build-docker-image
+    description: Build Docker images.
+    required-projects:
+      - openstack/diskimage-builder
+      - openstack/openstacksdk
+    dependencies:
+      - opendev-buildset-registry
+    vars:
+      docker_images:
+        - context: .
+          repository: zuul/nodepool
+          target: nodepool
+        - context: .
+          repository: zuul/nodepool-launcher
+          target: nodepool-launcher
+          siblings:
+            - opendev.org/openstack/openstacksdk
+        - context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+          siblings:
+            - opendev.org/openstack/diskimage-builder
+            - opendev.org/openstack/openstacksdk
+
+- job:
     name: nodepool-upload-image
     parent: opendev-upload-docker-image
     description: Build Docker images and upload to Docker Hub.
@@ -186,7 +213,9 @@
 - project:
     check:
       jobs:
-        - nodepool-build-image
+        - opendev-buildset-registry
+        - nodepool-build-image-siblings
+#        - nodepool-build-image
         - zuul-tox-docs
         - tox-pep8
         - tox-py35:
@@ -194,17 +223,14 @@
         - tox-py36
         - nodepool-zuul-functional:
             voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
         - nodepool-functional-openstack-src:
             vars:
               nodepool_debug: true
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-        - build-python-release
+#        - nodepool-functional-k8s
+#        - nodepool-functional-openshift
+#        - zuul-quick-start:
+#            dependencies: nodepool-build-image
+#        - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
