@@ -5,8 +5,14 @@
       bindep_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
     - role: test-setup
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - install-docker
     - install-devstack
   tasks:
+    - name: Install docker-compose dependencies
+      package:
+        name:
+          - docker-compose
+      become: yes
     # Create the virtualenv so we can control the python version
     - name: Create virtualenv
       pip:
@@ -20,3 +26,10 @@
         zuul_work_dir: "{{ item.src_dir }}"
         error_on_failure: true
       loop: "{{ zuul.projects.values() | selectattr('required') | list }}"
+    - name: Create a local user that matches the container UID
+      user:
+        name: nodepool
+        comment: nodepool
+        uid: 10001
+      become: yes
+
