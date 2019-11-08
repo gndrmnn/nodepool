@@ -1,0 +1,64 @@
+- hosts: all
+  tasks:
+    - name: Copy nodepool log files
+      synchronize:
+        src: /var/log/nodepool
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+    - name: Copy nodepool config files
+      synchronize:
+        src: /etc/nodepool
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+    - name: Copy instance console logs
+      become: true
+      synchronize:
+        src: /opt/stack/data/nova/instances
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+        rsync_opts:
+          - "--include=*/"
+          - "--include=console.log"
+          - "--exclude=*"
+    - name: Export legacy syslog.txt
+      become: true
+      shell:
+        # The journal contains everything running under systemd, we'll
+        # build an old school version of the syslog with just the
+        # kernel and sudo messages.
+        cmd: |
+          journalctl \
+              -t kernel \
+              -t sudo \
+              --no-pager \
+            | gzip - > {{ ansible_user_dir }}/syslog.txt.gz
+
+    - name: Copy syslog
+      become: True
+      synchronize:
+        src: "{{ ansible_user_dir }}/syslog.txt.gz"
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
+
+    - name: List containers
+      command: "docker ps -a --format '{{ '{{ .Names }}' }}'"
+      register: docker_containers
+      ignore_errors: true
+
+    - name: Create container log dir
+      file:
+        path: "{{ ansible_user_dir }}/docker"
+        state: directory
+
+    - name: Save container logs
+      loop: "{{ docker_containers.stdout_lines | default([]) }}"
+      shell: "docker logs {{ item }} &> {{ ansible_user_dir }}/docker/{{ item }}.txt"
+      args:
+        executable: /bin/bash
+
+    - name: Copy docker logs
+      become: True
+      synchronize:
+        src: '{{ ansible_user_dir }}/docker'
+        dest: '{{ zuul.executor.log_root }}'
+        mode: pull
