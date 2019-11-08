@@ -151,6 +151,8 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    dependencies:
+      - opendev-buildset-registry
     vars: &nodepool_image_vars
       docker_images:
         - context: .
@@ -186,8 +188,10 @@
 # NOTE(ianw) : kept separate as these aren't intended to be released
 - job:
     name: nodepool-build-image-siblings
+    dependencies:
+      - opendev-buildset-registry
     parent: opendev-build-docker-image
-    description: Build docker images, with required projects as sibling from source
+    description: Build container images, with required projects as sibling from source
     required-projects:
       - openstack/diskimage-builder
       - openstack/openstacksdk
@@ -209,9 +213,66 @@
             - opendev.org/openstack/openstacksdk
             - opendev.org/openstack/diskimage-builder
 
+- job:
+    name: nodepool-functional-container-openstack-base
+    abstract: true
+    description: |
+      Test Nodepool containers with an OpenStack.
+
+      This is similar to nodepool-functional-openstack-base, but
+      uses containers to deploy nodepool.
+
+      Note this is an abstract job and does not define an image to
+      build.  If you wish to test released dependencies, you should
+      inherit from this job and define nodepool_diskimage.  If you
+      wish to test against dependencies installed from source, you
+      should inherit from
+      nodepool-functional-container-openstack-siblings-base.
+    timeout: 5400
+    required-projects:
+      - zuul/nodepool
+    pre-run: playbooks/nodepool-functional-container-openstack/pre.yaml
+    run: playbooks/nodepool-functional-container-openstack/run.yaml
+    post-run: playbooks/nodepool-functional-container-openstack/post.yaml
+    vars:
+      zuul_copy_output:
+        /var/log/nodepool: logs
+
+- job:
+    name: nodepool-functional-container-openstack-siblings-base
+    abstract: true
+    description: |
+      Test Nodepool containers and OpenStack, with some projects from source
+
+      Note, this job does not define an image to build.  It should be
+      inherited from and nodepool_diskimage defined.
+    parent: nodepool-functional-container-openstack-base
+    dependencies:
+      - nodepool-build-image-siblings
+    required-projects:
+      - name: opendev/glean # note, installed by dib
+      - name: zuul/nodepool
+
+- job:
+    name: nodepool-functional-container-openstack-siblings
+    description: |
+      Test Nodepool containers and OpenStack, with some projects from source
+
+      This builds, uploads and boots a CentOS 7 image into a
+      OpenStack cloud.
+    parent: nodepool-functional-container-openstack-siblings-base
+    vars:
+      nodepool_diskimage:
+        base_element: centos-minimal
+        release: 7
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        env-vars:
+          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+
 - project:
     check:
       jobs:
+        - opendev-buildset-registry
         - nodepool-build-image
         - nodepool-build-image-siblings
         - zuul-tox-docs
@@ -227,6 +288,7 @@
         - nodepool-functional-openstack-src:
             vars:
               nodepool_debug: true
+        - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
