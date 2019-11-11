@@ -14,10 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+USER_NAME=${USER_NAME:-nodepool}
 if ! whoami 2>&1 >/dev/null; then
   if [ -w /etc/passwd ]; then
-     echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default} user:${HOME}:/sbin/nologin" >> /etc/passwd
-     echo "${USER_NAME:-default}:!:18211:0:99999:7:::" >> /etc/shadow
+     echo "${USER_NAME}:x:$(id -u):0:${USER_NAME} user:/var/lib/nodepool:/sbin/nologin" >> /etc/passwd
+     echo "${USER_NAME}:!:18211:0:99999:7:::" >> /etc/shadow
   fi
 fi
 exec dumb-init "$@"

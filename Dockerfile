@@ -23,14 +23,12 @@ FROM opendevorg/python-base as nodepool
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
+VOLUME /var/lib/nodepool
+COPY tools/uid_entrypoint.sh /uid_entrypoint
+
 ### Containers should NOT run as root as a good practice
 RUN chmod g=u /etc/passwd
-ENV APP_ROOT=/var/lib/nodepool
-ENV HOME=${APP_ROOT}
-ENV USER_NAME=nodepool
-RUN mkdir ${APP_ROOT}
 USER 10001
-COPY tools/uid_entrypoint.sh /uid_entrypoint
 ENTRYPOINT ["/uid_entrypoint"]
 
 CMD ["/usr/local/bin/nodepool"]
