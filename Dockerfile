@@ -24,7 +24,13 @@ COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
 ### Containers should NOT run as root as a good practice
-RUN chmod g=u /etc/passwd
+
+# although this feels odd ... by default has group "shadow", meaning
+# uid_entrypoint can't update it.  This is necessary for things like
+# sudo to work.
+RUN chown root:root /etc/shadow
+
+RUN chmod g=u /etc/passwd /etc/shadow
 ENV APP_ROOT=/var/lib/nodepool
 ENV HOME=${APP_ROOT}
 ENV USER_NAME=nodepool
