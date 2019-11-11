@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_441cd576",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-11-11T10:08:33Z",
+      "side": 1,
+      "message": "if we send this in as dict(id\u003did) instead of just id - then the underlying delete_image call won\u0027t attempt to look up the image first. This will work, so no -1.",
+      "range": {
+        "startLine": 286,
+        "startChar": 41,
+        "endLine": 286,
+        "endChar": 43
+      },
+      "revId": "e56bba7a21aab6affeae69d09a8cec35ce7bc551",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
