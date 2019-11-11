@@ -28,6 +28,7 @@ RUN chmod g=u /etc/passwd
 ENV APP_ROOT=/var/lib/nodepool
 ENV HOME=${APP_ROOT}
 ENV USER_NAME=nodepool
+RUN mkdir ${APP_ROOT}
 USER 10001
 COPY tools/uid_entrypoint.sh /uid_entrypoint
 ENTRYPOINT ["/uid_entrypoint"]
