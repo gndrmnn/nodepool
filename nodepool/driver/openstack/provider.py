@@ -279,11 +279,11 @@ class OpenStackProvider(Provider):
         self._networks[name] = network
         return network
 
-    def deleteImage(self, name):
+    def deleteImage(self, name, id):
         if name in self._images:
             del self._images[name]
 
-        return self._client.delete_image(name)
+        return self._client.delete_image(dict(id=id))
 
     def createServer(self, name, image,
                      flavor_name=None, min_ram=None,
