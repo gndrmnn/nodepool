@@ -326,11 +326,12 @@ class CleanupWorker(BaseWorker):
                 # It is possible we got this far, but don't actually have an
                 # external_name. This could mean that zookeeper and cloud
                 # provider are some how out of sync.
-                if upload.external_name:
+                if upload.external_id:
                     base = "-".join([upload.image_name, upload.build_id])
                     self.log.info("Deleting image build %s from %s" %
                                   (base, upload.provider_name))
-                    manager.deleteImage(upload.external_name)
+                    manager.deleteImage(upload.external_name,
+                                        upload.external_id)
             except Exception:
                 self.log.exception(
                     "Unable to delete image %s from %s:",
