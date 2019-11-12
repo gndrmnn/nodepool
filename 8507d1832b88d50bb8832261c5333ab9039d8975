@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_980f7adf",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-11-12T22:24:54Z",
+      "side": 1,
+      "message": "I think this should be owned by the user too.",
+      "revId": "8507d1832b88d50bb8832261c5333ab9039d8975",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
