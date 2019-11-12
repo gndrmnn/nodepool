@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_76af357d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2019-11-12T15:40:24Z",
+      "side": 1,
+      "message": "nit: the comment doesn\u0027t match the code anymore.",
+      "range": {
+        "startLine": 327,
+        "startChar": 27,
+        "endLine": 327,
+        "endChar": 31
+      },
+      "revId": "65c93b8859836a32f673d0df3b2128760778a135",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
