@@ -130,7 +130,7 @@
           label: fedora-29
     required-projects:
       - zuul/nodepool
-
+# Zuul images
 - secret:
     name: nodepool-zuul-dockerhub
     data:
@@ -186,9 +186,61 @@
         secret: nodepool-zuul-dockerhub
         pass-to-parent: true
 
+# OpenDev Images
+- secret:
+    name: nodepool-opendev-dockerhub
+    data:
+      username: zuulopendev
+      password: !encrypted/pkcs1-oaep
+        - password_todo
+
+- job:
+    name: nodepool-build-opendev-image
+    parent: opendev-build-docker-image
+    description: Build OpenDev namespace Docker images.
+    dependencies: dib-build-opendev-image
+    vars: &nodepool_image_vars
+      docker_images:
+        - dockerfile: Dockerfile.opendev
+          context: .
+          repository: zuul/nodepool
+          target: nodepool
+        - dockerfile: Dockerfile.opendev
+          context: .
+          repository: zuul/nodepool-launcher
+          target: nodepool-launcher
+        - dockerfile: Dockerfile.opendev
+          context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+
+- job:
+    name: nodepool-upload-opendev-image
+    parent: opendev-upload-docker-image
+    description: Build OpenDev namespace Docker images and upload to Docker Hub.
+    vars: *nodepool_image_vars
+    secrets:
+      - name: docker_credentials
+        secret: nodepool-opendev-dockerhub
+        pass-to-parent: true
+
+- job:
+    name: nodepool-promote-opendev-image
+    parent: opendev-promote-docker-image
+    description: Promote previously uploaded Zuul namespace Docker images.
+    vars: *nodepool_image_vars
+    secrets:
+      - name: docker_credentials
+        secret: nodepool-opendev-dockerhub
+        pass-to-parent: true
+
 - project:
     check:
       jobs:
+        - opendev-buildset-registry
+        - openstacksdk-build-opendev-image
+        - dib-build-opendev-image
+        - nodepool-build-opendev-image
         - nodepool-build-zuul-image
         - zuul-tox-docs
         - tox-pep8
@@ -211,6 +263,7 @@
     gate:
       jobs:
         - nodepool-upload-zuul-image
+        - nodepool-upload-opendev-image
         - zuul-tox-docs
         - tox-pep8
         - tox-py35:
@@ -226,6 +279,7 @@
     promote:
       jobs:
         - nodepool-promote-zuul-image
+        - nodepool-promote-opendev-image
         - zuul-promote-docs
         - opendev-promote-python
     release:
