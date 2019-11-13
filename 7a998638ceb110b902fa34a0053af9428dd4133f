@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3fa7e38b_9e04431a",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-11-13T01:19:29Z",
+      "side": 1,
+      "message": "That\u0027s a good idea.",
+      "parentUuid": "3fa7e38b_dd31640c",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 9
+      },
+      "revId": "7a998638ceb110b902fa34a0053af9428dd4133f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fa7e38b_98cc5abc",
         "filename": "Dockerfile",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-11-12T22:16:22Z",
       "side": 1,
       "message": "This seems odd to do packages install after nodepool install, and it may produce a layer that drift from the python-base image (e.g. this apt-get install could pick or change the package already provided by the python-base image). Shouldn\u0027t this be managed by bindep?",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 25
+      },
+      "revId": "7a998638ceb110b902fa34a0053af9428dd4133f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_61fc4a0c",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2019-11-13T01:19:29Z",
+      "side": 1,
+      "message": "Well - it\u0027s complicated. These are only depends for builder and not for launcher - but more complicated than that is vhd-util which comes from the ppa, so we can\u0027t put it into the bindep file.",
+      "parentUuid": "3fa7e38b_98cc5abc",
       "range": {
         "startLine": 46,
         "startChar": 0,
