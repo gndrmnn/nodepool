@@ -13,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Create the opendev/nodepool[-<launcher|builder>] images
+#
+
 FROM opendevorg/python-builder as builder
 
 COPY . /tmp/src
 RUN assemble
 
-FROM opendevorg/python-base as nodepool
+FROM opendev/diskimage-builder as nodepool
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
