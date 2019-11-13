@@ -18,7 +18,7 @@ FROM opendevorg/python-builder as builder
 COPY . /tmp/src
 RUN assemble
 
-FROM opendevorg/python-base as nodepool
+FROM zuul/diskimage-builder as nodepool
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
