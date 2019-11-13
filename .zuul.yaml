@@ -151,6 +151,7 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    dependencies: dib-build-image
     vars: &nodepool_image_vars
       docker_images:
         - context: .
