@@ -44,12 +44,21 @@ USER 10001
 CMD ["/usr/local/bin/nodepool"]
 
 FROM nodepool-base as nodepool-launcher
+# if ENABLE_DEBUG is set, DAEMON_FLAG becomes "-d";
+# otherwise it stays blank, and the next line will
+# set it to a default of "-f"
+ARG ENABLE_DEBUG
+ENV DAEMON_FLAG=${ENABLE_DEBUG:+-d}
+ENV DAEMON_FLAG=${DAEMON_FLAG:--f}
 USER 10001
-CMD ["/usr/local/bin/nodepool-launcher", "-f"]
+CMD /usr/local/bin/nodepool-launcher ${DAEMON_FLAG}
 
 FROM nodepool-base as nodepool-builder
+ARG ENABLE_DEBUG
+ENV DAEMON_FLAG=${ENABLE_DEBUG:+-d}
+ENV DAEMON_FLAG=${DAEMON_FLAG:--f}
 # dib needs sudo
 RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
   && chmod 0440 /etc/sudoers.d/nodepool-sudo
 USER 10001
-CMD ["/usr/local/bin/nodepool-builder", "-f"]
+CMD /usr/local/bin/nodepool-builder ${DAEMON_FLAG}
