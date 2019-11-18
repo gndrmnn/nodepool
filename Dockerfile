@@ -18,7 +18,7 @@ FROM opendevorg/python-builder as builder
 COPY . /tmp/src
 RUN assemble
 
-FROM zuul/diskimage-builder as nodepool
+FROM zuul/diskimage-builder as nodepool-base
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
@@ -36,14 +36,19 @@ ENV HOME=${APP_ROOT}
 ENV USER_NAME=nodepool
 RUN mkdir ${APP_ROOT}
 RUN chown 10001:1001 ${APP_ROOT}
-USER 10001
 COPY tools/uid_entrypoint.sh /uid_entrypoint
 ENTRYPOINT ["/uid_entrypoint"]
 
+FROM nodepool-base as nodepool
+USER 10001
 CMD ["/usr/local/bin/nodepool"]
 
-FROM nodepool as nodepool-launcher
+FROM nodepool-base as nodepool-launcher
+USER 10001
 CMD ["/usr/local/bin/nodepool-launcher", "-f"]
 
-FROM nodepool as nodepool-builder
+FROM nodepool-base as nodepool-builder
+# dib needs sudo
+RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
+  && chmod 0440 /etc/sudoers.d/nodepool-sudo
 CMD ["/usr/local/bin/nodepool-builder", "-f"]
