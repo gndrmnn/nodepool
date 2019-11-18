@@ -45,11 +45,16 @@ CMD ["/usr/local/bin/nodepool"]
 
 FROM nodepool-base as nodepool-launcher
 USER 10001
-CMD ["/usr/local/bin/nodepool-launcher", "-f"]
+CMD _DAEMON_FLAG=${DEBUG:+-d} && \
+    _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
+    /usr/local/bin/nodepool-launcher ${_DAEMON_FLAG}
 
 FROM nodepool-base as nodepool-builder
+ARG ENABLE_DEBUG
 # dib needs sudo
 RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
   && chmod 0440 /etc/sudoers.d/nodepool-sudo
 USER 10001
-CMD ["/usr/local/bin/nodepool-builder", "-f"]
+CMD _DAEMON_FLAG=${DEBUG:+-d} && \
+    _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
+    /usr/local/bin/nodepool-builder ${_DAEMON_FLAG}
