@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_3803950e",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 30637
+      },
+      "writtenOn": "2019-11-19T08:18:11Z",
+      "side": 1,
+      "message": "What about limiting the command set?",
+      "range": {
+        "startLine": 52,
+        "startChar": 38,
+        "endLine": 52,
+        "endChar": 41
+      },
+      "revId": "78908cafae86697b08210c7ddfb324d95ac47b88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
