@@ -881,6 +881,7 @@ class NodePool(threading.Thread):
         self._delete_thread = None
         self._stats_thread = None
         self._submittedRequests = {}
+        self.ready = False
 
     def stop(self):
         self._stopped = True
@@ -1154,5 +1155,9 @@ class NodePool(threading.Thread):
                             self._pool_threads[key] = t
             except Exception:
                 self.log.exception("Exception in main loop:")
+
+            # At this point all providers are registered and fully functional
+            # so we can mark nodepool as ready.
+            self.ready = True
 
             self._stop_event.wait(self.watermark_sleep)

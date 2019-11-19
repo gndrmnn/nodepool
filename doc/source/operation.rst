@@ -394,6 +394,12 @@ launchers, all will provide the same information.
    :resheader Content-Type: ``application/json`` or ``text/plain``
                             depending on the :http:header:`Accept` header
 
+.. http:get:: /ready
+
+   Responds with status code 200 as soon as all configured providers are fully
+   started. During startup it returns 500. This can be used as a
+   readiness probe in a kubernetes based deployment.
+
 Monitoring
 ----------
 

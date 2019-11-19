@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    There is a new :http:get:`/ready` endpoint that can be used as a readiness
+    probe.
