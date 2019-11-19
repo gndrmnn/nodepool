@@ -17,9 +17,11 @@ import json
 import logging
 import yaml
 from urllib import request
+from urllib.error import HTTPError
 
 from nodepool import tests
 from nodepool import zk
+from nodepool.nodeutils import iterate_timeout
 
 
 class TestWebApp(tests.DBTestCase):
@@ -248,3 +250,30 @@ class TestWebApp(tests.DBTestCase):
         config = yaml.safe_load(open(configfile))
         self.assertEqual(config['webapp']['port'], 8080)
         self.assertEqual(config['webapp']['listen_address'], '127.0.0.1')
+
+    def test_webapp_ready(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        # Query ready endpoint before the pool has been started. We expect
+        # an error in this case.
+        req = request.Request("http://localhost:%s/ready" % port)
+        with self.assertRaises(HTTPError, request.urlopen, req):
+            pass
+
+        pool.start()
+
+        # Now wait until we get a valid response.
+        for _ in iterate_timeout(30, Exception, 'ready succeeds'):
+            try:
+                f = request.urlopen(req)
+                break
+            except HTTPError:
+                pass
+
+        data = f.read()
+        self.assertEqual(data, b"OK")
