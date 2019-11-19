@@ -75,6 +75,13 @@ class WebApp(threading.Thread):
         self.server.server_close()
 
     def get_cache(self, path, params, request_type):
+        # At first process ready request as this doesn't need caching.
+        if path == '/ready':
+            if not self.nodepool.ready:
+                raise webob.exc.HTTPServiceUnavailable()
+            else:
+                return time.time(), 'OK'
+
         # TODO quick and dirty way to take query parameters
         # into account when caching data
         if params:
