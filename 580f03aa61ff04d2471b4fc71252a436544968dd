@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_58ee868b",
+        "filename": "playbooks/nodepool-functional-openstack-container/pre.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-11-19T21:02:50Z",
+      "side": 1,
+      "message": "Run this after install-docker (which overwrites the buildset registry config with the mirror config).",
+      "revId": "580f03aa61ff04d2471b4fc71252a436544968dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_78f34274",
+        "filename": "playbooks/nodepool-functional-openstack-container/templates/docker-compose.yaml.j2",
+        "patchSetId": 19
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-11-19T21:02:50Z",
+      "side": 1,
+      "message": "Drop the hostname.",
+      "revId": "580f03aa61ff04d2471b4fc71252a436544968dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_18e48ea7",
+        "filename": "playbooks/nodepool-functional-openstack-container/templates/docker-compose.yaml.j2",
+        "patchSetId": 19
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2019-11-19T21:02:50Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "580f03aa61ff04d2471b4fc71252a436544968dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
