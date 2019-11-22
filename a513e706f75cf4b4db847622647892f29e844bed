@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_89231d58",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-11-22T19:25:53Z",
+      "side": 1,
+      "message": "I\u0027d feel a lot better if all of this was wrapped in try: except: just in case subprocess.run() or manager.deleteImage() throw an exception.",
+      "range": {
+        "startLine": 1093,
+        "startChar": 0,
+        "endLine": 1109,
+        "endChar": 27
+      },
+      "revId": "a513e706f75cf4b4db847622647892f29e844bed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
