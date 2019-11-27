@@ -132,7 +132,7 @@
       - zuul/nodepool
 
 - secret:
-    name: nodepool-dockerhub
+    name: nodepool-zuul-dockerhub
     data:
       username: zuulzuul
       password: !encrypted/pkcs1-oaep
@@ -148,45 +148,48 @@
           L21z+Vp1Vce1XCsaOduMrmZDvuQcK1YOKIIUeElAQw8GuwTfcXqekoPvp54SeE=
 
 - job:
-    name: nodepool-build-image
+    name: nodepool-build-zuul-image
     parent: opendev-build-docker-image
-    description: Build Docker images.
-    vars: &nodepool_image_vars
+    description: Build Zuul namespace Docker images.
+    vars: &nodepool_zuul_image_vars
       docker_images:
-        - context: .
+        - dockerfile: Dockerfile.zuul
+          context: .
           repository: zuul/nodepool
           target: nodepool
-        - context: .
+        - dockerfile: Dockerfile.zuul
+          context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
-        - context: .
+        - dockerfile: Dockerfile.zuul
+          context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
 
 - job:
-    name: nodepool-upload-image
+    name: nodepool-upload-zuul-image
     parent: opendev-upload-docker-image
-    description: Build Docker images and upload to Docker Hub.
-    vars: *nodepool_image_vars
+    description: Build Zuul namespace Docker images and upload to Docker Hub.
+    vars: *nodepool_zuul_image_vars
     secrets:
       - name: docker_credentials
-        secret: nodepool-dockerhub
+        secret: nodepool-zuul-dockerhub
         pass-to-parent: true
 
 - job:
-    name: nodepool-promote-image
+    name: nodepool-promote-zuul-image
     parent: opendev-promote-docker-image
-    description: Promote previously uploaded Docker images.
-    vars: *nodepool_image_vars
+    description: Promote previously uploaded Zuul namespace Docker images.
+    vars: *nodepool_zuul_image_vars
     secrets:
       - name: docker_credentials
-        secret: nodepool-dockerhub
+        secret: nodepool-zuul-dockerhub
         pass-to-parent: true
 
 - project:
     check:
       jobs:
-        - nodepool-build-image
+        - nodepool-build-zuul-image
         - zuul-tox-docs
         - tox-pep8
         - tox-py35:
@@ -203,11 +206,11 @@
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
-            dependencies: nodepool-build-image
+            dependencies: nodepool-zuul-build-image
         - build-python-release
     gate:
       jobs:
-        - nodepool-upload-image
+        - nodepool-upload-zuul-image
         - zuul-tox-docs
         - tox-pep8
         - tox-py35:
@@ -222,7 +225,7 @@
         - build-python-release
     promote:
       jobs:
-        - nodepool-promote-image
+        - nodepool-promote-zuul-image
         - zuul-promote-docs
         - opendev-promote-python
     release:
