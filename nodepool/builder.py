@@ -1083,6 +1083,42 @@ class UploadWorker(BaseWorker):
             data.state = zk.FAILED
             return data
 
+        if provider.post_upload_hook:
+            try:
+                cmd = [
+                    provider.post_upload_hook,
+                    provider.name,
+                    external_id,
+                    filename
+                ]
+                self.log.info('Running post upload hook %s', cmd)
+                p = subprocess.run(cmd, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, check=True)
+            except Exception as e:
+                if isinstance(e, subprocess.CalledProcessError):
+                    self.log.error('Post upload hook failed with '
+                                   'exit code %s\nstdout:\n%s\nstderr:\n%s',
+                                   e.returncode, e.stdout.decode(),
+                                   e.stderr.decode())
+                else:
+                    self.log.exception('Unknown exception during upload hook')
+
+                try:
+                    manager.deleteImage(ext_image_name)
+                except Exception:
+                    # Image delete failed but we cannot do anything about this
+                    # right now so just log the exception.
+                    self.log.exception('Unable to delete image "%s"',
+                                       ext_image_name)
+                data = zk.ImageUpload()
+                data.state = zk.FAILED
+                return data
+
+            self.log.info(
+                'Post upload hook success with exit code %s\n'
+                'stdout:\n%s\nstderr:\n%s',
+                p.returncode, p.stdout.decode(), p.stderr.decode())
+
         if self._statsd:
             dt = int((time.time() - start_time) * 1000)
             key = 'nodepool.image_update.%s.%s' % (image_name,
