@@ -151,14 +151,23 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    required-projects:
+      # just two repos that are imported into zuul
+      - opendev/glean
+      - openstack/requirements
     vars: &nodepool_image_vars
       docker_images:
         - context: .
           repository: zuul/nodepool
           target: nodepool
+          siblings:
+            - opendev.org/opendev/glean
+            - opendev.org/openstack/requirements
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
+          siblings:
+            - opendev.org/opendev/glean
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
@@ -187,24 +196,6 @@
     check:
       jobs:
         - nodepool-build-image
-        - zuul-tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-openstack-src:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-        - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
