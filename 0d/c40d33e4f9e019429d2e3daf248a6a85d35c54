@@ -1,0 +1,10 @@
+Code-Review+1: Jan Kubovy <jan.kubovy@bmw.de>
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Workflow+1: David Shrewsbury <dshrewsb@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Tue, 03 Dec 2019 17:51:52 +0000
+Reviewed-on: https://review.opendev.org/676266
+Project: zuul/nodepool
+Branch: refs/heads/master
