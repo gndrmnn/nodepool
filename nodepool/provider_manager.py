@@ -27,46 +27,123 @@ def get_provider(provider):
 
 
 class ProviderManager(object):
-    log = logging.getLogger("nodepool.ProviderManager")
+    '''
+    A class to handle management of objects subclassed from the Provider class.
 
-    @staticmethod
-    def reconfigure(old_config, new_config, zk_conn,
-                    only_image_manager=False):
-        '''
-        Reconfigure the provider managers on any configuration changes.
+    This is a singleton class, implemented as a pattern suggested from:
 
-        If a provider configuration changes, stop the current provider
-        manager we have cached and replace it with a new one.
+        https://python-3-patterns-idioms-test.readthedocs.io/
 
-        :param Config old_config: The previously read configuration.
-        :param Config new_config: The newly read configuration.
-        :param ZooKeeper zk_conn: A ZooKeeper connection object.
-        :param bool only_image_manager: If True, skip manager that do not
-                    manage images. This is used by the builder process.
-        '''
-        stop_managers = []
-        for p in new_config.providers.values():
-            if only_image_manager and not p.manage_images:
-                continue
-            oldmanager = None
-            if old_config:
-                oldmanager = old_config.provider_managers.get(p.name)
-            if oldmanager and p != oldmanager.provider:
-                stop_managers.append(oldmanager)
-                oldmanager = None
-            if oldmanager:
-                new_config.provider_managers[p.name] = oldmanager
-            else:
-                ProviderManager.log.debug("Creating new ProviderManager object"
-                                          " for %s" % p.name)
-                new_config.provider_managers[p.name] = get_provider(p)
-                new_config.provider_managers[p.name].start(zk_conn)
+    '''
 
-        for stop_manager in stop_managers:
-            stop_manager.stop()
+	# Our singleton instance
+	instance = None
 
-    @staticmethod
-    def stopProviders(config):
-        for m in config.provider_managers.values():
-            m.stop()
-            m.join()
+	def __new__(cls):
+	    if not ProviderManager.instance:
+	        ProviderManager.instance = ProviderManager.__ProviderManager()
+	    return ProviderManager.instance
+
+	# Redirect attribute access to our private singleton object.
+	def __getattr__(self, name):
+		return getattr(self.instance, name)
+
+	def __setattr__(self, name):
+		return setattr(self.instance, name)
+
+	# Private inner class acting as the singleton
+	class __ProviderManager:
+        log = logging.getLogger("nodepool.ProviderManager")
+
+	    def __init__(self):
+			self.managers = {}
+
+		def addProvider(self, provider_config, zk_conn):
+			'''
+			Add a new Provider object to the manager and starts it.
+
+			If the given provider is already being managed, it is simply
+			replaced.
+
+			:param dict provider_config: The provider configuration as read
+			    from the nodepool configuration file.
+			:param ZooKeeper zk_conn: A ZooKeeper connection object.
+			'''
+			name = provider_config.name
+			self.log.debug("Creating new ProviderManager object for %s", name)
+			self.managers[name] = get_provider(provider_config)
+			self.managers[name].start(zk_conn)
+
+		def getProvider(self, provider_name):
+			'''
+			Get the Provider object with the given provider name.
+
+			:param str provider_name: The name of the provider as defined in
+			    the nodepool configuration file.
+			'''
+		    return self.managers.get(provider_name)
+
+		def stopProviders(self, name_list=None):
+			'''
+			Stop providers that we are currently managing.
+
+			Stopping a provider effectively stops us from managing it since
+			it will be removed from our manage list.
+
+			:param list name_list: A list of provider names to stop. If not
+			    supplied, all currently managed providers are stopped.
+			'''
+			if not name_list:
+				name_list = self.managers.keys()
+
+			for name in name_list:
+				provider = self.getProvider(name)
+				provider.stop()
+				provider.join()
+				del self.managers[name]
+
+		def reconfigure(new_config, zk_conn, only_image_manager=False):
+			'''
+			Reconfigure the provider managers on any configuration changes.
+
+			If a provider configuration changes, stop the current provider
+			manager we have cached and replace it with a new one.
+
+			:param Config new_config: The newly read configuration.
+			:param ZooKeeper zk_conn: A ZooKeeper connection object.
+			:param bool only_image_manager: If True, skip managers that do not
+			    manage images. This is used by the builder process.
+			'''
+			stop_list = []
+			restart_list = []
+
+			for provider_cfg in new_config.providers.values():
+				if only_image_manager and not provider_cfg.manage_images:
+					continue
+
+				# New provider
+				if provider_cfg.name not in self.managers:
+					self.addProvider(provider_cfg, zk_conn)
+					continue
+
+				# Existing provider, but different configuration.
+				# Each Provider object has a copy of it's configuration in its
+				# 'provider' attribute.
+				provider = self.getProvider(provider_cfg.name)
+				if provider_cfg != provider.provider:
+				    restart_list.append(provider_cfg)
+
+			# Stop managing any providers that have been totally removed.
+			new_providers = [p.name for p in new_config.providers.values()]
+			for name in self.managers.keys():
+				if name not in new_providers:
+					stop_list.append(name)
+
+			# Stop and delete any providers that have been removed or changed.
+			if stop_list or restart_list:
+				restart_names = [p.name for p in restart_list]
+				self.stopProviders(stop_list + restart_names)
+
+			# Add back the providers that have changed.
+			for config in restart_list:
+				self.addProvider(config, zk_conn)
