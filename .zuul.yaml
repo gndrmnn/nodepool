@@ -186,6 +186,7 @@
 - project:
     check:
       jobs:
+        - opendev-buildset-registry
         - nodepool-build-image
     gate:
       jobs:
