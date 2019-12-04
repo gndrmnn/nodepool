@@ -187,24 +187,6 @@
     check:
       jobs:
         - nodepool-build-image
-        - zuul-tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py36
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-openstack-src:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            dependencies: nodepool-build-image
-        - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
