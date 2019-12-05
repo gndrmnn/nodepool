@@ -151,6 +151,9 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    required-projects:
+      - openstack/diskimage-builder
+      - openstack/openstacksdk
     vars: &nodepool_image_vars
       docker_images:
         - context: .
@@ -162,6 +165,21 @@
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
+        - context: .
+          repository: zuul/nodepool-launcher
+          target: nodepool-builder
+          tags:
+            - siblings
+          siblings:
+            - opendev.org/openstack/openstacksdk
+        - context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+          tags:
+            - siblings
+          siblings:
+            - opendev.org/openstack/openstacksdk
+            - opendev.org/openstack/diskimage-builder
 
 - job:
     name: nodepool-upload-image
