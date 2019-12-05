@@ -15,6 +15,7 @@
 
 FROM opendevorg/python-builder as builder
 
+ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
 RUN assemble
 
