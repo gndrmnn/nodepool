@@ -46,6 +46,29 @@
       "revId": "d318cc8e65e611e4c4a556e4c709150363992b06",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_154b0c5f",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2019-12-06T11:57:14Z",
+      "side": 0,
+      "message": "Duplicate with less information. See line 980",
+      "range": {
+        "startLine": 921,
+        "startChar": 8,
+        "endLine": 924,
+        "endChar": 44
+      },
+      "revId": "d318cc8e65e611e4c4a556e4c709150363992b06",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
