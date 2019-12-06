@@ -941,11 +941,6 @@ Selecting the OpenStack driver adds the following options to the
            Mutually exclusive with
            :attr:`providers.[openstack].pools.labels.diskimage`
 
-        .. attr:: key-name
-           :type: str
-
-           Name or id of the ssh key to use.
-
         .. attr:: flavor-name
            :type: str
 
@@ -1011,7 +1006,7 @@ Selecting the OpenStack driver adds the following options to the
            :default: False
 
            On the failure of the ssh ready check, download the server
-           console log to aid in debuging the problem.
+           console log to aid in debugging the problem.
 
         .. attr:: volume-size
            :type: int gigabytes
@@ -1606,7 +1601,7 @@ section of the configuration.
 
       A unique name for this provider configuration.
 
-   .. attr:: region
+   .. attr:: region-name
       :required:
 
       Name of the `AWS region`_ to interact with.
@@ -1769,7 +1764,6 @@ section of the configuration.
             labels:
               - name: bionic
                 instance-type: m5a.large
-                console-log: True
 
          Each entry is a dictionary with the following keys
 
@@ -1797,8 +1791,9 @@ section of the configuration.
 
            .. attr:: key-name
               :type: string
+              :required:
 
-              If given, the name of a keypair that will be used when
+              The name of a keypair that will be used when
               booting each server.
 
            .. attr:: volume-type
