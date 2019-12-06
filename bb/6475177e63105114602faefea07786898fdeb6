@@ -1,0 +1,9 @@
+Code-Review+2: Monty Taylor <mordred@inaugust.com>
+Code-Review+2: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Workflow+1: Clint 'SpamapS' Byrum <clint@fewbar.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 06 Dec 2019 23:57:22 +0000
+Reviewed-on: https://review.opendev.org/697635
+Project: zuul/nodepool
+Branch: refs/heads/master
