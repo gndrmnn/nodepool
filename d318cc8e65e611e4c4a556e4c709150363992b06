@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_acf7598c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 1704,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2019-12-06T09:07:37Z",
+      "side": 0,
+      "message": "Couldn\u0027t find any reference to this in the documentation for aws or in the aws driver.",
+      "range": {
+        "startLine": 1704,
+        "startChar": 16,
+        "endLine": 1704,
+        "endChar": 33
+      },
+      "revId": "d318cc8e65e611e4c4a556e4c709150363992b06",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
