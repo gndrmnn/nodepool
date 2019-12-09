@@ -1,0 +1,4 @@
+---
+fixes:
+  - |
+    Fixed compatibility issue with openstacksdk 0.37.0 and above.
