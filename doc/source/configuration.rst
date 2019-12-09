@@ -1612,7 +1612,7 @@ section of the configuration.
          :type: string
          :required:
 
-         Identifier to refer this cloud-image from :attr:`labels` section.
+         Identifier to refer this cloud-image from :attr:`providers.[aws].pools.labels` section.
          Since this name appears elsewhere in the nodepool configuration file,
          you may want to use your own descriptive name here and use
          ``image-id`` to specify the cloud image so that if
