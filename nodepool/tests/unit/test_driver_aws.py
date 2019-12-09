@@ -134,6 +134,7 @@ class TestDriverAws(tests.DBTestCase):
             {"label": "ubuntu1404"},
             {"label": "ubuntu1404-by-filters"},
             {"label": "ubuntu1404-by-capitalized-filters"},
+            {"label": "ubuntu1404-non-host-key-checking"},
             {"label": "ubuntu1404-bad-ami-name", "is_valid_config": False},
             {"label": "ubuntu1404-bad-config", "is_valid_config": False},
         ]
