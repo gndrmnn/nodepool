@@ -63,8 +63,12 @@ class TestDriverAws(tests.DBTestCase):
         }
         raw_config['providers'][0]['pools'][0]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
 
-        def _test_run_node(label, is_valid_config=True):
+        def _test_run_node(label,
+                           is_valid_config=True,
+                           host_key_checking=True):
             with tempfile.NamedTemporaryFile() as tf:
                 tf.write(yaml.safe_dump(
                     raw_config, default_flow_style=False).encode('utf-8'))
@@ -95,11 +99,12 @@ class TestDriverAws(tests.DBTestCase):
                     self.assertEqual(node.state, zk.READY)
                     self.assertIsNotNone(node.launcher)
                     self.assertEqual(node.connection_type, 'ssh')
-                    nodescan.assert_called_with(
-                        node.interface_ip,
-                        port=22,
-                        timeout=180,
-                        gather_hostkeys=True)
+                    if host_key_checking:
+                        nodescan.assert_called_with(
+                            node.interface_ip,
+                            port=22,
+                            timeout=180,
+                            gather_hostkeys=True)
 
                     # A new request will be paused and for lack of quota
                     # until this one is deleted
@@ -136,8 +141,11 @@ class TestDriverAws(tests.DBTestCase):
             {"label": "ubuntu1404-by-capitalized-filters"},
             {"label": "ubuntu1404-bad-ami-name", "is_valid_config": False},
             {"label": "ubuntu1404-bad-config", "is_valid_config": False},
+            {"label": "ubuntu1404-non-host-key-checking",
+             "host_key_checking": False},
         ]
 
         for cloud_image in cloud_images:
             _test_run_node(cloud_image["label"],
-                           cloud_image.get("is_valid_config"))
+                           cloud_image.get("is_valid_config"),
+                           cloud_image.get("host_key_checking"))

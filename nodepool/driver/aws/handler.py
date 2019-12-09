@@ -80,6 +80,7 @@ class AwsInstanceLauncher(NodeLauncher):
 
         self.node.connection_port = self.label.cloud_image.connection_port
         self.node.connection_type = self.label.cloud_image.connection_type
+        keys = []
         if self.pool.host_key_checking:
             try:
                 if (self.node.connection_type == 'ssh' or
