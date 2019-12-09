@@ -230,6 +230,7 @@ class AwsProviderConfig(ProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [pool_label],
+            'host-key-checking': bool,
             'security-group-id': str,
             'subnet-id': str,
         })
