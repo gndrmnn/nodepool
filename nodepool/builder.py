@@ -323,31 +323,59 @@ class CleanupWorker(BaseWorker):
         if upload.state == zk.DELETING:
             manager = self._config.provider_managers[upload.provider_name]
             try:
-                # It is possible we got this far, but don't actually have an
-                # external_id. This could mean that zookeeper and cloud
-                # provider are some how out of sync.
-                if upload.external_id:
-                    base = "-".join([upload.image_name, upload.build_id])
-                    self.log.info("Deleting image build %s from %s" %
-                                  (base, upload.provider_name))
-                    manager.deleteImage(upload.external_name,
-                                        upload.external_id)
-            except Exception:
-                self.log.exception(
-                    "Unable to delete image %s from %s:",
-                    upload.external_name, upload.provider_name)
-            else:
-                self.log.debug("Deleting image upload: %s", upload)
-                try:
-                    with self._zk.imageUploadNumberLock(upload,
-                                                        blocking=False):
-                        self._zk.deleteUpload(upload.image_name,
-                                              upload.build_id,
-                                              upload.provider_name, upload.id)
-                except exceptions.ZKLockException:
-                    # If we can't get a lock, we'll try again later.
-                    self.log.debug("Unable to get lock on image upload: %s",
-                                   upload)
+                with self._zk.imageUploadNumberLock(upload, blocking=False):
+                    # It is possible we got this far, but don't actually have
+                    # an external_id. This could mean that zookeeper and cloud
+                    # provider are some how out of sync.
+                    if upload.external_id:
+                        base = "-".join([upload.image_name, upload.build_id])
+
+                        # In order to do a proper back-off we need to update
+                        # the image upload and check the delete_attempts and
+                        # age.
+                        upload = self._zk.getImageUpload(
+                            upload.image_name, upload.build_id,
+                            upload.provider_name, upload.id)
+
+                        # Check if we should delete the image now. The backoff
+                        # is calculated by 2 ^ delete_attempts times the
+                        # cleanup interval with a max of one hour.
+                        delete_attempts = upload.delete_attemps or 0
+                        min_age = min(2**delete_attempts * self._interval,
+                                      3600)
+                        age = time.time() - upload.state_time
+
+                        if age < min_age:
+                            self.log.debug("Upload delete backoff, not "
+                                           "deleting image build %s from %s",
+                                           base, upload.provider_name)
+                            return
+
+                        try:
+                            # It is possible we got this far, but don't
+                            # actually have an external_name. This could mean
+                            # that zookeeper and cloud provider are some how
+                            # out of sync.
+                            if upload.external_name:
+                                self.log.info("Deleting image build %s "
+                                              "from %s",
+                                              base, upload.provider_name)
+                                manager.deleteImage(
+                                    upload.external_name, upload.external_id)
+                        except Exception:
+                            self.log.exception(
+                                "Unable to delete image %s from %s:",
+                                upload.external_name, upload.provider_name)
+                        else:
+                            self.log.debug("Deleting image upload: %s", upload)
+                            self._zk.deleteUpload(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload.id)
+            except exceptions.ZKLockException:
+                # If we can't get a lock, we'll try again later.
+                self.log.debug("Unable to get lock on image upload: %s",
+                               upload)
 
     def _inProgressBuild(self, build, image):
         '''
