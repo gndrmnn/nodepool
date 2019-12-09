@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Nodepool now supports :attr:`providers.[openstack].post-upload-hook` to
+    run a user supplied script after an image has been uploaded to a cloud
+    but before it gets used.
