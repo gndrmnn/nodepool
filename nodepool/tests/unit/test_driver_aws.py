@@ -63,6 +63,8 @@ class TestDriverAws(tests.DBTestCase):
         }
         raw_config['providers'][0]['pools'][0]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
 
         def _test_run_node(label, is_valid_config=True):
             with tempfile.NamedTemporaryFile() as tf:
@@ -134,6 +136,7 @@ class TestDriverAws(tests.DBTestCase):
             {"label": "ubuntu1404"},
             {"label": "ubuntu1404-by-filters"},
             {"label": "ubuntu1404-by-capitalized-filters"},
+            {"label": "ubuntu1404-non-host-key-checking"},
             {"label": "ubuntu1404-bad-ami-name", "is_valid_config": False},
             {"label": "ubuntu1404-bad-config", "is_valid_config": False},
         ]
