@@ -358,6 +358,7 @@ class ImageUpload(BaseModel):
         self.python_path = python_path
         self.external_id = None      # Provider ID of the image
         self.external_name = None    # Provider name of the image
+        self.delete_attemps = None
 
     def __repr__(self):
         d = self.toDict()
@@ -374,7 +375,8 @@ class ImageUpload(BaseModel):
                     self.provider_name == other.provider_name and
                     self.build_id == other.build_id and
                     self.image_name == other.image_name and
-                    self.format == other.format)
+                    self.format == other.format and
+                    self.delete_attemps == other.delete_attemps)
         else:
             return False
 
@@ -388,6 +390,7 @@ class ImageUpload(BaseModel):
         d['format'] = self.format
         d['username'] = self.username
         d['python_path'] = self.python_path
+        d['delete_attempts'] = self.delete_attemps
         return d
 
     @staticmethod
@@ -410,6 +413,7 @@ class ImageUpload(BaseModel):
         o.format = d.get('format')
         o.username = d.get('username', 'zuul')
         o.python_path = d.get('python_path', '/usr/bin/python2')
+        o.delete_attemps = d.get('delete_attempts')
         return o
 
 
