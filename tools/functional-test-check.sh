@@ -6,9 +6,16 @@ LOGDIR=/home/zuul/zuul-output/logs
 RETURN=0
 FAILURE_REASON=""
 
-NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-~/.venv}
-NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
-NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG"
+if [[ ${NODEPOOL_FUNCTIONAL_CHECK:-} == "installed" ]]; then
+    NODEPOOL_INSTALL=${NODEPOOL_INSTALL:-~/.venv}
+    NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
+    NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG"
+elif [[ ${NODEPOOL_FUNCTIONAL_CHECK:-} == "containers" ]]; then
+    NODEPOOL="docker exec nodepool_nodepool-launcher_1 nodepool"
+else
+    echo "Running in unknown environment!"
+    exit 1
+fi
 
 cat > /tmp/ssh_wrapper <<EOF
 #!/bin/bash -ex

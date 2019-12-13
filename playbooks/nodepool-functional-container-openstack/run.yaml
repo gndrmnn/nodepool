@@ -111,4 +111,6 @@
         cmd: docker image prune -f
 
     - name: Check nodepool functionality
-      command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/playbooks/nodepool-functional-container-openstack/check.sh"
+      command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/tools/functional-test-check.sh"
+      environment:
+        NODEPOOL_FUNCTIONAL_CHECK: 'containers'
