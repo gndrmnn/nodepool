@@ -2007,6 +2007,12 @@ section of the configuration.
          booted. This might be needed if nodepool-launcher and the nodes it
          launches are on different networks.  The default value is True.
 
+      .. attr:: use-internal-ip
+         :default: False
+
+         Whether to access the instance with the internal or external IP
+         address.
+
       .. attr:: labels
          :type: list
 
