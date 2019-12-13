@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_28b20a97",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-12-13T17:42:29Z",
+      "side": 1,
+      "message": "Technically APP_ROOT, but meh.",
+      "range": {
+        "startLine": 7,
+        "startChar": 19,
+        "endLine": 7,
+        "endChar": 26
+      },
+      "revId": "960d2a00dfd26bbcd1377fdd49732ac68cb7631b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
