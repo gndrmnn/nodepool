@@ -231,18 +231,6 @@
         /var/log/nodepool: logs
 
 - job:
-    name: nodepool-functional-container-openstack
-    description: Test Nodepool containers with an OpenStack
-    parent: nodepool-functional-container-openstack-base
-    vars:
-      nodepool_diskimage:
-        base_element: centos-minimal
-        release: 7
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
-        env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
-
-- job:
     name: nodepool-functional-container-openstack-siblings
     description: Test Nodepool and OpenStack, with some projects from source
     parent: nodepool-functional-container-openstack-base
@@ -251,6 +239,31 @@
     required-projects:
       - name: opendev/glean # note, installed by dib
       - name: zuul/nodepool
+    vars:
+      nodepool_container_tag: ':siblings'
+      nodepool_diskimage:
+        base_element: centos-minimal
+        release: 7
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        env-vars:
+          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+
+- job:
+    name: nodepool-functional-container-openstack
+    description: Test Nodepool and OpenStack, with released dependencies
+    parent: nodepool-functional-container-openstack-base
+    dependencies:
+      - nodepool-build-image
+    required-projects:
+      - name: opendev/glean # note, installed by dib
+      - name: zuul/nodepool
+    vars:
+      nodepool_diskimage:
+        base_element: centos-minimal
+        release: 7
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        env-vars:
+          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
 - project:
     check:
@@ -271,6 +284,7 @@
         - nodepool-functional-openstack-src:
             vars:
               nodepool_debug: true
+        - nodepool-functional-container-openstack
         - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift

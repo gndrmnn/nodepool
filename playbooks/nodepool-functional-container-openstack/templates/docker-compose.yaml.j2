@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   nodepool-builder:
-    image: zuul/nodepool-builder:siblings
+    image: zuul/nodepool-builder{{ nodepool_container_tag|default('') }}
     network_mode: host
     restart: always
 
@@ -23,7 +23,7 @@ services:
       - /var/log/nodepool:/var/log/nodepool
 
   nodepool-launcher:
-    image: zuul/nodepool-launcher:siblings
+    image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}
     network_mode: host
     restart: always
 
