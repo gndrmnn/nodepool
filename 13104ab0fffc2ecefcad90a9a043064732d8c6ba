@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_4c676125",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-12-13T11:00:06Z",
+      "side": 1,
+      "message": "While looking at this I wonder if we should remove that default at some point in the future.",
+      "revId": "13104ab0fffc2ecefcad90a9a043064732d8c6ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
