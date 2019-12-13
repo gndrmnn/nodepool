@@ -16,6 +16,29 @@
       "revId": "13104ab0fffc2ecefcad90a9a043064732d8c6ba",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_dc2a1c76",
+        "filename": "nodepool/driver/simple.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2019-12-13T13:41:45Z",
+      "side": 1,
+      "message": "This seems like a pretty essential thing to have implemented up front.",
+      "range": {
+        "startLine": 479,
+        "startChar": 8,
+        "endLine": 479,
+        "endChar": 35
+      },
+      "revId": "13104ab0fffc2ecefcad90a9a043064732d8c6ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
