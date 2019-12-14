@@ -106,7 +106,10 @@ class SimpleTaskManagerLauncher(NodeLauncher):
 
         self.log.debug("Created instance %s", repr(instance))
 
-        server_ip = instance.interface_ip
+        if self.pool.use_internal_ip:
+            server_ip = instance.private_ipv4
+        else:
+            server_ip = instance.interface_ip
 
         self.node.connection_port = self.label.cloud_image.connection_port
         self.node.connection_type = self.label.cloud_image.connection_type

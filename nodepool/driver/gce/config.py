@@ -80,6 +80,7 @@ class ProviderPool(ConfigPool):
     def __init__(self):
         self.name = None
         self.host_key_checking = True
+        self.use_internal_ip = False
         self.labels = None
         # The ProviderConfig object that owns this pool.
         self.provider = None
@@ -94,6 +95,8 @@ class ProviderPool(ConfigPool):
 
         self.host_key_checking = bool(
             pool_config.get('host-key-checking', True))
+        self.use_internal_ip = bool(
+            pool_config.get('use-internal-ip', False))
 
         for label in pool_config.get('labels', []):
             pl = ProviderLabel()
@@ -124,6 +127,7 @@ class ProviderPool(ConfigPool):
             return (super().__eq__(other)
                     and other.name == self.name
                     and other.host_key_checking == self.host_key_checking
+                    and other.use_internal_ip == self.use_internal_ip
                     and other.labels == self.labels)
         return False
 
@@ -218,6 +222,7 @@ class GCEProviderConfig(ProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [pool_label],
+            'use-internal-ip': bool,
         })
 
         provider_cloud_images = {
@@ -239,6 +244,7 @@ class GCEProviderConfig(ProviderConfig):
             'cloud-images': [provider_cloud_images],
             'boot-timeout': int,
             'launch-retries': int,
+            'rate-limit': int,
         })
         return v.Schema(provider)
 
