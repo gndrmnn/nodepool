@@ -22,6 +22,30 @@
       "revId": "560a05bf351b8207296071352edda5d764c6afec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_61d7b1f6",
+        "filename": "Dockerfile",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2019-12-16T01:31:38Z",
+      "side": 1,
+      "message": "you\u0027re right, this is left over from a prior iteration",
+      "parentUuid": "3fa7e38b_239f8bb3",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 16
+      },
+      "revId": "560a05bf351b8207296071352edda5d764c6afec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
