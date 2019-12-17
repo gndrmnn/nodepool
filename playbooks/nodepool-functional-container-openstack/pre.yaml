@@ -1,0 +1,24 @@
+- hosts: all
+  roles:
+    # for zookeeper, etc. on host
+    - role: bindep
+      bindep_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - role: test-setup
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - install-docker
+    # Note: keep after install-docker
+    - use-buildset-registry
+    - install-devstack
+  tasks:
+    - name: Install docker-compose dependencies
+      package:
+        name:
+          - docker-compose
+      become: yes
+    - name: Create a local user that matches the container UID
+      user:
+        name: nodepool
+        comment: nodepool
+        uid: 10001
+      become: yes
+
