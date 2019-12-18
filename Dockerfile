@@ -72,6 +72,7 @@ RUN \
       ubuntu-keyring \
       vhd-util \
       debootstrap \
+      procps \
       yum \
       yum-utils \
   && apt-get clean \
