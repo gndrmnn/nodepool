@@ -71,6 +71,7 @@ RUN \
       qemu-utils \
       ubuntu-keyring \
       vhd-util \
+      debootstrap \
       yum \
       yum-utils \
   && apt-get clean \
