@@ -16,6 +16,24 @@
       "revId": "a28ff5720fc7f8c67390e16bb3cf006d962d5c67",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_38075f1a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2019-12-19T19:58:18Z",
+      "side": 1,
+      "message": "In theory that\u0027s correct, practically it doesn\u0027t really matter because when nodepool is stopped, the ready endpoint will go away anyway.",
+      "parentUuid": "3fa7e38b_de77653c",
+      "revId": "a28ff5720fc7f8c67390e16bb3cf006d962d5c67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
