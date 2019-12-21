@@ -79,7 +79,8 @@ class ConfigValidator:
         log.info("validating %s" % self.config_file)
 
         try:
-            config = yaml.safe_load(open(self.config_file))
+            with open(self.config_file) as f:
+                config = yaml.safe_load(f)
         except Exception:
             log.exception('YAML parsing failed')
             return 1
