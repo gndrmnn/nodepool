@@ -32,7 +32,9 @@ class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
 
     @mock_ec2
-    def test_ec2_machine(self):
+    def _test_ec2_machine(self, label,
+                          is_valid_config=True,
+                          host_key_checking=True):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -67,86 +69,89 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
 
-        def _test_run_node(label,
-                           is_valid_config=True,
-                           host_key_checking=True):
-            with tempfile.NamedTemporaryFile() as tf:
-                tf.write(yaml.safe_dump(
-                    raw_config, default_flow_style=False).encode('utf-8'))
-                tf.flush()
-                configfile = self.setup_config(tf.name)
-                pool = self.useNodepool(configfile, watermark_sleep=1)
-                pool.start()
-                req = zk.NodeRequest()
-                req.state = zk.REQUESTED
-                req.node_types.append(label)
-                with patch('nodepool.driver.aws.handler.nodescan') as nodescan:
-                    nodescan.return_value = 'MOCK KEY'
-                    self.zk.storeNodeRequest(req)
+        with tempfile.NamedTemporaryFile() as tf:
+            tf.write(yaml.safe_dump(
+                raw_config, default_flow_style=False).encode('utf-8'))
+            tf.flush()
+            configfile = self.setup_config(tf.name)
+            pool = self.useNodepool(configfile, watermark_sleep=1)
+            pool.start()
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.node_types.append(label)
+            with patch('nodepool.driver.aws.handler.nodescan') as nodescan:
+                nodescan.return_value = 'MOCK KEY'
+                self.zk.storeNodeRequest(req)
 
-                    self.log.debug("Waiting for request %s", req.id)
-                    req = self.waitForNodeRequest(req)
+                self.log.debug("Waiting for request %s", req.id)
+                req = self.waitForNodeRequest(req)
 
-                    if is_valid_config is False:
-                        self.assertEqual(req.state, zk.FAILED)
-                        self.assertEqual(req.nodes, [])
-                        return
+                if is_valid_config is False:
+                    self.assertEqual(req.state, zk.FAILED)
+                    self.assertEqual(req.nodes, [])
+                    return
 
-                    self.assertEqual(req.state, zk.FULFILLED)
-                    self.assertNotEqual(req.nodes, [])
+                self.assertEqual(req.state, zk.FULFILLED)
+                self.assertNotEqual(req.nodes, [])
 
-                    node = self.zk.getNode(req.nodes[0])
-                    self.assertEqual(node.allocated_to, req.id)
-                    self.assertEqual(node.state, zk.READY)
-                    self.assertIsNotNone(node.launcher)
-                    self.assertEqual(node.connection_type, 'ssh')
-                    if host_key_checking:
-                        nodescan.assert_called_with(
-                            node.interface_ip,
-                            port=22,
-                            timeout=180,
-                            gather_hostkeys=True)
+                node = self.zk.getNode(req.nodes[0])
+                self.assertEqual(node.allocated_to, req.id)
+                self.assertEqual(node.state, zk.READY)
+                self.assertIsNotNone(node.launcher)
+                self.assertEqual(node.connection_type, 'ssh')
+                if host_key_checking:
+                    nodescan.assert_called_with(
+                        node.interface_ip,
+                        port=22,
+                        timeout=180,
+                        gather_hostkeys=True)
 
-                    # A new request will be paused and for lack of quota
-                    # until this one is deleted
-                    req2 = zk.NodeRequest()
-                    req2.state = zk.REQUESTED
-                    req2.node_types.append(label)
-                    self.zk.storeNodeRequest(req2)
-                    req2 = self.waitForNodeRequest(
-                        req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-                    self.assertEqual(req2.state, zk.PENDING)
-                    # It could flip from PENDING to one of the others,
-                    # so sleep a bit and be sure
-                    time.sleep(1)
-                    req2 = self.waitForNodeRequest(
-                        req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-                    self.assertEqual(req2.state, zk.PENDING)
+                # A new request will be paused and for lack of quota
+                # until this one is deleted
+                req2 = zk.NodeRequest()
+                req2.state = zk.REQUESTED
+                req2.node_types.append(label)
+                self.zk.storeNodeRequest(req2)
+                req2 = self.waitForNodeRequest(
+                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.PENDING)
+                # It could flip from PENDING to one of the others,
+                # so sleep a bit and be sure
+                time.sleep(1)
+                req2 = self.waitForNodeRequest(
+                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.PENDING)
 
-                    node.state = zk.DELETING
-                    self.zk.storeNode(node)
+                node.state = zk.DELETING
+                self.zk.storeNode(node)
 
-                    self.waitForNodeDeletion(node)
+                self.waitForNodeDeletion(node)
 
-                    req2 = self.waitForNodeRequest(req2,
-                                                   (zk.FAILED, zk.FULFILLED))
-                    self.assertEqual(req2.state, zk.FULFILLED)
-                    node = self.zk.getNode(req2.nodes[0])
-                    node.state = zk.DELETING
-                    self.zk.storeNode(node)
-                    self.waitForNodeDeletion(node)
+                req2 = self.waitForNodeRequest(req2,
+                                               (zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.FULFILLED)
+                node = self.zk.getNode(req2.nodes[0])
+                node.state = zk.DELETING
+                self.zk.storeNode(node)
+                self.waitForNodeDeletion(node)
 
-        cloud_images = [
-            {"label": "ubuntu1404"},
-            {"label": "ubuntu1404-by-filters"},
-            {"label": "ubuntu1404-by-capitalized-filters"},
-            {"label": "ubuntu1404-bad-ami-name", "is_valid_config": False},
-            {"label": "ubuntu1404-bad-config", "is_valid_config": False},
-            {"label": "ubuntu1404-non-host-key-checking",
-             "host_key_checking": False},
-        ]
+    def test_ec2_machine(self):
+        self._test_ec2_machine('ubuntu1404')
 
-        for cloud_image in cloud_images:
-            _test_run_node(cloud_image["label"],
-                           cloud_image.get("is_valid_config"),
-                           cloud_image.get("host_key_checking"))
+    def test_ec2_machine_by_filters(self):
+        self._test_ec2_machine('ubuntu1404-by-filters')
+
+    def test_ec2_machine_by_filters_capitalized(self):
+        self._test_ec2_machine('ubuntu1404-by-capitalized-filters')
+
+    def test_ec2_machine_bad_ami_name(self):
+        self._test_ec2_machine('ubuntu1404-bad-ami-name',
+                               is_valid_config=False)
+
+    def test_ec2_machine_bad_config(self):
+        self._test_ec2_machine('ubuntu1404-bad-config',
+                               is_valid_config=False)
+
+    def test_ec2_machine_non_host_key_checking(self):
+        self._test_ec2_machine('ubuntu1404-non-host-key-checking',
+                               host_key_checking=False)
