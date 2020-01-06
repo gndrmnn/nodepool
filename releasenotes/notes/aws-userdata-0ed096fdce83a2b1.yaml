@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The AWS driver now supports custom
+    :attr:`providers.[aws].pools.labels.userdata` when launching instances.

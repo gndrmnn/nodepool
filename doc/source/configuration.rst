@@ -1812,6 +1812,14 @@ section of the configuration.
 
               If given, the size of the root EBS volume, in GiB.
 
+           .. attr:: userdata
+              :type: str
+              :default: None
+
+              A string of userdata for a node. Example usage is to install
+              cloud-init package on image which will apply the userdata.
+              Additional info about options in cloud-config:
+              https://cloudinit.readthedocs.io/en/latest/topics/examples.html
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html

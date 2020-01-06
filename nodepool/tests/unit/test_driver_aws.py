@@ -12,6 +12,7 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import base64
 
 import fixtures
 import logging
@@ -34,7 +35,8 @@ class TestDriverAws(tests.DBTestCase):
     @mock_ec2
     def _test_ec2_machine(self, label,
                           is_valid_config=True,
-                          host_key_checking=True):
+                          host_key_checking=True,
+                          userdata=None):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -42,6 +44,7 @@ class TestDriverAws(tests.DBTestCase):
         self.useFixture(
             fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
 
+        ec2_resource = boto3.resource('ec2', region_name='us-west-2')
         ec2 = boto3.client('ec2', region_name='us-west-2')
 
         # TEST-NET-3
@@ -105,6 +108,14 @@ class TestDriverAws(tests.DBTestCase):
                         port=22,
                         timeout=180,
                         gather_hostkeys=True)
+                if userdata:
+                    instance = ec2_resource.Instance(node.external_id)
+                    response = instance.describe_attribute(
+                        Attribute='userData')
+                    self.assertIn('UserData', response)
+                    userdata = base64.b64decode(
+                        response['UserData']['Value']).decode()
+                    self.assertEqual('fake-user-data', userdata)
 
                 # A new request will be paused and for lack of quota
                 # until this one is deleted
@@ -155,3 +166,7 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_non_host_key_checking(self):
         self._test_ec2_machine('ubuntu1404-non-host-key-checking',
                                host_key_checking=False)
+
+    def test_ec2_machine_userdata(self):
+        self._test_ec2_machine('ubuntu1404-userdata',
+                               userdata=True)
