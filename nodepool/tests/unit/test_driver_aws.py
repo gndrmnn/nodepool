@@ -55,7 +55,8 @@ class TestDriverAws(tests.DBTestCase):
 
         ec2_template = os.path.join(
             os.path.dirname(__file__), '..', 'fixtures', 'aws.yaml')
-        raw_config = yaml.safe_load(open(ec2_template))
+        with open(ec2_template) as f:
+            raw_config = yaml.safe_load(f)
         raw_config['zookeeper-servers'][0] = {
             'host': self.zookeeper_host,
             'port': self.zookeeper_port,
