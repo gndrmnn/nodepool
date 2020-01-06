@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    It is now possible to specify if AWS nodes shall get a
+    :attr:`providers.[aws].pools.public-ip-address`.

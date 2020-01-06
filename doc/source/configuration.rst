@@ -1748,6 +1748,12 @@ section of the configuration.
          If provided, specifies the security group ID to assign to the primary
          network interface of nodes.
 
+      .. attr:: public-ip-address
+         :type: bool
+         :default: True
+
+         Specify if a public ip address shall be attached to nodes.
+
       .. attr:: host-key-checking
          :type: bool
          :default: True
