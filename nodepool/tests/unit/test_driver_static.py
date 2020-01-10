@@ -84,20 +84,41 @@ class TestDriverStatic(tests.DBTestCase):
 
     def test_static_multiname(self):
         '''
-        Test that multi name node registration works.
+        Test that multi name node (re-)registration works.
         '''
         configfile = self.setup_config('static-multiname.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
 
         self.log.debug("Waiting for node pre-registration")
-        nodes = self.waitForNodes('fake-label', 2)
-        self.assertEqual(len(nodes), 2)
+        nodes = self.waitForNodes('fake-label', 1)
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(nodes[0].state, zk.READY)
+        self.assertEqual(nodes[0].username, 'zuul')
 
+        nodes = self.waitForNodes('other-label', 1)
+        self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].state, zk.READY)
         self.assertEqual(nodes[0].username, 'zuul-2')
-        self.assertEqual(nodes[1].state, zk.READY)
-        self.assertEqual(nodes[1].username, 'zuul')
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+        node = self.zk.getNode(req.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
+
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        registered_ids = {n.id for n in self.zk.nodeIterator()}
+        self.assertEqual(registered_ids, {'0000000001', '0000000002'})
 
     def test_static_unresolvable(self):
         '''

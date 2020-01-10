@@ -114,7 +114,8 @@ class StaticNodeProvider(Provider):
         )
 
     def checkNodeLiveness(self, node):
-        static_node = self.poolNodes().get(node.hostname)
+        node_tuple = nodeTuple(node)
+        static_node = self.poolNodes().get(node_tuple)
         if static_node is None:
             return False
 
@@ -132,7 +133,7 @@ class StaticNodeProvider(Provider):
             self.log.exception("Failed to connect to node %s:",
                                static_node["name"])
         try:
-            self.deregisterNode(count=1, node_tuple=nodeTuple(static_node))
+            self.deregisterNode(count=1, node_tuple=node_tuple)
         except Exception:
             self.log.exception("Couldn't deregister static node:")
 
@@ -140,7 +141,7 @@ class StaticNodeProvider(Provider):
 
     def getRegisteredNodes(self):
         '''
-        Get hostnames for all registered static nodes.
+        Get node tuples for all registered static nodes.
 
         :note: We assume hostnames, username and port are unique across pools.
 
@@ -160,7 +161,7 @@ class StaticNodeProvider(Provider):
         Register a static node from the config with ZooKeeper.
 
         A node can be registered multiple times to support max-parallel-jobs.
-        These nodes will share a hostname.
+        These nodes will share the same node tuple.
 
         In case there are 'building' nodes waiting for a label, those nodes
         will be updated and marked 'ready'.
@@ -172,6 +173,7 @@ class StaticNodeProvider(Provider):
         '''
         host_keys = self.checkHost(static_node)
         waiting_nodes = self.getWaitingNodesOfType(static_node["labels"])
+        node_tuple = nodeTuple(static_node)
 
         for i in range(0, count):
             try:
@@ -192,7 +194,7 @@ class StaticNodeProvider(Provider):
             nodeutils.set_node_ip(node)
             node.host_keys = host_keys
             self.zk.storeNode(node)
-            self.log.debug("Registered static node %s", node.hostname)
+            self.log.debug("Registered static node %s", node_tuple)
 
     def updateNodeFromConfig(self, static_node):
         '''
@@ -205,7 +207,8 @@ class StaticNodeProvider(Provider):
         :param dict static_node: The node definition from the config file.
         '''
         host_keys = self.checkHost(static_node)
-        nodes = self.getRegisteredReadyNodes(nodeTuple(static_node))
+        node_tuple = nodeTuple(static_node)
+        nodes = self.getRegisteredReadyNodes()
         new_attrs = (
             static_node["labels"],
             static_node["username"],
@@ -238,7 +241,8 @@ class StaticNodeProvider(Provider):
 
             try:
                 self.zk.storeNode(node)
-                self.log.debug("Updated static node %s", node.hostname)
+                self.log.debug("Updated static node %s (id=%s)",
+                               node_tuple, node.id)
             finally:
                 self.zk.unlockNode(node)
 
@@ -250,10 +254,10 @@ class StaticNodeProvider(Provider):
         let them remain until they naturally are deleted (we won't re-register
         them after they are deleted).
 
-        :param str node_name: The static node name/hostname.
+        :param Node node_tuple: the namedtuple Node.
         '''
-        self.log.debug("Deregistering %s nodes with hostname %s",
-                       count, node_tuple.hostname)
+        self.log.debug("Deregistering %s node(s) matching %s",
+                       count, node_tuple)
 
         nodes = self.getRegisteredReadyNodes(node_tuple)
 
@@ -279,8 +283,8 @@ class StaticNodeProvider(Provider):
             node.state = zk.DELETING
             try:
                 self.zk.storeNode(node)
-                self.log.debug("Deregistered static node: id=%s, hostname=%s",
-                               node.id, node.hostname)
+                self.log.debug("Deregistered static node: id=%s, "
+                               "node_tuple=%s", node.id, node_tuple)
                 count = count - 1
             except Exception:
                 self.log.exception("Error deregistering static node:")
@@ -357,10 +361,11 @@ class StaticNodeProvider(Provider):
         return servers
 
     def poolNodes(self):
-        nodes = {}
-        for pool in self.provider.pools.values():
-            nodes.update({n["name"]: n for n in pool.nodes})
-        return nodes
+        return {
+            nodeTuple(n): n
+            for p in self.provider.pools.values()
+            for n in p.nodes
+        }
 
     def cleanupNode(self, server_id):
         return True
@@ -414,7 +419,7 @@ class StaticNodeProvider(Provider):
         '''
         # It's possible a deleted node no longer exists in our config, so
         # don't bother to reregister.
-        static_node = self.poolNodes().get(node.hostname)
+        static_node = self.poolNodes().get(nodeTuple(node))
         if static_node is None:
             return
 
@@ -423,7 +428,7 @@ class StaticNodeProvider(Provider):
                 registered = self.getRegisteredNodes()
             except Exception:
                 self.log.exception(
-                    "Cannot get registered hostnames for node re-registration:"
+                    "Cannot get registered nodes for re-registration:"
                 )
                 return
             current_count = registered[nodeTuple(node)]
