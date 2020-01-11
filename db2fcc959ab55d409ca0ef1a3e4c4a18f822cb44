@@ -16,6 +16,24 @@
       "revId": "db2fcc959ab55d409ca0ef1a3e4c4a18f822cb44",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_de476c1d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-01-11T01:10:28Z",
+      "side": 1,
+      "message": "Yup I had thought of that. I think because the next block conditional on line 520 compares against empty uploads as well that this reads better. It helps to show you that both blocks run when uploads is empty but the first one can additionally execute if the state are all deleting.",
+      "parentUuid": "3fa7e38b_7e3758b0",
+      "revId": "db2fcc959ab55d409ca0ef1a3e4c4a18f822cb44",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
