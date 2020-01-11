@@ -444,8 +444,8 @@ class CleanupWorker(BaseWorker):
         local_builds = set(self._filterLocalBuilds(image, all_builds))
         diskimage = self._config.diskimages.get(image)
         if not diskimage and not local_builds:
-            # This builder is and was not responsible for this image,
-            # so ignore it.
+            # This builder is not configured to build this image and was not
+            # responsible for this image build so ignore it.
             return
         # Remove any local builds that are not in use.
         if not diskimage or (diskimage and not diskimage.image_types):
@@ -499,13 +499,27 @@ class CleanupWorker(BaseWorker):
                                        "of image %s in provider %s:",
                                        build, image, provider)
 
-            uploads_exist = False
+            uploads = []
             for p in self._zk.getBuildProviders(image, build.id):
-                if self._zk.getImageUploadNumbers(image, build.id, p):
-                    uploads_exist = True
-                    break
+                uploads += self._zk.getUploads(image, build.id, p)
 
-            if not uploads_exist:
+            # If we own this build, delete the local DIB files as soon as all
+            # provider uploads are in a deleting state. This prevents us from
+            # keeping local files around while we wait on clouds to remove
+            # the image on their side (which can be very slow).
+            # To maintain backward compatibility with builders that didn't
+            # use unique builder IDs before, but do now, always compare to
+            # hostname as well since some ZK data may still reference that.
+            all_deleting = all(map(lambda x: x.state == zk.DELETING, uploads))
+            if ((not uploads or all_deleting) and
+                (build.builder_id == self._builder_id or
+                 build.builder == self._hostname)
+                ):
+                self._deleteLocalBuild(image, build)
+
+            if not uploads:
+                # Finally when the clouds catch up we can clean up our db
+                # records to reflect there is nothing else to cleanup.
                 if build.state != zk.DELETING:
                     with self._zk.imageBuildNumberLock(
                         image, build.id, blocking=False
@@ -514,17 +528,9 @@ class CleanupWorker(BaseWorker):
                         self._zk.storeBuild(image, build, build.id)
                     # Release the lock here so we can delete the build znode
 
-                # If we own this build, delete the local DIB files.
-                # To maintain backward compatibility with builders that didn't
-                # use unique builder IDs before, but do now, always compare to
-                # hostname as well since some ZK data may still reference that.
-                if (build.builder_id == self._builder_id or
-                    build.builder == self._hostname
-                ):
-                    self._deleteLocalBuild(image, build)
-                    if not self._zk.deleteBuild(image, build.id):
-                        self.log.error("Unable to delete build %s because"
-                                       " uploads still remain.", build)
+                if not self._zk.deleteBuild(image, build.id):
+                    self.log.error("Unable to delete build %s because"
+                                   " uploads still remain.", build)
 
     def run(self):
         '''
