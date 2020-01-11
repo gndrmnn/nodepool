@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_7e3758b0",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2020-01-11T01:08:50Z",
+      "side": 1,
+      "message": "\"not uploads or all_deleting\" is redundant, since \"not uploads\" will always result in \"all_deleting\" being True (because a map() of an empty set is an empty set, and all() over an empty set is True).",
+      "revId": "db2fcc959ab55d409ca0ef1a3e4c4a18f822cb44",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
