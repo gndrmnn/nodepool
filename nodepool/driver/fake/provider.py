@@ -383,6 +383,21 @@ class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
                          self).delete_server(*args, **kwargs)
 
 
+class FakeDeleteImageFailCloud(FakeOpenStackCloud):
+    log = logging.getLogger("nodepool.FakeDeleteImageFailCloud")
+
+    def __init__(self):
+        super().__init__()
+        self._fail = True
+
+    def delete_image(self, *args, **kwargs):
+        if self._fail:
+            raise Exception('Induced failure for testing')
+        else:
+            return super(FakeDeleteImageFailCloud,
+                         self).delete_image(*args, **kwargs)
+
+
 class FakeProvider(OpenStackProvider):
     fake_cloud = FakeOpenStackCloud
 
