@@ -29,13 +29,13 @@ log = logging.getLogger("nodepool.utils")
 ITERATE_INTERVAL = 2
 
 
-def iterate_timeout(max_seconds, exc, purpose):
+def iterate_timeout(max_seconds, exc, purpose, interval=ITERATE_INTERVAL):
     start = time.time()
     count = 0
     while (time.time() < start + max_seconds):
         count += 1
         yield count
-        time.sleep(ITERATE_INTERVAL)
+        time.sleep(interval)
     raise exc("Timeout waiting for %s" % purpose)
 
 
