@@ -187,6 +187,47 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.waitForImageDeletion('fake-provider', 'fake-image2')
         self.waitForBuildDeletion('fake-image2', '0000000001')
 
+    def test_image_removal_dib_deletes_first(self):
+        # Break cloud image deleting
+        fake_client = fakeprovider.FakeDeleteImageFailCloud()
+
+        def get_fake_client(*args, **kwargs):
+            return fake_client
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider, '_getClient',
+            get_fake_client))
+
+        configfile = self.setup_config('node_two_image.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        img = self.waitForImage('fake-provider', 'fake-image2')
+
+        # Ask nodepool to delete the image build and uploads
+        self.replace_config(configfile, 'node_two_image_remove.yaml')
+        # Wait for image files on disk to be deleted.
+        for _ in iterate_timeout(10, Exception,
+                                 'DIB disk files did not delete first'):
+            self.wait_for_threads()
+            files = builder.DibImageFile.from_image_id(
+                self._config_images_dir.path, 'fake-image2-0000000001')
+            if not files:
+                break
+        # Check image is still in fake-provider cloud
+        img.state = zk.DELETING
+        self.assertEqual(
+            self.zk.getImageUpload('fake-image2', '0000000001',
+                                   'fake-provider', '0000000001'),
+            img)
+
+        # Release things by unbreaking image deleting. This allows cloud
+        # and zk records to be removed.
+        fake_client._fail = False
+        # Check image is removed from cloud and zk
+        self.waitForImageDeletion('fake-provider', 'fake-image2', match=img)
+        # Check build is removed from zk
+        self.waitForBuildDeletion('fake-image2', '0000000001')
+
     def test_image_rebuild_age(self):
         self._test_image_rebuild_age()
 
