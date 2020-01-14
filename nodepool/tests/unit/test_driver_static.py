@@ -236,6 +236,30 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].connection_type, 'winrm')
         self.assertEqual(nodes[0].host_keys, [])
 
+    def test_static_node_update_startup(self):
+        '''
+        Test that updates a static node on config change at startup.
+        '''
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for initial node")
+        nodes = self.waitForNodes('fake-label')
+
+        pool.stop()
+        configfile = self.setup_config('static-multilabel.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for new label")
+        nodes = self.waitForNodes('fake-label2')
+        self.assertEqual(len(nodes), 1)
+        # Check that the node was update and not re-created
+        self.assertEqual(nodes[0].id, "0000000000")
+        self.assertIn('fake-label', nodes[0].type)
+        self.assertIn('fake-label2', nodes[0].type)
+
     def test_static_multilabel(self):
         configfile = self.setup_config('static-multilabel.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
