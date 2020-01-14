@@ -208,7 +208,7 @@ class StaticNodeProvider(Provider):
         '''
         host_keys = self.checkHost(static_node)
         node_tuple = nodeTuple(static_node)
-        nodes = self.getRegisteredReadyNodes()
+        nodes = self.getRegisteredReadyNodes(node_tuple)
         new_attrs = (
             static_node["labels"],
             static_node["username"],
