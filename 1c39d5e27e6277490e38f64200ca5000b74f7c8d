@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_8eef63f9",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-14T16:07:07Z",
+      "side": 1,
+      "message": "iterate_timeout() appends this message to \"Timeout waiting for \", so this will read awkwardly if we hit it. Probably should change this to \"transient threads to finish\" instead.\n\nSimilar changes needed for the other changes within this file.",
+      "range": {
+        "startLine": 231,
+        "startChar": 33,
+        "endLine": 231,
+        "endChar": 72
+      },
+      "revId": "1c39d5e27e6277490e38f64200ca5000b74f7c8d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
