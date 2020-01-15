@@ -18,3 +18,5 @@ WebOb>=1.8.1
 openshift<=0.8.9
 boto3
 google-api-python-client
+python-json-logger==0.1.9
+
