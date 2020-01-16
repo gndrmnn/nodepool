@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_7260960d",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-01-16T23:52:33Z",
+      "side": 1,
+      "message": "checkNodeLiveness is used in the \"can this node be reused\" path. I don\u0027t use the static driver, but my hunch is if we deregister the node because it is not accessible immediately after a job completes then we should still log that at the exception level?\n\nI worry that warning would be too quiet for this specific case since you\u0027ll stop using that node right?",
+      "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
