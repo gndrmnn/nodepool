@@ -52,6 +52,24 @@
       "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_8fb964ec",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-01-17T15:28:25Z",
+      "side": 1,
+      "message": "On irc corvus had the suggestion that we could include the error message from the exception (without trace) and log with error level which probably would be a good compromise between the information the trace gives us and less log spam.",
+      "parentUuid": "3fa7e38b_6f3188bb",
+      "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
