@@ -34,6 +34,24 @@
       "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_6f3188bb",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-01-17T15:23:58Z",
+      "side": 1,
+      "message": "As an operator I treat stack traces generally as a sign that I as an operator must analyze and fix the root cause. Since this type of error can be user induced I\u0027d prefer not having a traceback but just a warning or error message.",
+      "parentUuid": "3fa7e38b_b33ff0b0",
+      "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
