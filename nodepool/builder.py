@@ -82,7 +82,7 @@ class DibImageFile(object):
             if image_file.is_file():
                 image = DibImageFile.from_path(image_file)
                 if image.image_id == image_id:
-                        images.append(image)
+                    images.append(image)
         return images
 
     @staticmethod
