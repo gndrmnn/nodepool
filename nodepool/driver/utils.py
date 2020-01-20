@@ -25,13 +25,7 @@ from kazoo import exceptions as kze
 from nodepool import exceptions
 from nodepool import stats
 from nodepool import zk
-
-
-class NodeLogAdapter(logging.LoggerAdapter):
-    def process(self, msg, kwargs):
-        msg, kwargs = super().process(msg, kwargs)
-        msg = '[node: %s] %s' % (kwargs['extra']['node_id'], msg)
-        return msg, kwargs
+from nodepool.logconfig import get_annotated_logger
 
 
 class NodeLauncher(threading.Thread,
@@ -53,7 +47,9 @@ class NodeLauncher(threading.Thread,
         threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
         stats.StatsReporter.__init__(self)
         logger = logging.getLogger("nodepool.NodeLauncher")
-        self.log = NodeLogAdapter(logger, {'node_id': node.id})
+        # TODO: Add event id from request when it's plumbed through
+        self.log = get_annotated_logger(logger, node_request=None,
+                                        node=node.id)
         self.zk = zk_conn
         self.node = node
         self.provider_config = provider_config
