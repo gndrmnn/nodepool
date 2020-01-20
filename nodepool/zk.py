@@ -16,6 +16,8 @@ import abc
 import json
 import logging
 import time
+import uuid
+
 from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
 from kazoo.handlers.threading import KazooTimeoutError
@@ -448,6 +450,7 @@ class NodeRequest(BaseModel):
         self.requestor = None
         self.provider = None
         self.relative_priority = 0
+        self.event_id = None
 
     def __repr__(self):
         d = self.toDict()
@@ -480,6 +483,7 @@ class NodeRequest(BaseModel):
         d['requestor'] = self.requestor
         d['provider'] = self.provider
         d['relative_priority'] = self.relative_priority
+        d['event_id'] = self.event_id
         return d
 
     @staticmethod
@@ -506,6 +510,7 @@ class NodeRequest(BaseModel):
         self.requestor = d.get('requestor')
         self.provider = d.get('provider')
         self.relative_priority = d.get('relative_priority', 0)
+        self.event_id = d.get('event_id')
 
 
 class Node(BaseModel):
@@ -1733,6 +1738,8 @@ class ZooKeeper(object):
         :param str priority: Priority of a new request. Ignored on updates.
         '''
         if not request.id:
+            if not request.event_id:
+                request.event_id = uuid.uuid4().hex
             path = "%s/%s-" % (self.REQUEST_ROOT, priority)
             path = self.client.create(
                 path,
