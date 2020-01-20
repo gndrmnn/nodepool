@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_1d458e44",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-20T20:56:50Z",
+      "side": 1,
+      "message": "Are there more changes coming that will actually send a NodeRequest? Currently this has no value.",
+      "range": {
+        "startLine": 51,
+        "startChar": 48,
+        "endLine": 51,
+        "endChar": 65
+      },
+      "revId": "44eb1ce630d5888c8795ad866b06b8372e4eba86",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
