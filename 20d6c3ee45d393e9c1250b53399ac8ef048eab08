@@ -70,6 +70,24 @@
       "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_816369ab",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-01-20T06:13:57Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "3fa7e38b_8fb964ec",
+      "revId": "20d6c3ee45d393e9c1250b53399ac8ef048eab08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
