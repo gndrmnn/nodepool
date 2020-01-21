@@ -85,6 +85,8 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][2]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][3]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][3]['security-group-id'] = sg_id
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
@@ -210,3 +212,7 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',
                                public_ip=False)
+
+    def test_ec2_machine_tags(self):
+        self._test_ec2_machine('ubuntu1404-tags',
+                               tags={"Key": "has-tags", "Value": "true"})
