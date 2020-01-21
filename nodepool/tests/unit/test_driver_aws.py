@@ -48,7 +48,8 @@ class TestDriverAws(tests.DBTestCase):
                           is_valid_config=True,
                           host_key_checking=True,
                           userdata=None,
-                          public_ip=True):
+                          public_ip=True,
+                          tags=False):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -85,6 +86,8 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][2]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][3]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][3]['security-group-id'] = sg_id
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
@@ -152,6 +155,14 @@ class TestDriverAws(tests.DBTestCase):
                     userdata = base64.b64decode(
                         response['UserData']['Value']).decode()
                     self.assertEqual('fake-user-data', userdata)
+                if tags:
+                    instance = ec2_resource.Instance(node.external_id)
+                    tag_list = instance.tags
+
+                    self.assertIn({"Key": "has-tags", "Value": "true"},
+                                  tag_list)
+                    self.assertIn({"Key": "Name", "Value": "tags"},
+                                  tag_list)
 
                 # A new request will be paused and for lack of quota
                 # until this one is deleted
@@ -210,3 +221,7 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',
                                public_ip=False)
+
+    def test_ec2_machine_tags(self):
+        self._test_ec2_machine('ubuntu1404-tags',
+                               tags=True)
