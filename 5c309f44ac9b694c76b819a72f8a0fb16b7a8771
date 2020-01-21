@@ -22,6 +22,30 @@
       "revId": "5c309f44ac9b694c76b819a72f8a0fb16b7a8771",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_d4002cb4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-01-21T06:07:49Z",
+      "side": 1,
+      "message": "Unfortunately we do:\n\n./nodepool/config.py:137:13: E741 ambiguous variable name \u0027l\u0027\n            l \u003d Label()\n            ^\n./nodepool/cmd/nodepoolcmd.py:150:13: E741 ambiguous variable name \u0027l\u0027\n            l \u003d logging.getLogger(\u0027kazoo\u0027)\n            ^\n./nodepool/tests/__init__.py:169:9: E741 ambiguous variable name \u0027l\u0027\n        l \u003d logging.getLogger(\u0027kazoo\u0027)\n        ^\n./nodepool/tests/__init__.py:172:9: E741 ambiguous variable name \u0027l\u0027\n        l \u003d logging.getLogger(\u0027stevedore\u0027)\n        ^\n\nI can fix those instead of ignoring. However since those are only style issues that were not reported before I thought it might be better to simply ignore them.",
+      "parentUuid": "3fa7e38b_9d9f3eb2",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 51
+      },
+      "revId": "5c309f44ac9b694c76b819a72f8a0fb16b7a8771",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
