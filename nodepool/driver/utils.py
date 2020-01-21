@@ -37,9 +37,9 @@ class NodeLauncher(threading.Thread,
     At this time, the implementing class must manage this thread.
     '''
 
-    def __init__(self, zk_conn, node, provider_config):
+    def __init__(self, handler, node, provider_config):
         '''
-        :param ZooKeeper zk_conn: The ZooKeeper connection object.
+        :param NodeRequestHandler handler: The handler object.
         :param Node node: A Node object describing the node to launch.
         :param ProviderConfig provider_config: A ProviderConfig object
             describing the provider launching this node.
@@ -47,10 +47,10 @@ class NodeLauncher(threading.Thread,
         threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
         stats.StatsReporter.__init__(self)
         logger = logging.getLogger("nodepool.NodeLauncher")
-        # TODO: Add event id from request when it's plumbed through
-        self.log = get_annotated_logger(logger, node_request=None,
+        self.log = get_annotated_logger(logger, node_request=handler.request,
                                         node=node.id)
-        self.zk = zk_conn
+        self.handler = handler
+        self.zk = handler.zk
         self.node = node
         self.provider_config = provider_config
 

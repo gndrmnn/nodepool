@@ -23,9 +23,7 @@ from nodepool.driver import NodeRequestHandler
 
 class K8SLauncher(NodeLauncher):
     def __init__(self, handler, node, provider_config, provider_label):
-        super().__init__(handler.zk, node, provider_config)
-        self.handler = handler
-        self.zk = handler.zk
+        super().__init__(handler, node, provider_config)
         self.label = provider_label
         self._retries = provider_config.launch_retries
 
