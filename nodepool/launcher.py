@@ -29,6 +29,7 @@ from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
+from nodepool.logconfig import get_annotated_logger
 
 
 MINS = 60
@@ -214,6 +215,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if self.launcher_id in req.declined_by:
                 continue
 
+            log = get_annotated_logger(self.log, req)
             # Skip this request if it is requesting another provider
             # which is online
             if req.provider and req.provider != self.provider_name:
@@ -225,26 +227,25 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     # There is a launcher online which can satisfy the request
                     if not candidate_launchers.issubset(set(req.declined_by)):
                         # It has not yet declined the request, so yield to it.
-                        self.log.debug(
-                            "Yielding request %s to provider %s %s",
-                            req.id, req.provider, candidate_launchers)
+                        log.debug("Yielding request %s to provider %s %s",
+                                  req.id, req.provider, candidate_launchers)
                         continue
 
-            self.log.debug("Locking request %s", req.id)
+            log.debug("Locking request %s", req.id)
             try:
                 self.zk.lockNodeRequest(req, blocking=False)
             except exceptions.ZKLockException:
-                self.log.debug("Request %s is locked by someone else", req.id)
+                log.debug("Request %s is locked by someone else", req.id)
                 continue
 
             # Make sure the state didn't change on us after getting the lock
             if req.state != zk.REQUESTED:
                 self.zk.unlockNodeRequest(req)
-                self.log.debug("Request %s is in state %s", req.id, req.state)
+                log.debug("Request %s is in state %s", req.id, req.state)
                 continue
 
             # Got a lock, so assign it
-            self.log.info("Assigning node request %s" % req)
+            log.info("Assigning node request %s" % req)
 
             pm = self.getProviderManager()
             rh = pm.getRequestHandler(self, req)
@@ -264,14 +265,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         '''
         active_handlers = []
         for r in self.request_handlers:
+            log = get_annotated_logger(self.log, r.request)
             try:
                 if not r.poll():
                     active_handlers.append(r)
                     if r.paused:
                         self.paused_handler = r
                 else:
-                    self.log.debug("Removing handler for request %s",
-                                   r.request.id)
+                    log.debug("Removing handler for request %s", r.request.id)
             except kze.SessionExpiredError:
                 # If we lost our ZooKeeper session, we've lost our NodeRequest
                 # lock so it's no longer active
@@ -280,8 +281,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 # If we fail to poll a request handler log it but move on
                 # and process the other handlers. We keep this handler around
                 # and will try again later.
-                self.log.exception("Error polling request handler for "
-                                   "request %s", r.request.id)
+                log.exception("Error polling request handler for request %s",
+                              r.request.id)
                 active_handlers.append(r)
         self.request_handlers = active_handlers
         active_reqs = [r.request.id for r in self.request_handlers]
@@ -446,12 +447,13 @@ class CleanupWorker(BaseCleanupWorker):
         if req.state != zk.PENDING:
             return
 
+        log = get_annotated_logger(self.log, req)
         for node in zk_conn.nodeIterator():
             if node.allocated_to == req.id:
                 try:
                     zk_conn.lockNode(node)
                 except exceptions.ZKLockException:
-                    self.log.warning(
+                    log.warning(
                         "Unable to grab lock to deallocate node %s from "
                         "request %s", node.id, req.id)
                     return
@@ -459,10 +461,10 @@ class CleanupWorker(BaseCleanupWorker):
                 node.allocated_to = None
                 try:
                     zk_conn.storeNode(node)
-                    self.log.debug("Deallocated node %s for lost request %s",
-                                   node.id, req.id)
+                    log.debug("Deallocated node %s for lost request %s",
+                              node.id, req.id)
                 except Exception:
-                    self.log.exception(
+                    log.exception(
                         "Unable to deallocate node %s from request %s:",
                         node.id, req.id)
 
@@ -471,7 +473,7 @@ class CleanupWorker(BaseCleanupWorker):
         req.state = zk.REQUESTED
         req.nodes = []
         zk_conn.storeNodeRequest(req)
-        self.log.info("Reset lost request %s", req.id)
+        log.info("Reset lost request %s", req.id)
 
     def _cleanupLostRequests(self):
         '''
@@ -484,6 +486,7 @@ class CleanupWorker(BaseCleanupWorker):
         '''
         zk_conn = self._nodepool.getZK()
         for req in zk_conn.nodeRequestIterator():
+            log = get_annotated_logger(self.log, req)
             if req.state == zk.PENDING:
                 try:
                     zk_conn.lockNodeRequest(req, blocking=False)
@@ -493,8 +496,7 @@ class CleanupWorker(BaseCleanupWorker):
                 try:
                     self._resetLostRequest(zk_conn, req)
                 except Exception:
-                    self.log.exception("Error resetting lost request %s:",
-                                       req.id)
+                    log.exception("Error resetting lost request %s:", req.id)
 
                 zk_conn.unlockNodeRequest(req)
 
@@ -985,6 +987,7 @@ class NodePool(threading.Thread):
                 if not req:
                     continue
 
+                log = get_annotated_logger(self.log, req)
                 if req.state == zk.FULFILLED:
                     # Reset node allocated_to
                     for node_id in req.nodes:
@@ -996,7 +999,7 @@ class NodePool(threading.Thread):
                         self.zk.storeNode(node)
                     self.zk.deleteNodeRequest(req)
                 elif req.state == zk.FAILED:
-                    self.log.debug("min-ready node request failed: %s", req)
+                    log.debug("min-ready node request failed: %s", req)
                     self.zk.deleteNodeRequest(req)
                 else:
                     active_requests.append(req)
