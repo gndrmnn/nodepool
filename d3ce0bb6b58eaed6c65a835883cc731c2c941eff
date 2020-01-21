@@ -22,6 +22,30 @@
       "revId": "d3ce0bb6b58eaed6c65a835883cc731c2c941eff",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_fb01906e",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-21T14:52:44Z",
+      "side": 1,
+      "message": "Ok, had to refresh myself on the actual implementations of this class, but it seems we already depend on the handler in the subclasses, so this change makes more sense now and I remove my objection.",
+      "parentUuid": "3fa7e38b_9b341ce1",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "d3ce0bb6b58eaed6c65a835883cc731c2c941eff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
