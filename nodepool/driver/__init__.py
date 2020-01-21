@@ -26,6 +26,7 @@ import voluptuous as v
 
 from nodepool import zk
 from nodepool import exceptions
+from nodepool.logconfig import get_annotated_logger
 
 
 class Drivers:
@@ -533,8 +534,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             raise Exception("Provider configuration missing")
 
         # We have the launcher_id attr after _setFromPoolWorker() is called.
-        self.log = logging.getLogger(
-            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id)
+        self.log = get_annotated_logger(logging.getLogger(
+            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id),
+            event_id=self.request.event_id, node_request_id=self.request.id)
 
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()
