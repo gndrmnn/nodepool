@@ -166,12 +166,12 @@ class BaseTestCase(testtools.TestCase):
                                                 format=fs))
         else:
             logging.basicConfig(level=logging.DEBUG)
-        l = logging.getLogger('kazoo')
-        l.setLevel(logging.INFO)
-        l.propagate = False
-        l = logging.getLogger('stevedore')
-        l.setLevel(logging.INFO)
-        l.propagate = False
+        logger = logging.getLogger('kazoo')
+        logger.setLevel(logging.INFO)
+        logger.propagate = False
+        logger = logging.getLogger('stevedore')
+        logger.setLevel(logging.INFO)
+        logger.propagate = False
         self.useFixture(fixtures.NestedTempfile())
 
         self.subprocesses = []

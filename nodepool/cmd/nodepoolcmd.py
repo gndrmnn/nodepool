@@ -147,8 +147,8 @@ class NodePoolCmd(NodepoolApp):
             m = '%(asctime)s %(levelname)s %(name)s: %(message)s'
             logging.basicConfig(level=logging.INFO, format=m)
 
-            l = logging.getLogger('kazoo')
-            l.setLevel(logging.WARNING)
+            logger = logging.getLogger('kazoo')
+            logger.setLevel(logging.WARNING)
 
     def list(self, node_id=None, detail=False):
         if hasattr(self.args, 'detail'):

@@ -134,12 +134,12 @@ class Config(ConfigValue):
             return
 
         for label in labels_cfg:
-            l = Label()
-            l.name = label['name']
-            l.max_ready_age = label.get('max-ready-age', 0)
-            l.min_ready = label.get('min-ready', 0)
-            l.pools = []
-            self.labels[l.name] = l
+            new_label = Label()
+            new_label.name = label['name']
+            new_label.max_ready_age = label.get('max-ready-age', 0)
+            new_label.min_ready = label.get('min-ready', 0)
+            new_label.pools = []
+            self.labels[new_label.name] = new_label
 
     def setProviders(self, providers_cfg):
         if not providers_cfg:
