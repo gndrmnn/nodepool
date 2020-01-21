@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_5b58e423",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-21T14:31:12Z",
+      "side": 1,
+      "message": "Since you don\u0027t actually need the entire NodeRequest object for logging, I think you should just pass these two attributes in separately.",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 47
+      },
+      "revId": "ee17daa620a5e9e8742030afa2771909ce1609a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
