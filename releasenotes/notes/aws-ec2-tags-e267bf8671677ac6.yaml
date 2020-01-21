@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Add optional tags on ec2 instances and use cloud-image label as Name.
