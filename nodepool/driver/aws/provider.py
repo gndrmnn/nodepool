@@ -170,7 +170,13 @@ class AwsProvider(Provider):
             InstanceType=label.instance_type,
             NetworkInterfaces=[{
                 'AssociatePublicIpAddress': label.pool.public_ip,
-                'DeviceIndex': 0}])
+                'DeviceIndex': 0}],
+            TagSpecifications=[
+                {
+                    'ResourceType': 'instance',
+                    'Tags': [{"Key": "Name", "Value": label.name}] + label.tags
+                },
+            ])
 
         if label.pool.security_group_id:
             args['NetworkInterfaces'][0]['Groups'] = [
