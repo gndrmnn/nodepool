@@ -39,15 +39,13 @@ class OpenStackNodeLauncher(NodeLauncher):
         :param ProviderLabel provider_label: A ProviderLabel object
             describing the label to use for the node.
         '''
-        super().__init__(handler.zk, node, provider_config)
+        super().__init__(handler, node, provider_config)
 
         # Number of times to retry failed launches.
         self._retries = provider_config.launch_retries
 
         self.label = provider_label
         self.pool = provider_label.pool
-        self.handler = handler
-        self.zk = handler.zk
 
     def _logConsole(self, server_id, hostname):
         if not self.label.console_log:

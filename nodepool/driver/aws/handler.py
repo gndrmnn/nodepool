@@ -25,12 +25,10 @@ from nodepool.nodeutils import nodescan
 
 class AwsInstanceLauncher(NodeLauncher):
     def __init__(self, handler, node, provider_config, provider_label):
-        super().__init__(handler.zk, node, provider_config)
+        super().__init__(handler, node, provider_config)
         self.provider_name = provider_config.name
         self.retries = provider_config.launch_retries
         self.pool = provider_config.pools[provider_label.pool.name]
-        self.handler = handler
-        self.zk = handler.zk
         self.boot_timeout = provider_config.boot_timeout
         self.label = provider_label
 
