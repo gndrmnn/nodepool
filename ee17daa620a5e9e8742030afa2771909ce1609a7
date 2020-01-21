@@ -22,6 +22,30 @@
       "revId": "ee17daa620a5e9e8742030afa2771909ce1609a7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_1bb90cca",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-01-21T14:50:46Z",
+      "side": 1,
+      "message": "k, I can change that. I was trying to keep that similar to what\u0027s already available in Zuul [0], but maybe it\u0027s a good idea to allow passing a (generic) event id that doesn\u0027t necessarily has to come from a node request.\n\n[0] https://opendev.org/zuul/zuul/src/branch/master/zuul/lib/logutil.py#L18",
+      "parentUuid": "3fa7e38b_5b58e423",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 47
+      },
+      "revId": "ee17daa620a5e9e8742030afa2771909ce1609a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
