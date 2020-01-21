@@ -22,6 +22,30 @@
       "revId": "44eb1ce630d5888c8795ad866b06b8372e4eba86",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_b456d0cc",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-01-21T06:04:02Z",
+      "side": 1,
+      "message": "Yes, sorry. There will be a patch to add that here. I just didn\u0027t finish that part yet.",
+      "parentUuid": "3fa7e38b_1d458e44",
+      "range": {
+        "startLine": 51,
+        "startChar": 48,
+        "endLine": 51,
+        "endChar": 65
+      },
+      "revId": "44eb1ce630d5888c8795ad866b06b8372e4eba86",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
