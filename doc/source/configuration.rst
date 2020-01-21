@@ -1597,10 +1597,15 @@ section of the configuration.
                  cloud-image: debian9
                  instance-type: t3.medium
                  key-name: zuul
+                 tags:
+                   key1: value1
                - name: debian9-large
                  cloud-image: debian9
                  instance-type: t3.large
                  key-name: zuul
+                 tags:
+                   key1: value1
+                   key2: value2
 
    .. attr:: name
       :required:
@@ -1826,6 +1831,12 @@ section of the configuration.
               cloud-init package on image which will apply the userdata.
               Additional info about options in cloud-config:
               https://cloudinit.readthedocs.io/en/latest/topics/examples.html
+
+           .. attr:: tags
+              :type: dict
+              :default: None
+
+              A dictionary of tags to add to the EC2 instances
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html
