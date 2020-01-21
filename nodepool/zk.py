@@ -26,6 +26,7 @@ from kazoo.recipe.cache import TreeCache, TreeEvent
 from kazoo.recipe.election import Election
 
 from nodepool import exceptions as npe
+from nodepool.logconfig import get_annotated_logger
 
 # States:
 # We are building this image (or node) but it is not ready for use.
@@ -1792,6 +1793,8 @@ class ZooKeeper(object):
             blocking with a timeout. ZKLockException if we are not blocking
             and could not get the lock, or a lock is already held.
         '''
+        log = get_annotated_logger(self.log, event_id=request.event_id,
+                                   node_request_id=request.id)
         path = self._requestLockPath(request.id)
         try:
             lock = Lock(self.client, path)
@@ -1801,7 +1804,7 @@ class ZooKeeper(object):
                 "Timeout trying to acquire lock %s" % path)
         except kze.NoNodeError:
             have_lock = False
-            self.log.error("Request not found for locking: %s", request)
+            log.error("Request not found for locking: %s", request)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
