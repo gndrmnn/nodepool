@@ -220,7 +220,8 @@ class TestWebApp(tests.DBTestCase):
         data = f.read()
         objs = json.loads(data.decode('utf8'))
         self.assertDictContainsSubset({'node_types': ['fake-label'],
-                                       'requestor': 'test_request_list', },
+                                       'requestor': 'test_request_list',
+                                       'event_id': req.event_id, },
                                       objs[0])
 
     def test_label_list_json(self):
