@@ -94,3 +94,14 @@ providers:
             cloud-image: ubuntu1404
             instance-type: t3.medium
             key-name: zuul
+      - name: tags
+        max-servers: 1
+        subnet-id: null
+        security-group-id: null
+        labels:
+          - name: ubuntu1404-with-tags
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+            tags:
+              has-tags: true
