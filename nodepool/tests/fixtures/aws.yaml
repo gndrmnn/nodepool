@@ -53,6 +53,8 @@ providers:
             cloud-image: ubuntu1404
             instance-type: t3.medium
             key-name: zuul
+            tags:
+              test: true
           - name: ubuntu1404-bad-ami-name
             cloud-image: ubuntu1404-bad-ami-name
             instance-type: t3.medium
