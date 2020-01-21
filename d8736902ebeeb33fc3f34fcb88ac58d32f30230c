@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_af6c329d",
+        "filename": "nodepool/tests/fixtures/aws.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 29946
+      },
+      "writtenOn": "2020-01-21T17:31:44Z",
+      "side": 1,
+      "message": "Create a new label with your tags scenario",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 24
+      },
+      "revId": "d8736902ebeeb33fc3f34fcb88ac58d32f30230c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
