@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_9b341ce1",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-21T14:29:54Z",
+      "side": 1,
+      "message": "There is zero reason for the NodeLauncher to have the NodeRequestHandler here, except for two pieces of logging data. I understand the convenience of doing this, but having the NRH object passed in does two things that I don\u0027t like:\n\n  1) Needlessly couples the NL and NRH objects together.\n  2) Opens up the possibility that we could accidentally do something bad with the handler object itself.\n\nI\u0027d rather see the logging items you need passed in either separately, or, as part of a logging-specific dict item.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "d3ce0bb6b58eaed6c65a835883cc731c2c941eff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
