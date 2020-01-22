@@ -46,6 +46,29 @@
       "revId": "ee17daa620a5e9e8742030afa2771909ce1609a7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_bbc3188c",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-22T16:24:58Z",
+      "side": 1,
+      "message": "Since you only need the event_id and request ID from the NodeRequest object, I\u0027d rather see those items passed in to get_annotated_logger() separately",
+      "range": {
+        "startLine": 165,
+        "startChar": 1,
+        "endLine": 166,
+        "endChar": 47
+      },
+      "revId": "ee17daa620a5e9e8742030afa2771909ce1609a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
