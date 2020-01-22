@@ -1,0 +1,9 @@
+Code-Review+2: David Shrewsbury <dshrewsb@redhat.com>
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Workflow+1: Tobias Henkel <tobias.henkel@bmw.de>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 22 Jan 2020 19:14:05 +0000
+Reviewed-on: https://review.opendev.org/703406
+Project: zuul/nodepool
+Branch: refs/heads/master
