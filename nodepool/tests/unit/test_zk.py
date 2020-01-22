@@ -606,6 +606,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_storeNodeRequest(self):
         req = self._create_node_request()
+        self.assertNotEqual(req.event_id, None)
         req2 = self.zk.getNodeRequest(req.id)
         self.assertEqual(req, req2)
 
@@ -872,6 +873,9 @@ class TestZKModel(tests.BaseTestCase):
         o.nodes.append('100')
         o.reuse = False
         o.requestor = 'zuul'
+        o.provider = "test"
+        o.relative_priority = 1
+        o.event_id = "deadbeef"
         d = o.toDict()
         self.assertNotIn('id', d)
         self.assertIn('state', d)
@@ -881,6 +885,9 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(d['nodes'], o.nodes)
         self.assertEqual(d['reuse'], o.reuse)
         self.assertEqual(d['requestor'], o.requestor)
+        self.assertEqual(d['provider'], o.provider)
+        self.assertEqual(d['relative_priority'], o.relative_priority)
+        self.assertEqual(d['event_id'], o.event_id)
 
     def test_NodeRequest_fromDict(self):
         now = int(time.time())
@@ -893,6 +900,9 @@ class TestZKModel(tests.BaseTestCase):
             'nodes': ['100'],
             'reuse': False,
             'requestor': 'zuul',
+            'provider': 'test',
+            'relative_priority': 1,
+            'event_id': 'deadbeef',
         }
 
         o = zk.NodeRequest.fromDict(d, req_id)
@@ -904,6 +914,9 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(o.nodes, d['nodes'])
         self.assertEqual(o.reuse, d['reuse'])
         self.assertEqual(o.requestor, d['requestor'])
+        self.assertEqual(o.provider, d['provider'])
+        self.assertEqual(o.relative_priority, d['relative_priority'])
+        self.assertEqual(o.event_id, d['event_id'])
 
     def test_Node_toDict(self):
         o = zk.Node('123')
