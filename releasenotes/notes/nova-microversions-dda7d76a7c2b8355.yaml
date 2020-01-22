@@ -2,3 +2,10 @@
 fixes:
   - |
     Fixed compatibility issue with openstacksdk 0.37.0 and above.
+
+  # Next is a post release note, un-related to the filename
+  - |
+    Fixed kubernetes driver service account creation issue resulting
+    in zuul job to fail with:
+      MODULE FAILURE: error: You must be logged in to the server
+      (Unauthorized)
