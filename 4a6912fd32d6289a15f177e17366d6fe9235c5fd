@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_f7c8ad20",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-22T15:37:47Z",
+      "side": 1,
+      "message": "Don\u0027t forget to add this attribute to the __eq__ method below.",
+      "revId": "4a6912fd32d6289a15f177e17366d6fe9235c5fd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
