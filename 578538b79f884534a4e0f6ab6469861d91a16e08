@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_d24edfc0",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 29946
+      },
+      "writtenOn": "2020-01-22T16:21:15Z",
+      "side": 1,
+      "message": "replace False by None like \u0027userdata\u003dNone\u0027",
+      "range": {
+        "startLine": 52,
+        "startChar": 31,
+        "endLine": 52,
+        "endChar": 36
+      },
+      "revId": "578538b79f884534a4e0f6ab6469861d91a16e08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
