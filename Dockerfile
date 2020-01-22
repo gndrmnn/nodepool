@@ -15,11 +15,19 @@
 
 FROM opendevorg/python-builder as builder
 
+# TODO: Hotfix for https://github.com/pypa/pip/issues/6852 remove when pip is
+# updated in python-builder image.
+RUN pip install -U pip
+
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
 RUN assemble
 
 FROM opendevorg/python-base as nodepool-base
+
+# TODO: Hotfix for https://github.com/pypa/pip/issues/6852 remove when pip is
+# updated in python-base image.
+RUN pip install -U pip
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
