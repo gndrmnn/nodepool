@@ -151,3 +151,50 @@ class FileLoggingConfig(LoggingConfig):
 
     def apply(self):
         logging.config.fileConfig(self._filename)
+
+
+def get_annotated_logger(logger, event_id=None, node_request_id=None,
+                         node_id=None):
+    # Note: When running with python 3.5 log adapters cannot be
+    # stacked. We need to detect this case and modify the original one.
+    if isinstance(logger, EventIdLogAdapter):
+        extra = logger.extra
+    else:
+        extra = {}
+
+    if event_id is not None:
+        extra["event_id"] = event_id
+
+    if node_request_id is not None:
+        extra['node_request'] = node_request_id
+
+    if node_id is not None:
+        extra["node"] = node_id
+
+    if isinstance(logger, EventIdLogAdapter):
+        return logger
+
+    return EventIdLogAdapter(logger, extra)
+
+
+class EventIdLogAdapter(logging.LoggerAdapter):
+    def process(self, msg, kwargs):
+        msg, kwargs = super().process(msg, kwargs)
+        extra = kwargs.get("extra", {})
+
+        new_msg = []
+        event_id = extra.get("event_id")
+        if event_id is not None:
+            new_msg.append('[e: {}]'.format(event_id))
+
+        node_request = extra.get("node_request")
+        if node_request is not None:
+            new_msg.append("[node_request: {}]".format(node_request))
+
+        node = extra.get("node")
+        if node is not None:
+            new_msg.append("[node: {}]".format(node))
+
+        new_msg.append(msg)
+        msg = " ".join(new_msg)
+        return msg, kwargs
