@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_c485a80b",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-01-23T22:12:40Z",
+      "side": 1,
+      "message": "nit: Maybe add a trailing comman here so future additions have less code churn.",
+      "revId": "49482e157c806bf86d6673229b36d50ce21a6ea1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
