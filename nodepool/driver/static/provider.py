@@ -66,8 +66,7 @@ class StaticNodeProvider(Provider):
                                       gather_hostkeys=gather_hostkeys)
         except exceptions.ConnectionTimeoutException:
             raise StaticNodeError(
-                "%s:%s: ConnectionTimeoutException" % (
-                    node["name"], node["connection-port"]))
+                "{}: ConnectionTimeoutException".format(nodeTuple(node)))
 
         if not gather_hostkeys:
             return []
@@ -76,11 +75,11 @@ class StaticNodeProvider(Provider):
         if set(node["host-key"]).issubset(set(keys)):
             return keys
 
-        self.log.debug("%s: Registered key '%s' not in %s" % (
-            node["name"], node["host-key"], keys
-        ))
-        raise StaticNodeError("%s: host key mismatches (%s)" %
-                              (node["name"], keys))
+        node_tuple = nodeTuple(node)
+        self.log.debug("%s: Registered key '%s' not in %s",
+                       node_tuple, node["host-key"], keys)
+        raise StaticNodeError(
+            "{}: host key mismatches ({})".format(node_tuple, keys))
 
     def getRegisteredReadyNodes(self, node_tuple):
         '''
@@ -129,9 +128,10 @@ class StaticNodeProvider(Provider):
                                timeout=static_node["timeout"],
                                gather_hostkeys=False)
             return True
-        except Exception:
-            self.log.exception("Failed to connect to node %s:",
-                               static_node["name"])
+        except Exception as exc:
+            self.log.warning("Failed to connect to node %s: %s",
+                             node_tuple, exc)
+
         try:
             self.deregisterNode(count=1, node_tuple=node_tuple)
         except Exception:
@@ -319,14 +319,22 @@ class StaticNodeProvider(Provider):
             for node in pool.nodes:
                 try:
                     self.syncNodeCount(registered, node, pool)
+                except StaticNodeError as exc:
+                    self.log.warning("Couldn't sync node: %s", exc)
+                    continue
                 except Exception:
-                    self.log.exception("Couldn't sync node:")
+                    self.log.exception("Couldn't sync node %s:",
+                                       nodeTuple(node))
                     continue
 
                 try:
                     self.updateNodeFromConfig(node)
+                except StaticNodeError as exc:
+                    self.log.warning("Couldn't update static node: %s", exc)
+                    continue
                 except Exception:
-                    self.log.exception("Couldn't update static node:")
+                    self.log.exception("Couldn't update static node %s:",
+                                       nodeTuple(node))
                     continue
 
                 static_nodes[nodeTuple(node)] = node
@@ -386,11 +394,16 @@ class StaticNodeProvider(Provider):
                 for node in pool.nodes:
                     try:
                         self.syncNodeCount(registered, node, pool)
+                    except StaticNodeError as exc:
+                        self.log.warning("Couldn't sync node: %s", exc)
+                        continue
                     except Exception:
                         self.log.exception("Couldn't sync node:")
                         continue
                     try:
                         self.assignReadyNodes(node, pool)
+                    except StaticNodeError as exc:
+                        self.log.warning("Couldn't assign ready node: %s", exc)
                     except Exception:
                         self.log.exception("Couldn't assign ready nodes:")
 
@@ -419,7 +432,8 @@ class StaticNodeProvider(Provider):
         '''
         # It's possible a deleted node no longer exists in our config, so
         # don't bother to reregister.
-        static_node = self.poolNodes().get(nodeTuple(node))
+        node_tuple = nodeTuple(node)
+        static_node = self.poolNodes().get(node_tuple)
         if static_node is None:
             return
 
@@ -431,7 +445,7 @@ class StaticNodeProvider(Provider):
                     "Cannot get registered nodes for re-registration:"
                 )
                 return
-            current_count = registered[nodeTuple(node)]
+            current_count = registered[node_tuple]
 
             # It's possible we were not able to de-register nodes due to a
             # config change (because they were in use). In that case, don't
@@ -442,5 +456,8 @@ class StaticNodeProvider(Provider):
             try:
                 self.registerNodeFromConfig(
                     1, node.provider, node.pool, static_node)
+            except StaticNodeError as exc:
+                self.log.warning("Cannot re-register deleted node: %s", exc)
             except Exception:
-                self.log.exception("Cannot re-register deleted node %s", node)
+                self.log.exception("Cannot re-register deleted node %s:",
+                                   node_tuple)
