@@ -176,9 +176,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # the same priority, use the relative_priority field to
         # further sort, then finally, the submission order.
         requests = list(self.zk.nodeRequestIterator())
-        requests.sort(key=lambda r: (r.id.split('-')[0],
+        requests.sort(key=lambda r: (int(r.id.split('-')[0]),
                                      r.relative_priority,
-                                     r.id.split('-')[1]))
+                                     int(r.id.split('-')[1])))
 
         for req in requests:
             if not self.running:
