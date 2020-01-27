@@ -73,7 +73,7 @@ class AwsProvider(Provider):
             if instance.tags:
                 for tag in instance.tags:
                     if (tag["Key"] == 'nodepool_provider'
-                        and tag["Value"] == self.provider.name):
+                            and tag["Value"] == self.provider.name):
                         ours = True
                         break
             if not ours:
@@ -170,7 +170,13 @@ class AwsProvider(Provider):
             InstanceType=label.instance_type,
             NetworkInterfaces=[{
                 'AssociatePublicIpAddress': label.pool.public_ip,
-                'DeviceIndex': 0}])
+                'DeviceIndex': 0}],
+            TagSpecifications=[{
+                'ResourceType': 'instance',
+                'Tags': [{"Key": "Name",
+                          "Value": str(label.name)}] + label.tags
+            }]
+        )
 
         if label.pool.security_group_id:
             args['NetworkInterfaces'][0]['Groups'] = [
