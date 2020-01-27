@@ -16,6 +16,29 @@
       "revId": "49482e157c806bf86d6673229b36d50ce21a6ea1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_dd86bd16",
+        "filename": "nodepool/tests/fixtures/aws.yaml",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-01-27T17:43:49Z",
+      "side": 1,
+      "message": "A bit interesting that this apparently gets deserialized as True in python then string converted to \u0027true\u0027 instead of \u0027True\u0027. I would have expected that it ends up as \u0027True\u0027 but the test asserts \u0027true\u0027.",
+      "range": {
+        "startLine": 108,
+        "startChar": 24,
+        "endLine": 108,
+        "endChar": 28
+      },
+      "revId": "49482e157c806bf86d6673229b36d50ce21a6ea1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
