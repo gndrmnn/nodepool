@@ -235,14 +235,17 @@ def request_list(zk):
         ("requestor", "Requestor"),
         ("node_types", "Node Types"),
         ("nodes", "Nodes"),
-        ("declined_by", "Declined By")])
+        ("declined_by", "Declined By"),
+        ("event_id", "Event ID"),
+    ])
     objs = []
     for req in zk.nodeRequestIterator():
         values = [req.id, req.relative_priority,
                   req.state, req.requestor,
                   req.node_types,
                   req.nodes,
-                  req.declined_by]
+                  req.declined_by,
+                  req.event_id]
         objs.append(dict(zip(headers_table.keys(),
                              values)))
     return (objs, headers_table)
