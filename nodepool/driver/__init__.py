@@ -26,6 +26,7 @@ import voluptuous as v
 
 from nodepool import zk
 from nodepool import exceptions
+from nodepool.logconfig import get_annotated_logger
 
 
 class Drivers:
@@ -444,8 +445,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                             self.paused = False
 
                         self.log.debug(
-                            "Locked existing node %s for request %s",
-                            node.id, self.request.id)
+                            "Locked existing node %s for request",
+                            node.id)
                         got_a_node = True
                         node.allocated_to = self.request.id
                         self.zk.storeNode(node)
@@ -468,19 +469,17 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                         # speculatively create a node. Decline this so someone
                         # else with capacity can take it.
                         self.log.debug(
-                            "Declining node request %s because provider cannot"
-                            " satisfy min-ready", self.request.id)
+                            "Declining node request because provider cannot"
+                            " satisfy min-ready")
                         self.decline_request()
                         self._declinedHandlerCleanup()
                         return
 
                     self.log.info(
-                        "Not enough quota remaining to satisfy request %s",
-                        self.request.id)
+                        "Not enough quota remaining to satisfy request")
                     if not self.paused:
                         self.log.debug(
-                            "Pausing request handling to satisfy request %s",
-                            self.request.id)
+                            "Pausing request handling to satisfy request")
                     self.paused = True
                     self.zk.deleteOldestUnusedNode(self.provider.name,
                                                    self.pool.name)
@@ -509,8 +508,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 # locked anywhere.
                 self.zk.storeNode(node)
                 self.zk.lockNode(node, blocking=False)
-                self.log.debug("Locked building node %s for request %s",
-                               node.id, self.request.id)
+                self.log.debug("Locked building node %s for request", node.id)
 
                 # Set state AFTER lock so that it isn't accidentally cleaned
                 # up (unlocked BUILDING nodes will be deleted).
@@ -533,8 +531,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             raise Exception("Provider configuration missing")
 
         # We have the launcher_id attr after _setFromPoolWorker() is called.
-        self.log = logging.getLogger(
-            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id)
+        self.log = get_annotated_logger(logging.getLogger(
+            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id),
+            event_id=self.request.event_id, node_request_id=self.request.id)
 
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()
@@ -550,16 +549,16 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             declined_reasons.append('it would exceed quota')
 
         if declined_reasons:
-            self.log.debug("Declining node request %s because %s",
-                           self.request.id, ', '.join(declined_reasons))
+            self.log.debug("Declining node request because %s",
+                           ', '.join(declined_reasons))
             self.decline_request()
             self._declinedHandlerCleanup()
             return
 
         if self.paused:
-            self.log.debug("Retrying node request %s", self.request.id)
+            self.log.debug("Retrying node request")
         else:
-            self.log.debug("Accepting node request %s", self.request.id)
+            self.log.debug("Accepting node request")
             self.request.state = zk.PENDING
             self.zk.storeNodeRequest(self.request)
 
@@ -582,8 +581,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         except Exception:
             # If the request is gone for some reason, we need to make
             # sure that self.done still gets set.
-            self.log.exception("Unable to modify missing request %s",
-                               self.request.id)
+            self.log.exception("Unable to modify missing request")
         self.done = True
 
     # ---------------------------------------------------------------
@@ -609,8 +607,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 self.zk.unlockNode(node)
             except Exception:
                 self.log.exception("Error unlocking node:")
-            self.log.debug("Unlocked node %s for request %s",
-                           node.id, self.request.id)
+            self.log.debug("Unlocked node %s", node.id)
 
         self.nodeset = []
 
@@ -623,8 +620,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         launchers = set([x.id for x in self.zk.getRegisteredLaunchers()])
         if launchers.issubset(set(self.request.declined_by)):
             # All launchers have declined it
-            self.log.debug("Failing declined node request %s",
-                           self.request.id)
+            self.log.debug("Failing declined node request")
             self.request.state = zk.FAILED
         else:
             self.request.state = zk.REQUESTED
@@ -642,8 +638,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             self._runHandler()
         except Exception:
             self.log.exception(
-                "Declining node request %s due to exception in "
-                "NodeRequestHandler:", self.request.id)
+                "Declining node request due to exception in "
+                "NodeRequestHandler:")
             self.decline_request()
             self._declinedHandlerCleanup()
 
@@ -677,7 +673,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # If the request has been pulled, unallocate the node set so other
         # requests can use them.
         if not self.zk.getNodeRequest(self.request.id):
-            self.log.info("Node request %s disappeared", self.request.id)
+            self.log.info("Node request disappeared")
             for node in self.nodeset:
                 node.allocated_to = None
                 self.zk.storeNode(node)
@@ -688,14 +684,12 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 # If the lock object is invalid that is "ok" since we no
                 # longer have a request either. Just do our best, log and
                 # move on.
-                self.log.debug("Request lock invalid for node request %s "
-                               "when attempting to clean up the lock",
-                               self.request.id)
+                self.log.debug("Request lock invalid for node request "
+                               "when attempting to clean up the lock")
             return True
 
         if self.failed_nodes:
-            self.log.debug("Declining node request %s because nodes failed",
-                           self.request.id)
+            self.log.debug("Declining node request because nodes failed")
             self.decline_request()
         elif aborted_nodes:
             # Because nodes are added to the satisfied types list before they
@@ -704,8 +698,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             for node in aborted_nodes:
                 self._satisfied_types.removeNode(node.id)
             self.log.debug(
-                "Pausing request handling after node abort to satisfy "
-                "request %s", self.request.id)
+                "Pausing request handling after node abort to satisfy request")
             self.paused = True
             return False
         else:
@@ -715,8 +708,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 node_id = self._satisfied_types.pop(requested_type)
                 self.request.nodes.append(node_id)
 
-            self.log.debug("Fulfilled node request %s",
-                           self.request.id)
+            self.log.debug("Fulfilled node request")
             self.request.state = zk.FULFILLED
 
         self.unlockNodeSet()
