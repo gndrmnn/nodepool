@@ -112,11 +112,9 @@ class OpenStackNodeLauncher(NodeLauncher):
             label=self.label, provider=self.provider_config, node=self.node
         )
 
-        self.log.info("Creating server with hostname %s in %s from image %s "
-                      "for node id: %s" % (hostname,
-                                           self.provider_config.name,
-                                           image_name,
-                                           self.node.id))
+        self.log.info(
+            "Creating server with hostname %s in %s from image %s" % (
+                hostname, self.provider_config.name, image_name))
 
         # NOTE: We store the node ID in the server metadata to use for leaked
         # instance detection. We cannot use the external server ID for this
@@ -166,8 +164,7 @@ class OpenStackNodeLauncher(NodeLauncher):
         # Checkpoint save the updated node info
         self.zk.storeNode(self.node)
 
-        self.log.debug("Waiting for server %s for node id: %s" %
-                       (server.id, self.node.id))
+        self.log.debug("Waiting for server %s" % server.id)
         server = self.handler.manager.waitForServer(
             server, self.provider_config.launch_timeout,
             auto_ip=self.pool.auto_floating_ip)
@@ -207,9 +204,9 @@ class OpenStackNodeLauncher(NodeLauncher):
         self.zk.storeNode(self.node)
 
         self.log.debug(
-            "Node %s is running [region: %s, az: %s, ip: %s ipv4: %s, "
+            "Node is running [region: %s, az: %s, ip: %s ipv4: %s, "
             "ipv6: %s, hostid: %s]" %
-            (self.node.id, self.node.region, self.node.az,
+            (self.node.region, self.node.az,
              self.node.interface_ip, self.node.public_ipv4,
              self.node.public_ipv6, self.node.host_id))
 
@@ -217,8 +214,7 @@ class OpenStackNodeLauncher(NodeLauncher):
         host_keys = []
         if self.label.host_key_checking:
             try:
-                self.log.debug(
-                    "Gathering host keys for node %s", self.node.id)
+                self.log.debug("Gathering host keys")
                 # only gather host keys if the connection type is ssh or
                 # network_cli
                 gather_host_keys = (
@@ -252,10 +248,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                 raise
             except Exception as e:
                 if attempts <= self._retries:
-                    self.log.exception(
-                        "Request %s: Launch attempt %d/%d failed for node %s:",
-                        self.handler.request.id, attempts,
-                        self._retries, self.node.id)
+                    self.log.exception("Launch attempt %d/%d failed:",
+                                       attempts, self._retries)
 
                 # If we got an external id we need to fetch the server info
                 # again in order to retrieve the fault reason as this is not
@@ -267,16 +261,12 @@ class OpenStackNodeLauncher(NodeLauncher):
                             self.node.external_id) or {}
                         fault = server.get('fault', {}).get('message')
                         if fault:
-                            self.log.error(
-                                'Request %s: Detailed error for node %s: %s',
-                                self.handler.request.id, self.node.external_id,
-                                fault)
+                            self.log.error('Detailed node error: %s', fault)
                             if 'quota' in fault:
                                 quota_exceeded = True
                     except Exception:
                         self.log.exception(
-                            'Request %s: Failed to retrieve error information '
-                            'for node %s', self.node.external_id)
+                            'Failed to retrieve node error information:')
 
                 # If we created an instance, delete it.
                 if self.node.external_id:
@@ -287,9 +277,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                     deleting_node.external_id = self.node.external_id
                     deleting_node.state = zk.DELETING
                     self.zk.storeNode(deleting_node)
-                    self.log.info(
-                        "Request %s: Node %s scheduled for cleanup",
-                        self.handler.request.id, deleting_node.external_id)
+                    self.log.info("Node %s scheduled for cleanup",
+                                  deleting_node.external_id)
                     self.node.external_id = None
                     self.node.public_ipv4 = None
                     self.node.public_ipv6 = None
@@ -310,7 +299,7 @@ class OpenStackNodeLauncher(NodeLauncher):
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
-        self.log.info("Node id %s is ready", self.node.id)
+        self.log.info("Node is ready")
 
 
 class OpenStackNodeRequestHandler(NodeRequestHandler):
