@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_87e53240",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-01-29T13:57:13Z",
+      "side": 1,
+      "message": "Sorting numerically is fine, but our storeNodeRequest() API accepts a string, which will now be counter-intuitive. Perhaps that should be changed to an int too? Not sure yet what the implications of that would be.",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 62
+      },
+      "revId": "c9d0460f0af17f22f96a32abde9c3f8a3c166eaa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
