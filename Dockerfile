@@ -24,22 +24,7 @@ FROM opendevorg/python-base as nodepool-base
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
-### Containers should NOT run as root as a good practice
 RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
-
-# although this feels odd ... by default has group "shadow", meaning
-# uid_entrypoint can't update it.  This is necessary for things like
-# sudo to work.
-RUN chown root:root /etc/shadow
-
-RUN chmod g=u /etc/passwd /etc/shadow
-ENV APP_ROOT=/var/lib/nodepool
-ENV HOME=${APP_ROOT}
-ENV USER_NAME=nodepool
-RUN mkdir ${APP_ROOT}
-RUN chown 10001:1001 ${APP_ROOT}
-COPY tools/uid_entrypoint.sh /uid_entrypoint
-ENTRYPOINT ["/uid_entrypoint"]
 
 FROM nodepool-base as nodepool
 USER 10001
