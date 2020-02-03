@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_010d6fe6",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-02-03T20:18:06Z",
+      "side": 1,
+      "message": "looks like this fails because it\u0027s already created by the useradd",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "6c279d7bcc9a7b62dc67c8ffd3c3b9ea7c9e4bb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
