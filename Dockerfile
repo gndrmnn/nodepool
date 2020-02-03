@@ -25,6 +25,7 @@ COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
 ### Containers should NOT run as root as a good practice
+RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
 
 # although this feels odd ... by default has group "shadow", meaning
 # uid_entrypoint can't update it.  This is necessary for things like
