@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Add optional ebs-optimized on ec2 instances.

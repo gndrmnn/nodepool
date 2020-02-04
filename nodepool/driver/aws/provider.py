@@ -167,6 +167,7 @@ class AwsProvider(Provider):
             MinCount=1,
             MaxCount=1,
             KeyName=label.key_name,
+            EbsOptimized=label.ebs_optimized,
             InstanceType=label.instance_type,
             NetworkInterfaces=[{
                 'AssociatePublicIpAddress': label.pool.public_ip,
