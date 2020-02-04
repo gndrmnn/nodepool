@@ -1800,6 +1800,14 @@ section of the configuration.
               configured entry from the ``cloud-images`` section of the
               provider. See :attr:`providers.[aws].cloud-images`.
 
+           .. attr:: ebs-optimized
+              :type: bool
+              :default: False
+
+              Indicates whether EBS optimization
+              (additional, dedicated throughput between Amazon EC2 and Amazon EBS,)
+              has been enabled for the instance.
+
            .. attr:: instance-type
               :type: str
               :required:
