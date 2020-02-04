@@ -52,6 +52,7 @@ class ProviderLabel(ConfigValue):
     def __init__(self):
         self.name = None
         self.cloud_image = None
+        self.ebs_optimized = None
         self.instance_type = None
         self.key_name = None
         self.volume_size = None
@@ -67,6 +68,7 @@ class ProviderLabel(ConfigValue):
             # since this causes recursive checks with ProviderPool.
             return (other.name == self.name
                     and other.cloud_image == self.cloud_image
+                    and other.ebs_optimized == self.ebs_optimized
                     and other.instance_type == self.instance_type
                     and other.key_name == self.key_name
                     and other.volume_size == self.volume_size
@@ -123,6 +125,7 @@ class ProviderPool(ConfigPool):
             else:
                 cloud_image = None
             pl.cloud_image = cloud_image
+            pl.ebs_optimized = bool(label.get('ebs-optimized', False))
             pl.instance_type = label['instance-type']
             pl.key_name = label['key-name']
             pl.volume_type = label.get('volume-type')
@@ -236,6 +239,7 @@ class AwsProviderConfig(ProviderConfig):
             v.Exclusive('cloud-image', 'label-image'): str,
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
+            'eb-optimized': bool,
             'volume-type': str,
             'volume-size': int,
             'userdata': str,
