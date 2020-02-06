@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 06 Feb 2020 23:36:40 +0000
+Reviewed-on: https://review.opendev.org/706325
+Project: zuul/nodepool
+Branch: refs/heads/master
