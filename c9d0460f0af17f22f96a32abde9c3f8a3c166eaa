@@ -22,6 +22,30 @@
       "revId": "c9d0460f0af17f22f96a32abde9c3f8a3c166eaa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_0c11e6ae",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-02-07T01:49:36Z",
+      "side": 1,
+      "message": "Perhaps we could do the int to string conversion only once in the _nodePath functions. IIUC, this is the only place having a string for id is useful right?",
+      "parentUuid": "3fa7e38b_87e53240",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 62
+      },
+      "revId": "c9d0460f0af17f22f96a32abde9c3f8a3c166eaa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
