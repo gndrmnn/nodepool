@@ -88,6 +88,8 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][3]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][3]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][4]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][4]['security-group-id'] = sg_id
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(

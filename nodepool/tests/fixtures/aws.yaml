@@ -9,6 +9,7 @@ labels:
   - name: ubuntu1404-by-filters
   - name: ubuntu1404-by-capitalized-filters
   - name: ubuntu1404-bad-config
+  - name: ubuntu1404-ebs-optimized
   - name: ubuntu1404-non-host-key-checking
   - name: ubuntu1404-private-ip
   - name: ubuntu1404-userdata
@@ -45,6 +46,16 @@ providers:
               - ubuntu*
         username: ubuntu
     pools:
+      - name: ebs-optimized
+        max-servers: 1
+        subnet-id: null
+        security-group-id: null
+        labels:
+          - name: ubuntu1404-ebs-optimized
+            cloud-image: ubuntu1404
+            ebs-optimized: True
+            instance-type: t3.medium
+            key-name: zuul
       - name: main
         max-servers: 1
         subnet-id: null
