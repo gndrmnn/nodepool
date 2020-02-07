@@ -279,6 +279,9 @@ class KubernetesProvider(Provider):
             },
             'restartPolicy': 'Never',
         }
+        if label.service_account:
+            pod_body['spec']['containers'][0]['serviceAccount'] = \
+                label.service_account
         self.k8s_client.create_namespaced_pod(namespace, pod_body)
         for retry in range(300):
             pod = self.k8s_client.read_namespaced_pod(label.name, namespace)
