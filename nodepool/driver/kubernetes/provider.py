@@ -207,6 +207,10 @@ class KubernetesProvider(Provider):
                     'apiGroups': [""],
                     'resources': ["pods/logs"],
                     'verbs': all_verbs
+                }, {
+                    'apiGroups': [""],
+                    'resources': ["pods/portforward"],
+                    'verbs': all_verbs
                 }]
             }
         else:
@@ -219,7 +223,7 @@ class KubernetesProvider(Provider):
                 },
                 'rules': [{
                     'apiGroups': [""],
-                    'resources': ["pods", "pods/exec", "pods/log",
+                    'resources': ["pods", "pods/exec", "pods/log", "pods/portforward",
                                   "services", "endpoints", "crontabs", "jobs",
                                   "deployments", "replicasets",
                                   "configmaps", "secrets"],
