@@ -153,6 +153,10 @@
     description: Build Docker images.
     dependencies:
       - opendev-buildset-registry
+    requires:
+      - python-builder-container-image
+      - python-base-container-image
+    provides: nodepool-container-image
     vars: &nodepool_image_vars
       docker_images:
         - context: .
@@ -169,6 +173,10 @@
     name: nodepool-upload-image
     parent: opendev-upload-docker-image
     description: Build Docker images and upload to Docker Hub.
+    requires:
+      - python-builder-container-image
+      - python-base-container-image
+    provides: nodepool-container-image
     vars: *nodepool_image_vars
     secrets:
       - name: docker_credentials
@@ -195,6 +203,10 @@
     required-projects:
       - openstack/diskimage-builder
       - openstack/openstacksdk
+    requires:
+      - python-builder-container-image
+      - python-base-container-image
+    provides: nodepool-siblings-container-image
     vars:
       docker_images:
         - context: .
