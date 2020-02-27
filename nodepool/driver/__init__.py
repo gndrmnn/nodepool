@@ -601,7 +601,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
             if clear_allocation:
                 node.allocated_to = None
-                self.zk.storeNode(node)
+                try:
+                    self.zk.storeNode(node)
+                except Exception:
+                    self.log.exception("Error clearing node allocation:")
 
             try:
                 self.zk.unlockNode(node)
@@ -674,10 +677,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # requests can use them.
         if not self.zk.getNodeRequest(self.request.id):
             self.log.info("Node request disappeared")
-            for node in self.nodeset:
-                node.allocated_to = None
-                self.zk.storeNode(node)
-            self.unlockNodeSet()
+            self.unlockNodeSet(clear_allocation=True)
             try:
                 self.zk.unlockNodeRequest(self.request)
             except exceptions.ZKLockException:
