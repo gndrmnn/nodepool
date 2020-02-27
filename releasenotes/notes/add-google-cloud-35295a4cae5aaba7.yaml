@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Support for resources in Google Compute Engine (GCE) has been added.

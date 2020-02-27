@@ -86,9 +86,13 @@ class GCEAdapter(SimpleTaskManagerAdapter):
 
     def createInstance(self, task_manager, hostname, metadata, label):
         image_id = self._getImageId(task_manager, label.cloud_image)
+        disk_init = dict(sourceImage=image_id,
+                         diskType='zones/{}/diskTypes/{}'.format(
+                             self.provider.zone, label.volume_type),
+                         diskSizeGb=str(label.volume_size))
         disk = dict(boot=True,
                     autoDelete=True,
-                    initializeParams=dict(sourceImage=image_id))
+                    initializeParams=disk_init)
         machine_type = 'zones/{}/machineTypes/{}'.format(
             self.provider.zone, label.instance_type)
         network = dict(network='global/networks/default',

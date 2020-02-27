@@ -2088,7 +2088,8 @@ section of the configuration.
            .. attr:: volume-type
               :type: string
 
-              If given, the root volume type (``standard`` or ``ssd``).
+              If given, the root volume type (``pd-standard`` or
+              ``pd-ssd``).
 
            .. attr:: volume-size
               :type: int

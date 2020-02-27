@@ -116,7 +116,7 @@ class ProviderPool(ConfigPool):
                 cloud_image = None
             pl.cloud_image = cloud_image
             pl.instance_type = label['instance-type']
-            pl.volume_type = label.get('volume-type', 'standard')
+            pl.volume_type = label.get('volume-type', 'pd-standard')
             pl.volume_size = label.get('volume-size', '10')
             full_config.labels[label['name']].pools.append(self)
 
