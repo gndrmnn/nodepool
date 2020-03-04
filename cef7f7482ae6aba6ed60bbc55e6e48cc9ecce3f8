@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_00541b52",
+        "filename": "nodepool/cmd/update_zk_auth.py",
+        "patchSetId": 29
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-04T21:43:11Z",
+      "side": 1,
+      "message": "zokeeper_auth[1] includes the password, but we only want the user.",
+      "revId": "cef7f7482ae6aba6ed60bbc55e6e48cc9ecce3f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_a04c27c8",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 29
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-04T21:43:11Z",
+      "side": 1,
+      "message": "auth_data[1] includes the password but we only want the user.",
+      "revId": "cef7f7482ae6aba6ed60bbc55e6e48cc9ecce3f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_c04923b7",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 29
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-04T21:43:11Z",
+      "side": 1,
+      "message": "auth_data[1] includes the password but we only want the user",
+      "revId": "cef7f7482ae6aba6ed60bbc55e6e48cc9ecce3f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
