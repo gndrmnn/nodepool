@@ -17,10 +17,13 @@ grep -q sasl /etc/zookeeper/conf/zoo.cfg || {
 }
 sudo mount -t tmpfs -o nodev,nosuid,size=500M none $DATADIR
 sudo cp nodepool/tests/fixtures/zookeeper/auth.conf /etc/zookeeper
+sudo chmod 0400 /etc/zookeeper/auth.conf
 
 # Enable authentication
 echo 'JVMFLAGS="-Djava.security.auth.login.config=/etc/zookeeper/auth.conf"' | \
     sudo tee -a /etc/default/zookeeper
 echo 'JAVA_OPTS="-Djava.security.auth.login.config=/etc/zookeeper/auth.conf"' | \
     sudo tee -a /etc/default/zookeeper
+# Remove existing data
+sudo bash -c "rm -Rf /var/lib/zookeeper/*"
 sudo service zookeeper start
