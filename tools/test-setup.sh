@@ -24,3 +24,11 @@ echo 'JVMFLAGS="-Djava.security.auth.login.config=/etc/zookeeper/auth.conf"' | \
 echo 'JAVA_OPTS="-Djava.security.auth.login.config=/etc/zookeeper/auth.conf"' | \
     sudo tee -a /etc/default/zookeeper
 sudo service zookeeper start
+
+# debug zookeeper service arg
+sleep 4
+ps aux
+
+sudo bash -c "journalctl -n 2000 -u zookeeperd -u zookeeper; cat /var/log/zookeeper/*"
+
+exit 42
