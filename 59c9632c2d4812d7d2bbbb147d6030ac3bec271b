@@ -53,6 +53,29 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_b24d4b9b",
+        "filename": "releasenotes/notes/zookeeper-auth-23ed584cf7ca3a69.yaml",
+        "patchSetId": 32
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-05T18:03:35Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be \"nodepool-update-zk-auth\"?",
+      "range": {
+        "startLine": 8,
+        "startChar": 44,
+        "endLine": 8,
+        "endChar": 65
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_92e92fb8",
         "filename": "tools/test-setup.sh",
         "patchSetId": 32
