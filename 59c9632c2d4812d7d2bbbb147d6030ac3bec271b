@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_32295be5",
+        "filename": "nodepool/tests/fixtures/zookeeper/zoo.cfg",
+        "patchSetId": 32
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-05T18:01:40Z",
+      "side": 1,
+      "message": "Is this file still used? I wonder if it is a hold over from when zuul/nodepool ran a zk for each test?\n\nMaybe we can simplify things a bit by removing this if it isn\u0027t needed.",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_f2742338",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-05T18:01:40Z",
+      "side": 1,
+      "message": "Rather than parsing the previously parsed and serialized auth_data again here, should we carry the { scheme, user, passwd } dict to this point then serialize it into the KazooClient auth data below?",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_92e92fb8",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 32
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-05T18:01:40Z",
+      "side": 1,
+      "message": "Should this be a +\u003d to append to any existing flags? Note you\u0027ll want a space after the \" too.",
+      "range": {
+        "startLine": 22,
+        "startChar": 14,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_32d2bb01",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 32
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-05T18:01:40Z",
+      "side": 1,
+      "message": "See above.",
+      "range": {
+        "startLine": 24,
+        "startChar": 15,
+        "endLine": 24,
+        "endChar": 16
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
