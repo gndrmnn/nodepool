@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1fa4df85_f256632a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 32
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-05T18:02:42Z",
+      "side": 1,
+      "message": "I raised a question in the Zuul change about whether we should have user + password here or just an opaque credential.",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_32295be5",
         "filename": "nodepool/tests/fixtures/zookeeper/zoo.cfg",
         "patchSetId": 32
