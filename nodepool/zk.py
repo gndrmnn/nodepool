@@ -17,6 +17,7 @@ import json
 import logging
 import time
 import uuid
+from typing import Set  # noqa: F401
 
 from kazoo.client import KazooClient, KazooState
 from kazoo import exceptions as kze
@@ -210,7 +211,7 @@ class Launcher(Serializable):
 
 
 class BaseModel(Serializable):
-    VALID_STATES = set([])
+    VALID_STATES = set([])  # type: Set[str]
 
     def __init__(self, o_id):
         if o_id:

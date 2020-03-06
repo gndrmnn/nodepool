@@ -25,6 +25,7 @@ import signal
 import sys
 import threading
 import traceback
+from typing import Optional  # noqa: F401
 
 from nodepool.version import version_info as npd_version_info
 from nodepool import logconfig
@@ -117,7 +118,7 @@ def stack_dump_handler(signum, frame):
 
 class NodepoolApp(object):
 
-    app_name = None
+    app_name = None  # type: Optional[str]
     app_description = 'Node pool.'
 
     def __init__(self):
