@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_0d52eb3b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T21:36:30Z",
+      "side": 1,
+      "message": "Let\u0027s omit the scheme and only support sasl.  Digest is too weird -- the password is encoded in the ACL.  I don\u0027t think I can endorse anyone using that -- password rotation is too hard.",
+      "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_ad44f774",
+        "filename": "nodepool/zk_auth.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T21:36:30Z",
+      "side": 1,
+      "message": "Er, can we just use a class for this?",
+      "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_cd47f376",
+        "filename": "nodepool/zk_auth.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T21:36:30Z",
+      "side": 1,
+      "message": "If we use a class, we can just use attributes here and we can stop parsing the auth cred field.",
+      "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
