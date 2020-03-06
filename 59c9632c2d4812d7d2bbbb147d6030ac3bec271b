@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_0ad3bbd6",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 32
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "For auth_data that seems possible, but for the kazoo make_acl function, it seems like the value can\u0027t be opaque (e.g. we need to either hash the password (which is not done yet) for digest, or just use the login for sasl (as you suggested previously)).\n\nAlso this (not release yet) change: https://github.com/python-zk/kazoo/commit/cd49b3fa01136848c5e6bfafb4c241b9704f249d , seems to imply that GSSAPI mechanism can\u0027t be opaque either (e.g. we need to differentiate `service` and `principale`).\n\nI think it is very unlikely that zuul user are connecting to a shared zookeeper service, and perhaps we shouldn\u0027t bother with all the auth possibility and we could pick the one we are able to setup and test: the digest sasl. In that situation, the configuration would only need a `username` and `password`.\n\nPS33 moves all the logic to a common module so that we can easily change the data formats.",
+      "parentUuid": "1fa4df85_f256632a",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_32295be5",
         "filename": "nodepool/tests/fixtures/zookeeper/zoo.cfg",
         "patchSetId": 32
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-05T18:01:40Z",
       "side": 1,
       "message": "Is this file still used? I wonder if it is a hold over from when zuul/nodepool ran a zk for each test?\n\nMaybe we can simplify things a bit by removing this if it isn\u0027t needed.",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_2ecec2b3",
+        "filename": "nodepool/tests/fixtures/zookeeper/zoo.cfg",
+        "patchSetId": 32
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_32295be5",
       "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_6e0b5ad5",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 32
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "yes, it\u0027s just that this was introduced in a recent ps. next ps will make this easier to refactor since it introduces a common zk_auth module.",
+      "parentUuid": "1fa4df85_f2742338",
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_b24d4b9b",
         "filename": "releasenotes/notes/zookeeper-auth-23ed584cf7ca3a69.yaml",
         "patchSetId": 32
@@ -64,6 +118,30 @@
       "writtenOn": "2020-03-05T18:03:35Z",
       "side": 1,
       "message": "Shouldn\u0027t this be \"nodepool-update-zk-auth\"?",
+      "range": {
+        "startLine": 8,
+        "startChar": 44,
+        "endLine": 8,
+        "endChar": 65
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_0e0e66e4",
+        "filename": "releasenotes/notes/zookeeper-auth-23ed584cf7ca3a69.yaml",
+        "patchSetId": 32
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_b24d4b9b",
       "range": {
         "startLine": 8,
         "startChar": 44,
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_2e11e204",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 32
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_92e92fb8",
+      "range": {
+        "startLine": 22,
+        "startChar": 14,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_32d2bb01",
         "filename": "tools/test-setup.sh",
         "patchSetId": 32
@@ -110,6 +212,30 @@
       "writtenOn": "2020-03-05T18:01:40Z",
       "side": 1,
       "message": "See above.",
+      "range": {
+        "startLine": 24,
+        "startChar": 15,
+        "endLine": 24,
+        "endChar": 16
+      },
+      "revId": "59c9632c2d4812d7d2bbbb147d6030ac3bec271b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_cefb6ebe",
+        "filename": "tools/test-setup.sh",
+        "patchSetId": 32
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T19:19:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_32d2bb01",
       "range": {
         "startLine": 24,
         "startChar": 15,
