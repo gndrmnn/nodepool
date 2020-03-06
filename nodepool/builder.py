@@ -835,7 +835,7 @@ class BuildWorker(BaseWorker):
         fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
 
         # Poll subprocess stdout for readability
-        r, w, e = select.select([fd], [], [], 0)
+        r, w, _ = select.select([fd], [], [], 0)
         bitmask = (select.POLLIN | select.POLLHUP)
         poll = select.poll()
         poll.register(fd, bitmask)

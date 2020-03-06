@@ -23,6 +23,7 @@ import logging
 import math
 import os
 import voluptuous as v
+from typing import Dict  # noqa: F401
 
 from nodepool import zk
 from nodepool import exceptions
@@ -33,7 +34,7 @@ class Drivers:
     """The Drivers plugin interface"""
 
     log = logging.getLogger("nodepool.driver.Drivers")
-    drivers = {}
+    drivers = {}  # type: Dict[str, Driver]
     drivers_paths = None
 
     @staticmethod
