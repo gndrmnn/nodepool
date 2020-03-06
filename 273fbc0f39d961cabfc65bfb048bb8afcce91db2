@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_70b49480",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T22:33:29Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be optional at first?",
+      "range": {
+        "startLine": 63,
+        "startChar": 21,
+        "endLine": 63,
+        "endChar": 32
+      },
+      "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_50a5d845",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T22:33:29Z",
+      "side": 1,
+      "message": "i think those arguments need to be wrapped in list type.",
+      "range": {
+        "startLine": 968,
+        "startChar": 0,
+        "endLine": 969,
+        "endChar": 56
+      },
+      "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
