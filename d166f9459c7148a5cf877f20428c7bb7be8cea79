@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_30905c95",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 34
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T21:46:54Z",
+      "side": 1,
+      "message": "alright, i\u0027ll drop the scheme setting",
+      "parentUuid": "1fa4df85_0d52eb3b",
+      "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_ad44f774",
         "filename": "nodepool/zk_auth.py",
         "patchSetId": 34
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-06T21:36:30Z",
       "side": 1,
       "message": "Er, can we just use a class for this?",
+      "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_f0864466",
+        "filename": "nodepool/zk_auth.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-06T21:46:54Z",
+      "side": 1,
+      "message": "We could use a class, but a type makes it opaque.",
+      "parentUuid": "1fa4df85_ad44f774",
       "revId": "d166f9459c7148a5cf877f20428c7bb7be8cea79",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
