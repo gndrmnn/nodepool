@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_53716243",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T23:29:30Z",
+      "side": 1,
+      "message": "At least in the current configuration, supporting sasl-digest only, we need both of these arguments, but the zookeeper-auth entry itself is not required.",
+      "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_f3916e48",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T23:29:30Z",
+      "side": 1,
+      "message": "No v.Required here means zookeeper-auth is optional.",
+      "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_50a5d845",
         "filename": "nodepool/zk.py",
         "patchSetId": 35
@@ -42,6 +76,23 @@
         "endLine": 969,
         "endChar": 56
       },
+      "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_13952a33",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 35
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-06T23:29:30Z",
+      "side": 1,
+      "message": "Ah yep.",
       "revId": "273fbc0f39d961cabfc65bfb048bb8afcce91db2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
