@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_7f5533f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 36
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-09T14:04:12Z",
+      "side": 1,
+      "message": "Looks like this is moved to the zuul/zuul change.",
+      "range": {
+        "startLine": 9,
+        "startChar": 64,
+        "endLine": 10,
+        "endChar": 59
+      },
+      "revId": "eeaa2262b4b98f4466bd3fafb6bad129a4ce3c99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
