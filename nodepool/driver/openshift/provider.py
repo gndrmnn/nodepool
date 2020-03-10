@@ -205,7 +205,7 @@ class OpenshiftProvider(Provider):
             'name': label.name,
             'image': label.image,
             'imagePullPolicy': label.image_pull,
-            'command': ["/bin/bash", "-c", "--"],
+            'command': ["/bin/sh", "-c"],
             'args': ["while true; do sleep 30; done;"],
             'workingDir': '/tmp',
         }
