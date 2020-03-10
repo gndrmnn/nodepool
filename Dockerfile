@@ -75,6 +75,7 @@ RUN \
       procps \
       yum \
       yum-utils \
+      zypper \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
