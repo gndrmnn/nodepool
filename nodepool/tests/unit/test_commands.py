@@ -362,3 +362,32 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(1, len(nodes))
         self.assertEqual(p1_nodes[0], nodes[0])
+
+    def test_info_selective(self):
+        '''
+        Test the --builds/--nodes options to the info command.
+
+        The test_info_and_erase option tests using neither of these options
+        (i.e., all data is returned).
+        '''
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+
+        nodes = self.waitForNodes('fake-label')
+
+        # Verify that only the image builds are listed.
+        cmd = ['info', 'fake-provider', '--builds']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 1)
+        self.assert_listed(configfile, cmd, 0, nodes[0].id, 0)
+
+        # Verify that only the nodes are listed.
+        cmd = ['info', 'fake-provider', '--nodes']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 0)
+        self.assert_listed(configfile, cmd, 0, nodes[0].id, 1)
+
+        # Test for silly users that want to supply both options.
+        cmd = ['info', 'fake-provider', '--builds', '--nodes']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 1)
+        self.assert_listed(configfile, cmd, 0, nodes[0].id, 1)
