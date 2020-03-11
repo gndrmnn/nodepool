@@ -362,3 +362,38 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(1, len(nodes))
         self.assertEqual(p1_nodes[0], nodes[0])
+
+    def test_info_selective(self):
+        '''
+        Test the --builds/--nodes options to the info command.
+
+        The test_info_and_erase option tests using neither of these options
+        (i.e., all data is returned).
+        '''
+        configfile = self.setup_config('info_cmd_two_provider.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+        p2_nodes = self.waitForNodes('fake-label2')
+
+        # Get rid of the second provider so that when we remove its
+        # data from ZooKeeper, the builder and launcher don't attempt to
+        # recreate the data.
+        self.replace_config(configfile, 'info_cmd_two_provider_remove.yaml')
+
+        # Verify that only the second provider image builds are listed.
+        cmd = ['info', 'fake-provider2', '--builds']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 1)
+        self.assert_listed(configfile, cmd, 0, p2_nodes[0].id, 0)
+
+        # Verify that only the second provider nodes are listed.
+        cmd = ['info', 'fake-provider2', '--nodes']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 0)
+        self.assert_listed(configfile, cmd, 0, p2_nodes[0].id, 1)
+
+        # Test for silly users that want to supply both options.
+        cmd = ['info', 'fake-provider2', '--builds', '--nodes']
+        self.assert_listed(configfile, cmd, 0, 'fake-image', 1)
+        self.assert_listed(configfile, cmd, 0, p2_nodes[0].id, 1)
