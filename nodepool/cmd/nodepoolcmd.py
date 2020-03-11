@@ -117,6 +117,10 @@ class NodePoolCmd(NodepoolApp):
             'provider',
             help='Provider name',
             metavar='PROVIDER')
+        cmd_info.add_argument('--builds', help='show only image build',
+                              action='store_true')
+        cmd_info.add_argument('--nodes', help='show only nodes',
+                              action='store_true')
         cmd_info.set_defaults(func=self.info)
 
         cmd_erase = subparsers.add_parser(
@@ -319,21 +323,31 @@ class NodePoolCmd(NodepoolApp):
         provider_builds = self.zk.getProviderBuilds(provider_name)
         provider_nodes = self.zk.getProviderNodes(provider_name)
 
+        def show_builds():
+            print("Image builds:")
+            t = PrettyTable(['Image Name', 'Build IDs'])
+            t.align = 'l'
+            for image, builds in provider_builds.items():
+                t.add_row([image, ','.join(builds)])
+            print(t)
+
+        def show_nodes():
+            print("\nNodes:")
+            t = PrettyTable(['ID', 'Server ID'])
+            t.align = 'l'
+            for node in provider_nodes:
+                t.add_row([node.id, node.external_id])
+            print(t)
+
         print("ZooKeeper data for provider %s\n" % provider_name)
 
-        print("Image builds:")
-        t = PrettyTable(['Image Name', 'Build IDs'])
-        t.align = 'l'
-        for image, builds in provider_builds.items():
-            t.add_row([image, ','.join(builds)])
-        print(t)
-
-        print("\nNodes:")
-        t = PrettyTable(['ID', 'Server ID'])
-        t.align = 'l'
-        for node in provider_nodes:
-            t.add_row([node.id, node.external_id])
-        print(t)
+        if self.args.builds:
+            show_builds()
+        if self.args.nodes:
+            show_nodes()
+        if not self.args.builds and not self.args.nodes:
+            show_builds()
+            show_nodes()
 
     def config_validate(self):
         validator = ConfigValidator(self.args.config)
