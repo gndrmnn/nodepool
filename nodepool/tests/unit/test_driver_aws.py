@@ -49,7 +49,7 @@ class TestDriverAws(tests.DBTestCase):
                           host_key_checking=True,
                           userdata=None,
                           public_ip=True,
-                          tags=False):
+                          tags=[]):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -90,6 +90,8 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][3]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][4]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][4]['security-group-id'] = sg_id
+        raw_config['providers'][0]['pools'][5]['subnet-id'] = subnet_id
+        raw_config['providers'][0]['pools'][5]['security-group-id'] = sg_id
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
@@ -160,13 +162,8 @@ class TestDriverAws(tests.DBTestCase):
                 if tags:
                     instance = ec2_resource.Instance(node.external_id)
                     tag_list = instance.tags
-
-                    self.assertIn({"Key": "has-tags", "Value": "true"},
-                                  tag_list)
-                    self.assertIn({
-                        "Key": "Name",
-                        "Value": "ubuntu1404-with-tags"
-                    }, tag_list)
+                    for tag in tags:
+                        self.assertIn(tag, tag_list)
 
                 # A new request will be paused and for lack of quota
                 # until this one is deleted
@@ -228,4 +225,14 @@ class TestDriverAws(tests.DBTestCase):
 
     def test_ec2_machine_tags(self):
         self._test_ec2_machine('ubuntu1404-with-tags',
-                               tags=True)
+                               tags=[
+                                   {"Key": "has-tags", "Value": "true"},
+                                   {"Key": "Name",
+                                    "Value": "ubuntu1404-with-tags"}
+                               ])
+
+    def test_ec2_machine_name_tag(self):
+        self._test_ec2_machine('ubuntu1404-with-name-tag',
+                               tags=[
+                                   {"Key": "Name", "Value": "different-name"}
+                               ])

@@ -1789,6 +1789,8 @@ section of the configuration.
               :required:
 
               Identifier to refer this label.
+              Nodepool will use this to set the name of the instance unless
+              the name is specified as a tag.
 
            .. attr:: cloud-image
               :type: str

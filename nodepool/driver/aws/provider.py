@@ -162,6 +162,11 @@ class AwsProvider(Provider):
 
     def createInstance(self, label):
         image_id = self.getImageId(label.cloud_image)
+        tags = label.tags
+        if not [tag for tag in label.tags if tag["Key"] == "Name"]:
+            tags.append(
+                {"Key": "Name", "Value": str(label.name)}
+            )
         args = dict(
             ImageId=image_id,
             MinCount=1,
@@ -174,8 +179,7 @@ class AwsProvider(Provider):
                 'DeviceIndex': 0}],
             TagSpecifications=[{
                 'ResourceType': 'instance',
-                'Tags': [{"Key": "Name",
-                          "Value": str(label.name)}] + label.tags
+                'Tags': tags
             }]
         )
 
