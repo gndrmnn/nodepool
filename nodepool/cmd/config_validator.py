@@ -59,6 +59,12 @@ class ConfigValidator:
             'listen_address': str,
         }
 
+        zk_tls = dict(
+            cert=v.Required(str),
+            key=v.Required(str),
+            ca=v.Required(str),
+        )
+
         top_level = {
             'webapp': webapp,
             'elements-dir': str,
@@ -70,6 +76,7 @@ class ConfigValidator:
                 'port': int,
                 'chroot': str,
             }],
+            'zookeeper-tls': zk_tls,
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],
