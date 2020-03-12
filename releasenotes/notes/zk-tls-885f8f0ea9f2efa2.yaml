@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    Support for encrypted connections to ZooKeeper has been added.
+
+    Before enabling, ensure that both Zuul and Nodepool software
+    versions support encrypted connections.  See the Zuul release
+    notes, documentation, and associated helper scripts for more
+    information.
+
+    Both Zuul and Nodepool may need to be restarted together with the
+    new configuration.
