@@ -13,13 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM opendevorg/python-builder as builder
+FROM docker.io/opendevorg/python-builder as builder
 
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
 RUN assemble
 
-FROM opendevorg/python-base as nodepool-base
+FROM docker.io/opendevorg/python-base as nodepool-base
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
