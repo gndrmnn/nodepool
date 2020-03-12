@@ -2184,6 +2184,36 @@ class ZooKeeper(object):
                         provider_builds[image].append(build)
         return provider_builds
 
+    def getProviderUploads(self, provider_name):
+        '''
+        Get all uploads for a provider for each image.
+
+        :param str provider_name: The provider name.
+        :returns: A dict, keyed by image name and build ID, of a list of
+            ImageUpload objects.
+        '''
+        provider_uploads = {}
+        image_names = self.getImageNames()
+        for image in image_names:
+            build_numbers = self.getBuildNumbers(image)
+            for build in build_numbers:
+                # If this build is not valid for this provider, move along.
+                if provider_name not in self.getBuildProviders(image, build):
+                    continue
+
+                # We've determined that we at least have a build for this
+                # provider so init with an empty upload list.
+                if image not in provider_uploads:
+                    provider_uploads[image] = {}
+                if build not in provider_uploads[image]:
+                    provider_uploads[image][build] = []
+
+                # Add any uploads we might have for this provider.
+                uploads = self.getUploads(image, build, provider_name)
+                for upload in uploads:
+                    provider_uploads[image][build].append(upload)
+        return provider_uploads
+
     def getProviderNodes(self, provider_name):
         '''
         Get all nodes for a provider.
