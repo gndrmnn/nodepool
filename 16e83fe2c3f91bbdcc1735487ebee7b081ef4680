@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_e352b3de",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-12T15:46:04Z",
+      "side": 1,
+      "message": "Oh, yes, I agree. I didn\u0027t notice that bit.",
+      "parentUuid": "1fa4df85_7281afc3",
+      "range": {
+        "startLine": 335,
+        "startChar": 19,
+        "endLine": 335,
+        "endChar": 21
+      },
+      "revId": "16e83fe2c3f91bbdcc1735487ebee7b081ef4680",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_52683320",
         "filename": "nodepool/cmd/nodepoolcmd.py",
         "patchSetId": 2
