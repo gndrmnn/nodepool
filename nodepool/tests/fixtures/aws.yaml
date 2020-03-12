@@ -14,6 +14,7 @@ labels:
   - name: ubuntu1404-private-ip
   - name: ubuntu1404-userdata
   - name: ubuntu1404-with-tags
+  - name: ubuntu1404-with-name-tag
 
 providers:
   - name: ec2-us-west-2
@@ -117,3 +118,14 @@ providers:
             key-name: zuul
             tags:
               has-tags: true
+      - name: name-tag
+        max-servers: 1
+        subnet-id: null
+        security-group-id: null
+        labels:
+          - name: ubuntu1404-with-name-tag
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+            tags:
+              Name: different-name
