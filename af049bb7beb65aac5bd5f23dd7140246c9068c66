@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_ea604338",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-12T17:23:22Z",
+      "side": 1,
+      "message": "This was removed in the zuul change.",
+      "range": {
+        "startLine": 132,
+        "startChar": 6,
+        "endLine": 132,
+        "endChar": 16
+      },
+      "revId": "af049bb7beb65aac5bd5f23dd7140246c9068c66",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_6a6bf31e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-12T17:23:22Z",
+      "side": 1,
+      "message": "This was removed in the zuul change.",
+      "range": {
+        "startLine": 138,
+        "startChar": 6,
+        "endLine": 138,
+        "endChar": 16
+      },
+      "revId": "af049bb7beb65aac5bd5f23dd7140246c9068c66",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
