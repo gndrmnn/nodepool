@@ -373,6 +373,25 @@ class TestZooKeeper(tests.DBTestCase):
         d = self.zk.getMostRecentImageUpload(image, provider, zk.READY)
         self.assertEqual(upload2.state_time, d.state_time)
 
+    def test_getProviderUploads(self):
+        image = "ubuntu-trusty"
+        provider = "rax"
+
+        build = zk.ImageBuild()
+        build.state = zk.READY
+        bnum = self.zk.storeBuild(image, build)
+
+        upload = zk.ImageUpload()
+        upload.state = zk.READY
+        upnum = self.zk.storeImageUpload(image, bnum, provider, upload)
+
+        d = self.zk.getProviderUploads(provider)
+        self.assertIn(image, d)
+        self.assertIn(bnum, d[image])
+        self.assertEqual(1, len(d[image][bnum]))
+        self.assertIsInstance(d[image][bnum][0], zk.ImageUpload)
+        self.assertEqual(upnum, d[image][bnum][0].id)
+
     def test_getBuilds_any(self):
         image = "ubuntu-trusty"
         path = self.zk._imageBuildsPath(image)

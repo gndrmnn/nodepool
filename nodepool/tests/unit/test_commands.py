@@ -51,7 +51,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                         if col_count:
                             self.assertEquals(len(row), col_count)
                         log.debug(row)
-                        if row[col] == val:
+                        if col < len(row) and row[col] == val:
                             rows_with_val += 1
                     self.assertEquals(rows_with_val, count)
                 break
@@ -320,6 +320,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.useBuilder(configfile)
         pool.start()
         p1_image = self.waitForImage('fake-provider', 'fake-image')
+        p2_image = self.waitForImage('fake-provider2', 'fake-image')
         p1_nodes = self.waitForNodes('fake-label')
         p2_nodes = self.waitForNodes('fake-label2')
 
@@ -328,33 +329,47 @@ class TestNodepoolCMD(tests.DBTestCase):
         # recreate the data.
         self.replace_config(configfile, 'info_cmd_two_provider_remove.yaml')
 
+        IMAGE_NAME_COL = 0
+        BUILD_ID_COL = 1
+        UPLOAD_ID_COL = 2
+        NODE_ID_COL = 0
+
         # Verify that the second provider image is listed
         self.assert_listed(
             configfile,
             ['info', 'fake-provider2'],
-            0, 'fake-image', 1)
-
-        # Verify that the second provider node is listed.
+            IMAGE_NAME_COL, 'fake-image', 1)
         self.assert_listed(
             configfile,
             ['info', 'fake-provider2'],
-            0, p2_nodes[0].id, 1)
+            BUILD_ID_COL, p2_image.build_id, 1)
+        self.assert_listed(
+            configfile,
+            ['info', 'fake-provider2'],
+            UPLOAD_ID_COL, p2_image.id, 1)
+
+        # Verify that the second provider node is listed in the second table.
+        self.assert_listed(
+            configfile,
+            ['info', 'fake-provider2'],
+            NODE_ID_COL, p2_nodes[0].id, 1)
 
         # Erase the data for the second provider
         self.patch_argv(
             "-c", configfile, 'erase', 'fake-provider2', '--force')
         nodepoolcmd.main()
 
-        # Verify that no build or node for the second provider is listed
-        # after the previous erase
+        # Verify that no image or node for the second provider is listed
+        # after the previous erase. With no build data, the image name should
+        # not even show up.
         self.assert_listed(
             configfile,
             ['info', 'fake-provider2'],
-            0, 'fake-image', 0)
+            IMAGE_NAME_COL, 'fake-image', 0)
         self.assert_listed(
             configfile,
             ['info', 'fake-provider2'],
-            0, p2_nodes[0].id, 0)
+            NODE_ID_COL, p2_nodes[0].id, 0)
 
         # Verify that we did not affect the first provider
         image = self.waitForImage('fake-provider', 'fake-image')
