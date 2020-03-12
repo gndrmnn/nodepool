@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_7281afc3",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2020-03-12T13:55:14Z",
+      "side": 1,
+      "message": "I think it would look better if the newline was printed between show_builds and show_nodes when both are used instead of always adding a newline before the nodes.",
+      "range": {
+        "startLine": 335,
+        "startChar": 19,
+        "endLine": 335,
+        "endChar": 21
+      },
+      "revId": "16e83fe2c3f91bbdcc1735487ebee7b081ef4680",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_52683320",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2020-03-12T13:55:14Z",
+      "side": 1,
+      "message": "Something like:\n\nshow_builds()\nprint(\"\\n\")\nshow_nodes()",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 24
+      },
+      "revId": "16e83fe2c3f91bbdcc1735487ebee7b081ef4680",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
