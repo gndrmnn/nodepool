@@ -119,6 +119,8 @@ class NodePoolCmd(NodepoolApp):
             metavar='PROVIDER')
         cmd_info.add_argument('--builds', help='show only image builds',
                               action='store_true')
+        cmd_info.add_argument('--uploads', help='show only image uploads',
+                              action='store_true')
         cmd_info.add_argument('--nodes', help='show only nodes',
                               action='store_true')
         cmd_info.set_defaults(func=self.info)
@@ -339,16 +341,31 @@ class NodePoolCmd(NodepoolApp):
                 t.add_row([node.id, node.external_id])
             print(t)
 
+        def show_uploads():
+            provider_uploads = self.zk.getProviderUploads(provider_name)
+            print("Uploads:")
+            t = PrettyTable(['Image Name', 'Build ID', 'Upload IDs'])
+            t.align = 'l'
+            for image in provider_uploads:
+                for build, uploads in provider_uploads[image].items():
+                    upload_ids = [u.id for u in uploads]
+                    t.add_row([image, build, ','.join(upload_ids)])
+            print(t)
+
         print("ZooKeeper data for provider %s\n" % provider_name)
 
         if self.args.builds:
             show_builds()
         if self.args.nodes:
             show_nodes()
-        if not self.args.builds and not self.args.nodes:
+        if self.args.uploads:
+            show_uploads()
+        if not (self.args.builds or self.args.uploads or self.args.nodes):
             show_builds()
             print("\n")
             show_nodes()
+            print("\n")
+            show_uploads()
 
     def config_validate(self):
         validator = ConfigValidator(self.args.config)
