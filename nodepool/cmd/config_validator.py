@@ -64,6 +64,12 @@ class ConfigValidator:
             password=v.Required(str),
         )
 
+        zk_tls = dict(
+            cert=v.Required(str),
+            key=v.Required(str),
+            ca=v.Required(str),
+        )
+
         top_level = {
             'webapp': webapp,
             'elements-dir': str,
@@ -76,6 +82,7 @@ class ConfigValidator:
                 'chroot': str,
             }],
             'zookeeper-auth': zk_auth,
+            'zookeeper-tls': zk_tls,
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],

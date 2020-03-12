@@ -951,7 +951,8 @@ class ZooKeeper(object):
     def resetLostFlag(self):
         self._became_lost = False
 
-    def connect(self, host_list, read_only=False, auth_data=None):
+    def connect(self, host_list, read_only=False, auth_data=None,
+                tls_cert=None, tls_key=None, tls_ca=None):
         '''
         Establish a connection with ZooKeeper cluster.
 
@@ -963,6 +964,9 @@ class ZooKeeper(object):
             (one per server) defining the ZooKeeper cluster servers.
         :param bool read_only: If True, establishes a read-only connection.
         :param ZKAuth auth_data: A ZKAuth object representing the auth data
+        :param str tls_key: Path to TLS key
+        :param str tls_cert: Path to TLS cert
+        :param str tls_ca: Path to TLS CA cert
 
         '''
         if self.client is None:
@@ -972,6 +976,11 @@ class ZooKeeper(object):
             if auth_data:
                 args['auth_data'] = auth_data.getAuthData()
                 args['default_acl'] = auth_data.getACL()
+            if tls_key:
+                args['use_ssl'] = True
+                args['keyfile'] = tls_key
+                args['certfile'] = tls_cert
+                args['ca'] = tls_ca
             self.client = KazooClient(**args)
             self.client.add_listener(self._connection_listener)
             # Manually retry initial connection attempt

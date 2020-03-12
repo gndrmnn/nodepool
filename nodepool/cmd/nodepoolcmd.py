@@ -372,6 +372,9 @@ class NodePoolCmd(NodepoolApp):
             self.zk = zk.ZooKeeper(enable_cache=False)
             self.zk.connect(
                 list(config.zookeeper_servers.values()),
+                tls_cert=config.zookeeper_tls_cert,
+                tls_key=config.zookeeper_tls_key,
+                tls_ca=config.zookeeper_tls_ca,
                 auth_data=config.zookeeper_auth)
 
         self.pool.setConfig(config)

@@ -38,6 +38,9 @@ class Config(ConfigValue):
         self.provider_managers = {}
         self.zookeeper_servers = {}
         self.zookeeper_auth = None
+        self.zookeeper_tls_cert = None
+        self.zookeeper_tls_key = None
+        self.zookeeper_tls_ca = None
         self.elementsdir = None
         self.imagesdir = None
         self.build_log_dir = None
@@ -89,6 +92,13 @@ class Config(ConfigValue):
         if not zk_auth:
             return
         self.zookeeper_auth = nodepool.zk_auth.ZKAuth(zk_auth)
+
+    def setZooKeeperTLS(self, zk_tls):
+        if not zk_tls:
+            return
+        self.zookeeper_tls_cert = zk_tls.get('cert')
+        self.zookeeper_tls_key = zk_tls.get('key')
+        self.zookeeper_tls_ca = zk_tls.get('ca')
 
     def setZooKeeperServers(self, zk_cfg):
         if not zk_cfg:
@@ -270,6 +280,7 @@ def loadConfig(config_path):
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
     newconfig.setZooKeeperAuth(config.get('zookeeper-auth'))
+    newconfig.setZooKeeperTLS(config.get('zookeeper-tls'))
 
     # Ensure at least qcow2 is set to be passed to qemu-img.
     # Note that this needs to be after setting the providers as they
@@ -294,3 +305,4 @@ def loadSecureConfig(config, secure_config_path):
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
     config.setZooKeeperAuth(secure.get('zookeeper-auth'))
+    config.setZooKeeperTLS(secure.get('zookeeper-tls'))

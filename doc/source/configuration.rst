@@ -139,6 +139,30 @@ Options
 
       The authentication password.
 
+.. attr:: zookeeper-tls
+   :type: dict
+
+   To use TLS connections with Zookeeper, provide this dictionary with
+   the following keys:
+
+   .. attr:: cert
+      :type: string
+      :required:
+
+      The path to the PEM encoded certificate.
+
+   .. attr:: key
+      :type: string
+      :required:
+
+      The path to the PEM encoded key.
+
+   .. attr:: ca
+      :type: string
+      :required:
+
+      The path to the PEM encoded CA certificate.
+
 
 .. attr:: labels
    :type: list
