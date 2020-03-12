@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_a3127bb3",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-12T15:58:38Z",
+      "side": 1,
+      "message": "Maybe remove the space between tags and .append?",
+      "revId": "6614e0d532d6073e1caa408a2e5f723e66fc20ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
