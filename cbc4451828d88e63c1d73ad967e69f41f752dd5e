@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_5fbca5ba",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2020-03-13T16:06:28Z",
+      "side": 1,
+      "message": "This should suffice until some time in the distant future when that configuration line changes, but maybe by then this will no longer be a problem.",
+      "revId": "cbc4451828d88e63c1d73ad967e69f41f752dd5e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
