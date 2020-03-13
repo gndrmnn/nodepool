@@ -14,12 +14,14 @@
 # limitations under the License.
 
 FROM docker.io/opendevorg/python-builder as builder
+# ============================================================================
 
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
 RUN assemble
 
 FROM docker.io/opendevorg/python-base as nodepool-base
+# ============================================================================
 
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
@@ -41,16 +43,22 @@ COPY tools/uid_entrypoint.sh /uid_entrypoint
 ENTRYPOINT ["/uid_entrypoint"]
 
 FROM nodepool-base as nodepool
+# ============================================================================
+
 USER 10001
 CMD ["/usr/local/bin/nodepool"]
 
 FROM nodepool-base as nodepool-launcher
+# ============================================================================
+
 USER 10001
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
     /usr/local/bin/nodepool-launcher ${_DAEMON_FLAG}
 
 FROM nodepool-base as nodepool-builder
+# ============================================================================
+
 # dib needs sudo
 RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
   && chmod 0440 /etc/sudoers.d/nodepool-sudo
