@@ -68,6 +68,7 @@ RUN \
       debian-keyring \
       git \
       kpartx \
+      lsb-release \
       qemu-utils \
       ubuntu-keyring \
       vhd-util \
