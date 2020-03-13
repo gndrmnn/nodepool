@@ -388,11 +388,7 @@ class CleanupWorker(BaseWorker):
         '''Return the subset of builds that are local'''
         ret = []
         for build in builds:
-            # To maintain backward compatibility with builders that didn't
-            # use unique builder IDs before, but do now, always compare to
-            # hostname as well since some ZK data may still reference that.
-            is_local = build.builder_id == self._builder_id or \
-                build.builder == self._hostname
+            is_local = build.builder_id == self._builder_id:
             if is_local:
                 ret.append(build)
         return ret
@@ -510,12 +506,8 @@ class CleanupWorker(BaseWorker):
             # provider uploads are in a deleting state. This prevents us from
             # keeping local files around while we wait on clouds to remove
             # the image on their side (which can be very slow).
-            # To maintain backward compatibility with builders that didn't
-            # use unique builder IDs before, but do now, always compare to
-            # hostname as well since some ZK data may still reference that.
             all_deleting = all(map(lambda x: x.state == zk.DELETING, uploads))
-            is_local = build.builder_id == self._builder_id or \
-                build.builder == self._hostname
+            is_local = build.builder_id == self._builder_id:
             if (not uploads or all_deleting) and is_local:
                 self._deleteLocalBuild(image, build)
 
