@@ -24,6 +24,9 @@ FROM docker.io/opendevorg/python-base as nodepool-base
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
+# A non zero number of clouds need older TLS
+RUN sed -i -e 's/^MinProtocol = TLSv1.2/MinProtocol = TLSv1.1/g' /etc/ssl/openssl.cnf
+
 ### Containers should NOT run as root as a good practice
 RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
 
