@@ -194,14 +194,14 @@ Options
    remove its entry from `diskimages`.  All uploads will be deleted as
    well as the files on disk.
 
+   A sample configuration section is illustrated below.
+
    .. code-block:: yaml
 
       diskimages:
-        - name: ubuntu-precise
-          pause: False
-          rebuild-age: 86400
+        - name: base
+          abstract: True
           elements:
-            - ubuntu-minimal
             - vm
             - simple-init
             - openstack-repos
@@ -210,40 +210,44 @@ Options
             - cache-bindep
             - growroot
             - infra-package-needs
-          release: precise
-          username: zuul
           env-vars:
             TMPDIR: /opt/dib_tmp
             DIB_CHECKSUM: '1'
             DIB_IMAGE_CACHE: /opt/dib_cache
+
+        - name: ubuntu-bionic
+          parent: base
+          pause: False
+          rebuild-age: 86400
+          elements:
+            - ubuntu-minimal
+          release: bionic
+          username: zuul
+          env-vars:
             DIB_APT_LOCAL_CACHE: '0'
             DIB_DISABLE_APT_CLEANUP: '1'
             FS_TYPE: ext3
-        - name: ubuntu-xenial
+
+        - name: ubuntu-focal
+          base: ubuntu-bionic
+          release: focal
+          env-vars:
+            DIB_DISABLE_APT_CLEANUP: '0'
+
+        - name: centos-8
+          parent: base
           pause: True
           rebuild-age: 86400
           formats:
             - raw
             - tar
           elements:
-            - ubuntu-minimal
-            - vm
-            - simple-init
-            - openstack-repos
-            - nodepool-base
-            - cache-devstack
-            - cache-bindep
-            - growroot
-            - infra-package-needs
-          release: precise
-          username: ubuntu
+            - centos-minimal
+            - epel
+          release: '8'
+          username: centos
           env-vars:
-            TMPDIR: /opt/dib_tmp
-            DIB_CHECKSUM: '1'
-            DIB_IMAGE_CACHE: /opt/dib_cache
-            DIB_APT_LOCAL_CACHE: '0'
-            DIB_DISABLE_APT_CLEANUP: '1'
-            FS_TYPE: ext3
+            FS_TYPE: xfs
 
    Each entry is a dictionary with the following keys
 
@@ -253,6 +257,43 @@ Options
 
       Identifier to reference the disk image in
       :attr:`providers.[openstack].diskimages` and :attr:`labels`.
+
+   .. attr:: abstract
+      :type: bool
+      :default: False
+
+      An ``abstract`` entry is used to group common configuration
+      together, but will not create any actual image.  A `diskimage`
+      marked as ``abstract`` should be inherited from in another
+      `diskimage` via its :attr:`diskimages.parent` attribute.
+
+      An `abstract` entry can have a :attr:`diskimages.parent`
+      attribute as well; values will merge down.
+
+   .. attr:: parent
+      :type: str
+      :default: None
+
+      A parent `diskimage` entry to inherit from.  Any values from the
+      parent will be populated into this image.  Setting any fields in
+      the current image will override the parent values execept for
+      the following:
+
+      * :attr:`diskimages.env-vars`: new keys are additive, any
+        existing keys from the parent will be overwritten by values in
+        the current diskimage (i.e. Python `update()` semantics for a
+        dictionary).
+      * :attr:`diskimages.elements`: values are additive; the list of
+        elements from the parent will be extended with any values in
+        the current diskimage.  Note that the element list passed to
+        `diskimage-builder` is not ordered; elements specify their own
+        dependencies and `diskimage-builder` builds a graph from that,
+        not the command-line order.
+
+      Note that a parent `diskimage` may also have it's own parent,
+      creating a chain of inheritance.  See also
+      :attr:`diskimages.abstract` for defining common configuration
+      that does not create a diskimage.
 
    .. attr:: formats
       :type: list
