@@ -94,15 +94,17 @@ class Config(ConfigValue):
             name = z.host + '_' + str(z.port)
             self.zookeeper_servers[name] = z
 
-    def setDiskImages(self, diskimages_cfg):
+    def setDiskImages(self, diskimages_cfg, globals_cfg):
         if not diskimages_cfg:
             return
 
         for diskimage in diskimages_cfg:
             d = DiskImage()
             d.name = diskimage['name']
+            if 'elements' in globals_cfg:
+                d.elements = u' '.join(globals_cfg['elements']) + ' '
             if 'elements' in diskimage:
-                d.elements = u' '.join(diskimage['elements'])
+                d.elements += u' '.join(diskimage['elements'])
             else:
                 d.elements = ''
             d.dib_cmd = str(diskimage.get('dib-cmd', 'disk-image-create'))
@@ -111,7 +113,8 @@ class Config(ConfigValue):
             # interpreted as a number (e.g. "21" for fedora)
             d.release = str(diskimage.get('release', ''))
             d.rebuild_age = int(diskimage.get('rebuild-age', 86400))
-            d.env_vars = diskimage.get('env-vars', {})
+            d.env_vars = globals_cfg.get('env-vars', {})
+            d.env_vars.update(diskimage.get('env-vars', {}))
             if not isinstance(d.env_vars, dict):
                 d.env_vars = {}
             d.image_types = set(diskimage.get('formats', []))
@@ -173,7 +176,7 @@ class Label(ConfigValue):
 class DiskImage(ConfigValue):
     def __init__(self):
         self.name = None
-        self.elements = None
+        self.elements = ''
         self.dib_path = None
         self.release = None
         self.rebuild_age = None
@@ -259,7 +262,8 @@ def loadConfig(config_path):
     newconfig.setMaxHoldAge(config.get('max-hold-age'))
     newconfig.setWebApp(config.get('webapp'))
     newconfig.setZooKeeperServers(config.get('zookeeper-servers'))
-    newconfig.setDiskImages(config.get('diskimages'))
+    newconfig.setDiskImages(config.get('diskimages'),
+                            config.get('diskimages-globals', {}))
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
 

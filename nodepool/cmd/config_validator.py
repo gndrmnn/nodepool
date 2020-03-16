@@ -40,6 +40,11 @@ class ConfigValidator:
             'max-ready-age': int,
         }
 
+        diskimages_globals = {
+            'env-vars' : {str: str},
+            'elements' : [str],
+        }
+
         diskimage = {
             'name': str,
             'dib-cmd': str,
@@ -72,6 +77,7 @@ class ConfigValidator:
             }],
             'providers': list,
             'labels': [label],
+            'diskimages-globals': diskimages_globals,
             'diskimages': [diskimage],
             'max-hold-age': int,
         }

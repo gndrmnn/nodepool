@@ -1,0 +1,5 @@
+features:
+  - |
+    A new config section ``diskimages-globals`` is added to allow
+    common values of ``elements`` and ``env-vars`` to be set for
+    all ``diskimages`` at once.
