@@ -87,6 +87,11 @@ RUN \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+# This is required to communicate with ORD and DFW RAX regions, which
+# seem to talk themselves down to SHA1 which isn't considered secure.
+# See https://storyboard.openstack.org/#!/story/2007407 task #39073
+RUN sed -i -e 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/g'
+
 USER 10001
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
