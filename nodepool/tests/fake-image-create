@@ -58,9 +58,83 @@ while true ; do
     esac
 done
 
+ELEMENTS="$@"
+
 if [ -z "$outfile" ]; then
     echo "No output file specified."
     exit 1
+fi
+
+#
+#  WTF is this testing?  That we merge abstract diskimages correctly
+#  into children and append/override variables correctly.  The two
+#  images in the test config file
+#  (/nodepool/tests/fixtures/node_diskimage_parents.yaml) set
+#  PARENT_TEST_FLAG which we gate on here so we only run this for that
+#  test.  The diskimage layout when hitting this path is roughly like
+#  this:
+#
+#           %%%%% abstract-base %%%%%
+#           elements: fedora
+#           env:  TMPDIR, DIB_IMAGE_... (and so on)
+#                 PARENT_TEST_ENV_OVERRIDE=abstract-base
+#                  |       |
+#          |-------+        +-------|
+#          |                        |
+#          |                        |
+#          |     %%%%% abstract-intermediate %%%%%
+#          |     elements: intermediate
+#          |     env: PARENT_TEST_ENV_INTERMEDIATE=abstract-intermediate
+#          |                               |
+#          |                               |
+# %%%%% parent-image-1 %%%%%     %%%%% parent-image-2 %%%%%%
+# elements: vm                   elements: vm
+# env:  PARENT_TEST_FLAG=base   env:  PARENT_TEST_FLAG=intermediate
+#                                     PARENT_TEST_ENV_OVERRIDE=parent-image-2
+#
+# So for parent-image-1 we want to see elements "fedora vm" and for
+# parent-image-2 we want to see "fedora intermediate vm"; and similar
+# updates/overrides for the env-vars.
+#
+if [[ -n "${PARENT_TEST_FLAG}" ]]; then
+
+    if [[ "${PARENT_TEST_FLAG}" == "base" ]]; then
+        # Note we've already tested the base-defined env-vars like
+        # TMPDIR, DIB_*, etc. are merged because they're tested above.
+        if [[ "${ELEMENTS}" != "fedora vm" ]]; then
+            echo "Elements list did not merge correctly"
+            exit 1
+        else
+            echo "  -> Base elements list correctly merged"
+        fi
+
+    elif [[ "${PARENT_TEST_FLAG}" == "intermediate" ]]; then
+
+        if [[ "${ELEMENTS}" != "fedora intermediate vm" ]]; then
+            echo "Elements list did not merge correctly"
+            exit 1
+        else
+            echo "  -> Intermediate elements list correctly merged"
+        fi
+
+        if [[ "${PARENT_TEST_ENV_INTERMEDIATE}" != "abstract-intermediate" ]]; then
+            echo "Did not see intermediate env value in final job"
+            exit 1
+        else
+            echo "  -> Intermediate env value correctly merged"
+        fi
+
+        if [[ "${PARENT_TEST_ENV_OVERRIDE}" != "parent-image-2" ]]; then
+            echo "Final job did not override PARENT_TEST_ENV_OVERRIDE correctly"
+            exit 1
+        else
+            echo "  -> Env override correct"
+        fi
+    else
+        echo "Invalid PARENT_TEST_IMAGE?"
+        exit 1
+    fi
+
 fi
 
 # Tests can pause this script by creating this file before it runs.
