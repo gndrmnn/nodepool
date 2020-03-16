@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import math
 import time
 import yaml
@@ -31,6 +32,7 @@ class Config(ConfigValue):
     items found in the YAML config file, and set attributes accordingly.
     '''
     def __init__(self):
+        self.log = logging.getLogger("nodepool.Config")
         self.diskimages = {}
         self.labels = {}
         self.providers = {}
@@ -98,28 +100,71 @@ class Config(ConfigValue):
         if not diskimages_cfg:
             return
 
+        all_diskimages = {}
+        non_abstract_diskimages = []
+
+        # create a dict and split out the abstract images which don't
+        # become final images, but can still be referenced as parent:
         for diskimage in diskimages_cfg:
             name = diskimage['name']
-            d = DiskImage(name)
+            all_diskimages[name] = diskimage
+            if not diskimage.get('abstract', False):
+                non_abstract_diskimages.append(diskimage)
 
-            if 'elements' in diskimage:
-                d.elements = u' '.join(diskimage['elements'])
-            else:
-                d.elements = ''
-            d.dib_cmd = str(diskimage.get('dib-cmd', 'disk-image-create'))
+        def _set_from_config(diskimage, config):
+            build_timeout = config.get('build-timeout', None)
+            if build_timeout:
+                diskimage.build_timeout = build_timeout
+            dib_cmd = config.get('dib-cmd', None)
+            if dib_cmd:
+                diskimage.dib_cmd = dib_cmd
+            elements = config.get('elements', [])
+            diskimage.elements.extend(elements)
+            env_vars = config.get('env-vars', {})
+            diskimage.env_vars.update(env_vars)
+            image_types = config.get('formats', None)
+            if image_types:
+                diskimage.image_types = set(image_types)
+            pause = config.get('pause', None)
+            if pause:
+                diskimage.pause = pause
+            python_path = config.get('python-path', None)
+            if python_path:
+                diskimage.python_path = python_path
+            rebuild_age = config.get('rebuild-age', None)
+            if rebuild_age:
+                diskimage.rebuild_age = rebuild_age
+            release = config.get('release', None)
+            if release:
+                diskimage.release = release
+
+        def _merge_image_cfg(diskimage, parent):
+            parent_cfg = all_diskimages[parent]
+            if parent_cfg.get('parent', None):
+                _merge_image_cfg(diskimage, parent_cfg['parent'])
+            _set_from_config(diskimage, parent_cfg)
+            self.log.debug("Merged diskimage %s into %s" %
+                           (parent_cfg['name'], diskimage.name))
+
+        for cfg in non_abstract_diskimages:
+            d = DiskImage(cfg['name'])
+
+            # Walk the parents, if any, and set their values
+            if cfg.get('parent', None):
+                _merge_image_cfg(d, cfg.get('parent'))
+
+            # Now set our config, which overrides any values from
+            # parents.
+            _set_from_config(d, cfg)
+
             # must be a string, as it's passed as env-var to
             # d-i-b, but might be untyped in the yaml and
             # interpreted as a number (e.g. "21" for fedora)
-            d.release = str(diskimage.get('release', ''))
-            d.rebuild_age = int(diskimage.get('rebuild-age', 86400))
-            d.env_vars = diskimage.get('env-vars', {})
-            if not isinstance(d.env_vars, dict):
-                d.env_vars = {}
-            d.image_types = set(diskimage.get('formats', []))
-            d.pause = bool(diskimage.get('pause', False))
-            d.username = diskimage.get('username', 'zuul')
-            d.python_path = diskimage.get('python-path', 'auto')
-            d.build_timeout = diskimage.get('build-timeout', (8 * 60 * 60))
+            d.release = str(d.release)
+
+            # This is expected as a space-separated string
+            d.elements = u' '.join(d.elements)
+
             self.diskimages[d.name] = d
 
     def setSecureDiskimageEnv(self, diskimages, secure_config_path):
@@ -172,22 +217,26 @@ class Label(ConfigValue):
 
 
 class DiskImage(ConfigValue):
-    __slots__ = ['name', 'dib_cmd', 'elements', 'env_vars',
+    __slots__ = ['name', 'abstract', 'dib_cmd', 'elements', 'env_vars',
                  'image_types', 'pause', 'python_path',
                  'rebuild_age', 'release', 'username']
 
+    BUILD_TIMEOUT = (8 * 60 * 60) # 8 hours
+    REBUILD_AGE = (24 * 60 * 60)  # 24 hours
+
     def __init__(self, name):
         self.name = name
-        self.build_timeout = None
-        self.dib_cmd = None
-        self.elements = None
-        self.env_vars = None
-        self.image_types = None
+        self.abstract = False
+        self.build_timeout = self.BUILD_TIMEOUT
+        self.dib_cmd = 'disk-image-create'
+        self.elements = []
+        self.env_vars = {}
+        self.image_types = set([])
         self.pause = False
-        self.python_path = None
-        self.rebuild_age = None
-        self.release = None
-        self.username = None
+        self.python_path = 'auto'
+        self.rebuild_age = self.REBUILD_AGE
+        self.release = ''
+        self.username = 'zuul'
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
