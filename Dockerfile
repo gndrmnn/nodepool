@@ -26,6 +26,11 @@ FROM docker.io/opendevorg/python-base as nodepool-base
 COPY --from=builder /output/ /output
 RUN /output/install-from-bindep
 
+# This is required to communicate with ORD and DFW RAX regions, which
+# seem to talk themselves down to SHA1 which isn't considered secure.
+# See https://storyboard.openstack.org/#!/story/2007407 task #39073
+RUN sed -i -e 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULT@SECLEVEL=1/g'
+
 ### Containers should NOT run as root as a good practice
 RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
 
