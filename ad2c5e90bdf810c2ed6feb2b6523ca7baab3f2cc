@@ -16,6 +16,40 @@
       "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_d7d5c71c",
+        "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-16T14:09:18Z",
+      "side": 1,
+      "message": "The implementation adds the globals before the unit elements list, which means this is useful *only* if you build fedora.  I would think that putting them at the end would be more useful (ie, \"cache some stuff\" element).  But really, I think the ambiguity is problematic.  This is why ordered lists are never merged in Zuul.  I don\u0027t think we should do that here either.",
+      "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_77dc1346",
+        "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-16T14:09:18Z",
+      "side": 1,
+      "message": "The env vars are simpler to reason about.",
+      "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
