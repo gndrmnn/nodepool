@@ -1,0 +1,79 @@
+elements-dir: .
+images-dir: '{images_dir}'
+build-log-dir: '{build_log_dir}'
+
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: fake-image-globals-1
+    min-ready: 1
+  - name: fake-image-globals-2
+    min-ready: 1
+
+providers:
+  - name: fake-provider-1
+    cloud: fake
+    driver: fake
+    region-name: fake-region
+    rate: 0.0001
+    diskimages:
+      - name: globals-image-1
+    pools:
+      - name: main
+        max-servers: 96
+        labels:
+          - name: fake-image-globals-1
+            diskimage: globals-image-1
+            min-ram: 8192
+  - name: fake-provider-2
+    cloud: fake
+    driver: fake
+    region-name: fake-region
+    rate: 0.0001
+    diskimages:
+      - name: globals-image-2
+    pools:
+      - name: main
+        max-servers: 96
+        labels:
+          - name: fake-image-globals-2
+            diskimage: globals-image-2
+            min-ram: 8192
+
+diskimages-globals:
+  elements:
+    - fedora
+  env-vars:
+    TMPDIR: /opt/dib_tmp
+    GLOBAL_OVERRIDE: override_this
+
+diskimages:
+  - name: globals-image-1
+    elements:
+      # - fedora : should merge from global
+      - vm
+    release: 21
+    dib-cmd: nodepool/tests/fake-image-create
+    env-vars:
+      # TMPDIR: /opt/dib_tmp : should merge from global
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_CLOUD_IMAGES: http://download.fedoraproject.org/pub/fedora/linux/releases/test/21-Beta/Cloud/Images/x86_64/
+      BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
+      GLOBAL_TEST_OVERRIDE: '0'
+
+  - name: globals-image-2
+    elements:
+      # - fedora : should merge from global
+      - vm
+    release: 21
+    dib-cmd: nodepool/tests/fake-image-create
+    env-vars:
+      # TMPDIR: /opt/dib_tmp : should merge from global
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_CLOUD_IMAGES: http://download.fedoraproject.org/pub/fedora/linux/releases/test/21-Beta/Cloud/Images/x86_64/
+      BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
+      GLOBAL_TEST_OVERRIDE: '1'
+      GLOBAL_OVERRIDE: is_changed

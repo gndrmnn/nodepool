@@ -335,6 +335,31 @@ Options
                 ``disk-image-create`` are not considered an API and
                 may change.
 
+.. attr:: diskimages-globals
+   :type: dict
+
+   This dictionary allows you to specify values that will be merged
+   into all entries in the following :attr:`diskimages` section.
+   Currently this supports :attr:`diskimages.elements` and
+   :attr:`diskimages.env-vars` entries only.
+
+   ``elements`` are additive to the final list.  ``env-vars`` are also
+   additive, but the same key provided by a ``diskiamges`` entry will
+   override a global value.
+
+   .. code-block:: yaml
+
+      diskimages-globals:
+        elements:
+          # Elements are additive to any values
+          # provided by individual diskimage entries
+          - element_to_add
+        env-vars:
+          # Individual diskimage entries override keys
+          # this dictionary if specified
+          ENVIRONMENT_VARIABLE: foo
+          ANOTHER: bar
+
 .. attr:: providers
    :type: list
 

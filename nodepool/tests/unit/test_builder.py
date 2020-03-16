@@ -399,6 +399,12 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.assertReportedStat('nodepool.dib_image_build.'
                                 'fake-image-vhd.vhd.size', '4096', 'g')
 
+    def test_diskimage_build_globals_vars_merge(self):
+        configfile = self.setup_config('node_diskimage_globals.yaml')
+        self.useBuilder(configfile)
+        self.waitForBuild('globals-image-1', '0000000001')
+        self.waitForBuild('globals-image-2', '0000000001')
+
     @mock.patch('select.poll')
     def test_diskimage_build_timeout(self, mock_poll):
         configfile = self.setup_config('diskimage_build_timeout.yaml')
