@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_b7a04ba7",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-16T14:10:46Z",
+      "side": 0,
+      "message": "Maybe we should leave the sudo setting here so that users can still specify a uid when running the container and dib will work?",
+      "revId": "9ffe97403d645d17c3f75d3eada00d5a7ebb5634",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
