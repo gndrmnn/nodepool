@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_ea201afa",
+        "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-16T15:14:38Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand what you mean by \"useful only if you build fedora\".\n\nDIB elements order doesn\u0027t matter as each element internally sets up run parts ordering for each build phase. Whether these come before or after on the command line shouldn\u0027t matter. I guess that means we could technically express this list as a set instead, but I\u0027m not sure yaml can express a set?",
+      "parentUuid": "1fa4df85_d7d5c71c",
+      "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_77dc1346",
         "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
         "patchSetId": 2
