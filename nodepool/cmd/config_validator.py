@@ -42,10 +42,12 @@ class ConfigValidator:
 
         diskimage = {
             v.Required('name'): str,
+            'abstract': bool,
             'dib-cmd': str,
             'pause': bool,
             'elements': [str],
             'formats': [str],
+            'parent': str,
             'release': v.Any(str, int),
             'rebuild-age': int,
             'env-vars': {str: str},
@@ -121,6 +123,13 @@ class ConfigValidator:
                     log.error("diskimage %s already defined" % name)
                     errors = True
                 diskimages[name] = diskimage
+
+            for diskimage in config.get('diskimages'):
+                if diskimage.get('parent', None):
+                    if diskimage['parent'] not in diskimages:
+                        log.error("diskimage %s has non-existant parent: %s" %
+                                  (diskimage['name'], diskimage['parent']))
+                        errors = True
 
         if errors is True:
             return 1

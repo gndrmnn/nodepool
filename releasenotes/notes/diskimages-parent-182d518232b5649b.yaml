@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Entries in the `diskimages` section can now specify a parent image
+    to inherit configuration values from.  You can also specify images
+    for configuration use only as `abstract` to consolidate
+    common values.
