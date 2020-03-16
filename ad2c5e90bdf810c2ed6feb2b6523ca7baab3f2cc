@@ -54,6 +54,23 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_6ad0aaca",
+        "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-16T15:19:04Z",
+      "side": 1,
+      "message": "I thought they were ordered.  I stand corrected.",
+      "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_77dc1346",
         "filename": "nodepool/tests/fixtures/node_diskimage_globals.yaml",
         "patchSetId": 2
