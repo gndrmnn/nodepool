@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_1db139e2",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-16T21:17:14Z",
+      "side": 1,
+      "message": "We are asserting that fake-provider2\u0027s content shows up below. Should we be waiting for that provider instead?",
+      "revId": "11429b6881cba4a4a6e00b9f47396a6c5ecfa5bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_fdc53d3e",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-16T21:17:14Z",
+      "side": 1,
+      "message": "Though waiting for the label here is probably sufficient. I guess the line above is mostly just confusing.",
+      "revId": "11429b6881cba4a4a6e00b9f47396a6c5ecfa5bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_1de619ea",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-16T21:17:14Z",
+      "side": 1,
+      "message": "I don\u0027t think we are removing its data from zk? Is this section necessary?",
+      "revId": "11429b6881cba4a4a6e00b9f47396a6c5ecfa5bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
