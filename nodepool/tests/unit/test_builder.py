@@ -24,6 +24,7 @@ from pathlib import Path
 from nodepool import builder, exceptions, tests
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool import zk
+from nodepool.config import Config
 from nodepool.nodeutils import iterate_timeout
 
 
@@ -96,6 +97,89 @@ class TestNodepoolBuilderDibImage(tests.BaseTestCase):
 
         image = builder.DibImageFile('myid1234')
         self.assertRaises(exceptions.BuilderError, image.to_path, '/imagedir/')
+
+
+class TestNodepoolBuilderImageInheritance(tests.BaseTestCase):
+    def test_parent_job(self):
+        config = Config()
+        diskimages = [
+            {
+                'name': 'parent',
+                'dib-cmd': 'parent-dib-cmd',
+                'elements': ['a', 'b'],
+                'env-vars': {
+                    'A': 'foo',
+                    'B': 'bar',
+                },
+                'release': 21,
+            },
+            {
+                'name': 'child',
+                'parent': 'parent',
+                'dib-cmd': 'override-dib-cmd',
+                'elements': ['c'],
+                'env-vars': {
+                    'A': 'override_foo',
+                    'C': 'moo'
+                },
+            },
+
+        ]
+        config.setDiskImages(diskimages)
+        parsed = config.diskimages['child']
+        self.assertEqual(parsed.dib_cmd, 'override-dib-cmd')
+        self.assertEqual(parsed.release, '21')
+        self.assertEqual(parsed.elements, 'a b c')
+        self.assertDictEqual({
+            'A': 'override_foo',
+            'B': 'bar',
+            'C': 'moo',
+        }, parsed.env_vars)
+
+    def test_abstract_jobs(self):
+        config = Config()
+        diskimages = [
+            {
+                'name': 'abstract',
+                'abstract': True,
+                'elements': ['a', 'b'],
+                'env-vars': {
+                    'A': 'foo',
+                    'B': 'bar',
+                },
+            },
+            {
+                'name': 'another-abstract',
+                'abstract': True,
+                'parent': 'abstract',
+                'elements': ['c'],
+                'env-vars': {
+                    'A': 'override_abstract',
+                    'C': 'moo'
+                },
+            },
+            {
+                'name': 'job',
+                'parent': 'another-abstract',
+                'elements': ['d'],
+                'dib-cmd': 'override-dib-cmd',
+                'env-vars': {
+                    'A': 'override_foo_again',
+                    'D': 'zoo'
+                },
+            },
+
+        ]
+        config.setDiskImages(diskimages)
+        parsed = config.diskimages['job']
+        self.assertEqual(parsed.dib_cmd, 'override-dib-cmd')
+        self.assertEqual(parsed.elements, 'a b c d')
+        self.assertDictEqual({
+            'A': 'override_foo_again',
+            'B': 'bar',
+            'C': 'moo',
+            'D': 'zoo',
+        }, parsed.env_vars)
 
 
 class TestNodePoolBuilder(tests.DBTestCase):
@@ -398,6 +482,12 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                 '4096', 'g')
         self.assertReportedStat('nodepool.dib_image_build.'
                                 'fake-image-vhd.vhd.size', '4096', 'g')
+
+    def test_diskimage_build_parents(self):
+        configfile = self.setup_config('node_diskimage_parents.yaml')
+        self.useBuilder(configfile)
+        self.waitForBuild('parent-image-1', '0000000001')
+        self.waitForBuild('parent-image-2', '0000000001')
 
     @mock.patch('select.poll')
     def test_diskimage_build_timeout(self, mock_poll):
