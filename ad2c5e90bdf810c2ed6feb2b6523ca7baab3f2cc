@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_ee70370b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-16T03:15:41Z",
+      "side": 1,
+      "message": "For a sample of where i think it would be useful; see https://review.opendev.org/713160",
+      "revId": "ad2c5e90bdf810c2ed6feb2b6523ca7baab3f2cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
