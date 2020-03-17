@@ -65,10 +65,10 @@ class TestConfigComparisons(tests.BaseTestCase):
         self.assertNotEqual(a, b)
 
     def test_DiskImage(self):
-        a = DiskImage()
-        b = DiskImage()
+        a = DiskImage('foo')
+        b = DiskImage('foo')
         self.assertEqual(a, b)
-        a.name = "foo"
+        a.name = 'bar'
         self.assertNotEqual(a, b)
 
     def test_ProviderDiskImage(self):
