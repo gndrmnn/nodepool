@@ -109,38 +109,11 @@ class Config(ConfigValue):
             if not diskimage.get('abstract', False):
                 non_abstract_diskimages.append(diskimage)
 
-        def _set_from_config(diskimage, config):
-            build_timeout = config.get('build-timeout', None)
-            if build_timeout:
-                diskimage.build_timeout = build_timeout
-            dib_cmd = config.get('dib-cmd', None)
-            if dib_cmd:
-                diskimage.dib_cmd = dib_cmd
-            elements = config.get('elements', [])
-            diskimage.elements.extend(elements)
-            env_vars = config.get('env-vars', {})
-            diskimage.env_vars.update(env_vars)
-            image_types = config.get('formats', None)
-            if image_types:
-                diskimage.image_types = set(image_types)
-            pause = config.get('pause', None)
-            if pause:
-                diskimage.pause = pause
-            python_path = config.get('python-path', None)
-            if python_path:
-                diskimage.python_path = python_path
-            rebuild_age = config.get('rebuild-age', None)
-            if rebuild_age:
-                diskimage.rebuild_age = rebuild_age
-            release = config.get('release', None)
-            if release:
-                diskimage.release = release
-
         def _merge_image_cfg(diskimage, parent):
             parent_cfg = all_diskimages[parent]
             if parent_cfg.get('parent', None):
                 _merge_image_cfg(diskimage, parent_cfg['parent'])
-            _set_from_config(diskimage, parent_cfg)
+            diskimage.setFromConfig(parent_cfg)
 
         for cfg in non_abstract_diskimages:
             d = DiskImage(cfg['name'])
@@ -151,7 +124,7 @@ class Config(ConfigValue):
 
             # Now set our config, which overrides any values from
             # parents.
-            _set_from_config(d, cfg)
+            d.setFromConfig(cfg)
 
             # must be a string, as it's passed as env-var to
             # d-i-b, but might be untyped in the yaml and
@@ -234,6 +207,48 @@ class DiskImage(ConfigValue):
         self.rebuild_age = self.REBUILD_AGE
         self.release = ''
         self.username = 'zuul'
+
+    def setFromConfig(self, config):
+        '''Merge values from configuration file
+
+        This merges the values from a config dictionary (from the YAML
+        config file) into the current diskimage.  Values from the
+        specified config file will override any current values with
+        the following exceptions:
+
+        * elements append to the list
+        * env_vars dict has update() sematics (new keys append,
+          existing keys overwrite)
+
+        This may be run multiple times to implement inheritance.
+
+        :param dict config: The diskimage config from the config file
+        '''
+        build_timeout = config.get('build-timeout', None)
+        if build_timeout:
+            self.build_timeout = build_timeout
+        dib_cmd = config.get('dib-cmd', None)
+        if dib_cmd:
+            self.dib_cmd = dib_cmd
+        elements = config.get('elements', [])
+        self.elements.extend(elements)
+        env_vars = config.get('env-vars', {})
+        self.env_vars.update(env_vars)
+        image_types = config.get('formats', None)
+        if image_types:
+            self.image_types = set(image_types)
+        pause = config.get('pause', None)
+        if pause:
+            self.pause = pause
+        python_path = config.get('python-path', None)
+        if python_path:
+            self.python_path = python_path
+        rebuild_age = config.get('rebuild-age', None)
+        if rebuild_age:
+            self.rebuild_age = rebuild_age
+        release = config.get('release', None)
+        if release:
+            self.release = release
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
