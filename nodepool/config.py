@@ -173,30 +173,30 @@ class Label(ConfigValue):
 class DiskImage(ConfigValue):
     def __init__(self):
         self.name = None
-        self.elements = None
+        self.build_timeout = None
         self.dib_cmd = None
-        self.release = None
-        self.rebuild_age = None
+        self.elements = None
         self.env_vars = None
         self.image_types = None
         self.pause = False
-        self.username = None
         self.python_path = None
-        self.build_timeout = None
+        self.rebuild_age = None
+        self.release = None
+        self.username = None
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
             return (other.name == self.name and
-                    other.elements == self.elements and
+                    other.build_timeout == self.build_timeout and
                     other.dib_cmd == self.dib_cmd and
-                    other.release == self.release and
-                    other.rebuild_age == self.rebuild_age and
+                    other.elements == self.elements and
                     other.env_vars == self.env_vars and
                     other.image_types == self.image_types and
                     other.pause == self.pause and
-                    other.username == self.username and
                     other.python_path == self.python_path and
-                    other.build_timeout == self.build_timeout)
+                    other.rebuild_age == self.rebuild_age and
+                    other.release == self.release and
+                    other.username == self.username)
         return False
 
     def __repr__(self):
