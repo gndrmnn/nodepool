@@ -174,7 +174,7 @@ class DiskImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.elements = None
-        self.dib_path = None
+        self.dib_cmd = None
         self.release = None
         self.rebuild_age = None
         self.env_vars = None
@@ -188,7 +188,7 @@ class DiskImage(ConfigValue):
         if isinstance(other, DiskImage):
             return (other.name == self.name and
                     other.elements == self.elements and
-                    other.dib_path == self.dib_path and
+                    other.dib_cmd == self.dib_cmd and
                     other.release == self.release and
                     other.rebuild_age == self.rebuild_age and
                     other.env_vars == self.env_vars and
