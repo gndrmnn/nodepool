@@ -107,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_be97a990",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T23:47:40Z",
+      "side": 1,
+      "message": "you\u0027re right; keeping parent in the final DiskImage object doesn\u0027t make much sense, because DiskImage(s) are only the final result of merging -- if it\u0027s parent field refers to an abstract image, that doesn\u0027t have a DiskImage and doesn\u0027t make sense for the lifespan of the object.  i\u0027ve removed the parent field.",
+      "parentUuid": "1fa4df85_72f3aa9f",
+      "range": {
+        "startLine": 154,
+        "startChar": 16,
+        "endLine": 154,
+        "endChar": 44
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_6f07451e",
         "filename": "nodepool/config.py",
         "patchSetId": 4
