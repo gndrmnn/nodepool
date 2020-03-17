@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_e9e1edfd",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T22:16:26Z",
+      "side": 1,
+      "message": "i think that \"--builds --nodes\" will actually be different now to specifying nothing, as in this case it has a space but \"--builds --nodes\" won\u0027t?",
+      "revId": "9f9fcdf03c13d9f7758ee2dd97394267fe93efe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_49d36139",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T22:16:26Z",
+      "side": 1,
+      "message": "for completeness should probably test the backwards compat behaviour that nothing prints both?",
+      "revId": "9f9fcdf03c13d9f7758ee2dd97394267fe93efe6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
