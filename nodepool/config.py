@@ -99,8 +99,9 @@ class Config(ConfigValue):
             return
 
         for diskimage in diskimages_cfg:
-            d = DiskImage()
-            d.name = diskimage['name']
+            name = diskimage['name']
+            d = DiskImage(name)
+
             if 'elements' in diskimage:
                 d.elements = u' '.join(diskimage['elements'])
             else:
@@ -175,8 +176,8 @@ class DiskImage(ConfigValue):
                  'image_types', 'pause', 'python_path',
                  'rebuild_age', 'release', 'username']
 
-    def __init__(self):
-        self.name = None
+    def __init__(self, name):
+        self.name = name
         self.build_timeout = None
         self.dib_cmd = None
         self.elements = None
