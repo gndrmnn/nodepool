@@ -41,7 +41,7 @@ class ConfigValidator:
         }
 
         diskimage = {
-            'name': str,
+            v.Required('name'): str,
             'dib-cmd': str,
             'pause': bool,
             'elements': [str],
@@ -112,6 +112,15 @@ class ConfigValidator:
                         log.error("diskimage %s in provider %s "
                                   "not in top-level labels" %
                                   (label['name'], provider['name']))
+
+        diskimages = {}
+        if config.get('diskimages', None):
+            for diskimage in config.get('diskimages'):
+                name = diskimage['name']
+                if name in diskimages:
+                    log.error("diskimage %s already defined" % name)
+                    errors = True
+                diskimages[name] = diskimage
 
         if errors is True:
             return 1
