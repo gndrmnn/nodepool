@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1fa4df85_72216afb",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-17T17:34:05Z",
+      "side": 1,
+      "message": "nit: this function could moved to a DiskImage.fromYAML attribute.",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 114,
+        "endChar": 28
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_7202cab6",
         "filename": "nodepool/config.py",
         "patchSetId": 4
@@ -13,6 +36,29 @@
       "writtenOn": "2020-03-17T17:23:01Z",
       "side": 1,
       "message": "The post order recursion is important here in order to apply the env merges in the correct order. (calling this out for other reviewers).",
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_72f3aa9f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-17T17:34:05Z",
+      "side": 1,
+      "message": "is this diskimage.parent attribute assignment necessary?",
+      "range": {
+        "startLine": 154,
+        "startChar": 16,
+        "endLine": 154,
+        "endChar": 44
+      },
       "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
