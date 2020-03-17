@@ -171,36 +171,37 @@ class Label(ConfigValue):
 
 
 class DiskImage(ConfigValue):
+    __slots__ = ['name', 'build_timeout', 'dib_cmd', 'elements', 'env_vars',
+                 'image_types', 'pause', 'python_path',
+                 'rebuild_age', 'release', 'username']
+
     def __init__(self):
         self.name = None
-        self.elements = None
+        self.build_timeout = None
         self.dib_cmd = None
-        self.release = None
-        self.rebuild_age = None
+        self.elements = None
         self.env_vars = None
         self.image_types = None
         self.pause = False
-        self.username = None
         self.python_path = None
-        self.build_timeout = None
+        self.rebuild_age = None
+        self.release = None
+        self.username = None
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
-            return (other.name == self.name and
-                    other.elements == self.elements and
-                    other.dib_cmd == self.dib_cmd and
-                    other.release == self.release and
-                    other.rebuild_age == self.rebuild_age and
-                    other.env_vars == self.env_vars and
-                    other.image_types == self.image_types and
-                    other.pause == self.pause and
-                    other.username == self.username and
-                    other.python_path == self.python_path and
-                    other.build_timeout == self.build_timeout)
+            for attr in self.__slots__:
+                if getattr(self, attr) != getattr(other, attr):
+                    return False
+            return True
         return False
 
     def __repr__(self):
-        return "<DiskImage %s>" % self.name
+        s = "<DiskImage "
+        for attr in self.__slots__:
+            s += "%s:%s " % (attr, getattr(self, attr))
+        s += ">"
+        return s
 
 
 def as_list(item):
