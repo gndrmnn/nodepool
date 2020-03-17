@@ -230,7 +230,7 @@ class FakeOpenStackCloud(object):
             self._image_list, instance_type=Dummy.IMAGE,
             done_status='READY', **kwargs)
 
-    def get_image(self, name_or_id):
+    def get_image(self, name_or_id, filters=None):
         return self._get(name_or_id, self._image_list)
 
     def list_images(self):

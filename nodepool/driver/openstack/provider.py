@@ -264,7 +264,7 @@ class OpenStackProvider(Provider):
         if name in self._images:
             return self._images[name]
 
-        image = self._client.get_image(name)
+        image = self._client.get_image(name, filters={'status': 'active'})
         self._images[name] = image
         return image
 
@@ -396,7 +396,7 @@ class OpenStackProvider(Provider):
             image_name, server, **meta)
 
     def getImage(self, image_id):
-        return self._client.get_image(image_id)
+        return self._client.get_image(image_id, filters={'status': 'active'})
 
     def labelReady(self, label):
         if not label.cloud_image:
