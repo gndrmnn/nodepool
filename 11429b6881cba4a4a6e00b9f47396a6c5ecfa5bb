@@ -50,6 +50,24 @@
       "revId": "11429b6881cba4a4a6e00b9f47396a6c5ecfa5bb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_306c4f07",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-17T15:36:56Z",
+      "side": 1,
+      "message": "This test was copied from the test above that does erasing. I\u0027ve simplified it in the next PS. Should address all of your comments.",
+      "parentUuid": "1fa4df85_1de619ea",
+      "revId": "11429b6881cba4a4a6e00b9f47396a6c5ecfa5bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
