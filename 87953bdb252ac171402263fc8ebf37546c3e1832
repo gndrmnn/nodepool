@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_4337c2b1",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T20:03:24Z",
+      "side": 1,
+      "message": "sure, will follow-on to reduce code motion here",
+      "parentUuid": "1fa4df85_72216afb",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 114,
+        "endChar": 28
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_7202cab6",
         "filename": "nodepool/config.py",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2020-03-17T17:23:01Z",
       "side": 1,
       "message": "The post order recursion is important here in order to apply the env merges in the correct order. (calling this out for other reviewers).",
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_a3ba3607",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T20:03:24Z",
+      "side": 1,
+      "message": "yeah; that should be tested as i\u0027ve inherited through several parents in the test suite",
+      "parentUuid": "1fa4df85_7202cab6",
       "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -88,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_c3c5f28f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T20:03:24Z",
+      "side": 1,
+      "message": "well, as much as python has constants ... I can add a BUILD_TIMEOUT to make it clear",
+      "parentUuid": "1fa4df85_6f07451e",
+      "range": {
+        "startLine": 228,
+        "startChar": 29,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_52022e0b",
         "filename": "nodepool/config.py",
         "patchSetId": 4
@@ -111,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_83bffaf9",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T20:03:24Z",
+      "side": 1,
+      "message": "done as above with REBUILD_AGE",
+      "parentUuid": "1fa4df85_52022e0b",
+      "range": {
+        "startLine": 236,
+        "startChar": 27,
+        "endLine": 236,
+        "endChar": 32
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_729e4a64",
         "filename": "nodepool/tests/fake-image-create",
         "patchSetId": 4
@@ -122,6 +212,30 @@
       "writtenOn": "2020-03-17T17:23:01Z",
       "side": 1,
       "message": "I think this should be \"abstract-intermediate\" as is this whole case is skipped.",
+      "range": {
+        "startLine": 104,
+        "startChar": 39,
+        "endLine": 104,
+        "endChar": 51
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_c321724f",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-17T20:03:24Z",
+      "side": 1,
+      "message": "I don\u0027t think so ... I know this is a very tangled path :/\n\nfake-dib is called to build two actual images \"parent-image-1\" and \"parent-image-2\".\n\nwhen it\u0027s building -1 PARENT_TEST_IMAGE\u003d\u003dbase, when it\u0027s building -2 PARENT_TEST_IMAGE\u003d\u003dintermediate.  In both cases PARENT_TEST_IMAGE is set (which isn\u0027t done from any other tests; that\u0027s why the initial -n $PARENT_TEST_IMAGE gate).\n\nin the \"base\" case we just test the elements are \"fedora vm\", but in the intermediate case that has added an element so it is \"fedora intermediate vm\".  env vars have similar overrides/additions being checked.",
+      "parentUuid": "1fa4df85_729e4a64",
       "range": {
         "startLine": 104,
         "startChar": 39,
