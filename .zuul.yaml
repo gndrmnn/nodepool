@@ -332,7 +332,7 @@
         - tox-pep8
         - tox-py35:
             nodeset: ubuntu-xenial
-        - tox-py36
+        - tox-py38
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-openstack:
@@ -355,7 +355,7 @@
         - tox-pep8
         - tox-py35:
             nodeset: ubuntu-xenial
-        - tox-py36
+        - tox-py38
         - nodepool-functional-openstack
         - nodepool-functional-openstack-src
         - nodepool-functional-k8s
