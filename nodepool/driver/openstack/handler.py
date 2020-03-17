@@ -167,7 +167,7 @@ class OpenStackNodeLauncher(NodeLauncher):
         self.log.debug("Waiting for server %s" % server.id)
         server = self.handler.manager.waitForServer(
             server, self.provider_config.launch_timeout,
-            auto_ip=self.pool.auto_floating_ip)
+            auto_ip=self.pool.auto_floating_ip, ip_pool=self.pool.ip_pool)
 
         if server.status != 'ACTIVE':
             raise exceptions.LaunchStatusException("Server %s for node id: %s "

@@ -127,6 +127,7 @@ class ProviderPool(ConfigPool):
         self.azs = None
         self.networks = None
         self.security_groups = None
+        self.ip_pool = None
         self.auto_floating_ip = True
         self.host_key_checking = True
         self.labels = None
@@ -151,7 +152,8 @@ class ProviderPool(ConfigPool):
                     other.security_groups == self.security_groups and
                     other.auto_floating_ip == self.auto_floating_ip and
                     other.host_key_checking == self.host_key_checking and
-                    other.labels == self.labels)
+                    other.labels == self.labels and
+                    other.ip_pool == self.ip_pool)
         return False
 
     def __repr__(self):
@@ -176,6 +178,7 @@ class ProviderPool(ConfigPool):
                                                      False)
         self.azs = pool_config.get('availability-zones')
         self.networks = pool_config.get('networks', [])
+        self.ip_pool = pool_config.get('floating-pool')
         self.security_groups = pool_config.get('security-groups', [])
         self.auto_floating_ip = bool(pool_config.get('auto-floating-ip', True))
         self.host_key_checking = bool(pool_config.get('host-key-checking',
@@ -409,7 +412,8 @@ class OpenStackProviderConfig(ProviderConfig):
             'max-ram': int,
             'labels': [pool_label],
             'availability-zones': [str],
-            'security-groups': [str]
+            'security-groups': [str],
+            'floating-pool': [str]
         })
 
         schema = ProviderConfig.getCommonSchemaDict()
