@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_7202cab6",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-17T17:23:01Z",
+      "side": 1,
+      "message": "The post order recursion is important here in order to apply the env merges in the correct order. (calling this out for other reviewers).",
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_6f07451e",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-17T17:23:01Z",
+      "side": 1,
+      "message": "Can we use a constant for this?",
+      "range": {
+        "startLine": 228,
+        "startChar": 29,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_52022e0b",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-17T17:23:01Z",
+      "side": 1,
+      "message": "Constant for this too?",
+      "range": {
+        "startLine": 236,
+        "startChar": 27,
+        "endLine": 236,
+        "endChar": 32
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_729e4a64",
+        "filename": "nodepool/tests/fake-image-create",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-03-17T17:23:01Z",
+      "side": 1,
+      "message": "I think this should be \"abstract-intermediate\" as is this whole case is skipped.",
+      "range": {
+        "startLine": 104,
+        "startChar": 39,
+        "endLine": 104,
+        "endChar": 51
+      },
+      "revId": "87953bdb252ac171402263fc8ebf37546c3e1832",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
