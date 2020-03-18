@@ -22,6 +22,30 @@
       "revId": "3c4c0ff0a08cec3f2958a58a2cf0c03b8164fbd9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_763b88d0",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-18T19:46:33Z",
+      "side": 1,
+      "message": "After thinking about it some more, I think I\u0027m ok with this, but not the missing attribute though. ;)  I don\u0027t suppose it\u0027s more trouble than forgetting to add a new attribute to the __eq__ method, which is what we deal with now.",
+      "parentUuid": "1fa4df85_50b3f44d",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 54
+      },
+      "revId": "3c4c0ff0a08cec3f2958a58a2cf0c03b8164fbd9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
