@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_b67d806f",
+        "filename": "nodepool/config.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-18T19:54:29Z",
+      "side": 1,
+      "message": "I don\u0027t see any gain from this being in the logs, IMO.",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 64
+      },
+      "revId": "783c382734b8a0fcec3195e0dd06604f1fe38df1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
