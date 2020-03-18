@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_c01071ab",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-18T23:59:10Z",
+      "side": 1,
+      "message": "as in why didn\u0027t the original do that too? i don\u0027t know\n\nmy thinking at least was that comparing the slots is the external/configuration view of the diskimage so that\u0027s the only relevant parts of what might have changed in a comparison.",
+      "parentUuid": "1fa4df85_603bbdd0",
+      "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_8036f9e6",
         "filename": "nodepool/config.py",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-18T22:59:11Z",
       "side": 1,
       "message": "-1: This is going to be really long which will make logs harder to read.  It seems like just knowing the name of the diskimage is usually enough, is there a reason to add anything else?",
+      "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_80f4b988",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-18T23:59:10Z",
+      "side": 1,
+      "message": "i found it useful to see what was being merged into the final image; it\u0027s not like a name 1:1 corresponds to a yaml config entry with inheritance any more; if you still feel -1 i can revert it to a name.\n\ni\u0027m also pretty sure it\u0027s never actually printed for now at least; so we could leave it (it\u0027s useful if you\u0027re actively debugging and put in your own print) and if it becomes too verbose, revert it then?",
+      "parentUuid": "1fa4df85_8036f9e6",
       "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
