@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_60409d36",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-18T23:02:12Z",
+      "side": 1,
+      "message": "None is the default in .get, so that argument can be omitted.",
+      "revId": "98f15f39b3442748fd4dfb817c0c3f3f4d9466f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_803b59c6",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-18T23:02:12Z",
+      "side": 1,
+      "message": "But rather than doing this twice, you can just:\n  for diskimage in config.get(\u0027diskimages\u0027, []):\n\nAnd save a level of indentation.",
+      "revId": "98f15f39b3442748fd4dfb817c0c3f3f4d9466f8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
