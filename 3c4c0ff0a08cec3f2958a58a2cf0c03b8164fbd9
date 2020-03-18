@@ -46,6 +46,30 @@
       "revId": "3c4c0ff0a08cec3f2958a58a2cf0c03b8164fbd9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_ed30060a",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-18T22:52:00Z",
+      "side": 1,
+      "message": "nice catch, fixed",
+      "parentUuid": "1fa4df85_763b88d0",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 54
+      },
+      "revId": "3c4c0ff0a08cec3f2958a58a2cf0c03b8164fbd9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
