@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_50b3f44d",
+        "filename": "nodepool/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 3099
+      },
+      "writtenOn": "2020-03-18T18:10:12Z",
+      "side": 1,
+      "message": "I\u0027m not entirely certain how I feel about this yet. We now must keep __slots__ up-to-date with what is in __init__(), which is prone to error. As an example, \u0027build_timeout\u0027 is not present in __slots__, so mostly a -1 for that being missing for the time being.",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 54
+      },
+      "revId": "3c4c0ff0a08cec3f2958a58a2cf0c03b8164fbd9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
