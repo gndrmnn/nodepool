@@ -37,6 +37,23 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_8d1f0507",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-19T14:12:40Z",
+      "side": 1,
+      "message": "But there\u0027s nothing else to compare other than slots; the DiskImage can\u0027t have any attributes that aren\u0027t slots, so it can\u0027t have any private attributes.  If we wanted to set \"_dib_cmd\", we couldn\u0027t unless we added it to slots and then we would be comparing it in __eq__ (unless we filtered it out, which we could also do with __dict__).\n\nAnother option might be to have the ConfigValues construct themselves from a YAML dict, and store the raw YAML dict for comparison.",
+      "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_8036f9e6",
         "filename": "nodepool/config.py",
         "patchSetId": 4
