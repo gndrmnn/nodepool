@@ -86,6 +86,23 @@
       "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_0da795bf",
+        "filename": "nodepool/config.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-03-19T14:15:57Z",
+      "side": 1,
+      "message": "We do seem to usually use diskimage.name in logs.  I could go either way on this, but I still think I would prefer __repr__ to be minimally useful info (ie, a demonstrated need in a log line), and if you want to temporarily dump the whole thing to debug something, why not do this there?  Or rename this to a new method just for that?",
+      "revId": "b661e885dcfe8e3cecbb001dba4a8a7326b25fea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
