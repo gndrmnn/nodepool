@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1fa4df85_20e4e5ab",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-19T00:03:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_40b3214e",
+      "revId": "2c8cdbd055e72510c2cc4bd00d7cafc56fb66a85",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fa4df85_e0832d55",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2020-03-18T23:08:36Z",
       "side": 1,
       "message": "We typically omit the default tag in this case.",
+      "revId": "2c8cdbd055e72510c2cc4bd00d7cafc56fb66a85",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_40dfa1d5",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-19T00:03:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fa4df85_e0832d55",
       "revId": "2c8cdbd055e72510c2cc4bd00d7cafc56fb66a85",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
