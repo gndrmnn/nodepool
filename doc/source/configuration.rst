@@ -1098,6 +1098,12 @@ Selecting the static driver adds the following options to the
 
          Pool name
 
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
+
       .. attr:: nodes
          :type: list
          :required:

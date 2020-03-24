@@ -11,6 +11,9 @@ providers:
     driver: static
     pools:
       - name: main
+        node-attributes:
+          key1: value1
+          key2: value2
         nodes:
           - name: fake-host-1
             labels: fake-label

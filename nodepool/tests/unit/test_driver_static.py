@@ -62,6 +62,8 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].connection_port, 22022)
         self.assertEqual(nodes[0].connection_type, 'ssh')
         self.assertEqual(nodes[0].host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(nodes[0].attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
 
     def test_static_python_path(self):
         '''
