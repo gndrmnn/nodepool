@@ -17,6 +17,7 @@
 import math
 import voluptuous as v
 
+from nodepool.driver import ConfigPool
 from nodepool.driver.openshift.config import OpenshiftPool
 from nodepool.driver.openshift.config import OpenshiftProviderConfig
 
@@ -52,10 +53,11 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'python-path': str,
         }
 
-        pool = {
+        pool = ConfigPool.getCommonSchemaDict()
+        pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
-        }
+        })
 
         schema = OpenshiftProviderConfig.getCommonSchemaDict()
         schema.update({

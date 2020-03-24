@@ -51,6 +51,9 @@ providers:
         max-servers: 1
         subnet-id: null
         security-group-id: null
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404-ebs-optimized
             cloud-image: ubuntu1404
@@ -61,6 +64,9 @@ providers:
         max-servers: 1
         subnet-id: null
         security-group-id: null
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404
             cloud-image: ubuntu1404
@@ -92,6 +98,9 @@ providers:
         subnet-id: null
         security-group-id: null
         host-key-checking: false
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404-non-host-key-checking
             cloud-image: ubuntu1404
@@ -102,6 +111,9 @@ providers:
         subnet-id: null
         security-group-id: null
         public-ip-address: false
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404-private-ip
             cloud-image: ubuntu1404
@@ -111,6 +123,9 @@ providers:
         max-servers: 1
         subnet-id: null
         security-group-id: null
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404-with-tags
             cloud-image: ubuntu1404
@@ -122,6 +137,9 @@ providers:
         max-servers: 1
         subnet-id: null
         security-group-id: null
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: ubuntu1404-with-name-tag
             cloud-image: ubuntu1404

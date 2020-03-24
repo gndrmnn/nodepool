@@ -120,6 +120,8 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.assertEqual(node.connection_type, 'kubectl')
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
         self.assertEqual(node.python_path, '/usr/bin/python3')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
 
         node.state = zk.DELETING
         self.zk.storeNode(node)

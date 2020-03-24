@@ -145,6 +145,8 @@ class TestDriverAws(tests.DBTestCase):
                 self.assertEqual(node.state, zk.READY)
                 self.assertIsNotNone(node.launcher)
                 self.assertEqual(node.connection_type, 'ssh')
+                self.assertEqual(node.attributes,
+                                 {'key1': 'value1', 'key2': 'value2'})
                 if host_key_checking:
                     nodescan.assert_called_with(
                         node.interface_ip,

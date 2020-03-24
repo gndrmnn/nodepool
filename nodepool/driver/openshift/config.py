@@ -109,10 +109,11 @@ class OpenshiftProviderConfig(ProviderConfig):
             'python-path': str,
         }
 
-        pool = {
+        pool = ConfigPool.getCommonSchemaDict()
+        pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
-        }
+        })
 
         schema = ProviderConfig.getCommonSchemaDict()
         schema.update({
