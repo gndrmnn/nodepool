@@ -12,6 +12,9 @@ providers:
     context: service-account.local
     pools:
       - name: main
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: pod-fedora
             image: docker.io/fedora:28

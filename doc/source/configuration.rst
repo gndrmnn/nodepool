@@ -1261,6 +1261,12 @@ Selecting the kubernetes driver adds the following options to the
 
          Namespaces are prefixed with the pool's name.
 
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
+
       .. attr:: labels
          :type: list
 
@@ -1386,6 +1392,12 @@ Selecting the openshift driver adds the following options to the
          :required:
 
          Project's name are prefixed with the pool's name.
+
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
 
    .. attr:: labels
       :type: list
@@ -1516,6 +1528,12 @@ Selecting the openshift pods driver adds the following options to the
          :required:
 
          The project's name that will be used to create the pods.
+
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
 
    .. attr:: labels
       :type: list
@@ -1748,6 +1766,12 @@ section of the configuration.
          :required:
 
          A unique name within the provider for this pool of resources.
+
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
 
       .. attr:: subnet-id
 
@@ -2036,6 +2060,12 @@ section of the configuration.
          :required:
 
          A unique name within the provider for this pool of resources.
+
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be stored with the node data
+         in ZooKeeper. The keys and values can be any arbitrary string.
 
       .. attr:: host-key-checking
          :type: bool

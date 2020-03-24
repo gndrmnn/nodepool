@@ -13,6 +13,9 @@ providers:
     context: admin-cluster.local
     pools:
       - name: main
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: kubernetes-namespace
             type: namespace
