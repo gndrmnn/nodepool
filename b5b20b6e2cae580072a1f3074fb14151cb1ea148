@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df33271e_5b6e5f01",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-03-26T22:16:07Z",
+      "side": 1,
+      "message": "nit: this doesn\u0027t prevent abstract image to be used in a provider.",
+      "revId": "b5b20b6e2cae580072a1f3074fb14151cb1ea148",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
