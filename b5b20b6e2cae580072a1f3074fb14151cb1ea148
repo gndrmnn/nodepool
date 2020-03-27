@@ -16,6 +16,24 @@
       "revId": "b5b20b6e2cae580072a1f3074fb14151cb1ea148",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_0ff48d5a",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-03-27T04:40:26Z",
+      "side": 1,
+      "message": "true, that would be a good follow-on test",
+      "parentUuid": "df33271e_5b6e5f01",
+      "revId": "b5b20b6e2cae580072a1f3074fb14151cb1ea148",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
