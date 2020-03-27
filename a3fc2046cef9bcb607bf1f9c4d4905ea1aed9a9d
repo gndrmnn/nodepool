@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df33271e_a303f4b7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 2160,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-03-27T15:15:15Z",
+      "side": 1,
+      "message": "The other drivers have the image specific information in a separate cloud-images section so it can be referenced from multiple labels. What do you think about this:\n\n providers:\n   - name: azure-central-us\n     driver: azure\n     zuul-public-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAA...\n     resource_group_location: centralus\n     location: centralus\n     resource_group: ZuulCIDev\n     auth_path: /Users/grhayes/.azure/nodepoolCreds.json\n     subnet_id: /subscriptions/\u003csubscription-id\u003e/resourceGroups/ZuulCI/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default\n     cloud-images:\n       - name: ubuntu1804\n         username: zuul\n         imageReference:\n           sku: 18.04-LTS\n           publisher: Canonical\n           version: latest\n           offer: UbuntuServer\n     pools:\n       - name: main\n         max-servers: 10\n         labels:\n           - name: bionic\n             cloud-image: ubuntu1804\n             hardwareProfile:\n               vmSize: Standard_D1_v2\n             tags:\n               department: R\u0026D\n               purpose: CI/CD\n           - name: bionic-large\n             cloud-image: ubuntu1804\n             hardwareProfile:\n               vmSize: Large_D1_v2\n             tags:\n               department: R\u0026D\n               purpose: CI/CD",
+      "range": {
+        "startLine": 2156,
+        "startChar": 0,
+        "endLine": 2160,
+        "endChar": 39
+      },
+      "revId": "a3fc2046cef9bcb607bf1f9c4d4905ea1aed9a9d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
