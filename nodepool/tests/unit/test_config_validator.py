@@ -48,6 +48,24 @@ class TestConfigValidation(tests.BaseTestCase):
         ret = validator.validate()
         self.assertEqual(ret, 1)
 
+    def test_no_diskimage_name(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'no_diskimage_name.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
+
+    def test_duplicate_diskimage_name(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'duplicate_diskimage_name.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
+
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate',
