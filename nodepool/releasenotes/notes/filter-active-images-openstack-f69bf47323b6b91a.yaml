@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Fixed a bug where Nodepool did not filter for active images when
+    using the OpenStack provider.
