@@ -155,7 +155,7 @@ class StaticNodeProvider(Provider):
             registered.update([nodeTuple(node)])
         return registered
 
-    def registerNodeFromConfig(self, count, provider_name, pool_name,
+    def registerNodeFromConfig(self, count, provider_name, pool,
                                static_node):
         '''
         Register a static node from the config with ZooKeeper.
@@ -168,9 +168,10 @@ class StaticNodeProvider(Provider):
 
         :param int count: Number of times to register this node.
         :param str provider_name: Name of the provider.
-        :param str pool_name: Name of the pool owning the node.
+        :param str pool: Config of the pool owning the node.
         :param dict static_node: The node definition from the config file.
         '''
+        pool_name = pool.name
         host_keys = self.checkHost(static_node)
         waiting_nodes = self.getWaitingNodesOfType(static_node["labels"])
         node_tuple = nodeTuple(static_node)
@@ -193,6 +194,7 @@ class StaticNodeProvider(Provider):
             node.python_path = static_node["python-path"]
             nodeutils.set_node_ip(node)
             node.host_keys = host_keys
+            node.attributes = pool.node_attributes
             self.zk.storeNode(node)
             self.log.debug("Registered static node %s", node_tuple)
 
@@ -298,7 +300,7 @@ class StaticNodeProvider(Provider):
         if current_count < node["max-parallel-jobs"]:
             register_cnt = node["max-parallel-jobs"] - current_count
             self.registerNodeFromConfig(
-                register_cnt, self.provider.name, pool.name, node)
+                register_cnt, self.provider.name, pool, node)
 
         # De-register nodes to synchronize with our configuration.
         # This case covers an existing node, but with a decreased
@@ -421,7 +423,7 @@ class StaticNodeProvider(Provider):
 
         self.deregisterNode(leaked_count, nodeTuple(node))
         self.registerNodeFromConfig(
-            leaked_count, self.provider.name, pool.name, node)
+            leaked_count, self.provider.name, pool, node)
 
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)
@@ -454,8 +456,9 @@ class StaticNodeProvider(Provider):
                 return
 
             try:
+                pool = self.provider.pools[node.pool]
                 self.registerNodeFromConfig(
-                    1, node.provider, node.pool, static_node)
+                    1, node.provider, pool, static_node)
             except StaticNodeError as exc:
                 self.log.warning("Cannot re-register deleted node: %s", exc)
             except Exception:
