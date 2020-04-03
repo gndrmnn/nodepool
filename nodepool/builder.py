@@ -874,6 +874,12 @@ class BuildWorker(BaseWorker):
                         subprocess_done = True
                         rc = p.wait()
 
+                    # There is nothing to read but we still need to
+                    # check if we've timed out. Otherwise we could
+                    # wait forever for input that won't come.
+                    elif buildDidTimeout():
+                        break
+
                 if not subprocess_done:
                     if buildDidTimeout():
                         did_timeout = True
