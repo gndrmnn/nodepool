@@ -20,4 +20,4 @@
 
 - hosts: cluster
   roles:
-    - install-openshift
+    - ensure-openshift

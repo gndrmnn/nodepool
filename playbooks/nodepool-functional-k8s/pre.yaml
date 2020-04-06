@@ -1,5 +1,5 @@
 - hosts: all
   roles:
     - role: bindep
-    - role: install-kubernetes
+    - role: ensure-kubernetes
       docker_version: 18.06.1~ce~3-0~ubuntu
