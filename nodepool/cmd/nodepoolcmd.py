@@ -316,16 +316,19 @@ class NodePoolCmd(NodepoolApp):
 
     def info(self):
         provider_name = self.args.provider
-        provider_builds = self.zk.getProviderBuilds(provider_name)
+        provider_uploads = self.zk.getProviderUploads(provider_name)
         provider_nodes = self.zk.getProviderNodes(provider_name)
 
         print("ZooKeeper data for provider %s\n" % provider_name)
 
-        print("Image builds:")
-        t = PrettyTable(['Image Name', 'Build IDs'])
+        print("Image data:")
+        t = PrettyTable(['Image Name', 'Build ID', 'Upload IDs'])
         t.align = 'l'
-        for image, builds in provider_builds.items():
-            t.add_row([image, ','.join(builds)])
+        for image in sorted(provider_uploads):
+            for build in sorted(provider_uploads[image]):
+                uploads = provider_uploads[image][build]
+                upload_ids = sorted([u.id for u in uploads])
+                t.add_row([image, build, ','.join(upload_ids)])
         print(t)
 
         print("\nNodes:")
