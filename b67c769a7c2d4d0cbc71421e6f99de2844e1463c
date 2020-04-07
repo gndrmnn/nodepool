@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df33271e_6ddf373a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "This doesn\u0027t match the imageReference which is used to determine the actual image.",
+      "range": {
+        "startLine": 2276,
+        "startChar": 33,
+        "endLine": 2276,
+        "endChar": 63
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_ad1bff19",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "Copy pasta",
+      "range": {
+        "startLine": 2321,
+        "startChar": 50,
+        "endLine": 2321,
+        "endChar": 53
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_edea27d6",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2346,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "I guess this should be\n\n - name: bionic\n   cloud-image: bionic\n   hardwareProfile:\n     vmSize: Standard_D1_v2",
+      "range": {
+        "startLine": 2342,
+        "startChar": 16,
+        "endLine": 2346,
+        "endChar": 37
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_2d91af47",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "We should at least log that CloudError. Otherwise we have no means to debug not working disk cleanup.",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_6d9bb765",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "We should log this error as well.",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_4db7d3d9",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "We should log this error as well.",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_6de9f7b5",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "This hides CloudErrors other than 404. I think we should at least log them if we hit a different error.",
+      "range": {
+        "startLine": 217,
+        "startChar": 1,
+        "endLine": 218,
+        "endChar": 22
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df33271e_ed4227ab",
+        "filename": "nodepool/tests/unit/test_driver_azure.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-04-07T17:40:53Z",
+      "side": 1,
+      "message": "I don\u0027t find the place where this is used. Is this debug leftover?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
