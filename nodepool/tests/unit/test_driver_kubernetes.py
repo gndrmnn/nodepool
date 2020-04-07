@@ -122,6 +122,8 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'kubectl')
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
