@@ -146,13 +146,13 @@ class TaskManager:
             while True:
                 task = self.queue.get()
                 if not task:
-                    if not self._running:
-                        break
                     continue
                 self.log.debug("Manager %s running task %s (queue %s)" %
                                (self.name, task.name, self.queue.qsize()))
                 task.run(self)
                 self.queue.task_done()
+                if not self._running:
+                    break
         except Exception:
             self.log.exception("Task manager died")
             raise

@@ -893,8 +893,6 @@ class NodePool(threading.Thread):
         # completed before we continue the shutdown.
         if self.isAlive():
             self.join()
-        if self.config:
-            provider_manager.ProviderManager.stopProviders(self.config)
 
         if self._cleanup_thread:
             self._cleanup_thread.stop()
@@ -916,6 +914,10 @@ class NodePool(threading.Thread):
                 thd.stop()
             self.log.debug("Waiting for %s" % thd.name)
             thd.join()
+
+        # Stop providers after all the cleanup threads have stopped.
+        if self.config:
+            provider_manager.ProviderManager.stopProviders(self.config)
 
         if self.zk:
             self.zk.disconnect()
