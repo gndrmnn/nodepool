@@ -230,6 +230,8 @@ class GCEProviderConfig(ProviderConfig):
             'connection-type': str,
             'connection-port': int,
             'image-id': str,
+            'image-project': str,
+            'image-family': str,
             'username': str,
             'key': str,
             'python-path': str,

@@ -1,0 +1,222 @@
+# Copyright (C) 2020 Red Hat
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import logging
+import os
+import tempfile
+import time
+from unittest.mock import patch
+
+import yaml
+
+import googleapiclient.discovery
+import googleapiclient.errors
+
+from nodepool import tests
+from nodepool import zk
+from nodepool.nodeutils import iterate_timeout
+
+
+class GCloudRequest:
+    def __init__(self, method, args, kw):
+        self.method = method
+        self.args = args
+        self.kw = kw
+
+    def execute(self):
+        return self.method(*self.args, **self.kw)
+
+
+class GCloudCollection:
+    def __init__(self):
+        self.items = []
+
+    def list(self, *args, **kw):
+        return GCloudRequest(self._list, args, kw)
+
+    def _list(self, *args, **kw):
+        return dict(
+            items=self.items,
+        )
+
+    def insert(self, *args, **kw):
+        return GCloudRequest(self._insert, args, kw)
+
+    def delete(self, *args, **kw):
+        return GCloudRequest(self._delete, args, kw)
+
+
+class GCloudInstances(GCloudCollection):
+    def _insert(self, *args, **kw):
+        item = kw['body'].copy()
+        item['status'] = 'RUNNING'
+        item['zone'] = ('https://www.googleapis.com/compute/v1/projects/'
+                        + kw['project'] + '/' + kw['zone'])
+        item['networkInterfaces'][0]['networkIP'] = '10.0.0.1'
+        item['networkInterfaces'][0]['accessConfigs'][0]['natIP'] = '8.8.8.8'
+        item['selfLink'] = ("https://www.googleapis.com/compute/v1/projects/"
+                            + kw['project'] + '/instances/'
+                            + kw['body']['name'])
+        self.items.append(item)
+
+    def _delete(self, *args, **kw):
+        for item in self.items[:]:
+            if (kw['zone'] in item['zone'] and
+                kw['instance'] == item['name'] and
+                kw['project'] in item['selfLink']):
+                self.items.remove(item)
+
+
+class GCloudImages(GCloudCollection):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.items.append({
+            "family": "debian-9",
+            "selfLink": "https://www.googleapis.com/compute/beta/projects/"
+            "debian-cloud/global/images/debian-9-stretch-v20200309",
+        })
+
+    def getFromFamily(self, *args, **kw):
+        return GCloudRequest(self._getFromFamily, args, kw)
+
+    def _getFromFamily(self, *args, **kw):
+        for item in self.items:
+            if (kw['family'] == item['family'] and
+                kw['project'] in item['selfLink']):
+                return item
+        # Note this isn't quite right, but at least it's the correct class
+        raise googleapiclient.errors.HttpError(404, b'')
+
+
+class GCloudComputeEmulator:
+    def __init__(self):
+        self._instances = GCloudInstances()
+        self._images = GCloudImages()
+
+    def instances(self):
+        return self._instances
+
+    def images(self):
+        return self._images
+
+
+class GCloudEmulator:
+    def __init__(self):
+        self.compute = GCloudComputeEmulator()
+
+    def build(self, *args, **kw):
+        return self.compute
+
+
+class TestDriverGce(tests.DBTestCase):
+    log = logging.getLogger("nodepool.TestDriverAws")
+
+    def _wait_for_provider(self, nodepool, provider):
+        for _ in iterate_timeout(30, Exception, 'wait for provider'):
+            try:
+                nodepool.getProviderManager(provider)
+                break
+            except Exception:
+                pass
+
+    def _test_gce_machine(self, label,
+                          is_valid_config=True,
+                          host_key_checking=True):
+        self.patch(googleapiclient, 'discovery', GCloudEmulator())
+
+        conf_template = os.path.join(
+            os.path.dirname(__file__), '..', 'fixtures', 'gce.yaml')
+        with open(conf_template) as f:
+            raw_config = yaml.safe_load(f)
+        raw_config['zookeeper-servers'][0] = {
+            'host': self.zookeeper_host,
+            'port': self.zookeeper_port,
+            'chroot': self.zookeeper_chroot,
+        }
+
+        with tempfile.NamedTemporaryFile() as tf:
+            tf.write(yaml.safe_dump(
+                raw_config, default_flow_style=False).encode('utf-8'))
+            tf.flush()
+            configfile = self.setup_config(tf.name)
+            pool = self.useNodepool(configfile, watermark_sleep=1)
+            pool.start()
+
+            self._wait_for_provider(pool, 'gcloud-provider')
+
+            with patch('nodepool.driver.simple.nodescan') as nodescan:
+                nodescan.return_value = 'MOCK KEY'
+                req = zk.NodeRequest()
+                req.state = zk.REQUESTED
+                req.node_types.append(label)
+                self.zk.storeNodeRequest(req)
+
+                self.log.debug("Waiting for request %s", req.id)
+                req = self.waitForNodeRequest(req)
+                self.log.debug("Finished request %s", req.id)
+
+                if is_valid_config is False:
+                    self.assertEqual(req.state, zk.FAILED)
+                    self.assertEqual(req.nodes, [])
+                    return
+
+                self.assertEqual(req.state, zk.FULFILLED)
+                self.assertNotEqual(req.nodes, [])
+
+                node = self.zk.getNode(req.nodes[0])
+                self.assertEqual(node.allocated_to, req.id)
+                self.assertEqual(node.state, zk.READY)
+                self.assertIsNotNone(node.launcher)
+                self.assertEqual(node.connection_type, 'ssh')
+                self.assertEqual(node.attributes,
+                                 {'key1': 'value1', 'key2': 'value2'})
+                if host_key_checking:
+                    nodescan.assert_called_with(
+                        node.interface_ip,
+                        port=22,
+                        timeout=180,
+                        gather_hostkeys=True)
+
+                # A new request will be paused and for lack of quota
+                # until this one is deleted
+                req2 = zk.NodeRequest()
+                req2.state = zk.REQUESTED
+                req2.node_types.append(label)
+                self.zk.storeNodeRequest(req2)
+                req2 = self.waitForNodeRequest(
+                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.PENDING)
+                # It could flip from PENDING to one of the others,
+                # so sleep a bit and be sure
+                time.sleep(1)
+                req2 = self.waitForNodeRequest(
+                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.PENDING)
+
+                node.state = zk.DELETING
+                self.zk.storeNode(node)
+
+                self.waitForNodeDeletion(node)
+
+                req2 = self.waitForNodeRequest(req2,
+                                               (zk.FAILED, zk.FULFILLED))
+                self.assertEqual(req2.state, zk.FULFILLED)
+                node = self.zk.getNode(req2.nodes[0])
+                node.state = zk.DELETING
+                self.zk.storeNode(node)
+                self.waitForNodeDeletion(node)
+
+    def test_gce_machine(self):
+        self._test_gce_machine('debian-stretch-f1-micro')
