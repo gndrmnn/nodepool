@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "df33271e_09312da3",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2289,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2020-04-08T07:35:34Z",
+      "side": 1,
+      "message": "Can we stick to hyphens instead of camelcase for consistency in nodepool.yaml?\n\ne.g: image-reference instead of imageReference",
+      "range": {
+        "startLine": 2289,
+        "startChar": 15,
+        "endLine": 2289,
+        "endChar": 29
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_ad1bff19",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 13
