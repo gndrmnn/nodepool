@@ -26,14 +26,8 @@ class ConfigValidator:
     def __init__(self, config_file):
         self.config_file = config_file
 
-    def validate(self):
-        '''
-        Validate a configuration file
-
-        :return: 0 for success, non-zero for failure
-        '''
-        provider = ProviderConfig.getCommonSchemaDict()
-
+    @staticmethod
+    def getSchema():
         label = {
             'name': str,
             'min-ready': int,
@@ -77,6 +71,15 @@ class ConfigValidator:
             'diskimages': [diskimage],
             'max-hold-age': int,
         }
+        return v.Schema(top_level)
+
+    def validate(self):
+        '''
+        Validate a configuration file
+
+        :return: 0 for success, non-zero for failure
+        '''
+        provider = ProviderConfig.getCommonSchemaDict()
 
         log.info("validating %s" % self.config_file)
 
@@ -89,8 +92,7 @@ class ConfigValidator:
 
         try:
             # validate the overall schema
-            schema = v.Schema(top_level)
-            schema(config)
+            ConfigValidate.getSchema()(config)
             for provider_dict in config.get('providers', []):
                 provider_schema = \
                     get_provider_config(provider_dict).getSchema()
