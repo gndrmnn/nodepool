@@ -346,6 +346,7 @@
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
+            requires: zuul-container-image
             dependencies: nodepool-build-image
         - build-python-release
     gate:
@@ -361,6 +362,7 @@
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
+            requires: zuul-container-image
             dependencies: nodepool-upload-image
         - build-python-release
     promote:
