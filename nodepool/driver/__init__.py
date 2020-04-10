@@ -903,7 +903,7 @@ class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
     def getCommonSchemaDict(self):
         return {
             v.Required('name'): str,
-            'driver': str,
+            v.Required('driver'): str,
             'max-concurrency': int
         }
 
