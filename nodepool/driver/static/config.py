@@ -113,11 +113,11 @@ class StaticProviderConfig(ProviderConfig):
         }
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
-            'name': str,
-            'nodes': [pool_node],
+            v.Required('name'): str,
+            v.Required('nodes'): [pool_node],
         })
         schema = ProviderConfig.getCommonSchemaDict()
-        schema.update({'pools': [pool]})
+        schema.update({v.Required('pools'): [pool]})
         return v.Schema(schema)
 
     def getSupportedLabels(self, pool_name=None):
