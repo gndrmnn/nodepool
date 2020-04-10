@@ -349,7 +349,7 @@ class OpenStackProviderConfig(ProviderConfig):
 
     def getSchema(self):
         provider_diskimage = {
-            'name': str,
+            v.Required('name'): str,
             'pause': bool,
             'meta': dict,
             'config-drive': bool,
@@ -358,7 +358,7 @@ class OpenStackProviderConfig(ProviderConfig):
         }
 
         provider_cloud_images = {
-            'name': str,
+            v.Required('name'): str,
             'config-drive': bool,
             'connection-type': str,
             'connection-port': int,

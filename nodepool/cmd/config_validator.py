@@ -29,7 +29,7 @@ class ConfigValidator:
     @staticmethod
     def getSchema():
         label = {
-            'name': str,
+            v.Required('name'): str,
             'min-ready': int,
             'max-ready-age': int,
         }
@@ -61,13 +61,13 @@ class ConfigValidator:
             'images-dir': str,
             'build-log-dir': str,
             'build-log-retention': int,
-            'zookeeper-servers': [{
-                'host': str,
+            v.Required('zookeeper-servers'): [{
+                v.Required('host'): str,
                 'port': int,
                 'chroot': str,
             }],
             'providers': list,
-            'labels': [label],
+            v.Required('labels'): [label],
             'diskimages': [diskimage],
             'max-hold-age': int,
         }
