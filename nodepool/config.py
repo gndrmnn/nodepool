@@ -243,6 +243,9 @@ class DiskImage(ConfigValue):
         release = config.get('release', None)
         if release:
             self.release = release
+        username = config.get('username', None)
+        if username:
+            self.username = username
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
