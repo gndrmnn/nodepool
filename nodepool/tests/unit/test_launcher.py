@@ -40,7 +40,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('node_no_min_ready.yaml')
         self.useBuilder(configfile)
         image = self.waitForImage('fake-provider', 'fake-image')
-        self.assertEqual(image.username, 'zuul')
+        self.assertEqual(image.username, 'fake-username')
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -63,7 +63,7 @@ class TestLauncher(tests.DBTestCase):
             self.assertEqual(node.cloud, 'fake')
             self.assertEqual(node.region, 'fake-region')
             self.assertEqual(node.az, "az1")
-            self.assertEqual(node.username, "zuul")
+            self.assertEqual(node.username, "fake-username")
             self.assertEqual(node.connection_type, 'ssh')
             self.assertEqual(node.connection_port, 22)
             self.assertEqual(node.python_path, '/usr/bin/python3')
