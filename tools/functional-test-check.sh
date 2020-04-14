@@ -64,6 +64,7 @@ function showserver {
     RESULT=$(mktemp)
     source /opt/devstack/openrc admin admin
 
+    nova show $node_id
     nova show $node_id | grep -Eo "user_data[ ]+.*|[ ]*$" | awk {'print $3'} |\
     base64 --decode > $RESULT
     cat <<EOF >$EXPECTED
