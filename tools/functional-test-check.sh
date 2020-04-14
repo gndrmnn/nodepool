@@ -55,36 +55,6 @@ function sshintonode {
     fi
 }
 
-function showserver {
-    name=$1
-    state='ready'
-
-    node_id=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f5 | tr -d ' '`
-    EXPECTED=$(mktemp)
-    RESULT=$(mktemp)
-    source /opt/devstack/openrc admin admin
-
-    nova show $node_id | grep -Eo "user_data[ ]+.*|[ ]*$" | awk {'print $3'} |\
-    base64 --decode > $RESULT
-    cat <<EOF >$EXPECTED
-#cloud-config
-write_files:
-- content: |
-    testpassed
-  path: /etc/testfile_nodepool_userdata
-EOF
-    diff $EXPECTED $RESULT
-    if [[ $? -ne 0 ]]; then
-        echo "*** Failed to find userdata on server!"
-        FAILURE_REASON="Failed to find userdata on server for $node"
-        echo "Expected userdata:"
-        cat $EXPECTED
-        echo "Found userdata:"
-        cat $RESULT
-        RETURN=1
-    fi
-}
-
 function checknm {
     name=$1
     state='ready'
@@ -142,7 +112,6 @@ sshintonode test-image
 # this checking should move into the dib repo
 #checknm test-image
 # userdata check
-showserver test-image
 
 set -o errexit
 # Show the built nodes
