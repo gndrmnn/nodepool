@@ -43,6 +43,7 @@ providers:
 
 diskimages:
   - name: fake-image
+    username: fake-username
     elements:
       - fedora
       - vm
