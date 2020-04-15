@@ -259,9 +259,12 @@ class KubernetesProvider(Provider):
             'host': self.k8s_client.api_client.configuration.host,
             'skiptls': not self.k8s_client.api_client.configuration.verify_ssl,
             'token': token,
-            'ca_crt': ca_crt,
             'user': user,
         }
+
+        if not resource['skiptls']:
+            resource['ca_crt'] = ca_crt
+
         self.log.info("%s: namespace created" % namespace)
         return resource
 

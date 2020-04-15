@@ -193,9 +193,12 @@ class OpenshiftProvider(Provider):
             'host': self.os_client.api_client.configuration.host,
             'skiptls': not self.os_client.api_client.configuration.verify_ssl,
             'token': token,
-            'ca_crt': ca_crt,
             'user': user,
         }
+
+        if not resource['skiptls']:
+            resource['ca_crt'] = ca_crt
+
         self.log.info("%s: project created" % project)
         return resource
 
