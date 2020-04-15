@@ -373,7 +373,11 @@ class NodePoolCmd(NodepoolApp):
                                  'list', 'delete',
                                  'request-list', 'info', 'erase'):
             self.zk = zk.ZooKeeper(enable_cache=False)
-            self.zk.connect(list(config.zookeeper_servers.values()))
+            self.zk.connect(
+                list(config.zookeeper_servers.values()),
+                tls_cert=config.zookeeper_tls_cert,
+                tls_key=config.zookeeper_tls_key,
+                tls_ca=config.zookeeper_tls_ca)
 
         self.pool.setConfig(config)
         self.args.func()
