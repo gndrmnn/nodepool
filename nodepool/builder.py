@@ -509,19 +509,20 @@ class CleanupWorker(BaseWorker):
             all_deleting = all(map(lambda x: x.state == zk.DELETING, uploads))
             is_local = build.builder_id == self._builder_id
             if (not uploads or all_deleting) and is_local:
-                self._deleteLocalBuild(image, build)
-
-            if not uploads:
-                # Finally when the clouds catch up we can clean up our db
-                # records to reflect there is nothing else to cleanup.
+                # If we got here, it's either an explicit delete (user
+                # activated), or we're deleting because we have newer
+                # images.  We're about to start deleting files, so
+                # make sure that the dib image state reflects that.
                 if build.state != zk.DELETING:
                     with self._zk.imageBuildNumberLock(
                         image, build.id, blocking=False
                     ):
                         build.state = zk.DELETING
                         self._zk.storeBuild(image, build, build.id)
-                    # Release the lock here so we can delete the build znode
 
+                self._deleteLocalBuild(image, build)
+
+            if not uploads:
                 if is_local:
                     # Only remove the db build record from the builder that
                     # built this image. This prevents us from removing the db
