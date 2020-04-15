@@ -1344,11 +1344,16 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return None
 
-        d = ImageUpload.fromDict(self._bytesToDict(data),
-                                 build_number,
-                                 provider,
-                                 image,
-                                 upload_number)
+        try:
+            d = ImageUpload.fromDict(self._bytesToDict(data),
+                                     build_number,
+                                     provider,
+                                     image,
+                                     upload_number)
+        except json.decoder.JSONDecodeError:
+            self.log.exception('Error loading json data from image upload '
+                               '%s, %s, %s', image, build_number, provider)
+            raise
         d.stat = stat
         return d
 
