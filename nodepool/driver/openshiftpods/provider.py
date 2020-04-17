@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import base64
 import logging
 import urllib3
 import time
@@ -34,7 +35,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
         self.provider = provider
         self.ready = False
         try:
-            self.token, self.k8s_client = self._get_client(
+            self.token, self.ca_crt, self.k8s_client = self._get_client(
                 provider.context)
         except kce.ConfigException:
             self.log.exception("Couldn't load client from config")
@@ -44,6 +45,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
                           "config.list_kube_config_contexts()[0]]))\"")
             self.token = None
             self.k8s_client = None
+            self.ca_crt = None
         self.pod_names = set()
         for pool in provider.pools.values():
             self.pod_names.update(pool.labels.keys())
@@ -51,7 +53,12 @@ class OpenshiftPodsProvider(OpenshiftProvider):
     def _get_client(self, context):
         conf = config.new_client_from_config(context=context)
         token = conf.configuration.api_key.get('authorization', '').split()[-1]
-        return (token, k8s_client.CoreV1Api(conf))
+        ca_crt = None
+        if conf.configuration.ssl_ca_cert:
+            with open(conf.configuration.ssl_ca_cert) as ca:
+                ca_crt = ''.join(ca.readlines())
+                ca_crt = base64.b64encode(ca_crt.encode('utf-8')).decode('utf-8')
+        return (token, ca_crt, k8s_client.CoreV1Api(conf))
 
     def start(self, zk_conn):
         self.log.debug("Starting")
