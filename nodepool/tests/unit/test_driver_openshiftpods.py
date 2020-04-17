@@ -76,7 +76,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         self.fake_k8s_client = FakeCoreClient()
 
         def fake_get_client(*args):
-            return "fake-token", self.fake_k8s_client
+            return "fake-token", None, self.fake_k8s_client
 
         self.useFixture(fixtures.MockPatchObject(
             provider.OpenshiftPodsProvider, '_get_client',
@@ -103,6 +103,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'kubectl')
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertIn('ca_crt', node.connection_port)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
 
