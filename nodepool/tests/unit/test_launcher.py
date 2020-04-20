@@ -495,6 +495,24 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[0].attributes,
                          {'key1': 'value1', 'key2': 'value2'})
 
+    def test_node_metadata(self):
+        """Test that node metadata is set"""
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        image = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
+        nodes = self.waitForNodes('fake-label')
+
+        self.assertEqual(len(nodes), 1)
+
+        # We check the "cloud" side attributes are set from nodepool side
+        provider = pool.getProviderManager('fake-provider')
+        cloud_node = provider.getServer(nodes[0].hostname)
+        self.assertEqual(cloud_node.metadata['nodepool_provider_name'], 'fake-provider')
+        self.assertEqual(cloud_node.metadata['nodepool_pool_name'], 'main')
+
     def test_node_network_cli(self):
         """Same as test_node but using connection-type network_cli"""
         configfile = self.setup_config('node-network_cli.yaml')
