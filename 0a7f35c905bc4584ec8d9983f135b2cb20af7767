@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f493fa4_f0e08699",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-04-20T22:54:53Z",
+      "side": 1,
+      "message": "You\u0027re possing nodepool_pool_name into this method, you could use that.",
+      "revId": "0a7f35c905bc4584ec8d9983f135b2cb20af7767",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f493fa4_50efba86",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-04-20T22:54:53Z",
+      "side": 1,
+      "message": "we should make this a .get() in order to upgrade",
+      "revId": "0a7f35c905bc4584ec8d9983f135b2cb20af7767",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
