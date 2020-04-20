@@ -14,6 +14,7 @@
 
 import logging
 import threading
+from concurrent.futures.thread import ThreadPoolExecutor
 from operator import attrgetter
 
 from collections import Counter
@@ -317,29 +318,36 @@ class StaticNodeProvider(Provider):
         registered = self.getRegisteredNodes()
 
         static_nodes = {}
-        for pool in self.provider.pools.values():
-            for node in pool.nodes:
-                try:
-                    self.syncNodeCount(registered, node, pool)
-                except StaticNodeError as exc:
-                    self.log.warning("Couldn't sync node: %s", exc)
-                    continue
-                except Exception:
-                    self.log.exception("Couldn't sync node %s:",
-                                       nodeTuple(node))
-                    continue
+        with ThreadPoolExecutor() as executor:
+            for pool in self.provider.pools.values():
+                synced_nodes = []
+                for node in pool.nodes:
+                    synced_nodes.append((node, executor.submit(
+                        self.syncNodeCount, registered, node, pool)))
 
-                try:
-                    self.updateNodeFromConfig(node)
-                except StaticNodeError as exc:
-                    self.log.warning("Couldn't update static node: %s", exc)
-                    continue
-                except Exception:
-                    self.log.exception("Couldn't update static node %s:",
-                                       nodeTuple(node))
-                    continue
+                for node, result in synced_nodes:
+                    try:
+                        result.result()
+                    except StaticNodeError as exc:
+                        self.log.warning("Couldn't sync node: %s", exc)
+                        continue
+                    except Exception:
+                        self.log.exception("Couldn't sync node %s:",
+                                           nodeTuple(node))
+                        continue
 
-                static_nodes[nodeTuple(node)] = node
+                    try:
+                        self.updateNodeFromConfig(node)
+                    except StaticNodeError as exc:
+                        self.log.warning(
+                            "Couldn't update static node: %s", exc)
+                        continue
+                    except Exception:
+                        self.log.exception("Couldn't update static node %s:",
+                                           nodeTuple(node))
+                        continue
+
+                    static_nodes[nodeTuple(node)] = node
 
         # De-register nodes to synchronize with our configuration.
         # This case covers any registered nodes that no longer appear in
