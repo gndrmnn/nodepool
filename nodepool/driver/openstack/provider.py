@@ -290,6 +290,7 @@ class OpenStackProvider(Provider):
                      az=None, key_name=None, config_drive=True,
                      nodepool_node_id=None, nodepool_node_label=None,
                      nodepool_image_name=None,
+                     nodepool_pool_name=None,
                      networks=None, security_groups=None,
                      boot_from_volume=False, volume_size=50,
                      instance_properties=None, userdata=None):
@@ -338,6 +339,7 @@ class OpenStackProvider(Provider):
         meta = dict(
             groups=",".join(groups_list),
             nodepool_provider_name=self.provider.name,
+            nodepool_pool_name=nodepool_pool_name,
         )
         # merge in any provided properties
         if instance_properties:
@@ -533,6 +535,7 @@ class OpenStackProvider(Provider):
                 node = zk.Node()
                 node.external_id = server.id
                 node.provider = self.provider.name
+                node.pool = meta.get('nodepool_pool_name')
                 node.state = zk.DELETING
                 self._zk.storeNode(node)
 
