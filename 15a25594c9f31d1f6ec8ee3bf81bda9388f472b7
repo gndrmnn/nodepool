@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f493fa4_4c47144d",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-04-21T17:11:26Z",
+      "side": 1,
+      "message": "this also needs to be updated",
+      "range": {
+        "startLine": 57,
+        "startChar": 25,
+        "endLine": 57,
+        "endChar": 30
+      },
+      "revId": "15a25594c9f31d1f6ec8ee3bf81bda9388f472b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
