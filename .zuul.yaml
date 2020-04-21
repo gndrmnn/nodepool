@@ -158,6 +158,7 @@
       - python-base-3.7-container-image
     provides: nodepool-container-image
     vars: &nodepool_image_vars
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
       docker_images:
         - context: .
           repository: zuul/nodepool
