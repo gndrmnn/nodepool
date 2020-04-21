@@ -52,7 +52,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             return
         console = self.handler.manager.getServerConsole(server_id)
         if console:
-            self.log.debug('Console log from hostname %s:' % hostname)
+            self.log.info('Console log from hostname %s:' % hostname)
             for line in console.splitlines():
                 self.log.debug(line.rstrip())
 
