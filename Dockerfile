@@ -47,14 +47,23 @@ FROM nodepool-base as nodepool-builder
 RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
   && chmod 0440 /etc/sudoers.d/nodepool-sudo
 
-# binary deps; see
-#  https://docs.openstack.org/diskimage-builder/latest/developer/vhd_creation.html
-# about the vhd-util deps
+# We have some out-of-tree of binary dependencies expressed below:
+#
+#  * vhd-util is required to create .vhd images, mostly used in
+#    Rackspace.  For full details see:
+#      https://docs.openstack.org/diskimage-builder/latest/developer/vhd_creation.html
+#
+#  * debootstrap unmounts /proc in the container causing havoc when
+#    using -minimal elements on debuntu.  Two unmerged fixes:
+#      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/26
+#      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/27
+#    are incoporated into the openstack-ci-core version
 RUN \
   apt-get update \
   && apt-get install -y gnupg2 \
   && apt-key adv --keyserver keyserver.ubuntu.com --recv 2B5DE24F0EC9F98BD2F85CA315B6CE7C018D05F5 \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu bionic main" >> /etc/apt/sources.list \
+  && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install -y \
       curl \
