@@ -24,7 +24,7 @@ FROM docker.io/opendevorg/python-base:3.7 as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
-RUN /output/install-from-bindep
+RUN /output/install-from-bindep nodepool_base
 
 RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
 
