@@ -119,8 +119,8 @@ class TestDriverStatic(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
-        registered_ids = {n.id for n in self.zk.nodeIterator()}
-        self.assertEqual(registered_ids, {'0000000001', '0000000002'})
+        registered_labels = {n.type[0] for n in self.zk.nodeIterator()}
+        self.assertEqual(registered_labels, {'fake-label', 'other-label'})
 
     def test_static_unresolvable(self):
         '''
