@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The docker images published to ``zuul/nodepool``, ``zuul/nodepol-launcher``
+    and ``zuul/nodepool-builder`` are now built as multi-arch images and
+    support arm64 in addition to amd64.
