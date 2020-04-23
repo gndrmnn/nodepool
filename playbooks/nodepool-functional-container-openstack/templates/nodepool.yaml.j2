@@ -64,15 +64,10 @@ diskimages:
       DIB_CHECKSUM: '1'
       DIB_SHOW_IMAGE_USAGE: '1'
       DIB_IMAGE_CACHE: '{{ NODEPOOL_DIB_BASE_PATH }}/cache'
-      DIB_APT_LOCAL_CACHE: '0'
-      DIB_DISABLE_APT_CLEANUP: '1'
-      DIB_DEBIAN_COMPONENTS: 'main,universe'
       DIB_DEV_USER_AUTHORIZED_KEYS: '{{ NODEPOOL_PUBKEY }}'
 {% if 'mirror' in nodepool_diskimage %}
       DIB_DISTRIBUTION_MIRROR: '{{ nodepool_diskimage.mirror }}'
 {% endif %}
-      DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
-      # TODO(corvus): cached $DIB_GET_PIP
 {% if zuul.projects.get('opendev.org/opendev/glean', {}).get('required', False) %}
       DIB_INSTALLTYPE_simple_init: 'repo'
       DIB_REPOLOCATION_glean: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/opendev/glean'].src_dir }}"
