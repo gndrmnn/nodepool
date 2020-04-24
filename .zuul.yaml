@@ -201,6 +201,7 @@
     parent: opendev-build-docker-image
     description: Build container images, with required projects as sibling from source
     required-projects:
+      - zuul/nodepool
       - openstack/diskimage-builder
       - openstack/openstacksdk
     requires:
