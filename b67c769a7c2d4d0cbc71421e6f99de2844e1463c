@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1f493fa4_067bb2f4",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2276,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "updated",
+      "parentUuid": "df33271e_6ddf373a",
+      "range": {
+        "startLine": 2276,
+        "startChar": 33,
+        "endLine": 2276,
+        "endChar": 63
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_09312da3",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 13
@@ -36,6 +60,30 @@
       "writtenOn": "2020-04-08T07:35:34Z",
       "side": 1,
       "message": "Can we stick to hyphens instead of camelcase for consistency in nodepool.yaml?\n\ne.g: image-reference instead of imageReference",
+      "range": {
+        "startLine": 2289,
+        "startChar": 15,
+        "endLine": 2289,
+        "endChar": 29
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f493fa4_6368a8b8",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2289,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "yeah - good idea, will swap them out",
+      "parentUuid": "df33271e_09312da3",
       "range": {
         "startLine": 2289,
         "startChar": 15,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1f493fa4_7114ee44",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_ad1bff19",
+      "range": {
+        "startLine": 2321,
+        "startChar": 50,
+        "endLine": 2321,
+        "endChar": 53
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_edea27d6",
         "filename": "doc/source/configuration.rst",
         "patchSetId": 13
@@ -82,6 +154,30 @@
       "writtenOn": "2020-04-07T17:40:53Z",
       "side": 1,
       "message": "I guess this should be\n\n - name: bionic\n   cloud-image: bionic\n   hardwareProfile:\n     vmSize: Standard_D1_v2",
+      "range": {
+        "startLine": 2342,
+        "startChar": 16,
+        "endLine": 2346,
+        "endChar": 37
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f493fa4_110c8a39",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 2346,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_edea27d6",
       "range": {
         "startLine": 2342,
         "startChar": 16,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "1f493fa4_e00b0ed3",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_2d91af47",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_6d9bb765",
         "filename": "nodepool/driver/azure/provider.py",
         "patchSetId": 13
@@ -128,6 +242,24 @@
     },
     {
       "key": {
+        "uuid": "1f493fa4_00071acc",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_6d9bb765",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_4db7d3d9",
         "filename": "nodepool/driver/azure/provider.py",
         "patchSetId": 13
@@ -139,6 +271,24 @@
       "writtenOn": "2020-04-07T17:40:53Z",
       "side": 1,
       "message": "We should log this error as well.",
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f493fa4_a068e686",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_4db7d3d9",
       "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -168,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "1f493fa4_c06b7282",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df33271e_6de9f7b5",
+      "range": {
+        "startLine": 217,
+        "startChar": 1,
+        "endLine": 218,
+        "endChar": 22
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df33271e_ed4227ab",
         "filename": "nodepool/tests/unit/test_driver_azure.py",
         "patchSetId": 13
@@ -179,6 +353,30 @@
       "writtenOn": "2020-04-07T17:40:53Z",
       "side": 1,
       "message": "I don\u0027t find the place where this is used. Is this debug leftover?",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f493fa4_e034ae95",
+        "filename": "nodepool/tests/unit/test_driver_azure.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-04-27T16:11:35Z",
+      "side": 1,
+      "message": "It is used in the fixtures returned in the setUp below",
+      "parentUuid": "df33271e_ed4227ab",
       "range": {
         "startLine": 37,
         "startChar": 0,
