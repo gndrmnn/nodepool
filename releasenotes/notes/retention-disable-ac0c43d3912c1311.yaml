@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Setting ``build-log-retention`` to ``-1`` will disable the removal of
+    old build logs.
