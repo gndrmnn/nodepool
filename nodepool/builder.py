@@ -592,6 +592,8 @@ class BuildWorker(BaseWorker):
         return log_dir
 
     def _pruneBuildLogs(self, name):
+        if self._config_build_log_retention < 0):
+            return
         log_dir = self._getBuildLogRoot(name)
         keep = max(self._config.build_log_retention, 1)
         existing = sorted(os.listdir(log_dir))

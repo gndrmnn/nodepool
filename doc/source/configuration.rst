@@ -83,7 +83,7 @@ Options
    they exceed this value.  This option specifies how many will be
    kept (usually you will see one more, as deletion happens before
    starting a new build).  By default, the last 7 old build logs are
-   kept.
+   kept.  Set this to ``-1`` to disable removal of logs.
 
 .. attr:: zookeeper-servers
    :type: list
