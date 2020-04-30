@@ -58,11 +58,11 @@ RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/26
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/27
 #    are incoporated into the openstack-ci-core version
+
+COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
+
 RUN \
-  apt-get update \
-  && apt-get install -y gnupg2 \
-  && apt-key adv --keyserver keyserver.ubuntu.com --recv 2B5DE24F0EC9F98BD2F85CA315B6CE7C018D05F5 \
-  && echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu bionic main" >> /etc/apt/sources.list \
+  echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu bionic main" >> /etc/apt/sources.list \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install -y \
