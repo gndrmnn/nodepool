@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Zookeeper hosts specified as IPv6 literals will now be configured
+    correctly.

@@ -13,6 +13,7 @@
 from contextlib import contextmanager
 from copy import copy
 import abc
+import ipaddress
 import json
 import logging
 import time
@@ -101,6 +102,10 @@ class ZooKeeperConnectionConfig(object):
         self.port = port
         self.chroot = chroot or ''
 
+    def __repr__(self):
+        return "host=%s port=%s chroot=%s" % \
+            (self.host, self.port, self.chroot)
+
 
 def buildZooKeeperHosts(host_list):
     '''
@@ -113,8 +118,18 @@ def buildZooKeeperHosts(host_list):
     if not isinstance(host_list, list):
         raise Exception("'host_list' must be a list")
     hosts = []
+    print(host_list)
     for host_def in host_list:
-        host = '%s:%s%s' % (host_def.host, host_def.port, host_def.chroot)
+        h = host_def.host
+        # If this looks like a ipv6 literal address, make sure it's
+        # quoted in []'s
+        try:
+            addr = ipaddress.ip_address(host_def.host)
+            if addr.version == 6:
+                h = '[%s]' % addr
+        except ValueError:
+            pass
+        host = '%s:%s%s' % (h, host_def.port, host_def.chroot)
         hosts.append(host)
     return ",".join(hosts)
 
