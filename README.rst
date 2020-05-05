@@ -1,6 +1,8 @@
 Nodepool
 ========
 
+Test
+
 Nodepool is a system for managing test node resources. It supports launching
 single-use test nodes from cloud providers as well as managing access to
 pre-defined pre-existing nodes. Nodepool is part of a suite of tools that form
