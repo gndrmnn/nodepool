@@ -162,12 +162,21 @@
         - context: .
           repository: zuul/nodepool
           target: nodepool
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
+          arch:
+            - linux/amd64
+            - linux/arm64
 
 - job:
     name: nodepool-upload-image
