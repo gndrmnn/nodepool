@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f493fa4_f9db177a",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1563,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-05-06T09:55:52Z",
+      "side": 1,
+      "message": "The pending state will be wrong if there is already a normal rebuild in progress for the given image.\n\nMaybe we could also compare the build lock created time against the request\u0027s created time to figure out if this build was started for the manual request?!\n\n    try:\n    \tlock \u003d self.client.get(lock_path)\n\tpending \u003d lock.created \u003e stat.created\n    except kze.NoNodeError:\n        pending \u003d False",
+      "revId": "31b33a3af9c40a610f3ea9a2189ca5d2bfa9856c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
