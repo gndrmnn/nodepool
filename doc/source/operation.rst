@@ -366,6 +366,15 @@ launchers, all will provide the same information.
    :resheader Content-Type: ``application/json`` or ``text/plain``
                             depending on the :http:header:`Accept` header
 
+.. http:get:: /dib-request-list
+
+   The status of manual build requests
+
+   :query fields: comma-separated list of fields to display
+   :reqheader Accept: ``application/json`` or ``text/*``
+   :resheader Content-Type: ``application/json`` or ``text/plain``
+                            depending on the :http:header:`Accept` header
+
 .. http:get:: /node-list
 
    The status of currently active nodes
