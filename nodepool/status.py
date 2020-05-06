@@ -202,6 +202,25 @@ def dib_image_list(zk):
     return (objs, headers_table)
 
 
+def dib_request_list(zk):
+    headers_table = OrderedDict([
+        ("image", "Image"),
+        ("state", "State"),
+        ("age", "Age")
+    ])
+    objs = []
+    for image_name in zk.getImageNames():
+        request = zk.getBuildRequest(image_name)
+        if request is None:
+            continue
+        objs.append({
+            "image": request.image_name,
+            "state": "pending" if request.pending else "building",
+            "age": int(request.state_time)
+        })
+    return (objs, headers_table)
+
+
 def image_list(zk):
     headers_table = OrderedDict([
         ("id", "Build ID"),

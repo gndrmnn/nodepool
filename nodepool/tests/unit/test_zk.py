@@ -348,12 +348,17 @@ class TestZooKeeper(tests.DBTestCase):
                          [upload_id])
 
     def test_build_request(self):
-        '''Test the build request API methods (has/submit/remove)'''
+        '''Test the build request API methods (has/get/submit/remove)'''
         image = "ubuntu-trusty"
         self.zk.submitBuildRequest(image)
         self.assertTrue(self.zk.hasBuildRequest(image))
+        build_request = self.zk.getBuildRequest(image)
+        self.assertEqual(build_request.image_name, image)
+        self.assertTrue(build_request.pending)
         self.zk.removeBuildRequest(image)
         self.assertFalse(self.zk.hasBuildRequest(image))
+        build_request = self.zk.getBuildRequest(image)
+        self.assertIsNone(build_request)
 
     def test_buildLock_orphan(self):
         image = "ubuntu-trusty"

@@ -149,6 +149,11 @@ dib-image-list
 .. program-output:: nodepool dib-image-list --help
    :nostderr:
 
+dib-request-list
+^^^^^^^^^^^^^^^^
+.. program-output:: nodepool dib-request-list --help
+   :nostderr:
+
 image-list
 ^^^^^^^^^^
 .. program-output:: nodepool image-list --help
@@ -385,6 +390,15 @@ launchers, all will provide the same information.
 .. http:get:: /dib-image-list
 
    The status of images built by ``diskimage-builder``
+
+   :query fields: comma-separated list of fields to display
+   :reqheader Accept: ``application/json`` or ``text/*``
+   :resheader Content-Type: ``application/json`` or ``text/plain``
+                            depending on the :http:header:`Accept` header
+
+.. http:get:: /dib-request-list
+
+   The status of manual build requests
 
    :query fields: comma-separated list of fields to display
    :reqheader Accept: ``application/json`` or ``text/*``
