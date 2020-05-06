@@ -138,6 +138,35 @@ class TestWebApp(tests.DBTestCase):
                                        'formats': ['qcow2'],
                                        'state': 'ready'}, objs[0])
 
+    def test_dib_request_list_json(self):
+        configfile = self.setup_config("node.yaml")
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage("fake-provider", "fake-image")
+        self.waitForNodes('fake-label')
+
+        self.zk.submitBuildRequest("fake-image")
+
+        req = request.Request(
+            "http://localhost:{}/dib-request-list".format(port))
+        req.add_header("Accept", "application/json")
+
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get("Content-Type"),
+                         "application/json")
+
+        data = f.read()
+        objs = json.loads(data.decode("utf8"))
+        # make sure this is valid json and has some of the
+        # non-changing keys
+        self.assertDictContainsSubset({'image': 'fake-image',
+                                       'state': 'building'}, objs[0])
+
     def test_node_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

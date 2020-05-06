@@ -356,6 +356,21 @@ class ImageBuild(BaseModel):
         return o
 
 
+class ImageBuildRequest(object):
+    """Class representing a manual build request.
+
+    This doesn't need to derive from BaseModel since this class exists only
+    to aggregate information about a build request.
+    """
+    def __init__(self, image_name, pending, state_time):
+        self.image_name = image_name
+        self.state_time = state_time
+        self.pending = pending
+
+    def __repr__(self):
+        return "<ImageBuildRequest {}>".format(self.image_name)
+
+
 class ImageUpload(BaseModel):
     '''
     Class representing a provider image upload within the ZooKeeper cluster.
@@ -1530,6 +1545,23 @@ class ZooKeeper(object):
         if self.client.exists(path) is not None:
             return True
         return False
+
+    def getBuildRequest(self, image):
+        """Get a build request for the given image.
+
+        :param str image: The image name to check.
+
+        :returns: An ImagebuildRequest object, or None if not found
+        """
+        path = self._imageBuildRequestPath(image)
+        try:
+            _, stat = self.client.get(path)
+        except kze.NoNodeError:
+            return
+
+        lock_path = self._imageBuildLockPath(image)
+        pending = self.client.exists(lock_path) is None
+        return ImageBuildRequest(image, pending, stat.created)
 
     def submitBuildRequest(self, image):
         '''
