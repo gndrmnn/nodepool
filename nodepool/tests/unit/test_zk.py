@@ -206,7 +206,7 @@ class TestZooKeeper(tests.DBTestCase):
     def test_store_and_get_build(self):
         image = "ubuntu-trusty"
         orig_data = zk.ImageBuild()
-        orig_data.builder = 'host'
+        orig_data.builder = 'host.domain.com'
         orig_data.builder_id = 'ABC-123'
         orig_data.state = zk.READY
         with self.zk.imageBuildLock(image, blocking=True, timeout=1):

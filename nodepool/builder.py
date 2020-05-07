@@ -131,7 +131,7 @@ class BaseWorker(threading.Thread):
         self._config_path = config_path
         self._secure_path = secure_path
         self._zk = zk
-        self._hostname = socket.gethostname()
+        self._hostname = socket.getfqdn()
         self._statsd = stats.get_client()
         self._interval = interval
         self._builder_id = builder_id
