@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    There are new metrics for leaked resources:
+    * :zuul:stat:`nodepool.provider.<provider>.leaked.ports`
+    * :zuul:stat:`nodepool.provider.<provider>.leaked.instances`
+    * :zuul:stat:`nodepool.provider.<provider>.leaked.floatingips`
+upgrade:
+  - |
+    The metric ``nodepool.provider.<provider>.downPorts`` has been renamed
+    to ``nodepool.provider.<provider>.leaked.ports``
