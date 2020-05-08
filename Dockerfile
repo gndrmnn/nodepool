@@ -58,12 +58,21 @@ RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/26
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/27
 #    are incoporated into the openstack-ci-core version
+#
+#  * podman allows for easily running diskimage-builder from nodepool-builder
+#    in another architeture.
+#       podman run --cgroup-manager cgroupfs --net=host -it --rm docker.io/zuul/nodepool-builder:arm64 disk-image-create ...
+#    fuse-overlayfs and libglib2.0-0 are needed for podman
+#    In order to use this, on the main host run:
+#       docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+#    to install the binfmt information.
 
 COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
-
+COPY tools/kubic.asc /etc/apt/trusted.gpg.d/
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu bionic main" >> /etc/apt/sources.list \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
+  && echoo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install -y \
       curl \
@@ -78,8 +87,14 @@ RUN \
       yum \
       yum-utils \
       zypper \
+      podman \
+      fuse-overlayfs \
+      libglib2.0-0 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+# We need to configure this to work inside of docker
+COPY tools/containers-storage.conf /etc/containers/storage.conf
 
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
