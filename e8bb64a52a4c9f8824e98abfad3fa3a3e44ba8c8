@@ -16,6 +16,23 @@
       "revId": "e8bb64a52a4c9f8824e98abfad3fa3a3e44ba8c8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff570b3c_1575f195",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-05-12T20:04:07Z",
+      "side": 1,
+      "message": "This is my understanding.",
+      "revId": "e8bb64a52a4c9f8824e98abfad3fa3a3e44ba8c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
