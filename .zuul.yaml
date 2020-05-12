@@ -83,7 +83,7 @@
         - yum-utils
       nodepool_diskimage:
         base_element: centos-minimal
-        release: 7
+        release: 8
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
@@ -289,13 +289,13 @@
     description: |
       Test Nodepool containers and OpenStack, with released projects
 
-      This builds, uploads and boots a CentOS 7 image into a
+      This builds, uploads and boots a CentOS 8 image into a
       OpenStack cloud.
     parent: nodepool-functional-container-openstack-release-base
     vars:
       nodepool_diskimage:
         base_element: centos-minimal
-        release: 7
+        release: 8
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
@@ -322,13 +322,13 @@
     description: |
       Test Nodepool containers and OpenStack, with some projects from source
 
-      This builds, uploads and boots a CentOS 7 image into a
+      This builds, uploads and boots a CentOS 8 image into a
       OpenStack cloud.
     parent: nodepool-functional-container-openstack-siblings-base
     vars:
       nodepool_diskimage:
         base_element: centos-minimal
-        release: 7
+        release: 8
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
