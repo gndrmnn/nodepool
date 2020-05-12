@@ -33,6 +33,24 @@
       "revId": "e8bb64a52a4c9f8824e98abfad3fa3a3e44ba8c8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff570b3c_f5e83d17",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-05-12T20:05:34Z",
+      "side": 1,
+      "message": "I found no uses other than builder_id. So I think this should be safe.",
+      "parentUuid": "ff570b3c_9ae1309e",
+      "revId": "e8bb64a52a4c9f8824e98abfad3fa3a3e44ba8c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
