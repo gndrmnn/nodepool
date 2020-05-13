@@ -386,6 +386,30 @@
       "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff570b3c_765a622a",
+        "filename": "nodepool/tests/unit/test_driver_azure.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-05-13T14:17:59Z",
+      "side": 1,
+      "message": "ah found it thanks",
+      "parentUuid": "1f493fa4_e034ae95",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "b67c769a7c2d4d0cbc71421e6f99de2844e1463c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
