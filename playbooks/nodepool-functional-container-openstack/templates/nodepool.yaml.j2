@@ -44,6 +44,9 @@ providers:
 diskimages:
   - name: test-image
     rebuild-age: 86400
+{% if 'elements-dir' in nodepool_diskimage %}
+    elements-dir: '{{ nodepool_diskimage.elements-dir }}'
+{% endif %}
     elements:
       - {{ nodepool_diskimage.base_element }}
 {% if 'extra_elements' in nodepool_diskimage %}

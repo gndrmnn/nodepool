@@ -35,6 +35,11 @@
 
             The base element to use when building the disk image.
 
+         .. zuul:jobvar:: elements-dir
+            :type: string
+
+            Path to directory with external elements
+
          .. zuul:jobvar:: extra_elements
             :type: list
             :default: []
