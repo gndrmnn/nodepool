@@ -361,7 +361,7 @@
         - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift
-        - zuul-quick-start:
+        - zuul-tutorial:
             requires: zuul-container-image
             dependencies: nodepool-build-image
         - build-python-release
@@ -377,7 +377,7 @@
         - nodepool-functional-openstack-src
         - nodepool-functional-k8s
         - nodepool-functional-openshift
-        - zuul-quick-start:
+        - zuul-tutorial:
             requires: zuul-container-image
             dependencies: nodepool-upload-image
         - build-python-release
