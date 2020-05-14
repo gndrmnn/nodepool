@@ -28,6 +28,11 @@ from nodepool import zk
 class AzureProvider(Provider):
     log = logging.getLogger("nodepool.driver.azure.AzureProvider")
 
+    API_VERSION_COMPUTE = "2019-12-01"
+    API_VERSION_DISKS = "2019-11-01"
+    API_VERSION_NETWORK = "2020-03-01"
+    API_VERSION_RESOURCE = "2019-10-01"
+
     def __init__(self, provider, *args):
         self.provider = provider
         self.zuul_public_key = provider.zuul_public_key
@@ -57,28 +62,28 @@ class AzureProvider(Provider):
         return get_client_from_auth_file(
             ComputeManagementClient,
             auth_path=self.provider.auth_path,
-            api_version="2019-12-01"
+            api_version=self.API_VERSION_COMPUTE
         )
 
     def _get_disks_client(self):
         return get_client_from_auth_file(
             ComputeManagementClient,
             auth_path=self.provider.auth_path,
-            api_version="2019-11-01"
+            api_version=self.API_VERSION_DISKS
         )
 
     def _get_network_client(self):
         return get_client_from_auth_file(
             NetworkManagementClient,
             auth_path=self.provider.auth_path,
-            api_version="2020-03-01"
+            api_version=self.API_VERSION_NETWORK
         )
 
     def _get_resource_client(self):
         return get_client_from_auth_file(
             ResourceManagementClient,
             auth_path=self.provider.auth_path,
-            api_version="2019-10-01"
+            api_version=self.API_VERSION_RESOURCE
         )
 
     def stop(self):

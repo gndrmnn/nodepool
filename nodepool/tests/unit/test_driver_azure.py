@@ -23,7 +23,7 @@ import yaml
 from nodepool import tests
 from nodepool import zk
 from nodepool import nodeutils as utils
-from nodepool.driver.azure import provider
+from nodepool.driver.azure import provider, AzureProvider
 
 from azure.common.client_factory import get_client_from_json_dict
 from azure.mgmt.resource.resources.v2019_10_01.operations import ResourceGroupsOperations  # noqa
@@ -44,7 +44,7 @@ auth = {
     "activeDirectoryGraphResourceId": "https://graph.windows.net/",
     "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
     "galleryEndpointUrl": "https://gallery.azure.com/",
-    "managementEndpointUrl": "https://management.core.windows.net/"
+    "managementEndpointUrl": "https://management.core.windows.net/",
 }
 
 
@@ -98,7 +98,8 @@ class TestDriverAzure(tests.DBTestCase):
             provider.AzureProvider, '_get_compute_client',
             MagicMock(
                 return_value=get_client_from_json_dict(
-                    ComputeManagementClient, auth, credentials={}
+                    ComputeManagementClient, auth, credentials={},
+                    api_version=AzureProvider.API_VERSION_COMPUTE
                 )
             )
         ))
@@ -107,7 +108,8 @@ class TestDriverAzure(tests.DBTestCase):
             provider.AzureProvider, '_get_disks_client',
             MagicMock(
                 return_value=get_client_from_json_dict(
-                    ComputeManagementClient, auth, credentials={}
+                    ComputeManagementClient, auth, credentials={},
+                    api_version=AzureProvider.API_VERSION_DISKS
                 )
             )
         ))
@@ -120,7 +122,8 @@ class TestDriverAzure(tests.DBTestCase):
             provider.AzureProvider, '_get_network_client',
             MagicMock(
                 return_value=get_client_from_json_dict(
-                    NetworkManagementClient, auth, credentials={}
+                    NetworkManagementClient, auth, credentials={},
+                    api_version=AzureProvider.API_VERSION_NETWORK
                 )
             )
         ))
@@ -129,7 +132,8 @@ class TestDriverAzure(tests.DBTestCase):
             provider.AzureProvider, '_get_resource_client',
             MagicMock(
                 return_value=get_client_from_json_dict(
-                    ResourceManagementClient, auth, credentials={}
+                    ResourceManagementClient, auth, credentials={},
+                    api_version=AzureProvider.API_VERSION_RESOURCE
                 )
             )
         ))
@@ -158,7 +162,8 @@ class TestDriverAzure(tests.DBTestCase):
     def test_azure_machine(self):
         az_template = os.path.join(
             os.path.dirname(__file__), '..', 'fixtures', 'azure.yaml')
-        raw_config = yaml.safe_load(open(az_template))
+        with open(az_template) as f:
+            raw_config = yaml.safe_load(f)
         raw_config['zookeeper-servers'][0] = {
             'host': self.zookeeper_host,
             'port': self.zookeeper_port,
