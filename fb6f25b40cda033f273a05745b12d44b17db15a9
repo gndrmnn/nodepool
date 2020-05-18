@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff570b3c_a148d92c",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-05-18T17:23:14Z",
+      "side": 1,
+      "message": "Is this not handled by lines 260-262?",
+      "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff570b3c_015265de",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-05-18T17:23:14Z",
+      "side": 1,
+      "message": "There\u0027s a .wait() call on virtual_machines.delete() -- does that mean we\u0027re waiting for the machine to be deleted, or just waiting for the API call to return, indicating that it received the request?\n\nIf we aren\u0027t waiting for deletion above, I worry about not implementing this method -- we will end up deleting the znode too quickly and then risk detecting the instance as a leaked instance then creating a new znode for it and deleting that until it is finally deleted.",
+      "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
