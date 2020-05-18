@@ -40,6 +40,7 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
             'pod': pod_name,
             'namespace': project,
             'host': k8s.api_client.configuration.host,
+            'ca_crt': self.handler.manager.ca_crt,
             'skiptls': not k8s.api_client.configuration.verify_ssl,
             'token': self.handler.manager.token,
             'user': 'zuul-worker',
