@@ -69,6 +69,24 @@
       "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff570b3c_40a0a990",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-05-20T12:25:29Z",
+      "side": 1,
+      "message": "So, after digging into this a little bit - we need to keep the waits, and do them in a specific order (if we dont wait between server and nic deletion for example, it spins throws errors until the server is deleted).\n\nHow should we do this? move the entire deletion mechanism from cleanUpNode to waitForNodeCleanUp?",
+      "parentUuid": "ff570b3c_1430d7e7",
+      "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
