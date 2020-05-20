@@ -11,11 +11,12 @@
 # under the License.
 
 import logging
+import os
 import voluptuous as v
 import yaml
 
 from nodepool.driver import ProviderConfig
-from nodepool.config import get_provider_config
+from nodepool.config import get_provider_config, substitute_env_vars
 
 log = logging.getLogger(__name__)
 
@@ -80,7 +81,7 @@ class ConfigValidator:
         }
         return v.Schema(top_level)
 
-    def validate(self):
+    def validate(self, env=os.environ):
         '''
         Validate a configuration file
 
@@ -92,10 +93,12 @@ class ConfigValidator:
 
         try:
             with open(self.config_file) as f:
-                config = yaml.safe_load(f)
+                config = yaml.safe_load(substitute_env_vars(f.read(), env))
         except Exception:
             log.exception('YAML parsing failed')
             return 1
+
+        self.config = config
 
         try:
             # validate the overall schema
