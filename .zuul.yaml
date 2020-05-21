@@ -364,6 +364,21 @@
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-build-image
+        - zuul-tutorial-quick-start:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-gate-your-first-patch:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-use-zuul-jobs:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-the-gate-pipeline:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-job-dependencies:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
         - build-python-release
     gate:
       jobs:
@@ -380,6 +395,21 @@
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-upload-image
+        - zuul-tutorial-quick-start:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-gate-your-first-patch:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-use-zuul-jobs:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-the-gate-pipeline:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
+        - zuul-tutorial-job-dependencies:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
         - build-python-release
     promote:
       jobs:
