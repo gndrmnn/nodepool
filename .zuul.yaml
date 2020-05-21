@@ -364,6 +364,9 @@
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-build-image
+        - zuul-tutorial-quick-start:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
         - build-python-release
     gate:
       jobs:
@@ -380,6 +383,9 @@
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-upload-image
+        - zuul-tutorial-quick-start:
+            requires: zuul-container-image
+            dependencies: nodepool-build-image
         - build-python-release
     promote:
       jobs:
