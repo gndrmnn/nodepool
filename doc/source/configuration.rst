@@ -2549,3 +2549,148 @@ section of the configuration.
 .. _`Azure CLI`: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest
 
 .. _azure.microsoft.com: https://azure.microsoft.com/en-us/global-infrastructure/services/?products=virtual-machines
+
+Cobbler Driver
+--------------------
+
+The Cobbler driver is modelled after the Kubernetes driver with label type ``namespace``.
+The driver connects to a Cobbler server and query the server for an inventory of machines
+that the driver can provision.  When the driver provision a machine/node, the driver will
+return a coordinate that you can use to manage the allocated node via the
+``zuul.resources.<node name>.namespace`` variable.  The value of the variable is a
+base64-encoded JSON string.
+
+Similar to the ``namespace`` type of Kubernetes driver, the returned resource needs to be
+setup before it can be use.  The ``bmc`` value is the value of ``Power Management Address``
+value of the system in Cobbler.  You would manage the allocated node with the ``bmc``
+value using procotols like IPMI and connect to the node with the ``node`` value using
+protocols like SSH.
+
+Example:
+
+.. code-block:: yaml
+
+  - job:
+      name: test-baremetal-job
+      nodeset:
+        nodes:
+          - name: bmnode
+            label: bm-label
+
+
+.. code-block:: yaml
+
+  - set_fact:
+      nodedata: "{{ zuul.resources.bmnode.namespace | b64decode | from_json }}"
+
+  - set_fact:
+      cobbler_endpoint: "http://{{ nodedata['cobbler_server'] }}/cobbler_api"
+      cobbler_token: "{{ nodedata['token'] }}"
+      cobbler_distro_name: "{{ nodedata['profile'] }}"
+      node_bmc: "{{ nodedata['bmc'] }}"
+      node_name: "{{ nodedata['node'] }}"
+      ks_meta: "{{ nodedata['ks_meta'] }}"
+
+  - name: Turn machine on
+    shell: "ipmitool -I lanplus -H {{ node_bmc }} -U user -P password chassis power on"
+
+  - name: add created baremetal to inventory
+    add_host:
+      hostname: baremetal
+      ansible_host: "{{ node_name }}"
+      ansible_connection: ssh
+      ansible_python_interpreter: auto
+      ansible_user: devops
+
+
+Selecting the cobbler driver adds the following options to the :attr:`providers`
+section of the configuration.
+
+.. attr-overview::
+   :prefix: providers.[cobbler]
+   :maxdepth: 3
+
+.. attr:: providers.[cobbler]
+   :type: list
+
+   An Cobbler provider's resources are partitioned into groups called `pool`
+   (see :attr:`providers.[cobbler].pools` for details),
+   and within a pool, the node types which are to be made available are listed.
+   You should set the ``max-ready-age`` for labels associated with cobbler providers
+   to be less than 3600 seconds.  This because a token to access Cobbler is generated
+   for each Zuul node and Cobbler token expires in one hour.
+
+
+   .. note:: For documentation purposes the option names are prefixed
+             ``providers.[cobbler]`` to disambiguate from other
+             drivers, but ``[cobbler]`` is not required in the
+             configuration (e.g. below
+             ``providers.[cobbler].pools`` refers to the ``pools``
+             key in the ``providers`` section when the ``cobbler``
+             driver is selected).
+
+   Example:
+
+   .. code-block:: yaml
+
+     providers:
+        - name: cobbler.example.org
+          driver: cobbler
+          api-server-username: cobbler
+          api-server-password: cobbler
+          pools:
+            - name: main
+              node-attributes:
+                owners: zuul-user-A
+              labels:
+                - cobbler1
+                - cobbler2
+            - name: second
+              node-attributes:
+                owners: zuul-user-B
+              labels:
+                - fake-label
+
+
+   .. attr:: name
+      :required:
+
+      A unique name for this provider configuration.  The name is also used to
+      identify the API endpoint for the Cobbler server you want to drive.  For
+      example, if the API endpoint of your Cobbler server is located at
+      ``http://cobbler.example.org/cobbler_api``, use ``cobbler.example.org`` as your name.
+
+   .. attr:: api-server-username
+      :required:
+
+      Username for accessing the Cobbler server
+
+   .. attr:: api-server-password
+      :required:
+
+      Password for accessing the Cobbler server
+
+  .. attr:: pools
+      :type: list
+
+      A pool defines a group of resources from an Cobbler provider. Each pool has a
+      maximum number of nodes which can be launched from it, along with a number
+      of attributes used when launching nodes.
+
+      .. attr:: name
+         :required:
+
+         A unique name within the provider for this pool of resources.
+
+      .. attr:: labels
+         :type: list
+
+         Each entry in a pool's `labels` section indicates that the
+         corresponding label is available for use in this pool.
+
+      .. attr:: node-attributes
+         :type: dict
+
+         A dictionary of key-value pairs that will be used to filter the inventory
+         of systems in Cobbler as nodes available to the pool. ``owners``, ``name``,
+         ``status`` are some of the available keys.  Wildcard can be used in the value.
