@@ -25,6 +25,7 @@ The following drivers are available.
 
    aws
    azure
+   cobbler
    gce
    kubernetes
    openshift
@@ -469,6 +470,12 @@ Options
          For details on the extra options required and provided by the
          Azure driver, see the separate section
          :ref:`azure-driver`
+
+      .. value:: cobbler
+
+         For details on the extra options required and provided by the
+         Cobbler driver, see the separate section
+         :ref:`cobbler-driver`
 
       .. value:: gce
 
