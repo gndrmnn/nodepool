@@ -1,0 +1,32 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: fake-label
+    min-ready: 1
+  - name: cobbler1
+    min-ready: 1
+  - name: cobbler2
+    min-ready: 1
+
+providers:
+  # name is use to create the api url (http:// + name + /cobbler_api)
+  - name: cobbler.example.org
+    driver: cobbler
+    api-server-username: cobbler
+    api-server-password: cobbler
+    token-keepalive: 300
+    pools:
+      - name: main
+        node-attributes:
+          owners: zuul-user-A
+        labels:
+          - cobbler1
+          - cobbler2
+      - name: second
+        node-attributes:
+          owners: zuul-user-B
+        labels:
+          - fake-label
