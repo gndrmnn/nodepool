@@ -56,3 +56,43 @@ To run the test suite in just one of the environments in envlist execute::
 so for example, *run the test suite in py35*::
 
   tox -e py35
+
+Run One Test
+------------
+
+To run individual tests with tox::
+
+  tox -e <env> -- path.to.module.Class.test
+
+For example, to *run a single Nodepool test*::
+
+  tox -e py35 -- nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
+
+To *run one test in the foreground* (after previously having run tox
+to set up the virtualenv)::
+
+  .tox/py35/bin/stestr run nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
+
+List Failing Tests
+------------------
+
+  .tox/py35/bin/activate
+  stestr failing --list
+
+Hanging Tests
+-------------
+
+The following will run each test in turn and print the name of the
+test as it is run::
+
+  . .tox/py35/bin/activate
+  stestr run
+
+You can compare the output of that to::
+
+  python -m testtools.run discover --list
+
+Need More Info?
+---------------
+
+More information about stestr: http://stestr.readthedocs.io/en/latest/
