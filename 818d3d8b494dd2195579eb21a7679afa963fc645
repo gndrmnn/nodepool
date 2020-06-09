@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff570b3c_8502880a",
+        "filename": "TESTING.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2020-06-09T15:46:07Z",
+      "side": 1,
+      "message": "Nodepool",
+      "range": {
+        "startLine": 67,
+        "startChar": 30,
+        "endLine": 67,
+        "endChar": 34
+      },
+      "revId": "818d3d8b494dd2195579eb21a7679afa963fc645",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
