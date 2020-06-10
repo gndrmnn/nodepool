@@ -23,6 +23,7 @@ from unittest.mock import patch
 
 import boto3
 from moto import mock_ec2
+from moto import mock_iam
 import yaml
 
 from nodepool import tests
@@ -43,11 +44,13 @@ class TestDriverAws(tests.DBTestCase):
             except Exception:
                 pass
 
+    @mock_iam
     @mock_ec2
     def _test_ec2_machine(self, label,
                           is_valid_config=True,
                           host_key_checking=True,
                           userdata=None,
+                          iam_instance_profile=None,
                           public_ip=True,
                           tags=[]):
         aws_id = 'AK000000000000000000'
@@ -71,6 +74,11 @@ class TestDriverAws(tests.DBTestCase):
             Description='Zuul Nodes')
         sg_id = sg['GroupId']
 
+        iam = boto3.client('iam', region_name='us-west-2')
+        fake_instance_profile = \
+            iam.create_instance_profile(
+                InstanceProfileName='fake-iam-instance-profile')
+
         ec2_template = os.path.join(
             os.path.dirname(__file__), '..', 'fixtures', 'aws.yaml')
         with open(ec2_template) as f:
@@ -84,6 +92,11 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
+        for l in raw_config['providers'][0]['pools'][1]['labels']:
+            if l['name'] == 'ubuntu1404-iam-instance-profile':
+                l['iam-instance-profile']['arn'] = \
+                    fake_instance_profile['InstanceProfile']['Arn']
+
         raw_config['providers'][0]['pools'][2]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][3]['subnet-id'] = subnet_id
@@ -161,6 +174,13 @@ class TestDriverAws(tests.DBTestCase):
                     userdata = base64.b64decode(
                         response['UserData']['Value']).decode()
                     self.assertEqual('fake-user-data', userdata)
+                if iam_instance_profile:
+                    instance = ec2_resource.Instance(node.external_id)
+                    iam_instance_profile = instance.iam_instance_profile
+                    self.assertEqual(
+                        'arn:aws:iam::\
+                         123456789012:instance-profile/not-a-real-profile',
+                        iam_instance_profile['Arn'])
                 if tags:
                     instance = ec2_resource.Instance(node.external_id)
                     tag_list = instance.tags
@@ -220,6 +240,10 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_userdata(self):
         self._test_ec2_machine('ubuntu1404-userdata',
                                userdata=True)
+
+    def test_ec2_machine_iam_instance_profile(self):
+        self._test_ec2_machine('ubuntu1404-iam-instance-profile',
+                               iam_instance_profile=True)
 
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',

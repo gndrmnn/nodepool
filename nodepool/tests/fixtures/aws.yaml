@@ -13,6 +13,7 @@ labels:
   - name: ubuntu1404-non-host-key-checking
   - name: ubuntu1404-private-ip
   - name: ubuntu1404-userdata
+  - name: ubuntu1404-iam-instance-profile
   - name: ubuntu1404-with-tags
   - name: ubuntu1404-with-name-tag
 
@@ -93,6 +94,13 @@ providers:
             instance-type: t3.medium
             key-name: zuul
             userdata: fake-user-data
+          - name: ubuntu1404-iam-instance-profile
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+            iam-instance-profile:
+              name: fake-iam-instance-profile
+              arn: null
       - name: non-host-key-checking
         max-servers: 1
         subnet-id: null
