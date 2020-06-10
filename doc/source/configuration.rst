@@ -1685,6 +1685,9 @@ section of the configuration.
                - name: debian9
                  cloud-image: debian9
                  instance-type: t3.medium
+                 iam-instance-profile:
+                   name: s3-read-only
+                   arn: arn:aws:iam::123456789012:instance-profile/s3-read-only
                  key-name: zuul
                  tags:
                    key1: value1
@@ -1910,6 +1913,21 @@ section of the configuration.
               :required:
 
               Name of the flavor to use.
+
+           .. attr:: iam-instance-profile
+              :type: dict
+
+              Used to attach an iam instance profile.
+              Useful for giving access to services
+              without needing any secrets.
+
+              .. attr:: name
+
+                 Name of the instance profile.
+
+              .. attr:: arn
+
+                 ARN identifier of the profile.
 
            .. attr:: key-name
               :type: string
