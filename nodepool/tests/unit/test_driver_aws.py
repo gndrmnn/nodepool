@@ -221,6 +221,14 @@ class TestDriverAws(tests.DBTestCase):
         self._test_ec2_machine('ubuntu1404-userdata',
                                userdata=True)
 
+    # Note(avass): moto does not yet support attaching an instance profile
+    # but these two at least tests to make sure that the instances 'starts'
+    def test_ec2_machine_iam_instance_profile_name(self):
+        self._test_ec2_machine('ubuntu1404-iam-instance-profile-name')
+
+    def test_ec2_machine_iam_instance_profile_arn(self):
+        self._test_ec2_machine('ubuntu1404-iam-instance-profile-arn')
+
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',
                                public_ip=False)
