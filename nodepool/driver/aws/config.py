@@ -243,6 +243,7 @@ class AwsProviderConfig(ProviderConfig):
             'volume-type': str,
             'volume-size': int,
             'userdata': str,
+            'iam-instance-profile': dict(name=str, arn=str),
             'tags': dict,
         }
 
