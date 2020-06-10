@@ -23,6 +23,7 @@ from unittest.mock import patch
 
 import boto3
 from moto import mock_ec2
+from moto import mock_iam
 import yaml
 
 from nodepool import tests
@@ -220,6 +221,12 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_userdata(self):
         self._test_ec2_machine('ubuntu1404-userdata',
                                userdata=True)
+
+    # Note(avass): moto does not yet support attaching an instance profile
+    # but this at least tests to make sure that the instance 'starts'
+    def test_ec2_machine_iam_instance_profile(self):
+        self._test_ec2_machine('ubuntu1404-iam-instance-profile')
+
 
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',
