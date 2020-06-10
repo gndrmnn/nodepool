@@ -58,6 +58,7 @@ class ProviderLabel(ConfigValue):
         self.volume_size = None
         self.volume_type = None
         self.userdata = None
+        self.iam_instance_profile = None
         # The ProviderPool object that owns this label.
         self.pool = None
         self.tags = None
@@ -74,6 +75,7 @@ class ProviderLabel(ConfigValue):
                     and other.volume_size == self.volume_size
                     and other.volume_type == self.volume_type
                     and other.userdata == self.userdata
+                    and other.iam_instance_profile == self.iam_instance_profile
                     and other.tags == self.tags)
         return False
 
@@ -131,6 +133,7 @@ class ProviderPool(ConfigPool):
             pl.volume_type = label.get('volume-type')
             pl.volume_size = label.get('volume-size')
             pl.userdata = label.get('userdata', None)
+            pl.iam_instance_profile = label.get('iam-instance-profile', None)
             pl.tags = [
                 {
                     "Key": k,
@@ -243,6 +246,7 @@ class AwsProviderConfig(ProviderConfig):
             'volume-type': str,
             'volume-size': int,
             'userdata': str,
+            'iam-instance-profile': dict(name=str, arn=str),
             'tags': dict,
         }
 
