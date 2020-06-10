@@ -193,6 +193,12 @@ class AwsProvider(Provider):
         if label.userdata:
             args['UserData'] = label.userdata
 
+        if label.iam_instance_profile:
+            args['IamInstanceProfile'] = {
+                "Name": label.iam_instance_profile['name'],
+                "Arn": label.iam_instance_profile['arn']
+            }
+
         # Default block device mapping parameters are embedded in AMIs.
         # We might need to supply our own mapping before lauching the instance.
         # We basically want to make sure DeleteOnTermination is true and be

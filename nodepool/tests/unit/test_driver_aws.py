@@ -48,6 +48,7 @@ class TestDriverAws(tests.DBTestCase):
                           is_valid_config=True,
                           host_key_checking=True,
                           userdata=None,
+                          iam_instance_profile=None,
                           public_ip=True,
                           tags=[]):
         aws_id = 'AK000000000000000000'
@@ -161,6 +162,13 @@ class TestDriverAws(tests.DBTestCase):
                     userdata = base64.b64decode(
                         response['UserData']['Value']).decode()
                     self.assertEqual('fake-user-data', userdata)
+                if iam_instance_profile:
+                    instance = ec2_resource.Instance(node.external_id)
+                    iam_instance_profile = instance.iam_instance_profile
+                    self.assertEqual(
+                        'arn:aws:iam::\
+                         123456789012:instance-profile/not-a-real-profile',
+                        iam_instance_profile['Arn'])
                 if tags:
                     instance = ec2_resource.Instance(node.external_id)
                     tag_list = instance.tags
@@ -220,6 +228,10 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_userdata(self):
         self._test_ec2_machine('ubuntu1404-userdata',
                                userdata=True)
+
+    def test_ec2_machine_iam_instance_profile(self):
+        self._test_ec2_machine('ubuntu1404-iam-instance-profile',
+                               iam_instance_profile=True)
 
     def test_ec2_machine_private_ip(self):
         self._test_ec2_machine('ubuntu1404-private-ip',
