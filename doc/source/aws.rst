@@ -39,10 +39,15 @@ section of the configuration.
        - name: ec2-us-west-2
          driver: aws
          region-name: us-west-2
+         diskimage-import:
+           bucket: diskimage-import-s3-bucket
+           role: vmimport
          cloud-images:
            - name: debian9
              image-id: ami-09c308526d9534717
              username: admin
+         diskimages:
+           - name: debian9
          pools:
            - name: main
              max-servers: 5
@@ -59,6 +64,13 @@ section of the configuration.
                    key1: value1
                - name: debian9-large
                  cloud-image: debian9
+                 instance-type: t3.large
+                 key-name: zuul
+                 tags:
+                   key1: value1
+                   key2: value2
+               - name: debian9-dib
+                 diskimage: debian9
                  instance-type: t3.large
                  key-name: zuul
                  tags:
@@ -81,6 +93,32 @@ section of the configuration.
       `boto3` library will select a profile.
 
       See `Boto Configuration`_ for more information.
+
+   .. attr:: diskimage-import
+
+      The information necessary to import diskimages into AWS as Amazon Machine Images (AMIs).
+
+      Required if :attr:`providers.[aws].diskimages` is configured for this provider.
+
+      .. attr:: bucket
+         :type: str
+         :required:
+
+         S3 bucket needed for intermediate storage to import diskimages to AWS.
+
+      .. attr:: role
+         :type: str
+         :default: vmimport
+
+         For the AWS VM image import task to run it has to be given the necessary rights in your
+         AWS account. For this, a corresponding service role has to be created. The AWS
+         documentation suggests vmimport as name for this role.
+         See the AWS documentation for more details: `AWS vmimport role`_.
+
+      .. attr:: basedir
+         :type: str
+
+         Base directory in the s3 bucket to store the images in.
 
    .. attr:: boot-timeout
       :type: int seconds
@@ -204,6 +242,81 @@ section of the configuration.
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``
 
+   .. attr:: diskimages
+      :type: list
+
+      Each entry in a provider's `diskimages` section must correspond
+      to an entry in :attr:`diskimages`.  Such an entry indicates that
+      the corresponding diskimage should be uploaded for use in this
+      provider.  Additionally, any nodes that are created using the
+      uploaded image will have the associated attributes (such as
+      flavor or metadata).
+
+      If an image is removed from this section, any previously uploaded
+      images will be deleted from the provider.
+
+      .. code-block:: yaml
+
+         diskimages:
+           - name: precise
+             pause: False
+           - name: windows
+             connection-type: winrm
+             connection-port: 5986
+
+      Each entry is a dictionary with the following keys
+
+      .. attr:: name
+         :type: string
+         :required:
+
+         Identifier to refer this image from
+         :attr:`providers.[aws].pools.labels` and
+         :attr:`diskimages` sections.
+
+      .. attr:: pause
+         :type: bool
+         :default: False
+
+         When set to True, nodepool-builder will not upload the image
+         to the provider.
+
+      .. attr:: connection-type
+         :type: string
+
+         The connection type that a consumer should use when connecting
+         to the node. For most diskimages this is not
+         necessary. However when creating Windows images this could be
+         ``winrm`` to enable access via ansible.
+
+      .. attr:: connection-port
+         :type: int
+         :default: 22 / 5986
+
+         The port that a consumer should use when connecting to the
+         node. For most diskimages this is not necessary. This defaults
+         to 22 for ssh and 5986 for winrm.
+
+   .. attr:: image-name-format
+      :type: string
+      :default: {image_name}-{timestamp}
+
+      Format for image names that are uploaded to providers.
+
+   .. attr:: post-upload-hook
+      :type: string
+      :default: None
+
+      Filename of an optional script that can be called after an image has
+      been uploaded to a provider but before it is taken into use. This is
+      useful to perform last minute validation tests before an image is
+      really used for build nodes. The script will be called as follows:
+
+      ``<SCRIPT> <PROVIDER> <EXTERNAL_IMAGE_ID> <LOCAL_IMAGE_FILENAME>``
+
+      If the script returns with result code 0 it is treated as successful
+      otherwise it is treated as failed and the image gets deleted.
+
    .. attr:: pools
       :type: list
 
@@ -280,6 +393,15 @@ section of the configuration.
               ``cloud-image`` should match the ``name`` of a previously
               configured entry from the ``cloud-images`` section of the
               provider. See :attr:`providers.[aws].cloud-images`.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.diskimage`
+
+           .. attr:: diskimage
+              :type: str
+              :required:
+
+              Refers to provider's diskimages, see
+              :attr:`providers.[aws].diskimages`.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.cloud-image`
 
            .. attr:: ebs-optimized
               :type: bool
@@ -345,5 +467,6 @@ section of the configuration.
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html
+.. _`AWS vmimport role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role
 .. _`Boto configuration`: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
 .. _`Boto describe images`: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_images

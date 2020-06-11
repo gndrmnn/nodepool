@@ -28,6 +28,7 @@ import yaml
 from nodepool import tests
 from nodepool import zk
 from nodepool.nodeutils import iterate_timeout
+from nodepool.zk import ImageUpload, ImageBuild
 
 
 class TestDriverAws(tests.DBTestCase):
@@ -45,6 +46,7 @@ class TestDriverAws(tests.DBTestCase):
 
     @mock_ec2
     def _test_ec2_machine(self, label,
+                          diskimage_label=False,
                           is_valid_config=True,
                           host_key_checking=True,
                           userdata=None,
@@ -111,6 +113,9 @@ class TestDriverAws(tests.DBTestCase):
 
             self._wait_for_provider(pool, 'ec2-us-west-2')
             provider_manager = pool.getProviderManager('ec2-us-west-2')
+
+            if diskimage_label:
+                self._prepare_diskimage_label(provider_manager)
 
             # Note: boto3 doesn't handle private ip addresses correctly
             # when in fake mode so we need to intercept the
@@ -205,6 +210,18 @@ class TestDriverAws(tests.DBTestCase):
                 self.zk.storeNode(node)
                 self.waitForNodeDeletion(node)
 
+    def _prepare_diskimage_label(self, provider_manager):
+        self.zk.storeBuild('dib-ubuntu1804', ImageBuild(build_id='12345'))
+        image_upload_dict = {"external_id": "ami-1e749f67", "state": "ready"}
+        image_upload = ImageUpload.fromDict(image_upload_dict,
+                                            build_id='12345',
+                                            provider_name=provider_manager.
+                                            provider.name,
+                                            image_name='dib-ubuntu1804',
+                                            upload_id='12345')
+        self.zk.storeImageUpload('dib-ubuntu1804', 1,
+                                 provider_manager.provider.name, image_upload)
+
     def test_ec2_machine(self):
         self._test_ec2_machine('ubuntu1404')
 
@@ -259,3 +276,6 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_shell_type(self):
         self._test_ec2_machine('ubuntu1404-with-shell-type',
                                shell_type="csh")
+
+    def test_ec2_with_diskimage(self):
+        self._test_ec2_machine('dib-ubuntu1804', diskimage_label=True)

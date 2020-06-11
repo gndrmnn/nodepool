@@ -17,8 +17,10 @@ import boto3
 import botocore.exceptions
 import nodepool.exceptions
 
+from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
+from nodepool.nodeutils import iterate_timeout
 
 
 class AwsInstance:
@@ -47,12 +49,17 @@ class AwsProvider(Provider):
 
     def __init__(self, provider, *args):
         self.provider = provider
+        self.aws = None
         self.ec2 = None
+        self.ec2_client = None
+        self.s3_client = None
+        self.zk = None
 
     def getRequestHandler(self, poolworker, request):
         return AwsNodeRequestHandler(poolworker, request)
 
     def start(self, zk_conn):
+        self.zk = zk_conn
         if self.ec2 is not None:
             return True
         self.log.debug("Starting")
@@ -61,6 +68,7 @@ class AwsProvider(Provider):
             profile_name=self.provider.profile_name)
         self.ec2 = self.aws.resource('ec2')
         self.ec2_client = self.aws.client("ec2")
+        self.s3_client = self.aws.client("s3")
 
     def stop(self):
         self.log.debug("Stopping")
@@ -125,25 +133,137 @@ class AwsProvider(Provider):
 
         return image_id
 
-    def getImage(self, cloud_image):
+    def getEC2ImageForCloudImage(self, cloud_image):
         return self.ec2.Image(self.getImageId(cloud_image))
 
-    def labelReady(self, label):
-        if not label.cloud_image:
-            msg = "A cloud-image (AMI) must be supplied with the AWS driver."
-            raise Exception(msg)
+    def getEC2ImageForAmi(self, ami):
+        return self.ec2.Image(ami)
 
-        image = self.getImage(label.cloud_image)
+    def labelReady(self, label):
+        if label.diskimage:
+            diskimage = self.provider.diskimages[label.diskimage.name]
+            image_upload = self.zk.getMostRecentImageUpload(
+                diskimage.name, self.provider.name)
+            if not image_upload:
+                self.log.debug("Label %s not yet uploaded in %s",
+                               label.name, self.provider.name)
+                return False
+            image = self.getEC2ImageForAmi(image_upload.external_id)
+        elif label.cloud_image:
+            image = self.getEC2ImageForCloudImage(label.cloud_image)
+        else:
+            return False
+
         # Image loading is deferred, check if it's really there
         if image.state != 'available':
             self.log.warning(
                 "Provider %s is configured to use %s as the AMI for"
                 " label %s and that AMI is there but unavailable in the"
                 " cloud." % (self.provider.name,
-                             label.cloud_image.external_name,
+                             image.image_id,
                              label.name))
             return False
         return True
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None,
+                    md5=None, sha256=None):
+        dest = self._get_s3_upload_dest(image_name)
+        self.log.debug("Uploading image %s to %s/%s",
+                       filename,
+                       self.provider.s3_image_bucket,
+                       dest)
+        try:
+            self.s3_client.upload_file(
+                filename,
+                self.provider.s3_image_bucket,
+                dest)
+            args = dict(
+                DiskContainers=[dict(
+                    UserBucket=dict(
+                        S3Bucket=self.provider.s3_image_bucket,
+                        S3Key=dest,
+                    )
+                )],
+                RoleName=self.provider.ec2_vm_import_role
+            )
+
+            import_image_task = self.ec2_client.import_image(**args)
+            import_task_id = import_image_task['ImportTaskId']
+            self.log.debug("Import task ID for image import of %s: %s",
+                           image_name, import_task_id)
+
+            progress = ''
+            for count in iterate_timeout(max_seconds=3600,
+                                         exc=exceptions.ImageCreateException,
+                                         purpose="importing image %s to aws"
+                                                 % image_name,
+                                         interval=30):
+                response = self.ec2_client.describe_import_image_tasks(
+                    ImportTaskIds=[import_task_id]
+                )
+                import_image_task = response['ImportImageTasks'][0]
+                status = import_image_task['Status']
+                if status in ('completed', 'deleted'):
+                    break
+                else:
+                    if progress != import_image_task['Progress']:
+                        statusmessage = import_image_task['StatusMessage']
+                        progress = import_image_task['Progress']
+                        self.log.debug("Importing image %s: %s %s%%: %s",
+                                       import_task_id, status,
+                                       progress, statusmessage)
+        finally:
+            self._delete_image_from_s3(image_name)
+
+        if status == 'deleted':
+            raise ValueError(import_image_task['StatusMessage'])
+
+        image_id = import_image_task['ImageId']
+
+        if status == 'completed':
+            tags = [{'Key': k, 'Value': v} for k, v in meta.items()]
+            tags.append({'Key': 'Name', 'Value': image_name})
+            self.ec2_client.create_tags(
+                Resources=[image_id],
+                Tags=tags
+            )
+
+        return image_id
+
+    def _get_s3_upload_dest(self, image_name):
+        dest = image_name
+        if self.provider.s3_image_basedir:
+            dest = self.provider.s3_image_basedir + '/' + dest
+        return dest
+
+    def _delete_image_from_s3(self, image_name):
+        self.log.debug("Delete image %s from S3 bucket.", image_name)
+        dest = self._get_s3_upload_dest(image_name)
+        self.s3_client.delete_object(Bucket=self.provider.s3_image_bucket,
+                                     Key=dest)
+
+    def _s3_contains_image(self, image_name):
+        dest = self._get_s3_upload_dest(image_name)
+        result = self.s3_client.list_objects_v2(
+            Bucket=self.provider.s3_image_bucket, Prefix=dest)
+        # The AWS API only returns up to 1000 results. As we use a prefix this
+        # should never be exceeded. If it still happens, raise an exception.
+        if result['IsTruncated']:
+            raise ValueError('Not all elements of S3 bucket with prefix'
+                             '%s could be retrieved' % dest)
+        if result['KeyCount'] > 0:
+            for entry in result['Contents']:
+                if entry['Key'] == image_name:
+                    return True
+        return False
+
+    def deleteImage(self, image_name, image_id):
+        self.log.debug("Deregistering image %s: %s", image_name, image_id)
+        if self._s3_contains_image(image_name):
+            self.log.warning("Image file for %s still in S3 bucket on"
+                             "deregistration.", image_name)
+            self._delete_image_from_s3(image_name)
+        self.ec2_client.deregister_image(ImageId=image_id)
 
     def join(self):
         return True
@@ -215,7 +335,7 @@ class AwsProvider(Provider):
         # We might need to supply our own mapping before lauching the instance.
         # We basically want to make sure DeleteOnTermination is true and be
         # able to set the volume type and size.
-        image = self.getImage(label.cloud_image)
+        image = self.getEC2ImageForCloudImage(label.cloud_image)
         # TODO: Flavors can also influence whether or not the VM spawns with a
         # volume -- we basically need to ensure DeleteOnTermination is true
         if hasattr(image, 'block_device_mappings'):

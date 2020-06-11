@@ -18,6 +18,7 @@ import time
 
 from nodepool import exceptions
 from nodepool import zk
+from nodepool.driver.aws.config import ProviderCloudImage
 from nodepool.driver.utils import NodeLauncher, QuotaInformation
 from nodepool.driver import NodeRequestHandler
 from nodepool.nodeutils import nodescan
@@ -35,6 +36,26 @@ class AwsInstanceLauncher(NodeLauncher):
     def launch(self):
         self.log.debug("Starting %s instance" % self.node.type)
         attempts = 1
+        if self.label.diskimage:
+            diskimage = self.provider_config.diskimages[
+                self.label.diskimage.name]
+            image_upload = self.handler.zk.getMostRecentImageUpload(
+                diskimage.name, self.provider_config.name)
+            if not image_upload:
+                raise exceptions.LaunchNodepoolException(
+                    "Unable to find current cloud image %s in %s" %
+                    (diskimage.name, self.provider_config.name)
+                )
+            cloud_image = ProviderCloudImage()
+            cloud_image.name = image_upload.image_name
+            cloud_image.image_id = image_upload.external_id
+            cloud_image.username = image_upload.username
+            cloud_image.image_filters = None
+            cloud_image.connection_port = diskimage.connection_port
+            cloud_image.connection_type = diskimage.connection_type
+            cloud_image.python_path = image_upload.python_path
+            self.label.cloud_image = cloud_image
+
         while attempts <= self.retries:
             try:
                 instance = self.handler.manager.createInstance(self.label)
@@ -140,9 +161,8 @@ class AwsNodeRequestHandler(NodeRequestHandler):
         '''
         if self.provider.manage_images:
             for label in self.request.node_types:
-                if self.pool.labels[label].cloud_image:
-                    if not self.manager.labelReady(self.pool.labels[label]):
-                        return False
+                if not self.manager.labelReady(self.pool.labels[label]):
+                    return False
         return True
 
     def hasRemainingQuota(self, ntype):

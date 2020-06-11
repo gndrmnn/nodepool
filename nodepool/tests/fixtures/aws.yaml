@@ -3,6 +3,14 @@ zookeeper-servers:
     port: null
     chroot: null
 
+diskimages:
+  - name: dib-ubuntu1804
+    rebuild-age: 14400
+    release: bionic
+    elements:
+      - ubuntu
+      - vm
+
 labels:
   - name: ubuntu1404
   - name: ubuntu1404-bad-ami-name
@@ -18,11 +26,18 @@ labels:
   - name: ubuntu1404-with-tags
   - name: ubuntu1404-with-name-tag
   - name: ubuntu1404-with-shell-type
+  - name: dib-ubuntu1804
 
 providers:
   - name: ec2-us-west-2
     driver: aws
     region-name: us-west-2
+    diskimage-import:
+      bucket: diskimage-import-s3-bucket
+      basedir: images
+      role: vmimport
+    diskimages:
+      - name: dib-ubuntu1804
     cloud-images:
       - name: ubuntu1404
         image-id: ami-1e749f67
@@ -112,6 +127,10 @@ providers:
             key-name: zuul
             iam-instance-profile:
               arn: arn:aws:iam::123456789012:instance-profile/not-a-real-profile
+          - name: dib-ubuntu1804
+            diskimage: dib-ubuntu1804
+            instance-type: t3.medium
+            key-name: zuul
       - name: non-host-key-checking
         max-servers: 1
         subnet-id: null
