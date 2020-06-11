@@ -35,6 +35,25 @@ class AwsInstanceLauncher(NodeLauncher):
     def launch(self):
         self.log.debug("Starting %s instance" % self.node.type)
         attempts = 1
+        if self.label.diskimage:
+            diskimage = self.provider_config.diskimages[
+                self.label.diskimage.name]
+            image_upload = self.handler.zk.getMostRecentImageUpload(
+                diskimage.name, self.provider_config.name)
+            if not image_upload:
+                raise exceptions.LaunchNodepoolException(
+                    "Unable to find current cloud image %s in %s" %
+                    (diskimage.name, self.provider_config.name)
+                )
+            cloud_image = ProviderCloudImage()
+            cloud_image.name image_upload.image_name
+            cloud_image.image_id = image_upload.external_id
+            cloud_image.username = image_upload.username
+
+
+            self.label.connection_port = diskimage.connection_port
+            self.label.connection_type = diskimage.connection_type
+
         while attempts <= self.retries:
             try:
                 instance = self.handler.manager.createInstance(self.label)

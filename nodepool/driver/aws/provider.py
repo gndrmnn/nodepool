@@ -16,6 +16,7 @@ import logging
 import boto3
 import botocore.exceptions
 import nodepool.exceptions
+import time
 
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
@@ -130,8 +131,7 @@ class AwsProvider(Provider):
 
     def labelReady(self, label):
         if not label.cloud_image:
-            msg = "A cloud-image (AMI) must be supplied with the AWS driver."
-            raise Exception(msg)
+            return False
 
         image = self.getImage(label.cloud_image)
         # Image loading is deferred, check if it's really there
@@ -144,6 +144,71 @@ class AwsProvider(Provider):
                              label.name))
             return False
         return True
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None,
+                    md5=None, sha256=None):
+        s3_client = self.aws.client("s3")
+        dest = image_name
+        self.log.debug("Uploading image %s to %s/%s",
+                       filename,
+                       self.provider.vmimport['bucket'],
+                       dest)
+        s3_client.upload_file(
+            filename,
+            self.provider.vmimport['bucket'],
+            dest)
+        args = dict(
+            DiskContainers=[dict(
+                UserBucket=dict(
+                    S3Bucket=self.provider.vmimport['bucket'],
+                    S3Key=dest,
+                )
+            )],
+            RoleName=self.provider.vmimport['role']
+        )
+
+        import_image_task = self.ec2_client.import_image(**args)
+        import_task_id = import_image_task['ImportTaskId']
+
+        status = import_image_task['Status']
+        statusmessage = import_image_task['StatusMessage']
+        progress = import_image_task['Progress']
+        self.log.debug("Importing image: %s %s%%: %s",
+                       status, progress, statusmessage)
+        while status not in ('completed', 'deleted'):
+            time.sleep(10)
+            response = self.ec2_client.describe_import_image_tasks(
+                ImportTaskIds=[import_task_id]
+            )
+            import_image_task = response['ImportImageTasks'][0]
+            status = import_image_task['Status']
+            try:
+                if progress != import_image_task['Progress']:
+                    statusmessage = import_image_task['StatusMessage']
+                    progress = import_image_task['Progress']
+                    self.log.debug("Importing image: %s %s%%: %s",
+                                   status, progress, statusmessage)
+            except Exception as e:
+                self.log.debug(e)
+
+        s3_client.delete_object(Bucket=self.provider.vmimport['bucket'],
+                                Key=dest)
+        image_id = import_image_task['ImageId']
+
+        if status == 'deleted':
+            raise ValueError(import_image_task['StatusMessage'])
+        elif status == 'completed':
+            tags = [{'Key': k, 'Value': v} for k, v in meta.items()]
+            tags.append({'Key': 'Name', 'Value': image_name})
+            self.ec2_client.create_tags(
+                Resources=[image_id],
+                Tags=tags
+            )
+
+        return image_id
+
+    def deleteImage(self, image_name, image_id):
+        self.ec2_client.deregister_image(image_id)
 
     def join(self):
         return True
