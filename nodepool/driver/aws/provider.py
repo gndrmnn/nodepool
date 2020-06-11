@@ -16,6 +16,7 @@ import logging
 import boto3
 import botocore.exceptions
 import nodepool.exceptions
+import time
 
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
@@ -48,11 +49,13 @@ class AwsProvider(Provider):
     def __init__(self, provider, *args):
         self.provider = provider
         self.ec2 = None
+        self.zk = None
 
     def getRequestHandler(self, poolworker, request):
         return AwsNodeRequestHandler(poolworker, request)
 
     def start(self, zk_conn):
+        self.zk = zk_conn
         if self.ec2 is not None:
             return True
         self.log.debug("Starting")
@@ -129,21 +132,97 @@ class AwsProvider(Provider):
         return self.ec2.Image(self.getImageId(cloud_image))
 
     def labelReady(self, label):
-        if not label.cloud_image:
-            msg = "A cloud-image (AMI) must be supplied with the AWS driver."
-            raise Exception(msg)
+        if label.diskimage:
+            diskimage = self.provider.diskimages[label.diskimage.name]
+            image_upload = self.zk.getMostRecentImageUpload(
+                diskimage.name, self.provider.name)
+            if not image_upload:
+                self.log.debug("Label %s not ready in %s",
+                               label.name, self.provider.name)
+                return False
+            image = self.getImage(image_upload.external_id)
+        elif label.cloud_image:
+            image = self.getImage(label.cloud_image)
+        else:
+            return False
 
-        image = self.getImage(label.cloud_image)
         # Image loading is deferred, check if it's really there
         if image.state != 'available':
             self.log.warning(
                 "Provider %s is configured to use %s as the AMI for"
                 " label %s and that AMI is there but unavailable in the"
                 " cloud." % (self.provider.name,
-                             label.cloud_image.external_name,
+                             image.image_id,
                              label.name))
             return False
         return True
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None,
+                    md5=None, sha256=None):
+        s3_client = self.aws.client("s3")
+        dest = image_name
+        if self.provider.s3_image_basedir:
+            dest = self.provider.s3_image_basedir + '/' + dest
+        self.log.debug("Uploading image %s to %s/%s",
+                       filename,
+                       self.provider.s3_image_bucket,
+                       dest)
+        s3_client.upload_file(
+            filename,
+            self.provider.s3_image_bucket,
+            dest)
+        args = dict(
+            DiskContainers=[dict(
+                UserBucket=dict(
+                    S3Bucket=self.provider.s3_image_bucket,
+                    S3Key=dest,
+                )
+            )],
+            RoleName=self.provider.ec2_vm_import_role
+        )
+
+        import_image_task = self.ec2_client.import_image(**args)
+        import_task_id = import_image_task['ImportTaskId']
+
+        progress = ''
+        import_task_running = True
+        while import_task_running:
+            status = import_image_task['Status']
+            if status in ('completed', 'deleted'):
+                import_task_running = False
+            else:
+                if progress != import_image_task['Progress']:
+                    statusmessage = import_image_task['StatusMessage']
+                    progress = import_image_task['Progress']
+                    self.log.debug("Importing image: %s %s%%: %s",
+                                   status, progress, statusmessage)
+                time.sleep(30)
+                response = self.ec2_client.describe_import_image_tasks(
+                    ImportTaskIds=[import_task_id]
+                )
+                import_image_task = response['ImportImageTasks'][0]
+
+        s3_client.delete_object(Bucket=self.provider.s3_image_bucket,
+                                Key=dest)
+
+        if status == 'deleted':
+            raise ValueError(import_image_task['StatusMessage'])
+
+        image_id = import_image_task['ImageId']
+
+        if status == 'completed':
+            tags = [{'Key': k, 'Value': v} for k, v in meta.items()]
+            tags.append({'Key': 'Name', 'Value': image_name})
+            self.ec2_client.create_tags(
+                Resources=[image_id],
+                Tags=tags
+            )
+
+        return image_id
+
+    def deleteImage(self, image_name, image_id):
+        self.log.debug("Deregistering image %s: %s", image_name, image_id)
+        self.ec2_client.deregister_image(image_id)
 
     def join(self):
         return True
