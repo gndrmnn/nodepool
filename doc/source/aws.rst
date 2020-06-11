@@ -64,6 +64,13 @@ section of the configuration.
                  tags:
                    key1: value1
                    key2: value2
+               - name: debian9-dib
+                 diskimage: debian9
+                 instance-type: t3.large
+                 key-name: zuul
+                 tags:
+                   key1: value1
+                   key2: value2
 
    .. attr:: name
       :required:
@@ -81,6 +88,28 @@ section of the configuration.
       `boto3` library will select a profile.
 
       See `Boto Configuration`_ for more information.
+
+   .. attr:: vmimport
+
+      Required if diskimages are configured for this provider.
+
+      .. attr:: bucket
+         :type: str
+         :required:
+
+         S3 bucket needed for intermediate storage to import diskimages to aws.
+         Required for :attr:`providers.[aws].diskimages`
+
+      .. attr:: role
+         :type: str
+         :default: vmimport
+
+         Role to assign the import image task.
+
+      .. attr:: basedir
+         :type: str
+
+         Base directory in the s3 bucket to store the images in.
 
    .. attr:: boot-timeout
       :type: int seconds
@@ -189,6 +218,61 @@ section of the configuration.
          most diskimages this is not necessary. This defaults to 22 for ssh and
          5986 for winrm.
 
+   .. attr:: diskimages
+      :type: list
+
+      Each entry in a provider's `diskimages` section must correspond
+      to an entry in :attr:`diskimages`.  Such an entry indicates that
+      the corresponding diskimage should be uploaded for use in this
+      provider.  Additionally, any nodes that are created using the
+      uploaded image will have the associated attributes (such as
+      flavor or metadata).
+
+      If an image is removed from this section, any previously uploaded
+      images will be deleted from the provider.
+
+      .. code-block:: yaml
+
+         diskimages:
+           - name: precise
+             pause: False
+           - name: windows
+             connection-type: winrm
+             connection-port: 5986
+
+      Each entry is a dictionary with the following keys
+
+      .. attr:: name
+         :type: string
+         :required:
+
+         Identifier to refer this image from
+         :attr:`providers.[aws].pools.labels` and
+         :attr:`diskimages` sections.
+
+      .. attr:: pause
+         :type: bool
+         :default: False
+
+         When set to True, nodepool-builder will not upload the image
+         to the provider.
+
+      .. attr:: connection-type
+         :type: string
+
+         The connection type that a consumer should use when connecting
+         to the node. For most diskimages this is not
+         necessary. However when creating Windows images this could be
+         ``winrm`` to enable access via ansible.
+
+      .. attr:: connection-port
+         :type: int
+         :default: 22 / 5986
+
+         The port that a consumer should use when connecting to the
+         node. For most diskimages this is not necessary. This defaults
+         to 22 for ssh and 5986 for winrm.
+
    .. attr:: pools
       :type: list
 
@@ -265,6 +349,15 @@ section of the configuration.
               ``cloud-image`` should match the ``name`` of a previously
               configured entry from the ``cloud-images`` section of the
               provider. See :attr:`providers.[aws].cloud-images`.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.diskimage`
+
+           .. attr:: diskimage
+              :type: str
+              :required:
+
+              Refers to provider's diskimages, see
+              :attr:`providers.[aws].diskimages`.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.cloud-image`
 
            .. attr:: ebs-optimized
               :type: bool
