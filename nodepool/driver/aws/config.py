@@ -165,6 +165,7 @@ class AwsProviderConfig(ProviderConfig):
         self.boot_timeout = None
         self.launch_retries = None
         self.cloud_images = {}
+        self.s3_image_bucket = None
         super().__init__(provider)
 
     def __eq__(self, other):
@@ -197,6 +198,7 @@ class AwsProviderConfig(ProviderConfig):
         self.region_name = self.provider.get('region-name')
         self.boot_timeout = self.provider.get('boot-timeout', 60)
         self.launch_retries = self.provider.get('launch-retries', 3)
+        self.s3_image_bucket = self.provider.get('s3-image-bucket')
 
         default_port_mapping = {
             'ssh': 22,
@@ -280,6 +282,7 @@ class AwsProviderConfig(ProviderConfig):
             'hostname-format': str,
             'boot-timeout': int,
             'launch-retries': int,
+            's3-image-bucket': str,
         })
         return v.Schema(provider)
 
