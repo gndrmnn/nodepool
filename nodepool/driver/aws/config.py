@@ -21,6 +21,26 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
 
+class ProviderDiskImage(ConfigValue):
+    def __init__(self):
+        self.name = None
+        self.pause = False
+        self.connection_type = None
+        self.connection_port = None
+        self.meta = dict()
+
+    def __eq__(self, other):
+        if isinstance(other, ProviderDiskImage):
+            return (self.name == other.name and
+                    self.pause == other.pause and
+                    self.connection_type == other.connection_type and
+                    self.connection_port == other.connection_port)
+        return False
+
+    def __repr__(self):
+        return "<ProviderDiskImage %s>" % self.name
+
+
 class ProviderCloudImage(ConfigValue):
     def __init__(self):
         self.name = None
@@ -52,6 +72,7 @@ class ProviderLabel(ConfigValue):
     def __init__(self):
         self.name = None
         self.cloud_image = None
+        self.diskimage = None
         self.ebs_optimized = None
         self.instance_type = None
         self.key_name = None
@@ -127,6 +148,19 @@ class ProviderPool(ConfigPool):
             else:
                 cloud_image = None
             pl.cloud_image = cloud_image
+
+            diskimage_name = label.get('diskimage')
+            if diskimage_name:
+                diskimage = self.provider.diskimages.get(diskimage_name)
+                if not diskimage:
+                    raise ValueError(
+                        "diskimage %s does not exist in provider %s"
+                        " but is referenced in label %s" %
+                        (diskimage_name, self.name, pl.name))
+            else:
+                diskimage = None
+
+            pl.diskimage = diskimage
             pl.ebs_optimized = bool(label.get('ebs-optimized', False))
             pl.instance_type = label['instance-type']
             pl.key_name = label['key-name']
@@ -168,6 +202,13 @@ class AwsProviderConfig(ProviderConfig):
         self.boot_timeout = None
         self.launch_retries = None
         self.cloud_images = {}
+        self.diskimages = {}
+        self.image_type = 'raw'
+        self.s3_image_bucket = None
+        self.s3_image_basedir = None
+        self.ec2_vm_import_role = None
+        self.image_name_format = None
+        self.post_upload_hook = None
         super().__init__(provider)
 
     def __eq__(self, other):
@@ -187,9 +228,7 @@ class AwsProviderConfig(ProviderConfig):
 
     @property
     def manage_images(self):
-        # Currently we have no image management for AWS. This should
-        # be updated if that changes.
-        return False
+        return True
 
     @staticmethod
     def reset():
@@ -200,12 +239,19 @@ class AwsProviderConfig(ProviderConfig):
         self.region_name = self.provider.get('region-name')
         self.boot_timeout = self.provider.get('boot-timeout', 60)
         self.launch_retries = self.provider.get('launch-retries', 3)
+        diskimage_import = self.provider.get('diskimage-import')
+        if diskimage_import:
+            self.s3_image_bucket = diskimage_import['bucket']
+            self.s3_image_basedir = diskimage_import.get('basedir')
+            self.ec2_vm_import_role = diskimage_import.get('role', 'vmimport')
+        self.image_name_format = self.provider.get('image-name-format',
+                                                   '{image_name}-{timestamp}')
+        self.post_upload_hook = self.provider.get('post-upload-hook')
 
         default_port_mapping = {
             'ssh': 22,
             'winrm': 5986,
         }
-        # TODO: diskimages
 
         for image in self.provider.get('cloud-images', []):
             i = ProviderCloudImage()
@@ -231,6 +277,18 @@ class AwsProviderConfig(ProviderConfig):
                 default_port_mapping.get(i.connection_type, 22))
             self.cloud_images[i.name] = i
 
+        for image in self.provider.get('diskimages', []):
+            i = ProviderDiskImage()
+            i.name = image['name']
+            self.diskimages[i.name] = i
+            diskimage = config.diskimages[i.name]
+            diskimage.image_types.add(self.image_type)
+            i.pause = bool(image.get('pause', False))
+            i.connection_type = image.get('connection-type', 'ssh')
+            i.connection_port = image.get(
+                'connection-port',
+                default_port_mapping.get(i.connection_type, 22))
+
         for pool in self.provider.get('pools', []):
             pp = ProviderPool()
             pp.load(pool, config, self)
@@ -239,6 +297,7 @@ class AwsProviderConfig(ProviderConfig):
     def getSchema(self):
         pool_label = {
             v.Required('name'): str,
+            v.Exclusive('diskimage', 'label-image'): str,
             v.Exclusive('cloud-image', 'label-image'): str,
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
@@ -268,6 +327,15 @@ class AwsProviderConfig(ProviderConfig):
             v.Any('Values', 'values'): [str]
         }
 
+        provider_diskimages = {
+            'pause': bool,
+            'name': str,
+            'connection-type': str,
+            'connection-port': int,
+            'username': str,
+            'python-path': str,
+        }
+
         provider_cloud_images = {
             'name': str,
             'connection-type': str,
@@ -284,9 +352,17 @@ class AwsProviderConfig(ProviderConfig):
             v.Required('region-name'): str,
             'profile-name': str,
             'cloud-images': [provider_cloud_images],
+            'diskimages': [provider_diskimages],
             'hostname-format': str,
             'boot-timeout': int,
             'launch-retries': int,
+            'diskimage-import': {
+                v.Required('bucket'): str,
+                'role': str,
+                'basedir': str,
+            },
+            'image-name-format': str,
+            'post-upload-hook': str,
         })
         return v.Schema(provider)
 
