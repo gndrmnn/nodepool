@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ff570b3c_0e7030da",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2020-06-11T15:06:46Z",
+      "side": 1,
+      "message": "not sure, and the boto3 docs seem ambiguous so  I\u0027ll see if I can find out.",
+      "parentUuid": "ff570b3c_13597b5a",
+      "revId": "947ad554d563cb026044a1e75e482e2f4928a46b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff570b3c_7358b755",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 13
