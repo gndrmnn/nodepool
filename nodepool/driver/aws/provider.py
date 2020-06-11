@@ -128,8 +128,7 @@ class AwsProvider(Provider):
 
     def labelReady(self, label):
         if not label.cloud_image:
-            msg = "A cloud-image (AMI) must be supplied with the AWS driver."
-            raise Exception(msg)
+            return False
 
         image = self.getImage(label.cloud_image)
         # Image loading is deferred, check if it's really there
@@ -142,6 +141,24 @@ class AwsProvider(Provider):
                              label.name))
             return False
         return True
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None):
+        s3_client = self.aws.client("s3")
+        s3_client.upload_file(filename, self.s3_image_bucket, image_name)
+        args = dict(
+            DiskContainers=[dict(
+                UserBucket=dict(
+                    S3Bucket=self.provider.s3_image_bucket,
+                    S3Key=filename,
+                )
+            )]
+        )
+        image = self.ec2_client.import_image(**args)
+        s3_client.delete_object(Bucket=self.bucket, Key=image_name)
+        return image.get('ImageId')
+
+    def deleteImage(self, image_name, image_id):
+        self.ec2_client.deregister_image(image_id)
 
     def join(self):
         return True
