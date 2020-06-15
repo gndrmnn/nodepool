@@ -87,6 +87,23 @@
       "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf51134e_33c2f834",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-06-15T17:17:41Z",
+      "side": 1,
+      "message": "Okay, I think I understand, but there\u0027s one thing we should be 100% sure of:\n\nWhen we call foo.wait() (e.g., async_disk_delete.wait()) above, does that return only when the disk is actually deleted (or perhaps when it fails to delete the disk)?.  Put another way, is it the case that .wait() will never return successfully while the underlying resource still exists?\n\nIf the answer to those questions is \"yes\", then I think this is correct as written and we should just change the comment in waitForNodeCleanup to read \"All async tasks are handled in cleanupNode\".\n\nOtherwise, we\u0027ll have to rethink this a bit more.\n\nIn either case, I don\u0027t think moving everything to waitForNodeCleanup would be advantageous; I think the two methods are only ever called one immediately after the other, so they are really only split for code organization purposes.",
+      "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
