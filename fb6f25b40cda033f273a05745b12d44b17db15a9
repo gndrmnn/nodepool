@@ -104,6 +104,24 @@
       "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf51134e_3e591f5a",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 8099
+      },
+      "writtenOn": "2020-06-15T18:39:50Z",
+      "side": 1,
+      "message": "yes - the `.wait()`s above will only return when it is deleted (or fails).\n\nI will update the comment below - thanks!",
+      "parentUuid": "bf51134e_33c2f834",
+      "revId": "fb6f25b40cda033f273a05745b12d44b17db15a9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
