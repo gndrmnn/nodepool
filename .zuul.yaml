@@ -167,18 +167,24 @@
         - context: .
           repository: zuul/nodepool
           target: nodepool
+          tags:
+            # If zuul.tag is defined: [ '3', '3.19', '3.19.0' ].  Only works for 3-component tags.
+            # Otherwise: ['latest']
+            &imagetag "{{ zuul.tag is defined | ternary([zuul.get('tag', '').split('.')[0], '.'.join(zuul.get('tag', '').split('.')[:2]), zuul.get('tag', '')], ['latest']) }}"
           arch:
             - linux/amd64
             - linux/arm64
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
+          tags: *imagetag
           arch:
             - linux/amd64
             - linux/arm64
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
+          tags: *imagetag
           arch:
             - linux/amd64
             - linux/arm64
@@ -388,5 +394,13 @@
         - opendev-promote-python
     release:
       jobs:
-        - opendev-release-python
-        - zuul-publish-tox-docs
+        # - opendev-release-python
+        # - zuul-publish-tox-docs
+        - upload-docker-image:
+            secrets:
+              name: docker_credentials
+              secret: nodepool-dockerhub
+              pass-to-parent: true
+            vars:
+              <<: *nodepool_image_vars
+              upload_docker_image_promote: false
