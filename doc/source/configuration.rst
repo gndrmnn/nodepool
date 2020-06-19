@@ -1386,6 +1386,20 @@ Selecting the kubernetes driver adds the following options to the
            interpreter on Ansible >=2.8, and default to
            ``/usr/bin/python2`` for earlier versions.
 
+         .. attr:: cpu
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            specifies the number of cpu to request for the pod.
+
+         .. attr:: memory
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            specifies the amount of memory in MB to request for the pod.
+
 
 
 Openshift Driver
