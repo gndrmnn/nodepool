@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import abc
+import copy
 import logging
 import math
 import threading
@@ -26,6 +27,9 @@ from nodepool import exceptions
 from nodepool import stats
 from nodepool import zk
 from nodepool.logconfig import get_annotated_logger
+
+
+MAX_QUOTA_AGE = 5 * 60  # How long to keep the quota information cached
 
 
 class NodeLauncher(threading.Thread,
@@ -171,3 +175,120 @@ class QuotaInformation:
 
     def __str__(self):
         return str(self.quota)
+
+
+class QuotaSupport:
+    """A mix-in class for providers to supply quota support methods"""
+
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self._current_nodepool_quota = None
+
+    @abc.abstractmethod
+    def quotaNeededByLabel(self, label, pool):
+        """Return quota information about a label
+
+        :param str label: The label name
+        :param ProviderPool pool: A ProviderPool config object with the label
+
+        :return: QuotaInformation about the label
+        """
+        pass
+
+    @abc.abstractmethod
+    def unmanagedQuotaUsed(self):
+        '''
+        Sums up the quota used by servers unmanaged by nodepool.
+
+        :return: Calculated quota in use by unmanaged servers
+        '''
+        pass
+
+    @abc.abstractmethod
+    def getProviderLimits(self):
+        '''
+        Get the resource limits from the provider.
+
+        :return: QuotaInformation about the label
+        '''
+        print("base")
+        pass
+
+    def invalidateQuotaCache(self):
+        self._current_nodepool_quota['timestamp'] = 0
+
+    def estimatedNodepoolQuota(self):
+        '''
+        Determine how much quota is available for nodepool managed resources.
+        This needs to take into account the quota of the tenant, resources
+        used outside of nodepool and the currently used resources by nodepool,
+        max settings in nodepool config. This is cached for MAX_QUOTA_AGE
+        seconds.
+
+        :return: Total amount of resources available which is currently
+                 available to nodepool including currently existing nodes.
+        '''
+
+        if self._current_nodepool_quota:
+            now = time.time()
+            if now < self._current_nodepool_quota['timestamp'] + MAX_QUOTA_AGE:
+                return copy.deepcopy(self._current_nodepool_quota['quota'])
+
+        # This is initialized with the full tenant quota and later becomes
+        # the quota available for nodepool.
+        nodepool_quota = self.getProviderLimits()
+
+        self.log.debug("Provider quota for %s: %s",
+                       self.provider.name, nodepool_quota)
+
+        # Subtract the unmanaged quota usage from nodepool_max
+        # to get the quota available for us.
+        nodepool_quota.subtract(self.unmanagedQuotaUsed())
+
+        self._current_nodepool_quota = {
+            'quota': nodepool_quota,
+            'timestamp': time.time()
+        }
+
+        self.log.debug("Available quota for %s: %s",
+                       self.provider.name, nodepool_quota)
+
+        return copy.deepcopy(nodepool_quota)
+
+    def estimatedNodepoolQuotaUsed(self, pool=None):
+        '''
+        Sums up the quota used (or planned) currently by nodepool. If pool is
+        given it is filtered by the pool.
+
+        :param pool: If given, filtered by the pool.
+        :return: Calculated quota in use by nodepool
+        '''
+        used_quota = QuotaInformation()
+
+        for node in self._zk.nodeIterator():
+            if node.provider == self.provider.name:
+                try:
+                    if pool and not node.pool == pool.name:
+                        continue
+                    provider_pool = self.provider.pools.get(node.pool)
+                    if not provider_pool:
+                        self.log.warning(
+                            "Cannot find provider pool for node %s" % node)
+                        # This node is in a funny state we log it for debugging
+                        # but move on and don't account it as we can't properly
+                        # calculate its cost without pool info.
+                        continue
+                    if node.type[0] not in provider_pool.labels:
+                        self.log.warning("Node type is not in provider pool "
+                                         "for node %s" % node)
+                        # This node is also in a funny state; the config
+                        # may have changed under it.  It should settle out
+                        # eventually when it's deleted.
+                        continue
+                    node_resources = self.quotaNeededByLabel(
+                        node.type[0], provider_pool)
+                    used_quota.add(node_resources)
+                except Exception:
+                    self.log.exception("Couldn't consider invalid node %s "
+                                       "for quota:" % node)
+        return used_quota

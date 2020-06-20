@@ -147,7 +147,7 @@ class ProviderNotifications(object):
         pass
 
 
-class Provider(ProviderNotifications, metaclass=abc.ABCMeta):
+class Provider(ProviderNotifications):
     """The Provider interface
 
     Drivers implement this interface to supply Providers.  Each
@@ -160,6 +160,9 @@ class Provider(ProviderNotifications, metaclass=abc.ABCMeta):
     The class or instance attribute **name** must be provided as a string.
 
     """
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+
     @abc.abstractmethod
     def start(self, zk_conn):
         """Start this provider

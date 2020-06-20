@@ -152,7 +152,7 @@ class OpenStackNodeLauncher(NodeLauncher):
         self.node.image_id = image_id
 
         pool = self.handler.provider.pools.get(self.node.pool)
-        resources = self.handler.manager.quotaNeededByNodeType(
+        resources = self.handler.manager.quotaNeededByLabel(
             self.node.type[0], pool)
         self.node.resources = resources.quota['compute']
         if username:
@@ -340,7 +340,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         return True
 
     def hasRemainingQuota(self, ntype):
-        needed_quota = self.manager.quotaNeededByNodeType(ntype, self.pool)
+        needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
 
         if not self.pool.ignore_provider_quota:
             # Calculate remaining quota which is calculated as:
@@ -374,7 +374,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
         for ntype in node_types:
             needed_quota.add(
-                self.manager.quotaNeededByNodeType(ntype, self.pool))
+                self.manager.quotaNeededByLabel(ntype, self.pool))
 
         if not self.pool.ignore_provider_quota:
             cloud_quota = self.manager.estimatedNodepoolQuota()

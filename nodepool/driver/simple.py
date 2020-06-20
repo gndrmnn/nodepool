@@ -18,7 +18,7 @@ import math
 
 from nodepool.driver.taskmanager import BaseTaskManagerProvider, Task
 from nodepool.driver import Driver, NodeRequestHandler
-from nodepool.driver.utils import NodeLauncher, QuotaInformation
+from nodepool.driver.utils import NodeLauncher, QuotaInformation, QuotaSupport
 from nodepool.nodeutils import iterate_timeout, nodescan
 from nodepool import exceptions
 from nodepool import zk
@@ -199,18 +199,31 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
         :param ntype: node type for the quota check
         :return: True if there is enough quota, False otherwise
         '''
-        # TODO: Add support for real quota handling; this only handles
-        # max_servers.
-        needed_quota = QuotaInformation(cores=1, instances=1, ram=1, default=1)
-        n_running = self.manager.countNodes(self.provider.name, self.pool.name)
-        pool_quota = QuotaInformation(
-            cores=math.inf,
-            instances=self.pool.max_servers - n_running,
-            ram=math.inf,
-            default=math.inf)
+        needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
+
+        # Calculate remaining quota which is calculated as:
+        # quota = <total nodepool quota> - <used quota> - <quota for node>
+        cloud_quota = self.manager.estimatedNodepoolQuota()
+        cloud_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed())
+        cloud_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining provider quota: %s",
+                       cloud_quota)
+
+        if not cloud_quota.non_negative():
+            return False
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        # TODO: add cores, ram
+        pool_quota = QuotaInformation(instances=self.pool.max_servers,
+                                      default=math.inf)
+        pool_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+        self.log.debug("Current pool quota: %s" % pool_quota)
         pool_quota.subtract(needed_quota)
-        self.log.debug("hasRemainingQuota({},{}) = {}".format(
-            self.pool, ntype, pool_quota))
+        self.log.debug("Predicted remaining pool quota: %s", pool_quota)
+
         return pool_quota.non_negative()
 
     def launchesComplete(self):
@@ -243,7 +256,7 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
         self._threads.append(thd)
 
 
-class SimpleTaskManagerProvider(BaseTaskManagerProvider):
+class SimpleTaskManagerProvider(BaseTaskManagerProvider, QuotaSupport):
     """The Provider implementation for the SimpleTaskManager driver
        framework"""
     def __init__(self, adapter, provider):
@@ -262,6 +275,22 @@ class SimpleTaskManagerProvider(BaseTaskManagerProvider):
 
     def labelReady(self, label):
         return True
+
+    def getProviderLimits(self):
+        # TODO: query the api to get real limits
+        return QuotaInformation(
+            cores=math.inf,
+            instances=math.inf,
+            ram=math.inf,
+            default=math.inf)
+
+    def quotaNeededByLabel(self, ntype, pool):
+        # TODO: return real quota information about a label
+        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+
+    def unmanagedQuotaUsed(self):
+        # TODO: return real quota information about quota
+        return QuotaInformation()
 
     def cleanupNode(self, external_id):
         instance = self.getInstance(external_id)
