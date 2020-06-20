@@ -164,6 +164,7 @@ class BaseTaskManagerProvider(Provider):
     log = logging.getLogger("nodepool.driver.taskmanager.TaskManagerProvider")
 
     def __init__(self, provider):
+        super().__init__()
         self.provider = provider
         self.thread = None
         self.task_manager = TaskManager(provider.name, provider.rate_limit)
