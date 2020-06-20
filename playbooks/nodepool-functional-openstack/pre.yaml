@@ -5,6 +5,7 @@
     - role: test-setup
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
     - ensure-devstack
+    - ensure-virtualenv
   tasks:
     # Create the virtualenv so we can control the python version
     - name: Create virtualenv
