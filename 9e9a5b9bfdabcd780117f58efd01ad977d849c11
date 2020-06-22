@@ -33,6 +33,24 @@
       "revId": "9e9a5b9bfdabcd780117f58efd01ad977d849c11",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf51134e_343d452b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2020-06-22T14:05:47Z",
+      "side": 1,
+      "message": "Weird.",
+      "parentUuid": "bf51134e_b40cb5a5",
+      "revId": "9e9a5b9bfdabcd780117f58efd01ad977d849c11",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
