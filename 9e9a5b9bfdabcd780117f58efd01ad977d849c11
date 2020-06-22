@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf51134e_f4b8ede5",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2020-06-22T14:00:10Z",
+      "side": 1,
+      "message": "This seems like default __init__ ... is there a reason to add this? (it\u0027s fine - I\u0027m just wondering if there\u0027s something I\u0027m missing)",
+      "revId": "9e9a5b9bfdabcd780117f58efd01ad977d849c11",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
