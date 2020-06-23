@@ -223,8 +223,8 @@ class StaticNodeProvider(Provider):
 
         for node in nodes:
             original_attrs = (node.type, node.username, node.connection_port,
-                              node.connection_type, node.python_path,
-                              node.host_keys)
+                              node.connection_type, node.log_stream_port,
+                              node.python_path, node.host_keys)
 
             if original_attrs == new_attrs:
                 continue
@@ -235,6 +235,7 @@ class StaticNodeProvider(Provider):
                 node.username = static_node["username"]
                 node.connection_port = static_node["connection-port"]
                 node.connection_type = static_node["connection-type"]
+                node.log_stream_port = static_node["log_stream_port"]
                 node.python_path = static_node["python-path"]
                 nodeutils.set_node_ip(node)
                 node.host_keys = host_keys
