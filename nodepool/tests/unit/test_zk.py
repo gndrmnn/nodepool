@@ -130,6 +130,34 @@ class TestZooKeeper(tests.DBTestCase):
                                  upload.id)
         self.assertIsNone(self.zk.client.exists(path))
 
+    def test_imageUploadNumberLock_delete_race(self):
+        '''
+        Test that deleting an image upload number while we hold the lock
+        on it works properly.
+        '''
+        upload = zk.ImageUpload()
+        upload.image_name = "ubuntu-trusty"
+        upload.build_id = "0000000003"
+        upload.provider_name = "providerA"
+        upload.id = "0000000001"
+        path = self.zk._imageUploadNumberLockPath(upload.image_name,
+                                                  upload.build_id,
+                                                  upload.provider_name,
+                                                  upload.id)
+        with self.zk.imageUploadNumberLock(upload, blocking=False):
+            self.assertIsNotNone(self.zk.client.exists(path))
+            self.zk.deleteUpload(upload.image_name,
+                                 upload.build_id,
+                                 upload.provider_name,
+                                 upload.id)
+            with self.zk.imageUploadNumberLock(upload, blocking=False):
+                pass
+
+        # Will throw an exception
+        self.zk.getImageUpload(upload.image_name, upload.build_id,
+                               upload.provider_name, upload.id)
+
+
     def test_imageUploadNumberLock(self):
         upload = zk.ImageUpload()
         upload.image_name = "ubuntu-trusty"
