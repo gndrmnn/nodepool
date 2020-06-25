@@ -217,6 +217,11 @@ def image_list(zk):
                         image_name, build_no, provider):
                     upload = zk.getImageUpload(image_name, build_no,
                                                provider, upload_no)
+                    if not upload:
+                        self.log.warning(
+                            "Ignoring invalid or empty image upload"
+                        )
+                        continue
                     values = [build_no, upload_no, provider, image_name,
                               upload.external_name,
                               upload.external_id,
