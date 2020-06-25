@@ -417,6 +417,9 @@ class CleanupWorker(BaseWorker):
                 # between the getUploads() and the _inProgressUpload() check.
                 u = self._zk.getImageUpload(image, build_id, provider,
                                             upload.id)
+                if not u:
+                    self.log.warning("Ignoring invalid or empty image upload")
+                    continue
                 if upload.state != u.state:
                     continue
                 self.log.debug("Removing failed upload record: %s" % upload)
