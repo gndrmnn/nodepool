@@ -1,0 +1,9 @@
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Tristan Cacqueray <tdecacqu@redhat.com>
+Workflow+1: Tristan Cacqueray <tdecacqu@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 29 Jun 2020 18:25:35 +0000
+Reviewed-on: https://review.opendev.org/731373
+Project: zuul/nodepool
+Branch: refs/heads/master
