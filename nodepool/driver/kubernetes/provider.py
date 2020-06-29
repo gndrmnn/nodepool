@@ -269,25 +269,40 @@ class KubernetesProvider(Provider):
         return resource
 
     def createPod(self, node, pool, label):
-        resource = self.createNamespace(node, pool, restricted_access=True)
-        namespace = resource['namespace']
+        spec_body = {
+            'name': label.name,
+            'image': label.image,
+            'imagePullPolicy': label.image_pull,
+            'command': ["/bin/sh", "-c"],
+            'args': ["while true; do sleep 30; done;"],
+            'workingDir': '/tmp',
+        }
+
+        if label.cpu or label.memory:
+            spec_body['resources'] = {}
+            for rtype in ('requests', 'limits'):
+                rbody = {}
+                if label.cpu:
+                    rbody['cpu'] = int(label.cpu)
+                if label.memory:
+                    rbody['memory'] = '%dMi' % int(label.memory)
+                spec_body['resources'][rtype] = rbody
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
             'metadata': {'name': label.name},
             'spec': {
-                'containers': [{
-                    'name': label.name,
-                    'image': label.image,
-                    'imagePullPolicy': label.image_pull,
-                    'command': ["/bin/sh", "-c"],
-                    'args': ["while true; do sleep 30; done;"],
-                    'workingDir': '/tmp'
-                }]
+                'containers': [spec_body],
             },
             'restartPolicy': 'Never',
         }
+
+        resource = self.createNamespace(node, pool, restricted_access=True)
+        namespace = resource['namespace']
+
         self.k8s_client.create_namespaced_pod(namespace, pod_body)
+
         for retry in range(300):
             pod = self.k8s_client.read_namespaced_pod(label.name, namespace)
             if pod.status.phase == "Running":

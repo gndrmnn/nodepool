@@ -28,7 +28,9 @@ class KubernetesLabel(ConfigValue):
                     other.type == self.type and
                     other.image_pull == self.image_pull and
                     other.python_path == self.python_path and
-                    other.image == self.image)
+                    other.image == self.image and
+                    other.cpu == self.cpu and
+                    other.memory == self.memory)
         return False
 
     def __repr__(self):
@@ -57,6 +59,8 @@ class KubernetesPool(ConfigPool):
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.python_path = label.get('python-path', 'auto')
+            pl.cpu = label.get('cpu')
+            pl.memory = label.get('memory')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -99,6 +103,8 @@ class KubernetesProviderConfig(ProviderConfig):
             'image': str,
             'image-pull': str,
             'python-path': str,
+            'cpu': int,
+            'memory': int,
         }
 
         pool = ConfigPool.getCommonSchemaDict()
