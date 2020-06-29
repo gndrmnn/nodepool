@@ -1654,6 +1654,16 @@ Selecting the openshift pods driver adds the following options to the
 
          The amount of memory in MB to request for the pod.
 
+      .. attr:: python-path
+         :type: str
+         :default: auto
+
+        The path of the default python interpreter.  Used by Zuul to set
+        ``ansible_python_interpreter``.  The special value ``auto`` will
+        direct Zuul to use inbuilt Ansible logic to select the
+        interpreter on Ansible >=2.8, and default to
+        ``/usr/bin/python2`` for earlier versions.
+
 
 AWS EC2 Driver
 --------------
