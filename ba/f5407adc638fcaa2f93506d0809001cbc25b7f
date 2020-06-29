@@ -1,0 +1,9 @@
+Code-Review+2: Tristan Cacqueray <tdecacqu@redhat.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 29 Jun 2020 14:26:24 +0000
+Reviewed-on: https://review.opendev.org/736984
+Project: zuul/nodepool
+Branch: refs/heads/master
