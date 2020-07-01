@@ -398,8 +398,8 @@
         - opendev-promote-python
     release:
       jobs:
-        # - opendev-release-python
-        # - zuul-publish-tox-docs
+        - opendev-release-python
+        - zuul-publish-tox-docs
         - upload-docker-image:
             secrets:
               name: docker_credentials
