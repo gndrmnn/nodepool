@@ -118,6 +118,9 @@ class TestDriverAws(tests.DBTestCase):
                 return provider_manager.ec2.create_instances_orig(
                     *args, **kwargs)
 
+            provider_manager.ec2_client.describe_instances = \
+                BotoMock._fake_describe_instances
+
             provider_manager.ec2.create_instances_orig = \
                 provider_manager.ec2.create_instances
             provider_manager.ec2.create_instances = _fake_create_instances
@@ -246,3 +249,20 @@ class TestDriverAws(tests.DBTestCase):
                                tags=[
                                    {"Key": "Name", "Value": "different-name"}
                                ])
+
+
+class BotoMock:
+    # Note: moto doesn't implement ec2_client.describe_instances
+    @staticmethod
+    def _fake_describe_instances(**kwargs):
+        instances = kwargs.get('InstanceIds')
+        returned = dict()
+        returned["Reservations"] = list()
+        for i in instances:
+            returned["Reservations"].append({
+                "Instances": [{
+                    "State": {"Name": "running"},
+                    "InstanceId": i
+                }]
+            })
+        return returned
