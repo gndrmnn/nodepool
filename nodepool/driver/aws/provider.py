@@ -14,6 +14,8 @@
 
 import logging
 import boto3
+import threading
+import time
 
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
@@ -42,13 +44,16 @@ class AwsInstance:
 
 class AwsProvider(Provider):
     log = logging.getLogger("nodepool.driver.aws.AwsProvider")
+    describe_queue = None
+    describe_thread = None
 
     def __init__(self, provider, *args):
         self.provider = provider
         self.ec2 = None
+        self.describe_queue = {}
 
     def getRequestHandler(self, poolworker, request):
-        return AwsNodeRequestHandler(poolworker, request)
+        return AwsNodeRequestHandler(poolworker, request, self.describe_queue)
 
     def start(self, zk_conn):
         if self.ec2 is not None:
@@ -59,6 +64,11 @@ class AwsProvider(Provider):
             profile_name=self.provider.profile_name)
         self.ec2 = self.aws.resource('ec2')
         self.ec2_client = self.aws.client("ec2")
+        self.describe_thread = threading.Thread(
+            target=self.describeThread,
+            args=(self.describe_queue, self.ec2_client)
+        )
+        self.describe_thread.start()
 
     def stop(self):
         self.log.debug("Stopping")
@@ -227,3 +237,33 @@ class AwsProvider(Provider):
 
         instances = self.ec2.create_instances(**args)
         return self.ec2.Instance(instances[0].id)
+
+    @staticmethod
+    def describeThread(describe_queue, ec2_client):
+        """
+        Thread launched to request all instances status at once
+        """
+        log = logging.getLogger("nodepool.driver.aws.AwsProvider")
+        log.debug("starting describe instances thread")
+        sleep_time = 1
+        while True:
+            if not len(describe_queue):
+                time.sleep(sleep_time)
+                continue
+            log.debug("describe_queue: " + str(describe_queue))
+            try:
+                instances = ec2_client.describe_instances(
+                    InstanceIds=list(describe_queue.keys()),
+                    DryRun=False
+                )
+            except Exception as e:
+                log.error("impossible to describe instances: " + str(e))
+                time.sleep(sleep_time)
+                continue
+            for instance in [
+                i["Instances"][0] for i in instances["Reservations"]
+            ]:
+                state = instance["State"]["Name"]
+                log.debug("update instance state to " + str(state))
+                describe_queue[instance["InstanceId"]] = state
+            time.sleep(sleep_time)
