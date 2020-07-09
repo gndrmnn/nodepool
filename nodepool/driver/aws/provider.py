@@ -16,6 +16,8 @@ import logging
 import boto3
 import botocore.exceptions
 import nodepool.exceptions
+import threading
+import time
 
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
@@ -47,10 +49,13 @@ class AwsProvider(Provider):
 
     def __init__(self, provider, *args):
         self.provider = provider
+        self.aws = None
         self.ec2 = None
+        self.ec2_client = None
+        self.describe_queue = None
 
     def getRequestHandler(self, poolworker, request):
-        return AwsNodeRequestHandler(poolworker, request)
+        return AwsNodeRequestHandler(poolworker, request, self.describe_queue)
 
     def start(self, zk_conn):
         if self.ec2 is not None:
@@ -61,9 +66,11 @@ class AwsProvider(Provider):
             profile_name=self.provider.profile_name)
         self.ec2 = self.aws.resource('ec2')
         self.ec2_client = self.aws.client("ec2")
+        self.describe_queue = AwsDescribeQueue(self.ec2_client)
 
     def stop(self):
         self.log.debug("Stopping")
+        self.describe_queue.stopDescribeThread()
 
     def listNodes(self):
         servers = []
@@ -235,3 +242,102 @@ class AwsProvider(Provider):
 
         instances = self.ec2.create_instances(**args)
         return self.ec2.Instance(instances[0].id)
+
+
+class AwsDescribeQueue:
+    """
+    Hold the describe queue mechanism allowing grouping of EC2
+    describe requests to avoid AWS API rate limiting
+    """
+    describe_thread = None
+
+    def __init__(self, ec2_client):
+        """
+        :param ec2_client: boto3 ec2_client
+        :type ec2_client: boto3.EC2.Client
+        """
+        self.log = logging.getLogger(
+            "nodepool.driver.aws.AwsProvider.AwsDescribeQueue"
+        )
+        self.log.debug("initializing describe queue")
+        self.describe_queue = {}
+        self.ec2_client = ec2_client
+        self.run_thread = True
+
+    def stopDescribeThread(self):
+        """
+        Stop the describe thread
+        """
+        self.log.debug("stopping describe thread")
+        if not self.describe_thread or not self.describe_thread.is_alive():
+            self.log.warning("describe thread already stopped")
+            return
+        self.run_thread = False
+        self.describe_thread.join()
+        self.log.debug("describe thread stopped")
+
+    def describeThread(self):
+        """
+        Thread launched to request all instances status at once
+        """
+        self.log.debug("starting describe instances thread")
+        sleep_time = 1
+        while self.run_thread and len(self.describe_queue):
+            self.log.debug("describe_queue: " + str(self.describe_queue))
+            try:
+                instances = self.ec2_client.describe_instances(
+                    InstanceIds=list(self.describe_queue.keys()),
+                    DryRun=False
+                )
+            except Exception as e:
+                self.log.error("impossible to describe instances: " + str(e))
+                time.sleep(sleep_time)
+                continue
+            for instance in [
+                i["Instances"][0] for i in instances["Reservations"]
+            ]:
+                state = instance["State"]["Name"]
+                self.log.debug("update instance '" + instance["InstanceId"] +
+                               "' state to " + str(state))
+                self.describe_queue[instance["InstanceId"]] = state
+            time.sleep(sleep_time)
+        self.log.debug("describe thread stopped automatically")
+
+    def addNewInstance(self, instance_id):
+        """
+        Add a newly created instance to the describe queue
+
+        :param instance_id: AWS instanceID
+        :type instance_id: string
+        """
+        self.log.debug("adding instance '%s' to describe queue" % instance_id)
+        self.describe_queue[instance_id] = "pending"
+        if not self.describe_thread or not self.describe_thread.is_alive():
+            self.log.debug("initializing describe queue thread")
+            self.describe_thread = threading.Thread(target=self.describeThread)
+            self.log.debug("start describe queue thread")
+            self.run_thread = True
+            self.describe_thread.start()
+
+    def removeInstanceFromQueue(self, instance_id):
+        """
+        Remove an instance from the describe queue
+
+        :param instance_id: AWS instanceID
+        :type instance_id: string
+        """
+        self.log.debug(
+            "removing instance '%s' from describe queue" % instance_id
+        )
+        del self.describe_queue[instance_id]
+
+    def getInstanceState(self, instance_id):
+        """
+        Return the current state of specified instance
+
+        :param instance_id: AWS instanceID
+        :type instance_id: string
+        :return: instance state
+        :rtype: string
+        """
+        return self.describe_queue[instance_id]
