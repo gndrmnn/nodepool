@@ -24,13 +24,18 @@ from nodepool.nodeutils import nodescan
 
 
 class AwsInstanceLauncher(NodeLauncher):
-    def __init__(self, handler, node, provider_config, provider_label):
+
+    def __init__(
+            self, handler, node,
+            provider_config, provider_label, describe_queue
+    ):
         super().__init__(handler, node, provider_config)
         self.provider_name = provider_config.name
         self.retries = provider_config.launch_retries
         self.pool = provider_config.pools[provider_label.pool.name]
         self.boot_timeout = provider_config.boot_timeout
         self.label = provider_label
+        self.describe_queue = describe_queue
 
     def launch(self):
         self.log.debug("Starting %s instance" % self.node.type)
@@ -52,11 +57,12 @@ class AwsInstanceLauncher(NodeLauncher):
         instance_id = instance.id
         self.node.external_id = instance_id
         self.zk.storeNode(self.node)
-
+        self.describe_queue.addNewInstance(instance_id)
         boot_start = time.monotonic()
         while time.monotonic() - boot_start < self.boot_timeout:
-            state = instance.state.get('Name')
+            state = self.describe_queue.getInstanceState(instance_id)
             self.log.debug("Instance %s is %s" % (instance_id, state))
+
             if state == 'running':
                 instance.create_tags(
                     Tags=[
@@ -76,7 +82,6 @@ class AwsInstanceLauncher(NodeLauncher):
                 )
                 break
             time.sleep(0.5)
-            instance.reload()
         if state != 'running':
             raise exceptions.LaunchStatusException(
                 "Instance %s failed to start: %s" % (instance_id, state))
@@ -119,9 +124,10 @@ class AwsNodeRequestHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.aws."
                             "AwsNodeRequestHandler")
 
-    def __init__(self, pw, request):
+    def __init__(self, pw, request, describe_queue):
         super().__init__(pw, request)
         self._threads = []
+        self.describe_queue = describe_queue
 
     @property
     def alive_thread_count(self):
@@ -208,6 +214,8 @@ class AwsNodeRequestHandler(NodeRequestHandler):
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]
-        thd = AwsInstanceLauncher(self, node, self.provider, label)
+        thd = AwsInstanceLauncher(
+            self, node, self.provider, label, self.describe_queue
+        )
         thd.start()
         self._threads.append(thd)
