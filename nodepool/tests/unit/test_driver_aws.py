@@ -118,6 +118,25 @@ class TestDriverAws(tests.DBTestCase):
                 return provider_manager.ec2.create_instances_orig(
                     *args, **kwargs)
 
+            def _fake_describe_instances(**kwargs):
+                with open("/tmp/fake", 'w+') as fd:
+                    fd.write("asdfghadfuogaderyvfg")
+                self.assertIsNotNone(kwargs.get('InstanceIds'))
+                instances = kwargs.get('InstanceIds')
+                returned = dict()
+                returned["Reservations"] = list()
+                for i in instances:
+                    returned["Reservations"].append({
+                        "Instances": [{
+                            "State": {"Name": "running"},
+                            "InstanceId": i
+                        }]
+                    })
+                return returned
+
+            provider_manager.ec2_client.describe_instances = \
+                _fake_describe_instances
+
             provider_manager.ec2.create_instances_orig = \
                 provider_manager.ec2.create_instances
             provider_manager.ec2.create_instances = _fake_create_instances
