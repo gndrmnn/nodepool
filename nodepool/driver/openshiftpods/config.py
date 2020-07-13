@@ -44,6 +44,11 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
+        env_var = {
+            v.Required('name'): str,
+            v.Required('value'): str,
+        }
+
         openshift_label = {
             v.Required('name'): str,
             v.Required('image'): str,
@@ -51,6 +56,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'cpu': int,
             'memory': int,
             'python-path': str,
+            'env': [env_var]
         }
 
         pool = ConfigPool.getCommonSchemaDict()
