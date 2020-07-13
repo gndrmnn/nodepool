@@ -1400,6 +1400,25 @@ Selecting the kubernetes driver adds the following options to the
             :value:`providers.[kubernetes].pools.labels.type.pod` label type;
             specifies the amount of memory in MB to request for the pod.
 
+         .. attr:: env
+            :type: list
+            :default: []
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            A list of environment variables to pass to the Pod.
+
+            .. attr:: name
+               :type: str
+               :required:
+
+               The name of the environment variable passed to the Pod.
+
+            .. attr:: value
+               :type: str
+               :required:
+
+               The value of the environment variable passed to the Pod.
 
 
 Openshift Driver
@@ -1552,6 +1571,26 @@ Selecting the openshift driver adds the following options to the
          :value:`providers.[openshift].labels.type.pod` label type;
          specifies the amount of memory in MB to request for the pod.
 
+      .. attr:: env
+         :type: list
+         :default: []
+
+         Only used by the
+         :value:`providers.[openshift].labels.type.pod` label type;
+         A list of environment variables to pass to the Pod.
+
+         .. attr:: name
+            :type: str
+            :required:
+
+            The name of the environment variable passed to the Pod.
+
+         .. attr:: value
+            :type: str
+            :required:
+
+            The value of the environment variable passed to the Pod.
+
 
 Openshift Pods Driver
 ---------------------
@@ -1663,6 +1702,24 @@ Selecting the openshift pods driver adds the following options to the
         direct Zuul to use inbuilt Ansible logic to select the
         interpreter on Ansible >=2.8, and default to
         ``/usr/bin/python2`` for earlier versions.
+
+      .. attr:: env
+         :type: list
+         :default: []
+
+         A list of environment variables to pass to the Pod.
+
+         .. attr:: name
+            :type: str
+            :required:
+
+            The name of the environment variable passed to the Pod.
+
+         .. attr:: value
+            :type: str
+            :required:
+
+            The value of the environment variable passed to the Pod.
 
 
 AWS EC2 Driver

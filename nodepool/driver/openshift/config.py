@@ -31,7 +31,8 @@ class OpenshiftLabel(ConfigValue):
                     other.image == self.image and
                     other.cpu == self.cpu and
                     other.memory == self.memory and
-                    other.python_path == self.python_path)
+                    other.python_path == self.python_path and
+                    other.env == self.env)
         return False
 
     def __repr__(self):
@@ -62,6 +63,7 @@ class OpenshiftPool(ConfigPool):
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
             pl.python_path = label.get('python-path', 'auto')
+            pl.env = label.get('env', [])
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -99,6 +101,11 @@ class OpenshiftProviderConfig(ProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
+        env_var = {
+            v.Required('name'): str,
+            v.Required('value'): str,
+        }
+
         openshift_label = {
             v.Required('name'): str,
             v.Required('type'): str,
@@ -107,6 +114,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'cpu': int,
             'memory': int,
             'python-path': str,
+            'env': [env_var],
         }
 
         pool = ConfigPool.getCommonSchemaDict()
