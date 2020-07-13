@@ -211,6 +211,7 @@ class OpenshiftProvider(Provider):
             'command': ["/bin/sh", "-c"],
             'args': ["while true; do sleep 30; done;"],
             'workingDir': '/tmp',
+            'env': label.env,
         }
         if label.cpu or label.memory:
             spec_body['resources'] = {}

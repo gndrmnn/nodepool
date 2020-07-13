@@ -30,7 +30,8 @@ class KubernetesLabel(ConfigValue):
                     other.python_path == self.python_path and
                     other.image == self.image and
                     other.cpu == self.cpu and
-                    other.memory == self.memory)
+                    other.memory == self.memory and
+                    other.env == self.env)
         return False
 
     def __repr__(self):
@@ -61,6 +62,7 @@ class KubernetesPool(ConfigPool):
             pl.python_path = label.get('python-path', 'auto')
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
+            pl.env = label.get('env', [])
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -97,6 +99,11 @@ class KubernetesProviderConfig(ProviderConfig):
             self.pools[pp.name] = pp
 
     def getSchema(self):
+        env_var = {
+            v.Required('name'): str,
+            v.Required('value'): str,
+        }
+
         k8s_label = {
             v.Required('name'): str,
             v.Required('type'): str,
@@ -105,6 +112,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'python-path': str,
             'cpu': int,
             'memory': int,
+            'env': [env_var],
         }
 
         pool = ConfigPool.getCommonSchemaDict()
