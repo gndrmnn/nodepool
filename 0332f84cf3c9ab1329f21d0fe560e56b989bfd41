@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf51134e_f13e1127",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-07-13T14:55:47Z",
+      "side": 1,
+      "message": "Please add a trailing comma to reduce code churn on later additions.",
+      "revId": "0332f84cf3c9ab1329f21d0fe560e56b989bfd41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf51134e_1170e507",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-07-13T14:55:47Z",
+      "side": 1,
+      "message": "Please add trailing comma.",
+      "revId": "0332f84cf3c9ab1329f21d0fe560e56b989bfd41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf51134e_b158198a",
+        "filename": "nodepool/driver/openshiftpods/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-07-13T14:55:47Z",
+      "side": 1,
+      "message": "Please add trailing comma.",
+      "revId": "0332f84cf3c9ab1329f21d0fe560e56b989bfd41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
