@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf51134e_a68b961c",
+        "filename": "tools/containers-storage.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-07-15T16:24:13Z",
+      "side": 1,
+      "message": "This probably warrants a comment explaining where/how/why it\u0027s used in this repo.",
+      "revId": "e68d74b33410d371157c8825be7e759e73429b46",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
