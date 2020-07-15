@@ -328,6 +328,9 @@ Options
       or to build additional formats which you know you may need in the
       future, list those formats here.
 
+      In case the diskimage is not used by any provider and no formats
+      are configured, the image won't be built.
+
    .. attr:: rebuild-age
       :type: int
       :default: 86400

@@ -737,6 +737,10 @@ class BuildWorker(BaseWorker):
         if diskimage.pause:
             return
 
+        if not diskimage.image_types:
+            # We don't know what formats to build.
+            return
+
         # Reduce use of locks by adding an initial check here and
         # a redundant check after lock acquisition.
         if not self._zk.hasBuildRequest(diskimage.name):
