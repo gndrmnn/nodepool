@@ -453,11 +453,8 @@ class TestNodePoolBuilder(tests.DBTestCase):
         configfile = self.setup_config('node_diskimage_only.yaml')
         self.useBuilder(configfile)
         build_tar = self.waitForBuild('fake-image', '0000000001')
-        build_default = self.waitForBuild('fake-image-default-format',
-                                          '0000000001')
 
         self.assertEqual(build_tar._formats, ['tar'])
-        self.assertEqual(build_default._formats, ['qcow2'])
         self.assertReportedStat('nodepool.dib_image_build.'
                                 'fake-image.status.rc',
                                 '0', 'g')

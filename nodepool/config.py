@@ -337,13 +337,6 @@ def loadConfig(config_path):
     newconfig.setProviders(config.get('providers'))
     newconfig.setZooKeeperTLS(config.get('zookeeper-tls'))
 
-    # Ensure at least qcow2 is set to be passed to qemu-img.
-    # Note that this needs to be after setting the providers as they
-    # add their supported image types to the diskimages.
-    for diskimage in newconfig.diskimages.values():
-        if not diskimage.image_types:
-            diskimage.image_types.add('qcow2')
-
     return newconfig
 
 
