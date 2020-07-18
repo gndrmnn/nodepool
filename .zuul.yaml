@@ -68,7 +68,7 @@
             and launcher services. By default we log at INFO level and
             higher. This enables DEBUG and higher. This is optional.
 
-    timeout: 5400
+    timeout: 5399
     required-projects:
       - zuul/nodepool
     pre-run: playbooks/nodepool-functional-openstack/pre.yaml
