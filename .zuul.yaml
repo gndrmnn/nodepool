@@ -156,6 +156,7 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    timeout: 3600
     dependencies:
       - opendev-buildset-registry
     requires:
