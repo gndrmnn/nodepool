@@ -1,0 +1,5 @@
+[global]
+extra-index-url = https://mirror.regionone.linaro-us.opendev.org/wheel/debian-10-aarch64/
+
+[install]
+prefer-binary = true

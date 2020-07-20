@@ -13,17 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker.io/opendevorg/python-builder:3.8 as builder
+FROM docker.io/opendevorg/python-builder:3.7 as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
+RUN if [ `uname -m` = "aarch64" ] ; then \
+      echo "Installing arm64 pip.conf" ; \
+      cp /tmp/src/tools/pip.conf.arm64 /etc/pip.conf ; \
+      cp /tmp/src/tools/pip.conf.arm64 /output/pip.conf ; \
+    fi
 RUN assemble
 
-FROM docker.io/opendevorg/python-base:3.8 as nodepool-base
+FROM docker.io/opendevorg/python-base:3.7 as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
+RUN if [ -f /output/pip.conf ] ; then \
+      echo "Installing pip.conf from builder" ; \
+      cp /output/pip.conf /etc/pip.conf ; \
+    fi
 RUN /output/install-from-bindep nodepool_base
 
 RUN useradd -u 10001 -m -d /var/lib/nodepool -c "Nodepool Daemon" nodepool
