@@ -156,6 +156,7 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    timeout: 3600
     dependencies:
       - opendev-buildset-registry
     requires:
@@ -193,6 +194,7 @@
     name: nodepool-upload-image
     parent: opendev-upload-docker-image
     description: Build Docker images and upload to Docker Hub.
+    timeout: 3600
     requires:
       - python-builder-3.8-container-image
       - python-base-3.8-container-image
