@@ -22,6 +22,7 @@ RUN if [ `uname -m` = "aarch64" ] ; then \
       echo "Installing arm64 pip.conf" ; \
       cp /tmp/src/tools/pip.conf.arm64 /etc/pip.conf ; \
       cp /tmp/src/tools/pip.conf.arm64 /output/pip.conf ; \
+      cp /tmp/src/tools/upper-constraints.txt.arm64 /tmp/src/upper-constraints.txt ; \
     fi
 RUN assemble
 
