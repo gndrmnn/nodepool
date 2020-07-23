@@ -21,6 +21,8 @@ services:
       - /home/zuul:/home/zuul
       # logs (builder + dib build logs under /build)
       - /var/log/nodepool:/var/log/nodepool
+      # devstack tls-proxy puts CA here that is referenced by cloud config
+      - /opt/stack/data:/opt/stack/data:ro
 
   nodepool-launcher:
     image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}
@@ -37,3 +39,5 @@ services:
       - /etc/nodepool:/etc/nodepool:ro
       # logs (builder + dib build logs under /build)
       - /var/log/nodepool:/var/log/nodepool
+      # devstack tls-proxy puts CA here that is referenced by cloud config
+      - /opt/stack/data:/opt/stack/data:ro
