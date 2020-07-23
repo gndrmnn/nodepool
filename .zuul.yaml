@@ -171,23 +171,14 @@
             # If zuul.tag is defined: [ '3', '3.19', '3.19.0' ].  Only works for 3-component tags.
             # Otherwise: ['latest']
             &imagetag "{{ zuul.tag is defined | ternary([zuul.get('tag', '').split('.')[0], '.'.join(zuul.get('tag', '').split('.')[:2]), zuul.get('tag', '')], ['latest']) }}"
-          arch:
-            - linux/amd64
-            - linux/arm64
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
           tags: *imagetag
-          arch:
-            - linux/amd64
-            - linux/arm64
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
           tags: *imagetag
-          arch:
-            - linux/amd64
-            - linux/arm64
 
 - job:
     name: nodepool-upload-image
