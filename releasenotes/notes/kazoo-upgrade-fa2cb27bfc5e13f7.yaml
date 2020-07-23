@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    The dependency on kazoo has been upgraded to 2.8.0 which has an important
+    fix for using Zookeeper over TLS.
