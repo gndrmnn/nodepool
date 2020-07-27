@@ -15,6 +15,7 @@ providers:
     context: minikube
     pools:
       - name: main
+        max-servers: 2
         labels:
           - name: kubernetes-namespace
             type: namespace
