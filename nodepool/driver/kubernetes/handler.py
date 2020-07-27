@@ -17,8 +17,8 @@ import logging
 from kazoo import exceptions as kze
 
 from nodepool import zk
+from nodepool.driver.simple import SimpleTaskManagerHandler
 from nodepool.driver.utils import NodeLauncher
-from nodepool.driver import NodeRequestHandler
 
 
 class K8SLauncher(NodeLauncher):
@@ -76,50 +76,7 @@ class K8SLauncher(NodeLauncher):
                 attempts += 1
 
 
-class KubernetesNodeRequestHandler(NodeRequestHandler):
+class KubernetesNodeRequestHandler(SimpleTaskManagerHandler):
     log = logging.getLogger("nodepool.driver.kubernetes."
                             "KubernetesNodeRequestHandler")
-
-    def __init__(self, pw, request):
-        super().__init__(pw, request)
-        self._threads = []
-
-    @property
-    def alive_thread_count(self):
-        count = 0
-        for t in self._threads:
-            if t.isAlive():
-                count += 1
-        return count
-
-    def imagesAvailable(self):
-        return True
-
-    def launchesComplete(self):
-        '''
-        Check if all launch requests have completed.
-
-        When all of the Node objects have reached a final state (READY or
-        FAILED), we'll know all threads have finished the launch process.
-        '''
-        if not self._threads:
-            return True
-
-        # Give the NodeLaunch threads time to finish.
-        if self.alive_thread_count:
-            return False
-
-        node_states = [node.state for node in self.nodeset]
-
-        # NOTE: It very important that NodeLauncher always sets one of
-        # these states, no matter what.
-        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
-            return False
-
-        return True
-
-    def launch(self, node):
-        label = self.pool.labels[node.type[0]]
-        thd = K8SLauncher(self, node, self.provider, label)
-        thd.start()
-        self._threads.append(thd)
+    launcher = K8SLauncher

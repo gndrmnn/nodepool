@@ -15,6 +15,7 @@
 
 import fixtures
 import logging
+import time
 
 from nodepool import tests
 from nodepool import zk
@@ -155,3 +156,45 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.zk.storeNode(node)
 
         self.waitForNodeDeletion(node)
+
+    def test_kubernetes_max_servers(self):
+        configfile = self.setup_config('kubernetes.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        # Start two pods to hit max-server limit
+        reqs = []
+        for x in [1, 2]:
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.node_types.append('pod-fedora')
+            self.zk.storeNodeRequest(req)
+            reqs.append(req)
+
+        fulfilled_reqs = []
+        for req in reqs:
+            self.log.debug("Waiting for request %s", req.id)
+            r = self.waitForNodeRequest(req)
+            self.assertEqual(r.state, zk.FULFILLED)
+            fulfilled_reqs.append(r)
+
+        # Now request a third pod that will hit the limit
+        max_req = zk.NodeRequest()
+        max_req.state = zk.REQUESTED
+        max_req.node_types.append('pod-fedora')
+        self.zk.storeNodeRequest(max_req)
+
+        # The previous request should pause the handler
+        pool_worker = pool.getPoolWorkers('kubespray')
+        while not pool_worker[0].paused_handler:
+            time.sleep(0.1)
+
+        # Delete the earlier two pods freeing space for the third.
+        for req in fulfilled_reqs:
+            node = self.zk.getNode(req.nodes[0])
+            node.state = zk.DELETING
+            self.zk.storeNode(node)
+            self.waitForNodeDeletion(node)
+
+        # We should unpause and fulfill this now
+        req = self.waitForNodeRequest(max_req)
+        self.assertEqual(req.state, zk.FULFILLED)
