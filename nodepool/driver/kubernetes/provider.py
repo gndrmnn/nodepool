@@ -24,11 +24,12 @@ from openshift import config
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.kubernetes import handler
+from nodepool.driver.utils import QuotaInformation, QuotaSupport
 
 urllib3.disable_warnings()
 
 
-class KubernetesProvider(Provider):
+class KubernetesProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.kubernetes.KubernetesProvider")
 
     def __init__(self, provider, *args):
@@ -318,3 +319,19 @@ class KubernetesProvider(Provider):
 
     def getRequestHandler(self, poolworker, request):
         return handler.KubernetesNodeRequestHandler(poolworker, request)
+
+    def getProviderLimits(self):
+        # TODO: query the api to get real limits
+        return QuotaInformation(
+            cores=math.inf,
+            instances=math.inf,
+            ram=math.inf,
+            default=math.inf)
+
+    def quotaNeededByLabel(self, ntype, pool):
+        # TODO: return real quota information about a label
+        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+
+    def unmanagedQuotaUsed(self):
+        # TODO: return real quota information about quota
+        return QuotaInformation()
