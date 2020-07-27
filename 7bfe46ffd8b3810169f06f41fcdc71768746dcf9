@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_3880138c",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 29946
+      },
+      "writtenOn": "2020-07-27T11:49:26Z",
+      "side": 1,
+      "message": "AwsDescribeQueue",
+      "range": {
+        "startLine": 242,
+        "startChar": 49,
+        "endLine": 242,
+        "endChar": 60
+      },
+      "revId": "7bfe46ffd8b3810169f06f41fcdc71768746dcf9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
