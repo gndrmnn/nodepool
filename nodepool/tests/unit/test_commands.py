@@ -267,9 +267,8 @@ class TestNodepoolCMD(tests.DBTestCase):
         builds = self.zk.getMostRecentBuilds(1, 'fake-image', zk.READY)
 
         # 2. Stop builder1; start builder2
-        for worker in builder1._upload_workers:
-            worker.shutdown()
-            worker.join()
+        builder1._upload_worker.shutdown()
+        builder1._upload_worker.join()
         builder1.stop()
         # setup_config() makes a new images_dir each time, so this
         # acts as a different builder.
@@ -472,9 +471,8 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForBuild('fake-image', '0000000002')
 
         pool.stop()
-        for worker in builder._upload_workers:
-            worker.shutdown()
-            worker.join()
+        builder._upload_worker.shutdown()
+        builder._upload_worker.join()
         builder.stop()
         # Save a copy of the data in ZK
         old_data = self.getZKTree('/nodepool/images')
