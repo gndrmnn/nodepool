@@ -21,3 +21,4 @@ google-api-python-client
 azure-mgmt-compute
 azure-mgmt-network
 azure-mgmt-resource
+orjson

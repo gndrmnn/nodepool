@@ -14,8 +14,8 @@ from contextlib import contextmanager
 from copy import copy
 import abc
 import ipaddress
-import json
 import logging
+import orjson
 import time
 import uuid
 
@@ -172,7 +172,7 @@ class Serializable(abc.ABC):
 
         Used for storing the object data in ZooKeeper.
         '''
-        return json.dumps(self.toDict()).encode('utf8')
+        return orjson.dumps(self.toDict())
 
 
 class Launcher(Serializable):
@@ -821,7 +821,7 @@ class ZooKeeper(object):
         return "%s/%s" % (self.REQUEST_LOCK_ROOT, request)
 
     def _bytesToDict(self, data):
-        return json.loads(data.decode('utf8'))
+        return orjson.loads(data)
 
     def _getImageBuildLock(self, image, blocking=True, timeout=None):
         lock_path = self._imageBuildLockPath(image)
@@ -1364,7 +1364,7 @@ class ZooKeeper(object):
                                      provider,
                                      image,
                                      upload_number)
-        except json.decoder.JSONDecodeError:
+        except orjson.JSONDecodeError:
             self.log.exception('Error loading json data from image upload '
                                '%s, %s, %s', image, build_number, provider)
             raise
