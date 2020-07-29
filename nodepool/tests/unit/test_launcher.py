@@ -700,7 +700,7 @@ class TestLauncher(tests.DBTestCase):
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.startPool(pool)
-        provider = (builder._upload_workers[0]._config.
+        provider = (builder._upload_worker._config.
                     provider_managers['fake-provider'])
         cloud_image = provider.adapter._findImage(image.external_id)
         self.assertEqual(

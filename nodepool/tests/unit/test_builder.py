@@ -247,9 +247,8 @@ class TestNodePoolBuilder(tests.DBTestCase):
         builder1 = self.useBuilder(configfile1)
         self.waitForImage('fake-provider1', 'fake-image1')
         self.waitForBuild('fake-image1', '0000000001')
-        for worker in builder1._upload_workers:
-            worker.shutdown()
-            worker.join()
+        builder1._upload_worker.shutdown()
+        builder1._upload_worker.join()
         builder1.stop()
 
         self.zk.deleteUpload('fake-image1', '0000000001',
