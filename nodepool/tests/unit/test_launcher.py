@@ -608,7 +608,7 @@ class TestLauncher(tests.DBTestCase):
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
 
-        provider = (builder._upload_workers[0]._config.
+        provider = (builder._upload_worker._config.
                     provider_managers['fake-provider'])
         cloud_image = provider.getImage(image.external_id)
         self.assertEqual(
