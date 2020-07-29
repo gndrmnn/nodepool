@@ -410,9 +410,8 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForNodes('fake-label')
 
         pool.stop()
-        for worker in builder._upload_workers:
-            worker.shutdown()
-            worker.join()
+        builder._upload_worker.shutdown()
+        builder._upload_worker.join()
         builder.stop()
         # Save a copy of the data in ZK
         old_data = self.getZKTree('/nodepool/images')
