@@ -246,6 +246,8 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("PoolWorker"):
                     continue
+                if t.name.startswith("ThreadPoolExecutor"):
+                    continue
                 if t.name not in whitelist:
                     done = False
             if done:
@@ -341,10 +343,9 @@ class BuilderFixture(fixtures.Fixture):
         # The NodePoolBuilder.stop() method does not intentionally stop the
         # upload workers for reasons documented in that method. But we can
         # safely do so in tests.
-        for worker in self.builder._upload_workers:
-            worker.shutdown()
-            worker.join()
-            self.log.debug("Stopped worker %s", worker.name)
+        self.builder._upload_worker.shutdown()
+        self.builder._upload_worker.join()
+        self.log.debug("Stopped worker %s", self.builder._upload_worker.name)
         self.builder.stop()
 
 
