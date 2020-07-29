@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_6d4bb458",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 31760
+      },
+      "writtenOn": "2020-07-29T23:32:34Z",
+      "side": 1,
+      "message": "Do you need to add zk.ABORTED here since that\u0027s one of the node_states when there\u0027s no quota left?",
+      "range": {
+        "startLine": 117,
+        "startChar": 44,
+        "endLine": 117,
+        "endChar": 46
+      },
+      "revId": "94e4bee1c6c5b69c933a7770b4ba89fbe20ae589",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
