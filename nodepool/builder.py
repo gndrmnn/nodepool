@@ -23,6 +23,7 @@ import threading
 import time
 import shlex
 import uuid
+from concurrent.futures.thread import ThreadPoolExecutor
 
 from pathlib import Path
 
@@ -1003,11 +1004,12 @@ class BuildWorker(BaseWorker):
 
 class UploadWorker(BaseWorker):
     def __init__(self, name, builder_id, config_path, secure_path,
-                 interval, zk):
+                 interval, zk, upload_workers):
         super(UploadWorker, self).__init__(builder_id, config_path,
                                            secure_path, interval, zk)
         self.log = logging.getLogger("nodepool.builder.UploadWorker.%s" % name)
         self.name = 'UploadWorker.%s' % name
+        self.upload_pool = ThreadPoolExecutor(max_workers=upload_workers)
 
     def _reloadConfig(self):
         '''
@@ -1157,29 +1159,22 @@ class UploadWorker(BaseWorker):
         If we find any builds in the 'ready' state that haven't been uploaded
         to providers, do the upload if they are available on the local disk.
         '''
+        self.log.info("Check for provider uploads")
+
         for provider in self._config.providers.values():
             if not provider.manage_images:
                 continue
             for image in provider.diskimages.values():
-                uploaded = False
-
                 # Check if we've been told to shutdown
                 # or if ZK connection is suspended
                 if not self._running or self._zk.suspended or self._zk.lost:
                     return
                 try:
-                    uploaded = self._checkProviderImageUpload(provider, image)
+                    self._checkProviderImageUpload(provider, image)
                 except Exception:
                     self.log.exception("Error uploading image %s "
                                        "to provider %s:",
                                        image.name, provider.name)
-
-                # NOTE: Due to the configuration file disagreement issue
-                # (the copy we have may not be current), if we took the time
-                # to attempt to upload an image, let's short-circuit this loop
-                # to give us a chance to reload the configuration file.
-                if uploaded:
-                    return
 
     def _checkProviderImageUpload(self, provider, image):
         '''
@@ -1193,13 +1188,13 @@ class UploadWorker(BaseWorker):
         '''
         # Check if image uploads are paused.
         if provider.diskimages.get(image.name).pause:
-            return False
+            return
 
         # Search for the most recent 'ready' image build
         builds = self._zk.getMostRecentBuilds(1, image.name,
                                               zk.READY)
         if not builds:
-            return False
+            return
 
         build = builds[0]
 
@@ -1208,29 +1203,34 @@ class UploadWorker(BaseWorker):
         local_images = DibImageFile.from_image_id(
             self._config.imagesdir, "-".join([image.name, build.id]))
         if not local_images:
-            return False
+            return
 
         # See if this image has already been uploaded
         upload = self._zk.getMostRecentBuildImageUploads(
             1, image.name, build.id, provider.name, zk.READY)
         if upload:
-            return False
+            return
 
         # See if this provider supports the available image formats
         if provider.image_type not in build.formats:
-            return False
+            return
 
+        # Offload the actual upload to the thread pool
+        self.upload_pool.submit(
+            self._doImageUpload, build, image, local_images, provider)
+
+    def _doImageUpload(self, build, image, local_images, provider):
         try:
             with self._zk.imageUploadLock(
-                image.name, build.id, provider.name,
-                blocking=False
+                    image.name, build.id, provider.name,
+                    blocking=False
             ):
                 # Verify once more that it hasn't been uploaded since the
                 # last check.
                 upload = self._zk.getMostRecentBuildImageUploads(
                     1, image.name, build.id, provider.name, zk.READY)
                 if upload:
-                    return False
+                    return
 
                 # NOTE: Due to the configuration file disagreement issue
                 # (the copy we have may not be current), we try to verify
@@ -1238,7 +1238,7 @@ class UploadWorker(BaseWorker):
                 # before we upload.
                 b = self._zk.getBuild(image.name, build.id)
                 if b.state == zk.DELETING:
-                    return False
+                    return
 
                 # New upload number with initial state 'uploading'
                 data = zk.ImageUpload()
@@ -1256,10 +1256,13 @@ class UploadWorker(BaseWorker):
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
                                           provider.name, data, upnum)
-                return True
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
-            return False
+            return
+        except Exception:
+            self.log.exception("Error uploading image %s "
+                               "to provider %s:",
+                               image.name, provider.name)
 
     def run(self):
 
@@ -1288,6 +1291,10 @@ class UploadWorker(BaseWorker):
 
         provider_manager.ProviderManager.stopProviders(self._config)
 
+    def shutdown(self):
+        super().shutdown()
+        self.upload_pool.shutdown(wait=False)
+
 
 class NodePoolBuilder(object):
     '''
@@ -1315,7 +1322,7 @@ class NodePoolBuilder(object):
         self._num_builders = num_builders
         self._build_workers = []
         self._num_uploaders = num_uploaders
-        self._upload_workers = []
+        self._upload_worker = None
         self._janitor = None
         self._running = False
         self.cleanup_interval = 60
@@ -1395,12 +1402,12 @@ class NodePoolBuilder(object):
                 w.start()
                 self._build_workers.append(w)
 
-            for i in range(self._num_uploaders):
-                w = UploadWorker(i, builder_id,
-                                 self._config_path, self._secure_path,
-                                 self.upload_interval, self.zk)
-                w.start()
-                self._upload_workers.append(w)
+            self._upload_worker = UploadWorker(
+                i, builder_id,
+                self._config_path, self._secure_path,
+                self.upload_interval, self.zk,
+                self._num_uploaders)
+            self._upload_worker.start()
 
             if self.cleanup_interval > 0:
                 self._janitor = CleanupWorker(
@@ -1412,7 +1419,7 @@ class NodePoolBuilder(object):
             # Wait until all threads are running. Otherwise, we have a race
             # on the worker _running attribute if shutdown() is called before
             # run() actually begins.
-            workers = self._build_workers + self._upload_workers
+            workers = self._build_workers + [self._upload_worker]
             if self._janitor:
                 workers += [self._janitor]
             while not all([
