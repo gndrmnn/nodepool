@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_db9f075d",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-07-30T19:11:15Z",
+      "side": 1,
+      "message": "See comment below, but this is an example of the alternative I describe.",
+      "revId": "b76a0f458e4b350e24a3ec4eb81af064360f7dba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_dbca676b",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-07-30T19:11:15Z",
+      "side": 1,
+      "message": "With a data structure like:\n\n  env:\n    - name: foo\n      value: bar\n    - name: something\n      value: else\n\nThe name/value (key/value) keys are redundant information and we can express this as:\n\n  env:\n    foo: bar\n    something: else\n\nIs there a reason to not do it this way? Reading the rest of the code it may be that this is the structure that kubernetes expects?",
+      "revId": "b76a0f458e4b350e24a3ec4eb81af064360f7dba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
