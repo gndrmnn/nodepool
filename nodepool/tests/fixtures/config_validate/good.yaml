@@ -138,6 +138,11 @@ providers:
             image: docker.io/fedora:28
             cpu: 2
             memory: 512
+            env:
+              - name: FOO
+                value: hello
+              - name: BAR
+                value: world
 
   - name: openshift
     driver: openshift
@@ -153,6 +158,11 @@ providers:
             python-path: /usr/bin/python3
             memory: 512
             cpu: 2
+            env:
+              - name: FOO
+                value: hello
+              - name: BAR
+                value: world
 
   - name: ec2-us-east-2
     driver: aws
@@ -183,6 +193,9 @@ providers:
         labels:
           - name: openshift-pod
             image: docker.io/fedora:28
+            env:
+              - name: FOO
+                value: bar
 
 diskimages:
   - name: trusty

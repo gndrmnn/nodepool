@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    Support for passing environment variables to k8s and OpenShift Pod build
+    nodes has been added.
+
+    It is not possible to set persistent env vars in containers on run time
+    because there is no login shell available. Thus, we need to pass in any
+    env vars during node launch. This allows to set, e.g., `http_proxy`
+    variables. Environment variables can be defined on node labels as a list
+    of dictionaries with `name` and `value` fields as per the k8s container
+    YAML schema.
