@@ -33,6 +33,24 @@
       "revId": "b76a0f458e4b350e24a3ec4eb81af064360f7dba",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_5bb93778",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-07-30T19:30:49Z",
+      "side": 1,
+      "message": "I think this is what Kubernetes expects. If I understand correctly, this is to safely enable such key: \"ENV-NAME\u003dvalue\" .",
+      "parentUuid": "9f560f44_dbca676b",
+      "revId": "b76a0f458e4b350e24a3ec4eb81af064360f7dba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
