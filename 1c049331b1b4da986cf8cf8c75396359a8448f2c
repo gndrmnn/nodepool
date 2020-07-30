@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_db6ee793",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-07-30T19:03:28Z",
+      "side": 1,
+      "message": "The code at https://opendev.org/zuul/nodepool/src/branch/master/nodepool/builder.py#L414-L421 assumes that the image upload will always have content when returned from this function. The end result should be the same as the code in the link above will raise an exception too.\n\nWe should probably guard against this situation in the code above as well?",
+      "revId": "1c049331b1b4da986cf8cf8c75396359a8448f2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
