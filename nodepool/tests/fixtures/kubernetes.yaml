@@ -13,6 +13,7 @@ providers:
     context: admin-cluster.local
     pools:
       - name: main
+        max-servers: 2
         node-attributes:
           key1: value1
           key2: value2

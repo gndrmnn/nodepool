@@ -145,6 +145,7 @@ class SimpleTaskManagerLauncher(NodeLauncher):
 class SimpleTaskManagerHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.simple."
                             "SimpleTaskManagerHandler")
+    launcher = SimpleTaskManagerLauncher
 
     def __init__(self, pw, request):
         super().__init__(pw, request)
@@ -230,8 +231,8 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
         '''
         Check if all launch requests have completed.
 
-        When all of the Node objects have reached a final state (READY or
-        FAILED), we'll know all threads have finished the launch process.
+        When all of the Node objects have reached a final state (READY, FAILED
+        or ABORTED), we'll know all threads have finished the launch process.
         '''
         if not self._threads:
             return True
@@ -244,14 +245,15 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
 
         # NOTE: It is very important that NodeLauncher always sets one
         # of these states, no matter what.
-        if not all(s in (zk.READY, zk.FAILED) for s in node_states):
+        if not all(s in (zk.READY, zk.FAILED, zk.ABORTED)
+                   for s in node_states):
             return False
 
         return True
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]
-        thd = SimpleTaskManagerLauncher(self, node, self.provider, label)
+        thd = self.launcher(self, node, self.provider, label)
         thd.start()
         self._threads.append(thd)
 
