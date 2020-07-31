@@ -16,6 +16,24 @@
       "revId": "1c049331b1b4da986cf8cf8c75396359a8448f2c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_c41c4314",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-07-31T06:42:09Z",
+      "side": 1,
+      "message": "Thanks, will add a check. I also found another use of `zk.getImageUpload()` https://opendev.org/zuul/nodepool/src/branch/master/nodepool/status.py#L218-L219 that needs a guard.",
+      "parentUuid": "9f560f44_db6ee793",
+      "revId": "1c049331b1b4da986cf8cf8c75396359a8448f2c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
