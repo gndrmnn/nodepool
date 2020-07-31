@@ -390,6 +390,14 @@ class CleanupWorker(BaseCleanupWorker):
                         "request", node.id)
                     return
 
+                # If the node is in state init then the launcher that worked
+                # on the lost request has been interrupted between creating
+                # the znode and locking/setting to building. In this case the
+                # znode is leaked and we should delete the node instead of
+                # just deallocating it.
+                if node.state == zk.INIT:
+                    node.state = zk.DELETING
+
                 node.allocated_to = None
                 try:
                     zk_conn.storeNode(node)
