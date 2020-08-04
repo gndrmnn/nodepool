@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_637256af",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-04T15:15:32Z",
+      "side": 1,
+      "message": "Should we log the node path for these empty nodes? that way admins can check on them and clean them up if appropriate?\n\nI think that gives us a reasonable halfway point between fixing this and working around it.",
+      "revId": "825108d53ceaf9542ac092ae777773c68882ce64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_0361dad3",
+        "filename": "nodepool/status.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-04T15:15:32Z",
+      "side": 1,
+      "message": "See comment in builder.py",
+      "revId": "825108d53ceaf9542ac092ae777773c68882ce64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
