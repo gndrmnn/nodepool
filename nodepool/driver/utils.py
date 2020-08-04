@@ -211,7 +211,6 @@ class QuotaSupport:
 
         :return: QuotaInformation about the label
         '''
-        print("base")
         pass
 
     def invalidateQuotaCache(self):

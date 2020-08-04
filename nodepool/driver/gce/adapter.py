@@ -13,9 +13,11 @@
 # under the License.
 
 import logging
+import math
 
 from nodepool.driver.simple import SimpleTaskManagerAdapter
 from nodepool.driver.simple import SimpleTaskManagerInstance
+from nodepool.driver.utils import QuotaInformation
 
 import googleapiclient.discovery
 
@@ -36,10 +38,17 @@ class GCEInstance(SimpleTaskManagerInstance):
             if len(access):
                 self.public_ipv4 = access[0].get('natIP')
         self.interface_ip = self.public_ipv4 or self.private_ipv4
+        self._machine_type = data.get('_nodepool_gce_machine_type')
 
         if data.get('metadata'):
             for item in data['metadata'].get('items', []):
                 self.metadata[item['key']] = item['value']
+
+    def getQuotaInformation(self):
+        return QuotaInformation(
+            cores=self._machine_type['guestCpus'],
+            instances=1,
+            ram=self._machine_type['memoryMb'])
 
 
 class GCEAdapter(SimpleTaskManagerAdapter):
@@ -48,6 +57,7 @@ class GCEAdapter(SimpleTaskManagerAdapter):
     def __init__(self, provider):
         self.provider = provider
         self.compute = googleapiclient.discovery.build('compute', 'v1')
+        self._machine_types = {}
 
     def listInstances(self, task_manager):
         servers = []
@@ -58,6 +68,9 @@ class GCEAdapter(SimpleTaskManagerAdapter):
             result = q.execute()
 
         for instance in result.get('items', []):
+            instance_type = instance['machineType'].split('/')[-1]
+            mtype = self._getMachineType(task_manager, instance_type)
+            instance['_nodepool_gce_machine_type'] = mtype
             servers.append(GCEInstance(instance))
         return servers
 
@@ -84,6 +97,18 @@ class GCEAdapter(SimpleTaskManagerAdapter):
 
         return image_id
 
+    def _getMachineType(self, task_manager, machine_type):
+        if machine_type in self._machine_types:
+            return self._machine_types[machine_type]
+        q = self.compute.machineTypes().get(
+            project=self.provider.project,
+            zone=self.provider.zone,
+            machineType=machine_type)
+        with task_manager.rateLimit():
+            result = q.execute()
+        self._machine_types[machine_type] = result
+        return result
+
     def createInstance(self, task_manager, hostname, metadata, label):
         image_id = self._getImageId(task_manager, label.cloud_image)
         disk_init = dict(sourceImage=image_id,
@@ -93,8 +118,8 @@ class GCEAdapter(SimpleTaskManagerAdapter):
         disk = dict(boot=True,
                     autoDelete=True,
                     initializeParams=disk_init)
-        machine_type = 'zones/{}/machineTypes/{}'.format(
-            self.provider.zone, label.instance_type)
+        mtype = self._getMachineType(task_manager, label.instance_type)
+        machine_type = mtype['selfLink']
         network = dict(network='global/networks/default',
                        accessConfigs=[dict(
                            type='ONE_TO_ONE_NAT',
@@ -117,3 +142,32 @@ class GCEAdapter(SimpleTaskManagerAdapter):
         with task_manager.rateLimit():
             q.execute()
         return hostname
+
+    def getQuotaLimits(self, task_manager):
+        q = self.compute.regions().get(project=self.provider.project,
+                                       region=self.provider.region)
+        with task_manager.rateLimit():
+            ret = q.execute()
+
+        cores = None
+        instances = None
+        ram = None
+        for item in ret['quotas']:
+            if item['metric'] == 'CPUS':
+                cores = item['limit']
+                continue
+            if item['metric'] == 'INSTANCES':
+                instances = item['limit']
+                continue
+        return QuotaInformation(
+            cores=cores,
+            instances=instances,
+            default=math.inf)
+
+    def getQuotaForLabel(self, task_manager, label):
+        mtype = self._getMachineType(task_manager, label.instance_type)
+        machine_type = mtype['selfLink']
+        return QuotaInformation(
+            cores=mtype['guestCpus'],
+            instances=1,
+            ram=mtype['memoryMb'])
