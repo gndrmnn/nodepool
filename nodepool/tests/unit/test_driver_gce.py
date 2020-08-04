@@ -100,16 +100,119 @@ class GCloudImages(GCloudCollection):
         raise googleapiclient.errors.HttpError(404, b'')
 
 
+class GCloudMachineTypes(GCloudCollection):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.items.append({
+            "id": "3002",
+            "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+            "name": "n1-standard-2",
+            "description": "2 vCPUs, 7.5 GB RAM",
+            "guestCpus": 2,
+            "memoryMb": 7680,
+            "imageSpaceGb": 10,
+            "maximumPersistentDisks": 128,
+            "maximumPersistentDisksSizeGb": "263168",
+            "zone": "us-central1-a",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/"
+            "gcloud-project/zones/us-central1-a/machineTypes/n1-standard-2",
+            "isSharedCpu": False,
+            "kind": "compute#machineType"
+        })
+        self.items.append({
+            "id": "1000",
+            "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+            "name": "f1-micro",
+            "description": "1 vCPU (shared physical core) and 0.6 GB RAM",
+            "guestCpus": 1,
+            "memoryMb": 614,
+            "imageSpaceGb": 0,
+            "maximumPersistentDisks": 16,
+            "maximumPersistentDisksSizeGb": "3072",
+            "zone": "us-central1-a",
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/"
+            "gcloud-project/zones/us-central1-a/machineTypes/f1-micro",
+            "isSharedCpu": True,
+            "kind": "compute#machineType"
+        })
+
+    def get(self, *args, **kw):
+        return GCloudRequest(self._get, args, kw)
+
+    def _get(self, *args, **kw):
+        for item in self.items:
+            if (kw['machineType'] == item['name']):
+                return item
+        # Note this isn't quite right, but at least it's the correct class
+        raise googleapiclient.errors.HttpError(404, b'')
+
+
+class GCloudRegions(GCloudCollection):
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.items.append({
+            "id": "1000",
+            "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+            "name": "us-central1",
+            "description": "us-central1",
+            "status": "UP",
+            "zones": [
+                "https://www.googleapis.com/compute/v1/projects/gcloud-project"
+                "/zones/us-central1-a",
+                "https://www.googleapis.com/compute/v1/projects/gcloud-project"
+                "/zones/us-central1-b",
+                "https://www.googleapis.com/compute/v1/projects/gcloud-project"
+                "/zones/us-central1-c",
+                "https://www.googleapis.com/compute/v1/projects/gcloud-project"
+                "/zones/us-central1-f"
+            ],
+            "quotas": [
+                {"metric": "CPUS",               "limit": 24,   "usage": 0}, # noqa
+                {"metric": "DISKS_TOTAL_GB",     "limit": 4096, "usage": 0}, # noqa
+                {"metric": "STATIC_ADDRESSES",   "limit": 8,    "usage": 0}, # noqa
+                {"metric": "IN_USE_ADDRESSES",   "limit": 8,    "usage": 0}, # noqa
+                {"metric": "SSD_TOTAL_GB",       "limit": 500,  "usage": 0}, # noqa
+                {"metric": "LOCAL_SSD_TOTAL_GB", "limit": 6000, "usage": 0}, # noqa
+                {"metric": "INSTANCES",          "limit": 24,   "usage": 0}, # noqa
+                {"metric": "PREEMPTIBLE_CPUS",   "limit": 0,    "usage": 0}, # noqa
+                {"metric": "COMMITTED_CPUS",     "limit": 0,    "usage": 0}, # noqa
+                {"metric": "INTERNAL_ADDRESSES", "limit": 200,  "usage": 0}, # noqa
+                # A bunch of other quotas elided for space
+            ],
+            "selfLink": "https://www.googleapis.com/compute/v1/projects/"
+            "gcloud-project/regions/us-central1",
+            "kind": "compute#region"
+        })
+
+    def get(self, *args, **kw):
+        return GCloudRequest(self._get, args, kw)
+
+    def _get(self, *args, **kw):
+        for item in self.items:
+            if (kw['region'] == item['name']):
+                return item
+        # Note this isn't quite right, but at least it's the correct class
+        raise googleapiclient.errors.HttpError(404, b'')
+
+
 class GCloudComputeEmulator:
     def __init__(self):
         self._instances = GCloudInstances()
         self._images = GCloudImages()
+        self._machine_types = GCloudMachineTypes()
+        self._regions = GCloudRegions()
 
     def instances(self):
         return self._instances
 
     def images(self):
         return self._images
+
+    def machineTypes(self):
+        return self._machine_types
+
+    def regions(self):
+        return self._regions
 
 
 class GCloudEmulator:

@@ -50,6 +50,21 @@ class ListInstancesTask(Task):
         return self.args['adapter'].listInstances(manager)
 
 
+class GetQuotaLimitsTask(Task):
+    name = 'get_quota_limits'
+
+    def main(self, manager):
+        return self.args['adapter'].getQuotaLimits(manager)
+
+
+class GetQuotaForLabelTask(Task):
+    name = 'get_quota_for_label'
+
+    def main(self, manager):
+        return self.args['adapter'].getQuotaForLabel(
+            manager, self.args['label_config'])
+
+
 class SimpleTaskManagerLauncher(NodeLauncher):
     """The NodeLauncher implementation for the SimpleTaskManager driver
        framework"""
@@ -175,21 +190,28 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
         :param node_types: list of node types to check
         :return: True if the node list fits into the provider, False otherwise
         '''
-        # TODO: Add support for real quota handling; this only handles
-        # max_servers.
-        needed_quota = QuotaInformation(
-            cores=1,
-            instances=len(node_types),
-            ram=1,
-            default=1)
+        needed_quota = QuotaInformation()
+
+        for ntype in node_types:
+            needed_quota.add(
+                self.manager.quotaNeededByLabel(ntype, self.pool))
+
+        if hasattr(self.pool, 'ignore_provider_quota'):
+            if not self.pool.ignore_provider_quota:
+                cloud_quota = self.manager.estimatedNodepoolQuota()
+                cloud_quota.subtract(needed_quota)
+
+                if not cloud_quota.non_negative():
+                    return False
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
         pool_quota = QuotaInformation(
-            cores=math.inf,
+            cores=getattr(self.pool, 'max_cores', None),
             instances=self.pool.max_servers,
-            ram=math.inf,
+            ram=getattr(self.pool, 'max_ram', None),
             default=math.inf)
         pool_quota.subtract(needed_quota)
-        self.log.debug("hasProviderQuota({},{}) = {}".format(
-            self.pool, node_types, pool_quota))
         return pool_quota.non_negative()
 
     def hasRemainingQuota(self, ntype):
@@ -216,9 +238,11 @@ class SimpleTaskManagerHandler(NodeRequestHandler):
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
-        # TODO: add cores, ram
-        pool_quota = QuotaInformation(instances=self.pool.max_servers,
-                                      default=math.inf)
+        pool_quota = QuotaInformation(
+            cores=getattr(self.pool, 'max_cores', None),
+            instances=self.pool.max_servers,
+            ram=getattr(self.pool, 'max_ram', None),
+            default=math.inf)
         pool_quota.subtract(
             self.manager.estimatedNodepoolQuotaUsed(self.pool))
         self.log.debug("Current pool quota: %s" % pool_quota)
@@ -279,20 +303,56 @@ class SimpleTaskManagerProvider(BaseTaskManagerProvider, QuotaSupport):
         return True
 
     def getProviderLimits(self):
-        # TODO: query the api to get real limits
-        return QuotaInformation(
-            cores=math.inf,
-            instances=math.inf,
-            ram=math.inf,
-            default=math.inf)
+        try:
+            t = self.task_manager.submitTask(GetQuotaLimitsTask(
+                adapter=self.adapter))
+            return t.wait()
+        except NotImplementedError:
+            return QuotaInformation(
+                cores=math.inf,
+                instances=math.inf,
+                ram=math.inf,
+                default=math.inf)
 
     def quotaNeededByLabel(self, ntype, pool):
-        # TODO: return real quota information about a label
-        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+        provider_label = pool.labels[ntype]
+        try:
+            t = self.task_manager.submitTask(GetQuotaForLabelTask(
+                adapter=self.adapter, label_config=provider_label))
+            return t.wait()
+        except NotImplementedError:
+            return QuotaInformation()
 
     def unmanagedQuotaUsed(self):
-        # TODO: return real quota information about quota
-        return QuotaInformation()
+        '''
+        Sums up the quota used by servers unmanaged by nodepool.
+
+        :return: Calculated quota in use by unmanaged servers
+        '''
+        used_quota = QuotaInformation()
+
+        node_ids = set([n.id for n in self._zk.nodeIterator()])
+
+        for server in self.listNodes():
+            meta = server.metadata
+            nodepool_provider_name = meta.get('nodepool_provider_name')
+            if (nodepool_provider_name and
+                nodepool_provider_name == self.provider.name):
+                # This provider (regardless of the launcher) owns this
+                # node so it must not be accounted for unmanaged
+                # quota; unless it has leaked.
+                nodepool_node_id = meta.get('nodepool_node_id')
+                if nodepool_node_id and nodepool_node_id in node_ids:
+                    # It has not leaked.
+                    continue
+
+            try:
+                qi = server.getQuotaInformation()
+            except NotImplementedError:
+                qi = QuotaInformation()
+            used_quota.add(qi)
+
+        return used_quota
 
     def cleanupNode(self, external_id):
         instance = self.getInstance(external_id)
@@ -434,6 +494,13 @@ class SimpleTaskManagerInstance:
         """
         raise NotImplementedError()
 
+    def getQuotaInformation(self):
+        """Return quota information about this instance.
+
+        :returns: A :py:class:`QuotaInformation` object.
+        """
+        raise NotImplementedError()
+
 
 class SimpleTaskManagerAdapter:
     """Public interface for the simple TaskManager Provider
@@ -486,6 +553,36 @@ class SimpleTaskManagerAdapter:
         :returns: A list of :py:class:`SimpleTaskManagerInstance` objects.
         """
         raise NotImplementedError()
+
+    def getQuotaLimits(self, task_manager):
+        """Return the quota limits for this provider
+
+        The default implementation returns a simple QuotaInformation
+        with no limits.  Override this to provide accurate
+        information.
+
+        :param TaskManager task_manager: An instance of
+            :py:class:`~nodepool.driver.taskmananger.TaskManager`.
+        :returns: A :py:class:`QuotaInformation` object.
+
+        """
+        return QuotaInformation(default=math.inf)
+
+    def getQuotaForLabel(self, task_manager, label_config):
+        """Return information about the quota used for a label
+
+        The default implementation returns a simple QuotaInformation
+        for one instance; override this to return more detailed
+        information including cores and RAM.
+
+        :param TaskManager task_manager: An instance of
+            :py:class:`~nodepool.driver.taskmananger.TaskManager`.
+        :param ProviderLabel label_config: A LabelConfig object describing
+            a label for an instance.
+        :returns: A :py:class:`QuotaInformation` object.
+
+        """
+        return QuotaInformation(instances=1)
 
 
 class SimpleTaskManagerDriver(Driver):
