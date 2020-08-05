@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f560f44_25297989",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2020-08-05T05:29:13Z",
+      "side": 1,
+      "message": "The exception is already logged in getImageUpload() so I figured that it might not be necessary here. But I\u0027m fine with logging maybe a few more details here so it\u0027s clear that we are not simply ignoring this condition.",
+      "parentUuid": "9f560f44_637256af",
+      "revId": "825108d53ceaf9542ac092ae777773c68882ce64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_0361dad3",
         "filename": "nodepool/status.py",
         "patchSetId": 6
