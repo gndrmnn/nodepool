@@ -1805,6 +1805,71 @@ section of the configuration.
 
       See `Boto Configuration`_ for more information.
 
+      This account needs to have a set of access rights. This is an example of
+      a working IAM profile definition:
+
+      .. code-block:: json
+
+         {
+             "Version": "2012-10-17",
+             "Statement": [
+                 {
+                     "Action": [
+                         "ec2:AttachVolume",
+                         "ec2:DeregisterImage",
+                         "ec2:ImportVolume",
+                         "ec2:ModifyVolumeAttribute",
+                         "ec2:DescribeInstances",
+                         "ec2:UnmonitorInstances",
+                         "ec2:RequestSpotInstances",
+                         "ec2:DescribeInstanceAttribute",
+                         "ec2:DescribeVolumesModifications",
+                         "ec2:CreateImage",
+                         "ec2:CreateTags",
+                         "ec2:ResetInstanceAttribute",
+                         "ec2:CopyImage",
+                         "ec2:DescribeSpotInstanceRequests",
+                         "ec2:ModifyImageAttribute",
+                         "ec2:ReportInstanceStatus",
+                         "ec2:DeleteFpgaImage",
+                         "ec2:DeleteVolume",
+                         "ec2:DescribeVolumeStatus",
+                         "ec2:StartInstances",
+                         "ec2:DescribeVolumes",
+                         "ec2:DescribeFpgaImageAttribute",
+                         "ec2:ImportImage",
+                         "ec2:DescribeInstanceStatus",
+                         "ec2:CreateInstanceExportTask",
+                         "ec2:DetachVolume",
+                         "ec2:RebootInstances",
+                         "ec2:ModifyVolume",
+                         "ec2:ResetImageAttribute",
+                         "ec2:TerminateInstances",
+                         "ec2:ImportInstance",
+                         "ec2:ModifyFpgaImageAttribute",
+                         "ec2:RegisterImage",
+                         "ec2:RunInstances",
+                         "ec2:DescribeImportImageTasks",
+                         "ec2:CopyFpgaImage",
+                         "ec2:StopInstances",
+                         "ec2:DescribeVolumeAttribute",
+                         "ec2:CreateVolume",
+                         "ec2:EnableVolumeIO",
+                         "ec2:DescribeImages",
+                         "ec2:CancelSpotInstanceRequests",
+                         "ec2:DescribeFpgaImages",
+                         "ec2:DescribeScheduledInstances",
+                         "ec2:DescribeImageAttribute",
+                         "ec2:CreateFpgaImage",
+                         "ec2:ResetFpgaImageAttribute"
+                     ],
+                     "Resource": "*",
+                     "Effect": "Allow",
+                     "Sid": "VisualEditor0"
+                 }
+             ]
+         }
+
    .. attr:: boot-timeout
       :type: int seconds
       :default: 60
