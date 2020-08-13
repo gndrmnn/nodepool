@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_4737dae4",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-08-13T13:21:36Z",
+      "side": 1,
+      "message": "I guess there is no ram limit?",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 157,
+        "endChar": 24
+      },
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
