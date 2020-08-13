@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_75e55f38",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-13T20:36:42Z",
+      "side": 1,
+      "message": "I think we should act on Clark\u0027s suggestion of adding more info here.  How about just the upload  object, like all of the other log lines in this method.",
+      "revId": "81a2408d0d51cf5447f2eba23a03fb9e5caa0e41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_55e2db30",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-13T20:36:42Z",
+      "side": 1,
+      "message": "An explicit \"return None\" as obove would be nice here for clarity.",
+      "revId": "81a2408d0d51cf5447f2eba23a03fb9e5caa0e41",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
