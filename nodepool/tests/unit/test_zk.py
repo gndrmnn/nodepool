@@ -326,6 +326,23 @@ class TestZooKeeper(tests.DBTestCase):
         self.zk.removeBuildRequest(image)
         self.assertFalse(self.zk.hasBuildRequest(image))
 
+    def test_buildLock_orphan(self):
+        image = "ubuntu-trusty"
+        build_number = "0000000003"
+
+        path = self.zk._imageBuildNumberLockPath(image, build_number)
+
+        # Pretend we still think the image build exists
+        # (e.g. multiple cleanup workers itertating over builds)
+        with self.zk.imageBuildNumberLock(image, build_number, blocking=False):
+            # We now created an empty build number node
+            pass
+
+        self.assertIsNotNone(self.zk.client.exists(path))
+
+        # Should not throw an exception because of the empty upload
+        self.assertIsNone(self.zk.getBuild(image, build_number))
+
     def test_getMostRecentBuilds(self):
         image = "ubuntu-trusty"
         v1 = {'state': zk.READY, 'state_time': int(time.time())}

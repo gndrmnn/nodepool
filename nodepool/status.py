@@ -189,13 +189,14 @@ def dib_image_list(zk):
     for image_name in zk.getImageNames():
         for build_no in zk.getBuildNumbers(image_name):
             build = zk.getBuild(image_name, build_no)
-            objs.append({'id': '-'.join([image_name, build_no]),
-                         'image': image_name,
-                         'builder': build.builder,
-                         'formats': build.formats,
-                         'state': build.state,
-                         'age': int(build.state_time)
-                         })
+            if build:
+                objs.append({'id': '-'.join([image_name, build_no]),
+                             'image': image_name,
+                             'builder': build.builder,
+                             'formats': build.formats,
+                             'state': build.state,
+                             'age': int(build.state_time)
+                             })
     return (objs, headers_table)
 
 
