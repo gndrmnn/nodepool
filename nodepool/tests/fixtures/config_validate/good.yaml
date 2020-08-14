@@ -143,6 +143,8 @@ providers:
                 value: hello
               - name: BAR
                 value: world
+            node-selector:
+              storageType: ssd
 
   - name: openshift
     driver: openshift
@@ -163,6 +165,8 @@ providers:
                 value: hello
               - name: BAR
                 value: world
+            node-selector:
+              storageType: ssd
 
   - name: ec2-us-east-2
     driver: aws
