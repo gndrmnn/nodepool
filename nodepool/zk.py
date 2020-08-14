@@ -1274,7 +1274,12 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return None
 
-        d = ImageBuild.fromDict(self._bytesToDict(data), build_number)
+        try:
+            d = ImageBuild.fromDict(self._bytesToDict(data), build_number)
+        except json.decoder.JSONDecodeError:
+            self.log.exception('Error loading json data from image build %s',
+                               path)
+            return None
         d.stat = stat
         return d
 

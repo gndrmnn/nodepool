@@ -368,7 +368,7 @@ class CleanupWorker(BaseWorker):
                 # still in progress so that it is checked again later with
                 # its new build state.
                 b = self._zk.getBuild(image, build.id)
-                if b.state != zk.BUILDING:
+                if b and b.state != zk.BUILDING:
                     return True
                 pass
         except exceptions.ZKLockException:
@@ -780,7 +780,7 @@ class BuildWorker(BaseWorker):
                 data = self._buildWrapper(diskimage)
 
                 # Remove request on a successful build
-                if data.state == zk.READY:
+                if data and data.state == zk.READY:
                     self._zk.removeBuildRequest(diskimage.name)
 
         except exceptions.ZKLockException:
@@ -1256,7 +1256,7 @@ class UploadWorker(BaseWorker):
                 # that another thread isn't trying to delete this build just
                 # before we upload.
                 b = self._zk.getBuild(image.name, build.id)
-                if b.state == zk.DELETING:
+                if not b or b.state == zk.DELETING:
                     return False
 
                 # New upload number with initial state 'uploading'

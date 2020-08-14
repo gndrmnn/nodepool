@@ -190,14 +190,15 @@ def dib_image_list(zk):
         paused = zk.getImagePaused(image_name)
         for build_no in zk.getBuildNumbers(image_name):
             build = zk.getBuild(image_name, build_no)
-            state = paused and 'paused' or build.state
-            objs.append({'id': '-'.join([image_name, build_no]),
-                         'image': image_name,
-                         'builder': build.builder,
-                         'formats': build.formats,
-                         'state': state,
-                         'age': int(build.state_time)
-                         })
+            if build:
+                state = paused and 'paused' or build.state
+                objs.append({'id': '-'.join([image_name, build_no]),
+                             'image': image_name,
+                             'builder': build.builder,
+                             'formats': build.formats,
+                             'state': state,
+                             'age': int(build.state_time)
+                            })
     return (objs, headers_table)
 
 
