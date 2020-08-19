@@ -14,6 +14,8 @@
 
 import logging
 import boto3
+import botocore.exceptions
+import nodepool.exceptions
 
 from nodepool.driver import Provider
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
@@ -154,7 +156,13 @@ class AwsProvider(Provider):
         if self.ec2 is None:
             return False
         instance = self.ec2.Instance(server_id)
-        instance.terminate()
+        try:
+            instance.terminate()
+        except botocore.exceptions.ClientError as e:
+            error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+            if error_code == "InvalidInstanceID.NotFound":
+                raise nodepool.exceptions.NotFound()
+            raise e
 
     def waitForNodeCleanup(self, server_id):
         # TODO: track instance deletion
