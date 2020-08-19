@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "9f560f44_195cd07c",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-19T22:37:05Z",
+      "side": 1,
+      "message": "The variable machine_type here is a URL of the same form as what was in createInstance.  That much is correct.  But what this method does is now return a MachineType REST object which has the extra information (such as number of CPUs for this machine) that we need to calculate quota.  We update createInstance to use the selfLink (ie URL) of this object instead of deterministically creating the URL for 2 reasons: it\u0027s potentially more resilient if they change the scheme in the future, and we\u0027re going to need this for the quota calcs anyway.  So yes, there is an extra network call (but only one -- it\u0027s cached) compared to before, but that extra call is needed for quota calcs regardless, so keeping the old behavior in createInstance won\u0027t reduce that.",
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_4737dae4",
         "filename": "nodepool/driver/gce/adapter.py",
         "patchSetId": 2
@@ -42,6 +59,23 @@
     },
     {
       "key": {
+        "uuid": "9f560f44_f95e3c74",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-19T22:37:05Z",
+      "side": 1,
+      "message": "That appears to be the case.  Lots of other limits, no RAM that I saw.  I thought it was weird too.",
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_79998c77",
         "filename": "nodepool/driver/simple.py",
         "patchSetId": 2
@@ -53,6 +87,23 @@
       "writtenOn": "2020-08-19T22:15:08Z",
       "side": 1,
       "message": "QuotaInformation seems to default to 0 values. The old code defaulted everything to 1. I thought this may break the kubernetes driver but we implement quotaNeededByLabel there to return 1 values like the old code here so that particular thing is fine, but it makes me wonder if we should keep the old defaults here.",
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_5955a84f",
+        "filename": "nodepool/driver/simple.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-19T22:37:05Z",
+      "side": 1,
+      "message": "I think this is the right default value.  It doesn\u0027t affect max-servers which is the only effective quota you can have with a driver that doesn\u0027t support quota.",
       "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
