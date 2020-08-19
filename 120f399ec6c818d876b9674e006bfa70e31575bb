@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9f560f44_19ccd0ba",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-19T22:15:08Z",
+      "side": 1,
+      "message": "Looking at the old code in createInstance it appears that machine_type might be able to be deterministically generated without a network round drip. Should we do that here instead of caching and doing what I presume is a network lookup below?",
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_4737dae4",
         "filename": "nodepool/driver/gce/adapter.py",
         "patchSetId": 2
@@ -19,6 +36,23 @@
         "endLine": 157,
         "endChar": 24
       },
+      "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_79998c77",
+        "filename": "nodepool/driver/simple.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-19T22:15:08Z",
+      "side": 1,
+      "message": "QuotaInformation seems to default to 0 values. The old code defaulted everything to 1. I thought this may break the kubernetes driver but we implement quotaNeededByLabel there to return 1 values like the old code here so that particular thing is fine, but it makes me wonder if we should keep the old defaults here.",
       "revId": "120f399ec6c818d876b9674e006bfa70e31575bb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
