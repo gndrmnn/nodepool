@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_8ce6e043",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-19T23:03:59Z",
+      "side": 1,
+      "message": "I would avoid setting this as a class attribute since we override it in each class object instance.",
+      "revId": "d42f782180a1a726aa4bd3625598955b77a952a1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_6ce1cc2a",
+        "filename": "nodepool/driver/aws/handler.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-19T23:03:59Z",
+      "side": 1,
+      "message": "I would avoid setting this as a class attribute since we override it in each class object instance.",
+      "revId": "d42f782180a1a726aa4bd3625598955b77a952a1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_acd48448",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-08-19T23:03:59Z",
+      "side": 1,
+      "message": "I would avoid setting these as class attributes since we override them in each class object instance.",
+      "revId": "d42f782180a1a726aa4bd3625598955b77a952a1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
