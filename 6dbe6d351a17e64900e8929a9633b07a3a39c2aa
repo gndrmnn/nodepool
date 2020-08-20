@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_5fd1f6fa",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-20T20:24:41Z",
+      "side": 1,
+      "message": "This seems a bit too detailed for this method (and DRY for the other).  Maybe instead we could just exit early if we have performed a build, let the existing \"reload config\" stuff happen, and then we\u0027ll start this loop over?  The only downside I could see is we could starve image builds if building all the images takes longer than the rebuild interval.\n\nOr if that doesn\u0027t sound great, how about we implement a checkConfig method on the base worker that determines if the config has changed, and if so, exit this loop and restart?",
+      "revId": "6dbe6d351a17e64900e8929a9633b07a3a39c2aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
