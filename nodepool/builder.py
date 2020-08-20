@@ -618,6 +618,13 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                # Use up to date image config to check for pauses in
+                # particular
+                new_config = nodepool_config.loadConfig(self._config_path)
+                for _diskimage in new_config.diskimages.values():
+                    if _diskimage.name == diskimage.name:
+                        diskimage = _diskimage
+                        break
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
                 self.log.exception("Exception checking for scheduled "
@@ -723,6 +730,13 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                # Use up to date image config to check for pauses in
+                # particular
+                new_config = nodepool_config.loadConfig(self._config_path)
+                for _diskimage in new_config.diskimages.values():
+                    if _diskimage.name == diskimage.name:
+                        diskimage = _diskimage
+                        break
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
                 self.log.exception("Exception checking for manual "
