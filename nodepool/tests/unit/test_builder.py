@@ -437,12 +437,27 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_cleanup_failed_image_build(self):
         configfile = self.setup_config('node_diskimage_fail.yaml')
         self.useBuilder(configfile)
-        # NOTE(pabelanger): We are racing here, but don't really care. We just
-        # need our first image build to fail.
+        # Wait for the build to fail before we replace our config. Otherwise
+        # we may replace the config before we build the image.
+        found = False
+        while not found:
+            builds = self.zk.getBuilds('fake-image')
+            for build in builds:
+                # Lexicographical order
+                if build and build.id > '0000000001':
+                    # We know we've built more than one image and we know
+                    # they have all failed. We can't check if they have
+                    # failed directly because they may be cleaned up.
+                    found = build.id
+                    break
+                time.sleep(0.1)
+
+        # Now replace the config with a valid config and check that the image
+        # builds successfully. Finally check that the failed image is gone.
         self.replace_config(configfile, 'node.yaml')
         self.waitForImage('fake-provider', 'fake-image')
         # Make sure our cleanup worker properly removes the first build.
-        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.waitForBuildDeletion('fake-image', found)
         self.assertReportedStat('nodepool.dib_image_build.'
                                 'fake-image.status.rc',
                                 '127', 'g')
