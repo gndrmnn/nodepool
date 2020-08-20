@@ -170,6 +170,18 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
         self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
 
+    def test_dib_image_cmd_pause(self):
+        configfile = self.setup_config('node.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
+        self.patch_argv("-c", configfile, "image-pause", "fake-image")
+        nodepoolcmd.main()
+        self.assert_listed(configfile, ['dib-image-list'], 4, 'paused', 1)
+        self.patch_argv("-c", configfile, "image-unpause", "fake-image")
+        nodepoolcmd.main()
+        self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
+
     def test_dib_image_build_pause(self):
         configfile = self.setup_config('node_diskimage_pause.yaml')
         self.useBuilder(configfile)
