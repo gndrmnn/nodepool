@@ -1,0 +1,9 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Thu, 20 Aug 2020 23:20:11 +0000
+Reviewed-on: https://review.opendev.org/747303
+Project: zuul/nodepool
+Branch: refs/heads/master
