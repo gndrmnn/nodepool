@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_79d05520",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2020-08-20T23:18:54Z",
+      "side": 1,
+      "message": "Just to be clear on this elegant bit of black sorcery, this is like doing...\n\n    if paused:\n        state \u003d \u0027paused\u0027\n    else:\n        state \u003d build.state\n\nRight? I had to stare at it for a minute to be sure what it was doing there.",
+      "revId": "00d62af3c3b04aef5fca4f0763862b79ea1a4c49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f560f44_19b839e3",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2020-08-20T23:18:54Z",
+      "side": 1,
+      "message": "Why assign these if they\u0027re not used? For consistency with other similar methods which do actually return these?",
+      "revId": "00d62af3c3b04aef5fca4f0763862b79ea1a4c49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
