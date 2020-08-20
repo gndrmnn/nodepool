@@ -618,6 +618,11 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                new_config = nodepool_config.loadConfig(self._config_path)
+                if new_config != self._config:
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
                 self.log.exception("Exception checking for scheduled "
@@ -723,6 +728,11 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                new_config = nodepool_config.loadConfig(self._config_path)
+                if new_config != self._config:
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
                 self.log.exception("Exception checking for manual "
