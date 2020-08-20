@@ -608,6 +608,13 @@ class BuildWorker(BaseWorker):
         log_dir = self._getBuildLogRoot(name)
         return os.path.join(log_dir, '%s-%s.log' % (name, build_id))
 
+    def _imageConfigIsCurrent(self, diskimage):
+        new_config = nodepool_config.loadConfig(self._config_path)
+        for _diskimage in new_config.diskimages.values():
+            if _diskimage.name == diskimage.name:
+                return _diskimage == diskimage
+        return False
+
     def _checkForScheduledImageUpdates(self):
         '''
         Check every DIB image to see if it has aged out and needs rebuilt.
@@ -618,6 +625,10 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                if not self._imageConfigIsCurrent(diskimage):
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
                 self.log.exception("Exception checking for scheduled "
@@ -723,6 +734,10 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                if not self._imageConfigIsCurrent(diskimage):
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
                 self.log.exception("Exception checking for manual "
