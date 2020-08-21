@@ -14,7 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import functools
 import math
+import os
 import time
 import yaml
 
@@ -293,7 +295,16 @@ def get_provider_config(provider):
     return driver.getProviderConfig(provider)
 
 
-def openConfig(path):
+def substitute_env_vars(config_str, env):
+    return functools.reduce(
+        lambda config, env_item: config.replace(
+            "%(" + env_item[0] + ")", env_item[1]),
+        [(k, v) for k, v in env.items()
+         if k.startswith('NODEPOOL_')],
+        config_str)
+
+
+def openConfig(path, env):
     retry = 3
 
     # Since some nodepool code attempts to dynamically re-read its config
@@ -303,8 +314,7 @@ def openConfig(path):
     while True:
         try:
             with open(path) as f:
-                config = yaml.safe_load(f)
-            break
+                return yaml.safe_load(substitute_env_vars(f.read(), env))
         except IOError as e:
             if e.errno == 2:
                 retry = retry - 1
@@ -313,11 +323,10 @@ def openConfig(path):
                 raise e
             if retry == 0:
                 raise e
-    return config
 
 
-def loadConfig(config_path):
-    config = openConfig(config_path)
+def loadConfig(config_path, env=os.environ):
+    config = openConfig(config_path, env)
 
     # Call driver config reset now to clean global hooks like openstacksdk
     for driver in Drivers.drivers.values():
@@ -340,8 +349,8 @@ def loadConfig(config_path):
     return newconfig
 
 
-def loadSecureConfig(config, secure_config_path):
-    secure = openConfig(secure_config_path)
+def loadSecureConfig(config, secure_config_path, env=os.environ):
+    secure = openConfig(secure_config_path, env)
     if not secure:   # empty file
         return
 

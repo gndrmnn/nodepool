@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Configuration value can be set from the envirnonment variables using the
+    `%(NODEPOOL_env_name)` syntax.

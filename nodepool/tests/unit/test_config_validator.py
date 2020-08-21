@@ -28,8 +28,9 @@ class TestConfigValidation(tests.BaseTestCase):
                               'fixtures', 'config_validate', 'good.yaml')
 
         validator = ConfigValidator(config)
-        ret = validator.validate()
+        ret = validator.validate(dict(NODEPOOL_PORT="8005"))
         self.assertEqual(ret, 0)
+        self.assertEqual(validator.config['webapp']['port'], 8005)
 
     def test_yaml_error(self):
         config = os.path.join(os.path.dirname(tests.__file__),
