@@ -132,6 +132,18 @@ class NodePoolCmd(NodepoolApp):
             action='store_true')
         cmd_erase.set_defaults(func=self.erase)
 
+        cmd_image_pause = subparsers.add_parser(
+            'image-pause',
+            help='pause an image')
+        cmd_image_pause.set_defaults(func=self.image_pause)
+        cmd_image_pause.add_argument('image', help='image name')
+
+        cmd_image_unpause = subparsers.add_parser(
+            'image-unpause',
+            help='unpause an image')
+        cmd_image_unpause.set_defaults(func=self.image_unpause)
+        cmd_image_unpause.add_argument('image', help='image name')
+
         return parser
 
     def setup_logging(self):
@@ -347,6 +359,14 @@ class NodePoolCmd(NodepoolApp):
         results = status.request_list(self.zk)
         print(status.output(results, 'pretty'))
 
+    def image_pause(self):
+        image_name = self.args.image
+        self.zk.setImagePaused(image_name, True)
+
+    def image_unpause(self):
+        image_name = self.args.image
+        self.zk.setImagePaused(image_name, False)
+
     def _wait_for_threads(self, threads):
         for t in threads:
             if t:
@@ -371,7 +391,8 @@ class NodePoolCmd(NodepoolApp):
                                  'image-list', 'dib-image-delete',
                                  'image-delete', 'alien-image-list',
                                  'list', 'delete',
-                                 'request-list', 'info', 'erase'):
+                                 'request-list', 'info', 'erase',
+                                 'image-pause', 'image-unpause'):
             self.zk = zk.ZooKeeper(enable_cache=False)
             self.zk.connect(
                 list(config.zookeeper_servers.values()),

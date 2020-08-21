@@ -779,6 +779,9 @@ class ZooKeeper(object):
     def _imageBuildsPath(self, image):
         return "%s/builds" % self._imagePath(image)
 
+    def _imagePausePath(self, image):
+        return "%s/pause" % self._imagePath(image)
+
     def _imageBuildLockPath(self, image):
         return "%s/lock" % self._imageBuildsPath(image)
 
@@ -1166,6 +1169,37 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             return []
         return sorted(images)
+
+    def getImagePaused(self, image):
+        '''
+        Return the pause flag for an image.
+
+        :returns: A boolean indicating if the image is paused.
+        '''
+        path = self._imagePausePath(image)
+
+        try:
+            data, stat = self.client.get(path)
+        except kze.NoNodeError:
+            return False
+        return True
+
+    def setImagePaused(self, image, paused):
+        '''
+        Set or clear the pause flag for an image.
+        '''
+        path = self._imagePausePath(image)
+
+        if paused:
+            try:
+                self.client.create(path)
+            except kze.NodeExistsError:
+                pass
+        else:
+            try:
+                self.client.delete(path)
+            except kze.NoNodeError:
+                pass
 
     def getBuildNumbers(self, image):
         '''

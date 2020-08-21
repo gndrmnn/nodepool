@@ -634,6 +634,8 @@ class BuildWorker(BaseWorker):
         # Check if diskimage builds are paused.
         if diskimage.pause:
             return
+        if self._zk.getImagePaused(diskimage.name):
+            return
 
         if not diskimage.image_types:
             # We don't know what formats to build.
@@ -735,6 +737,8 @@ class BuildWorker(BaseWorker):
         '''
         # Check if diskimage builds are paused.
         if diskimage.pause:
+            return
+        if self._zk.getImagePaused(diskimage.name):
             return
 
         if not diskimage.image_types:
