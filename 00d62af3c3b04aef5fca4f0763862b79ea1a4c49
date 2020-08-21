@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f560f44_c2c36556",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-08-21T11:35:42Z",
+      "side": 1,
+      "message": "I was just puzzled learning that \u0027True and \"paused\"\u0027 returns \"paused\" and not True.",
+      "parentUuid": "9f560f44_79d05520",
+      "revId": "00d62af3c3b04aef5fca4f0763862b79ea1a4c49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_19b839e3",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
