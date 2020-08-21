@@ -54,6 +54,23 @@
     },
     {
       "key": {
+        "uuid": "9f560f44_07b9e7ca",
+        "filename": "nodepool/status.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-08-21T17:40:08Z",
+      "side": 1,
+      "message": "Yes, this is python-speak for the ternary operator.  I mentally read/write it that way.  I agree as a boolean expression it\u0027s a little unclear, but once you internalize it as an idiom for ternary, it\u0027s more clear.  :)",
+      "revId": "00d62af3c3b04aef5fca4f0763862b79ea1a4c49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f560f44_19b839e3",
         "filename": "nodepool/zk.py",
         "patchSetId": 2
