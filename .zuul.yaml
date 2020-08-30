@@ -90,6 +90,7 @@
         base_element: centos-minimal
         release: 8
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        use_efi: True
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
