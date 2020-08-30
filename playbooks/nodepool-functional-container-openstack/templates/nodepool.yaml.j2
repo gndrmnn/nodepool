@@ -20,6 +20,10 @@ providers:
     diskimages:
       - name: test-image
         config-drive: true
+{% if nodepool_diskimage.get('use_efi', False) %}
+        meta:
+          hw_firmware_type: uefi
+{% endif %}
     pools:
       - name: main
         max-servers: 5
@@ -61,6 +65,9 @@ diskimages:
       - openssh-server
       - nodepool-setup
       - journal-to-console
+{% if nodepool_diskimage.get('use_efi', False) %}
+      - block-device-efi
+{% endif %}
     release: '{{ nodepool_diskimage.release }}'
     env-vars:
       TMPDIR: '{{ NODEPOOL_DIB_BASE_PATH }}/tmp'
