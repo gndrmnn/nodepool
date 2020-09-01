@@ -171,14 +171,23 @@
             # If zuul.tag is defined: [ '3', '3.19', '3.19.0' ].  Only works for 3-component tags.
             # Otherwise: ['latest']
             &imagetag "{{ zuul.tag is defined | ternary([zuul.get('tag', '').split('.')[0], '.'.join(zuul.get('tag', '').split('.')[:2]), zuul.get('tag', '')], ['latest']) }}"
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
           tags: *imagetag
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
           tags: *imagetag
+          arch:
+            - linux/amd64
+            - linux/arm64
 
 - job:
     name: nodepool-upload-image
@@ -343,27 +352,9 @@
         - opendev-buildset-registry
         - nodepool-build-image
         - nodepool-build-image-siblings
-        - zuul-tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py38
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-openstack-src:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-container-openstack-release
-        - nodepool-functional-container-openstack-siblings
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-build-image
-        - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
