@@ -1399,9 +1399,9 @@ class ZooKeeper(object):
                                      image,
                                      upload_number)
         except json.decoder.JSONDecodeError:
-            self.log.exception('Error loading json data from image upload '
-                               '%s, %s, %s', image, build_number, provider)
-            raise
+            self.log.exception('Error loading json data from image upload %s',
+                               path)
+            return None
         d.stat = stat
         return d
 
