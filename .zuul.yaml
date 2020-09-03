@@ -156,6 +156,7 @@
     name: nodepool-build-image
     parent: opendev-build-docker-image
     description: Build Docker images.
+    timeout: 4800
     dependencies:
       - opendev-buildset-registry
     requires:
@@ -171,19 +172,29 @@
             # If zuul.tag is defined: [ '3', '3.19', '3.19.0' ].  Only works for 3-component tags.
             # Otherwise: ['latest']
             &imagetag "{{ zuul.tag is defined | ternary([zuul.get('tag', '').split('.')[0], '.'.join(zuul.get('tag', '').split('.')[:2]), zuul.get('tag', '')], ['latest']) }}"
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-launcher
           target: nodepool-launcher
           tags: *imagetag
+          arch:
+            - linux/amd64
+            - linux/arm64
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
           tags: *imagetag
+          arch:
+            - linux/amd64
+            - linux/arm64
 
 - job:
     name: nodepool-upload-image
     parent: opendev-upload-docker-image
     description: Build Docker images and upload to Docker Hub.
+    timeout: 4800
     requires:
       - python-builder-3.8-container-image
       - python-base-3.8-container-image
