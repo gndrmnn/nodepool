@@ -176,10 +176,11 @@ class KubernetesProvider(Provider, QuotaSupport):
                 for secret_obj in sa.secrets:
                     secret = self.k8s_client.read_namespaced_secret(
                         secret_obj.name, namespace)
+                    token = secret.data.get('token')
                     ca_crt = secret.data.get('ca.crt')
-                    token = base64.b64decode(secret.data.get(
-                        'token').encode('utf-8')).decode('utf-8')
                     if token and ca_crt:
+                        token = base64.b64decode(
+                            token.encode('utf-8')).decode('utf-8')
                         break
             if token and ca_crt:
                 break
