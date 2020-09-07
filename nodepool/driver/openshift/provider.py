@@ -204,7 +204,7 @@ class OpenshiftProvider(Provider):
 
     def createPod(self, project, pod_name, label):
         self.log.debug("%s: creating pod in project %s" % (pod_name, project))
-        spec_body = {
+        container_body = {
             'name': label.name,
             'image': label.image,
             'imagePullPolicy': label.image_pull,
@@ -214,23 +214,30 @@ class OpenshiftProvider(Provider):
             'env': label.env,
         }
         if label.cpu or label.memory:
-            spec_body['resources'] = {}
+            container_body['resources'] = {}
             for rtype in ('requests', 'limits'):
                 rbody = {}
                 if label.cpu:
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
                     rbody['memory'] = '%dMi' % int(label.memory)
-                spec_body['resources'][rtype] = rbody
+                container_body['resources'][rtype] = rbody
+
+        spec_body = {
+            'containers': [container_body]
+        }
+
+        if label.node_selector:
+            spec_body['nodeSelector'] = label.node_selector
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
             'metadata': {'name': pod_name},
-            'spec': {
-                'containers': [spec_body],
-            },
+            'spec': spec_body,
             'restartPolicy': 'Never',
         }
+
         self.k8s_client.create_namespaced_pod(project, pod_body)
 
     def waitForPod(self, project, pod_name):

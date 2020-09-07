@@ -31,7 +31,8 @@ class KubernetesLabel(ConfigValue):
                     other.image == self.image and
                     other.cpu == self.cpu and
                     other.memory == self.memory and
-                    other.env == self.env)
+                    other.env == self.env and
+                    other.node_selector == self.node_selector)
         return False
 
     def __repr__(self):
@@ -63,6 +64,7 @@ class KubernetesPool(ConfigPool):
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
             pl.env = label.get('env', [])
+            pl.node_selector = label.get('node-selector')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -113,6 +115,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'cpu': int,
             'memory': int,
             'env': [env_var],
+            'node-selector': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

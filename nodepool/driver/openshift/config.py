@@ -32,7 +32,8 @@ class OpenshiftLabel(ConfigValue):
                     other.cpu == self.cpu and
                     other.memory == self.memory and
                     other.python_path == self.python_path and
-                    other.env == self.env)
+                    other.env == self.env and
+                    other.node_selector == self.node_selector)
         return False
 
     def __repr__(self):
@@ -64,6 +65,7 @@ class OpenshiftPool(ConfigPool):
             pl.memory = label.get('memory')
             pl.python_path = label.get('python-path', 'auto')
             pl.env = label.get('env', [])
+            pl.node_selector = label.get('node-selector')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -115,6 +117,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'memory': int,
             'python-path': str,
             'env': [env_var],
+            'node-selector': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

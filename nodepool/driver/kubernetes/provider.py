@@ -274,7 +274,7 @@ class KubernetesProvider(Provider, QuotaSupport):
         return resource
 
     def createPod(self, node, pool, label):
-        spec_body = {
+        container_body = {
             'name': label.name,
             'image': label.image,
             'imagePullPolicy': label.image_pull,
@@ -285,22 +285,27 @@ class KubernetesProvider(Provider, QuotaSupport):
         }
 
         if label.cpu or label.memory:
-            spec_body['resources'] = {}
+            container_body['resources'] = {}
             for rtype in ('requests', 'limits'):
                 rbody = {}
                 if label.cpu:
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
                     rbody['memory'] = '%dMi' % int(label.memory)
-                spec_body['resources'][rtype] = rbody
+                container_body['resources'][rtype] = rbody
+
+        spec_body = {
+            'containers': [container_body]
+        }
+
+        if label.node_selector:
+            spec_body['nodeSelector'] = label.node_selector
 
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
             'metadata': {'name': label.name},
-            'spec': {
-                'containers': [spec_body],
-            },
+            'spec': spec_body,
             'restartPolicy': 'Never',
         }
 

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Basic support for specifying k8s/OpenShift `nodeSelectors` on Pod node
+    labels. This allows to schedule a Pod on k8s nodes with specific labels,
+    e.g., having certain capabilities.

@@ -1423,6 +1423,14 @@ Selecting the kubernetes driver adds the following options to the
 
                The value of the environment variable passed to the Pod.
 
+         .. attr:: node-selector
+            :type: dict
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            A map of key-value pairs to ensure the Kubernetes scheduler
+            places the Pod on a node with specific node labels.
+
 
 Openshift Driver
 ----------------
@@ -1594,6 +1602,14 @@ Selecting the openshift driver adds the following options to the
 
             The value of the environment variable passed to the Pod.
 
+      .. attr:: node-selector
+         :type: dict
+
+         Only used by the
+         :value:`providers.[openshift].labels.type.pod` label type;
+         A map of key-value pairs to ensure the OpenShift scheduler
+         places the Pod on a node with specific node labels.
+
 
 Openshift Pods Driver
 ---------------------
@@ -1723,6 +1739,12 @@ Selecting the openshift pods driver adds the following options to the
             :required:
 
             The value of the environment variable passed to the Pod.
+
+      .. attr:: node-selector
+         :type: dict
+
+         A map of key-value pairs to ensure the OpenShift scheduler
+         places the Pod on a node with specific node labels.
 
 
 AWS EC2 Driver
