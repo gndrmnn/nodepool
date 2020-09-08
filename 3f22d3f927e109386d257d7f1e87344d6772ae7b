@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f560f44_e5c15331",
+        "filename": "nodepool/tests/unit/test_builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-09-08T08:17:37Z",
+      "side": 1,
+      "message": "nit: using iterate_timeout would ensure that this won\u0027t block the test",
+      "revId": "3f22d3f927e109386d257d7f1e87344d6772ae7b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
