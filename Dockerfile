@@ -77,6 +77,8 @@ RUN \
   && apt-get install -y \
       curl \
       debian-keyring \
+      dosfstools \
+      gdisk \
       git \
       kpartx \
       qemu-utils \
