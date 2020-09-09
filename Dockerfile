@@ -86,6 +86,7 @@ RUN \
       vhd-util \
       debootstrap \
       procps \
+      xz-utils \
       yum \
       yum-utils \
       zypper \
