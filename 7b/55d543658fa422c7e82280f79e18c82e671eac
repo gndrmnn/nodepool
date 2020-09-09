@@ -1,0 +1,8 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 09 Sep 2020 01:56:52 +0000
+Reviewed-on: https://review.opendev.org/750532
+Project: zuul/nodepool
+Branch: refs/heads/master
