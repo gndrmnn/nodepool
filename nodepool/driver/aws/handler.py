@@ -58,12 +58,22 @@ class AwsInstanceLauncher(NodeLauncher):
             state = instance.state.get('Name')
             self.log.debug("Instance %s is %s" % (instance_id, state))
             if state == 'running':
-                instance.create_tags(Tags=[{'Key': 'nodepool_id',
-                                            'Value': str(self.node.id)}])
-                instance.create_tags(Tags=[{'Key': 'nodepool_pool',
-                                            'Value': str(self.pool.name)}])
-                instance.create_tags(Tags=[{'Key': 'nodepool_provider',
-                                            'Value': str(self.provider_name)}])
+                instance.create_tags(
+                    Tags=[
+                        {
+                            'Key': 'nodepool_id',
+                            'Value': str(self.node.id)
+                        },
+                        {
+                            'Key': 'nodepool_pool',
+                            'Value': str(self.pool.name)
+                        },
+                        {
+                            'Key': 'nodepool_provider',
+                            'Value': str(self.provider_name)
+                        }
+                    ]
+                )
                 break
             time.sleep(0.5)
             instance.reload()
