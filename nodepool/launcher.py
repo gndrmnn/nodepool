@@ -945,7 +945,9 @@ class NodePool(threading.Thread):
             self.zk.connect(configured,
                             tls_cert=config.zookeeper_tls_cert,
                             tls_key=config.zookeeper_tls_key,
-                            tls_ca=config.zookeeper_tls_ca)
+                            tls_ca=config.zookeeper_tls_ca,
+                            timeout=config.zookeeper_timeout,
+                            )
         else:
             self.log.debug("Detected ZooKeeper server changes")
             self.zk.resetHosts(configured)

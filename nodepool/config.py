@@ -38,6 +38,7 @@ class Config(ConfigValue):
         self.providers = {}
         self.provider_managers = {}
         self.zookeeper_servers = {}
+        self.zookeeper_timeout = 10.0
         self.zookeeper_tls_cert = None
         self.zookeeper_tls_key = None
         self.zookeeper_tls_ca = None
@@ -55,6 +56,7 @@ class Config(ConfigValue):
                     self.providers == other.providers and
                     self.provider_managers == other.provider_managers and
                     self.zookeeper_servers == other.zookeeper_servers and
+                    self.zookeeper_timeout == other.zookeeper_timeout and
                     self.elementsdir == other.elementsdir and
                     self.imagesdir == other.imagesdir and
                     self.build_log_dir == other.build_log_dir and
@@ -105,6 +107,9 @@ class Config(ConfigValue):
                                              server.get('chroot', None))
             name = z.host + '_' + str(z.port)
             self.zookeeper_servers[name] = z
+
+    def setZooKeeperTimeout(self, timeout):
+        self.zookeeper_timeout = float(timeout)
 
     def setDiskImages(self, diskimages_cfg):
         if not diskimages_cfg:
@@ -341,6 +346,7 @@ def loadConfig(config_path, env=os.environ):
     newconfig.setMaxHoldAge(config.get('max-hold-age'))
     newconfig.setWebApp(config.get('webapp'))
     newconfig.setZooKeeperServers(config.get('zookeeper-servers'))
+    newconfig.setZooKeeperTimeout(config.get('zookeeper-timeout', 10.0))
     newconfig.setDiskImages(config.get('diskimages'))
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
