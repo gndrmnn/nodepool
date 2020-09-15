@@ -13,6 +13,8 @@ zookeeper-tls:
   cert: {zookeeper_cert}
   key: {zookeeper_key}
 
+zookeeper-timeout: 20.0
+
 labels:
   - name: fake-label
     min-ready: 1

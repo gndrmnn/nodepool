@@ -963,7 +963,7 @@ class ZooKeeper(object):
         self._became_lost = False
 
     def connect(self, host_list, read_only=False, tls_cert=None,
-                tls_key=None, tls_ca=None):
+                tls_key=None, tls_ca=None, timeout=10.0):
         '''
         Establish a connection with ZooKeeper cluster.
 
@@ -981,8 +981,11 @@ class ZooKeeper(object):
         '''
         if self.client is None:
             hosts = buildZooKeeperHosts(host_list)
-            args = dict(hosts=hosts,
-                        read_only=read_only)
+            args = dict(
+                hosts=hosts,
+                read_only=read_only,
+                timeout=timeout,
+            )
 
             args['use_ssl'] = True
             if not (tls_key and tls_cert and tls_ca):
