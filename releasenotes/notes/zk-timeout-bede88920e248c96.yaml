@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    It is now possible to configure the :attr:`zookeeper-timeout`. which can
+    help to avoid zookeeper session losses on busy systems.
