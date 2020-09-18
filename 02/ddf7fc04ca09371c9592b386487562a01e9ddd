@@ -1,0 +1,9 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 18 Sep 2020 19:58:03 +0000
+Reviewed-on: https://review.opendev.org/752724
+Project: zuul/nodepool
+Branch: refs/heads/master
