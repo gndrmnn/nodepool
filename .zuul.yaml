@@ -129,10 +129,12 @@
     run: playbooks/nodepool-functional-openshift/run.yaml
     nodeset:
       nodes:
+        # Runs openshift
         - name: cluster
           label: centos-7
+        # Runs nodepool
         - name: launcher
-          label: fedora-30
+          label: fedora-32
     required-projects:
       - zuul/nodepool
 
