@@ -131,7 +131,7 @@
       nodes:
         # Runs openshift
         - name: cluster
-          label: centos-7
+          label: centos-8
         # Runs nodepool
         - name: launcher
           label: fedora-32
