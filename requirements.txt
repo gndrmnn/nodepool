@@ -18,6 +18,6 @@ WebOb>=1.8.1
 openshift<=0.8.9
 boto3
 google-api-python-client
-azure-mgmt-compute
-azure-mgmt-network
-azure-mgmt-resource
+azure-mgmt-compute<17.0.0
+azure-mgmt-network<16.0.0
+azure-mgmt-resource<15.0.0
