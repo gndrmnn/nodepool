@@ -440,7 +440,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
         # Wait for the build to fail before we replace our config. Otherwise
         # we may replace the config before we build the image.
         found = False
-        while not found:
+        for _ in iterate_timeout(10, Exception, 'image builds to fail', 0.1):
             builds = self.zk.getBuilds('fake-image')
             for build in builds:
                 # Lexicographical order
@@ -451,6 +451,8 @@ class TestNodePoolBuilder(tests.DBTestCase):
                     found = build.id
                     break
                 time.sleep(0.1)
+            if found:
+                break
 
         # Now replace the config with a valid config and check that the image
         # builds successfully. Finally check that the failed image is gone.
