@@ -147,6 +147,12 @@ class BaseWorker(threading.Thread):
             self.log.debug("Detected ZooKeeper server changes")
             self._zk.resetHosts(list(new_config.zookeeper_servers.values()))
 
+    def _readConfig(self):
+        new_config = nodepool_config.loadConfig(self._config_path)
+        if self._secure_path:
+            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        return new_config
+
     @property
     def running(self):
         return self._running
@@ -565,9 +571,7 @@ class CleanupWorker(BaseWorker):
         '''
         Body of run method for exception handling purposes.
         '''
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        new_config = self._readConfig()
         if not self._config:
             self._config = new_config
 
@@ -623,6 +627,11 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                new_config = self._readConfig()
+                if new_config != self._config:
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
                 self.log.exception("Exception checking for scheduled "
@@ -730,6 +739,11 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
+                new_config = self._readConfig()
+                if new_config != self._config:
+                    # If our config isn't up to date then return and start
+                    # over with a new config load.
+                    return
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
                 self.log.exception("Exception checking for manual "
@@ -998,9 +1012,7 @@ class BuildWorker(BaseWorker):
         Body of run method for exception handling purposes.
         '''
         # NOTE: For the first iteration, we expect self._config to be None
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        new_config = self._readConfig()
         if not self._config:
             self._config = new_config
 
@@ -1022,9 +1034,7 @@ class UploadWorker(BaseWorker):
         '''
         Reload the nodepool configuration file.
         '''
-        new_config = nodepool_config.loadConfig(self._config_path)
-        if self._secure_path:
-            nodepool_config.loadSecureConfig(new_config, self._secure_path)
+        new_config = self._readConfig()
         if not self._config:
             self._config = new_config
 
