@@ -132,6 +132,7 @@ class ProviderPool(ConfigPool):
         self.labels = None
         # The OpenStackProviderConfig object that owns this pool.
         self.provider = None
+        self.floating_ip_pools = None
 
         # Initialize base class attributes
         super().__init__()
@@ -180,7 +181,7 @@ class ProviderPool(ConfigPool):
         self.auto_floating_ip = bool(pool_config.get('auto-floating-ip', True))
         self.host_key_checking = bool(pool_config.get('host-key-checking',
                                                       True))
-
+        self.floating_ip_pools = pool_config.get('floating_ip_pools', None)
         for label in pool_config.get('labels', []):
             pl = ProviderLabel()
             pl.name = label['name']
@@ -236,6 +237,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.hostname_format = None
         self.image_name_format = None
         self.post_upload_hook = None
+        self.floating_ip_pools = None
         super().__init__(provider)
 
     def __eq__(self, other):

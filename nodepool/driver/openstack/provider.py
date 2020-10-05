@@ -302,10 +302,12 @@ class OpenStackProvider(Provider, QuotaSupport):
         except openstack.exceptions.OpenStackCloudException:
             return None
 
-    def waitForServer(self, server, timeout=3600, auto_ip=True):
+    def waitForServer(self, server, timeout=3600, auto_ip=True,
+                      floating_ip_pools=None):
         return self._client.wait_for_server(
             server=server, auto_ip=auto_ip,
-            reuse=False, timeout=timeout)
+            reuse=False, ip_pool=floating_ip_pools,
+            timeout=timeout)
 
     def waitForNodeCleanup(self, server_id, timeout=600):
         for count in iterate_timeout(
