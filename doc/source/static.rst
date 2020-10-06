@@ -76,8 +76,11 @@ Selecting the static driver adds the following options to the
             :type: str
             :required:
 
-            The hostname or ip address of the static node. This must be
-            unique across all nodes defined within the configuration file.
+            The hostname or ip address of the static node. The combination of
+            ``name``, :attr:`providers.[static].pools.nodes.username`, and
+            :attr:`providers.[static].pools.nodes.connection-port`
+            must be unique across all nodes defined within the configuration
+            file.
 
          .. attr:: labels
             :type: list
