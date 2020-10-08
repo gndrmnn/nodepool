@@ -6,6 +6,7 @@
     - role: test-setup
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
     - ensure-docker
+    - ensure-podman
     # Note: keep after ensure-docker
     - use-buildset-registry
     - ensure-devstack
