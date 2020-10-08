@@ -69,10 +69,13 @@ RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
 #    are incoporated into the openstack-ci-core version
 
 COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
+COPY tools/kubic.asc /etc/apt/trusted.gpg.d/
 
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu focal main" >> /etc/apt/sources.list \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
+  && echo "deb https://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
+  && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
   && apt-get update \
   && apt-get install -y \
       curl \
@@ -90,8 +93,16 @@ RUN \
       yum \
       yum-utils \
       zypper \
+      libseccomp2/buster-backports \
+      podman \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+# Podman defaults to trying to use systemd to do cgroup things (insert
+# hand-wavy motion) but it's not in the container.
+RUN \
+  mkdir -p /etc/containers \
+  && echo 'cgroup_manager="cgroupfs"' >> /etc/containers/libpod.conf
 
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \

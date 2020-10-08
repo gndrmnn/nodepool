@@ -1,4 +1,8 @@
 version: '3.0'
+
+volumes:
+  nested_var_lib_containers:
+
 services:
   nodepool-builder:
     image: zuul/nodepool-builder{{ nodepool_container_tag|default('') }}
@@ -23,6 +27,8 @@ services:
       - /var/log/nodepool:/var/log/nodepool
       # devstack tls-proxy puts CA here that is referenced by cloud config
       - /opt/stack/data:/opt/stack/data:ro
+      # for nested podman/docker runs (container elements)
+      - nested_var_lib_containers:/var/lib/containers
       # zookeeper certs
       - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
 
