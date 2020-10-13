@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f6b1bfe_3dcbf01e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 1625,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-10-13T19:27:21Z",
+      "side": 1,
+      "message": "While at it do you want to correct the typos?\n\n* only supports\n* this enables\n* doesn\u0027t require",
+      "range": {
+        "startLine": 1624,
+        "startChar": 0,
+        "endLine": 1625,
+        "endChar": 51
+      },
+      "revId": "614f77ed15d43431d4b24f60b5f72f46ccd95ddb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
