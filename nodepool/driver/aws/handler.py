@@ -104,6 +104,7 @@ class AwsInstanceLauncher(NodeLauncher):
 
         self.log.info("Instance %s ready" % instance_id)
         self.node.state = zk.READY
+        self.node.host_id = instance_id
         self.node.external_id = instance_id
         self.node.hostname = server_ip
         self.node.interface_ip = server_ip
