@@ -73,6 +73,8 @@ class NodeDeleter(threading.Thread):
         '''
         try:
             node.state = zk.DELETING
+            if not node.deleting_start_time:
+                node.deleting_start_time = time.time()
             zk_conn.storeNode(node)
             if node.external_id:
                 manager.cleanupNode(node.external_id)

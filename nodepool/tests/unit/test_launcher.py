@@ -114,6 +114,9 @@ class TestLauncher(tests.DBTestCase):
                                 value='0', kind='g')
         self.assertReportedStat('nodepool.label.fake-label2.nodes.aborted',
                                 value='0', kind='g')
+        self.assertReportedStat(
+            'nodepool.label.fake-label2.nodes.long-deleting', value='0',
+            kind='g')
 
     def test_node_assignment_order(self):
         """Test that nodes are assigned in the order requested"""
@@ -975,6 +978,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
 
         self.zk.lockNode(nodes[0], blocking=False)
+        self.assertIsNone(nodes[0].deleting_start_time)
         nodepool.launcher.NodeDeleter.delete(
             self.zk, pool.getProviderManager('fake-provider'), nodes[0])
 
@@ -1028,6 +1032,40 @@ class TestLauncher(tests.DBTestCase):
         # remove error nodes
         pool.getProviderManager(
             'fake-provider')._getClient()._server_list.clear()
+
+    @mock.patch('nodepool.zk.DELETING_TIME_DELTA', 1,
+                mock.MagicMock(return_value=1))
+    @mock.patch('nodepool.zk.ZooKeeper.deleteNode')
+    def test_node_delete_long_deletion(self, zk_mock):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        self.zk.lockNode(nodes[0], blocking=False)
+        self.assertIsNone(nodes[0].deleting_start_time)
+        nodepool.launcher.NodeDeleter.delete(
+            self.zk, pool.getProviderManager('fake-provider'), nodes[0])
+
+        # Check if delete node has been started
+        deleted_node = self.zk.getNode(nodes[0].id)
+        self.assertIsNotNone(deleted_node)
+        self.assertEqual(deleted_node.state, zk.DELETING)
+
+        # Set long-deleting label by changing DELETING_TIME_DELTA to 1,
+        # so the statsd will get metric
+        deleted_node = self.zk.getNode(nodes[0].id)
+        self.assertIsNotNone(nodes[0].deleting_start_time)
+        time.sleep(5)
+        nodepool.launcher.NodeDeleter.delete(
+            self.zk, pool.getProviderManager('fake-provider'), nodes[0])
+
+        self.assertReportedStat(
+            'nodepool.label.fake-label.nodes.long-deleting', value='1',
+            kind='g')
 
     def test_leaked_node(self):
         """Test that a leaked node is deleted"""

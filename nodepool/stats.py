@@ -17,6 +17,7 @@ Helper to create a statsd client from environment variables
 import os
 import logging
 import statsd
+import time
 
 from nodepool import zk
 
@@ -124,6 +125,18 @@ class StatsReporter(object):
             # nodepool.label.LABEL.nodes.STATE
             # nodes can have several labels
             for label in node.type:
+                # Report those nodes that are in deleting state for
+                # long time.
+                if node.state == 'deleting' and node.deleting_start_time and (
+                        time.time() > (node.deleting_start_time +
+                                       zk.DELETING_TIME_DELTA)):
+                    key = 'nodepool.label.%s.nodes.%s' % (label,
+                                                          zk.LONG_DELETING)
+                    if key in states:
+                        states[key] += 1
+                    else:
+                        states[key] = 1
+
                 key = 'nodepool.label.%s.nodes.%s' % (label, node.state)
                 # It's possible we could see node types that aren't in our
                 # config

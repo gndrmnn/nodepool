@@ -232,6 +232,13 @@ to turn the provider back on.
   required, you can delete the nodes directly instead of waiting for them
   to go through their normal lifecycle, but the effect is the same.
 
+.. note::
+
+  It can be a situation, that node will be in deleting state for some time
+  (defaults to 15 minutes). In that case the node status will be set
+  to `long-deleting`.
+
+
 For example, if you want to remove ProviderA from a launcher with a
 configuration file defined as::
 
@@ -459,6 +466,7 @@ The following metrics are produced by a ``nodepool-launcher`` process:
 
    * building
    * deleting
+   * long-deleting
    * failed
    * in-use
    * ready
