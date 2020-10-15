@@ -61,6 +61,11 @@ INIT = 'init'
 ABORTED = 'aborted'
 # The node has actually been deleted and the Znode should be deleted
 DELETED = 'deleted'
+# Time that over which one it should set long-deletion time.
+# Defaults to 900 seconds (15 minutes).
+DELETING_TIME_DELTA = 900
+# The node is in deleting state over DELETING_TIME_DELTA
+LONG_DELETING = 'long-deleting'
 
 
 # NOTE(Shrews): Importing this from nodepool.config causes an import error
@@ -534,7 +539,7 @@ class Node(BaseModel):
     '''
     VALID_STATES = set([BUILDING, TESTING, READY, IN_USE, USED,
                         HOLD, DELETING, FAILED, INIT, ABORTED,
-                        DELETED])
+                        DELETED, LONG_DELETING])
 
     def __init__(self, id=None):
         super(Node, self).__init__(id)
@@ -566,6 +571,7 @@ class Node(BaseModel):
         self.resources = None
         self.attributes = None
         self.python_path = None
+        self.deleting_start_time = None
 
     def __repr__(self):
         d = self.toDict()
@@ -604,7 +610,8 @@ class Node(BaseModel):
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
                     self.attributes == other.attributes and
-                    self.python_path == other.python_path)
+                    self.python_path == other.python_path and
+                    self.deleting_start_time == other.deleting_start_time)
         else:
             return False
 
@@ -654,6 +661,7 @@ class Node(BaseModel):
         d['resources'] = self.resources
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
+        d['deleting_start_time'] = self.deleting_start_time
         return d
 
     @staticmethod
@@ -703,6 +711,7 @@ class Node(BaseModel):
         self.connection_type = d.get('connection_type')
         self.host_keys = d.get('host_keys', [])
         hold_expiration = d.get('hold_expiration')
+        self.deleting_start_time = d.get('deleting_start_time')
         if hold_expiration is not None:
             try:
                 # We try to force this to an integer value because we do
