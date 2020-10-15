@@ -566,6 +566,7 @@ class Node(BaseModel):
         self.resources = None
         self.attributes = None
         self.python_path = None
+        self.deletion_time = None
 
     def __repr__(self):
         d = self.toDict()
@@ -604,7 +605,8 @@ class Node(BaseModel):
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
                     self.attributes == other.attributes and
-                    self.python_path == other.python_path)
+                    self.python_path == other.python_path and
+                    self.deletion_time == other.deletion_time)
         else:
             return False
 
@@ -654,6 +656,7 @@ class Node(BaseModel):
         d['resources'] = self.resources
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
+        d['deletion_time'] = self.deletion_time
         return d
 
     @staticmethod
@@ -703,6 +706,7 @@ class Node(BaseModel):
         self.connection_type = d.get('connection_type')
         self.host_keys = d.get('host_keys', [])
         hold_expiration = d.get('hold_expiration')
+        self.deletion_time = d.get('deletion_time')
         if hold_expiration is not None:
             try:
                 # We try to force this to an integer value because we do

@@ -54,6 +54,17 @@ class NodeDeleter(threading.Thread):
         self._zk = zk
         self._provider_manager = provider_manager
         self._node = node
+        self._statsd = stats.get_client()
+
+    @staticmethod
+    def _send_statsd_metrics(statsd, key_base, start_time):
+        if statsd:
+            deleting_time = time.monotonic() - start_time
+            pipeline = statsd.pipeline()
+            pipeline.timing(key_base + '.duration',
+                            int(deleting_time * 1000))
+            pipeline.gauge(key_base, 1)
+            pipeline.send()
 
     @staticmethod
     def delete(zk_conn, manager, node, node_exists=True):
@@ -71,12 +82,16 @@ class NodeDeleter(threading.Thread):
             An artifical Node object can be passed that can be used to delete
             a leaked instance.
         '''
+        key_base = 'nodepool.node.deleting'
+        start_time = time.monotonic()
         try:
             node.state = zk.DELETING
+            node.deletion_time = time.time()
             zk_conn.storeNode(node)
             if node.external_id:
                 manager.cleanupNode(node.external_id)
                 manager.waitForNodeCleanup(node.external_id)
+            key_name = "%s.%s.success" % (key_base, node.external_id)
         except exceptions.NotFound:
             NodeDeleter.log.info("Instance %s not found in provider %s",
                                  node.external_id, node.provider)
@@ -87,7 +102,8 @@ class NodeDeleter(threading.Thread):
             # Don't delete the ZK node in this case, but do unlock it
             if node_exists:
                 zk_conn.unlockNode(node)
-            return
+            key_name = "%s.%s.failed" % (key_base, node.external_id)
+            return key_name, start_time
 
         if node_exists:
             NodeDeleter.log.info(
@@ -96,6 +112,9 @@ class NodeDeleter(threading.Thread):
             # This also effectively releases the lock
             zk_conn.deleteNode(node)
             manager.nodeDeletedNotification(node)
+            key_name = "%s.%s.ongoing" % (key_base, node.external_id)
+
+        return key_name, start_time
 
     def run(self):
         # Since leaked instances won't have an actual node in ZooKeeper,
@@ -106,10 +125,14 @@ class NodeDeleter(threading.Thread):
             node_exists = True
 
         try:
-            self.delete(self._zk, self._provider_manager,
-                        self._node, node_exists)
+            key_base, start_time = self.delete(self._zk,
+                                               self._provider_manager,
+                                               self._node,
+                                               node_exists)
         except Exception:
             self.log.exception("Error deleting node %s:", self._node)
+
+        self._send_statsd_metrics(self._statsd, key_base, start_time)
 
 
 class PoolWorker(threading.Thread, stats.StatsReporter):
