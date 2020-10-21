@@ -1,0 +1,10 @@
+---
+upgrade:
+  - |
+    The k8s and OpenShift providers do not longer set the workingDir attribute
+    of their container specs to /tmp.
+
+    For increased flexibility for the user, the working dir specified in the
+    container images Dockerfile is used as the default in container nodes.
+    Please note that this might often be the root dir ('/') if not specified
+    otherwise by the respective Dockerfiles WORKDIR directive.
