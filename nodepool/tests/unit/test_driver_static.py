@@ -16,6 +16,7 @@
 import logging
 import mock
 import os
+import time
 
 from nodepool import config as nodepool_config
 from nodepool import tests
@@ -543,3 +544,24 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for node to transition to ready again")
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
+
+    @mock.patch('nodepool.zk.BUILDING_TIME_DELTA', 1,
+                mock.MagicMock(return_value=1))
+    def test_node_long_building(self):
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req, zk.FULFILLED)
+        node = self.zk.getNode(req.nodes[0])
+        node.state = zk.BUILDING
+        node.created_time = time.time() - 10
+        self.zk.storeNode(node)
+        self.zk.getNodeRequest(req.id)
+        self.assertReportedStat(
+            'nodepool.label.fake-label.nodes.long-building', value='1',
+            kind='g')

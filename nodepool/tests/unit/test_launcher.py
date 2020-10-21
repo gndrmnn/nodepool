@@ -114,6 +114,9 @@ class TestLauncher(tests.DBTestCase):
                                 value='0', kind='g')
         self.assertReportedStat('nodepool.label.fake-label2.nodes.aborted',
                                 value='0', kind='g')
+        self.assertReportedStat(
+            'nodepool.label.fake-label2.nodes.long-building', value='0',
+            kind='g')
 
     def test_node_assignment_order(self):
         """Test that nodes are assigned in the order requested"""

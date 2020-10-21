@@ -61,6 +61,11 @@ INIT = 'init'
 ABORTED = 'aborted'
 # The node has actually been deleted and the Znode should be deleted
 DELETED = 'deleted'
+# Time that over which one it should set long-building time.
+# Defaults to 900 seconds (15 minutes).
+BUILDING_TIME_DELTA = 900
+# The node is in building state over BUIDLING_TIME_DELTA
+LONG_BUILDING = 'long-building'
 
 
 # NOTE(Shrews): Importing this from nodepool.config causes an import error
@@ -534,7 +539,7 @@ class Node(BaseModel):
     '''
     VALID_STATES = set([BUILDING, TESTING, READY, IN_USE, USED,
                         HOLD, DELETING, FAILED, INIT, ABORTED,
-                        DELETED])
+                        DELETED, LONG_BUILDING])
 
     def __init__(self, id=None):
         super(Node, self).__init__(id)

@@ -17,6 +17,7 @@ Helper to create a statsd client from environment variables
 import os
 import logging
 import statsd
+import time
 
 from nodepool import zk
 
@@ -124,6 +125,16 @@ class StatsReporter(object):
             # nodepool.label.LABEL.nodes.STATE
             # nodes can have several labels
             for label in node.type:
+                if node.state == 'building' and (
+                        time.time() > (node.created_time +
+                                       zk.BUILDING_TIME_DELTA)):
+                    key = 'nodepool.label.%s.nodes.%s' % (label,
+                                                          zk.LONG_BUILDING)
+                    if key in states:
+                        states[key] += 1
+                    else:
+                        states[key] = 1
+
                 key = 'nodepool.label.%s.nodes.%s' % (label, node.state)
                 # It's possible we could see node types that aren't in our
                 # config
