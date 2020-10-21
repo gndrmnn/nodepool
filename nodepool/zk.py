@@ -61,6 +61,11 @@ INIT = 'init'
 ABORTED = 'aborted'
 # The node has actually been deleted and the Znode should be deleted
 DELETED = 'deleted'
+# Time that over which one it should set long-building time.
+# Defaults to 900 seconds (15 minutes).
+BUILDING_TIME_DELTA = 900
+# The node is in building state over BUIDLING_TIME_DELTA
+LONG_BUILDING = 'long-building'
 
 
 # NOTE(Shrews): Importing this from nodepool.config causes an import error

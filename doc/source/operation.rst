@@ -458,6 +458,7 @@ The following metrics are produced by a ``nodepool-launcher`` process:
    state can be:
 
    * building
+   * long-building
    * deleting
    * failed
    * in-use
