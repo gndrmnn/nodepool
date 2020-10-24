@@ -21,6 +21,7 @@ google-api-python-client
 azure-mgmt-compute<17.0.0
 azure-mgmt-network<16.0.0
 azure-mgmt-resource<15.0.0
+python-digitalocean
 # For requests (via openstacksdk, etc.); until v2.25.0 release which fixes this
 #  https://github.com/psf/requests/pull/5651
 urllib3>=1.25.4,<1.26
