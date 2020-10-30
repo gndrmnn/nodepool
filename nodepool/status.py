@@ -130,13 +130,10 @@ def node_list(zk, node_id=None):
     headers_table = OrderedDict(headers_table)
 
     def _get_node_values(node):
-        locked = "unlocked"
-        try:
-            zk.lockNode(node, blocking=False)
-        except Exception:
+        if zk.isNodeLockedCached(node):
             locked = "locked"
         else:
-            zk.unlockNode(node)
+            locked = "unlocked"
 
         values = [
             node.id,

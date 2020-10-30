@@ -1936,6 +1936,14 @@ class ZooKeeper(object):
         # Do an in-place update of the node so we have the latest data.
         self.updateNode(node)
 
+    def isNodeLockedCached(self, node):
+        path = self._nodeLockPath(node.id)
+        data = self._node_cache.get_children(path)
+        if data:
+            return True
+        else:
+            return False
+
     def unlockNode(self, node):
         '''
         Unlock a node.
