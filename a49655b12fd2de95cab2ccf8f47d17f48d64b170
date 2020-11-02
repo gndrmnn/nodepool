@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f621f24_ab19467a",
+        "filename": "releasenotes/notes/k8s-provider-remove-default-workdir-21df518c822b2914.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-11-02T08:18:44Z",
+      "side": 1,
+      "message": "This should be in the upgrade section since this is something that needs to be considered when upgrading.",
+      "revId": "a49655b12fd2de95cab2ccf8f47d17f48d64b170",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
