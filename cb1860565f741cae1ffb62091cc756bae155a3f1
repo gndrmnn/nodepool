@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f621f24_b9605303",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-11-04T16:45:26Z",
+      "side": 1,
+      "message": "So this opens one connection for every potential key type (afaik 6 atm)?",
+      "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
