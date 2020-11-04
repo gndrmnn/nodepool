@@ -52,6 +52,24 @@
       "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f621f24_749a4263",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-11-04T17:19:46Z",
+      "side": 1,
+      "message": "That\u0027s a possibility, but limits you if for some reason multiple keys would be a valid need. If we add all the keys ssh should just validate the preferred one it ends up using is correct. Then later if the preferred option changes it will validate that instead.",
+      "parentUuid": "1f621f24_348baa1f",
+      "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
