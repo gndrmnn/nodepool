@@ -16,6 +16,24 @@
       "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f621f24_7429a236",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2020-11-04T17:10:49Z",
+      "side": 1,
+      "message": "Yes, it will do a proper scan rather than going with the first one that both sides support based on paramiko\u0027s priority listing. The reason for this is ed25119 is top of paramiko\u0027s priority list but does not have fips support. Another potential option is to reorder paramiko\u0027s list maybe do rsa, ecdsa, ed25119, dsa. But I think the approach in this change is most flexible.\n\nAs a side note this method has always returned a list seemingly with the intention of doing a proper scan.",
+      "parentUuid": "1f621f24_b9605303",
+      "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
