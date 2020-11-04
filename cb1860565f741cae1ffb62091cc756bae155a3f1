@@ -34,6 +34,24 @@
       "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f621f24_348baa1f",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4162
+      },
+      "writtenOn": "2020-11-04T17:17:59Z",
+      "side": 1,
+      "message": "When i was looking to do this, one idea I thought about was to expose something into nodepool.pool.labels cfg to allow the user to select which hostkey format to use.\n\nIn our case, for ansible we are looking to just default to ecdsa.",
+      "parentUuid": "1f621f24_7429a236",
+      "revId": "cb1860565f741cae1ffb62091cc756bae155a3f1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
