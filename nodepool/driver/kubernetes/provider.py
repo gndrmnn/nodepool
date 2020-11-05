@@ -281,7 +281,6 @@ class KubernetesProvider(Provider, QuotaSupport):
             'imagePullPolicy': label.image_pull,
             'command': ["/bin/sh", "-c"],
             'args': ["while true; do sleep 30; done;"],
-            'workingDir': '/tmp',
             'env': label.env,
         }
 
