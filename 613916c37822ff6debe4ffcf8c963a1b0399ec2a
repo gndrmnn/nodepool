@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f621f24_49164c57",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-11-10T22:06:29Z",
+      "side": 1,
+      "message": "where is requests 2.24.0 coming from?  we don\u0027t pin that?",
+      "range": {
+        "startLine": 9,
+        "startChar": 1,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "613916c37822ff6debe4ffcf8c963a1b0399ec2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
