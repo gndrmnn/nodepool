@@ -22,6 +22,40 @@
       "revId": "613916c37822ff6debe4ffcf8c963a1b0399ec2a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f621f24_e42f7f85",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-11-10T22:15:39Z",
+      "side": 1,
+      "message": "That\u0027s latest and comes via (at least) openstacksdk and almost certainly others.",
+      "revId": "613916c37822ff6debe4ffcf8c963a1b0399ec2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f621f24_444e336f",
+        "filename": "requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-11-10T22:15:39Z",
+      "side": 1,
+      "message": "This could probably use a comment indicating why.  Or maybe a !\u003d1.26.0",
+      "revId": "613916c37822ff6debe4ffcf8c963a1b0399ec2a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
