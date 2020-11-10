@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f621f24_847b2b79",
+        "filename": "requirements.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-11-10T22:26:31Z",
+      "side": 1,
+      "message": "oh, wants a comma",
+      "range": {
+        "startLine": 26,
+        "startChar": 15,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "38d7c5ccfb64c519260a2894a8f002c76375987e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
