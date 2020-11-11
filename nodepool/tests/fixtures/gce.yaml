@@ -5,16 +5,6 @@ zookeeper-servers:
 
 labels:
   - name: debian-stretch-f1-micro
-  - name: ubuntu1404-bad-ami-name
-  - name: ubuntu1404-by-filters
-  - name: ubuntu1404-by-capitalized-filters
-  - name: ubuntu1404-bad-config
-  - name: ubuntu1404-ebs-optimized
-  - name: ubuntu1404-non-host-key-checking
-  - name: ubuntu1404-private-ip
-  - name: ubuntu1404-userdata
-  - name: ubuntu1404-with-tags
-  - name: ubuntu1404-with-name-tag
 
 providers:
   - name: gcloud-provider
