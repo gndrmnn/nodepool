@@ -1,0 +1,8 @@
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 11 Nov 2020 20:54:46 +0000
+Reviewed-on: https://review.opendev.org/762399
+Project: zuul/nodepool
+Branch: refs/heads/master
