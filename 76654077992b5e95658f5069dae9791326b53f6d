@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f621f24_381fcab7",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2020-11-11T21:26:37Z",
+      "side": 1,
+      "message": "It\u0027s nice to have a list here, but I\u0027m not 100% sure how new users will feel about this.  They might navigate away from this page without realizing the important sentence below about all sections in this doc being required.  There is a list of drivers under the \u0027providers\u0027 option.  Does that make this redundant?\n\nIf we do like this, should we put it after the main list of options?",
+      "revId": "76654077992b5e95658f5069dae9791326b53f6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
