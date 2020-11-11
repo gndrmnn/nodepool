@@ -224,7 +224,7 @@ class GCloudEmulator:
 
 
 class TestDriverGce(tests.DBTestCase):
-    log = logging.getLogger("nodepool.TestDriverAws")
+    log = logging.getLogger("nodepool.TestDriverGce")
 
     def _wait_for_provider(self, nodepool, provider):
         for _ in iterate_timeout(30, Exception, 'wait for provider'):
