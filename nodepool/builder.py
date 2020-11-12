@@ -900,7 +900,7 @@ class BuildWorker(BaseWorker):
                             break
 
                     # Subprocess complete
-                    elif event & select.POLLHUP:
+                    if event & select.POLLHUP:
                         subprocess_done = True
                         rc = p.wait()
 
