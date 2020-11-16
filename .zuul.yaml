@@ -348,35 +348,65 @@
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
+- job:
+    name: nodepool-functional-container-openstack-siblings-arm64
+    description: |
+      Test Nodepool containers and OpenStack, with some projects from source
+
+      This builds, uploads and boots a Focal image into an ARM64 cloud
+    parent: nodepool-functional-container-openstack-siblings
+    nodeset: ubuntu-focal-arm64
+    vars:
+      nodepool_diskimage:
+        base_element: ubuntu-minimal
+        release: focal
+        env-vars:
+          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+      devstack_localrc:
+        IMAGE_URLS: https://github.com/cirros-dev/cirros/releases/download/0.5.1/cirros-0.5.1-aarch64-disk.img
+        DEFAULT_IMAGE_NAME: cirros-0.5.1-aarch64-disk
+        DEFAULT_IMAGE_FILE_NAME: cirros-0.5.1-aarch64-disk.img
+        DEFAULT_INSTANCE_TYPE: m1.tiny
+        ENABLE_VOLUME_MULTIATTACH: False
+      devstack_local_conf:
+        post-config:
+          $NOVA_CONF:
+            libvirt:
+              cpu_mode: custom
+              cpu_model: cortex-a57
+              num_pcie_ports: 15
+
+            
 - project:
     vars:
       release_python: python3
     check:
       jobs:
         - opendev-buildset-registry
-        - nodepool-build-image
+        # - nodepool-build-image
         - nodepool-build-image-siblings
-        - zuul-tox-docs
-        - tox-pep8
-        - tox-py35:
-            nodeset: ubuntu-xenial
-        - tox-py38
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-openstack:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-openstack-src:
-            vars:
-              nodepool_debug: true
-        - nodepool-functional-container-openstack-release
-        - nodepool-functional-container-openstack-siblings
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            requires: zuul-container-image
-            dependencies: nodepool-build-image
-        - build-python-release
+        # - zuul-tox-docs
+        # - tox-pep8
+        # - tox-py35:
+        #     nodeset: ubuntu-xenial
+        # - tox-py38
+        # - nodepool-zuul-functional:
+        #     voting: false
+        # - nodepool-functional-openstack:
+        #     vars:
+        #       nodepool_debug: true
+        # - nodepool-functional-openstack-src:
+        #     vars:
+        #       nodepool_debug: true
+        # - nodepool-functional-container-openstack-release
+        # - nodepool-functional-container-openstack-siblings
+        - nodepool-functional-container-openstack-siblings-arm64
+        # - nodepool-functional-k8s
+        # - nodepool-functional-openshift
+        # - zuul-quick-start:
+        #     requires: zuul-container-image
+        #     dependencies: nodepool-build-image
+        # - build-python-release
     gate:
       jobs:
         - nodepool-upload-image
