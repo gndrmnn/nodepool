@@ -129,6 +129,8 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
                     # only log if the error isn't due to mismatched host key
                     # types.
                     log.exception("ssh-keyscan failure")
+                else:
+                    pass
             except socket.error:
                 log.exception(
                     'Exception connecting to %s on port %s:' % (ip, port))
