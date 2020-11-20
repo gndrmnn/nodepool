@@ -117,8 +117,11 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
 
                 sock.settimeout(10)
                 sock.connect(sockaddr)
-                t.start_client(timeout=timeout)
-                key = t.get_remote_server_key()
+                try:
+                    t.start_client(timeout=timeout)
+                    key = t.get_remote_server_key()
+                except paramiko.ssh_exception.SSHException:
+                    log.debug('Could not retrieve host key: %s', key.get_name())
                 if key:
                     keys.append("%s %s" % (key.get_name(), key.get_base64()))
                     log.debug('Added ssh host key: %s', key.get_name())
