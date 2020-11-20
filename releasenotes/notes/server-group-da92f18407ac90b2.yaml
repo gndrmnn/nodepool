@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Openstack based labels now support
+    :attr:`providers.[openstack].pools.labels.server-group` which makes it
+    possible to apply affinity or anti-affinity to certain labels.
