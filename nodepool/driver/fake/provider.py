@@ -131,7 +131,8 @@ class FakeOpenStackCloud(object):
         return self.networks[0]
 
     def _create(self, instance_list, instance_type=Dummy.INSTANCE,
-                done_status='ACTIVE', max_quota=-1, **kw):
+                done_status='ACTIVE', max_quota=-1, group=None,
+                **kw):
         should_fail = kw.get('SHOULD_FAIL', '').lower() == 'true'
         nics = kw.get('nics', [])
         security_groups = kw.get('security_groups', [])
@@ -186,6 +187,7 @@ class FakeOpenStackCloud(object):
                   host_id=host_id,
                   interface_ip=interface_ip,
                   security_groups=security_groups,
+                  group=group,
                   location=Dummy(Dummy.LOCATION, zone=kw.get('az')),
                   metadata=kw.get('meta', {}),
                   manager=self,
