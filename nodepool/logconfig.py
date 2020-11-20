@@ -36,6 +36,11 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
             'level': 'INFO',
             'formatter': 'simple',
         },
+        'null': {
+            'class': 'logging.NullHandler',
+            'level': 'INFO',
+            'formatter': 'simple',
+        },
     },
     'loggers': {
         'nodepool': {
@@ -54,6 +59,10 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
             'handlers': ['console'],
             'level': 'WARN',
         },
+        'paramiko.transport': {
+            'handlers': ['null'],
+            'level': 'ERROR',
+        }
     },
     'root': {'handlers': []},
 }
