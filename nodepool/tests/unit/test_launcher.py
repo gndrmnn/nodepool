@@ -655,6 +655,22 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[0].provider, 'fake-provider')
         self.assertEqual(nodes[0].type, ['fake-label'])
 
+    def test_node_server_group(self):
+        """Test that an image and node are created from a volume"""
+        configfile = self.setup_config('node_server_group.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(nodes[0].provider, 'fake-provider')
+        self.assertEqual(nodes[0].type, ['fake-label'])
+        client = pool.getProviderManager('fake-provider')._getClient()
+        for server in client._server_list:
+            self.assertEqual(server.group, 'sg-anti-affinity')
+
     def test_disabled_label(self):
         """Test that a node is not created with min-ready=0"""
         configfile = self.setup_config('node_disabled_label.yaml')

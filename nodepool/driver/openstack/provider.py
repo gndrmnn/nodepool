@@ -226,7 +226,8 @@ class OpenStackProvider(Provider, QuotaSupport):
                      nodepool_pool_name=None,
                      networks=None, security_groups=None,
                      boot_from_volume=False, volume_size=50,
-                     instance_properties=None, userdata=None):
+                     instance_properties=None, userdata=None,
+                     server_group=None):
         if not networks:
             networks = []
         if not isinstance(image, dict):
@@ -284,6 +285,8 @@ class OpenStackProvider(Provider, QuotaSupport):
         if nodepool_node_label:
             meta['nodepool_node_label'] = nodepool_node_label
         create_args['meta'] = meta
+        if server_group:
+            create_args['group'] = server_group
 
         try:
             return self._client.create_server(wait=False, **create_args)

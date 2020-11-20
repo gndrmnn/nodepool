@@ -141,7 +141,9 @@ class OpenStackNodeLauncher(NodeLauncher):
                 boot_from_volume=self.label.boot_from_volume,
                 volume_size=self.label.volume_size,
                 instance_properties=self.label.instance_properties,
-                userdata=self.label.userdata)
+                userdata=self.label.userdata,
+                server_group=self.label.server_group,
+            )
         except openstack.cloud.exc.OpenStackCloudCreateException as e:
             if e.resource_id:
                 self.node.external_id = e.resource_id

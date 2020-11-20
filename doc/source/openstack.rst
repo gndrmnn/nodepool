@@ -648,3 +648,10 @@ Selecting the OpenStack driver adds the following options to the
            Additional info about options in cloud-config:
            https://cloudinit.readthedocs.io/en/latest/topics/examples.html
 
+        .. attr:: server-group
+           :type: str
+           :default: None
+
+           If given the name or id of a pre-existing server group. This can
+           be used to leverage affinity or anti affinity rules for specific
+           labels.
