@@ -117,7 +117,6 @@
     pre-run: playbooks/nodepool-functional-k8s/pre.yaml
     run: playbooks/nodepool-functional-k8s/run.yaml
     post-run: playbooks/nodepool-functional-k8s/post.yaml
-    nodeset: ubuntu-xenial
     required-projects:
       - zuul/nodepool
 
