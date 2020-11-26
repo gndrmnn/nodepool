@@ -41,8 +41,8 @@ class Config(ConfigValue):
         self.zookeeper_tls_cert = None
         self.zookeeper_tls_key = None
         self.zookeeper_tls_ca = None
-        self.elementsdir = None
-        self.imagesdir = None
+        self.elements_dir = None
+        self.images_dir = None
         self.build_log_dir = None
         self.build_log_retention = None
         self.max_hold_age = None
@@ -55,8 +55,8 @@ class Config(ConfigValue):
                     self.providers == other.providers and
                     self.provider_managers == other.provider_managers and
                     self.zookeeper_servers == other.zookeeper_servers and
-                    self.elementsdir == other.elementsdir and
-                    self.imagesdir == other.imagesdir and
+                    self.elements_dir == other.elements_dir and
+                    self.images_dir == other.images_dir and
                     self.build_log_dir == other.build_log_dir and
                     self.build_log_retention == other.build_log_retention and
                     self.max_hold_age == other.max_hold_age and
@@ -64,10 +64,10 @@ class Config(ConfigValue):
         return False
 
     def setElementsDir(self, value):
-        self.elementsdir = value
+        self.elements_dir = value
 
     def setImagesDir(self, value):
-        self.imagesdir = value
+        self.images_dir = value
 
     def setBuildLog(self, directory, retention):
         if retention is None:

@@ -54,7 +54,7 @@ class TestConfigComparisons(tests.BaseTestCase):
         a = Config()
         b = Config()
         self.assertEqual(a, b)
-        a.imagesdir = "foo"
+        a.images_dir = "foo"
         self.assertNotEqual(a, b)
 
     def test_Label(self):

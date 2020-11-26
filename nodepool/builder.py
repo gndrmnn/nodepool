@@ -286,7 +286,7 @@ class CleanupWorker(BaseWorker):
 
     def _deleteLocalBuild(self, image, build):
         CleanupWorker.deleteLocalBuild(
-            self._config.imagesdir, image, build, self.log)
+            self._config.images_dir, image, build, self.log)
 
     def _cleanupProvider(self, provider, image, build_id):
         all_uploads = self._zk.getUploads(image, build_id, provider.name)
@@ -723,7 +723,7 @@ class BuildWorker(BaseWorker):
                 bnum, diskimage.name)
             data.id = bnum
             CleanupWorker.deleteLocalBuild(
-                self._config.imagesdir, diskimage.name, data, self.log)
+                self._config.images_dir, diskimage.name, data, self.log)
             data.state = zk.FAILED
             return data
 
@@ -800,7 +800,7 @@ class BuildWorker(BaseWorker):
         '''
         base = "-".join([diskimage.name, build_id])
         image_file = DibImageFile(base)
-        filename = image_file.to_path(self._config.imagesdir, False)
+        filename = image_file.to_path(self._config.images_dir, False)
 
         env = os.environ.copy()
         env['DIB_RELEASE'] = diskimage.release
@@ -810,8 +810,8 @@ class BuildWorker(BaseWorker):
         # Note we use a reference to the nodepool config here so
         # that whenever the config is updated we get up to date
         # values in this thread.
-        if self._config.elementsdir:
-            env['ELEMENTS_PATH'] = self._config.elementsdir
+        if self._config.elements_dir:
+            env['ELEMENTS_PATH'] = self._config.elements_dir
 
         # send additional env vars if needed
         for k, v in diskimage.env_vars.items():
@@ -1076,7 +1076,7 @@ class UploadWorker(BaseWorker):
         self.log.debug("Found image file of type %s for image id: %s" %
                        (image.extension, image.image_id))
 
-        filename = image.to_path(self._config.imagesdir, with_extension=True)
+        filename = image.to_path(self._config.images_dir, with_extension=True)
 
         ext_image_name = provider.image_name_format.format(
             image_name=image_name, timestamp=str(timestamp)
@@ -1225,7 +1225,7 @@ class UploadWorker(BaseWorker):
         # Search for locally built images. The image name and build
         # sequence ID is used to name the image.
         local_images = DibImageFile.from_image_id(
-            self._config.imagesdir, "-".join([image.name, build.id]))
+            self._config.images_dir, "-".join([image.name, build.id]))
         if not local_images:
             return False
 
@@ -1369,7 +1369,7 @@ class NodePoolBuilder(object):
             nodepool_config.loadSecureConfig(config, self._secure_path)
         if not config.zookeeper_servers.values():
             raise RuntimeError('No ZooKeeper servers specified in config.')
-        if not config.imagesdir:
+        if not config.images_dir:
             raise RuntimeError('No images-dir specified in config.')
         return config
 
@@ -1392,7 +1392,7 @@ class NodePoolBuilder(object):
             self._config = self._getAndValidateConfig()
             self._running = True
 
-            builder_id_file = os.path.join(self._config.imagesdir,
+            builder_id_file = os.path.join(self._config.images_dir,
                                            "builder_id.txt")
             builder_id = self._getBuilderID(builder_id_file)
 
