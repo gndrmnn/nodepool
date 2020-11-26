@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7560bc9_a2b81e85",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2020-11-26T08:10:31Z",
+      "side": 1,
+      "message": "I think we should think about the placement of this block as there are different possibilities with different advantages/disadvantages.\n\n_buildImage (here):\n\n* we already have the lock and the image build object in zk\n* possibly high turnaround frequency in zk\n* high visibility of failed builds (appear in dib-image-list)\n* possibly confusing or the operator since there is no build log for a failed build in the dib-image-list\n* confusing for the user who looks at the dib-image-list web endpoint. This point can act as a ticket generator in our case even if there are other builders that can build the image.\n\n\n_checkImageForManualBuildRequest and _checkImageForScheduledImageUpdates:\n\n* avoid lock and image build object -\u003e builder just ignores it\n* less traffic on zk\n* low visibility of this condition (error logs)\n* less confusing since there is no mismatch of failed image build with missing build log\n\n\nAll in all I think I\u0027d tend slightly to the second option despite less visibility (that\u0027s still in the error log of each builder) due to the user confusion point which could get problematic or us.",
+      "revId": "3527d484a8fe358a576475a2c87d0117bff9631d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
