@@ -802,6 +802,24 @@ class BuildWorker(BaseWorker):
         image_file = DibImageFile(base)
         filename = image_file.to_path(self._config.images_dir, False)
 
+        # If we don't have enough free space, reject this build
+        if (self._config.images_dir_required_free or
+            diskimage.images_dir_required_free):
+            headroom = self._config.images_dir_required_free
+            if diskimage.images_dir_required_free:
+                headroom = diskimage.images_dir_required_free
+            # headroom in gb from config
+            headroom = headroom * (1024 ** 3)
+            free_space = shutil.disk_usage(self._config.images_dir).free
+            if free_space < headroom:
+                raise exceptions.BuilderError(
+                    '%s: %s free space %d less than minimum requirement %d' % (
+                        base, self._config.images_dir, free_space, headroom))
+            else:
+                self.log.debug(
+                    "%s : %s free space %d > minimum requirement %d" % (
+                        base, self._config.images_dir, free_space, headroom))
+
         env = os.environ.copy()
         env['DIB_RELEASE'] = diskimage.release
         env['DIB_IMAGE_NAME'] = diskimage.name

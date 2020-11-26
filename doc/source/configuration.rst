@@ -80,6 +80,15 @@ Options
           option. If this file does not exist, it will be created on
           builder startup and a UUID will be created automatically.
 
+.. attr:: images-dir-required-free
+   :default: None
+   :example: 60 # For 60 GiB
+   :type: int
+
+   The minimum required free space, in gigabytes, that should be
+   available in :attr:`images-dir` to start a build.  This is applied
+   to all :attr:`diskimages`, however each image can also define its
+   own value to override.  Default value is to not check free space.
 
 .. attr:: build-log-dir
    :example: /path/to/log/dir
@@ -249,6 +258,7 @@ Options
             - cache-bindep
             - growroot
             - infra-package-needs
+          images-dir-required-free: 50
           env-vars:
             TMPDIR: /opt/dib_tmp
             DIB_CHECKSUM: '1'
@@ -416,6 +426,16 @@ Options
                 the command-line or environment arguments to
                 ``disk-image-create`` are not considered an API and
                 may change.
+
+   .. attr:: images-dir-required-free
+      :default: None
+      :example: 50 # for 50 GiB
+      :type: int
+
+      The minimum required free space, in gigabytes, that should be
+      available in :attr:`images-dir` to start a build.  This is
+      overrides any value set by :attr:`images-dir-required-free`.
+      Default value is to not check free space.
 
 .. attr:: providers
    :type: list

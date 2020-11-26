@@ -38,17 +38,18 @@ class ConfigValidator:
         diskimage = {
             v.Required('name'): str,
             'abstract': bool,
-            'dib-cmd': str,
-            'pause': bool,
-            'elements': [str],
-            'formats': [str],
-            'parent': str,
-            'release': v.Any(str, int),
-            'rebuild-age': int,
-            'env-vars': {str: str},
-            'username': str,
-            'python-path': str,
             'build-timeout': int,
+            'dib-cmd': str,
+            'elements': [str],
+            'env-vars': {str: str},
+            'formats': [str],
+            'images-dir-required-free': int,
+            'parent': str,
+            'pause': bool,
+            'python-path': str,
+            'rebuild-age': int,
+            'release': v.Any(str, int),
+            'username': str,
         }
 
         webapp = {
@@ -66,6 +67,7 @@ class ConfigValidator:
             'webapp': webapp,
             'elements-dir': str,
             'images-dir': str,
+            'images-dir-required-free': int,
             'build-log-dir': str,
             'build-log-retention': int,
             'zookeeper-servers': [{

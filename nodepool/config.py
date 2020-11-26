@@ -43,6 +43,7 @@ class Config(ConfigValue):
         self.zookeeper_tls_ca = None
         self.elements_dir = None
         self.images_dir = None
+        self.images_dir_required_free = None
         self.build_log_dir = None
         self.build_log_retention = None
         self.max_hold_age = None
@@ -57,6 +58,8 @@ class Config(ConfigValue):
                     self.zookeeper_servers == other.zookeeper_servers and
                     self.elements_dir == other.elements_dir and
                     self.images_dir == other.images_dir and
+                    (self.images_dir_required_free ==
+                     other.images_dir_required_free) and
                     self.build_log_dir == other.build_log_dir and
                     self.build_log_retention == other.build_log_retention and
                     self.max_hold_age == other.max_hold_age and
@@ -68,6 +71,9 @@ class Config(ConfigValue):
 
     def setImagesDir(self, value):
         self.images_dir = value
+
+    def setImagesDirRequiredFree(self, value):
+        self.images_dir_required_free = value
 
     def setBuildLog(self, directory, retention):
         if retention is None:
@@ -208,6 +214,7 @@ class DiskImage(ConfigValue):
         self.elements = []
         self.env_vars = {}
         self.image_types = set([])
+        self.images_dir_required_free = None
         self.pause = False
         self.python_path = 'auto'
         self.rebuild_age = self.REBUILD_AGE
@@ -243,6 +250,9 @@ class DiskImage(ConfigValue):
         image_types = config.get('formats', None)
         if image_types:
             self.image_types = set(image_types)
+        images_dir_required_free = config.get('images-dir-required-free', None)
+        if images_dir_required_free:
+            self.images_dir_required_free = images_dir_required_free
         pause = config.get('pause', None)
         if pause:
             self.pause = pause
@@ -267,6 +277,8 @@ class DiskImage(ConfigValue):
                     other.elements == self.elements and
                     other.env_vars == self.env_vars and
                     other.image_types == self.image_types and
+                    (other.images_dir_required_free ==
+                     self.images_dir_required_free) and
                     other.pause == self.pause and
                     other.python_path == self.python_path and
                     other.rebuild_age == self.rebuild_age and
@@ -336,6 +348,8 @@ def loadConfig(config_path, env=os.environ):
 
     newconfig.setElementsDir(config.get('elements-dir'))
     newconfig.setImagesDir(config.get('images-dir'))
+    newconfig.setImagesDirRequiredFree(
+        config.get('images-dir-required-free'))
     newconfig.setBuildLog(config.get('build-log-dir'),
                           config.get('build-log-retention'))
     newconfig.setMaxHoldAge(config.get('max-hold-age'))

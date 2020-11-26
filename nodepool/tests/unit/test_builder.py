@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
 import os
 import uuid
 import fixtures
@@ -507,6 +508,27 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_diskimage_build_timeout(self, mock_poll):
         configfile = self.setup_config('diskimage_build_timeout.yaml')
         builder.BUILD_PROCESS_POLL_TIMEOUT = 500
+        self.useBuilder(configfile, cleanup_interval=0)
+        self.waitForBuild('fake-image', '0000000001', states=(zk.FAILED,))
+
+    @mock.patch('shutil.disk_usage')
+    def test_diskimage_insufficient_headroom_pass(self, shutil_disk_usage):
+        DiskUsage = collections.namedtuple('usage',
+                                           ['total', 'used', 'free'])
+        # free is less than the global amount in the config file, but
+        # more than the per-image amount; to ensure the per-image
+        # amount is applied.
+        shutil_disk_usage.return_value = DiskUsage(1, 1, 25 * 1024**3)
+        configfile = self.setup_config('diskimage_insufficient_headroom.yaml')
+        self.useBuilder(configfile, cleanup_interval=0)
+        self.waitForBuild('fake-image', '0000000001', states=(zk.READY,))
+
+    @mock.patch('shutil.disk_usage')
+    def test_diskimage_insufficient_headroom_fail(self, shutil_disk_usage):
+        DiskUsage = collections.namedtuple('usage',
+                                           ['total', 'used', 'free'])
+        shutil_disk_usage.return_value = DiskUsage(1, 1, 1)
+        configfile = self.setup_config('diskimage_insufficient_headroom.yaml')
         self.useBuilder(configfile, cleanup_interval=0)
         self.waitForBuild('fake-image', '0000000001', states=(zk.FAILED,))
 
