@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6217d2e_a9316f0c",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-11-26T03:07:20Z",
+      "side": 1,
+      "message": "It might be clearer here if this was modified into an additional class like BaseWorkerWithThreadPool to inherit from, that sets up a generic concept of a thread-pool for a worker thread to use to do it\u0027s work.",
+      "range": {
+        "startLine": 1026,
+        "startChar": 19,
+        "endLine": 1026,
+        "endChar": 29
+      },
+      "revId": "9b356fe1276d685f0045563a3f862d63ecfd107e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
