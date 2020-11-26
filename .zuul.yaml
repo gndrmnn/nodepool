@@ -357,7 +357,7 @@
         - nodepool-build-image-siblings
         - zuul-tox-docs
         - tox-pep8
-        - tox-py35:
+        - tox-py36:
             nodeset: ubuntu-xenial
         - tox-py38
         - nodepool-zuul-functional:
@@ -381,7 +381,7 @@
         - nodepool-upload-image
         - zuul-tox-docs
         - tox-pep8
-        - tox-py35:
+        - tox-py36:
             nodeset: ubuntu-xenial
         - tox-py38
         - nodepool-functional-openstack

@@ -37,7 +37,7 @@ Install Nodepool
 
 Install Nodepool prerequisites.
 
-Nodepool requires Python 3.5 or newer.
+Nodepool requires Python 3.6 or newer.
 
 RHEL 7 / CentOS 7::
 
