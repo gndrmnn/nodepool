@@ -12,9 +12,8 @@ Selecting the openshift pods driver adds the following options to the
    :type: list
 
    The Openshift Pods driver is similar to the Openshift driver, but it
-   only support pod label to be created in a single project. This enable
-   using an unprivileged service account that doesn't requires the
-   self-provisioner role.
+   only supports pod label. This enables using an unprivileged service account
+   that doesn't require the self-provisioner role.
 
    Example:
 
@@ -36,8 +35,7 @@ Selecting the openshift pods driver adds the following options to the
       Name of the context configured in ``kube/config``.
 
       Before using the driver, Nodepool services need a ``kube/config`` file
-      manually installed with self-provisioner (the service account needs to
-      be able to create projects) context.
+      manually installed.
       Make sure the context is present in ``oc config get-contexts`` command
       output.
 
@@ -61,7 +59,7 @@ Selecting the openshift pods driver adds the following options to the
       .. attr:: name
          :required:
 
-         The project's name that will be used to create the pods.
+         The project's (namespace) name that will be used to create the pods.
 
       .. attr:: node-attributes
          :type: dict
