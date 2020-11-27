@@ -16,6 +16,24 @@
       "revId": "3527d484a8fe358a576475a2c87d0117bff9631d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9194f6c6_6ae081ae",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-11-27T05:41:52Z",
+      "side": 1,
+      "message": "I tend to agree with that.  I also think we should have some back-off; like not try again for 2 minutes.  I\u0027ll try to rework it",
+      "parentUuid": "f7560bc9_a2b81e85",
+      "revId": "3527d484a8fe358a576475a2c87d0117bff9631d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
