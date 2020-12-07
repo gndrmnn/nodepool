@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5312dd68_9bfe968b",
+        "filename": "requirements.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2020-12-07T22:24:10Z",
+      "side": 1,
+      "message": "Should this need a min cap too to ensure existing pip install gets a compatible version?",
+      "revId": "e72b15751229b1352dcb5c60e4759661511b7613",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
