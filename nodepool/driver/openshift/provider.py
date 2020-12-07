@@ -17,10 +17,9 @@ import logging
 import urllib3
 import time
 
-from kubernetes.config import config_exception as kce
 from kubernetes import client as k8s_client
-from openshift import client as os_client
-from openshift import config
+from kubernetes import config as k8s_config
+from openshift.dynamic import DynamicClient as os_client
 
 from nodepool import exceptions
 from nodepool.driver import Provider
@@ -38,7 +37,7 @@ class OpenshiftProvider(Provider):
         try:
             self.os_client, self.k8s_client = self._get_client(
                 provider.context)
-        except kce.ConfigException:
+        except k8s_config.config_exception.ConfigException:
             self.log.exception(
                 "Couldn't load context %s from config", provider.context)
             self.os_client = None
@@ -48,9 +47,9 @@ class OpenshiftProvider(Provider):
             self.project_names.add(pool.name)
 
     def _get_client(self, context):
-        conf = config.new_client_from_config(context=context)
+        conf = k8s_config.new_client_from_config(context=context)
         return (
-            os_client.OapiApi(conf),
+            os_client(conf),
             k8s_client.CoreV1Api(conf))
 
     def start(self, zk_conn):
@@ -87,7 +86,9 @@ class OpenshiftProvider(Provider):
                 return getattr(self, name, default)
 
         if self.ready:
-            for project in self.os_client.list_project().items:
+            projects = self.os_client.resources.get(api_version='v1',
+                                                    kind='Project')
+            for project in projects.get().items:
                 servers.append(FakeServer(
                     project, self.provider.name, self.project_names))
         return servers
@@ -107,16 +108,20 @@ class OpenshiftProvider(Provider):
             return
         self.log.debug("%s: removing project" % server_id)
         try:
-            self.os_client.delete_project(server_id)
+            project = self.os_client.resources.get(api_version='v1',
+                                                   kind='Project')
+            project.delete(name=server_id)
             self.log.info("%s: project removed" % server_id)
         except Exception:
             # TODO: implement better exception handling
             self.log.exception("Couldn't remove project %s" % server_id)
 
     def waitForNodeCleanup(self, server_id):
+        project = self.os_client.resources.get(api_version='v1',
+                                               kind='Project')
         for retry in range(300):
             try:
-                self.os_client.read_project(server_id)
+                project.get(name=server_id)
             except Exception:
                 break
             time.sleep(1)
@@ -125,13 +130,15 @@ class OpenshiftProvider(Provider):
         self.log.debug("%s: creating project" % project)
         # Create the project
         proj_body = {
-            'apiVersion': 'v1',
+            'apiVersion': 'project.openshift.io/v1',
             'kind': 'ProjectRequest',
             'metadata': {
                 'name': project,
             }
         }
-        self.os_client.create_project_request(proj_body)
+        projects = self.os_client.resources.get(
+            api_version='project.openshift.io/v1', kind='ProjectRequest')
+        projects.create(body=proj_body)
         return project
 
     def prepareProject(self, project):
@@ -170,20 +177,25 @@ class OpenshiftProvider(Provider):
                 (project, sa))
 
         # Give service account admin access
-        role_body = {
-            'apiVersion': 'v1',
+        role_binding_body = {
+            'apiVersion': 'rbac.authorization.k8s.io/v1',
             'kind': 'RoleBinding',
             'metadata': {'name': 'admin-0'},
-            'roleRef': {'name': 'admin'},
+            'roleRef': {
+                'kind': 'Role',
+                'name': 'admin',
+            },
             'subjects': [{
                 'kind': 'ServiceAccount',
                 'name': user,
                 'namespace': project,
             }],
-            'userNames': ['system:serviceaccount:%s:zuul-worker' % project]
+            'userNames': ['system:serviceaccount:%s:%s' % (project, user)]
         }
         try:
-            self.os_client.create_namespaced_role_binding(project, role_body)
+            role_bindings = self.os_client.resources.get(
+                api_version='rbac.authorization.k8s.io/v1', kind='RoleBinding')
+            role_bindings.create(body=role_binding_body, namespace=project)
         except ValueError:
             # https://github.com/ansible/ansible/issues/36939
             pass
