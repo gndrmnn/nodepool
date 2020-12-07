@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from kubernetes import config as k8s_config
 from nodepool.driver import Driver
 from nodepool.driver.openshift.config import OpenshiftProviderConfig
 from nodepool.driver.openshift.provider import OpenshiftProvider
-from openshift import config
 
 
 class OpenshiftDriver(Driver):
@@ -26,7 +26,7 @@ class OpenshiftDriver(Driver):
 
     def reset(self):
         try:
-            config.load_kube_config(persist_config=True)
+            k8s_config.load_kube_config(persist_config=True)
         except FileNotFoundError:
             pass
 
