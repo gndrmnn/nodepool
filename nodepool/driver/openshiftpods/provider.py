@@ -17,9 +17,8 @@ import logging
 import urllib3
 import time
 
-from kubernetes.config import config_exception as kce
 from kubernetes import client as k8s_client
-from openshift import config
+from kubernetes import config as k8s_config
 
 from nodepool.driver.openshift.provider import OpenshiftProvider
 from nodepool.driver.openshiftpods import handler
@@ -37,10 +36,10 @@ class OpenshiftPodsProvider(OpenshiftProvider):
         try:
             self.token, self.ca_crt, self.k8s_client = self._get_client(
                 provider.context)
-        except kce.ConfigException:
+        except k8s_config.config_exception.ConfigException:
             self.log.exception("Couldn't load client from config")
             self.log.info("Get context list using this command: "
-                          "python3 -c \"from openshift import config; "
+                          "python3 -c \"from kubernetes import config; "
                           "print('\\n'.join([i['name'] for i in "
                           "config.list_kube_config_contexts()[0]]))\"")
             self.token = None
@@ -51,7 +50,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
             self.pod_names.update(pool.labels.keys())
 
     def _get_client(self, context):
-        conf = config.new_client_from_config(context=context)
+        conf = k8s_config.new_client_from_config(context=context)
         token = conf.configuration.api_key.get('authorization', '').split()[-1]
         ca = None
         if conf.configuration.ssl_ca_cert:
