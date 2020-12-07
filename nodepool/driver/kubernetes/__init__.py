@@ -14,16 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from kubernetes import config as k8s_config
 from nodepool.driver import Driver
 from nodepool.driver.kubernetes.config import KubernetesProviderConfig
 from nodepool.driver.kubernetes.provider import KubernetesProvider
-from openshift import config
 
 
 class KubernetesDriver(Driver):
     def reset(self):
         try:
-            config.load_kube_config(persist_config=True)
+            k8s_config.load_kube_config(persist_config=True)
+        except k8s_config.config_exception.ConfigException as e:
+            if 'Invalid kube-config file. No configuration found.' in str(e):
+                pass
+            else:
+                raise
         except FileNotFoundError:
             pass
 
