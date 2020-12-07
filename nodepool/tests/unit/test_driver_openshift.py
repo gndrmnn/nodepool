@@ -21,6 +21,66 @@ from nodepool import zk
 from nodepool.driver.openshift import provider
 
 
+class FakeOpenshiftProjectsQuery:
+
+    def __init__(self, client):
+        self.client = client
+
+    def get(self):
+        class FakeProjectsResult:
+            def __init__(self, items):
+                self.items = items
+
+        return FakeProjectsResult(self.client.projects)
+
+    def delete(self, name):
+        to_delete = None
+        for project in self.client.projects:
+            if project.metadata.name == name:
+                to_delete = project
+                break
+        if not to_delete:
+            raise RuntimeError("Unknown project %s" % name)
+        self.client.projects.remove(to_delete)
+
+
+class FakeOpenshiftProjectRequestQuery:
+
+    def __init__(self, client):
+        self.client = client
+
+    def create(self, body):
+        class FakeProject:
+            class metadata:
+                name = body['metadata']['name']
+        self.client.projects.append(FakeProject)
+        return FakeProject
+
+
+class FakeOpenshiftRoleBindingQuery:
+
+    def __init__(self, client):
+        self.client = client
+
+    def create(self, body, namespace):
+        return
+
+
+class FakeOpenshiftResources:
+
+    def __init__(self, client):
+        self.client = client
+
+    def get(self, api_version=None, kind=None):
+        if kind == 'Project':
+            return FakeOpenshiftProjectsQuery(self.client)
+        if kind == 'ProjectRequest':
+            return FakeOpenshiftProjectRequestQuery(self.client)
+        if kind == 'RoleBinding':
+            return FakeOpenshiftRoleBindingQuery(self.client)
+        raise NotImplementedError
+
+
 class FakeOpenshiftClient(object):
     def __init__(self):
         self.projects = []
@@ -30,31 +90,7 @@ class FakeOpenshiftClient(object):
                 host = "http://localhost:8080"
                 verify_ssl = False
         self.api_client = FakeApi()
-
-    def list_project(self):
-        class FakeProjects:
-            items = self.projects
-        return FakeProjects
-
-    def create_project_request(self, proj_body):
-        class FakeProject:
-            class metadata:
-                name = proj_body['metadata']['name']
-        self.projects.append(FakeProject)
-        return FakeProject
-
-    def delete_project(self, name):
-        to_delete = None
-        for project in self.projects:
-            if project.metadata.name == name:
-                to_delete = project
-                break
-        if not to_delete:
-            raise RuntimeError("Unknown project %s" % name)
-        self.projects.remove(to_delete)
-
-    def create_namespaced_role_binding(self, ns, role_binding_body):
-        return
+        self.resources = FakeOpenshiftResources(self)
 
 
 class FakeCoreClient(object):
@@ -153,3 +189,6 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.zk.storeNode(node)
 
         self.waitForNodeDeletion(node)
+
+        self.assertEqual(len(self.fake_os_client.projects), 0,
+                         'Project must be cleaned up')

@@ -15,7 +15,7 @@ voluptuous
 kazoo>=2.8.0
 Paste
 WebOb>=1.8.1
-openshift<=0.8.9
+openshift<0.12.0
 boto3
 google-api-python-client
 azure-mgmt-compute<17.0.0

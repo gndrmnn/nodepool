@@ -18,9 +18,8 @@ import math
 import urllib3
 import time
 
-from kubernetes.config import config_exception as kce
 from kubernetes import client as k8s_client
-from openshift import config
+from kubernetes import config as k8s_config
 
 from nodepool import exceptions
 from nodepool.driver import Provider
@@ -41,10 +40,10 @@ class KubernetesProvider(Provider, QuotaSupport):
         try:
             self.k8s_client, self.rbac_client = self._get_client(
                 provider.context)
-        except kce.ConfigException:
+        except k8s_config.config_exception.ConfigException:
             self.log.exception("Couldn't load client from config")
             self.log.info("Get context list using this command: "
-                          "python3 -c \"from openshift import config; "
+                          "python3 -c \"from kubernetes import config; "
                           "print('\\n'.join([i['name'] for i in "
                           "config.list_kube_config_contexts()[0]]))\"")
             self.k8s_client = None
@@ -55,11 +54,11 @@ class KubernetesProvider(Provider, QuotaSupport):
 
     def _get_client(self, context):
         try:
-            conf = config.new_client_from_config(context=context)
+            conf = k8s_config.new_client_from_config(context=context)
         except FileNotFoundError:
             self.log.debug("Kubernetes config file not found, attempting "
                            "to load in-cluster configs")
-            conf = config.load_incluster_config()
+            conf = k8s_config.load_incluster_config()
 
         return (
             k8s_client.CoreV1Api(conf),
