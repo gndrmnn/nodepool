@@ -127,7 +127,7 @@ class AwsNodeRequestHandler(NodeRequestHandler):
     def alive_thread_count(self):
         count = 0
         for t in self._threads:
-            if t.isAlive():
+            if t.is_alive():
                 count += 1
         return count
 

@@ -891,7 +891,7 @@ class NodePool(threading.Thread):
         self._stop_event.set()
         # Our run method can start new threads, so make sure it has
         # completed before we continue the shutdown.
-        if self.isAlive():
+        if self.is_alive():
             self.join()
 
         if self._cleanup_thread:
@@ -910,7 +910,7 @@ class NodePool(threading.Thread):
         # terminated.
         self.log.debug("Stopping pool threads")
         for thd in self._pool_threads.values():
-            if thd.isAlive():
+            if thd.is_alive():
                 thd.stop()
             self.log.debug("Waiting for %s" % thd.name)
             thd.join()
@@ -1157,7 +1157,7 @@ class NodePool(threading.Thread):
                             self.log.info("Starting %s" % t.name)
                             t.start()
                             self._pool_threads[key] = t
-                        elif not self._pool_threads[key].isAlive():
+                        elif not self._pool_threads[key].is_alive():
                             self._pool_threads[key].join()
                             t = PoolWorker(self, provider.name, pool.name)
                             self.log.info("Restarting %s" % t.name)
