@@ -87,9 +87,9 @@
         - rpm
         - yum-utils
       nodepool_diskimage:
-        base_element: centos-minimal
-        release: 8
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        base_element: ubuntu
+        release: bionic
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
