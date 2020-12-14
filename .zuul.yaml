@@ -84,14 +84,16 @@
     parent: nodepool-functional-openstack-base
     vars: &nodepool_diskimage_vars
       nodepool_extra_packages:
-        - rpm
-        - yum-utils
+        - debootstrap
+        - squashfs-tools
       nodepool_diskimage:
-        base_element: centos-minimal
-        release: 8
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        base_element: ubuntu-minimal
+        release: focal
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
         env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+          DIB_APT_LOCAL_CACHE: '0'
+          DIB_DISABLE_APT_CLEANUP: '1'
+          DIB_DEBOOTSTRAP_EXTRA_ARGS: '--no-check-gpg'
 
 - job:
     name: nodepool-functional-openstack-src-base
