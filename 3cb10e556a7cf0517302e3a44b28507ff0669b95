@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d26692dc_0ad3ce5e",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2020-12-17T22:14:33Z",
+      "side": 1,
+      "message": "So after reading IRC I guess this is to be compatible with ConfigParser ... however that interpolates from *within* the config file, not the environment? e.g.\n\n [foo]\n bar\u003d\u0027123\u0027\n moo\u003d%(bar)s456\n\nmakes moo \u003d 123456\n\nAFAICT, this does not get values from the environment at all.\n\nI feel like it\u0027s not a great idea to implement this additional behaviour with the \"s\" to look like ConfigParser syntax but then not actually behave in the same way.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 25
+      },
+      "revId": "3cb10e556a7cf0517302e3a44b28507ff0669b95",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
