@@ -18,6 +18,12 @@ and ``providers`` sections::
   providers:
     ...
 
+Nodepool will interpolate environment variables starting with the ``NODEPOOL_``
+prefix given in the config file escaped as python string expansion.
+``foo=%(NODEPOOL_HOME)s`` will set the value of ``foo`` to the same value
+as the environment variable named ``NODEPOOL_HOME``.
+
+
 The following drivers are available.
 
 .. toctree::

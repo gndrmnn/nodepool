@@ -3,7 +3,7 @@ images-dir: /opt/nodepool_dib
 
 webapp:
   port: %(NODEPOOL_PORT)
-  listen_address: '0.0.0.0'
+  listen_address: %(NODEPOL_HOST)s
 
 zookeeper-servers:
   - host: zk1.openstack.org
@@ -29,7 +29,7 @@ providers:
   - name: cloud1
     driver: openstack
     cloud: vanilla-cloud
-    region-name: 'vanilla'
+    region-name: "vanilla"
     boot-timeout: 120
     max-concurrency: 10
     launch-retries: 3
@@ -73,7 +73,7 @@ providers:
   - name: cloud2
     driver: openstack
     cloud: chocolate-cloud
-    region-name: 'chocolate'
+    region-name: "chocolate"
     boot-timeout: 120
     rate: 0.001
     port-cleanup-interval: 0
