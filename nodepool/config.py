@@ -297,10 +297,12 @@ def get_provider_config(provider):
 
 def substitute_env_vars(config_str, env):
     return functools.reduce(
-        lambda config, env_item: config.replace(
-            "%(" + env_item[0] + ")", env_item[1]),
-        [(k, v) for k, v in env.items()
-         if k.startswith('NODEPOOL_')],
+        lambda config_str, closing: functools.reduce(
+            lambda config, env_item: config.replace(
+                "%(" + env_item[0] + closing, env_item[1]),
+            [(k, v) for k, v in env.items() if k.startswith('NODEPOOL_')],
+            config_str),
+        [")s", ")"],
         config_str)
 
 
