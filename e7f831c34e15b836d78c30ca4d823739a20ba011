@@ -46,6 +46,30 @@
       "revId": "e7f831c34e15b836d78c30ca4d823739a20ba011",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38c9b797_f76b9802",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-01-11T18:09:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "374aa198_527a497d",
+      "range": {
+        "startLine": 190,
+        "startChar": 52,
+        "endLine": 190,
+        "endChar": 54
+      },
+      "revId": "e7f831c34e15b836d78c30ca4d823739a20ba011",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
