@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "caff2af7_f55f2561",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-01-12T21:11:50Z",
+      "side": 1,
+      "message": "Will this work in all OpenShift versions?  It looks like this is used in v3, but perhaps in v4 they recommend using \"rbac.authorization.k8s.io/v1\"  https://docs.openshift.com/container-platform/4.6/rest_api/rbac_apis/rolebinding-rbac-authorization-k8s-io-v1.html\n\nSecond question: is this needed for the client lib version change, or is this really a separate change?",
+      "revId": "e7f831c34e15b836d78c30ca4d823739a20ba011",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c679ad3_160e787f",
         "filename": "nodepool/driver/openshift/provider.py",
         "patchSetId": 21
