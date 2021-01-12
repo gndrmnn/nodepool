@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "67ccfc05_893b42cf",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-01-12T21:45:30Z",
+      "side": 1,
+      "message": "v1 doesn\u0027t work, I\u0027ve tried it in the functional test and also manually against an openshift. However I couldn\u0027t test yet against openshift v4.",
+      "parentUuid": "",
+      "revId": "e7f831c34e15b836d78c30ca4d823739a20ba011",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c679ad3_160e787f",
         "filename": "nodepool/driver/openshift/provider.py",
         "patchSetId": 21
