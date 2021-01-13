@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f990582_3625e55b",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-01-13T15:28:27Z",
+      "side": 1,
+      "message": "I think this is non-intuitive and could be renamed to diskimage-import or similar.",
+      "range": {
+        "startLine": 92,
+        "startChar": 13,
+        "endLine": 92,
+        "endChar": 21
+      },
+      "revId": "d4e793dfcd41140038ea6739eb8208315da62793",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ad3bec1_1d58ee5f",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 19
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-01-13T15:28:27Z",
+      "side": 1,
+      "message": "This should be described in more detail and include the link to the docs: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role",
+      "revId": "d4e793dfcd41140038ea6739eb8208315da62793",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
