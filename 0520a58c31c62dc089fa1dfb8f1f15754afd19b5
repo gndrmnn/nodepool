@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b78f73c_8f727ef3",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 20
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2021-01-15T09:52:58Z",
+      "side": 1,
+      "message": "Most of the time this should be `winrm` for windows nodes (since ssh modules are still experimental).\n\n\u003e However when creating Windows images this should be set to ``winrm`` for ansible to access the node.\n\n\nBut technically dib also cannot create windows images :)",
+      "range": {
+        "startLine": 269,
+        "startChar": 20,
+        "endLine": 270,
+        "endChar": 47
+      },
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
