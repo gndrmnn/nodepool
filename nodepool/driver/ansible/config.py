@@ -19,7 +19,6 @@ import voluptuous as v
 from nodepool.driver import ConfigPool
 from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
-from nodepool.config import as_list
 
 
 class AnsiblePool(ConfigPool):
@@ -43,6 +42,7 @@ class AnsibleLabel(ConfigValue):
     def __repr__(self):
         return "<AnsibleLabel %s>" % self.name
 
+
 class AnsibleProviderConfig(ProviderConfig):
     def __eq__(self, other):
         if (other.pools != self.pools or
@@ -57,7 +57,7 @@ class AnsibleProviderConfig(ProviderConfig):
 
     def load(self, config):
         self.provider_root_path = self.provider.get('provider-root-path',
-                                                    '/var/lib/nodepool/driver/ansible')
+            '/var/lib/nodepool/driver/ansible')
 
         self.pools = {}
         for pool in self.provider.get('pools', []):
@@ -86,7 +86,7 @@ class AnsibleProviderConfig(ProviderConfig):
                 pl.enable_vault = label.get('enable-vault', None)
                 pl.extra_vars = label.get('extra-vars', None)
                 config.labels[pl.name].append(pp)
-                 
+
     def get_schema(self):
         pool_label = {
             v.Required('name'): str,
@@ -103,3 +103,4 @@ class AnsibleProviderConfig(ProviderConfig):
             'labels': [pool_label],
         }
         return v.Schema({'pools': [pool]})
+
