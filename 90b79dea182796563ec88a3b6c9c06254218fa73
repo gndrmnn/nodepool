@@ -46,6 +46,23 @@
       "revId": "90b79dea182796563ec88a3b6c9c06254218fa73",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1f06980_93b4d217",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-01-20T19:14:07Z",
+      "side": 1,
+      "message": "We\u0027re already checking the class above (\"ConfigException\") so it\u0027s unlikely there\u0027s a better way of classifying this specific exception.\n\nThe client source confirms this same exception is used for many errors with only the message to distinguish: https://github.com/kubernetes-client/python-base/blob/b0021104307c99bac5b2a7e353df21d864f85809/config/kube_config.py",
+      "revId": "90b79dea182796563ec88a3b6c9c06254218fa73",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
