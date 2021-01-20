@@ -59,7 +59,13 @@ class KubernetesProvider(Provider, QuotaSupport):
             self.log.debug("Kubernetes config file not found, attempting "
                            "to load in-cluster configs")
             conf = k8s_config.load_incluster_config()
-
+        except k8s_config.config_exception.ConfigException as e:
+            if 'Invalid kube-config file. No configuration found.' in str(e):
+                self.log.debug("Kubernetes config file not found, attempting "
+                               "to load in-cluster configs")
+                conf = k8s_config.load_incluster_config()
+            else:
+                raise
         return (
             k8s_client.CoreV1Api(conf),
             k8s_client.RbacAuthorizationV1beta1Api(conf))
