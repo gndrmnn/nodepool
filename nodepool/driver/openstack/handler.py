@@ -289,6 +289,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                     raise
                 if 'quota exceeded' in str(e).lower():
                     quota_exceeded = True
+                if 'number of ports exceeded' in str(e).lower():
+                    quota_exceeded = True
 
                 if quota_exceeded:
                     # A quota exception is not directly recoverable so bail
