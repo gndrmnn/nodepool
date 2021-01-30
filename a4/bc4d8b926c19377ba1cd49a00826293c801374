@@ -1,0 +1,10 @@
+Code-Review+1: Sorin Sbârnea <ssbarnea@redhat.com>
+Code-Review+2: Tristan Cacqueray <tdecacqu@redhat.com>
+Code-Review+2: James E. Blair <corvus@inaugust.com>
+Workflow+1: James E. Blair <corvus@inaugust.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Sat, 30 Jan 2021 18:54:37 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/764282
+Project: zuul/nodepool
+Branch: refs/heads/master
