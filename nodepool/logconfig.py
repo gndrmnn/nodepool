@@ -36,6 +36,9 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
             'level': 'INFO',
             'formatter': 'simple',
         },
+        'null': {
+            'class': 'logging.NullHandler',
+        }
     },
     'loggers': {
         'nodepool': {
@@ -55,7 +58,7 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
             'level': 'WARN',
         },
     },
-    'root': {'handlers': []},
+    'root': {'handlers': ['null']},
 }
 
 _DEFAULT_SERVER_FILE_HANDLERS = {
