@@ -543,7 +543,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
 
         # There shouldn't be any DIB files even though cleanup thread is
         # disabled because the builder should clean up after itself.
-        images_dir = bldr._config.imagesdir
+        images_dir = bldr._config.images_dir
 
         # Wait for builder to remove the leaked files
         image_files = builder.DibImageFile.from_image_id(
@@ -598,7 +598,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
         bldr = self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
 
-        images_dir = bldr._config.imagesdir
+        images_dir = bldr._config.images_dir
         post_file = os.path.join(
             images_dir, 'fake-image-0000000001.qcow2.post')
         self.assertTrue(os.path.exists(post_file), 'Post hook file exists')
