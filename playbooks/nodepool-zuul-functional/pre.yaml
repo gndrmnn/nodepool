@@ -3,5 +3,4 @@
   roles:
     - role: bindep
       bindep_profile: default
-      bindep_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
     - nodepool-zuul-functional

@@ -17,3 +17,38 @@ python3-devel [compile test platform:rpm]
 sudo
 zookeeperd [platform:dpkg test]
 zookeeper [platform:suse test]
+
+# Copied from zuul/zuul and only needed for functional_zuul tox env
+
+mysql-client [test !platform:rpm]
+mysql [test platform:rpm]
+mysql-server [test]
+postgresql [test]
+libjpeg-dev [test !platform:rpm]
+libjpeg-turbo-devel [test platform:rpm]
+openssl [test]
+zookeeperd [test platform:dpkg]
+musl-dev [compile test platform:apk]
+make [compile test platform:apk]
+linux-headers [compile test platform:apk]
+gcc [compile test]
+g++ [compile test platform:apk platform:dpkg]
+gcc-c++ [compile test platform:rpm]
+libssl-dev [compile test platform:dpkg]
+openssl-devel [compile test platform:rpm]
+# postgresql-dev on alpine uses libressl-dev, so installing openssl-dev there
+# is an error.
+libressl-dev [compile test platform:apk]
+postgresql-dev [compile test platform:apk]
+libffi-dev [compile test platform:dpkg platform:apk]
+libffi-devel [compile test platform:rpm]
+libyaml-dev [platform:dpkg compile test]
+libyaml-devel [platform:rpm compile test]
+python3-dev [compile test platform:dpkg platform:apk]
+python3-devel [compile test platform:rpm]
+socat
+libre2-dev [compile test platform:dpkg]
+re2-devel [compile test platform:rpm]
+re2-dev [platform:apk]
+yarn [compile test platform:apk]
+nodejs-npm [compile test platform:apk]
