@@ -3,16 +3,14 @@
     parent: tox
     description: |
       Test that zuul works with current nodepool sources.
-
-      This test runs the zuul project ``nodepool`` environment.
     pre-run: playbooks/nodepool-zuul-functional/pre.yaml
     post-run: playbooks/nodepool-zuul-functional/post.yaml
     required-projects:
       - zuul/nodepool
       - zuul/zuul
     vars:
-      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
-      tox_envlist: nodepool
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+      tox_envlist: functional_zuul
 
 - job:
     name: nodepool-functional-openstack-base
