@@ -25,6 +25,7 @@ _DEFAULT_SERVER_LOGGING_CONFIG = {
     'version': 1,
     'formatters': {
         'simple': {
+            'class': 'nodepool.logutil.MultiLineFormatter',
             'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'
         },
     },
@@ -87,6 +88,23 @@ def load_config(filename: str):
     if isinstance(config, dict):
         return DictLoggingConfig(config)
     return FileLoggingConfig(filename)
+
+
+class MultiLineFormatter(logging.Formatter):
+    def format(self, record):
+        rec = super().format(record)
+        ret = []
+        # Save the existing message and re-use this record object to
+        # format each line.
+        saved_msg = record.message
+        for i, line in enumerate(rec.split('\n')):
+            if i:
+                record.message = '  ' + line
+                ret.append(self.formatMessage(record))
+            else:
+                ret.append(line)
+        # Restore the message
+        record.message = saved_msg
 
 
 class LoggingConfig(object, metaclass=abc.ABCMeta):
