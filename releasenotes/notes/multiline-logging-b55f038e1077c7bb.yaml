@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Multi-line log messages (such as tracebacks from image builds) are now
+    prefixed in the same manner as single-line messages.
