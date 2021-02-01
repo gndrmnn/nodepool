@@ -1,0 +1,11 @@
+---
+prelude: >
+    The 4.0.0 release of Nodepool is not substantially different than
+    3.14 and is compatible with Zuul versions 3.19 and 4.0.  Nodepool
+    and Zuul versions are not generally synchronized, but we elected
+    to increase the Nodepool major version to match the 4.0 release of
+    Zuul for clarity.
+features:
+  - |
+    Multi-line log messages (such as tracebacks from image builds) are now
+    prefixed in the same manner as single-line messages.
