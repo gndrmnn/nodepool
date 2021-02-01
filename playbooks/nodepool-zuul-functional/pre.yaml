@@ -1,5 +1,15 @@
 - hosts: all
   name: Zuul setup for nodepool test
+  # TODO remove pre-tasks after https://review.opendev.org/c/zuul/zuul/+/760361 is merged
+  pre_tasks:
+    - copy:
+        src: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}/requirements.txt"
+        dest: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/zuul_requirements.txt"
+        remote_src: yes
+    - copy:
+        src: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}/test-requirements.txt"
+        dest: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/zuul_test-requirements.txt"
+        remote_src: yes
   roles:
     - role: bindep
       bindep_profile: default
