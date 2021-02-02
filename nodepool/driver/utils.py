@@ -270,7 +270,7 @@ class QuotaSupport:
                     if pool and not node.pool == pool.name:
                         continue
                     provider_pool = self.provider.pools.get(node.pool)
-                    if not provider_pool:
+                    if not provider_pool or not node.type:
                         self.log.warning(
                             "Cannot find provider pool for node %s" % node)
                         # This node is in a funny state we log it for debugging
