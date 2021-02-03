@@ -560,6 +560,7 @@ class Node(BaseModel):
         self.comment = None
         self.hold_job = None
         self.username = None
+        self.credential = None
         self.connection_type = None
         self.host_keys = []
         self.hold_expiration = None
@@ -598,6 +599,7 @@ class Node(BaseModel):
                     self.comment == other.comment and
                     self.hold_job == other.hold_job and
                     self.username == other.username and
+                    self.credential == other.credential and
                     self.connection_type == other.connection_type and
                     self.connection_port == other.connection_port and
                     self.host_keys == other.host_keys and
@@ -648,6 +650,7 @@ class Node(BaseModel):
         d['hold_job'] = self.hold_job
         d['host_keys'] = self.host_keys
         d['username'] = self.username
+        d['credential'] = self.credential
         d['connection_type'] = self.connection_type
         d['connection_port'] = self.connection_port
         d['hold_expiration'] = self.hold_expiration
@@ -700,6 +703,7 @@ class Node(BaseModel):
         self.comment = d.get('comment')
         self.hold_job = d.get('hold_job')
         self.username = d.get('username', 'zuul')
+        self.credential = d.get('credential')
         self.connection_type = d.get('connection_type')
         self.host_keys = d.get('host_keys', [])
         hold_expiration = d.get('hold_expiration')
