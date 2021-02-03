@@ -156,6 +156,35 @@ class StaticNodeProvider(Provider):
             registered.update([nodeTuple(node)])
         return registered
 
+    def makeCredential(self, static_node):
+        '''
+        Make a credential entry for a ZK node record.
+
+        :param dict static_node: The node definition from the config file.
+
+        :return: A dictionary with the credential content (private
+                 keys, etc) ready for serialization to ZK
+        '''
+        def read_file(fn):
+            with open(fn, 'r') as f:
+                return f.read()
+
+        ctype = static_node['connection-type']
+        ssh_key_fn = static_node.get('ssh-private-key-file')
+        winrm_cert_fn = static_node.get('winrm-cert-pem-file')
+        winrm_key_fn = static_node.get('winrm-cert-key-file')
+
+        if ctype == 'ssh' and ssh_key_fn:
+            cred = dict(type='ssh',
+                        key=read_file(static_node['ssh-private-key-file']))
+        elif ctype == 'winrm' and winrm_cert_fn and winrm_key_fn:
+            cred = dict(type='certificate',
+                        cert=read_file(static_node['winrm-cert-pem-file']),
+                        key=read_file(static_node['winrm-cert-key-file']))
+        else:
+            cred = None
+        return cred
+
     def registerNodeFromConfig(self, count, provider_name, pool,
                                static_node):
         '''
@@ -190,6 +219,7 @@ class StaticNodeProvider(Provider):
             node.external_id = static_node["name"]
             node.hostname = static_node["name"]
             node.username = static_node["username"]
+            node.credential = self.makeCredential(static_node)
             node.interface_ip = static_node["name"]
             node.connection_port = static_node["connection-port"]
             node.connection_type = static_node["connection-type"]
@@ -211,11 +241,13 @@ class StaticNodeProvider(Provider):
         :param dict static_node: The node definition from the config file.
         '''
         host_keys = self.checkHost(static_node)
+        cred = self.makeCredential(static_node)
         node_tuple = nodeTuple(static_node)
         nodes = self.getRegisteredReadyNodes(node_tuple)
         new_attrs = (
             static_node["labels"],
             static_node["username"],
+            cred,
             static_node["connection-port"],
             static_node["connection-type"],
             static_node["python-path"],
@@ -223,7 +255,8 @@ class StaticNodeProvider(Provider):
         )
 
         for node in nodes:
-            original_attrs = (node.type, node.username, node.connection_port,
+            original_attrs = (node.type, node.username,
+                              node.credential, node.connection_port,
                               node.connection_type, node.python_path,
                               node.host_keys)
 
@@ -234,6 +267,7 @@ class StaticNodeProvider(Provider):
                 self.zk.lockNode(node, blocking=False)
                 node.type = static_node["labels"]
                 node.username = static_node["username"]
+                node.credential = cred
                 node.connection_port = static_node["connection-port"]
                 node.connection_type = static_node["connection-type"]
                 node.python_path = static_node["python-path"]
