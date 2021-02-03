@@ -187,6 +187,7 @@ class StaticNodeProvider(Provider):
             node.pool = pool_name
             node.launcher = "static driver"
             node.type = static_node["labels"]
+            node.external_id = static_node["name"]
             node.hostname = static_node["name"]
             node.username = static_node["username"]
             node.interface_ip = static_node["name"]
