@@ -132,8 +132,33 @@ Selecting the static driver adds the following options to the
             :type: str
             :default: zuul
 
-            The username nodepool will use to validate it can connect to the
-            node.
+            The username nodepool will use to validate it can connect
+            to the node and that a consumer should use when connecting
+            to the node.
+
+         .. attr:: ssh-private-key-file
+            :type: str
+
+            A path to a pivate key file to be used when connecting to
+            the node via SSH.  Nodepool does not use this value, but
+            will supply the contents of this file to the consumer of
+            the node.
+
+         .. attr:: winrm-cert-key-file
+            :type: str
+
+            A path to a pivate key file to be used when connecting to
+            the node via WinRM.  Nodepool does not use this value, but
+            will supply the contents of this file to the consumer of
+            the node.
+
+         .. attr:: winrm-cert-pem-file
+            :type: str
+
+            A path to a certificate file to be used when connecting to
+            the node via WinRM.  Nodepool does not use this value, but
+            will supply the contents of this file to the consumer of
+            the node.
 
          .. attr:: python-path
             :type: str

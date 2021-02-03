@@ -1,0 +1,24 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+labels:
+  - name: fake-label
+
+providers:
+  - name: static-provider
+    driver: static
+    pools:
+      - name: main
+        node-attributes:
+          key1: value1
+          key2: value2
+        nodes:
+          - name: fake-host-1
+            labels: fake-label
+            host-key: ssh-rsa FAKEKEY
+            timeout: 13
+            connection-port: 22022
+            username: zuul
+            ssh-private-key-file: {key_dir}/ssh.key
