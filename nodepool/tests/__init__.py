@@ -373,7 +373,8 @@ class DBTestCase(BaseTestCase):
         self.log = logging.getLogger("tests")
         self.setupZK()
 
-    def setup_config(self, filename, images_dir=None, context_name=None):
+    def setup_config(self, filename, images_dir=None, context_name=None,
+                     **kw):
         if images_dir is None:
             images_dir = fixtures.TempDir()
             self.useFixture(images_dir)
@@ -395,7 +396,8 @@ class DBTestCase(BaseTestCase):
                                      zookeeper_chroot=self.zookeeper_chroot,
                                      zookeeper_ca=self.zookeeper_ca,
                                      zookeeper_cert=self.zookeeper_cert,
-                                     zookeeper_key=self.zookeeper_key)
+                                     zookeeper_key=self.zookeeper_key,
+                                     **kw)
                 os.write(fd, data.encode('utf8'))
             os.close(fd)
         self._config_images_dir = images_dir
