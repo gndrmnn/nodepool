@@ -16,6 +16,7 @@
 import logging
 import mock
 import os
+import fixtures
 
 from nodepool import config as nodepool_config
 from nodepool import tests
@@ -43,7 +44,13 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         Test that basic node registration works.
         '''
-        configfile = self.setup_config('static-basic.yaml')
+
+        key_dir = fixtures.TempDir()
+        self.useFixture(key_dir)
+        with open(os.path.join(key_dir.path, 'ssh.key'), 'w') as f:
+            f.write("secret key")
+        configfile = self.setup_config('static-basic.yaml',
+                                       key_dir=key_dir.path)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
 
@@ -59,6 +66,9 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].hostname, 'fake-host-1')
         self.assertEqual(nodes[0].interface_ip, 'fake-host-1')
         self.assertEqual(nodes[0].username, 'zuul')
+        self.assertEqual(nodes[0].credential,
+                         {'type': 'ssh',
+                          'key': 'secret key'})
         self.assertEqual(nodes[0].connection_port, 22022)
         self.assertEqual(nodes[0].connection_type, 'ssh')
         self.assertEqual(nodes[0].host_keys, ['ssh-rsa FAKEKEY'])

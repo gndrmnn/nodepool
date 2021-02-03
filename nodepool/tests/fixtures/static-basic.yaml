@@ -21,3 +21,4 @@ providers:
             timeout: 13
             connection-port: 22022
             username: zuul
+            ssh-private-key-file: {key_dir}/ssh.key

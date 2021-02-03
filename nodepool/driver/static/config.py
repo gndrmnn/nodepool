@@ -58,6 +58,9 @@ class StaticPool(ConfigPool):
                     node.get('connection-port', node.get('ssh-port', 22))),
                 'connection-type': node.get('connection-type', 'ssh'),
                 'username': node.get('username', 'zuul'),
+                'ssh-private-key-file': node.get('ssh-private-key-file'),
+                'winrm-cert-key-file': node.get('winrm-cert-key-file'),
+                'winrm-cert-pem-file': node.get('winrm-cert-pem-file'),
                 'max-parallel-jobs': int(node.get('max-parallel-jobs', 1)),
                 'python-path': node.get('python-path', 'auto'),
             })
@@ -108,6 +111,9 @@ class StaticProviderConfig(ProviderConfig):
             'host-key': v.Any(str, [str]),
             'connection-port': int,
             'connection-type': str,
+            'ssh-private-key-file': str,
+            'winrm-cert-key-file': str,
+            'winrm-cert-pem-file': str,
             'max-parallel-jobs': int,
             'python-path': str,
         }
