@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "180eed0b_c0bf2b0c",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 20
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-04T17:17:28Z",
+      "side": 1,
+      "message": "Should we add an example diskimage-import configuration here since the new label below uses a diskimage? My read of the diskimage-import documentation is that this provider must now supply diskimage-import configs so having that in the example is probably a good idea.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0b78f73c_8f727ef3",
         "filename": "doc/source/aws.rst",
         "patchSetId": 20
@@ -19,6 +36,80 @@
         "endLine": 270,
         "endChar": 47
       },
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d7fdc80_97894e5d",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-04T17:17:28Z",
+      "side": 1,
+      "message": "The docs call this key diskimage-import. I think we need to make the schema and docs agreee?",
+      "range": {
+        "startLine": 359,
+        "startChar": 13,
+        "endLine": 359,
+        "endChar": 21
+      },
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41de7c6f_52b81487",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-04T17:17:28Z",
+      "side": 1,
+      "message": "You may want to put this s3 delete in a finally block to ensure that nodepool will try very hard to clean it up even if things go wrong. This will help avoid leaking objects in s3.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ced99981_871299b1",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-04T17:17:28Z",
+      "side": 1,
+      "message": "Related to my concern about leaks above. You may also want to check if the s3 object is present at this point and delete it here as well if so.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8240b0dc_31a4e04d",
+        "filename": "nodepool/tests/fixtures/aws.yaml",
+        "patchSetId": 20
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-04T17:17:28Z",
+      "side": 1,
+      "message": "Doesn\u0027t this need a vmimport/diskimage-import section too?",
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
