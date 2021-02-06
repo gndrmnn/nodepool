@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "6e5d0d95_9412c8ba",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 20
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "I think that would be good.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b78f73c_8f727ef3",
         "filename": "doc/source/aws.rst",
         "patchSetId": 20
@@ -39,6 +56,23 @@
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aef68a4b_15f59279",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 20
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "I think this is okay as written since windows does support both ssh and winrm.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +99,57 @@
     },
     {
       "key": {
+        "uuid": "a1f13587_aead4f40",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "Yes.  This should have failed testing, but I guess extra keys are allowed, and this schema isn\u0027t sophisticated enough to make diskimage-import required conditional on diskimages being present.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4b1eb82_ff2e2d37",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "I notice that the s3 dest is basically just the image name.  If it leaks and then we later upload a new image with the same name, will that just overwrite the previous image?  If so, then great.  If not, we may need to do more leak handling here.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d3913dd_2c01a434",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "Not a minus one: we could use iterate_timeout here and have a really long timeout in case the import gets permanently stuck.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41de7c6f_52b81487",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 20
@@ -79,6 +164,23 @@
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26fc3ec5_18730894",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "I agree, that is easy and worthwhile.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     },
     {
       "key": {
@@ -99,6 +201,23 @@
     },
     {
       "key": {
+        "uuid": "7f33eaf3_b1d25130",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "Agreed, and if the deletion fails, let that exception propogate up so we keep the ZK record.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8240b0dc_31a4e04d",
         "filename": "nodepool/tests/fixtures/aws.yaml",
         "patchSetId": 20
@@ -113,6 +232,40 @@
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "350625a5_062c6aea",
+        "filename": "nodepool/tests/fixtures/aws.yaml",
+        "patchSetId": 20
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "Agreed.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2b17458_831afcfe",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-06T22:30:20Z",
+      "side": 1,
+      "message": "This causes the new code not to run (because it adds the data to ZK as if it had already run).  The rest of the AWS tests use boto to actually exercise nodepool code.  Can we do that here?",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
