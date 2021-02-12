@@ -17,6 +17,7 @@
 import logging
 import operator
 import os
+import threading
 import time
 
 import openstack
@@ -24,7 +25,6 @@ import openstack
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
-from nodepool.nodeutils import iterate_timeout
 from nodepool import stats
 from nodepool import version
 from nodepool import zk
@@ -50,13 +50,21 @@ class OpenStackProvider(Provider, QuotaSupport):
         self._down_ports = set()
         self._last_port_cleanup = None
         self._statsd = stats.get_client()
+        self.stopped = False
+        self._server_list_watcher = threading.Thread(
+            name='ServerListWatcher', target=self._watchServerList)
+        self._server_list_watcher_stop_event = threading.Event()
+        self._cleanup_queue = {}
 
     def start(self, zk_conn):
         self.resetClient()
         self._zk = zk_conn
+        self._server_list_watcher.start()
 
     def stop(self):
-        pass
+        self.stopped = True
+        self._server_list_watcher_stop_event.set()
+        self._server_list_watcher.join()
 
     def join(self):
         pass
@@ -308,12 +316,11 @@ class OpenStackProvider(Provider, QuotaSupport):
             reuse=False, timeout=timeout)
 
     def waitForNodeCleanup(self, server_id, timeout=600):
-        for count in iterate_timeout(
-                timeout, exceptions.ServerDeleteException,
-                "server %s deletion" % server_id):
-            server = self.getServer(server_id)
-            if not server or server.status == "DELETED":
-                return
+        event = threading.Event()
+        self._cleanup_map[server_id] = (event, time.monotonic() + timeout)
+        if not event.wait(timeout=timeout):
+            raise exceptions.ServerDeleteException(
+                "server %s deletion" % server_id)
 
     def createImage(self, server, image_name, meta):
         return self._client.create_image_snapshot(
@@ -520,6 +527,7 @@ class OpenStackProvider(Provider, QuotaSupport):
         self._down_ports = set([p.id for p in ports])
 
     def cleanupLeakedResources(self):
+        self.log.debug('cleanupLeakedResources')
         self.cleanupLeakedInstances()
         if self.provider.port_cleanup_interval:
             self.cleanupLeakedPorts()
@@ -546,3 +554,40 @@ class OpenStackProvider(Provider, QuotaSupport):
                 # ability to turn off random portions of the OpenStack API.
                 self.__azs = [None]
         return self.__azs
+
+    def _watchServerList(self):
+        self.log.debug('Starting ServerListWatcher thread')
+        while not self.stopped:
+            if self._server_list_watcher_stop_event.wait(5):
+                # We're stopping now so don't wait with any thread for node
+                # deletion.
+                for event, _ in self._cleanup_queue.values():
+                    event.set()
+                break
+
+            if not self._cleanup_queue:
+                # No server deletion to wait for so check can be skipped
+                continue
+
+            try:
+                existing_server_ids = {
+                    server.id for server in self.listNodes()
+                    if server.status != 'DELETED'
+                }
+            except Exception:
+                self.log.exception('Failed to get server list in '
+                                   '_watchServerList')
+                continue
+
+            for server_id in list(self._cleanup_queue.keys()):
+                # Notify waiting threads that don't have server ids
+                if server_id not in existing_server_ids:
+                    # Notify the thread which is waiting for the delete
+                    self._cleanup_queue[server_id][0].set()
+                    del self._cleanup_queue[server_id]
+                    continue
+
+                # Remove entries that are beyond timeout
+                _, timeout = self._cleanup_queue[server_id]
+                if time.monotonic() > timeout:
+                    del self._cleanup_queue[server_id]
