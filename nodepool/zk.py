@@ -299,6 +299,7 @@ class ImageBuild(BaseModel):
         self.builder_id = None    # Unique ID
         self.username = None
         self.python_path = None
+        self.shell_type = None
 
     def __repr__(self):
         d = self.toDict()
@@ -332,6 +333,7 @@ class ImageBuild(BaseModel):
             d['formats'] = ','.join(self.formats)
         d['username'] = self.username
         d['python_path'] = self.python_path
+        d['shell_type'] = self.shell_type
         return d
 
     @staticmethod
@@ -350,6 +352,7 @@ class ImageBuild(BaseModel):
         o.builder_id = d.get('builder_id')
         o.username = d.get('username', 'zuul')
         o.python_path = d.get('python_path', '/usr/bin/python2')
+        o.shell_type = d.get('shell_type')
         # Only attempt the split on non-empty string
         if d.get('formats', ''):
             o.formats = d.get('formats', '').split(',')
@@ -363,7 +366,8 @@ class ImageUpload(BaseModel):
     VALID_STATES = set([UPLOADING, READY, DELETING, FAILED])
 
     def __init__(self, build_id=None, provider_name=None, image_name=None,
-                 upload_id=None, username=None, python_path=None):
+                 upload_id=None, username=None, python_path=None,
+                 shell_type=None):
         super(ImageUpload, self).__init__(upload_id)
         self.build_id = build_id
         self.provider_name = provider_name
@@ -371,6 +375,7 @@ class ImageUpload(BaseModel):
         self.format = None
         self.username = username
         self.python_path = python_path
+        self.shell_type = shell_type
         self.external_id = None      # Provider ID of the image
         self.external_name = None    # Provider name of the image
 
@@ -403,6 +408,7 @@ class ImageUpload(BaseModel):
         d['format'] = self.format
         d['username'] = self.username
         d['python_path'] = self.python_path
+        d['shell_type'] = self.shell_type
         return d
 
     @staticmethod
@@ -425,6 +431,7 @@ class ImageUpload(BaseModel):
         o.format = d.get('format')
         o.username = d.get('username', 'zuul')
         o.python_path = d.get('python_path', '/usr/bin/python2')
+        o.shell_type = d.get('shell_type')
         return o
 
 
@@ -551,7 +558,9 @@ class Node(BaseModel):
         self.public_ipv6 = None
         self.host_id = None
         self.interface_ip = None
+        self.connection_type = None
         self.connection_port = 22
+        self.shell_type = None
         self.image_id = None
         self.launcher = None
         self.created_time = None
@@ -560,7 +569,6 @@ class Node(BaseModel):
         self.comment = None
         self.hold_job = None
         self.username = None
-        self.connection_type = None
         self.host_keys = []
         self.hold_expiration = None
         self.resources = None
@@ -600,6 +608,7 @@ class Node(BaseModel):
                     self.username == other.username and
                     self.connection_type == other.connection_type and
                     self.connection_port == other.connection_port and
+                    self.shell_type == other.shell_type and
                     self.host_keys == other.host_keys and
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
@@ -650,6 +659,7 @@ class Node(BaseModel):
         d['username'] = self.username
         d['connection_type'] = self.connection_type
         d['connection_port'] = self.connection_port
+        d['shell_type'] = self.shell_type
         d['hold_expiration'] = self.hold_expiration
         d['resources'] = self.resources
         d['attributes'] = self.attributes
@@ -718,6 +728,7 @@ class Node(BaseModel):
         self.resources = d.get('resources')
         self.attributes = d.get('attributes')
         self.python_path = d.get('python_path')
+        self.shell_type = d.get('shell_type')
 
 
 class ZooKeeper(object):

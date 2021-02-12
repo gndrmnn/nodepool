@@ -194,6 +194,7 @@ class StaticNodeProvider(Provider):
             node.connection_port = static_node["connection-port"]
             node.connection_type = static_node["connection-type"]
             node.python_path = static_node["python-path"]
+            node.shell_type = static_node["shell-type"]
             nodeutils.set_node_ip(node)
             node.host_keys = host_keys
             node.attributes = pool.node_attributes
@@ -218,14 +219,15 @@ class StaticNodeProvider(Provider):
             static_node["username"],
             static_node["connection-port"],
             static_node["connection-type"],
+            static_node["shell-type"],
             static_node["python-path"],
             host_keys,
         )
 
         for node in nodes:
             original_attrs = (node.type, node.username, node.connection_port,
-                              node.connection_type, node.python_path,
-                              node.host_keys)
+                              node.shell_type, node.connection_type,
+                              node.python_path, node.host_keys)
 
             if original_attrs == new_attrs:
                 continue
@@ -236,6 +238,7 @@ class StaticNodeProvider(Provider):
                 node.username = static_node["username"]
                 node.connection_port = static_node["connection-port"]
                 node.connection_type = static_node["connection-type"]
+                node.shell_type = static_node["shell-type"]
                 node.python_path = static_node["python-path"]
                 nodeutils.set_node_ip(node)
                 node.host_keys = host_keys

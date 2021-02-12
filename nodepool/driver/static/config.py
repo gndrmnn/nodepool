@@ -57,6 +57,7 @@ class StaticPool(ConfigPool):
                 'connection-port': int(
                     node.get('connection-port', node.get('ssh-port', 22))),
                 'connection-type': node.get('connection-type', 'ssh'),
+                'shell-type': node.get('shell-type', None),
                 'username': node.get('username', 'zuul'),
                 'max-parallel-jobs': int(node.get('max-parallel-jobs', 1)),
                 'python-path': node.get('python-path', 'auto'),
@@ -108,6 +109,7 @@ class StaticProviderConfig(ProviderConfig):
             'host-key': v.Any(str, [str]),
             'connection-port': int,
             'connection-type': str,
+            'shell-type': str,
             'max-parallel-jobs': int,
             'python-path': str,
         }
