@@ -17,6 +17,7 @@
 import logging
 import operator
 import os
+import threading
 import time
 
 import openstack
@@ -50,13 +51,22 @@ class OpenStackProvider(Provider, QuotaSupport):
         self._down_ports = set()
         self._last_port_cleanup = None
         self._statsd = stats.get_client()
+        self.stopped = False
+        self._server_list_watcher = threading.Thread(
+            name='ServerListWatcher', target=self._watchServerList)
+        self._server_list_watcher_stop_event = threading.Event()
+        self._cleanup_map = {}
+
 
     def start(self, zk_conn):
         self.resetClient()
         self._zk = zk_conn
+        self._server_list_watcher.start()
 
     def stop(self):
-        pass
+        self.stopped = True
+        self._server_list_watcher_stop_event.set()
+        self._server_list_watcher.join()
 
     def join(self):
         pass
@@ -308,12 +318,17 @@ class OpenStackProvider(Provider, QuotaSupport):
             reuse=False, timeout=timeout)
 
     def waitForNodeCleanup(self, server_id, timeout=600):
-        for count in iterate_timeout(
-                timeout, exceptions.ServerDeleteException,
-                "server %s deletion" % server_id):
-            server = self.getServer(server_id)
-            if not server or server.status == "DELETED":
-                return
+        event = threading.Event()
+        self._cleanup_map[server_id] = (event, time.monotonic() + timeout)
+        if not event.wait(timeout=timeout):
+            raise exceptions.ServerDeleteException(
+                "server %s deletion" % server_id)
+        # for count in iterate_timeout(
+        #         timeout, exceptions.ServerDeleteException,
+        #         "server %s deletion" % server_id):
+        #     server = self.getServer(server_id)
+        #     if not server or server.status == "DELETED":
+        #         return
 
     def createImage(self, server, image_name, meta):
         return self._client.create_image_snapshot(
@@ -546,3 +561,35 @@ class OpenStackProvider(Provider, QuotaSupport):
                 # ability to turn off random portions of the OpenStack API.
                 self.__azs = [None]
         return self.__azs
+
+    def _watchServerList(self):
+        self.log.debug('Starting ServerListWatcher thread')
+        while not self.stopped:
+            if self._server_list_watcher_stop_event.wait(5):
+                break
+
+            if not self._cleanup_map:
+                # No server deletion to wait for so check can be skipped
+                continue
+
+            self.log.debug('_watchServerList tick')
+            existing_server_ids = {
+                server.id for server in self.listNodes()
+                if server.status != 'DELETED'
+            }
+            waiting_ids = set(self._cleanup_map.keys())
+
+            # Waiting servers minus existing servers are the servers that are
+            # deleted successfully.
+            deleted_ids = waiting_ids - existing_server_ids
+
+            for id in deleted_ids:
+                # Notify the thread which is waiting for the delete
+                self._cleanup_map[id][0].set()
+                del self._cleanup_map[id]
+
+            # Cleanup events that are past timeout
+            for id in list(self._cleanup_map.keys()):
+                _, timeout = self._cleanup_map[id]
+                if time.monotonic() > timeout:
+                    del self._cleanup_map[id]
