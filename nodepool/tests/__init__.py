@@ -153,6 +153,7 @@ class BaseTestCase(testtools.TestCase):
             test_timeout = 0
         if test_timeout > 0:
             self.useFixture(fixtures.Timeout(test_timeout, gentle=True))
+            self.useFixture(fixtures.Timeout(test_timeout + 20, gentle=False))
 
         if os.environ.get('OS_STDOUT_CAPTURE') in TRUE_VALUES:
             stdout = self.useFixture(fixtures.StringStream('stdout')).stream
@@ -221,6 +222,7 @@ class BaseTestCase(testtools.TestCase):
                      'fake-provider3',
                      'CleanupWorker',
                      'DeletedNodeWorker',
+                     'ServerListWatcher',
                      'StatsWorker',
                      'pydevd.CommandThread',
                      'pydevd.Reader',
