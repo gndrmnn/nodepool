@@ -30,6 +30,7 @@ class ProviderCloudImage(ConfigValue):
         self.python_path = None
         self.connection_type = None
         self.connection_port = None
+        self.shell_type = None
 
     def __eq__(self, other):
         if isinstance(other, ProviderCloudImage):
@@ -39,7 +40,8 @@ class ProviderCloudImage(ConfigValue):
                     and self.key == other.key
                     and self.python_path == other.python_path
                     and self.connection_type == other.connection_type
-                    and self.connection_port == other.connection_port)
+                    and self.connection_port == other.connection_port
+                    and self.shell_type == other.shell_type)
         return False
 
     def __repr__(self):
@@ -202,6 +204,7 @@ class GCEProviderConfig(ProviderConfig):
             i.connection_port = image.get(
                 'connection-port',
                 default_port_mapping.get(i.connection_type, 22))
+            i.shell_type = image.get('shell-type', None)
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
@@ -229,6 +232,7 @@ class GCEProviderConfig(ProviderConfig):
             'name': str,
             'connection-type': str,
             'connection-port': int,
+            'shell-type': str,
             'image-id': str,
             'image-project': str,
             'image-family': str,
