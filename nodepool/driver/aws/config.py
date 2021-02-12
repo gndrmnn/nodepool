@@ -229,6 +229,7 @@ class AwsProviderConfig(ProviderConfig):
             i.connection_port = image.get(
                 'connection-port',
                 default_port_mapping.get(i.connection_type, 22))
+            i.shell_type = image.get('shell-type', None)
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
@@ -272,6 +273,7 @@ class AwsProviderConfig(ProviderConfig):
             'name': str,
             'connection-type': str,
             'connection-port': int,
+            'shell-type': str,
             'image-id': str,
             "image-filters": [image_filters],
             'username': str,
