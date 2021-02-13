@@ -21,6 +21,7 @@ import threading
 import time
 
 import openstack
+from openstack.exceptions import ResourceTimeout
 
 from nodepool import exceptions
 from nodepool.driver import Provider
@@ -56,6 +57,7 @@ class OpenStackProvider(Provider, QuotaSupport):
             daemon=True)
         self._server_list_watcher_stop_event = threading.Event()
         self._cleanup_queue = {}
+        self._startup_queue = {}
 
     def start(self, zk_conn):
         self.resetClient()
@@ -312,6 +314,27 @@ class OpenStackProvider(Provider, QuotaSupport):
             return None
 
     def waitForServer(self, server, timeout=3600, auto_ip=True):
+        # This method is called from a separate thread per server. In order to
+        # reduce thread contention we don't call wait_for_server right now
+        # but put this thread on sleep until the desired instance is either
+        # in ACTIVE or ERROR state. After that just continue with
+        # wait_for_server which will continue its magic.
+        self.log.info('Wait for central server creation %s', server.id)
+        event = threading.Event()
+        start_time = time.monotonic()
+        self._startup_queue[server.id] = (event, start_time + timeout)
+        if not event.wait(timeout=timeout):
+            # On timeout emit the same exception as wait_for_server would to
+            timeout_message = "Timeout waiting for the server to come up."
+            raise ResourceTimeout(timeout_message)
+
+        self.log.info('Finished wait for central server creation %s',
+                      server.id)
+
+        # Re-calculate timeout to account for the duration so far
+        elapsed = time.monotonic() - start_time
+        timeout = max(0, timeout - elapsed)
+
         return self._client.wait_for_server(
             server=server, auto_ip=auto_ip,
             reuse=False, timeout=timeout)
@@ -564,31 +587,57 @@ class OpenStackProvider(Provider, QuotaSupport):
                 # deletion.
                 for event, _ in self._cleanup_queue.values():
                     event.set()
+                for event, _ in self._startup_queue.values():
+                    event.set()
                 break
 
-            if not self._cleanup_queue:
+            if not self._cleanup_queue and not self._startup_queue:
                 # No server deletion to wait for so check can be skipped
                 continue
 
             try:
-                existing_server_ids = {
-                    server.id for server in self.listNodes()
-                    if server.status != 'DELETED'
-                }
+                servers = self.listNodes()
             except Exception:
                 self.log.exception('Failed to get server list in '
                                    '_watchServerList')
                 continue
 
+            def process_timeouts(queue):
+                for server_id in list(queue.keys()):
+                    # Remove entries that are beyond timeout
+                    _, timeout = queue[server_id]
+                    if time.monotonic() > timeout:
+                        del queue[server_id]
+
+            # Process cleanup queue
+            existing_server_ids = {
+                server.id for server in servers
+                if server.status != 'DELETED'
+            }
             for server_id in list(self._cleanup_queue.keys()):
                 # Notify waiting threads that don't have server ids
                 if server_id not in existing_server_ids:
                     # Notify the thread which is waiting for the delete
+                    self.log.debug('Waking up thread for server %s', server_id)
                     self._cleanup_queue[server_id][0].set()
                     del self._cleanup_queue[server_id]
-                    continue
 
-                # Remove entries that are beyond timeout
-                _, timeout = self._cleanup_queue[server_id]
-                if time.monotonic() > timeout:
-                    del self._cleanup_queue[server_id]
+            # Process startup queue
+            finished_server_ids = {
+                server.id for server in servers
+                if server.status in ('ACTIVE', 'ERROR')
+            }
+            self.log.debug('Current servers: %s', servers)
+            self.log.debug('Finished servers: %s', finished_server_ids)
+            self.log.debug('Startup queue: %s', self._startup_queue)
+            for server_id in list(self._startup_queue.keys()):
+                # Notify waiting threads that don't have server ids
+                if server_id in finished_server_ids:
+                    # Notify the thread which is waiting for the delete
+                    self.log.debug('Waking up thread for server %s', server_id)
+                    self._startup_queue[server_id][0].set()
+                    del self._startup_queue[server_id]
+
+            # Process timeouts
+            process_timeouts(self._cleanup_queue)
+            process_timeouts(self._startup_queue)
