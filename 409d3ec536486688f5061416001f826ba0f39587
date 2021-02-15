@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c62bf70_6538445b",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "This should be debug",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f82ae59f_adfc3cd9",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "This should be debug",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0673019_034b48cc",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "Obsolete message",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a720a1bf_76ef2057",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "For better analysis a log entry before and after would be useful.",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a12e8c8_3d939942",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "Delete thread",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37e9af07_bd781490",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-15T22:09:48Z",
+      "side": 1,
+      "message": "Create thread",
+      "revId": "409d3ec536486688f5061416001f826ba0f39587",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
