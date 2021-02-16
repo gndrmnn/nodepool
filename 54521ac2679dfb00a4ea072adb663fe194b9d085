@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed4ed8fd_47b570c5",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-02-16T14:09:56Z",
+      "side": 1,
+      "message": "Could this function be moved outside of the class? It doesn\u0027t seems to use local binding.",
+      "range": {
+        "startLine": 610,
+        "startChar": 0,
+        "endLine": 610,
+        "endChar": 40
+      },
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d3306b6_904d98db",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-02-16T14:09:56Z",
+      "side": 1,
+      "message": "Would it be easier to review and re-use if we refactor the above two loops out of this class? They looks very similar.",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3d1eca8_a31598bf",
+        "filename": "tools/load-test.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-02-16T14:09:56Z",
+      "side": 1,
+      "message": "Would it be possible to measure how long this take and prints a summary at the end of the script?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 44
+      },
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
