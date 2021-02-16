@@ -19,6 +19,41 @@
     },
     {
       "key": {
+        "uuid": "a75613db_382e1ae6",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T14:34:25Z",
+      "side": 1,
+      "message": "It is actually already used in this change, see comment in the other provider.py",
+      "parentUuid": "40fcd91f_71f702ee",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8862198_83d0dcb2",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T14:34:25Z",
+      "side": 1,
+      "message": "The base flag is needed here.",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed4ed8fd_47b570c5",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 10
@@ -30,6 +65,30 @@
       "writtenOn": "2021-02-16T14:09:56Z",
       "side": 1,
       "message": "Could this function be moved outside of the class? It doesn\u0027t seems to use local binding.",
+      "range": {
+        "startLine": 610,
+        "startChar": 0,
+        "endLine": 610,
+        "endChar": 40
+      },
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "885bbc49_401f2010",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T14:34:25Z",
+      "side": 1,
+      "message": "This could be moved anywhere. Since it\u0027s only needed in that function I put it here, but actually I don\u0027t mind if folks want it to be somewhere else.",
+      "parentUuid": "ed4ed8fd_47b570c5",
       "range": {
         "startLine": 610,
         "startChar": 0,
@@ -59,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "277d6c39_ea82fc77",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T14:34:25Z",
+      "side": 1,
+      "message": "Actually I\u0027ve tried that but that got ugly die to the \u0027if server in ...\u0027 vs \u0027if server not in ...\u0027",
+      "parentUuid": "7d3306b6_904d98db",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3d1eca8_a31598bf",
         "filename": "tools/load-test.py",
         "patchSetId": 10
@@ -70,6 +147,30 @@
       "writtenOn": "2021-02-16T14:09:56Z",
       "side": 1,
       "message": "Would it be possible to measure how long this take and prints a summary at the end of the script?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 44
+      },
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bc87b2d_01776226",
+        "filename": "tools/load-test.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T14:34:25Z",
+      "side": 1,
+      "message": "Sure, however I guess that script should be its own change anyway. I\u0027ve accidentally put it here.",
+      "parentUuid": "b3d1eca8_a31598bf",
       "range": {
         "startLine": 64,
         "startChar": 0,
