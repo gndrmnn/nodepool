@@ -190,6 +190,24 @@
     },
     {
       "key": {
+        "uuid": "b51fb07c_205070c9",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-16T15:35:04Z",
+      "side": 1,
+      "message": "Yeah, it can be DELETED or just not there.",
+      "parentUuid": "d2242335_2d0de91c",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3d1eca8_a31598bf",
         "filename": "tools/load-test.py",
         "patchSetId": 10
