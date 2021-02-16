@@ -136,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "2d2d49da_2bca47da",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-02-16T14:40:46Z",
+      "side": 1,
+      "message": "Would it makes sense to use a `deleted_server_ids` set instead?",
+      "parentUuid": "277d6c39_ea82fc77",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3d1eca8_a31598bf",
         "filename": "tools/load-test.py",
         "patchSetId": 10
