@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c53778a_8e7f7849",
+        "filename": "nodepool/logconfig.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-16T18:02:30Z",
+      "side": 1,
+      "message": "This ret value is only ever written to and not used (would expect it to be part of the return value of this method).",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 16
+      },
+      "revId": "c30fb3946922157449fb12ea4f542161115e710f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
