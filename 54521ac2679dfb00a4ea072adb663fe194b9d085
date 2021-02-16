@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "40fcd91f_71f702ee",
+        "filename": "nodepool/driver/fake/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2021-02-16T14:25:12Z",
+      "side": 1,
+      "message": "I think this is actually part of the next change, no?",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed4ed8fd_47b570c5",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 10
