@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd10424f_5f9a6a4b",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2021-02-16T15:11:26Z",
+      "side": 1,
+      "message": "creation has been added - only if you do another pass for some other reason.",
+      "range": {
+        "startLine": 597,
+        "startChar": 28,
+        "endLine": 597,
+        "endChar": 36
+      },
+      "revId": "2e59f7b0b3d5094f5808463d2778e6b25f8ebd34",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
