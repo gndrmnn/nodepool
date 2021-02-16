@@ -22,7 +22,7 @@ import time
 from unittest.mock import patch
 
 import boto3
-from moto import mock_ec2
+from moto import mock_ec2, mock_s3
 import yaml
 
 from nodepool import tests
@@ -44,28 +44,7 @@ class TestDriverAws(tests.DBTestCase):
             except Exception:
                 pass
 
-    @mock_ec2
-    def _test_ec2_machine(self, label,
-                          diskimage_label=False,
-                          is_valid_config=True,
-                          host_key_checking=True,
-                          userdata=None,
-                          public_ip=True,
-                          tags=[],
-                          shell_type=None):
-        aws_id = 'AK000000000000000000'
-        aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
-        self.useFixture(
-            fixtures.EnvironmentVariable('AWS_ACCESS_KEY_ID', aws_id))
-        self.useFixture(
-            fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
-
-        ec2_resource = boto3.resource('ec2', region_name='us-west-2')
-        ec2 = boto3.client('ec2', region_name='us-west-2')
-
-        # TEST-NET-3
-        vpc = ec2.create_vpc(CidrBlock='203.0.113.0/24')
-
+    def _get_aws_config(self, ec2, vpc):
         subnet = ec2.create_subnet(
             CidrBlock='203.0.113.128/25', VpcId=vpc['Vpc']['VpcId'])
         subnet_id = subnet['Subnet']['SubnetId']
@@ -103,16 +82,48 @@ class TestDriverAws(tests.DBTestCase):
         raw_config['providers'][0]['pools'][6]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][6]['security-group-id'] = sg_id
 
-        with tempfile.NamedTemporaryFile() as tf:
-            tf.write(yaml.safe_dump(
-                raw_config, default_flow_style=False).encode('utf-8'))
-            tf.flush()
-            configfile = self.setup_config(tf.name)
-            pool = self.useNodepool(configfile, watermark_sleep=1)
-            pool.start()
+        return raw_config
 
-            self._wait_for_provider(pool, 'ec2-us-west-2')
-            provider_manager = pool.getProviderManager('ec2-us-west-2')
+    def _setup_aws_env_variables(self):
+        aws_id = 'AK000000000000000000'
+        aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
+        self.useFixture(
+            fixtures.EnvironmentVariable('AWS_ACCESS_KEY_ID', aws_id))
+        self.useFixture(
+            fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
+
+    def _get_provider_with_config(self, temp_file, raw_config):
+        temp_file.write(yaml.safe_dump(
+            raw_config, default_flow_style=False).encode('utf-8'))
+        temp_file.flush()
+        configfile = self.setup_config(temp_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self._wait_for_provider(pool, 'ec2-us-west-2')
+        return pool.getProviderManager('ec2-us-west-2')
+
+    @mock_ec2
+    def _test_ec2_machine(self, label,
+                          diskimage_label=False,
+                          is_valid_config=True,
+                          host_key_checking=True,
+                          userdata=None,
+                          public_ip=True,
+                          tags=[],
+                          shell_type=None):
+        self._setup_aws_env_variables()
+
+        ec2_resource = boto3.resource('ec2', region_name='us-west-2')
+        ec2 = boto3.client('ec2', region_name='us-west-2')
+
+        # TEST-NET-3
+        vpc = ec2.create_vpc(CidrBlock='203.0.113.0/24')
+
+        raw_config = self._get_aws_config(ec2, vpc)
+
+        with tempfile.NamedTemporaryFile() as tf:
+            provider_manager = self._get_provider_with_config(tf, raw_config)
 
             if diskimage_label:
                 self._prepare_diskimage_label(provider_manager, shell_type)
@@ -280,3 +291,48 @@ class TestDriverAws(tests.DBTestCase):
 
     def test_ec2_with_diskimage(self):
         self._test_ec2_machine('dib-ubuntu1804', diskimage_label=True)
+
+    @mock_s3
+    @mock_ec2
+    def test_image_upload(self):
+        self._setup_aws_env_variables()
+        aws_region = 'us-west-2'
+        ec2 = boto3.client('ec2', region_name=aws_region)
+        vpc = ec2.create_vpc(CidrBlock='203.0.113.0/24')
+        raw_config = self._get_aws_config(ec2, vpc)
+        with tempfile.NamedTemporaryFile() as tf:
+            provider_manager = self._get_provider_with_config(tf, raw_config)
+            s3 = boto3.resource('s3')
+            bucket_name = provider_manager.provider.s3_image_bucket
+            s3.create_bucket(Bucket=bucket_name,
+                             CreateBucketConfiguration={
+                                 'LocationConstraint': aws_region})
+            s3_bucket = s3.Bucket(bucket_name)
+
+            ami_import_task_id = 'ami-import-id-123'
+            ami_id = "ami-1234"
+
+            def _import_image_mock(**kwargs):
+                return {'ImportTaskId': ami_import_task_id}
+
+            def _describe_ami_import_mock(**kwargs):
+                assert kwargs['ImportTaskIds'][0] == ami_import_task_id
+                return {'ImportImageTasks': [{
+                    'Status': 'completed',
+                    'ImageId': ami_id}]}
+
+            def _ec2_create_tags_mock(Resources, Tags):
+                assert Resources[0] == ami_id
+
+            provider_manager.ec2_client.import_image = _import_image_mock
+            provider_manager.ec2_client.describe_import_image_tasks =\
+                _describe_ami_import_mock
+            provider_manager.ec2_client.create_tags = _ec2_create_tags_mock
+            image_name = 'dib-ubuntu1804'
+            with tempfile.NamedTemporaryFile() as image_tf:
+                meta = {'nodepool_build_id': 'aws-test-123'}
+                uploaded_image_id = provider_manager.uploadImage(
+                    image_name, image_tf.name, meta=meta)
+                for content in s3_bucket.objects.all():
+                    assert False
+                assert uploaded_image_id == ami_id
