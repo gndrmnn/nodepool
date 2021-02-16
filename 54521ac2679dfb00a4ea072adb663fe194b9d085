@@ -172,6 +172,24 @@
     },
     {
       "key": {
+        "uuid": "d2242335_2d0de91c",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-02-16T15:27:22Z",
+      "side": 1,
+      "message": "OH my bad, I got confused by the `if server.status !\u003d \u0027DELETED\u0027` test.",
+      "parentUuid": "3aa78faf_9f816d0a",
+      "revId": "54521ac2679dfb00a4ea072adb663fe194b9d085",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3d1eca8_a31598bf",
         "filename": "tools/load-test.py",
         "patchSetId": 10
