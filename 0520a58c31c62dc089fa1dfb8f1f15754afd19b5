@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "085f07ef_629ed0d9",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 20
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "180eed0b_c0bf2b0c",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b78f73c_8f727ef3",
         "filename": "doc/source/aws.rst",
         "patchSetId": 20
@@ -116,6 +134,30 @@
     },
     {
       "key": {
+        "uuid": "de827c71_337eb724",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7fdc80_97894e5d",
+      "range": {
+        "startLine": 359,
+        "startChar": 13,
+        "endLine": 359,
+        "endChar": 21
+      },
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4b1eb82_ff2e2d37",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 20
@@ -133,6 +175,24 @@
     },
     {
       "key": {
+        "uuid": "084f5142_838cc423",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "The image name here is actually the ext_image_name from the upload worker which has a timestamp attached to the image name specified in the config (e.g. ubuntu1804-1613482878).",
+      "parentUuid": "f4b1eb82_ff2e2d37",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d3913dd_2c01a434",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 20
@@ -144,6 +204,24 @@
       "writtenOn": "2021-02-06T22:30:20Z",
       "side": 1,
       "message": "Not a minus one: we could use iterate_timeout here and have a really long timeout in case the import gets permanently stuck.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80b1bde2_d73b8d76",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "7d3913dd_2c01a434",
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -184,6 +262,24 @@
     },
     {
       "key": {
+        "uuid": "f793a635_ed776d36",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41de7c6f_52b81487",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ced99981_871299b1",
         "filename": "nodepool/driver/aws/provider.py",
         "patchSetId": 20
@@ -212,6 +308,24 @@
       "writtenOn": "2021-02-06T22:30:20Z",
       "side": 1,
       "message": "Agreed, and if the deletion fails, let that exception propogate up so we keep the ZK record.",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c27cde5_66c6db0e",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ced99981_871299b1",
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
@@ -263,6 +377,24 @@
       "writtenOn": "2021-02-06T22:30:20Z",
       "side": 1,
       "message": "This causes the new code not to run (because it adds the data to ZK as if it had already run).  The rest of the AWS tests use boto to actually exercise nodepool code.  Can we do that here?",
+      "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad84c4ae_36639b8e",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 22907
+      },
+      "writtenOn": "2021-02-16T14:46:13Z",
+      "side": 1,
+      "message": "Thanks for your remark, I forgot to take out the labelReady mock method. Now the actual labelReady code in the aws provider will be executed.\nHowever, as large parts of this patch are in the image_upload, I added an additional test case to test the image upload aswell (executing the boto3 code where possible).\nI did this in an extra commit, as I had to restructure the existing test case to avoid duplicate code and did not want this commit to get too big.\nhttps://review.opendev.org/c/zuul/nodepool/+/775844",
+      "parentUuid": "b2b17458_831afcfe",
       "revId": "0520a58c31c62dc089fa1dfb8f1f15754afd19b5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
