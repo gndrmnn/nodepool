@@ -463,7 +463,7 @@ class OpenStackProvider(Provider, QuotaSupport):
                     deleting_nodes[node.provider] = []
                 deleting_nodes[node.provider].append(node.external_id)
 
-        for server in self.listNodes():
+        for server in self._client.list_servers(bare=True):
             meta = server.get('metadata', {})
 
             if 'nodepool_provider_name' not in meta:
