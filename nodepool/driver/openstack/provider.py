@@ -19,6 +19,7 @@ import operator
 import os
 import threading
 import time
+from collections import OrderedDict
 
 import openstack
 from openstack.exceptions import ResourceTimeout
@@ -35,6 +36,22 @@ from nodepool.driver.openstack import handler
 
 
 IPS_LIST_AGE = 5      # How long to keep a cached copy of the ip list
+
+
+class RequestLogger:
+
+    def __init__(self):
+        self.log = logging.getLogger("nodepool.openstackrequest")
+
+    def log_request(self, response, *args, **kwargs):
+        fields = OrderedDict()
+        fields['result'] = response.status_code
+        fields['size'] = len(response.content)
+        fields['duration'] = int(response.elapsed.microseconds / 1000)
+        info = ', '.join(['%s: %s' % (key, value)
+                          for key, value in fields.items()])
+        self.log.debug('%s %s %s',
+                       response.request.method, response.url, info)
 
 
 class OpenStackProvider(Provider, QuotaSupport):
@@ -89,7 +106,7 @@ class OpenStackProvider(Provider, QuotaSupport):
         # 1/time = requests-per-second.
         if self.provider.rate:
             rate_limit = 1 / self.provider.rate
-        return openstack.connection.Connection(
+        conn = openstack.connection.Connection(
             config=self.provider.cloud_config,
             use_direct_get=False,
             rate_limit=rate_limit,
@@ -99,6 +116,16 @@ class OpenStackProvider(Provider, QuotaSupport):
             app_name='nodepool',
             app_version=version.version_info.version_string()
         )
+
+        # Hook our own request logger into the session. We currently cannot
+        # use the integrated openstacksdk logging since this also logs the
+        # response bodies together with the requests which is too much for
+        # nodepool logging.
+        session = conn.session.session
+        request_logger = RequestLogger()
+        session.hooks['response'].append(request_logger.log_request)
+
+        return conn
 
     def getProviderLimits(self):
         limits = self._client.get_compute_limits()
