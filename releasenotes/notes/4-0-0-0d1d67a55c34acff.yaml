@@ -1,7 +1,6 @@
 ---
-prelude: >
-    The 4.0.0 release of Nodepool is not substantially different than
-    3.14 and is compatible with Zuul versions 3.19 and 4.0.  Nodepool
-    and Zuul versions are not generally synchronized, but we elected
-    to increase the Nodepool major version to match the 4.0 release of
-    Zuul for clarity.
+upgrade:
+  - |
+    TLS is now required for ZooKeeper connections.  TLS support has
+    been optional since version 3.13.  If you have not already enabled
+    it, we recommend enabling it before upgrading to 4.0.
