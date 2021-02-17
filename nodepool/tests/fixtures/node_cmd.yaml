@@ -6,6 +6,11 @@ zookeeper-servers:
     port: {zookeeper_port}
     chroot: {zookeeper_chroot}
 
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
 labels:
   - name: fake-label1
     min-ready: 1

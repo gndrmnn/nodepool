@@ -358,7 +358,6 @@ def loadSecureConfig(config, secure_config_path, env=os.environ):
     if secure.get('zookeeper-servers', []):
         config.zookeeper_servers = {}
 
-    # TODO(Shrews): Support ZooKeeper auth
     config.setZooKeeperServers(secure.get('zookeeper-servers'))
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
