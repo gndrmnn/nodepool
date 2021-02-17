@@ -983,11 +983,16 @@ class ZooKeeper(object):
             hosts = buildZooKeeperHosts(host_list)
             args = dict(hosts=hosts,
                         read_only=read_only)
-            if tls_key:
-                args['use_ssl'] = True
-                args['keyfile'] = tls_key
-                args['certfile'] = tls_cert
-                args['ca'] = tls_ca
+
+            args['use_ssl'] = True
+            if not (tls_key and tls_cert and tls_ca):
+                raise Exception("A TLS ZooKeeper connection is required; "
+                                "please supply the zookeeper-tls "
+                                "config values.")
+
+            args['keyfile'] = tls_key
+            args['certfile'] = tls_cert
+            args['ca'] = tls_ca
             self.client = KazooClient(**args)
             self.client.add_listener(self._connection_listener)
             # Manually retry initial connection attempt
