@@ -1,0 +1,4 @@
+- hosts: all
+  roles:
+    - role: ensure-zookeeper
+      zookeeper_use_tls: true
