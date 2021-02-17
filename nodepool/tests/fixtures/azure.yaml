@@ -6,6 +6,11 @@ zookeeper-servers:
   - host: 127.0.0.1
     port: 2181
 
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
 labels:
   - name: bionic
     min-ready: 1
