@@ -4,6 +4,8 @@
       bindep_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
     - role: test-setup
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    - role: ensure-zookeeper
+      zookeeper_use_tls: true
     - ensure-devstack
     - ensure-virtualenv
   tasks:
