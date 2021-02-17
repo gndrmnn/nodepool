@@ -61,16 +61,37 @@ class ZookeeperServerFixture(fixtures.Fixture):
         self.zookeeper_host = host
 
         if not port:
-            self.zookeeper_port = 2181
+            self.zookeeper_port = 2281
         else:
             self.zookeeper_port = int(port)
 
+        zk_ca = os.environ.get('NODEPOOL_ZK_CA', None)
+        if not zk_ca:
+            zk_ca = os.path.join(os.path.dirname(__file__),
+                                 '../../tools/ca/certs/cacert.pem')
+        self.zookeeper_ca = zk_ca
+        zk_cert = os.environ.get('NODEPOOL_ZK_CERT', None)
+        if not zk_cert:
+            zk_cert = os.path.join(os.path.dirname(__file__),
+                                   '../../tools/ca/certs/client.pem')
+        self.zookeeper_cert = zk_cert
+        zk_key = os.environ.get('NODEPOOL_ZK_KEY', None)
+        if not zk_key:
+            zk_key = os.path.join(os.path.dirname(__file__),
+                                  '../../tools/ca/keys/clientkey.pem')
+        self.zookeeper_key = zk_key
+
 
 class ChrootedKazooFixture(fixtures.Fixture):
-    def __init__(self, zookeeper_host, zookeeper_port):
+    def __init__(self, zookeeper_host, zookeeper_port, zookeeper_ca,
+                 zookeeper_cert, zookeeper_key):
         super(ChrootedKazooFixture, self).__init__()
-        self.zookeeper_host = zookeeper_host
-        self.zookeeper_port = zookeeper_port
+        self.zk_args = dict(
+            hosts='%s:%s' % (zookeeper_host, zookeeper_port),
+            use_ssl=True,
+            ca=zookeeper_ca,
+            certfile=zookeeper_cert,
+            keyfile=zookeeper_key)
 
     def _setUp(self):
         # Make sure the test chroot paths do not conflict
@@ -82,8 +103,7 @@ class ChrootedKazooFixture(fixtures.Fixture):
         self.zookeeper_chroot = "/nodepool_test/%s" % rand_test_path
 
         # Ensure the chroot path exists and clean up any pre-existing znodes.
-        _tmp_client = kazoo.client.KazooClient(
-            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port))
+        _tmp_client = kazoo.client.KazooClient(**self.zk_args)
         _tmp_client.start()
 
         if _tmp_client.exists(self.zookeeper_chroot):
@@ -98,8 +118,7 @@ class ChrootedKazooFixture(fixtures.Fixture):
     def _cleanup(self):
         '''Remove the chroot path.'''
         # Need a non-chroot'ed client to remove the chroot path
-        _tmp_client = kazoo.client.KazooClient(
-            hosts='%s:%s' % (self.zookeeper_host, self.zookeeper_port))
+        _tmp_client = kazoo.client.KazooClient(**self.zk_args)
         _tmp_client.start()
         _tmp_client.delete(self.zookeeper_chroot, recursive=True)
         _tmp_client.stop()
@@ -373,7 +392,10 @@ class DBTestCase(BaseTestCase):
                                      context_name=context_name,
                                      zookeeper_host=self.zookeeper_host,
                                      zookeeper_port=self.zookeeper_port,
-                                     zookeeper_chroot=self.zookeeper_chroot)
+                                     zookeeper_chroot=self.zookeeper_chroot,
+                                     zookeeper_ca=self.zookeeper_ca,
+                                     zookeeper_cert=self.zookeeper_cert,
+                                     zookeeper_key=self.zookeeper_key)
                 os.write(fd, data.encode('utf8'))
             os.close(fd)
         self._config_images_dir = images_dir
@@ -399,7 +421,10 @@ class DBTestCase(BaseTestCase):
             data = config.format(
                 zookeeper_host=self.zookeeper_host,
                 zookeeper_port=self.zookeeper_port,
-                zookeeper_chroot=self.zookeeper_chroot)
+                zookeeper_chroot=self.zookeeper_chroot,
+                zookeeper_ca=self.zookeeper_ca,
+                zookeeper_cert=self.zookeeper_cert,
+                zookeeper_key=self.zookeeper_key)
             os.write(fd, data.encode('utf8'))
         os.close(fd)
         return path
@@ -587,16 +612,26 @@ class DBTestCase(BaseTestCase):
         self.useFixture(f)
         self.zookeeper_host = f.zookeeper_host
         self.zookeeper_port = f.zookeeper_port
+        self.zookeeper_ca = f.zookeeper_ca
+        self.zookeeper_cert = f.zookeeper_cert
+        self.zookeeper_key = f.zookeeper_key
 
         kz_fxtr = self.useFixture(ChrootedKazooFixture(
             self.zookeeper_host,
-            self.zookeeper_port))
+            self.zookeeper_port,
+            self.zookeeper_ca,
+            self.zookeeper_cert,
+            self.zookeeper_key,
+        ))
         self.zookeeper_chroot = kz_fxtr.zookeeper_chroot
         self.zk = zk.ZooKeeper(enable_cache=False)
         host = zk.ZooKeeperConnectionConfig(
-            self.zookeeper_host, self.zookeeper_port, self.zookeeper_chroot
+            self.zookeeper_host, self.zookeeper_port, self.zookeeper_chroot,
         )
-        self.zk.connect([host])
+        self.zk.connect([host],
+                        tls_ca=self.zookeeper_ca,
+                        tls_cert=self.zookeeper_cert,
+                        tls_key=self.zookeeper_key)
         self.addCleanup(self.zk.disconnect)
 
     def printZKTree(self, node):

@@ -23,6 +23,8 @@ services:
       - /var/log/nodepool:/var/log/nodepool
       # devstack tls-proxy puts CA here that is referenced by cloud config
       - /opt/stack/data:/opt/stack/data:ro
+      # zookeeper certs
+      - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
 
   nodepool-launcher:
     image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}
@@ -41,3 +43,5 @@ services:
       - /var/log/nodepool:/var/log/nodepool
       # devstack tls-proxy puts CA here that is referenced by cloud config
       - /opt/stack/data:/opt/stack/data:ro
+      # zookeeper certs
+      - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
