@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  zookeeper:
+    container_name: nodepool-test-zookeeper
+    image: zookeeper
+    ports:
+      - "2281:2281"
+    tmpfs:
+      - /data
+      - /datalog
+    volumes:
+      - "./ca:/var/certs:z"
+      - "./zoo.cfg:/conf/zoo.cfg:z"
