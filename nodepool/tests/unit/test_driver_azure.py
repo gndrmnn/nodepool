@@ -169,6 +169,11 @@ class TestDriverAzure(tests.DBTestCase):
             'port': self.zookeeper_port,
             'chroot': self.zookeeper_chroot,
         }
+        raw_config['zookeeper-tls'] = {
+            'ca': self.zookeeper_ca,
+            'cert': self.zookeeper_cert,
+            'key': self.zookeeper_key,
+        }
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(
                 raw_config, default_flow_style=False).encode('utf-8'))

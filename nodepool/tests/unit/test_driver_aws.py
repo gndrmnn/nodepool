@@ -80,6 +80,11 @@ class TestDriverAws(tests.DBTestCase):
             'port': self.zookeeper_port,
             'chroot': self.zookeeper_chroot,
         }
+        raw_config['zookeeper-tls'] = {
+            'ca': self.zookeeper_ca,
+            'cert': self.zookeeper_cert,
+            'key': self.zookeeper_key,
+        }
         raw_config['providers'][0]['pools'][0]['subnet-id'] = subnet_id
         raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
         raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id

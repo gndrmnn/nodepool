@@ -15,5 +15,6 @@ musl-dev [compile test platform:apk]
 python3-dev [compile test platform:dpkg]
 python3-devel [compile test platform:rpm]
 sudo
-zookeeperd [platform:dpkg test]
-zookeeper [platform:suse test]
+docker.io [test platform:dpkg]
+docker [test platform:fedora]
+docker-compose [test]

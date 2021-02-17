@@ -9,6 +9,9 @@
           oc login -u developer -p developer --insecure-skip-tls-verify=true
           https://{{ hostvars['cluster']['ansible_hostname'] }}:8443
   roles:
-    - role: ensure-zookeeper
     - role: tox
       tox_envlist: functional_openshift
+      tox_environment:
+        NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
+        NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
+        NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem

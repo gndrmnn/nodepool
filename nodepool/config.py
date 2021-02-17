@@ -101,7 +101,7 @@ class Config(ConfigValue):
 
         for server in zk_cfg:
             z = zk.ZooKeeperConnectionConfig(server['host'],
-                                             server.get('port', 2181),
+                                             server.get('port', 2281),
                                              server.get('chroot', None))
             name = z.host + '_' + str(z.port)
             self.zookeeper_servers[name] = z
@@ -358,7 +358,6 @@ def loadSecureConfig(config, secure_config_path, env=os.environ):
     if secure.get('zookeeper-servers', []):
         config.zookeeper_servers = {}
 
-    # TODO(Shrews): Support ZooKeeper auth
     config.setZooKeeperServers(secure.get('zookeeper-servers'))
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)

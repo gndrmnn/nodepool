@@ -12,6 +12,8 @@
 - hosts: launcher
   roles:
     - role: bindep
+    - role: ensure-zookeeper
+      zookeeper_use_tls: true
     - role: ensure-tox
   tasks:
     - name: Ensure oc client is installed
