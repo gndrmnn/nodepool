@@ -248,6 +248,11 @@ class TestDriverGce(tests.DBTestCase):
             'port': self.zookeeper_port,
             'chroot': self.zookeeper_chroot,
         }
+        raw_config['zookeeper-tls'] = {
+            'ca': self.zookeeper_ca,
+            'cert': self.zookeeper_cert,
+            'key': self.zookeeper_key,
+        }
 
         with tempfile.NamedTemporaryFile() as tf:
             tf.write(yaml.safe_dump(

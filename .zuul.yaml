@@ -347,6 +347,26 @@
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
+- job:
+    name: nodepool-tox-py36
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py36
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: &nodepool_tox_vars
+      tox_environment:
+        NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
+        NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
+        NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
+
+- job:
+    name: nodepool-tox-py38
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py36
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: *nodepool_tox_vars
+          
 - project:
     vars:
       release_python: python3
