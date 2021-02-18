@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c36e7d8a_ccc327bd",
+        "filename": ".zuul.yaml",
+        "patchSetId": 10
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-18T21:39:24Z",
+      "side": 1,
+      "message": "I think this should be an 8.",
+      "range": {
+        "startLine": 366,
+        "startChar": 19,
+        "endLine": 366,
+        "endChar": 20
+      },
+      "revId": "773d45ad07814ab1310a0c06a2bcc48a86d431d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
