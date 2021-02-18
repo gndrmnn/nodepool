@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8d396a7_89d93385",
+        "filename": ".zuul.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-18T22:21:58Z",
+      "side": 1,
+      "message": "Need to update these jobs to the new job names.",
+      "revId": "e8d8dfdf9b11464bc3df7bdfd863998362002972",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7cb8509_b0845f1d",
+        "filename": ".zuul.yaml",
+        "patchSetId": 11
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-18T22:21:58Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "e8d8dfdf9b11464bc3df7bdfd863998362002972",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
