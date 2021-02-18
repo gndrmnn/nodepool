@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d055a8_06f9aff8",
+        "filename": "nodepool/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-18T00:15:42Z",
+      "side": 1,
+      "message": "This should be updated to be a 2.",
+      "range": {
+        "startLine": 104,
+        "startChar": 65,
+        "endLine": 104,
+        "endChar": 66
+      },
+      "revId": "0ccd723d49712bec60bbdf4092e8dba922a22df4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
