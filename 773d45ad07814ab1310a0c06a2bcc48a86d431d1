@@ -22,6 +22,29 @@
       "revId": "773d45ad07814ab1310a0c06a2bcc48a86d431d1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "715e9a91_fc61091a",
+        "filename": "playbooks/nodepool-functional-openstack/templates/nodepool.yaml.j2",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-18T21:45:13Z",
+      "side": 1,
+      "message": "This needs to be a 2",
+      "range": {
+        "startLine": 6,
+        "startChar": 11,
+        "endLine": 6,
+        "endChar": 12
+      },
+      "revId": "773d45ad07814ab1310a0c06a2bcc48a86d431d1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
