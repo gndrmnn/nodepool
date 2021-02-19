@@ -22,6 +22,30 @@
       "revId": "4c5fa46540e07dfad1d62f069f8e44aa5a330660",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ea878a1_3c604547",
+        "filename": "tools/zoo.cfg",
+        "patchSetId": 15
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-19T21:38:02Z",
+      "side": 1,
+      "message": "No, it\u0027s still used in the docker-compose file when launching zk. I guess that comment could be fixed in a followup.",
+      "parentUuid": "78ca03a1_0dc7b5fe",
+      "range": {
+        "startLine": 1,
+        "startChar": 21,
+        "endLine": 1,
+        "endChar": 34
+      },
+      "revId": "4c5fa46540e07dfad1d62f069f8e44aa5a330660",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
