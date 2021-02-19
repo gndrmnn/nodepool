@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78ca03a1_0dc7b5fe",
+        "filename": "tools/zoo.cfg",
+        "patchSetId": 15
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-19T20:57:12Z",
+      "side": 1,
+      "message": "test-setup.sh was removed which means we should be able to remove this file too?",
+      "range": {
+        "startLine": 1,
+        "startChar": 21,
+        "endLine": 1,
+        "endChar": 34
+      },
+      "revId": "4c5fa46540e07dfad1d62f069f8e44aa5a330660",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
