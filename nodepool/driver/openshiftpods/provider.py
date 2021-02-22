@@ -12,14 +12,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import base64
 import logging
 import urllib3
 import time
 
-from kubernetes import client as k8s_client
-from kubernetes import config as k8s_config
-
+from nodepool.driver.utils_k8s import get_client
 from nodepool.driver.openshift.provider import OpenshiftProvider
 from nodepool.driver.openshiftpods import handler
 
@@ -33,31 +30,11 @@ class OpenshiftPodsProvider(OpenshiftProvider):
     def __init__(self, provider, *args):
         self.provider = provider
         self.ready = False
-        try:
-            self.token, self.ca_crt, self.k8s_client = self._get_client(
-                provider.context)
-        except k8s_config.config_exception.ConfigException:
-            self.log.exception("Couldn't load client from config")
-            self.log.info("Get context list using this command: "
-                          "python3 -c \"from kubernetes import config; "
-                          "print('\\n'.join([i['name'] for i in "
-                          "config.list_kube_config_contexts()[0]]))\"")
-            self.token = None
-            self.k8s_client = None
-            self.ca_crt = None
+        self.token, self.ca_crt, self.k8s_client, _ = get_client(
+            self.log, provider.context)
         self.pod_names = set()
         for pool in provider.pools.values():
             self.pod_names.update(pool.labels.keys())
-
-    def _get_client(self, context):
-        conf = k8s_config.new_client_from_config(context=context)
-        token = conf.configuration.api_key.get('authorization', '').split()[-1]
-        ca = None
-        if conf.configuration.ssl_ca_cert:
-            with open(conf.configuration.ssl_ca_cert) as ca_file:
-                ca = ca_file.read()
-                ca = base64.b64encode(ca.encode('utf-8')).decode('utf-8')
-        return (token, ca, k8s_client.CoreV1Api(conf))
 
     def start(self, zk_conn):
         self.log.debug("Starting")
