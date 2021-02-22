@@ -22,7 +22,7 @@ from kubernetes import client as k8s_client
 from kubernetes import config as k8s_config
 
 from nodepool import exceptions
-from nodepool.driver import Provider
+from nodepool.driver import Provider, Drivers
 from nodepool.driver.kubernetes import handler
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 
@@ -75,10 +75,12 @@ class KubernetesProvider(Provider, QuotaSupport):
         self._zk = zk_conn
         if self.ready or not self.k8s_client or not self.rbac_client:
             return
+        Drivers.active("kubernetes")
         self.ready = True
 
     def stop(self):
         self.log.debug("Stopping")
+        Drivers.deactive("kubernetes")
         self.ready = False
 
     def listNodes(self):
