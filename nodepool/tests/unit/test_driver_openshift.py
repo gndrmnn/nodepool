@@ -18,7 +18,7 @@ import logging
 
 from nodepool import tests
 from nodepool import zk
-from nodepool.driver.openshift import provider
+from nodepool.driver import utils_k8s
 
 
 class FakeOpenshiftProjectsQuery:
@@ -126,11 +126,11 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.fake_os_client = FakeOpenshiftClient()
         self.fake_k8s_client = FakeCoreClient()
 
-        def fake_get_client(*args):
-            return self.fake_os_client, self.fake_k8s_client
+        def fake_get_client(log, context):
+            return None, None, self.fake_os_client, self.fake_k8s_client
 
-        self.useFixture(fixtures.MockPatchObject(
-            provider.OpenshiftProvider, '_get_client',
+        self.useFixture(fixtures.FunctionFixture(
+            utils_k8s.get_client,
             fake_get_client
         ))
 
