@@ -19,7 +19,7 @@ import time
 
 from nodepool import tests
 from nodepool import zk
-from nodepool.driver.kubernetes import provider
+from nodepool.driver import utils_k8s
 
 
 class FakeCoreClient(object):
@@ -95,13 +95,11 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.fake_k8s_client = FakeCoreClient()
         self.fake_rbac_client = FakeRbacClient()
 
-        def fake_get_client(*args):
-            return self.fake_k8s_client, self.fake_rbac_client
+        def fake_get_client(log, context, ctor=None):
+            return None, None, self.fake_k8s_client, self.fake_rbac_client
 
         self.useFixture(fixtures.MockPatchObject(
-            provider.KubernetesProvider, '_get_client',
-            fake_get_client
-        ))
+            utils_k8s, 'get_client', fake_get_client))
 
     def test_kubernetes_machine(self):
         configfile = self.setup_config('kubernetes.yaml')

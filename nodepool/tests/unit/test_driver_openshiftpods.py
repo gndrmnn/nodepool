@@ -18,7 +18,7 @@ import logging
 
 from nodepool import tests
 from nodepool import zk
-from nodepool.driver.openshiftpods import provider
+from nodepool.driver import utils_k8s
 
 
 class FakeCoreClient(object):
@@ -75,13 +75,11 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         super().setUp()
         self.fake_k8s_client = FakeCoreClient()
 
-        def fake_get_client(*args):
-            return "fake-token", None, self.fake_k8s_client
+        def fake_get_client(log, context, ctor=None):
+            return "fake-token", None, self.fake_k8s_client, None
 
         self.useFixture(fixtures.MockPatchObject(
-            provider.OpenshiftPodsProvider, '_get_client',
-            fake_get_client
-        ))
+            utils_k8s, 'get_client', fake_get_client))
 
     def test_openshift_pod(self):
         configfile = self.setup_config('openshiftpods.yaml')
