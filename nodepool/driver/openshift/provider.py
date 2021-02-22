@@ -22,7 +22,7 @@ from kubernetes import config as k8s_config
 from openshift.dynamic import DynamicClient as os_client
 
 from nodepool import exceptions
-from nodepool.driver import Provider
+from nodepool.driver import Drivers, Provider
 from nodepool.driver.openshift import handler
 
 urllib3.disable_warnings()
@@ -57,9 +57,11 @@ class OpenshiftProvider(Provider):
         if self.ready or not self.os_client or not self.k8s_client:
             return
         self.ready = True
+        Drivers.active("openshift")
 
     def stop(self):
         self.log.debug("Stopping")
+        Drivers.deactive("openshift")
 
     def listNodes(self):
         servers = []

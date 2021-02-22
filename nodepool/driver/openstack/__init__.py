@@ -14,7 +14,7 @@
 
 from openstack.config import loader
 
-from nodepool.driver import Driver
+from nodepool.driver import Driver, Drivers
 from nodepool.driver.openstack.config import OpenStackProviderConfig
 from nodepool.driver.openstack.provider import OpenStackProvider
 
@@ -22,12 +22,13 @@ from nodepool.driver.openstack.provider import OpenStackProvider
 class OpenStackDriver(Driver):
     def __init__(self):
         super().__init__()
-        self.reset()
 
     def reset(self):
         self.openstack_config = loader.OpenStackConfig()
 
     def getProviderConfig(self, provider):
+        if not Drivers.is_active("openstack"):
+            self.reset()
         return OpenStackProviderConfig(self, provider)
 
     def getProvider(self, provider_config):
