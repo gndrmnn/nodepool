@@ -20,6 +20,7 @@ import time
 from kubernetes import client as k8s_client
 from kubernetes import config as k8s_config
 
+from nodepool.driver import Drivers
 from nodepool.driver.openshift.provider import OpenshiftProvider
 from nodepool.driver.openshiftpods import handler
 
@@ -64,6 +65,11 @@ class OpenshiftPodsProvider(OpenshiftProvider):
         if self.ready or not self.k8s_client:
             return
         self.ready = True
+        Drivers.active("openshiftpods")
+
+    def stop(self):
+        self.log.debug("Stopping")
+        Drivers.deactive("openshiftpods")
 
     def listNodes(self):
         servers = []

@@ -34,7 +34,25 @@ class Drivers:
 
     log = logging.getLogger("nodepool.driver.Drivers")
     drivers = {}
+    # Keep track of active drivers
+    _active = {}
     drivers_paths = None
+
+    @staticmethod
+    def active(name):
+        """Register a driver as active"""
+        Drivers._active.setdefault(name, 0)
+        Drivers._active[name] += 1
+
+    @staticmethod
+    def deactive(name):
+        """De-register a driver as active"""
+        Drivers._active[name] -= 1
+
+    @staticmethod
+    def is_active(name):
+        """Check if a driver is active"""
+        return name in Drivers._active and Drivers._active[name] > 0
 
     @staticmethod
     def _load_class(driver_name, path, parent_class):

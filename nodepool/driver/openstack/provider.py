@@ -22,7 +22,7 @@ import time
 import openstack
 
 from nodepool import exceptions
-from nodepool.driver import Provider
+from nodepool.driver import Drivers, Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.nodeutils import iterate_timeout
 from nodepool import stats
@@ -54,9 +54,10 @@ class OpenStackProvider(Provider, QuotaSupport):
     def start(self, zk_conn):
         self.resetClient()
         self._zk = zk_conn
+        Drivers.active("openstack")
 
     def stop(self):
-        pass
+        Drivers.deactive("openstack")
 
     def join(self):
         pass
