@@ -329,8 +329,9 @@ def loadConfig(config_path, env=os.environ):
     config = openConfig(config_path, env)
 
     # Call driver config reset now to clean global hooks like openstacksdk
-    for driver in Drivers.drivers.values():
-        driver.reset()
+    for (name, driver) in Drivers.drivers.items():
+        if name in Drivers.is_active(name):
+            driver.reset()
 
     newconfig = Config()
 
