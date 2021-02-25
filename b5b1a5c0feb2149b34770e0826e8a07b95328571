@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06b4c14e_bc9c832b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-02-25T20:25:19Z",
+      "side": 1,
+      "message": "Almost 10% of the log lines in https://zuul.opendev.org/t/zuul/build/30e6ccf26559434881ca28858e92d8e3/log/nodepool/nodepool-launcher.log are due to this addition. Would be curious to hear if others think that is too verbose.",
+      "revId": "b5b1a5c0feb2149b34770e0826e8a07b95328571",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
