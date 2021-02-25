@@ -612,7 +612,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             try:
                 self.zk.unlockNode(node)
             except Exception:
-                self.log.exception("Error unlocking node:")
+                self.log.exception("Error unlocking node %s:", node.id)
             self.log.debug("Unlocked node %s", node.id)
 
         self.nodeset = []
