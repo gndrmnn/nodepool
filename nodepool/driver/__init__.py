@@ -651,13 +651,16 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
     def poll(self):
         if self.paused:
+            self.log.debug("Node request handler is paused")
             return False
 
         if self.done:
+            self.log.debug("Node request handler is done")
             return True
 
         # Driver must implement this call
         if not self.launchesComplete():
+            self.log.debug("Node request waiting for launches to complete")
             return False
 
         # Launches are complete, so populate ready_nodes and failed_nodes.
