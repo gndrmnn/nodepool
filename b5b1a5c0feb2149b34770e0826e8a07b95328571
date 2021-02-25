@@ -16,6 +16,24 @@
       "revId": "b5b1a5c0feb2149b34770e0826e8a07b95328571",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "249a2087_9eb1a0d3",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-02-25T20:39:23Z",
+      "side": 1,
+      "message": "I think this could become a problem when polling hundreds of node requests in a busy system. However I don\u0027t think this log line is needed for further analysis of the problem.",
+      "parentUuid": "06b4c14e_bc9c832b",
+      "revId": "b5b1a5c0feb2149b34770e0826e8a07b95328571",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
