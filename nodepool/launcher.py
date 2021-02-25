@@ -278,6 +278,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             except kze.SessionExpiredError:
                 # If we lost our ZooKeeper session, we've lost our NodeRequest
                 # lock so it's no longer active
+                log.error("Removing request handler (lost zookeeper session)")
                 continue
             except Exception:
                 # If we fail to poll a request handler log it but move on
