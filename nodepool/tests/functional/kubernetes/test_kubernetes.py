@@ -35,6 +35,6 @@ class TestKubernetes(tests.DBTestCase):
         self.assertEqual(1, len(namespace))
         self.assertEqual(namespace[0].connection_type, "namespace")
 
-        pod = self.waitForNodes("pod-fedora", 1)
+        pod = self.waitForNodes("pod-busybox", 1)
         self.assertEqual(1, len(pod))
         self.assertEqual(pod[0].connection_type, "kubectl")
