@@ -11,7 +11,7 @@ zookeeper-tls:
 labels:
   - name: kubernetes-namespace
     min-ready: 1
-  - name: pod-fedora
+  - name: pod-busybox
     min-ready: 1
 
 providers:
@@ -24,6 +24,6 @@ providers:
         labels:
           - name: kubernetes-namespace
             type: namespace
-          - name: pod-fedora
+          - name: pod-busybox
             type: pod
-            image: quay.io/fedora/fedora:34-x86_64
+            image: quay.io/prometheus/busybox
