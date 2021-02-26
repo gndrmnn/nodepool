@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83165a1c_e54281ab",
+        "filename": "nodepool/tests/fixtures/functional/kubernetes/basic.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-02-26T17:14:15Z",
+      "side": 1,
+      "message": "Change here too ^",
+      "revId": "8f18e0c5bc4d0b292732a5338509aef131dcd433",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
