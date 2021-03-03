@@ -153,6 +153,17 @@ section of the configuration.
          interpreter on Ansible >=2.8, and default to
          ``/usr/bin/python2`` for earlier versions.
 
+      .. attr:: shell-type
+         :type: str
+         :default: sh
+
+         The shell type of the node's default shell executable. Used by Zuul
+         to set ``ansible_shell_type``.  This setting should not be used
+         unless the default shell is a non-Bourne (sh) compatible shell, e.g.
+         ``csh`` or ``fish``. For a windows image with the experimental
+         `connection-type` ``ssh``, ``cmd`` or ``powershell`` should be set
+         and reflect the node's ``DefaultShell`` configuration.
+
       .. attr:: connection-type
          :type: str
 
