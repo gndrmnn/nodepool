@@ -189,6 +189,17 @@ section of the configuration.
          most diskimages this is not necessary. This defaults to 22 for ssh and
          5986 for winrm.
 
+      .. attr:: shell-type
+         :type: str
+         :default: sh
+
+         The shell type of the node's default shell executable. Used by Zuul
+         to set ``ansible_shell_type``.  This setting should not be used
+         unless the default shell is a non-Bourne (sh) compatible shell, e.g
+         ``csh`` or ``fish``. For a windows image with the experimental
+         `connection-type` ``ssh``, ``cmd`` or ``powershell`` should be set
+         and reflect the node's ``DefaultShell`` configuration.
+
    .. attr:: pools
       :type: list
 

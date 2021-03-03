@@ -938,6 +938,7 @@ class BuildWorker(BaseWorker):
         build_data.builder = self._hostname
         build_data.username = diskimage.username
         build_data.python_path = diskimage.python_path
+        build_data.shell_type = diskimage.shell_type
 
         if self._statsd:
             pipeline = self._statsd.pipeline()
@@ -1045,7 +1046,7 @@ class UploadWorker(BaseWorker):
         self._config = new_config
 
     def _uploadImage(self, build_id, upload_id, image_name, images, provider,
-                     username, python_path):
+                     username, python_path, shell_type):
         '''
         Upload a local DIB image build to a provider.
 
@@ -1057,6 +1058,7 @@ class UploadWorker(BaseWorker):
         :param provider: The provider from the parsed config file.
         :param username:
         :param python_path:
+        :param shell_type:
         '''
         start_time = time.time()
         timestamp = int(start_time)
@@ -1166,6 +1168,7 @@ class UploadWorker(BaseWorker):
         data.format = image.extension
         data.username = username
         data.python_path = python_path
+        data.shell_type = shell_type
 
         return data
 
@@ -1264,13 +1267,15 @@ class UploadWorker(BaseWorker):
                 data.state = zk.UPLOADING
                 data.username = build.username
                 data.python_path = build.python_path
+                data.shell_type = build.shell_type
 
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 
                 data = self._uploadImage(build.id, upnum, image.name,
                                          local_images, provider,
-                                         build.username, build.python_path)
+                                         build.username, build.python_path,
+                                         build.shell_type)
 
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,

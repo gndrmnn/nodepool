@@ -1378,6 +1378,7 @@ class TestLauncher(tests.DBTestCase):
         manager._client.create_image(name="fake-image")
         manager._client.create_image(name="fake-image-windows")
         manager._client.create_image(name="fake-image-windows-port")
+        manager._client.create_image(name="fake-label-shell-type")
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
@@ -1397,6 +1398,13 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('zuul', nodes[0].username)
         self.assertEqual('winrm', nodes[0].connection_type)
         self.assertEqual(1234, nodes[0].connection_port)
+        self.assertEqual(nodes[0].host_keys, [])
+
+        nodes = self.waitForNodes('fake-label-shell-type')
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual('zuul', nodes[0].username)
+        self.assertEqual(nodes[0].python_path, 'auto')
+        self.assertEqual(nodes[0].shell_type, 'cmd')
         self.assertEqual(nodes[0].host_keys, [])
 
     def test_unmanaged_image_provider_name(self):
