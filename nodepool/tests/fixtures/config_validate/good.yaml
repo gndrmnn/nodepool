@@ -24,6 +24,9 @@ labels:
   - name: openshift-project
   - name: openshift-pod
   - name: centos-ami
+  - name: winrm
+  - name: winssh
+
 
 providers:
   - name: cloud1
@@ -124,6 +127,15 @@ providers:
             connection-port: 22022
             username: zuul
             max-parallel-jobs: 1
+          - name: windows.example.com
+            labels: winrm
+            username: zuul
+            connection-type: winrm
+            connection-port: 5986
+          - name: windows-ssh.example.com
+            labels: winssh
+            username: zuul
+            shell-type: cmd
 
   - name: kubespray
     driver: kubernetes

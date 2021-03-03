@@ -111,6 +111,7 @@ class AwsInstanceLauncher(NodeLauncher):
         self.node.host_keys = keys
         self.node.username = self.label.cloud_image.username
         self.node.python_path = self.label.cloud_image.python_path
+        self.node.shell_type = self.label.cloud_image.shell_type
         self.zk.storeNode(self.node)
         self.log.info("Instance %s is ready", instance_id)
 

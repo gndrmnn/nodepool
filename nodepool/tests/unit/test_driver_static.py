@@ -64,6 +64,8 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].host_keys, ['ssh-rsa FAKEKEY'])
         self.assertEqual(nodes[0].attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(nodes[0].python_path, 'auto')
+        self.assertEqual(nodes[0].shell_type, None)
 
     def test_static_python_path(self):
         '''
@@ -527,6 +529,25 @@ class TestDriverStatic(tests.DBTestCase):
             nodes = self.waitForNodes('fake-label')
             self.assertEqual(len(nodes), 1)
             nodescan_mock.assert_not_called()
+
+    def test_static_shell_type(self):
+        '''
+        Test that static python-path works.
+        '''
+        configfile = self.setup_config('static-shell-type.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.log.debug("Waiting for node pre-registration")
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(nodes[0].shell_type, "cmd")
+
+        nodes[0].state = zk.USED
+        self.zk.storeNode(nodes[0])
+
+        self.log.debug("Waiting for node to be re-available")
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(nodes[0].shell_type, "cmd")
 
     def test_missing_static_node(self):
         """Test that a missing static node is added"""

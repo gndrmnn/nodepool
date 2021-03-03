@@ -19,6 +19,8 @@ labels:
     min-ready: 1
   - name: fake-label-arbitrary-port
     min-ready: 1
+  - name: fake-label-shell-type
+    min-ready: 1    
 
 providers:
   - name: fake-provider
@@ -29,6 +31,7 @@ providers:
     cloud-images:
       - name: fake-image
         python-path: /usr/bin/python3
+        shell-type: csh
       - name: fake-image-windows
         username: zuul
         connection-type: winrm
