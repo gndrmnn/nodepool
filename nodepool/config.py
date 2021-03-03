@@ -210,6 +210,7 @@ class DiskImage(ConfigValue):
         self.image_types = set([])
         self.pause = False
         self.python_path = 'auto'
+        self.shell_type = None
         self.rebuild_age = self.REBUILD_AGE
         self.release = ''
         self.username = 'zuul'
@@ -249,6 +250,9 @@ class DiskImage(ConfigValue):
         python_path = config.get('python-path', None)
         if python_path:
             self.python_path = python_path
+        shell_type = config.get('shell-type', None)
+        if shell_type:
+            self.shell_type = shell_type
         rebuild_age = config.get('rebuild-age', None)
         if rebuild_age:
             self.rebuild_age = rebuild_age
@@ -269,6 +273,7 @@ class DiskImage(ConfigValue):
                     other.image_types == self.image_types and
                     other.pause == self.pause and
                     other.python_path == self.python_path and
+                    other.shell_type == self.shell_type and
                     other.rebuild_age == self.rebuild_age and
                     other.release == self.release and
                     other.username == self.username)

@@ -87,6 +87,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             image_name = diskimage.name
             username = cloud_image.username
             python_path = cloud_image.python_path
+            shell_type = cloud_image.shell_type
             connection_type = diskimage.connection_type
             connection_port = diskimage.connection_port
 
@@ -105,6 +106,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             image_name = self.label.cloud_image.name
             username = self.label.cloud_image.username
             python_path = self.label.cloud_image.python_path
+            shell_type = self.label.cloud_image.shell_type
             connection_type = self.label.cloud_image.connection_type
             connection_port = self.label.cloud_image.connection_port
 
@@ -159,6 +161,7 @@ class OpenStackNodeLauncher(NodeLauncher):
             self.node.username = username
 
         self.node.python_path = python_path
+        self.node.shell_type = shell_type
         self.node.connection_type = connection_type
         self.node.connection_port = connection_port
 

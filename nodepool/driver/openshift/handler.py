@@ -47,6 +47,7 @@ class OpenshiftLauncher(NodeLauncher):
 
         self.node.state = zk.READY
         self.node.python_path = self.label.python_path
+        self.node.shell_type = self.label.shell_type
         # NOTE: resource access token may be encrypted here
         self.node.connection_port = resource
         self.zk.storeNode(self.node)
