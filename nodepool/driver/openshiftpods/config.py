@@ -56,6 +56,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'cpu': int,
             'memory': int,
             'python-path': str,
+            'shell-type': str,
             'env': [env_var],
             'node-selector': dict
         }
