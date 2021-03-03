@@ -17,6 +17,7 @@ labels:
   - name: ubuntu1404-iam-instance-profile-arn
   - name: ubuntu1404-with-tags
   - name: ubuntu1404-with-name-tag
+  - name: ubuntu1404-with-shell-type
 
 providers:
   - name: ec2-us-west-2
@@ -48,6 +49,10 @@ providers:
             values:
               - ubuntu*
         username: ubuntu
+      - name: ubuntu1404-with-shell-type
+        image-id: ami-1e749f67
+        username: ubuntu
+        shell-type: csh
     pools:
       - name: ebs-optimized
         max-servers: 1
@@ -161,3 +166,15 @@ providers:
             key-name: zuul
             tags:
               Name: different-name
+      - name: shell-type
+        max-servers: 1
+        subnet-id: null
+        security-group-id: null
+        node-attributes:
+          key1: value1
+          key2: value2
+        labels:
+          - name: ubuntu1404-with-shell-type
+            cloud-image: ubuntu1404-with-shell-type
+            instance-type: t3.medium
+            key-name: zuul

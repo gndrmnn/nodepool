@@ -1383,6 +1383,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertIsNone(nodes[0].username)
         self.assertEqual(nodes[0].python_path, '/usr/bin/python3')
+        self.assertEqual(nodes[0].shell_type, 'csh')
 
         nodes = self.waitForNodes('fake-label-windows')
         self.assertEqual(len(nodes), 1)
@@ -1391,6 +1392,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(5986, nodes[0].connection_port)
         self.assertEqual(nodes[0].host_keys, [])
         self.assertEqual(nodes[0].python_path, 'auto')
+        self.assertIsNone(nodes[0].shell_type)
 
         nodes = self.waitForNodes('fake-label-arbitrary-port')
         self.assertEqual(len(nodes), 1)
@@ -1398,6 +1400,8 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('winrm', nodes[0].connection_type)
         self.assertEqual(1234, nodes[0].connection_port)
         self.assertEqual(nodes[0].host_keys, [])
+        self.assertEqual(nodes[0].python_path, 'auto')
+        self.assertIsNone(nodes[0].shell_type)
 
     def test_unmanaged_image_provider_name(self):
         """

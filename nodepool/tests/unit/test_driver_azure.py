@@ -195,3 +195,4 @@ class TestDriverAzure(tests.DBTestCase):
             self.assertEqual(node.state, zk.READY)
             self.assertIsNotNone(node.launcher)
             self.assertEqual(node.connection_type, 'ssh')
+            self.assertIsNone(node.shell_type)
