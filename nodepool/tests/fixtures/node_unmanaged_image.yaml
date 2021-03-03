@@ -29,6 +29,7 @@ providers:
     cloud-images:
       - name: fake-image
         python-path: /usr/bin/python3
+        shell-type: csh
       - name: fake-image-windows
         username: zuul
         connection-type: winrm

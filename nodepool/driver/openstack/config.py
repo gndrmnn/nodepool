@@ -53,6 +53,7 @@ class ProviderCloudImage(ConfigValue):
         self.image_name = None
         self.username = None
         self.python_path = None
+        self.shell_type = None
         self.connection_type = None
         self.connection_port = None
 
@@ -64,6 +65,7 @@ class ProviderCloudImage(ConfigValue):
                     self.image_name == other.image_name and
                     self.username == other.username and
                     self.python_path == other.python_path and
+                    self.shell_type == other.shell_type and
                     self.connection_type == other.connection_type and
                     self.connection_port == other.connection_port)
         return False
@@ -336,6 +338,7 @@ class OpenStackProviderConfig(ProviderConfig):
             i.image_name = image.get('image-name', None)
             i.username = image.get('username', None)
             i.python_path = image.get('python-path', 'auto')
+            i.shell_type = image.get('shell-type', None)
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
                 'connection-port',
@@ -366,6 +369,7 @@ class OpenStackProviderConfig(ProviderConfig):
             v.Exclusive('image-name', 'cloud-image-name-or-id'): str,
             'username': str,
             'python-path': str,
+            'shell-type': str,
         }
 
         pool_label_main = {
