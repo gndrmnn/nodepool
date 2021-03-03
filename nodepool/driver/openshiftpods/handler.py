@@ -34,6 +34,7 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
 
         self.node.state = zk.READY
         self.node.python_path = self.label.python_path
+        self.node.shell_type = self.label.shell_type
         # NOTE: resource access token may be encrypted here
         k8s = self.handler.manager.k8s_client
         self.node.connection_port = {

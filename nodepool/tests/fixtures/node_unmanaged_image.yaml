@@ -14,6 +14,8 @@ labels:
     min-ready: 1
   - name: fake-label-arbitrary-port
     min-ready: 1
+  - name: fake-label-shell-type
+    min-ready: 1    
 
 providers:
   - name: fake-provider
@@ -31,6 +33,9 @@ providers:
         username: zuul
         connection-type: winrm
         connection-port: 1234
+      - name: fake-image-windows-shell-type
+        username: zuul
+        shell-type: cmd
     pools:
       - name: main
         max-servers: 96
@@ -44,3 +49,6 @@ providers:
           - name: fake-label-arbitrary-port
             cloud-image: fake-image-windows-port
             min-ram: 8192
+          - name: fake-label-shell-type
+            cloud-image: fake-image-windows-shell-type
+            min-ram: 8192            

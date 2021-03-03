@@ -49,7 +49,8 @@ class TestDriverAws(tests.DBTestCase):
                           host_key_checking=True,
                           userdata=None,
                           public_ip=True,
-                          tags=[]):
+                          tags=[],
+                          shell_type=None):
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -147,6 +148,7 @@ class TestDriverAws(tests.DBTestCase):
                 self.assertEqual(node.connection_type, 'ssh')
                 self.assertEqual(node.attributes,
                                  {'key1': 'value1', 'key2': 'value2'})
+                self.assertEqual(node.shell_type, shell_type)
                 if host_key_checking:
                     nodescan.assert_called_with(
                         node.interface_ip,
@@ -246,3 +248,7 @@ class TestDriverAws(tests.DBTestCase):
                                tags=[
                                    {"Key": "Name", "Value": "different-name"}
                                ])
+
+    def test_ec2_machine_shell_type(self):
+        self._test_ec2_machine('ubuntu1404-with-shell-type',
+                               shell_type="csh")
