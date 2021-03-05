@@ -375,12 +375,25 @@ class DBTestCase(BaseTestCase):
         self.log = logging.getLogger("tests")
         self.setupZK()
 
-    def setup_config(self, filename, images_dir=None, context_name=None):
+    def setup_config(self, filename, images_dir=None, **kw):
         if images_dir is None:
             images_dir = fixtures.TempDir()
             self.useFixture(images_dir)
         build_log_dir = fixtures.TempDir()
         self.useFixture(build_log_dir)
+
+        format_dict = dict(
+            images_dir=images_dir.path,
+            build_log_dir=build_log_dir.path,
+            zookeeper_host=self.zookeeper_host,
+            zookeeper_port=self.zookeeper_port,
+            zookeeper_chroot=self.zookeeper_chroot,
+            zookeeper_ca=self.zookeeper_ca,
+            zookeeper_cert=self.zookeeper_cert,
+            zookeeper_key=self.zookeeper_key
+        )
+        format_dict.update(kw)
+
         if filename.startswith('/'):
             path = filename
         else:
@@ -389,15 +402,7 @@ class DBTestCase(BaseTestCase):
             (fd, path) = tempfile.mkstemp()
             with open(configfile, 'rb') as conf_fd:
                 config = conf_fd.read().decode('utf8')
-                data = config.format(images_dir=images_dir.path,
-                                     build_log_dir=build_log_dir.path,
-                                     context_name=context_name,
-                                     zookeeper_host=self.zookeeper_host,
-                                     zookeeper_port=self.zookeeper_port,
-                                     zookeeper_chroot=self.zookeeper_chroot,
-                                     zookeeper_ca=self.zookeeper_ca,
-                                     zookeeper_cert=self.zookeeper_cert,
-                                     zookeeper_key=self.zookeeper_key)
+                data = config.format(**format_dict)
                 os.write(fd, data.encode('utf8'))
             os.close(fd)
         self._config_images_dir = images_dir
