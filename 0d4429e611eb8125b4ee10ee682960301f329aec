@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa9c5c59_cea21f52",
+        "filename": "releasenotes/notes/multiline-logging-b55f038e1077c7bb.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-03-05T21:04:50Z",
+      "side": 1,
+      "message": "That\u0027s probably not required anymore. Since 4.0 is released and has a useful release note.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 21
+      },
+      "revId": "0d4429e611eb8125b4ee10ee682960301f329aec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
