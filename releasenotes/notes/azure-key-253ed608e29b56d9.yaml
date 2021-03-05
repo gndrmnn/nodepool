@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The ``zuul-public-key`` configuration attribute in the
+    ``providers`` Azure driver has been moved and renamed.  Please
+    move this setting to its new location at
+    :attr:`providers.[azure].cloud-images.key`

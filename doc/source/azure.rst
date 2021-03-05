@@ -34,15 +34,15 @@ section of the configuration.
      providers:
         - name: azure-central-us
           driver: azure
-          zuul-public-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAA...
           resource-group-location: centralus
           location: centralus
-          resource-group: ZuulCIDev
+          resource-group: nodepool
           auth-path: /Users/grhayes/.azure/nodepoolCreds.json
-          subnet-id: /subscriptions/<subscription-id>/resourceGroups/ZuulCI/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
+          subnet-id: /subscriptions/<subscription-id>/resourceGroups/nodepool/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
           cloud-images:
             - name: bionic
               username: zuul
+              key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAA...
               image-reference:
                 sku: 18.04-LTS
                 publisher: Canonical
@@ -70,10 +70,16 @@ section of the configuration.
 
       Name of the Azure region to interact with.
 
+   .. attr:: resource-group
+      :required:
+
+      Name of the Resource Group in which to place the Nodepool nodes.
+
    .. attr:: resource-group-location
       :required:
 
-      Name of the Azure region to where the home Resource Group is or should be created.
+      Name of the Azure region where the home Resource Group is or
+      should be created.
 
    .. attr:: auth-path
       :required:
@@ -127,6 +133,11 @@ section of the configuration.
 
          The username that a consumer should use when connecting to the
          node.
+
+      .. attr:: key
+         :type: str
+
+         The SSH public key that should be installed on the node.
 
       .. attr:: image-reference
          :type: dict
