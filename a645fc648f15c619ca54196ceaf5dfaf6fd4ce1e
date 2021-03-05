@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d86fc9be_099d8394",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2021-03-05T11:53:34Z",
+      "side": 1,
+      "message": "This should be `i.shell_type`",
+      "range": {
+        "startLine": 229,
+        "startChar": 14,
+        "endLine": 229,
+        "endChar": 25
+      },
+      "revId": "a645fc648f15c619ca54196ceaf5dfaf6fd4ce1e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
