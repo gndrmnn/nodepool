@@ -22,6 +22,47 @@
       "revId": "a645fc648f15c619ca54196ceaf5dfaf6fd4ce1e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fceba3e9_990134a9",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 32721
+      },
+      "writtenOn": "2021-03-05T13:46:26Z",
+      "side": 1,
+      "message": "When I saw this I wondered how unit tests can have passed. But then I saw line 234.",
+      "parentUuid": "d86fc9be_099d8394",
+      "range": {
+        "startLine": 229,
+        "startChar": 14,
+        "endLine": 229,
+        "endChar": 25
+      },
+      "revId": "a645fc648f15c619ca54196ceaf5dfaf6fd4ce1e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceed9ae5_5b4be404",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 32721
+      },
+      "writtenOn": "2021-03-05T13:46:26Z",
+      "side": 1,
+      "message": "and this line should go.",
+      "revId": "a645fc648f15c619ca54196ceaf5dfaf6fd4ce1e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
