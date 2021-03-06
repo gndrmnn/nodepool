@@ -282,7 +282,7 @@ class FakeOpenStackCloud(object):
             server = self._clean_floating_ip(server)
         return server
 
-    def list_servers(self):
+    def list_servers(self, bare=False):
         return self._server_list
 
     def delete_server(self, name_or_id, delete_ips=True):
