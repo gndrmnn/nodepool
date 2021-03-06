@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0f8329f_1af3c2ae",
+        "filename": "nodepool/driver/example/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2021-03-06T16:10:00Z",
+      "side": 1,
+      "message": "Example",
+      "range": {
+        "startLine": 22,
+        "startChar": 6,
+        "endLine": 22,
+        "endChar": 11
+      },
+      "revId": "b87d5879bc31437cf27679a581a30e797b8253c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01b6e3aa_c6a6c3a4",
+        "filename": "nodepool/driver/example/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2021-03-06T16:10:00Z",
+      "side": 1,
+      "message": "Should this be VM_DELETING here?",
+      "range": {
+        "startLine": 50,
+        "startChar": 30,
+        "endLine": 50,
+        "endChar": 38
+      },
+      "revId": "b87d5879bc31437cf27679a581a30e797b8253c1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
