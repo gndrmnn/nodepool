@@ -291,3 +291,37 @@ class QuotaSupport:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)
         return used_quota
+
+
+class RateLimiter:
+    """A Rate limiter
+
+    :param str name: The provider name; used in logging.
+    :param float rate_limit: The rate limit expressed in
+        requests per second.
+
+    Example:
+    .. code:: python
+
+        rate_limiter = RateLimiter('provider', 1.0)
+        with rate_limiter:
+            api_call()
+    """
+
+    def __init__(self, name, rate_limit):
+        self._running = True
+        self.name = name
+        self.delta = 1.0 / rate_limit
+        self.last_ts = None
+
+    def __enter__(self):
+        if self.last_ts is None:
+            return
+        while True:
+            delta = time.monotonic() - self.last_ts
+            if delta >= self.delta:
+                break
+            time.sleep(self.delta - delta)
+
+    def __exit__(self, etype, value, tb):
+        self.last_ts = time.monotonic()
