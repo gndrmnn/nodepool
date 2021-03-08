@@ -158,11 +158,15 @@ section of the configuration.
          :default: sh
 
          The shell type of the node's default shell executable. Used by Zuul
-         to set ``ansible_shell_type``.  This setting should not be used
-         unless the default shell is a non-Bourne (sh) compatible shell, e.g.
-         ``csh`` or ``fish``. For a windows image with the experimental
-         `connection-type` ``ssh``, ``cmd`` or ``powershell`` should be set
-         and reflect the node's ``DefaultShell`` configuration.
+         to set ``ansible_shell_type``. This setting should only be used
+
+         - For a windows image with the experimental `connection-type` ``ssh``
+           in which case ``cmd`` or ``powershell`` should be set
+           and reflect the node's ``DefaultShell`` configuration.
+         - If the default shell is not Bourne compatible (sh), but instead
+           e.g. ``csh`` or ``fish``, and the user is aware that there is a
+           long-standing issue with ``ansible_shell_type`` in combination
+           with ``become``
 
       .. attr:: connection-type
          :type: str
