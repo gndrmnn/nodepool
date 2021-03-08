@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    AWS EC2, GCE, Kubernetes, Openshift, Openshift Pods, OpenStack and Static
+    drivers now support a shell-type config. Shell-type config is intended
+    to enable setting of cmd or powershell as shell type for Windows workers
+    with connection-type ssh.
+
+    For Linux workers, there is a long standing ansible issue with using
+    non-default shell type and become, so care should be taken if using
+    it for such workers.
