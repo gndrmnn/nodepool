@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0e75eb_619bc077",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2
+      },
+      "writtenOn": "2021-03-08T22:55:31Z",
+      "side": 1,
+      "message": "Whoops debug line.",
+      "revId": "344edf04a4621a5cba04c61acb876bfcf4633012",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
