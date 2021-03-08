@@ -17,13 +17,191 @@
 import time
 import logging
 import math
+import threading
+from concurrent.futures.thread import ThreadPoolExecutor
 
 from nodepool.driver import Driver, NodeRequestHandler, Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.nodeutils import iterate_timeout, nodescan
+from nodepool.logconfig import get_annotated_logger
+from nodepool import stats
 from nodepool import exceptions
 from nodepool import zk
 from kazoo import exceptions as kze
+
+
+def keyscan(node_id, interface_ip,
+            connection_type, connection_port):
+    """A standalone function for scanning keys to pass to a thread/process
+    pool executor
+    """
+
+    keys = []
+    try:
+        if (connection_type == 'ssh' or
+            connection_type == 'network_cli'):
+            gather_hostkeys = True
+        else:
+            gather_hostkeys = False
+        keys = nodescan(interface_ip, port=connection_port,
+                        timeout=180, gather_hostkeys=gather_hostkeys)
+    except Exception:
+        raise exceptions.LaunchKeyscanException(
+            "Can't scan instance %s key" % node_id)
+    return keys
+
+
+class StateMachineNodeLauncher(stats.StatsReporter):
+    """The state of the state machine.
+
+    This driver collects state machines from the underlying cloud
+    adapter implementations; those state machines handle building the
+    node.  But we still have our own accounting and a little bit of
+    work to do on either side of that process, so this data structure
+    holds the extra information we need for that.
+    """
+
+    def __init__(self, handler, node, provider_config):
+        super().__init__()
+        # Based on utils.NodeLauncher
+        logger = logging.getLogger("nodepool.StateMachineNodeLauncher")
+        request = handler.request
+        self.log = get_annotated_logger(logger,
+                                        event_id=request.event_id,
+                                        node_request_id=request.id,
+                                        node_id=node.id)
+        self.handler = handler
+        self.zk = handler.zk
+        self.node = node
+        self.provider_config = provider_config
+        # Local additions:
+        self.state_machine = None
+        self.keyscan_future = None
+        self.manager = handler.manager
+        self.start_time = None
+
+    @property
+    def complete(self):
+        if self.node.state != zk.BUILDING:
+            return True
+
+    def launch(self):
+        label = self.handler.pool.labels[self.node.type[0]]
+        hostname = 'nodepool-' + self.node.id
+        retries = self.manager.provider.launch_retries
+        metadata = {'nodepool_node_id': self.node.id,
+                    'nodepool_pool_name': self.handler.pool.name,
+                    'nodepool_provider_name': self.manager.provider.name}
+        self.state_machine = self.manager.adapter.getCreateStateMachine(
+            hostname, label, metadata, retries)
+
+    def updateNodeFromInstance(self, instance):
+        if instance is None:
+            return
+
+        node = self.node
+        pool = self.handler.pool
+        label = pool.labels[self.node.type[0]]
+
+        if pool.use_internal_ip and instance.private_ipv4:
+            server_ip = instance.private_ipv4
+        else:
+            server_ip = instance.interface_ip
+
+        node.external_id = instance.external_id
+        node.interface_ip = server_ip
+        node.public_ipv4 = instance.public_ipv4
+        node.private_ipv4 = instance.private_ipv4
+        node.public_ipv6 = instance.public_ipv6
+        node.region = instance.region
+        node.az = instance.az
+        node.username = label.cloud_image.username
+        node.python_path = label.cloud_image.python_path
+        node.connection_port = label.cloud_image.connection_port
+        node.connection_type = label.cloud_image.connection_type
+        self.zk.storeNode(node)
+
+    def runStateMachine(self):
+        instance = None
+        state_machine = self.state_machine
+        node = self.node
+        statsd_key = 'ready'
+
+        if self.start_time is None:
+            self.start_time = time.monotonic()
+
+        try:
+            if (self.state_machine.complete and self.keyscan_future
+                and self.keyscan_future.done()):
+                keys = self.keyscan_future.result()
+                node.keys = keys
+                self.log.debug(f"Node {node.id} is ready")
+                node.state = zk.READY
+                self.zk.storeNode(node)
+                try:
+                    dt = int((time.monotonic() - self.start_time) * 1000)
+                    self.recordLaunchStats(statsd_key, dt)
+                except Exception:
+                    self.log.exception("Exception while reporting stats:")
+                return True
+
+            now = time.monotonic()
+            if (now - state_machine.start_time >
+                self.manager.provider.boot_timeout):
+                raise Exception("Timeout waiting for instance creation")
+            instance = state_machine.advance()
+            self.log.debug(f"State machine for {node.id} at "
+                           f"{state_machine.state}")
+            if not node.external_id:
+                if not state_machine.external_id:
+                    raise Exception("Driver implementation error: state "
+                                    "machine must produce external ID "
+                                    "after first advancement")
+                self.updateNodeFromInstance(instance)
+            if state_machine.complete:
+                self.log.debug("Submitting keyscan request")
+                self.updateNodeFromInstance(instance)
+                future = self.manager.keyscan_worker.submit(
+                    keyscan,
+                    node.id, node.interface_ip,
+                    node.connection_type, node.connection_port)
+                self.keyscan_future = future
+        except kze.SessionExpiredError:
+            # Our node lock is gone, leaving the node state as BUILDING.
+            # This will get cleaned up in ZooKeeper automatically, but we
+            # must still set our cached node state to FAILED for the
+            # NodeLaunchManager's poll() method.
+            self.log.error(
+                "Lost ZooKeeper session trying to launch for node %s",
+                node.id)
+            node.state = zk.FAILED
+            node.external_id = state_machine.external_id
+            statsd_key = 'error.zksession'
+        except exceptions.QuotaException:
+            self.log.info("Aborting node %s due to quota failure" % node.id)
+            node.state = zk.ABORTED
+            node.external_id = state_machine.external_id
+            self.zk.storeNode(node)
+            statsd_key = 'error.quota'
+        except Exception as e:
+            self.log.exception(
+                "Launch failed for node %s:", node.id)
+            node.state = zk.FAILED
+            node.external_id = state_machine.external_id
+            self.zk.storeNode(node)
+
+            if hasattr(e, 'statsd_key'):
+                statsd_key = e.statsd_key
+            else:
+                statsd_key = 'error.unknown'
+
+        if node.state != zk.BUILDING:
+            try:
+                dt = int((time.monotonic() - self.start_time) * 1000)
+                self.recordLaunchStats(statsd_key, dt)
+            except Exception:
+                self.log.exception("Exception while reporting stats:")
+            return True
 
 
 class StateMachineHandler(NodeRequestHandler):
@@ -32,11 +210,11 @@ class StateMachineHandler(NodeRequestHandler):
 
     def __init__(self, pw, request):
         super().__init__(pw, request)
-        self.state_machines = []
+        self.launchers = []
 
     @property
     def alive_thread_count(self):
-        return len([sm for sm in self.state_machines if sm[1].complete])
+        return len([nl for nl in self.launchers if nl.complete])
 
     def imagesAvailable(self):
         '''
@@ -115,111 +293,6 @@ class StateMachineHandler(NodeRequestHandler):
 
         return pool_quota.non_negative()
 
-    def _gatherHostKeys(self, node):
-        keys = []
-        if self.pool.host_key_checking:
-            try:
-                if (node.connection_type == 'ssh' or
-                    node.connection_type == 'network_cli'):
-                    gather_hostkeys = True
-                else:
-                    gather_hostkeys = False
-                keys = nodescan(node.interface_ip, port=node.connection_port,
-                                timeout=180, gather_hostkeys=gather_hostkeys)
-            except Exception:
-                raise exceptions.LaunchKeyscanException(
-                    "Can't scan instance %s key" % node.id)
-            node.host_keys = keys
-
-    def _updateNodeFromInstance(self, node, instance, gather_keys=False):
-        if instance is None:
-            return
-
-        label = self.pool.labels[node.type[0]]
-
-        if self.pool.use_internal_ip and instance.private_ipv4:
-            server_ip = instance.private_ipv4
-        else:
-            server_ip = instance.interface_ip
-
-        node.external_id = instance.external_id
-        node.interface_ip = server_ip
-        node.public_ipv4 = instance.public_ipv4
-        node.private_ipv4 = instance.private_ipv4
-        node.public_ipv6 = instance.public_ipv6
-        node.region = instance.region
-        node.az = instance.az
-        node.username = label.cloud_image.username
-        node.python_path = label.cloud_image.python_path
-        node.connection_port = label.cloud_image.connection_port
-        node.connection_type = label.cloud_image.connection_type
-
-        if gather_keys:
-            self._gatherHostKeys(node)
-
-        self.zk.storeNode(node)
-
-    def _runStateMachine(self, node, state_machine):
-        if state_machine.complete:
-            return True
-
-        instance = None
-        try:
-            now = time.monotonic()
-            if (now - state_machine.start_time >
-                self.manager.provider.boot_timeout):
-                raise Exception("Timeout waiting for instance creation")
-            instance = state_machine.advance()
-            self.log.debug(f"State machine for {node.id} at "
-                           f"{state_machine.state}")
-            if not node.external_id:
-                if not state_machine.external_id:
-                    raise Exception("Driver implementation error: state "
-                                    "machine must produce external ID "
-                                    "after first advancement")
-                node.external_id = state_machine.external_id
-            if state_machine.complete:
-                self.log.debug(f"Node {node.id} is ready")
-                node.state = zk.READY
-            self._updateNodeFromInstance(node, instance, gather_keys=True)
-        except kze.SessionExpiredError:
-            # Our node lock is gone, leaving the node state as BUILDING.
-            # This will get cleaned up in ZooKeeper automatically, but we
-            # must still set our cached node state to FAILED for the
-            # NodeLaunchManager's poll() method.
-            self.log.error(
-                "Lost ZooKeeper session trying to launch for node %s",
-                node.id)
-            node.state = zk.FAILED
-            node.external_id = state_machine.external_id
-            # TODO: stats
-            # statsd_key = 'error.zksession'
-        except exceptions.QuotaException:
-            self.log.info("Aborting node %s due to quota failure" % node.id)
-            node.state = zk.ABORTED
-            node.external_id = state_machine.external_id
-            self.zk.storeNode(node)
-            # TODO: stats
-            # statsd_key = 'error.quota'
-        except Exception:
-            self.log.exception(
-                "Launch failed for node %s:", node.id)
-            node.state = zk.FAILED
-            node.external_id = state_machine.external_id
-            self.zk.storeNode(node)
-
-            # TODO: stats
-            # if hasattr(e, 'statsd_key'):
-            #     statsd_key = e.statsd_key
-            # else:
-            #     statsd_key = 'error.unknown'
-
-        if node.state == zk.FAILED:
-            state_machine.complete = True
-
-        if state_machine.complete:
-            return True
-
     def launchesComplete(self):
         '''
         Check if all launch requests have completed.
@@ -228,25 +301,21 @@ class StateMachineHandler(NodeRequestHandler):
         or ABORTED), we'll know all threads have finished the launch process.
         '''
         all_complete = True
-        for (node, state_machine) in self.state_machines:
-            if not self._runStateMachine(node, state_machine):
+        for launcher in self.launchers:
+            if not launcher.complete:
                 all_complete = False
 
         return all_complete
 
     def launch(self, node):
-        label = self.pool.labels[node.type[0]]
-        hostname = 'nodepool-' + node.id
-        retries = self.manager.provider.launch_retries
-        metadata = {'nodepool_node_id': node.id,
-                    'nodepool_pool_name': self.pool.name,
-                    'nodepool_provider_name': self.manager.provider.name}
-        state_machine = self.manager.adapter.getCreateStateMachine(
-            hostname, label, metadata, retries)
-        self.state_machines.append((node, state_machine))
+        launcher = StateMachineNodeLauncher(self, node, self.provider)
+        launcher.launch()
+        self.launchers.append(launcher)
+        self.manager.launchers.append(launcher)
 
 
 class StateMachineProvider(Provider, QuotaSupport):
+
     """The Provider implementation for the StateMachineManager driver
        framework"""
     log = logging.getLogger("nodepool.driver.statemachine."
@@ -257,11 +326,49 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.provider = provider
         self.adapter = adapter
         self.delete_state_machines = {}
+        self.launchers = []
         self._zk = None
+        self.keyscan_worker = None
+        self.state_machine_thread = None
+        self.running = False
 
     def start(self, zk_conn):
         super().start(zk_conn)
+        self.running = True
         self._zk = zk_conn
+        self.keyscan_worker = ThreadPoolExecutor()
+        self.state_machine_thread = threading.Thread(
+            target=self._runStateMachines)
+        self.state_machine_thread.start()
+
+    def stop(self):
+        self.running = False
+        if self.keyscan_worker:
+            self.keyscan_worker.shutdown()
+        if self.state_machine_thread:
+            self.running = False
+
+    def join(self):
+        if self.state_machine_thread:
+            self.state_machine_thread.join()
+
+    def _runStateMachines(self):
+        while self.running:
+            to_remove = []
+            for launcher in self.launchers:
+                try:
+                    launcher.runStateMachine()
+                    if launcher.node.state != zk.BUILDING:
+                        self.log.debug("Removing state machine from runner")
+                        to_remove.append(launcher)
+                except Exception:
+                    self.log.exception("Error running state machine:")
+            for launcher in to_remove:
+                self.launchers.remove(launcher)
+            if self.launchers:
+                time.sleep(0)
+            else:
+                time.sleep(1)
 
     def getRequestHandler(self, poolworker, request):
         return StateMachineHandler(poolworker, request)
