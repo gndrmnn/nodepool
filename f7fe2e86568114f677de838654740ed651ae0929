@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "616b7440_152c5d2d",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-03-09T22:33:22Z",
+      "side": 1,
+      "message": "This may not be what you intended?",
+      "revId": "f7fe2e86568114f677de838654740ed651ae0929",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
