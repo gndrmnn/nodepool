@@ -84,10 +84,6 @@ class StateMachineNodeLauncher(stats.StatsReporter):
     def complete(self):
         if self.node.state != zk.BUILDING:
             return True
-        return (self.state_machine
-                and self.state_machine.complete
-                and self.keyscan_future
-                and self.keyscan_future.done())
 
     def launch(self):
         label = self.handler.pool.labels[self.node.type[0]]
@@ -135,7 +131,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.start_time = time.monotonic()
 
         try:
-            if self.complete:
+            if (self.state_machine.complete and self.keyscan_future
+                and self.keyscan_future.done()):
                 keys = self.keyscan_future.result()
                 node.keys = keys
                 self.log.debug(f"Node {node.id} is ready")
@@ -158,8 +155,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     raise Exception("Driver implementation error: state "
                                     "machine must produce external ID "
                                     "after first advancement")
-                self.updateNodeFromInstance(instance)
-            if state_machine.complete:
+                node.external_id = state_machine.external_id
+                self.zk.storeNode(node)
+            if state_machine.complete and not self.keyscan_future:
                 self.log.debug("Submitting keyscan request")
                 self.updateNodeFromInstance(instance)
                 future = self.manager.keyscan_worker.submit(
@@ -355,6 +353,7 @@ class StateMachineProvider(Provider, QuotaSupport):
     def _runStateMachines(self):
         while self.running:
             to_remove = []
+            loop_start = time.monotonic()
             for launcher in self.launchers:
                 try:
                     launcher.runStateMachine()
@@ -365,8 +364,9 @@ class StateMachineProvider(Provider, QuotaSupport):
                     self.log.exception("Error running state machine:")
             for launcher in to_remove:
                 self.launchers.remove(launcher)
+            loop_end = time.monotonic()
             if self.launchers:
-                time.sleep(0)
+                time.sleep(max(0, 10-(loop_end-loop_start)))
             else:
                 time.sleep(1)
 
