@@ -157,8 +157,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     raise Exception("Driver implementation error: state "
                                     "machine must produce external ID "
                                     "after first advancement")
-                self.updateNodeFromInstance(instance)
-            if state_machine.complete:
+                node.external_id = state_machine.external_id
+                self.zk.storeNode(node)
+            if state_machine.complete and not self.keyscan_future:
                 self.log.debug("Submitting keyscan request")
                 self.updateNodeFromInstance(instance)
                 future = self.manager.keyscan_worker.submit(
