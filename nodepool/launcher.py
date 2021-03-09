@@ -21,6 +21,7 @@ import os.path
 import socket
 import threading
 import time
+import uuid
 
 from kazoo import exceptions as kze
 
@@ -137,9 +138,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.request_handlers = []
         self.watermark_sleep = nodepool.watermark_sleep
         self.zk = self.getZK()
-        self.launcher_id = "%s-%s-%s" % (socket.gethostname(),
-                                         os.getpid(),
-                                         self.name)
+        self.launcher_id = "%s-%s-%s" % (socket.getfqdn(),
+                                         self.name,
+                                         uuid.uuid4().hex)
         stats.StatsReporter.__init__(self)
 
     # ---------------------------------------------------------------
