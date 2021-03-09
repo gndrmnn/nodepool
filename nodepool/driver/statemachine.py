@@ -157,8 +157,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     raise Exception("Driver implementation error: state "
                                     "machine must produce external ID "
                                     "after first advancement")
-                self.updateNodeFromInstance(instance)
-            if state_machine.complete:
+                node.external_id = state_machine.external_id
+                self.zk.storeNode(node)
+            if state_machine.complete and not self.keyscan_future:
                 self.log.debug("Submitting keyscan request")
                 self.updateNodeFromInstance(instance)
                 future = self.manager.keyscan_worker.submit(
@@ -252,6 +253,8 @@ class StateMachineNodeDeleter:
             if node.external_id:
                 state_machine.advance()
                 self.log.debug(f"State machine for {node.id} at {state_machine.state}")
+            else:
+                self.state_machine.complete = True
 
             if not self.state_machine.complete:
                 return
@@ -422,15 +425,21 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.state_machine_thread.start()
 
     def stop(self):
+        self.log.debug("Stopping")
         self.running = False
+        if self.state_machine_thread:
+            while self.launchers or self.deleters:
+                time.sleep(1)
+            self.running = False
         if self.keyscan_worker:
             self.keyscan_worker.shutdown()
-        if self.state_machine_thread:
-            self.running = False
+        self.log.debug("Stopped")
 
     def join(self):
+        self.log.debug("Joining")
         if self.state_machine_thread:
             self.state_machine_thread.join()
+        self.log.debug("Joined")
 
     def _runStateMachines(self):
         while self.running:
