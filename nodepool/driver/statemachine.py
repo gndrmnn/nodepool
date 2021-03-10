@@ -203,6 +203,84 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             return True
 
 
+class StateMachineNodeDeleter:
+    """The state of the state machine.
+
+    This driver collects state machines from the underlying cloud
+    adapter implementations; those state machines handle building the
+    node.  But we still have our own accounting and a little bit of
+    work to do on either side of that process, so this data structure
+    holds the extra information we need for that.
+    """
+
+    DELETE_TIMEOUT=600
+
+    def __init__(self, zk, provider_manager, node):
+        # Based on utils.NodeDeleter
+        self.log = logging.getLogger("nodepool.StateMachineNodeDeleter")
+        self.manager = provider_manager
+        self.zk = zk
+        # Note: the node is locked
+        self.node = node
+        # Local additions:
+        self.start_time = time.monotonic()
+        self.state_machine = self.manager.adapter.getDeleteStateMachine(
+            node.external_id)
+
+    @property
+    def complete(self):
+        return self.state_machine.complete
+
+    def runStateMachine(self):
+        state_machine = self.state_machine
+        node = self.node
+        node_exists = (node.id is not None)
+
+        if self.state_machine.complete:
+            return True
+
+        try:
+            now = time.monotonic()
+            if now - state_machine.start_time > self.DELETE_TIMEOUT:
+                raise Exception("Timeout waiting for instance deletion")
+
+            if state_machine.state == state_machine.START:
+                node.state = zk.DELETING
+                self.zk.storeNode(node)
+
+            if node.external_id:
+                state_machine.advance()
+                self.log.debug(f"State machine for {node.id} at {state_machine.state}")
+
+            if not self.state_machine.complete:
+                return
+
+        except exceptions.NotFound:
+            self.log.info(f"Instance {node.external_id} not found in "
+                          "provider {node.provider}")
+        except Exception:
+            self.log.exception(f"Exception deleting instance "
+                               "{node.external_id} from {node.provider}:")
+            # Don't delete the ZK node in this case, but do unlock it
+            if node_exists:
+                self.zk.unlockNode(node)
+            return
+
+        if node_exists:
+            self.log.info(
+                "Deleting ZK node id=%s, state=%s, external_id=%s",
+                node.id, node.state, node.external_id)
+            # This also effectively releases the lock
+            self.zk.deleteNode(node)
+            self.manager.nodeDeletedNotification(node)
+        return True
+
+    def join(self):
+        # This is used by the CLI for synchronous deletes
+        while self in self.manager.deleters:
+            time.sleep(0)
+
+
 class StateMachineHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.simple."
                             "StateMachineHandler")
@@ -323,7 +401,8 @@ class StateMachineProvider(Provider, QuotaSupport):
         super().__init__()
         self.provider = provider
         self.adapter = adapter
-        self.delete_state_machines = {}
+        # State machines
+        self.deleters = []
         self.launchers = []
         self._zk = None
         self.keyscan_worker = None
@@ -354,18 +433,21 @@ class StateMachineProvider(Provider, QuotaSupport):
         while self.running:
             to_remove = []
             loop_start = time.monotonic()
-            for launcher in self.launchers:
+            for sm in self.deleters + self.launchers:
                 try:
-                    launcher.runStateMachine()
-                    if launcher.node.state != zk.BUILDING:
+                    sm.runStateMachine()
+                    if sm.complete:
                         self.log.debug("Removing state machine from runner")
-                        to_remove.append(launcher)
+                        to_remove.append(sm)
                 except Exception:
                     self.log.exception("Error running state machine:")
-            for launcher in to_remove:
-                self.launchers.remove(launcher)
+            for sm in to_remove:
+                if sm in self.deleters:
+                    self.deleters.remove(sm)
+                if sm in self.launchers:
+                    self.launchers.remove(sm)
             loop_end = time.monotonic()
-            if self.launchers:
+            if self.launchers or self.deleters:
                 time.sleep(max(0, 10-(loop_end-loop_start)))
             else:
                 time.sleep(1)
@@ -424,27 +506,18 @@ class StateMachineProvider(Provider, QuotaSupport):
 
         return used_quota
 
+    def startNodeCleanup(self, node):
+        nd = StateMachineNodeDeleter(self._zk, self, node)
+        self.deleters.append(nd)
+        return nd
+
     def cleanupNode(self, external_id):
-        # TODO: This happens in a thread-per-node in the launcher
-        # (above the driver level).  If we want to make this
-        # single-threaded (yes), we'll need to modify the launcher
-        # itself.
-        state_machine = self.adapter.getDeleteStateMachine(
-            external_id)
-        self.delete_state_machines[external_id] = state_machine
+        # This is no longer used due to our custom NodeDeleter
+        raise NotImplementedError()
 
     def waitForNodeCleanup(self, external_id, timeout=600):
-        try:
-            for count in iterate_timeout(
-                    timeout, exceptions.ServerDeleteException,
-                    "server %s deletion" % external_id):
-                sm = self.delete_state_machines[external_id]
-                sm.advance()
-                self.log.debug(f"State machine for {external_id} at {sm.state}")
-                if sm.complete:
-                    return
-        finally:
-            self.delete_state_machines.pop(external_id, None)
+        # This is no longer used due to our custom NodeDeleter
+        raise NotImplementedError()
 
     def cleanupLeakedResources(self):
         known_nodes = set()
