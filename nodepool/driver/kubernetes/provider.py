@@ -25,6 +25,7 @@ from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.kubernetes import handler
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
+from nodepool.driver.utils import NodeDeleter
 
 urllib3.disable_warnings()
 
@@ -120,6 +121,11 @@ class KubernetesProvider(Provider, QuotaSupport):
 
     def cleanupLeakedResources(self):
         pass
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         if not self.ready:

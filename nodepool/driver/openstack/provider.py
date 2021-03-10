@@ -26,6 +26,7 @@ from openstack.exceptions import ResourceTimeout
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
+from nodepool.driver.utils import NodeDeleter
 from nodepool import stats
 from nodepool import version
 from nodepool import zk
@@ -436,6 +437,11 @@ class OpenStackProvider(Provider, QuotaSupport):
 
     def deleteServer(self, server_id):
         return self._client.delete_server(server_id, delete_ips=True)
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         server = self.getServer(server_id)

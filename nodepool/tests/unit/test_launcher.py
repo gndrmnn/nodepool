@@ -975,8 +975,10 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
 
         self.zk.lockNode(nodes[0], blocking=False)
-        nodepool.launcher.NodeDeleter.delete(
-            self.zk, pool.getProviderManager('fake-provider'), nodes[0])
+
+        pm = pool.getProviderManager('fake-provider')
+        node_deleter = pm.startNodeCleanup(nodes[0])
+        node_deleter.join()
 
         # Make sure our old node is in delete state, even though delete failed
         deleted_node = self.zk.getNode(nodes[0].id)

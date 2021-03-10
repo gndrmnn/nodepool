@@ -19,6 +19,7 @@ import math
 from nodepool.driver.taskmanager import BaseTaskManagerProvider, Task
 from nodepool.driver import Driver, NodeRequestHandler
 from nodepool.driver.utils import NodeLauncher, QuotaInformation, QuotaSupport
+from nodepool.driver.utils import NodeDeleter
 from nodepool.nodeutils import iterate_timeout, nodescan
 from nodepool import exceptions
 from nodepool import zk
@@ -354,6 +355,11 @@ class SimpleTaskManagerProvider(BaseTaskManagerProvider, QuotaSupport):
             used_quota.add(qi)
 
         return used_quota
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, external_id):
         instance = self.getInstance(external_id)

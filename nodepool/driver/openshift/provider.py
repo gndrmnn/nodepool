@@ -23,6 +23,7 @@ from openshift.dynamic import DynamicClient as os_client
 
 from nodepool import exceptions
 from nodepool.driver import Provider
+from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.openshift import handler
 
 urllib3.disable_warnings()
@@ -54,6 +55,7 @@ class OpenshiftProvider(Provider):
 
     def start(self, zk_conn):
         self.log.debug("Starting")
+        self._zk = zk_conn
         if self.ready or not self.os_client or not self.k8s_client:
             return
         self.ready = True
@@ -102,6 +104,11 @@ class OpenshiftProvider(Provider):
 
     def cleanupLeakedResources(self):
         pass
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         if not self.ready:
