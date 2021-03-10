@@ -13,6 +13,7 @@
 
 import testtools
 import time
+import uuid
 
 from nodepool import exceptions as npe
 from nodepool import tests
@@ -564,7 +565,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_registerLauncher(self):
         launcher = zk.Launcher()
-        launcher.id = "launcher-000-001"
+        launcher.id = "launcher-Poolworker.provider-main-" + uuid.uuid4().hex
         self.zk.registerLauncher(launcher)
         launchers = self.zk.getRegisteredLaunchers()
         self.assertEqual(1, len(launchers))
@@ -572,7 +573,7 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_registerLauncher_safe_repeat(self):
         launcher = zk.Launcher()
-        launcher.id = "launcher-000-001"
+        launcher.id = "launcher-Poolworker.provider-main-" + uuid.uuid4().hex
         self.zk.registerLauncher(launcher)
         self.zk.registerLauncher(launcher)
         launchers = self.zk.getRegisteredLaunchers()
@@ -1014,7 +1015,7 @@ class TestZKModel(tests.BaseTestCase):
         o.public_ipv6 = '<ipv6>'
         o.host_id = 'fake-host-id'
         o.image_id = 'image-id'
-        o.launcher = 'launcher-id'
+        o.launcher = 'launcher-Poolworker.provider-main-' + uuid.uuid4().hex
         o.external_id = 'ABCD'
         o.hostname = 'xyz'
         o.comment = 'comment'
@@ -1048,6 +1049,7 @@ class TestZKModel(tests.BaseTestCase):
     def test_Node_fromDict(self):
         now = int(time.time())
         node_id = '123'
+        launcher_id = 'launcher-Poolworker.provider-main-' + uuid.uuid4().hex
         d = {
             'state': zk.READY,
             'state_time': now,
@@ -1062,7 +1064,7 @@ class TestZKModel(tests.BaseTestCase):
             'public_ipv6': '<ipv6>',
             'host_id': 'fake-host-id',
             'image_id': 'image-id',
-            'launcher': 'launcher-id',
+            'launcher': launcher_id,
             'external_id': 'ABCD',
             'hostname': 'xyz',
             'comment': 'comment',
