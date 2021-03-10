@@ -27,6 +27,7 @@ import voluptuous as v
 from nodepool import zk
 from nodepool import exceptions
 from nodepool.logconfig import get_annotated_logger
+from nodepool.driver.utils import NodeDeleter
 
 
 class Drivers:
@@ -220,6 +221,24 @@ class Provider(ProviderNotifications):
            otherwise.
         """
         pass
+
+    def startNodeCleanup(self, node):
+        '''Starts a background process to delete a node
+
+        This should return a NodeDeleter to implement and track the
+        deletion of a node.
+
+        :param Node node: A locked Node object representing the
+            instance to delete.
+
+        :returns: A NodeDeleter instance.
+        '''
+        t = NodeDeleter(
+            self._nodepool.getZK(),
+            self._nodepool.getProviderManager(node.provider),
+            node)
+        t.start()
+        return t
 
     @abc.abstractmethod
     def cleanupNode(self, node_id):
@@ -797,7 +816,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
     def launchesComplete(self):
         '''
         Handler needs to implement this to check if all nodes in self.nodeset
-        have completed the launch sequence..
+        have completed the launch sequence.
 
         This method will be called periodically to check on launch progress.
 
