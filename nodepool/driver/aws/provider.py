@@ -128,6 +128,12 @@ class AwsProvider(Provider):
     def getImage(self, cloud_image):
         return self.ec2.Image(self.getImageId(cloud_image))
 
+    def getRamUsedByInstanceType(self, instance_type):
+        info = self.ec2_client.describe_instance_types(
+            InstanceTypes=[instance_type])
+        memory = info["InstanceTypes"][0]["MemoryInfo"]
+        return memory["SizeInMiB"]
+
     def labelReady(self, label):
         if not label.cloud_image:
             msg = "A cloud-image (AMI) must be supplied with the AWS driver."

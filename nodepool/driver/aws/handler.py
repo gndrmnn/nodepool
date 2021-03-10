@@ -51,6 +51,11 @@ class AwsInstanceLauncher(NodeLauncher):
 
         instance_id = instance.id
         self.node.external_id = instance_id
+        quota = QuotaInformation(
+            cores=instance.cpu_options.CoreCount,
+            self.handler.manager.getRamUsedByInstanceType(
+                self.label.instance_type)
+        self.node.resources = quota
         self.zk.storeNode(self.node)
 
         boot_start = time.monotonic()
