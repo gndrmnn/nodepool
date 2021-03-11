@@ -51,7 +51,6 @@ class OpenStackProvider(Provider, QuotaSupport):
         self._down_ports = set()
         self._last_port_cleanup = None
         self._statsd = stats.get_client()
-        self.running = False
         self._server_list_watcher = threading.Thread(
             name='ServerListWatcher', target=self._watchServerList,
             daemon=True)
@@ -62,14 +61,14 @@ class OpenStackProvider(Provider, QuotaSupport):
     def start(self, zk_conn):
         self.resetClient()
         self._zk = zk_conn
-        self.running = True
         self._server_list_watcher.start()
 
-    def stop(self):
-        self.running = False
-        self._server_list_watcher_stop_event.set()
-
     def join(self):
+        # Wait until there is no thread waiting to be woken up.
+        while True:
+            if not self._cleanup_queue and not self._startup_queue:
+                break
+        self._server_list_watcher_stop_event.set()
         self._server_list_watcher.join()
 
     def getRequestHandler(self, poolworker, request):
@@ -583,7 +582,7 @@ class OpenStackProvider(Provider, QuotaSupport):
     def _watchServerList(self):
         log = logging.getLogger(
             "nodepool.driver.openstack.OpenStackProvider.watcher")
-        while self.running:
+        while True:
             if self._server_list_watcher_stop_event.wait(5):
                 # We're stopping now so don't wait with any thread for node
                 # deletion.
