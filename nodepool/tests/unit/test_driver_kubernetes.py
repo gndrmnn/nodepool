@@ -44,7 +44,7 @@ class FakeCoreClient(object):
         self.namespaces.append(FakeNamespace)
         return FakeNamespace
 
-    def delete_namespace(self, name, delete_body):
+    def delete_namespace(self, name, body):
         to_delete = None
         for namespace in self.namespaces:
             if namespace.metadata.name == name:

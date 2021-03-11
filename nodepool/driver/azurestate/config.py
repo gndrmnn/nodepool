@@ -23,71 +23,119 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
 
-class ProviderCloudImage(ConfigValue):
-    def __init__(self):
-        self.name = None
-        self.image_id = None
-        self.username = None
-        self.key = None
-        self.python_path = None
-        self.connection_type = None
-        self.connection_port = None
-
-    def __eq__(self, other):
-        if isinstance(other, ProviderCloudImage):
-            return (self.name == other.name
-                    and self.image_id == other.image_id
-                    and self.username == other.username
-                    and self.key == other.key
-                    and self.python_path == other.python_path
-                    and self.connection_type == other.connection_type
-                    and self.connection_port == other.connection_port)
-        return False
-
-    def __repr__(self):
-        return "<ProviderCloudImage %s>" % self.name
+class AzureProviderCloudImage(ConfigValue):
+    def __init__(self, image, zuul_public_key):
+        default_port_mapping = {
+            'ssh': 22,
+            'winrm': 5986,
+        }
+        self.name = image['name']
+        self.username = image['username']
+        # TODO(corvus): remove zuul_public_key
+        self.key = image.get('key', zuul_public_key)
+        self.image_reference = image['image-reference']
+        self.python_path = image.get('python-path')
+        self.connection_type = image.get('connection-type', 'ssh')
+        self.connection_port = image.get(
+            'connection-port',
+            default_port_mapping.get(self.connection_type, 22))
 
     @property
     def external_name(self):
         '''Human readable version of external.'''
         return self.image_id or self.name
 
+    @staticmethod
+    def getSchema():
+        azure_image_reference = {
+            v.Required('sku'): str,
+            v.Required('publisher'): str,
+            v.Required('version'): str,
+            v.Required('offer'): str,
+        }
+
+        return {
+            v.Required('name'): str,
+            v.Required('username'): str,
+            # TODO(corvus): make required when zuul_public_key removed
+            'key': str,
+            v.Required('image-reference'): azure_image_reference,
+            'connection-type': str,
+            'connection-port': int,
+            'python-path': str,
+            # TODO(corvus): shell-type
+        }
+
 
 class AzureLabel(ConfigValue):
-    def __eq__(self, other):
-        if (  # other.username != self.username or
-              # other.imageReference != self.imageReference or
-            other.hardware_profile != self.hardware_profile):
-            return False
-        return True
+    ignore_equality = ['pool']
+
+    def __init__(self, label, provider_config, provider_pool):
+        self.hardware_profile = None
+
+        self.name = label['name']
+        self.pool = provider_pool
+
+        cloud_image_name = label['cloud-image']
+        cloud_image = provider_config.cloud_images.get(
+            cloud_image_name, None)
+        if not cloud_image:
+            raise ValueError(
+                "cloud-image %s does not exist in provider %s"
+                " but is referenced in label %s" %
+                (cloud_image_name, provider_config.name, self.name))
+        self.cloud_image = cloud_image
+
+        self.hardware_profile = label['hardware-profile']
+        self.tags = label.get('tags', {})
+
+    @staticmethod
+    def getSchema():
+        azure_hardware_profile = {
+            v.Required('vm-size'): str,
+        }
+
+        return {
+            v.Required('name'): str,
+            v.Required('cloud-image'): str,
+            v.Required('hardware-profile'): azure_hardware_profile,
+            'tags': dict,
+        }
 
 
 class AzurePool(ConfigPool):
-    def __eq__(self, other):
-        if other.labels != self.labels:
-            return False
-        return True
+    ignore_equality = ['provider']
 
-    def __repr__(self):
-        return "<AzurePool %s>" % self.name
+    def __init__(self, provider_config, pool_config):
+        super().__init__()
+        self.provider = provider_config
+        self.load(pool_config)
 
     def load(self, pool_config):
-        pass
+        self.name = pool_config['name']
+        self.max_servers = pool_config['max-servers']
+        self.use_internal_ip = bool(pool_config.get('use-internal-ip', False))
+        self.host_key_checking = bool(pool_config.get(
+            'host-key-checking', True))
+
+    @staticmethod
+    def getSchema():
+        azure_label = AzureLabel.getSchema()
+
+        pool = ConfigPool.getCommonSchemaDict()
+        pool.update({
+            v.Required('name'): str,
+            v.Required('labels'): [azure_label],
+        })
+        return pool
 
 
 class AzureProviderConfig(ProviderConfig):
     def __init__(self, driver, provider):
+        super().__init__(provider)
         self._pools = {}
-        self.driver_object = driver
         self.rate_limit = None
         self.launch_retries = None
-        super().__init__(provider)
-
-    def __eq__(self, other):
-        if (other.location != self.location or
-            other.pools != self.pools):
-            return False
-        return True
 
     @property
     def pools(self):
@@ -106,6 +154,7 @@ class AzureProviderConfig(ProviderConfig):
         self.launch_retries = self.provider.get('launch-retries', 3)
         self.boot_timeout = self.provider.get('boot-timeout', 60)
 
+        # TODO(corvus): remove
         self.zuul_public_key = self.provider['zuul-public-key']
         self.location = self.provider['location']
         self.subnet_id = self.provider['subnet-id']
@@ -115,105 +164,34 @@ class AzureProviderConfig(ProviderConfig):
         self.auth_path = self.provider.get(
             'auth-path', os.getenv('AZURE_AUTH_LOCATION', None))
 
-        default_port_mapping = {
-            'ssh': 22,
-            'winrm': 5986,
-        }
-
         self.cloud_images = {}
         for image in self.provider['cloud-images']:
-            i = ProviderCloudImage()
-            i.name = image['name']
-            i.username = image['username']
-            # i.key = image['key']
-            i.key = self.zuul_public_key
-            i.image_reference = image['image-reference']
-            i.connection_type = image.get('connection-type', 'ssh')
-            i.connection_port = image.get(
-                'connection-port',
-                default_port_mapping.get(i.connection_type, 22))
+            i = AzureProviderCloudImage(image, self.zuul_public_key)
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
-            pp = AzurePool()
-            pp.name = pool['name']
-            pp.provider = self
-            pp.max_servers = pool['max-servers']
-            pp.use_internal_ip = bool(pool.get('use-internal-ip', False))
-            pp.host_key_checking = bool(pool.get(
-                'host-key-checking', True))
+            pp = AzurePool(self, pool)
             self._pools[pp.name] = pp
-            pp.labels = {}
 
             for label in pool.get('labels', []):
-                pl = AzureLabel()
-                pl.name = label['name']
-                pl.pool = pp
+                pl = AzureLabel(label, self, pp)
                 pp.labels[pl.name] = pl
-
-                cloud_image_name = label['cloud-image']
-                if cloud_image_name:
-                    cloud_image = self.cloud_images.get(
-                        cloud_image_name, None)
-                    if not cloud_image:
-                        raise ValueError(
-                            "cloud-image %s does not exist in provider %s"
-                            " but is referenced in label %s" %
-                            (cloud_image_name, self.name, pl.name))
-                    # pl.imageReference = cloud_image['image-reference']
-                    pl.cloud_image = cloud_image
-                    # pl.username = cloud_image.get('username', 'zuul')
-                else:
-                    # pl.imageReference = None
-                    pl.cloud_image = None
-                    # pl.username = 'zuul'
-
-                pl.hardware_profile = label['hardware-profile']
-
-                config.labels[label['name']].pools.append(pp)
-                pl.tags = label.get('tags', {})
+                config.labels[pl.name].pools.append(pp)
 
     def getSchema(self):
+        provider_cloud_images = AzureProviderCloudImage.getSchema()
 
-        azure_image_reference = {
-            v.Required('sku'): str,
-            v.Required('publisher'): str,
-            v.Required('version'): str,
-            v.Required('offer'): str,
-        }
-
-        azure_hardware_profile = {
-            v.Required('vm-size'): str,
-        }
-
-        provider_cloud_images = {
-            v.Required('name'): str,
-            'username': str,
-            v.Required('image-reference'): azure_image_reference,
-        }
-
-        azure_label = {
-            v.Required('name'): str,
-            v.Required('hardware-profile'): azure_hardware_profile,
-            v.Required('cloud-image'): str,
-            v.Optional('tags'): dict,
-        }
-        pool = ConfigPool.getCommonSchemaDict()
-        pool.update({
-            v.Required('name'): str,
-            v.Required('labels'): [azure_label],
-        })
+        pool = AzurePool.getSchema()
 
         provider = ProviderConfig.getCommonSchemaDict()
         provider.update({
-            v.Required('zuul-public-key'): str,
             v.Required('pools'): [pool],
             v.Required('location'): str,
             v.Required('resource-group'): str,
             v.Required('resource-group-location'): str,
             v.Required('subnet-id'): str,
             v.Required('cloud-images'): [provider_cloud_images],
-            v.Optional('auth-path'): str,
+            v.Required('auth-path'): str,
         })
         return v.Schema(provider)
 

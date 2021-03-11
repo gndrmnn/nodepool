@@ -31,16 +31,6 @@ class ProviderDiskImage(ConfigValue):
         self.connection_port = None
         self.meta = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderDiskImage):
-            return (self.name == other.name and
-                    self.pause == other.pause and
-                    self.config_drive == other.config_drive and
-                    self.connection_type == other.connection_type and
-                    self.connection_port == other.connection_port and
-                    self.meta == other.meta)
-        return False
-
     def __repr__(self):
         return "<ProviderDiskImage %s>" % self.name
 
@@ -57,19 +47,6 @@ class ProviderCloudImage(ConfigValue):
         self.connection_type = None
         self.connection_port = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderCloudImage):
-            return (self.name == other.name and
-                    self.config_drive == other.config_drive and
-                    self.image_id == other.image_id and
-                    self.image_name == other.image_name and
-                    self.username == other.username and
-                    self.python_path == other.python_path and
-                    self.shell_type == other.shell_type and
-                    self.connection_type == other.connection_type and
-                    self.connection_port == other.connection_port)
-        return False
-
     def __repr__(self):
         return "<ProviderCloudImage %s>" % self.name
 
@@ -80,6 +57,8 @@ class ProviderCloudImage(ConfigValue):
 
 
 class ProviderLabel(ConfigValue):
+    ignore_equality = ['pool']
+
     def __init__(self):
         self.name = None
         self.diskimage = None
@@ -121,6 +100,8 @@ class ProviderLabel(ConfigValue):
 
 
 class ProviderPool(ConfigPool):
+    ignore_equality = ['provider']
+
     def __init__(self):
         self.name = None
         self.max_cores = None
@@ -137,24 +118,6 @@ class ProviderPool(ConfigPool):
 
         # Initialize base class attributes
         super().__init__()
-
-    def __eq__(self, other):
-        if isinstance(other, ProviderPool):
-            # NOTE(Shrews): We intentionally do not compare 'provider' here
-            # since this causes recursive checks with OpenStackProviderConfig.
-            return (super().__eq__(other) and
-                    other.name == self.name and
-                    other.max_cores == self.max_cores and
-                    other.max_ram == self.max_ram and
-                    other.ignore_provider_quota == (
-                        self.ignore_provider_quota) and
-                    other.azs == self.azs and
-                    other.networks == self.networks and
-                    other.security_groups == self.security_groups and
-                    other.auto_floating_ip == self.auto_floating_ip and
-                    other.host_key_checking == self.host_key_checking and
-                    other.labels == self.labels)
-        return False
 
     def __repr__(self):
         return "<ProviderPool %s>" % self.name
@@ -239,23 +202,6 @@ class OpenStackProviderConfig(ProviderConfig):
         self.image_name_format = None
         self.post_upload_hook = None
         super().__init__(provider)
-
-    def __eq__(self, other):
-        if isinstance(other, OpenStackProviderConfig):
-            return (super().__eq__(other) and
-                    other.cloud_config == self.cloud_config and
-                    other.pools == self.pools and
-                    other.image_type == self.image_type and
-                    other.rate == self.rate and
-                    other.boot_timeout == self.boot_timeout and
-                    other.launch_timeout == self.launch_timeout and
-                    other.clean_floating_ips == self.clean_floating_ips and
-                    other.port_cleanup_interval ==
-                    self.port_cleanup_interval and
-                    other.diskimages == self.diskimages and
-                    other.cloud_images == self.cloud_images and
-                    other.post_upload_hook == self.post_upload_hook)
-        return False
 
     def _cloudKwargs(self):
         cloud_kwargs = {}

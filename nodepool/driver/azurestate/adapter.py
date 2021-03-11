@@ -115,7 +115,7 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.adapter = adapter
         self.retries = retries
         self.metadata = metadata
-        self.tags = label.tags or {}
+        self.tags = label.tags.copy() or {}
         self.tags.update(metadata)
         self.hostname = hostname
         self.label = label

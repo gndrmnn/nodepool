@@ -23,31 +23,14 @@ from nodepool.driver import ProviderConfig
 
 
 class OpenshiftLabel(ConfigValue):
-    def __eq__(self, other):
-        if isinstance(other, OpenshiftLabel):
-            return (other.name == self.name and
-                    other.type == self.type and
-                    other.image_pull == self.image_pull and
-                    other.image == self.image and
-                    other.cpu == self.cpu and
-                    other.memory == self.memory and
-                    other.python_path == self.python_path and
-                    other.shell_type == self.shell_type and
-                    other.env == self.env and
-                    other.node_selector == self.node_selector)
-        return False
+    ignore_equality = ['pool']
 
     def __repr__(self):
         return "<OpenshiftLabel %s>" % self.name
 
 
 class OpenshiftPool(ConfigPool):
-    def __eq__(self, other):
-        if isinstance(other, OpenshiftPool):
-            return (super().__eq__(other) and
-                    other.name == self.name and
-                    other.labels == self.labels)
-        return False
+    ignore_equality = ['provider']
 
     def __repr__(self):
         return "<OpenshiftPool %s>" % self.name
@@ -78,13 +61,6 @@ class OpenshiftProviderConfig(ProviderConfig):
         self.driver_object = driver
         self.__pools = {}
         super().__init__(provider)
-
-    def __eq__(self, other):
-        if isinstance(other, OpenshiftProviderConfig):
-            return (super().__eq__(other) and
-                    other.context == self.context and
-                    other.pools == self.pools)
-        return False
 
     @property
     def pools(self):

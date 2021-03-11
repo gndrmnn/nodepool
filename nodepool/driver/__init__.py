@@ -821,12 +821,26 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
 
 class ConfigValue(object, metaclass=abc.ABCMeta):
-    @abc.abstractmethod
+    ignore_equality = []
+
     def __eq__(self, other):
-        pass
+        if isinstance(other, self.__class__):
+            for k in set(list(self.__dict__.keys()) +
+                         list(other.__dict__.keys())):
+                if k in self.ignore_equality:
+                    continue
+                if self.__dict__.get(k) != other.__dict__.get(k):
+                    return False
+            return True
+        return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __repr__(self):
+        if hasattr(self, 'name'):
+            return "<%s %s>" % (self.__class__.__name__, self.name)
+        return "<%s>" % (self.__class__.__name__,)
 
 
 class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
@@ -838,13 +852,6 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         self.labels = {}
         self.max_servers = math.inf
         self.node_attributes = None
-
-    def __eq__(self, other):
-        if isinstance(other, ConfigPool):
-            return (self.labels == other.labels and
-                    self.max_servers == other.max_servers and
-                    self.node_attributes == other.node_attributes)
-        return False
 
     @classmethod
     def getCommonSchemaDict(self):
@@ -885,11 +892,6 @@ class DriverConfig(ConfigValue):
     def __init__(self):
         self.name = None
 
-    def __eq__(self, other):
-        if isinstance(other, DriverConfig):
-            return self.name == other.name
-        return False
-
 
 class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
     """The Provider config interface
@@ -903,17 +905,6 @@ class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
         self.driver = DriverConfig()
         self.driver.name = provider.get('driver', 'openstack')
         self.max_concurrency = provider.get('max-concurrency', -1)
-
-    def __eq__(self, other):
-        if isinstance(other, ProviderConfig):
-            return (self.name == other.name and
-                    self.provider == other.provider and
-                    self.driver == other.driver and
-                    self.max_concurrency == other.max_concurrency)
-        return False
-
-    def __repr__(self):
-        return "<Provider %s>" % self.name
 
     @classmethod
     def getCommonSchemaDict(self):
