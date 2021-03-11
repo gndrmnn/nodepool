@@ -22,6 +22,30 @@
       "revId": "f884e8c7229d30e56f79cf47aa5cca9992fa7151",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4238fd4b_89020e57",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 23
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-03-11T08:32:44Z",
+      "side": 1,
+      "message": "I think there is a misunderstanding. This is not about ssh into the nodes. The post upload hook is running locally and has been added to the openstack driver long ago to support use cases like enforcing image distribution to compute nodes or post upload sanity checks before taking an image into production.",
+      "parentUuid": "3d535be5_a9f01dee",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 318,
+        "endChar": 67
+      },
+      "revId": "f884e8c7229d30e56f79cf47aa5cca9992fa7151",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
