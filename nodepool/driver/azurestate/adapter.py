@@ -57,11 +57,15 @@ class AzureDeleteStateMachine(statemachine.StateMachine):
         super().__init__()
         self.adapter = adapter
         self.external_id = external_id
+        self.disk_names = []
 
     def advance(self):
         if self.state == self.START:
             self.vm = self.adapter._deleteVirtualMachine(
                 self.external_id)
+            if self.vm:
+                self.disk_names.append(
+                    self.vm['properties']['storageProfile']['osDisk']['name'])
             self.state = self.VM_DELETING
 
         if self.state == self.VM_DELETING:
@@ -82,11 +86,9 @@ class AzureDeleteStateMachine(statemachine.StateMachine):
             self.pip = self.adapter._refresh_delete(self.pip)
             if self.pip is None:
                 self.disks = []
-                for disk in self.adapter._listDisks():
-                    if disk['tags'] is not None and \
-                       disk['tags'].get('nodepool_id') == self.external_id:
-                        disk = self.adapter._deleteDisk(disk['name'])
-                        self.disks.append(disk)
+                for name in self.disk_names:
+                    disk = self.adapter._deleteDisk(name)
+                    self.disks.append(disk)
                 self.state = self.DISK_DELETING
 
         if self.state == self.DISK_DELETING:
@@ -409,10 +411,11 @@ class AzureAdapter(statemachine.Adapter):
         return self.azul.disks.list(self.resource_group)
 
     def _deleteDisk(self, name):
-        for disk in self._listNetworkInterfaces():
-            if disk['name'] == name:
-                break
-        else:
-            return None
+        # Because the disk listing is unreliable (there is up to a 30
+        # minute delay between disks being created and appearing in
+        # the listing) we can't use the listing to efficiently
+        # determine if the deletion is complete.  We could fall back
+        # on the asynchronous operation record, but since disks are
+        # the last thing we delete anyway, let's just fire and forget.
         self.azul.disks.delete(self.resource_group, name)
-        return disk
+        return None
