@@ -22,11 +22,40 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
 
+class AzureProviderCloudImage(ConfigValue):
+    def __init__(self):
+        self.name = None
+        self.image_id = None
+        self.username = None
+        self.key = None
+        self.python_path = None
+        self.connection_type = None
+        self.connection_port = None
+
+    def __eq__(self, other):
+        if isinstance(other, AzureProviderCloudImage):
+            return (self.name == other.name
+                    and self.image_id == other.image_id
+                    and self.username == other.username
+                    and self.key == other.key
+                    and self.python_path == other.python_path
+                    and self.connection_type == other.connection_type
+                    and self.connection_port == other.connection_port)
+        return False
+
+    def __repr__(self):
+        return "<AzureProviderCloudImage %s>" % self.name
+
+    @property
+    def external_name(self):
+        '''Human readable version of external.'''
+        return self.image_id or self.name
+
+
 class AzureLabel(ConfigValue):
     def __eq__(self, other):
-        if (other.username != self.username or
-            other.imageReference != self.imageReference or
-            other.hardwareProfile != self.hardwareProfile):
+        if (other.cloud_image != self.cloud_image or
+            other.hardware_profile != self.hardware_profile):
             return False
         return True
 
@@ -69,6 +98,10 @@ class AzureProviderConfig(ProviderConfig):
         pass
 
     def load(self, config):
+        default_port_mapping = {
+            'ssh': 22,
+            'winrm': 5986,
+        }
 
         self.zuul_public_key = self.provider['zuul-public-key']
         self.location = self.provider['location']
@@ -81,7 +114,16 @@ class AzureProviderConfig(ProviderConfig):
 
         self.cloud_images = {}
         for image in self.provider['cloud-images']:
-            self.cloud_images[image['name']] = image
+            i = AzureProviderCloudImage()
+            i.name = image['name']
+            i.username = image['username']
+            i.key = image.get('key', self.zuul_public_key)
+            i.image_reference = image['image-reference']
+            i.connection_type = image.get('connection-type', 'ssh')
+            i.connection_port = image.get(
+                'connection-port',
+                default_port_mapping.get(i.connection_type, 22))
+            self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
             pp = AzurePool()
@@ -106,13 +148,11 @@ class AzureProviderConfig(ProviderConfig):
                             "cloud-image %s does not exist in provider %s"
                             " but is referenced in label %s" %
                             (cloud_image_name, self.name, pl.name))
-                    pl.imageReference = cloud_image['image-reference']
-                    pl.username = cloud_image.get('username', 'zuul')
+                    pl.cloud_image = cloud_image
                 else:
-                    pl.imageReference = None
-                    pl.username = 'zuul'
+                    pl.cloud_image = None
 
-                pl.hardwareProfile = label['hardware-profile']
+                pl.hardware_profile = label['hardware-profile']
 
                 config.labels[label['name']].pools.append(pp)
                 pl.tags = label['tags']

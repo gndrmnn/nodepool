@@ -51,41 +51,40 @@ class AzureInstanceLauncher(NodeLauncher):
                     self.log.exception(
                         "Launch attempt %d/%d failed for node %s:",
                         attempts, self.retries, self.node.id)
-                else:
+                if attempts == self.retries:
                     raise
                 attempts += 1
             time.sleep(1)
 
-        self.node.external_id = instance.id
+        self.node.external_id = hostname
 
         boot_start = time.monotonic()
         while time.monotonic() - boot_start < self.boot_timeout:
-            state = instance.provisioning_state
-            self.log.debug("Instance %s is %s" % (instance.id, state))
+            state = instance['properties']['provisioningState']
+            self.log.debug("Instance %s is %s" % (hostname, state))
             if state == 'Succeeded':
                 break
             time.sleep(0.5)
-            instance = self.handler.manager.getInstance(instance.id)
+            instance = self.handler.manager.getInstance(hostname)
         if state != 'Succeeded':
             raise exceptions.LaunchStatusException(
-                "Instance %s failed to start: %s" % (instance.id, state))
+                "Instance %s failed to start: %s" % (hostname, state))
 
         server_ip = self.handler.manager.getIpaddress(instance)
         if self.provider_config.ipv6:
             server_v6_ip = self.handler.manager.getv6Ipaddress(instance)
         if not server_ip:
             raise exceptions.LaunchStatusException(
-                "Instance %s doesn't have a public ip" % instance.id)
+                "Instance %s doesn't have a public ip" % hostname)
 
         try:
             key = utils.nodescan(server_ip, port=22, timeout=180)
         except Exception:
             raise exceptions.LaunchKeyscanException(
-                "Can't scan instance %s key" % instance.id)
+                "Can't scan instance %s key" % hostname)
 
-        self.log.info("Instance %s ready" % instance.id)
+        self.log.info("Instance %s ready" % hostname)
         self.node.state = zk.READY
-        self.node.external_id = instance.id
         self.node.hostname = server_ip
         self.node.interface_ip = server_ip
         self.node.public_ipv4 = server_ip
@@ -94,9 +93,9 @@ class AzureInstanceLauncher(NodeLauncher):
         self.node.host_keys = key
         self.node.connection_port = 22
         self.node.connection_type = "ssh"
-        self.node.username = self.label.username
+        self.node.username = self.label.cloud_image.username
         self.zk.storeNode(self.node)
-        self.log.info("Instance %s is ready", instance.id)
+        self.log.info("Instance %s is ready", hostname)
 
 
 class AzureNodeRequestHandler(NodeRequestHandler):
