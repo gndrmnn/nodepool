@@ -126,28 +126,56 @@ class AzureCRUD:
 
     def get(self, resource_group_name, name):
         url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
+            '{}/{}'.format(self.resource, name),
             resourceGroupName=resource_group_name,
         )
         return self.cloud.get(url)
 
     def create(self, resource_group_name, name, params):
         url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
+            '{}/{}'.format(self.resource, name),
             resourceGroupName=resource_group_name,
         )
         return self.cloud.put(url, params)
 
     def delete(self, resource_group_name, name):
         url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
+            '{}/{}'.format(self.resource, name),
             resourceGroupName=resource_group_name,
+        )
+        return self.cloud.delete(url)
+
+
+class AzureSubnetCRUD(AzureCRUD):
+    def list(self, resource_group_name, virtual_network_name):
+        url = self.url(
+            self.resource,
+            resourceGroupName=resource_group_name,
+            virtualNetworkName=virtual_network_name,
+        )
+        return self.cloud.paginate(self.cloud.get(url))
+
+    def get(self, resource_group_name, virtual_network_name, name):
+        url = self.url(
+            '{}/{}'.format(self.resource, name),
+            resourceGroupName=resource_group_name,
+            virtualNetworkName=virtual_network_name,
+        )
+        return self.cloud.get(url)
+
+    def create(self, resource_group_name, virtual_network_name, name, params):
+        url = self.url(
+            '{}/{}'.format(self.resource, name),
+            resourceGroupName=resource_group_name,
+            virtualNetworkName=virtual_network_name,
+        )
+        return self.cloud.put(url, params)
+
+    def delete(self, resource_group_name, virtual_network_name, name):
+        url = self.url(
+            '{}/{}'.format(self.resource, name),
+            resourceGroupName=resource_group_name,
+            virtualNetworkName=virtual_network_name,
         )
         return self.cloud.delete(url)
 
@@ -193,6 +221,10 @@ class AzureCloud:
         self.resource_groups = AzureResourceGroupsCRUD(
             self,
             '2020-06-01')
+        self.subnets = AzureSubnetCRUD(
+            self,
+            'Microsoft.Network/virtualNetworks/{virtualNetworkName}/subnets',
+            '2020-07-01')
 
     def get(self, url, codes=[200]):
         return self.request('GET', url, None, codes)
