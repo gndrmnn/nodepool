@@ -114,9 +114,20 @@ class AzurePool(ConfigPool):
     def load(self, pool_config):
         self.name = pool_config['name']
         self.max_servers = pool_config['max-servers']
-        self.use_internal_ip = bool(pool_config.get('use-internal-ip', False))
-        self.host_key_checking = bool(pool_config.get(
-            'host-key-checking', True))
+        self.public_ipv4 = pool_config.get('public-ipv4',
+                                           self.provider.public_ipv4)
+        self.public_ipv6 = pool_config.get('public-ipv6',
+                                           self.provider.public_ipv6)
+        self.ipv4 = pool_config.get('ipv4', self.provider.ipv4)
+        self.ipv6 = pool_config.get('ipv6', self.provider.ipv6)
+        self.ipv4 = self.ipv4 or self.public_ipv4
+        self.ipv6 = self.ipv6 or self.public_ipv6
+        if not self.ipv4 or self.ipv6:
+            self.ipv4 = True
+        self.use_internal_ip = pool_config.get(
+            'use-internal-ip', self.provider.use_internal_ip)
+        self.host_key_checking = pool_config.get(
+            'host-key-checking', self.provider.use_internal_ip)
 
     @staticmethod
     def getSchema():
@@ -126,6 +137,12 @@ class AzurePool(ConfigPool):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [azure_label],
+            'ipv4': bool,
+            'ipv6': bool,
+            'public-ipv4': bool,
+            'public-ipv6': bool,
+            'use-internal-ip': bool,
+            'host-key-checking': bool,
         })
         return pool
 
@@ -157,8 +174,15 @@ class AzureProviderConfig(ProviderConfig):
         # TODO(corvus): remove
         self.zuul_public_key = self.provider['zuul-public-key']
         self.location = self.provider['location']
-        self.subnet_id = self.provider['subnet-id']
-        self.ipv6 = self.provider.get('ipv6', False)
+        self.subnet_id = self.provider.get('subnet-id')
+        # Don't use these directly; these are default values for
+        # labels.
+        self.public_ipv4 = self.provider.get('public-ipv4', False)
+        self.public_ipv6 = self.provider.get('public-ipv6', False)
+        self.ipv4 = self.provider.get('ipv4', None)
+        self.ipv6 = self.provider.get('ipv6', None)
+        self.use_internal_ip = self.provider.get('use-internal-ip', False)
+        self.host_key_checking = self.provider.get('host-key-checking', True)
         self.resource_group = self.provider['resource-group']
         self.resource_group_location = self.provider['resource-group-location']
         self.auth_path = self.provider.get(
@@ -192,6 +216,12 @@ class AzureProviderConfig(ProviderConfig):
             v.Required('subnet-id'): str,
             v.Required('cloud-images'): [provider_cloud_images],
             v.Required('auth-path'): str,
+            'ipv4': bool,
+            'ipv6': bool,
+            'public-ipv4': bool,
+            'public-ipv6': bool,
+            'use-internal-ip': bool,
+            'host-key-checking': bool,
         })
         return v.Schema(provider)
 
