@@ -175,6 +175,7 @@ class AzureProviderConfig(ProviderConfig):
         self.zuul_public_key = self.provider['zuul-public-key']
         self.location = self.provider['location']
         self.subnet_id = self.provider.get('subnet-id')
+        self.network = self.provider.get('network')
         # Don't use these directly; these are default values for
         # labels.
         self.public_ipv4 = self.provider.get('public-ipv4', False)
@@ -213,7 +214,12 @@ class AzureProviderConfig(ProviderConfig):
             v.Required('location'): str,
             v.Required('resource-group'): str,
             v.Required('resource-group-location'): str,
-            v.Required('subnet-id'): str,
+            'subnet-id': str,
+            'network': v.Any(str, {
+                'resource-group': str,
+                'network': str,
+                'subnet': str,
+            }),
             v.Required('cloud-images'): [provider_cloud_images],
             v.Required('auth-path'): str,
             'ipv4': bool,

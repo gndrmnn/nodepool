@@ -238,6 +238,18 @@ class AzureAdapter(statemachine.Adapter):
                                         self.provider.rate_limit)
         with open(self.provider.auth_path) as f:
             self.azul = azul.AzureCloud(json.load(f))
+        if provider_config.subnet_id:
+            self.subnet_id = provider_config.subnet_id
+        else:
+            if isinstance(provider_config.network, str):
+                net_info = {'network': provider_config.network}
+            else:
+                net_info = provider_config.network
+            subnet = self.azul.subnets.get(
+                net_info.get('resource-group', self.provider.resource_group),
+                net_info['network'],
+                net_info.get('subnet', 'default'))
+            self.subnet_id = subnet['id']
 
     def getCreateStateMachine(self, hostname, label, metadata, retries):
         return AzureCreateStateMachine(self, hostname, label, metadata, retries)
@@ -381,11 +393,11 @@ class AzureAdapter(statemachine.Adapter):
 
         if ipv4:
             ip_configs.append(make_ip_config('nodepool-v4-ip-config',
-                                             'IPv4', self.provider.subnet_id,
+                                             'IPv4', self.subnet_id,
                                              pip4))
         if ipv6:
             ip_configs.append(make_ip_config('nodepool-v6-ip-config',
-                                             'IPv6', self.provider.subnet_id,
+                                             'IPv6', self.subnet_id,
                                              pip6))
 
         nic_data = {
