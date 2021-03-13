@@ -23,10 +23,11 @@ from nodepool.driver import statemachine
 from . import azul
 
 class AzureInstance(statemachine.Instance):
-    def __init__(self, vm, nic=None, pip=None):
+    def __init__(self, vm, nic=None, pip4=None, pip6=None):
         self.external_id = vm['name']
         self.metadata = vm['tags'] or {}
         self.private_ipv4 = None
+        self.private_ipv6 = None
         self.public_ipv4 = None
         self.public_ipv6 = None
 
@@ -35,12 +36,17 @@ class AzureInstance(statemachine.Instance):
                 ip_config_prop = ip_config_data['properties']
                 if ip_config_prop['privateIPAddressVersion'] == 'IPv4':
                     self.private_ipv4 = ip_config_prop['privateIPAddress']
+                if ip_config_prop['privateIPAddressVersion'] == 'IPv6':
+                    self.private_ipv6 = ip_config_prop['privateIPAddress']
         # public_ipv6
 
-        if pip:
-            self.public_ipv4 = pip['properties'].get('ipAddress')
+        if pip4:
+            self.public_ipv4 = pip4['properties'].get('ipAddress')
+        if pip6:
+            self.public_ipv6 = pip6['properties'].get('ipAddress')
 
-        self.interface_ip = self.public_ipv4 or self.private_ipv4
+        self.interface_ip = (self.public_ipv4 or self.public_ipv6 or
+                             self.private_ipv4 or self.private_ipv6)
         self.region = vm['location']
         self.az = ''
 
@@ -77,13 +83,16 @@ class AzureDeleteStateMachine(statemachine.StateMachine):
         if self.state == self.NIC_DELETING:
             self.nic = self.adapter._refresh_delete(self.nic)
             if self.nic is None:
-                self.pip = self.adapter._deletePublicIPAddress(
-                    self.external_id + '-nic-pip')
+                self.pip4 = self.adapter._deletePublicIPAddress(
+                    self.external_id + '-pip-IPv4')
+                self.pip6 = self.adapter._deletePublicIPAddress(
+                    self.external_id + '-pip-IPv6')
                 self.state = self.PIP_DELETING
 
         if self.state == self.PIP_DELETING:
-            self.pip = self.adapter._refresh_delete(self.pip)
-            if self.pip is None:
+            self.pip4 = self.adapter._refresh_delete(self.pip4)
+            self.pip6 = self.adapter._refresh_delete(self.pip6)
+            if self.pip4 is None and self.pip6 is None:
                 self.disks = []
                 for name in self.disk_names:
                     disk = self.adapter._deleteDisk(name)
@@ -118,25 +127,56 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.tags.update(metadata)
         self.hostname = hostname
         self.label = label
-        self.pip = None
+        self.pip4 = None
+        self.pip6 = None
         self.nic = None
         self.vm = None
+        # There are two parameters for IP addresses: SKU and
+        # allocation method.  SKU is "basic" or "standard".
+        # Allocation method is "static" or "dynamic".  Between IPv4
+        # and v6, SKUs cannot be mixed (the same sku must be used for
+        # both protocols).  The standard SKU only supports static
+        # allocation.  Static is cheaper than dynamic, but basic is
+        # cheaper than standard.  Also, dynamic is faster than static.
+        # Therefore, if IPv6 is used at all, standard+static for
+        # everything; otherwise basic+dynamic in an IPv4-only
+        # situation.
+        if label.pool.ipv6:
+            self.ip_sku = 'Standard'
+            self.ip_method = 'static'
+        else:
+            self.ip_sku = 'Basic'
+            self.ip_method = 'dynamic'
 
     def advance(self):
         if self.state == self.START:
-            self.pip = self.adapter._createPublicIPAddress(
-                self.tags, self.hostname)
-            self.state = self.PIP_CREATING
             self.external_id = self.hostname
+            if self.label.pool.public_ipv4:
+                self.pip4 = self.adapter._createPublicIPAddress(
+                    self.tags, self.hostname, self.ip_sku, 'IPv4',
+                    self.ip_method)
+            if self.label.pool.public_ipv6:
+                self.pip6 = self.adapter._createPublicIPAddress(
+                    self.tags, self.hostname, self.ip_sku, 'IPv6',
+                    self.ip_method)
+            self.state = self.PIP_CREATING
 
         if self.state == self.PIP_CREATING:
-            self.pip = self.adapter._refresh(self.pip)
-            if self.adapter._succeeded(self.pip):
-                self.nic = self.adapter._createNetworkInterface(
-                    self.tags, self.hostname, self.pip)
-                self.state = self.NIC_CREATING
-            else:
-                return
+            if self.pip4:
+                self.pip4 = self.adapter._refresh(self.pip4)
+                if not self.adapter._succeeded(self.pip4):
+                    return
+            if self.pip6:
+                self.pip6 = self.adapter._refresh(self.pip6)
+                if not self.adapter._succeeded(self.pip6):
+                    return
+            # At this point, every pip we have has succeeded (we may
+            # have 0, 1, or 2).
+            self.nic = self.adapter._createNetworkInterface(
+                self.tags, self.hostname,
+                self.label.pool.ipv4, self.label.pool.ipv6,
+                self.pip4, self.pip6)
+            self.state = self.NIC_CREATING
 
         if self.state == self.NIC_CREATING:
             self.nic = self.adapter._refresh(self.nic)
@@ -162,20 +202,30 @@ class AzureCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.NIC_QUERY:
             self.nic = self.adapter._refresh(self.nic, force=True)
+            all_found = True
             for ip_config_data in self.nic['properties']['ipConfigurations']:
                 ip_config_prop = ip_config_data['properties']
-                if ip_config_prop['privateIPAddressVersion'] == 'IPv4':
-                    if 'privateIPAddress' in ip_config_prop:
-                        self.state = self.PIP_QUERY
+                if 'privateIPAddress' not in ip_config_prop:
+                    all_found = False
+            if all_found:
+                self.state = self.PIP_QUERY
 
         if self.state == self.PIP_QUERY:
-            self.pip = self.adapter._refresh(self.pip, force=True)
-            if 'ipAddress' in self.pip['properties']:
+            all_found = True
+            if self.pip4:
+                self.pip4 = self.adapter._refresh(self.pip4, force=True)
+                if 'ipAddress' not in self.pip4['properties']:
+                    all_found = False
+            if self.pip6:
+                self.pip6 = self.adapter._refresh(self.pip6, force=True)
+                if 'ipAddress' not in self.pip6['properties']:
+                    all_found = False
+            if all_found:
                 self.state = self.COMPLETE
 
         if self.state == self.COMPLETE:
             self.complete = True
-            return AzureInstance(self.vm, self.nic, self.pip)
+            return AzureInstance(self.vm, self.nic, self.pip4, self.pip6)
 
 class AzureAdapter(statemachine.Adapter):
     log = logging.getLogger("nodepool.driver.azure.AzureAdapter")
@@ -277,17 +327,22 @@ class AzureAdapter(statemachine.Adapter):
     def _listPublicIPAddresses(self):
         return self.azul.public_ip_addresses.list(self.resource_group)
 
-    def _createPublicIPAddress(self, tags, hostname):
+    def _createPublicIPAddress(self, tags, hostname, sku, version,
+                               allocation_method):
         v4_params_create = {
             'location': self.provider.location,
             'tags': tags,
+            'sku': {
+                'name': sku,
+            },
             'properties': {
-                'publicIpAllocationMethod': 'dynamic',
+                'publicIpAddressVersion': version,
+                'publicIpAllocationMethod': allocation_method,
             },
         }
         return self.azul.public_ip_addresses.create(
             self.resource_group,
-            "%s-nic-pip" % hostname,
+            "%s-pip-%s" % (hostname, version),
             v4_params_create,
         )
 
@@ -304,36 +359,42 @@ class AzureAdapter(statemachine.Adapter):
     def _listNetworkInterfaces(self):
         return self.azul.network_interfaces.list(self.resource_group)
 
-    def _createNetworkInterface(self, tags, hostname, pip):
+    def _createNetworkInterface(self, tags, hostname, ipv4, ipv6, pip4, pip6):
+
+        def make_ip_config(name, version, subnet_id, pip):
+            ip_config = {
+                'name': name,
+                'properties': {
+                    'privateIpAddressVersion': version,
+                    'subnet': {
+                        'id': subnet_id
+                    },
+                }
+            }
+            if pip:
+                ip_config['properties']['publicIpAddress'] = {
+                    'id': pip['id']
+                }
+            return ip_config
+
+        ip_configs = []
+
+        if ipv4:
+            ip_configs.append(make_ip_config('nodepool-v4-ip-config',
+                                             'IPv4', self.provider.subnet_id,
+                                             pip4))
+        if ipv6:
+            ip_configs.append(make_ip_config('nodepool-v6-ip-config',
+                                             'IPv6', self.provider.subnet_id,
+                                             pip6))
+
         nic_data = {
             'location': self.provider.location,
             'tags': tags,
             'properties': {
-                'ipConfigurations': [{
-                    'name': "nodepool-v4-ip-config",
-                    'properties': {
-                        'privateIpAddressVersion': 'IPv4',
-                        'subnet': {
-                            'id': self.provider.subnet_id
-                        },
-                        'publicIpAddress': {
-                            'id': pip['id']
-                        }
-                    }
-                }]
+                'ipConfigurations': ip_configs
             }
         }
-
-        if self.provider.ipv6:
-            nic_data['properties']['ipConfigurations'].append({
-                'name': "nodepool-v6-ip-config",
-                'properties': {
-                    'privateIpAddressVersion': 'IPv6',
-                    'subnet': {
-                        'id': self.provider.subnet_id
-                    }
-                }
-            })
 
         return self.azul.network_interfaces.create(
             self.resource_group,

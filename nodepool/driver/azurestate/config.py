@@ -114,6 +114,14 @@ class AzurePool(ConfigPool):
     def load(self, pool_config):
         self.name = pool_config['name']
         self.max_servers = pool_config['max-servers']
+        self.public_ipv4 = pool_config.get('public-ipv4', False)
+        self.public_ipv6 = pool_config.get('public-ipv6', False)
+        self.ipv4 = pool_config.get('ipv4', None)
+        self.ipv6 = pool_config.get('ipv6', None)
+        self.ipv4 = self.ipv4 or self.public_ipv4
+        self.ipv6 = self.ipv6 or self.public_ipv6
+        if not self.ipv4 or self.ipv6:
+            self.ipv4 = True
         self.use_internal_ip = bool(pool_config.get('use-internal-ip', False))
         self.host_key_checking = bool(pool_config.get(
             'host-key-checking', True))
@@ -158,6 +166,7 @@ class AzureProviderConfig(ProviderConfig):
         self.zuul_public_key = self.provider['zuul-public-key']
         self.location = self.provider['location']
         self.subnet_id = self.provider['subnet-id']
+        # TODO(corvus): remove
         self.ipv6 = self.provider.get('ipv6', False)
         self.resource_group = self.provider['resource-group']
         self.resource_group_location = self.provider['resource-group-location']

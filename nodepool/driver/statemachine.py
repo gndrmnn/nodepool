@@ -103,8 +103,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         pool = self.handler.pool
         label = pool.labels[self.node.type[0]]
 
-        if pool.use_internal_ip and instance.private_ipv4:
-            server_ip = instance.private_ipv4
+        if (pool.use_internal_ip and
+            (instance.private_ipv4 or instance.private_ipv6)):
+            server_ip = instance.private_ipv4 or instance.private_ipv6
         else:
             server_ip = instance.interface_ip
 
