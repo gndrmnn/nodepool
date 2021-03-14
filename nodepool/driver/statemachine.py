@@ -27,7 +27,9 @@ from nodepool.logconfig import get_annotated_logger
 from nodepool import stats
 from nodepool import exceptions
 from nodepool import zk
+
 from kazoo import exceptions as kze
+import cachetools
 
 
 def keyscan(node_id, interface_ip,
@@ -417,6 +419,9 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.keyscan_worker = None
         self.state_machine_thread = None
         self.running = False
+        num_labels = sum([len(pool.labels)
+                          for pool in provider.pools.values()])
+        self.label_quota_cache = cachetools.LRUCache(num_labels)
 
     def start(self, zk_conn):
         super().start(zk_conn)
@@ -484,10 +489,17 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     def quotaNeededByLabel(self, ntype, pool):
         provider_label = pool.labels[ntype]
+        qi = self.label_quota_cache.get(provider_label)
+        if qi is not None:
+            return qi
         try:
-            return self.adapter.getQuotaForLabel(provider_label)
+            qi = self.adapter.getQuotaForLabel(provider_label)
+            self.log.debug("Quota required for %s: %s",
+                           provider_label.name, qi)
         except NotImplementedError:
-            return QuotaInformation()
+            qi = QuotaInformation()
+        self.label_quota_cache.setdefault(provider_label, qi)
+        return qi
 
     def unmanagedQuotaUsed(self):
         '''
