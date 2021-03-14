@@ -284,9 +284,32 @@ class AzureAdapter(statemachine.Adapter):
             yield AzureInstance(vm)
 
     def getQuotaLimits(self):
-        return QuotaInformation(default=math.inf)
+        r = self.azul.compute_usages.list(self.provider.location)
+        cores = instances = math.inf
+        for item in r:
+            if item['name']['value'] == 'cores':
+                cores = item['limit']
+            elif item['name']['value'] == 'virtualMachines':
+                instances = item['limit']
+        return QuotaInformation(cores=cores,
+                                instances=instances,
+                                default=math.inf)
 
     def getQuotaForLabel(self, label):
+        for sku in self._listSKUs():
+            if (sku['name'] == label.hardware_profile["vm-size"] and
+                self.provider.location in sku['locations']):
+                cores = None
+                ram = None
+                for cap in sku['capabilities']:
+                    if cap['name'] == 'vCPUs':
+                        cores = int(cap['value'])
+                    if cap['name'] == 'MemoryGB':
+                        ram = int(float(cap['value']) * 1024)
+                return QuotaInformation(
+                    cores=cores,
+                    ram=ram,
+                    instances=1)
         return QuotaInformation(instances=1)
 
     # Local implementation below
@@ -334,6 +357,10 @@ class AzureAdapter(statemachine.Adapter):
             if new_obj['id'] == obj['id']:
                 return new_obj
         return None
+
+    @cachetools.func.lru_cache(maxsize=1)
+    def _listSKUs(self):
+        return self.azul.compute_skus.list()
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listPublicIPAddresses(self):

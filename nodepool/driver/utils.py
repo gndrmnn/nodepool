@@ -184,10 +184,11 @@ class QuotaInformation:
         be initialized with default which will be typically 0 or math.inf
         indicating an infinite limit.
 
-        :param cores:
-        :param instances:
-        :param ram:
-        :param default:
+        :param cores: An integer number of (v)CPU cores.
+        :param instances: An integer number of instances.
+        :param ram: An integer amount of RAM in Mebibytes.
+        :param default: The default value to use for any attribute not supplied
+                        (usually 0 or math.inf).
         '''
         self.quota = {
             'compute': {
