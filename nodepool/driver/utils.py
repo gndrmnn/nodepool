@@ -184,10 +184,11 @@ class QuotaInformation:
         be initialized with default which will be typically 0 or math.inf
         indicating an infinite limit.
 
-        :param cores:
-        :param instances:
-        :param ram:
-        :param default:
+        :param cores: An integer number of (v)CPU cores.
+        :param instances: An integer number of instances.
+        :param ram: An integer amount of RAM in Mebibytes.
+        :param default: The default value to use for any attribute not supplied
+                        (usually 0 or math.inf).
         '''
         self.quota = {
             'compute': {
@@ -302,7 +303,14 @@ class QuotaSupport:
 
         # This is initialized with the full tenant quota and later becomes
         # the quota available for nodepool.
-        nodepool_quota = self.getProviderLimits()
+        try:
+            nodepool_quota = self.getProviderLimits()
+        except Exception:
+            if self._current_nodepool_quota:
+                self.log.exception("Unable to get provider quota, "
+                                   "using cached value")
+                return copy.deepcopy(self._current_nodepool_quota['quota'])
+            raise
 
         self.log.debug("Provider quota for %s: %s",
                        self.provider.name, nodepool_quota)
