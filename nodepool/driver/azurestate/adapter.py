@@ -136,6 +136,7 @@ class AzureCreateStateMachine(statemachine.StateMachine):
     PIP_CREATING = 'creating pip'
     NIC_CREATING = 'creating nic'
     VM_CREATING = 'creating vm'
+    VM_RETRY = 'retrying vm creation'
     NIC_QUERY = 'querying nic'
     PIP_QUERY = 'querying pip'
     COMPLETE = 'complete'
@@ -144,6 +145,7 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         super().__init__()
         self.adapter = adapter
         self.retries = retries
+        self.attempts = 0
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
         self.tags.update(metadata)
@@ -211,15 +213,22 @@ class AzureCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.VM_CREATING:
             self.vm = self.adapter._refresh(self.vm)
-            # if 404:
-            #   increment retries
-            #   state = self.NIC_CREATING
-            # if error:
-            #   if retries too big: raise error
-            #   delete vm
             if self.adapter._succeeded(self.vm):
                 self.state = self.NIC_QUERY
+            elif self.adapter._failed(self.vm):
+                if self.attempts >= self.retries:
+                    raise Exception("Too many retries")
+                self.attempts += 1
+                self.vm = self.adapter._deleteVirtualMachine(
+                    self.external_id)
+                self.state = self.VM_RETRY
             else:
+                return
+
+        if self.state == self.VM_RETRY:
+            self.vm = self.adapter._refresh_delete(self.vm)
+            if self.vm is None:
+                self.state = self.NIC_CREATING
                 return
 
         if self.state == self.NIC_QUERY:
@@ -339,6 +348,10 @@ class AzureAdapter(statemachine.Adapter):
     @staticmethod
     def _succeeded(obj):
         return obj['properties']['provisioningState'] == 'Succeeded'
+
+    @staticmethod
+    def _failed(obj):
+        return obj['properties']['provisioningState'] == 'Failed'
 
     def _refresh(self, obj, force=False):
         if self._succeeded(obj) and not force:
