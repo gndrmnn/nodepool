@@ -12,9 +12,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import requests
+import concurrent.futures
 import logging
 import time
+
+import requests
 
 
 class AzureAuth(requests.auth.AuthBase):
@@ -68,8 +70,12 @@ class AzureCRUD:
         self.args = kw.copy()
         self.args.update(self.cloud.credential)
 
-    def url(self, **kw):
-        url = (self.base_subscription_url + self.base_url
+    def url(self, endpoint=None, **kw):
+        if endpoint is None:
+            endpoint = ''
+        else:
+            endpoint = '/' + endpoint
+        url = (self.base_subscription_url + self.base_url + endpoint
                + '?api-version={apiVersion}')
         args = self.args.copy()
         args.update(kw)
@@ -104,6 +110,10 @@ class AzureCRUD:
     def _delete(self, **kw):
         url = self.url(**kw)
         return self.cloud.delete(url)
+
+    def _post(self, endpoint, params, **kw):
+        url = self.url(endpoint=endpoint, **kw)
+        return self.cloud.post(url, params)
 
 
 class AzureResourceGroupsCRUD(AzureCRUD):
@@ -143,6 +153,11 @@ class AzureResourceProviderCRUD(AzureCRUD):
     def delete(self, resource_group_name, name):
         return self._delete(resourceGroupName=resource_group_name,
                             resourceName=name)
+
+    def post(self, resource_group_name, name, endpoint, params):
+        return self._post(endpoint, params,
+                          resourceGroupName=resource_group_name,
+                          resourceName=name)
 
 
 class AzureNetworkCRUD(AzureCRUD):
@@ -231,6 +246,11 @@ class AzureCloud:
             providerId='Microsoft.Compute',
             resource='disks',
             apiVersion='2020-06-30')
+        self.images = AzureResourceProviderCRUD(
+            self,
+            providerId='Microsoft.Compute',
+            resource='images',
+            apiVersion='2020-12-01')
         self.resource_groups = AzureResourceGroupsCRUD(
             self,
             apiVersion='2020-06-01')
@@ -252,8 +272,11 @@ class AzureCloud:
     def get(self, url, codes=[200]):
         return self.request('GET', url, None, codes)
 
-    def put(self, url, data, codes=[200, 201]):
+    def put(self, url, data, codes=[200, 201, 202]):
         return self.request('PUT', url, data, codes)
+
+    def post(self, url, data, codes=[200, 202]):
+        return self.request('POST', url, data, codes)
 
     def delete(self, url, codes=[200, 201, 202, 204]):
         return self.request('DELETE', url, None, codes)
@@ -323,6 +346,52 @@ class AzureCloud:
             if ret['status'] == 'InProgress':
                 continue
             if ret['status'] == 'Succeeded':
-                return
+                return ret
             raise Exception("Unhandled async operation result: %s",
                             ret['status'])
+
+    def _upload_chunk(self, url, start, end, data):
+        headers = {
+            'x-ms-blob-type': 'PageBlob',
+            'x-ms-page-write': 'Update',
+            'Content-Length': str(len(data)),
+            'Range': f'bytes={start}-{end}',
+        }
+        attempts = 10
+        for x in range(attempts):
+            try:
+                requests.put(url, headers=headers, data=data).\
+                    raise_for_status()
+                break
+            except Exception:
+                if x == attempts - 1:
+                    raise
+                else:
+                    time.sleep(2 * x)
+
+    def upload_page_blob_to_sas_url(self, url, file_object,
+                                    pagesize=(4 * 1024 * 1024),
+                                    concurrency=10):
+        start = 0
+        futures = set()
+        if 'comp=page' not in url:
+            url += '&comp=page'
+        with concurrent.futures.ThreadPoolExecutor(
+                max_workers=concurrency) as executor:
+            while True:
+                chunk = file_object.read(pagesize)
+                if not chunk:
+                    break
+                end = start + len(chunk) - 1
+                future = executor.submit(self._upload_chunk, url,
+                                         start, end, chunk)
+                start += len(chunk)
+                futures.add(future)
+                # Keep the pool of work supplied with data but without
+                # reading the entire file into memory.
+                if len(futures) >= (concurrency * 2):
+                    (done, futures) = concurrent.futures.wait(
+                        futures,
+                        return_when=concurrent.futures.FIRST_COMPLETED)
+            # We're done reading the file, wait for all uploads to finish
+            (done, futures) = concurrent.futures.wait(futures)
