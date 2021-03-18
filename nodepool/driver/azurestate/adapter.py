@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import os
 import math
 import logging
 import json
@@ -334,6 +335,95 @@ class AzureAdapter(statemachine.Adapter):
         sku = self.skus.get((label.hardware_profile["vm-size"],
                              self.provider.location))
         return quota_info_from_sku(sku)
+
+    def uploadImage(self, image_name, filename, image_format,
+                    metadata, md5, sha256):
+        file_sz = os.path.getsize(filename)
+        disk_info = {
+            "location": self.provider.location,
+            "tags": metadata,
+            "properties": {
+                "creationData": {
+                    "createOption": "Upload",
+                    "uploadSizeBytes": file_sz
+                }
+            }
+        }
+        self.log.debug("Creating disk for image upload")
+        r = self.azul.disks.create(self.resource_group, image_name, disk_info)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create disk for image upload")
+        disk_id = r['properties']['output']['id']
+
+        disk_grant = {
+            "access": "Write",
+            "durationInSeconds": 60*60*24,
+        }
+        self.log.debug("Enabling write access to disk for image upload")
+        r = self.azul.disks.post(self.resource_group, image_name,
+                                 'beginGetAccess', disk_grant)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to begin write access on disk")
+        sas = r['properties']['output']['accessSAS']
+
+        self.log.debug("Uploading image")
+        with open(filename, "rb") as fobj:
+            self.azul.upload_page_blob_to_sas_url(sas, fobj)
+
+        disk_grant = {}
+        self.log.debug("Disabling write access to disk for image upload")
+        r = self.azul.disks.post(self.resource_group, image_name,
+                                 'endGetAccess', disk_grant)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to end write access on disk")
+
+        image_info = {
+            "location": self.provider.location,
+            "tags": metadata,
+            "properties": {
+                "hyperVGeneration": "V2",
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Linux",
+                        "managedDisk": {
+                            "id": disk_id,
+                        },
+                        "osState": "Generalized"
+                    },
+                    "zoneResilient": True
+                }
+            }
+        }
+        self.log.debug("Creating image from disk")
+        r = self.azul.images.create(self.resource_group, image_name,
+                                    image_info)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create image from disk")
+
+        self.log.debug("Deleting disk for image upload")
+        r = self.azul.disks.delete(self.resource_group, image_name)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to delete disk for image upload")
+
+        return image_name
+
+    def deleteImage(self, external_id):
+        r = self.azul.images.delete(self.resource_group, external_id)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to delete image")
+
 
     # Local implementation below
 

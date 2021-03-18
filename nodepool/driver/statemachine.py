@@ -555,6 +555,18 @@ class StateMachineProvider(Provider, QuotaSupport):
         metadata = {'nodepool_provider_name': self.provider.name}
         self.adapter.cleanupLeakedResources(known_nodes, metadata)
 
+    # Image handling
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None,
+                    md5=None, sha256=None):
+        return self.adapter.uploadImage(image_name, filename,
+                                        image_format=image_type,
+                                        metadata=meta, md5=md5,
+                                        sha256=sha256)
+
+    def deleteImage(self, name, id):
+        return self.adapter.deleteImage(external_id=id)
+
 
 # Driver implementation
 
@@ -766,3 +778,29 @@ class Adapter:
         :returns: A :py:class:`QuotaInformation` object.
         """
         return QuotaInformation(instances=1)
+
+    # The following methods must be implemented only if image
+    # management is supported:
+
+    def uploadImage(self, image_name, filename, image_format=None,
+                    metadata=None, md5=None, sha256=None):
+        """Upload the image to the cloud
+
+        :param image_name str: The name of the image
+        :param filename str: The path to the local file to be uploaded
+        :param image_format str: The format of the image (e.g., "qcow")
+        :param metadata dict: A dictionary of metadata that must be
+            stored on the image in the cloud.
+        :param md5 str: The md5 hash of the image file
+        :param sha256 str: The sha256 hash of the image file
+
+        :return: The external id of the image in the cloud
+        """
+        raise NotImplementedError()
+
+    def deleteImage(self, external_id):
+        """Delete an image from the cloud
+
+        :param external_id str: The external id of the image to delete
+        """
+        raise NotImplementedError()
