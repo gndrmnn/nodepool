@@ -89,13 +89,44 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
     def launch(self):
         label = self.handler.pool.labels[self.node.type[0]]
+        if label.diskimage:
+            diskimage = self.provider_config.diskimages[
+                label.diskimage.name]
+            cloud_image = self.zk.getMostRecentImageUpload(
+                diskimage.name, self.provider_config.name)
+
+            if not cloud_image:
+                raise exceptions.LaunchNodepoolException(
+                    "Unable to find current cloud image %s in %s" %
+                    (diskimage.name, self.provider_config.name)
+                )
+
+            image_external_id = cloud_image.external_id
+            self.node.image_id = "{path}/{upload_id}".format(
+                path=self.zk._imageUploadPath(
+                    cloud_image.image_name,
+                    cloud_image.build_id,
+                    cloud_image.provider_name),
+                upload_id=cloud_image.id)
+            image = diskimage
+        else:
+            image_external_id = None
+            self.node.image_id = self.label.cloud_image.name
+            image = self.label.cloud_image.name
+
+        self.node.username = image.username
+        self.node.python_path = image.python_path
+        self.node.connection_port = image.connection_port
+        self.node.connection_type = image.connection_type
+        self.zk.storeNode(self.node)
+
         hostname = 'nodepool-' + self.node.id
         retries = self.manager.provider.launch_retries
         metadata = {'nodepool_node_id': self.node.id,
                     'nodepool_pool_name': self.handler.pool.name,
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
-            hostname, label, metadata, retries)
+            hostname, label, image_external_id, metadata, retries)
 
     def updateNodeFromInstance(self, instance):
         if instance is None:
@@ -118,10 +149,6 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.public_ipv6 = instance.public_ipv6
         node.region = instance.region
         node.az = instance.az
-        node.username = label.cloud_image.username
-        node.python_path = label.cloud_image.python_path
-        node.connection_port = label.cloud_image.connection_port
-        node.connection_type = label.cloud_image.connection_type
         self.zk.storeNode(node)
 
     def runStateMachine(self):
@@ -555,6 +582,18 @@ class StateMachineProvider(Provider, QuotaSupport):
         metadata = {'nodepool_provider_name': self.provider.name}
         self.adapter.cleanupLeakedResources(known_nodes, metadata)
 
+    # Image handling
+
+    def uploadImage(self, image_name, filename, image_type=None, meta=None,
+                    md5=None, sha256=None):
+        return self.adapter.uploadImage(image_name, filename,
+                                        image_format=image_type,
+                                        metadata=meta, md5=md5,
+                                        sha256=sha256)
+
+    def deleteImage(self, name, id):
+        return self.adapter.deleteImage(external_id=id)
+
 
 # Driver implementation
 
@@ -675,7 +714,8 @@ class Adapter:
     def __init__(self, provider_config):
         pass
 
-    def getCreateStateMachine(self, hostname, label, metadata, retries):
+    def getCreateStateMachine(self, hostname, label,
+                              image_external_id, metadata, retries):
         """Return a state machine suitable for creating an instance
 
         This method should return a new state machine object
@@ -684,6 +724,9 @@ class Adapter:
         :param str hostname: The hostname of the node.
         :param ProviderLabel label: A config object representing the
             provider-label for the node.
+        :param str image_external_id: If provided, the external id of
+            a previously uploaded image; if None, then the adapter should
+            look up a cloud image based on the label.
         :param metadata dict: A dictionary of metadata that must be
             stored on the instance in the cloud.  The same data must be
             able to be returned later on :py:class:`Instance` objects
@@ -766,3 +809,29 @@ class Adapter:
         :returns: A :py:class:`QuotaInformation` object.
         """
         return QuotaInformation(instances=1)
+
+    # The following methods must be implemented only if image
+    # management is supported:
+
+    def uploadImage(self, image_name, filename, image_format=None,
+                    metadata=None, md5=None, sha256=None):
+        """Upload the image to the cloud
+
+        :param image_name str: The name of the image
+        :param filename str: The path to the local file to be uploaded
+        :param image_format str: The format of the image (e.g., "qcow")
+        :param metadata dict: A dictionary of metadata that must be
+            stored on the image in the cloud.
+        :param md5 str: The md5 hash of the image file
+        :param sha256 str: The sha256 hash of the image file
+
+        :return: The external id of the image in the cloud
+        """
+        raise NotImplementedError()
+
+    def deleteImage(self, external_id):
+        """Delete an image from the cloud
+
+        :param external_id str: The external id of the image to delete
+        """
+        raise NotImplementedError()

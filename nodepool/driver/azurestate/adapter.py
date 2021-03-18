@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import os
 import math
 import logging
 import json
@@ -141,11 +142,13 @@ class AzureCreateStateMachine(statemachine.StateMachine):
     PIP_QUERY = 'querying pip'
     COMPLETE = 'complete'
 
-    def __init__(self, adapter, hostname, label, metadata, retries):
+    def __init__(self, adapter, hostname, label, image_external_id,
+                 metadata, retries):
         super().__init__()
         self.adapter = adapter
         self.retries = retries
         self.attempts = 0
+        self.image_external_id = image_external_id
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
         self.tags.update(metadata)
@@ -206,7 +209,8 @@ class AzureCreateStateMachine(statemachine.StateMachine):
             self.nic = self.adapter._refresh(self.nic)
             if self.adapter._succeeded(self.nic):
                 self.vm = self.adapter._createVirtualMachine(
-                    self.label, self.tags, self.hostname, self.nic)
+                    self.label, self.image_external_id, self.tags,
+                    self.hostname, self.nic)
                 self.state = self.VM_CREATING
             else:
                 return
@@ -284,8 +288,10 @@ class AzureAdapter(statemachine.Adapter):
         self.skus = {}
         self._getSKUs()
 
-    def getCreateStateMachine(self, hostname, label, metadata, retries):
-        return AzureCreateStateMachine(self, hostname, label, metadata, retries)
+    def getCreateStateMachine(self, hostname, label,
+                              image_external_id, metadata, retries):
+        return AzureCreateStateMachine(self, hostname, label,
+                                       image_external_id, metadata, retries)
 
     def getDeleteStateMachine(self, external_id):
         return AzureDeleteStateMachine(self, external_id)
@@ -334,6 +340,95 @@ class AzureAdapter(statemachine.Adapter):
         sku = self.skus.get((label.hardware_profile["vm-size"],
                              self.provider.location))
         return quota_info_from_sku(sku)
+
+    def uploadImage(self, image_name, filename, image_format,
+                    metadata, md5, sha256):
+        file_sz = os.path.getsize(filename)
+        disk_info = {
+            "location": self.provider.location,
+            "tags": metadata,
+            "properties": {
+                "creationData": {
+                    "createOption": "Upload",
+                    "uploadSizeBytes": file_sz
+                }
+            }
+        }
+        self.log.debug("Creating disk for image upload")
+        r = self.azul.disks.create(self.resource_group, image_name, disk_info)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create disk for image upload")
+        disk_id = r['properties']['output']['id']
+
+        disk_grant = {
+            "access": "Write",
+            "durationInSeconds": 60*60*24,
+        }
+        self.log.debug("Enabling write access to disk for image upload")
+        r = self.azul.disks.post(self.resource_group, image_name,
+                                 'beginGetAccess', disk_grant)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to begin write access on disk")
+        sas = r['properties']['output']['accessSAS']
+
+        self.log.debug("Uploading image")
+        with open(filename, "rb") as fobj:
+            self.azul.upload_page_blob_to_sas_url(sas, fobj)
+
+        disk_grant = {}
+        self.log.debug("Disabling write access to disk for image upload")
+        r = self.azul.disks.post(self.resource_group, image_name,
+                                 'endGetAccess', disk_grant)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to end write access on disk")
+
+        image_info = {
+            "location": self.provider.location,
+            "tags": metadata,
+            "properties": {
+                "hyperVGeneration": "V2",
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Linux",
+                        "managedDisk": {
+                            "id": disk_id,
+                        },
+                        "osState": "Generalized"
+                    },
+                    "zoneResilient": True
+                }
+            }
+        }
+        self.log.debug("Creating image from disk")
+        r = self.azul.images.create(self.resource_group, image_name,
+                                    image_info)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create image from disk")
+
+        self.log.debug("Deleting disk for image upload")
+        r = self.azul.disks.delete(self.resource_group, image_name)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to delete disk for image upload")
+
+        return image_name
+
+    def deleteImage(self, external_id):
+        r = self.azul.images.delete(self.resource_group, external_id)
+        r = self.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to delete image")
+
 
     # Local implementation below
 
@@ -392,6 +487,10 @@ class AzureAdapter(statemachine.Adapter):
                 key = (sku['name'], location)
                 self.skus[key] = sku
         self.log.debug("Done querying compute SKUs")
+
+    @cachetools.func.ttl_cache(maxsize=0, ttl=24*60*60)
+    def _getImage(self, image_name):
+        return self.azul.images.get(self.resource_group, image_name)
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listPublicIPAddresses(self):
@@ -485,31 +584,41 @@ class AzureAdapter(statemachine.Adapter):
     def _listVirtualMachines(self):
         return self.azul.virtual_machines.list(self.resource_group)
 
-    def _createVirtualMachine(self, label, tags, hostname, nic):
+    def _createVirtualMachine(self, label, image_external_id, tags,
+                              hostname, nic):
+        if image_external_id:
+            image = label.diskimage
+            remote_image = self._getImage(image_external_id)
+            image_reference = {'id': remote_image['id']}
+        else:
+            image = label.cloud_image
+            image_reference = label.cloud_image.image_reference
+        os_profile = {'computerName': hostname}
+        if image.username and image.key:
+            linux_config = {
+                'ssh': {
+                    'publicKeys': [{
+                        'path': "/home/%s/.ssh/authorized_keys" % (
+                            image.username),
+                        'keyData': image.key,
+                    }]
+                },
+                "disablePasswordAuthentication": True,
+            }
+            os_profile['adminUsername'] = image.username
+            os_profile['linuxConfiguration'] = linux_config
+
         return self.azul.virtual_machines.create(
             self.resource_group, hostname, {
                 'location': self.provider.location,
                 'tags': tags,
                 'properties': {
-                    'osProfile': {
-                        'computerName': hostname,
-                        'adminUsername': label.cloud_image.username,
-                        'linuxConfiguration': {
-                            'ssh': {
-                                'publicKeys': [{
-                                    'path': "/home/%s/.ssh/authorized_keys" % (
-                                        label.cloud_image.username),
-                                    'keyData': label.cloud_image.key,
-                                }]
-                            },
-                            "disablePasswordAuthentication": True,
-                        }
-                    },
+                    'osProfile': os_profile,
                     'hardwareProfile': {
                         'vmSize': label.hardware_profile["vm-size"]
                     },
                     'storageProfile': {
-                        'imageReference': label.cloud_image.image_reference
+                        'imageReference': image_reference,
                     },
                     'networkProfile': {
                         'networkInterfaces': [{
