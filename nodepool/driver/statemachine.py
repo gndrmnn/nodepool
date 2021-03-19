@@ -579,13 +579,23 @@ class StateMachineProvider(Provider, QuotaSupport):
                 continue
             known_nodes.add(node.id)
 
+        known_uploads = set()
+        uploads = self._zk.getProviderUploads(self.provider.name)
+        for image in uploads.values():
+            for build in image.values():
+                for upload in build:
+                    known_uploads.add(upload.id)
+
         metadata = {'nodepool_provider_name': self.provider.name}
-        self.adapter.cleanupLeakedResources(known_nodes, metadata)
+        self.adapter.cleanupLeakedResources(known_nodes,
+                                            known_uploads, metadata)
 
     # Image handling
 
     def uploadImage(self, image_name, filename, image_type=None, meta=None,
                     md5=None, sha256=None):
+        meta = meta.copy()
+        meta['nodepool_provider_name'] = self.provider.name
         return self.adapter.uploadImage(image_name, filename,
                                         image_format=image_type,
                                         metadata=meta, md5=md5,
@@ -762,7 +772,7 @@ class Adapter:
         """
         raise NotImplementedError()
 
-    def cleanupLeakedResources(self, known_nodes, metadata):
+    def cleanupLeakedResources(self, known_nodes, known_uploads, metadata):
         """Delete any leaked resources
 
         Use the supplied metadata to delete any leaked resources.
@@ -774,10 +784,13 @@ class Adapter:
         be deleted.
 
         Look up the `nodepool_node_id` metadata attribute on cloud
-        instances to compare to known_nodes.
+        instances to compare to known_nodes, and `nodepool_upload_id`
+        for known_uploads.
 
         :param set known_nodes: A set of string values representing
             known node ids.
+        :param set known_uploads: A set of string values representing
+            known image upload ids.
         :param dict metadata: Metadata values to compare with cloud
             instances.
 
