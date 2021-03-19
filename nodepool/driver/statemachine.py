@@ -448,6 +448,8 @@ class StateMachineProvider(Provider, QuotaSupport):
         num_labels = sum([len(pool.labels)
                           for pool in provider.pools.values()])
         self.label_quota_cache = cachetools.LRUCache(num_labels)
+        self.possibly_leaked_nodes = {}
+        self.possibly_leaked_uploads = {}
 
     def start(self, zk_conn):
         super().start(zk_conn)
@@ -586,9 +588,36 @@ class StateMachineProvider(Provider, QuotaSupport):
                 for upload in build:
                     known_uploads.add(upload.id)
 
-        metadata = {'nodepool_provider_name': self.provider.name}
-        self.adapter.cleanupLeakedResources(known_nodes,
-                                            known_uploads, metadata)
+        newly_leaked_nodes = {}
+        newly_leaked_uploads = {}
+        for resource in self.adapter.listResources():
+            pn = resource.metadata.get('nodepool_provider_name')
+            if pn != self.provider.name:
+                continue
+            node_id = resource.metadata.get('nodepool_node_id')
+            upload_id = resource.metadata.get('nodepool_upload_id')
+            if node_id and node_id not in known_nodes:
+                newly_leaked_nodes[node_id] = resource
+                if node_id in self.possibly_leaked_nodes:
+                    # We've seen this twice now, so it's not a race
+                    # condition.
+                    try:
+                        self.adapter.deleteResource(resource)
+                    except Exception:
+                        self.log.exception("Unable to delete leaked "
+                                           f"resource for node {node_id}")
+            if upload_id and upload_id not in known_uploads:
+                newly_leaked_uploads[upload_id] = resource
+                if upload_id in self.possibly_leaked_uploads:
+                    # We've seen this twice now, so it's not a race
+                    # condition.
+                    try:
+                        self.adapter.deleteResource(resource)
+                    except Exception:
+                        self.log.exception("Unable to delete leaked "
+                                           f"resource for upload {upload_id}")
+        self.possibly_leaked_nodes = newly_leaked_nodes
+        self.possibly_leaked_uploads = newly_leaked_uploads
 
     # Image handling
 
@@ -695,6 +724,28 @@ class Instance:
         raise NotImplementedError()
 
 
+class Resource:
+    """Represents a cloud resource
+
+    This could be an instance, a disk, a floating IP, or anything
+    else.  It is used by the driver to detect leaked resources so the
+    adapter can clean them up.  There is one required attribute,
+    `metadata`.
+
+    This is a dictionary of key/value pairs initially supplied by the
+    driver to the adapter when an instance or image was created.  This
+    is used by the driver to detect leaked resources.  The adapter may
+    add any other information to this instance for its own bookeeping
+    (resource type, id, etc).
+
+    :param dict metadata: A dictionary of metadata for the resource.
+
+    """
+
+    def __init__(self, metadata):
+        self.metadata = metadata
+
+
 class StateMachine:
     START = 'start'
 
@@ -772,28 +823,27 @@ class Adapter:
         """
         raise NotImplementedError()
 
-    def cleanupLeakedResources(self, known_nodes, known_uploads, metadata):
-        """Delete any leaked resources
+    def listResources(self):
+        """Return a list of resources accessible to this provider.
 
-        Use the supplied metadata to delete any leaked resources.
-        Typically you would list all of the instances in the provider,
-        then list any other resources (floating IPs, etc).  Any
-        resources with matching metadata not associated with an
-        instance should be deleted, and any instances with matching
-        metadata and whose node id is not in known_nodes should also
-        be deleted.
+        The yielded values should represent all resources accessible
+        to this provider, not only those under the control of this
+        adapter, but all visible instances in order for the driver to
+        identify leaked resources and instruct the adapter to remove
+        them.
 
-        Look up the `nodepool_node_id` metadata attribute on cloud
-        instances to compare to known_nodes, and `nodepool_upload_id`
-        for known_uploads.
+        :returns: A generator of :py:class:`Resource` objects.
+        """
+        raise NotImplementedError()
 
-        :param set known_nodes: A set of string values representing
-            known node ids.
-        :param set known_uploads: A set of string values representing
-            known image upload ids.
-        :param dict metadata: Metadata values to compare with cloud
-            instances.
+    def deleteResource(self, resource):
+        """Delete the supplied resource
 
+        The driver has identified a leaked resource and the adapter
+        should delete it.
+
+        :param Resource resource: A Resource object previously
+            returned by 'listResources'.
         """
         raise NotImplementedError()
 
