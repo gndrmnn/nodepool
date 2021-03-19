@@ -33,7 +33,8 @@ import cachetools
 
 
 def keyscan(node_id, interface_ip,
-            connection_type, connection_port):
+            connection_type, connection_port,
+            timeout):
     """A standalone function for scanning keys to pass to a thread/process
     pool executor
     """
@@ -46,7 +47,7 @@ def keyscan(node_id, interface_ip,
         else:
             gather_hostkeys = False
         keys = nodescan(interface_ip, port=connection_port,
-                        timeout=180, gather_hostkeys=gather_hostkeys)
+                        timeout=timeout, gather_hostkeys=gather_hostkeys)
     except Exception:
         raise exceptions.LaunchKeyscanException(
             "Can't scan instance %s key" % node_id)
@@ -176,7 +177,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
             now = time.monotonic()
             if (now - state_machine.start_time >
-                self.manager.provider.boot_timeout):
+                self.manager.provider.launch_timeout):
                 raise Exception("Timeout waiting for instance creation")
             instance = state_machine.advance()
             self.log.debug(f"State machine for {node.id} at "
@@ -195,7 +196,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                 future = self.manager.keyscan_worker.submit(
                     keyscan,
                     node.id, node.interface_ip,
-                    node.connection_type, node.connection_port)
+                    node.connection_type, node.connection_port,
+                    self.manager.provider.boot_timeout)
                 self.keyscan_future = future
         except kze.SessionExpiredError:
             # Our node lock is gone, leaving the node state as BUILDING.
