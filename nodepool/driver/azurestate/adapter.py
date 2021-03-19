@@ -74,6 +74,13 @@ class AzureInstance(statemachine.Instance):
         return quota_info_from_sku(self.sku)
 
 
+class AzureResource(statemachine.Resource):
+    def __init__(self, metadata, type, name):
+        super().__init__(metadata)
+        self.type = type
+        self.name = name
+
+
 class AzureDeleteStateMachine(statemachine.StateMachine):
     VM_DELETING = 'deleting vm'
     NIC_DELETING = 'deleting nic'
@@ -302,41 +309,32 @@ class AzureAdapter(statemachine.Adapter):
     def getDeleteStateMachine(self, external_id):
         return AzureDeleteStateMachine(self, external_id)
 
-    def cleanupLeakedResources(self, known_nodes, known_uploads, metadata):
+    def listResources(self):
         for vm in self._listVirtualMachines():
-            node_id, upload_id = self._metadataMatches(vm, metadata)
-            if (node_id and node_id not in known_nodes):
-                self.log.info(f"Deleting leaked vm: {vm['name']}")
-                with self.rate_limiter:
-                    self.azul.virtual_machines.delete(
-                        self.resource_group, vm['name'])
+            yield AzureResource(vm.get('tags', {}), 'vm', vm['name'])
         for nic in self._listNetworkInterfaces():
-            node_id, upload_id = self._metadataMatches(nic, metadata)
-            if (node_id and node_id not in known_nodes):
-                self.log.info(f"Deleting leaked nic: {nic['name']}")
-                with self.rate_limiter:
-                    self.azul.network_interfaces.delete(
-                        self.resource_group, nic['name'])
+            yield AzureResource(nic.get('tags', {}), 'nic', nic['name'])
         for pip in self._listPublicIPAddresses():
-            node_id, upload_id = self._metadataMatches(pip, metadata)
-            if (node_id and node_id not in known_nodes):
-                self.log.info(f"Deleting leaked pip: {pip['name']}")
-                with self.rate_limiter:
-                    self.azul.public_ip_addresses.delete(
-                        self.resource_group, pip['name'])
+            yield AzureResource(pip.get('tags', {}), 'pip', pip['name'])
         for disk in self._listDisks():
-            node_id, upload_id = self._metadataMatches(disk, metadata)
-            if ((node_id and node_id not in known_nodes) or
-                (upload_id and upload_id not in known_uploads)):
-                self.log.info(f"Deleting leaked disk: {disk['name']}")
-                with self.rate_limiter:
-                    self.azul.disks.delete(self.resource_group, disk['name'])
+            yield AzureResource(disk.get('tags', {}), 'disk', disk['name'])
         for image in self._listImages():
-            node_id, upload_id = self._metadataMatches(image, metadata)
-            if (upload_id and upload_id not in known_uploads):
-                self.log.info(f"Deleting leaked image: {image['name']}")
-                with self.rate_limiter:
-                    self.azul.images.delete(self.resource_group, image['name'])
+            yield AzureResource(image.get('tags', {}), 'image', image['name'])
+
+    def deleteResource(self, resource):
+        self.log.info(f"Deleting leaked {resource.type}: {resource.name}")
+        if resource.type == 'vm':
+            crud = self.azul.virtual_machines
+        elif resource.type == 'nic':
+            crud = self.azul.network_interfaces
+        elif resource.type == 'pip':
+            crud = self.azul.public_ip_addresses
+        elif resource.type == 'disk':
+            crud = self.azul.disks
+        elif resource.type == 'image':
+            crud = self.azul.images
+        with self.rate_limiter:
+            crud.delete(self.resource_group, resource.name)
 
     def listInstances(self):
         for vm in self._listVirtualMachines():
