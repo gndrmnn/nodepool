@@ -1,3 +1,8 @@
+elements-dir: .
+images-dir: '{images_dir}'
+build-log-dir: '{build_log_dir}'
+build-log-retention: 1
+
 webapp:
   port: 8005
   listen_address: '0.0.0.0'
@@ -25,23 +30,30 @@ providers:
     resource-group: nodepool
     auth-path: {auth_path}
     subnet-id: /subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/resourceGroups/nodepool/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
-    cloud-images:
-      - name: bionic
-        username: zuul
-        image-reference:
-          sku: 18.04-LTS
-          publisher: Canonical
-          version: latest
-          offer: UbuntuServer
+    diskimages:
+      - name: fake-image
     pools:
       - name: main
         max-servers: 10
         labels:
           - name: bionic
-            cloud-image: bionic
+            diskimage: fake-image
             hardware-profile:
               vm-size: Standard_B1ls
             tags:
               department: R&D
               team: DevOps
               systemPurpose: CI
+
+diskimages:
+  - name: fake-image
+    elements:
+      - fedora
+      - vm
+    release: 21
+    dib-cmd: nodepool/tests/fake-image-create
+    env-vars:
+      TMPDIR: /opt/dib_tmp
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_CLOUD_IMAGES: http://download.fedoraproject.org/pub/fedora/linux/releases/test/21-Beta/Cloud/Images/x86_64/
+      BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
