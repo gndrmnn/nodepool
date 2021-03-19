@@ -281,10 +281,12 @@ class AzureAdapter(statemachine.Adapter):
                 net_info = {'network': provider_config.network}
             else:
                 net_info = provider_config.network
-            subnet = self.azul.subnets.get(
-                net_info.get('resource-group', self.provider.resource_group),
-                net_info['network'],
-                net_info.get('subnet', 'default'))
+            with self.rate_limiter:
+                subnet = self.azul.subnets.get(
+                    net_info.get('resource-group',
+                                 self.provider.resource_group),
+                    net_info['network'],
+                    net_info.get('subnet', 'default'))
             self.subnet_id = subnet['id']
         self.skus = {}
         self._getSKUs()
@@ -302,31 +304,36 @@ class AzureAdapter(statemachine.Adapter):
             node_id, upload_id = self._metadataMatches(vm, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked vm: {vm['name']}")
-                self.azul.virtual_machines.delete(
-                    self.resource_group, vm['name'])
+                with self.rate_limiter:
+                    self.azul.virtual_machines.delete(
+                        self.resource_group, vm['name'])
         for nic in self._listNetworkInterfaces():
             node_id, upload_id = self._metadataMatches(nic, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked nic: {nic['name']}")
-                self.azul.network_interfaces.delete(
-                    self.resource_group, nic['name'])
+                with self.rate_limiter:
+                    self.azul.network_interfaces.delete(
+                        self.resource_group, nic['name'])
         for pip in self._listPublicIPAddresses():
             node_id, upload_id = self._metadataMatches(pip, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked pip: {pip['name']}")
-                self.azul.public_ip_addresses.delete(
-                    self.resource_group, pip['name'])
+                with self.rate_limiter:
+                    self.azul.public_ip_addresses.delete(
+                        self.resource_group, pip['name'])
         for disk in self._listDisks():
             node_id, upload_id = self._metadataMatches(disk, metadata)
             if ((node_id and node_id not in known_nodes) or
                 (upload_id and upload_id not in known_uploads)):
                 self.log.info(f"Deleting leaked disk: {disk['name']}")
-                self.azul.disks.delete(self.resource_group, disk['name'])
+                with self.rate_limiter:
+                    self.azul.disks.delete(self.resource_group, disk['name'])
         for image in self._listImages():
             node_id, upload_id = self._metadataMatches(image, metadata)
             if (upload_id and upload_id not in known_uploads):
                 self.log.info(f"Deleting leaked image: {image['name']}")
-                self.azul.images.delete(self.resource_group, image['name'])
+                with self.rate_limiter:
+                    self.azul.images.delete(self.resource_group, image['name'])
 
     def listInstances(self):
         for vm in self._listVirtualMachines():
@@ -335,7 +342,8 @@ class AzureAdapter(statemachine.Adapter):
             yield AzureInstance(vm, sku=sku)
 
     def getQuotaLimits(self):
-        r = self.azul.compute_usages.list(self.provider.location)
+        with self.rate_limiter:
+            r = self.azul.compute_usages.list(self.provider.location)
         cores = instances = math.inf
         for item in r:
             if item['name']['value'] == 'cores':
@@ -365,7 +373,9 @@ class AzureAdapter(statemachine.Adapter):
             }
         }
         self.log.debug("Creating disk for image upload")
-        r = self.azul.disks.create(self.resource_group, image_name, disk_info)
+        with self.rate_limiter:
+            r = self.azul.disks.create(self.resource_group,
+                                       image_name, disk_info)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
@@ -377,8 +387,9 @@ class AzureAdapter(statemachine.Adapter):
             "durationInSeconds": 24 * 60 * 60,
         }
         self.log.debug("Enabling write access to disk for image upload")
-        r = self.azul.disks.post(self.resource_group, image_name,
-                                 'beginGetAccess', disk_grant)
+        with self.rate_limiter:
+            r = self.azul.disks.post(self.resource_group, image_name,
+                                     'beginGetAccess', disk_grant)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
@@ -391,8 +402,9 @@ class AzureAdapter(statemachine.Adapter):
 
         disk_grant = {}
         self.log.debug("Disabling write access to disk for image upload")
-        r = self.azul.disks.post(self.resource_group, image_name,
-                                 'endGetAccess', disk_grant)
+        with self.rate_limiter:
+            r = self.azul.disks.post(self.resource_group, image_name,
+                                     'endGetAccess', disk_grant)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
@@ -416,15 +428,17 @@ class AzureAdapter(statemachine.Adapter):
             }
         }
         self.log.debug("Creating image from disk")
-        r = self.azul.images.create(self.resource_group, image_name,
-                                    image_info)
+        with self.rate_limiter:
+            r = self.azul.images.create(self.resource_group, image_name,
+                                        image_info)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
             raise Exception("Unable to create image from disk")
 
         self.log.debug("Deleting disk for image upload")
-        r = self.azul.disks.delete(self.resource_group, image_name)
+        with self.rate_limiter:
+            r = self.azul.disks.delete(self.resource_group, image_name)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
@@ -433,7 +447,8 @@ class AzureAdapter(statemachine.Adapter):
         return image_name
 
     def deleteImage(self, external_id):
-        r = self.azul.images.delete(self.resource_group, external_id)
+        with self.rate_limiter:
+            r = self.azul.images.delete(self.resource_group, external_id)
         r = self.azul.wait_for_async_operation(r)
 
         if r['status'] != 'Succeeded':
@@ -492,19 +507,22 @@ class AzureAdapter(statemachine.Adapter):
 
     def _getSKUs(self):
         self.log.debug("Querying compute SKUs")
-        for sku in self.azul.compute_skus.list():
-            for location in sku['locations']:
-                key = (sku['name'], location)
-                self.skus[key] = sku
+        with self.rate_limiter:
+            for sku in self.azul.compute_skus.list():
+                for location in sku['locations']:
+                    key = (sku['name'], location)
+                    self.skus[key] = sku
         self.log.debug("Done querying compute SKUs")
 
     @cachetools.func.ttl_cache(maxsize=0, ttl=(24 * 60 * 60))
     def _getImage(self, image_name):
-        return self.azul.images.get(self.resource_group, image_name)
+        with self.rate_limiter:
+            return self.azul.images.get(self.resource_group, image_name)
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listPublicIPAddresses(self):
-        return self.azul.public_ip_addresses.list(self.resource_group)
+        with self.rate_limiter:
+            return self.azul.public_ip_addresses.list(self.resource_group)
 
     def _createPublicIPAddress(self, tags, hostname, sku, version,
                                allocation_method):
@@ -519,11 +537,12 @@ class AzureAdapter(statemachine.Adapter):
                 'publicIpAllocationMethod': allocation_method,
             },
         }
-        return self.azul.public_ip_addresses.create(
-            self.resource_group,
-            "%s-pip-%s" % (hostname, version),
-            v4_params_create,
-        )
+        with self.rate_limiter:
+            return self.azul.public_ip_addresses.create(
+                self.resource_group,
+                "%s-pip-%s" % (hostname, version),
+                v4_params_create,
+            )
 
     def _deletePublicIPAddress(self, name):
         for pip in self._listPublicIPAddresses():
@@ -531,12 +550,14 @@ class AzureAdapter(statemachine.Adapter):
                 break
         else:
             return None
-        self.azul.public_ip_addresses.delete(self.resource_group, name)
+        with self.rate_limiter:
+            self.azul.public_ip_addresses.delete(self.resource_group, name)
         return pip
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listNetworkInterfaces(self):
-        return self.azul.network_interfaces.list(self.resource_group)
+        with self.rate_limiter:
+            return self.azul.network_interfaces.list(self.resource_group)
 
     def _createNetworkInterface(self, tags, hostname, ipv4, ipv6, pip4, pip6):
 
@@ -574,12 +595,12 @@ class AzureAdapter(statemachine.Adapter):
                 'ipConfigurations': ip_configs
             }
         }
-
-        return self.azul.network_interfaces.create(
-            self.resource_group,
-            "%s-nic" % hostname,
-            nic_data
-        )
+        with self.rate_limiter:
+            return self.azul.network_interfaces.create(
+                self.resource_group,
+                "%s-nic" % hostname,
+                nic_data
+            )
 
     def _deleteNetworkInterface(self, name):
         for nic in self._listNetworkInterfaces():
@@ -587,12 +608,14 @@ class AzureAdapter(statemachine.Adapter):
                 break
         else:
             return None
-        self.azul.network_interfaces.delete(self.resource_group, name)
+        with self.rate_limiter:
+            self.azul.network_interfaces.delete(self.resource_group, name)
         return nic
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listVirtualMachines(self):
-        return self.azul.virtual_machines.list(self.resource_group)
+        with self.rate_limiter:
+            return self.azul.virtual_machines.list(self.resource_group)
 
     def _createVirtualMachine(self, label, image_external_id, tags,
                               hostname, nic):
@@ -618,28 +641,29 @@ class AzureAdapter(statemachine.Adapter):
             os_profile['adminUsername'] = image.username
             os_profile['linuxConfiguration'] = linux_config
 
-        return self.azul.virtual_machines.create(
-            self.resource_group, hostname, {
-                'location': self.provider.location,
-                'tags': tags,
-                'properties': {
-                    'osProfile': os_profile,
-                    'hardwareProfile': {
-                        'vmSize': label.hardware_profile["vm-size"]
+        with self.rate_limiter:
+            return self.azul.virtual_machines.create(
+                self.resource_group, hostname, {
+                    'location': self.provider.location,
+                    'tags': tags,
+                    'properties': {
+                        'osProfile': os_profile,
+                        'hardwareProfile': {
+                            'vmSize': label.hardware_profile["vm-size"]
+                        },
+                        'storageProfile': {
+                            'imageReference': image_reference,
+                        },
+                        'networkProfile': {
+                            'networkInterfaces': [{
+                                'id': nic['id'],
+                                'properties': {
+                                    'primary': True,
+                                }
+                            }]
+                        },
                     },
-                    'storageProfile': {
-                        'imageReference': image_reference,
-                    },
-                    'networkProfile': {
-                        'networkInterfaces': [{
-                            'id': nic['id'],
-                            'properties': {
-                                'primary': True,
-                            }
-                        }]
-                    },
-                },
-            })
+                })
 
     def _deleteVirtualMachine(self, name):
         for vm in self._listVirtualMachines():
@@ -647,12 +671,14 @@ class AzureAdapter(statemachine.Adapter):
                 break
         else:
             return None
-        self.azul.virtual_machines.delete(self.resource_group, name)
+        with self.rate_limiter:
+            self.azul.virtual_machines.delete(self.resource_group, name)
         return vm
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listDisks(self):
-        return self.azul.disks.list(self.resource_group)
+        with self.rate_limiter:
+            return self.azul.disks.list(self.resource_group)
 
     def _deleteDisk(self, name):
         # Because the disk listing is unreliable (there is up to a 30
@@ -661,9 +687,11 @@ class AzureAdapter(statemachine.Adapter):
         # determine if the deletion is complete.  We could fall back
         # on the asynchronous operation record, but since disks are
         # the last thing we delete anyway, let's just fire and forget.
-        self.azul.disks.delete(self.resource_group, name)
+        with self.rate_limiter:
+            self.azul.disks.delete(self.resource_group, name)
         return None
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listImages(self):
-        return self.azul.images.list(self.resource_group)
+        with self.rate_limiter:
+            return self.azul.images.list(self.resource_group)
