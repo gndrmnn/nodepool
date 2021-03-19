@@ -12,9 +12,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import requests
+import concurrent.futures
 import logging
 import time
+
+import requests
 
 
 class AzureAuth(requests.auth.AuthBase):
@@ -48,108 +50,158 @@ class AzureAuth(requests.auth.AuthBase):
 
 
 class AzureError(Exception):
-    def __init__(self, status_code, message):
+    def __init__(self, status_code, error_code, message):
         super().__init__(message)
+        self.error_code = error_code
         self.status_code = status_code
 
 
 class AzureNotFoundError(AzureError):
-    def __init__(self, status_code, message):
-        super().__init__(status_code, message)
-
-
-class AzureResourceGroupsCRUD:
-    def __init__(self, cloud, version):
-        self.cloud = cloud
-        self.version = version
-
-    def url(self, url, **args):
-        base_url = (
-            'https://management.azure.com/subscriptions/{subscriptionId}'
-            '/resourcegroups/')
-        url = base_url + url + '?api-version={apiVersion}'
-        args = args.copy()
-        args.update(self.cloud.credential)
-        args['apiVersion'] = self.version
-        return url.format(**args)
-
-    def list(self):
-        url = self.url('')
-        return self.cloud.paginate(self.cloud.get(url))
-
-    def get(self, name):
-        url = self.url(name)
-        return self.cloud.get(url)
-
-    def create(self, name, params):
-        url = self.url(name)
-        return self.cloud.put(url, params)
-
-    def delete(self, name):
-        url = self.url(name)
-        return self.cloud.delete(url)
+    pass
 
 
 class AzureCRUD:
-    def __init__(self, cloud, resource, version):
-        self.cloud = cloud
-        self.resource = resource
-        self.version = version
+    base_subscription_url = (
+        'https://management.azure.com/subscriptions/{subscriptionId}/')
+    base_url = ''
 
-    def url(self, url, **args):
-        base_url = (
-            'https://management.azure.com/subscriptions/{subscriptionId}'
-            '/resourceGroups/{resourceGroupName}/providers/')
-        url = base_url + url + '?api-version={apiVersion}'
-        args = args.copy()
-        args.update(self.cloud.credential)
-        args['apiVersion'] = self.version
+    def __init__(self, cloud, **kw):
+        self.cloud = cloud
+        self.args = kw.copy()
+        self.args.update(self.cloud.credential)
+
+    def url(self, endpoint=None, **kw):
+        if endpoint is None:
+            endpoint = ''
+        else:
+            endpoint = '/' + endpoint
+        url = (self.base_subscription_url + self.base_url + endpoint
+               + '?api-version={apiVersion}')
+        args = self.args.copy()
+        args.update(kw)
         return url.format(**args)
 
-    def id_url(self, url, **args):
+    def id_url(self, url, **kw):
         base_url = 'https://management.azure.com'
         url = base_url + url + '?api-version={apiVersion}'
-        args = args.copy()
-        args['apiVersion'] = self.version
+        args = self.args.copy()
+        args.update(kw)
         return url.format(**args)
-
-    def list(self, resource_group_name):
-        url = self.url(
-            self.resource,
-            resourceGroupName=resource_group_name,
-        )
-        return self.cloud.paginate(self.cloud.get(url))
 
     def get_by_id(self, resource_id):
         url = self.id_url(resource_id)
         return self.cloud.get(url)
 
-    def get(self, resource_group_name, name):
-        url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
-            resourceGroupName=resource_group_name,
-        )
+    def _list(self, **kw):
+        url = self.url(**kw)
+        return self.cloud.paginate(self.cloud.get(url))
+
+    def list(self):
+        return self._list()
+
+    def _get(self, **kw):
+        url = self.url(**kw)
         return self.cloud.get(url)
 
-    def create(self, resource_group_name, name, params):
-        url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
-            resourceGroupName=resource_group_name,
-        )
+    def _create(self, params, **kw):
+        url = self.url(**kw)
         return self.cloud.put(url, params)
 
-    def delete(self, resource_group_name, name):
-        url = self.url(
-            '{_resource}/{_resourceName}',
-            _resource=self.resource,
-            _resourceName=name,
-            resourceGroupName=resource_group_name,
-        )
+    def _delete(self, **kw):
+        url = self.url(**kw)
         return self.cloud.delete(url)
+
+    def _post(self, endpoint, params, **kw):
+        url = self.url(endpoint=endpoint, **kw)
+        return self.cloud.post(url, params)
+
+
+class AzureResourceGroupsCRUD(AzureCRUD):
+    base_url = 'resourcegroups/{resourceGroupName}'
+
+    def list(self):
+        return self._list(resourceGroupName='')
+
+    def get(self, name):
+        return self._get(resourceGroupName=name)
+
+    def create(self, name, params):
+        return self._create(params, resourceGroupName=name)
+
+    def delete(self, name):
+        return self._delete(resourceGroupName=name)
+
+
+class AzureResourceProviderCRUD(AzureCRUD):
+    base_url = (
+        'resourceGroups/{resourceGroupName}/providers/'
+        '{providerId}/{resource}/{resourceName}')
+
+    def list(self, resource_group_name):
+        return self._list(resourceGroupName=resource_group_name,
+                          resourceName='')
+
+    def get(self, resource_group_name, name):
+        return self._get(resourceGroupName=resource_group_name,
+                         resourceName=name)
+
+    def create(self, resource_group_name, name, params):
+        return self._create(params,
+                            resourceGroupName=resource_group_name,
+                            resourceName=name)
+
+    def delete(self, resource_group_name, name):
+        return self._delete(resourceGroupName=resource_group_name,
+                            resourceName=name)
+
+    def post(self, resource_group_name, name, endpoint, params):
+        return self._post(endpoint, params,
+                          resourceGroupName=resource_group_name,
+                          resourceName=name)
+
+
+class AzureNetworkCRUD(AzureCRUD):
+    base_url = (
+        'resourceGroups/{resourceGroupName}/providers/'
+        'Microsoft.Network/virtualNetworks/{virtualNetworkName}/'
+        '{resource}/{resourceName}')
+
+    def list(self, resource_group_name, virtual_network_name):
+        return self._list(resourceGroupName=resource_group_name,
+                          virtualNetworkName=virtual_network_name,
+                          resourceName='')
+
+    def get(self, resource_group_name, virtual_network_name, name):
+        return self._get(resourceGroupName=resource_group_name,
+                         virtualNetworkName=virtual_network_name,
+                         resourceName=name)
+
+    def create(self, resource_group_name, virtual_network_name, name, params):
+        return self._create(params,
+                            resourceGroupName=resource_group_name,
+                            virtualNetworkName=virtual_network_name,
+                            resourceName=name)
+
+    def delete(self, resource_group_name, virtual_network_name, name):
+        return self._delete(resourceGroupName=resource_group_name,
+                            virtualNetworkName=virtual_network_name,
+                            resourceName=name)
+
+
+class AzureLocationCRUD(AzureCRUD):
+    base_url = (
+        'providers/{providerId}/locations/{location}/{resource}')
+
+    def list(self, location):
+        return self._list(location=location)
+
+
+class AzureProviderCRUD(AzureCRUD):
+    base_url = (
+        'providers/{providerId}/{resource}/')
+
+    def list(self):
+        return self._list()
 
 
 class AzureDictResponse(dict):
@@ -174,31 +226,57 @@ class AzureCloud:
         self.session = requests.Session()
         self.log = logging.getLogger("azul")
         self.auth = AzureAuth(credential)
-        self.network_interfaces = AzureCRUD(
+        self.network_interfaces = AzureResourceProviderCRUD(
             self,
-            'Microsoft.Network/networkInterfaces',
-            '2020-07-01')
-        self.public_ip_addresses = AzureCRUD(
+            providerId='Microsoft.Network',
+            resource='networkInterfaces',
+            apiVersion='2020-07-01')
+        self.public_ip_addresses = AzureResourceProviderCRUD(
             self,
-            'Microsoft.Network/publicIPAddresses',
-            '2020-07-01')
-        self.virtual_machines = AzureCRUD(
+            providerId='Microsoft.Network',
+            resource='publicIPAddresses',
+            apiVersion='2020-07-01')
+        self.virtual_machines = AzureResourceProviderCRUD(
             self,
-            'Microsoft.Compute/virtualMachines',
-            '2020-12-01')
-        self.disks = AzureCRUD(
+            providerId='Microsoft.Compute',
+            resource='virtualMachines',
+            apiVersion='2020-12-01')
+        self.disks = AzureResourceProviderCRUD(
             self,
-            'Microsoft.Compute/disks',
-            '2020-06-30')
+            providerId='Microsoft.Compute',
+            resource='disks',
+            apiVersion='2020-06-30')
+        self.images = AzureResourceProviderCRUD(
+            self,
+            providerId='Microsoft.Compute',
+            resource='images',
+            apiVersion='2020-12-01')
         self.resource_groups = AzureResourceGroupsCRUD(
             self,
-            '2020-06-01')
+            apiVersion='2020-06-01')
+        self.subnets = AzureNetworkCRUD(
+            self,
+            resource='subnets',
+            apiVersion='2020-07-01')
+        self.compute_usages = AzureLocationCRUD(
+            self,
+            providerId='Microsoft.Compute',
+            resource='usages',
+            apiVersion='2020-12-01')
+        self.compute_skus = AzureProviderCRUD(
+            self,
+            providerId='Microsoft.Compute',
+            resource='skus',
+            apiVersion='2019-04-01')
 
     def get(self, url, codes=[200]):
         return self.request('GET', url, None, codes)
 
-    def put(self, url, data, codes=[200, 201]):
+    def put(self, url, data, codes=[200, 201, 202]):
         return self.request('PUT', url, data, codes)
+
+    def post(self, url, data, codes=[200, 202]):
+        return self.request('POST', url, data, codes)
 
     def delete(self, url, codes=[200, 201, 202, 204]):
         return self.request('DELETE', url, None, codes)
@@ -226,9 +304,13 @@ class AzureCloud:
         self.log.error(response.text)
         if response.status_code == 404:
             raise AzureNotFoundError(
-                response.status_code, err['error']['message'])
+                response.status_code,
+                err['error']['code'],
+                err['error']['message'])
         else:
-            raise AzureError(response.status_code, err['error']['message'])
+            raise AzureError(response.status_code,
+                             err['error']['code'],
+                             err['error']['message'])
 
     def paginate(self, data):
         ret = data['value']
@@ -264,6 +346,47 @@ class AzureCloud:
             if ret['status'] == 'InProgress':
                 continue
             if ret['status'] == 'Succeeded':
-                return
+                return ret
             raise Exception("Unhandled async operation result: %s",
                             ret['status'])
+
+    def _upload_chunk(self, url, start, end, data):
+        headers = {
+            'x-ms-blob-type': 'PageBlob',
+            'x-ms-page-write': 'Update',
+            'Content-Length': str(len(data)),
+            'Range': f'bytes={start}-{end}',
+        }
+        for x in range(10):
+            try:
+                requests.put(url, headers=headers, data=data)
+                break
+            except Exception:
+                time.sleep(2 * x)
+
+    def upload_page_blob_to_sas_url(self, url, file_object,
+                                    pagesize=(4 * 1024 * 1024),
+                                    concurrency=10):
+        start = 0
+        futures = set()
+        if 'comp=page' not in url:
+            url += '&comp=page'
+        with concurrent.futures.ThreadPoolExecutor(
+                max_workers=concurrency) as executor:
+            while True:
+                chunk = file_object.read(pagesize)
+                if not chunk:
+                    break
+                end = start + len(chunk) - 1
+                future = executor.submit(self._upload_chunk, url,
+                                         start, end, chunk)
+                start += len(chunk)
+                futures.add(future)
+                # Keep the pool of work supplied with data but without
+                # reading the entire file into memory.
+                if len(futures) >= (concurrency * 2):
+                    (done, futures) = concurrent.futures.wait(
+                        futures,
+                        return_when=concurrent.futures.FIRST_COMPLETED)
+            # We're done reading the file, wait for all uploads to finish
+            (done, futures) = concurrent.futures.wait(futures)
