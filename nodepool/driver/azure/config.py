@@ -205,7 +205,7 @@ class AzureProviderConfig(ProviderConfig):
     def __init__(self, driver, provider):
         super().__init__(provider)
         self._pools = {}
-        self.rate_limit = None
+        self.rate = None
         self.launch_retries = None
 
     @property
@@ -225,9 +225,10 @@ class AzureProviderConfig(ProviderConfig):
         self.image_name_format = '{image_name}-{timestamp}'
         self.post_upload_hook = self.provider.get('post-upload-hook')
 
-        self.rate_limit = self.provider.get('rate-limit', 1)
+        self.rate = self.provider.get('rate', 1)
         self.launch_retries = self.provider.get('launch-retries', 3)
-        self.boot_timeout = self.provider.get('boot-timeout', 60)
+        self.launch_timeout = self.provider.get('launch-timeout', 3600)
+        self.boot_timeout = self.provider.get('boot-timeout', 120)
 
         # TODO(corvus): remove
         self.zuul_public_key = self.provider.get('zuul-public-key')
