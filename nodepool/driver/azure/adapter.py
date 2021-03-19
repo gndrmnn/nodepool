@@ -278,7 +278,7 @@ class AzureAdapter(statemachine.Adapter):
         self.resource_group = self.provider.resource_group
         self.resource_group_location = self.provider.resource_group_location
         self.rate_limiter = RateLimiter(self.provider.name,
-                                        self.provider.rate_limit)
+                                        self.provider.rate)
         with open(self.provider.auth_path) as f:
             self.azul = azul.AzureCloud(json.load(f))
         if provider_config.subnet_id:
