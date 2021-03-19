@@ -300,30 +300,36 @@ class AzureAdapter(statemachine.Adapter):
     def getDeleteStateMachine(self, external_id):
         return AzureDeleteStateMachine(self, external_id)
 
-    def cleanupLeakedResources(self, known_nodes, metadata):
+    def cleanupLeakedResources(self, known_nodes, known_uploads, metadata):
         for vm in self._listVirtualMachines():
-            node_id = self._metadataMatches(vm, metadata)
+            node_id, upload_id = self._metadataMatches(vm, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked vm: {vm['name']}")
                 self.azul.virtual_machines.delete(
                     self.resource_group, vm['name'])
         for nic in self._listNetworkInterfaces():
-            node_id = self._metadataMatches(nic, metadata)
+            node_id, upload_id = self._metadataMatches(nic, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked nic: {nic['name']}")
                 self.azul.network_interfaces.delete(
                     self.resource_group, nic['name'])
         for pip in self._listPublicIPAddresses():
-            node_id = self._metadataMatches(pip, metadata)
+            node_id, upload_id = self._metadataMatches(pip, metadata)
             if (node_id and node_id not in known_nodes):
                 self.log.info(f"Deleting leaked pip: {pip['name']}")
                 self.azul.public_ip_addresses.delete(
                     self.resource_group, pip['name'])
         for disk in self._listDisks():
-            node_id = self._metadataMatches(disk, metadata)
-            if (node_id and node_id not in known_nodes):
+            node_id, upload_id = self._metadataMatches(disk, metadata)
+            if ((node_id and node_id not in known_nodes) or
+                (upload_id and upload_id not in known_uploads)):
                 self.log.info(f"Deleting leaked disk: {disk['name']}")
                 self.azul.disks.delete(self.resource_group, disk['name'])
+        for image in self._listImages():
+            node_id, upload_id = self._metadataMatches(image, metadata)
+            if (upload_id and upload_id not in known_uploads):
+                self.log.info(f"Deleting leaked image: {image['name']}")
+                self.azul.images.delete(self.resource_group, image['name'])
 
     def listInstances(self):
         for vm in self._listVirtualMachines():
@@ -444,7 +450,8 @@ class AzureAdapter(statemachine.Adapter):
         for k, v in metadata.items():
             if obj['tags'].get(k) != v:
                 return None
-        return obj['tags']['nodepool_node_id']
+        return (obj['tags'].get('nodepool_node_id'),
+                obj['tags'].get('nodepool_upload_id'))
 
     @staticmethod
     def _succeeded(obj):
@@ -659,3 +666,7 @@ class AzureAdapter(statemachine.Adapter):
         # the last thing we delete anyway, let's just fire and forget.
         self.azul.disks.delete(self.resource_group, name)
         return None
+
+    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    def _listImages(self):
+        return self.azul.images.list(self.resource_group)
