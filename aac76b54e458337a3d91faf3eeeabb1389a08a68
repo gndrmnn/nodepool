@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ad360e2_42d1afd2",
+        "filename": "nodepool/driver/example/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 29671
+      },
+      "writtenOn": "2021-03-31T08:18:02Z",
+      "side": 1,
+      "message": "Nit from copy/paste: This should be ExampleProviderConfig (or just ProviderConfig)",
+      "range": {
+        "startLine": 116,
+        "startChar": 54,
+        "endLine": 116,
+        "endChar": 77
+      },
+      "revId": "aac76b54e458337a3d91faf3eeeabb1389a08a68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
