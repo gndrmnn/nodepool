@@ -247,8 +247,10 @@
           tags:
             - siblings
           siblings:
-            - opendev.org/openstack/openstacksdk
             - opendev.org/openstack/diskimage-builder
+          arch:
+            - linux/amd64
+            - linux/arm64
 
 - job:
     name: nodepool-functional-container-openstack-base

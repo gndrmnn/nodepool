@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Just need something to build me a nodepool-builder arm64 image.
+
 FROM docker.io/opendevorg/python-builder:3.7 as builder
 # ============================================================================
 
