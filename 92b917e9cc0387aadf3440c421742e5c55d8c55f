@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4edf41d7_c2fedcac",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-04-12T08:08:11Z",
+      "side": 1,
+      "message": "I think we should leverage self._findFlavorByName here in order to leverage caching.",
+      "revId": "92b917e9cc0387aadf3440c421742e5c55d8c55f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "426fedb7_e6bd647a",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-04-12T08:08:11Z",
+      "side": 1,
+      "message": "Nodes already can have resources attached so we should use the same field and data structure here [1].\n\n[1] https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/handler.py#L159",
+      "revId": "92b917e9cc0387aadf3440c421742e5c55d8c55f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
