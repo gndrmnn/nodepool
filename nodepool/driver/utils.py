@@ -370,19 +370,32 @@ class QuotaSupport:
                         # but move on and don't account it as we can't properly
                         # calculate its cost without pool info.
                         continue
-                    if node.type[0] not in provider_pool.labels:
-                        self.log.warning("Node type is not in provider pool "
-                                         "for node %s" % node)
-                        # This node is also in a funny state; the config
-                        # may have changed under it.  It should settle out
-                        # eventually when it's deleted.
+                    # NOTE(ianw) 2023-01-18 : before the statemachine
+                    # driver, the openstack driver would detect leaked
+                    # nodes and put in a "dummy" entry so that
+                    # nodepool would delete them.  It would not,
+                    # however, set the "type", hence the first check.
+                    # In the second case, a config update may have
+                    # removed this node type, so we can't look up its
+                    # resource usage by label any more.
+                    if node.type and (node.type[0] in provider_pool.labels):
+                        node_resources = self.quotaNeededByLabel(
+                            node.type[0], provider_pool)
+                        used_quota.add(node_resources)
+                    else:
+                        self.log.warning("Can not determine resource usage of "
+                                         "node %s; quota estimation for this "
+                                         "provider may be incorrect. The node "
+                                         "type is not in provider pool labels."
+                                         % (node.id))
+                        self.log.debug("node type not in provider pool for: %s"
+                                       % node)
                         continue
-                    node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
-                    used_quota.add(node_resources)
                 except Exception:
-                    self.log.exception("Couldn't consider invalid node %s "
-                                       "for quota:" % node)
+                    self.log.exception("Can not determine resource usage "
+                                       "as the following node is invalid.  "
+                                       "Quota estimation may be incorrect for "
+                                       "this provider: %s" % node)
         return used_quota
 
     def getLabelQuota(self):
