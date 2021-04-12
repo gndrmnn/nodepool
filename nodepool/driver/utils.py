@@ -285,16 +285,28 @@ class QuotaSupport:
                         # but move on and don't account it as we can't properly
                         # calculate its cost without pool info.
                         continue
-                    if node.type[0] not in provider_pool.labels:
+                    # Some active nodes don't have a "type" that
+                    # corresponds to a current configuration label to
+                    # look up; for example leaked nodes being cleaned
+                    # up by the Openstack driver.  Thus if we can't
+                    # determine the quota usage via this we check for
+                    # node.resources (the openstack client will
+                    # attempt to put the resource usage of the leaked
+                    # server in here) and if we still can't find
+                    # anything, we ignore it, assuming it will settle
+                    # out soon.
+                    if node.type and (node.type[0] in provider_pool.labels):
+                        node_resources = self.quotaNeededByLabel(
+                            node.type[0], provider_pool)
+                        used_quota.add(node_resources)
+                    elif node.resources:
+                        used_quota.add(
+                            QuotaInformation(cores=node.resources['cores'],
+                                             ram=node.resources['ram']))
+                    else:
                         self.log.warning("Node type is not in provider pool "
                                          "for node %s" % node)
-                        # This node is also in a funny state; the config
-                        # may have changed under it.  It should settle out
-                        # eventually when it's deleted.
                         continue
-                    node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
-                    used_quota.add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)

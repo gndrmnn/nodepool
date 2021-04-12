@@ -480,23 +480,40 @@ class OpenStackProvider(Provider, QuotaSupport):
                 continue
 
             if not self._zk.getNode(meta['nodepool_node_id']):
-                self.log.warning(
-                    "Marking for delete leaked instance %s (%s) in %s "
-                    "(unknown node id %s)",
-                    server.name, server.id, self.provider.name,
-                    meta['nodepool_node_id']
-                )
                 # Create an artifical node to use for deleting the server.
                 node = zk.Node()
                 node.external_id = server.id
                 node.provider = self.provider.name
                 node.pool = meta.get('nodepool_pool_name')
                 node.state = zk.DELETING
+                # Usually the ZK node has the "type" set, which allows
+                # us to lookup the flavor (and hence resource usage)
+                # of the node via configuration.  However, this node
+                # has leaked and may not have a config entry any more.
+                # Thus we look it up here and put the resource usage
+                # info directly into the "resources" field, which is
+                # then probed by the quota calculations; see
+                # utils.py:estimatedNodepoolQuotaUsed
+                if hasattr(server.flavor, 'id'):
+                    flavors = self.listFlavorsById()
+                    flavor = flavors.get(server.flavor.id)
+                else:
+                    flavor = server.flavor
+                used = QuotaInformation.construct_from_flavor(flavor)
+                node.resources = used.get_resources()
                 self._zk.storeNode(node)
                 if self._statsd:
                     key = ('nodepool.provider.%s.leaked.nodes'
                            % self.provider.name)
                     self._statsd.incr(key)
+                self.log.warning(
+                    "Marking for delete leaked instance %s (%s) in %s "
+                    "(%s cores/%s ram) (unknown node id %s)",
+                    server.name, server.id, self.provider.name,
+                    node.resources['cores'], node.resources['ram'],
+                    meta['nodepool_node_id']
+                )
+
 
     def filterComputePorts(self, ports):
         '''

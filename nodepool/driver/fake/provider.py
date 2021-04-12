@@ -185,6 +185,7 @@ class FakeOpenStackCloud(object):
                   private_v4=private_v4,
                   host_id=host_id,
                   interface_ip=interface_ip,
+                  flavor=self._flavor_list[0],
                   security_groups=security_groups,
                   location=Dummy(Dummy.LOCATION, zone=kw.get('az')),
                   metadata=kw.get('meta', {}),
