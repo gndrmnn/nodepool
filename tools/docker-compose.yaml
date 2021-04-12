@@ -10,5 +10,5 @@ services:
       - /data
       - /datalog
     volumes:
-      - "./ca:/var/certs:z"
-      - "./zoo.cfg:/conf/zoo.cfg:z"
+      - "./ca:/var/certs:Z"
+      - "./zoo.cfg:/conf/zoo.cfg:Z"

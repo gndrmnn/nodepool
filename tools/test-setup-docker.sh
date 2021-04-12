@@ -11,23 +11,23 @@ cd $(dirname $0)
 SCRIPT_DIR="$(pwd)"
 
 # Select docker or podman
-if command -v docker > /dev/null; then
+if command -v podman > /dev/null; then
+  DOCKER=podman
+elif command -v docker > /dev/null; then
   DOCKER=docker
   if ! docker ps; then
     systemctl start docker
   fi
-elif command -v podman > /dev/null; then
-  DOCKER=podman
 else
   echo "Please install docker or podman."
   exit 1
 fi
 
 # Select docker-compose or podman-compose
-if command -v docker-compose > /dev/null; then
+if [[ "${DOCKER}" == "podman" ]] && command -v podman-compose > /dev/null; then
+    COMPOSE=podman-compose
+elif [[ "${DOCKER}" == "docker" ]] && command -v docker-compose > /dev/null; then
   COMPOSE=docker-compose
-elif command -v podman-compose > /dev/null; then
-  COMPOSE=podman-compose
 else
   echo "Please install docker-compose or podman-compose."
   exit 1
