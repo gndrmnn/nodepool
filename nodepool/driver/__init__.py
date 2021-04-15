@@ -552,8 +552,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             declined_reasons.append('it would exceed quota')
 
         if declined_reasons:
-            self.log.debug("Declining node request because %s",
-                           ', '.join(declined_reasons))
+            self.log.info("Declining node request because %s",
+                          ', '.join(declined_reasons))
             self.decline_request()
             self._declinedHandlerCleanup()
             return
