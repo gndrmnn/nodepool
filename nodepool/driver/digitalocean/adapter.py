@@ -16,6 +16,7 @@
 
 import logging
 import digitalocean
+import dateutil.parser
 
 from nodepool.driver import statemachine
 from nodepool.driver.utils import QuotaInformation
@@ -135,12 +136,30 @@ class DigitalOceanAdapter(statemachine.Adapter):
     def getDeleteStateMachine(self, external_id):
         return DeleteStateMachine(self, external_id)
 
+    def _getCloudImage(self, image_filter):
+        private = (None
+                   if image_filter.public is None
+                   else not image_filter.public)
+        images = sorted(
+            filter(
+                lambda image: image_filter.matches(image),
+                self.manager.get_images(
+                    private=private,
+                    type=image_filter.type)
+            ),
+            key=lambda image: dateutil.parser.parse(
+                image.created_at).timestamp(),
+            reverse=True
+        )
+        return images[0]
+
     def _createDroplet(self, label, tags, hostname):
+        image = self._getCloudImage(label.cloud_image.image_filter)
         tags.append("nodepool")
         droplet = digitalocean.Droplet(
             name=hostname,
             region=self.provider.region,
-            image=label.cloud_image.image_id,
+            image=image.id,
             ssh_keys=label.ssh_keys,
             size=label.size,
             tags=tags,

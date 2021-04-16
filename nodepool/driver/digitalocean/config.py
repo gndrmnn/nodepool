@@ -16,9 +16,36 @@
 
 import voluptuous as v
 
+from fnmatch import fnmatch
 from nodepool.driver import ConfigPool
 from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
+
+
+class ImageFilter:
+
+    def __init__(self, config):
+        self.name = config.get('name')
+        self.slug = config.get('slug')
+        self.type = config.get('type')
+        self.id = config.get('id')
+        self.public = config.get('public')
+        self.tags = config.get('tags')
+
+    def matches(self, image):
+        if self.name is not None and not fnmatch(image.name, self.name):
+            return False
+        if self.slug is not None and self.slug != image.slug:
+            return False
+        if self.type is not None and self.type != image.type:
+            return False
+        if self.id is not None and self.id != image.id:
+            return False
+        if self.public is not None and self.public != image.public:
+            return False
+        if self.tags is not None and self.tags != image.tags:
+            return False
+        return True
 
 
 class ProviderCloudImage(ConfigValue):
@@ -181,7 +208,7 @@ class DigitalOceanProviderConfig(ProviderConfig):
         for image in self.provider.get('cloud-images', []):
             i = ProviderCloudImage()
             i.name = image['name']
-            i.image_id = image.get('image-id', None)
+            i.image_filter = ImageFilter(image.get('image-filter', None))
             i.username = image.get('username', None)
             i.key = image.get('key', None)
             i.python_path = image.get('python-path', 'auto')
@@ -218,6 +245,14 @@ class DigitalOceanProviderConfig(ProviderConfig):
             'connection-port': int,
             'shell-type': str,
             'image-id': v.Any(str, int),
+            'image-filter': {
+                'name': str,
+                'slug': str,
+                'public': bool,
+                'type': str,
+                'tags': set,
+                'id': int,
+            },
             'username': str,
             'ssh-keys': list(v.Any(str, int)),
             'python-path': str,
