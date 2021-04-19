@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8f36890c_803e3493",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-04-19T22:40:03Z",
+      "side": 1,
+      "message": "Yeah, this is still TDB by https://review.opendev.org/c/openstack/openstacksdk/+/786814",
+      "parentUuid": "4976c2fd_32b90d27",
+      "revId": "5a502560c2f98b8061dba4b4a10f39ee3f0b356a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54362f77_e0cf6761",
         "filename": "releasenotes/notes/openstack-statsd-ff1abe1a46794490.yaml",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "5a502560c2f98b8061dba4b4a10f39ee3f0b356a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46860a41_19098245",
+        "filename": "releasenotes/notes/openstack-statsd-ff1abe1a46794490.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-04-19T22:40:03Z",
+      "side": 1,
+      "message": "sure",
+      "parentUuid": "54362f77_e0cf6761",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 6
+      },
+      "revId": "5a502560c2f98b8061dba4b4a10f39ee3f0b356a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
