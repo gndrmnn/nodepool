@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4976c2fd_32b90d27",
+        "filename": "doc/source/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-04-19T12:33:02Z",
+      "side": 1,
+      "message": "I can\u0027t find how to do per-cloud metric in the SDK configuration documentation, could we include an example in the nodepool doc to help with the migration?",
+      "revId": "5a502560c2f98b8061dba4b4a10f39ee3f0b356a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54362f77_e0cf6761",
+        "filename": "releasenotes/notes/openstack-statsd-ff1abe1a46794490.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-04-19T12:33:02Z",
+      "side": 1,
+      "message": "`upgrade` sounds more appropriate.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 6
+      },
+      "revId": "5a502560c2f98b8061dba4b4a10f39ee3f0b356a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
