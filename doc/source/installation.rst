@@ -32,6 +32,13 @@ configured to send information to it.  Set the environment variable
 ``STATSD_PORT`` if this should be different to the default ``8125``)
 for the Nodepool daemon to enable this support.
 
+If using the OpenStack driver, setting these variables will enable
+``openstacksdk`` reporting.  By default, ``openstacksdk`` will report
+OpenStack API statistics prefixed with ``openstack.api``.  To override
+this, for example to report API statistics on a per-cloud basis, see
+the OpenStack SDK configuration documentation on `metrics
+<https://docs.openstack.org/openstacksdk/latest/user/guides/stats.html>`__.
+
 Install Nodepool
 ----------------
 
