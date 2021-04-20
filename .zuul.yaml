@@ -77,6 +77,7 @@
     vars:
       zuul_copy_output:
         /var/log/nodepool: logs
+    nodeset: ubuntu-focal
 
 - job:
     name: nodepool-functional-openstack
