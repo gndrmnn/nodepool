@@ -7,7 +7,12 @@
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
     - role: ensure-zookeeper
       zookeeper_use_tls: true
-    - ensure-docker
+    - role: ensure-docker
+      vars:
+        _docker_upstream_distro_packages:
+          - docker-ce=5:20.10.5~3-0~ubuntu-focal
+          - docker-ce-cli=5:20.10.5~3-0~ubuntu-focal
+          - containerd.io
     # Note: keep after ensure-docker
     - use-buildset-registry
     - ensure-devstack
