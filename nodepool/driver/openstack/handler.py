@@ -156,7 +156,7 @@ class OpenStackNodeLauncher(NodeLauncher):
         pool = self.handler.provider.pools.get(self.node.pool)
         resources = self.handler.manager.quotaNeededByLabel(
             self.node.type[0], pool)
-        self.node.resources = resources.quota['compute']
+        self.node.resources = resources.get_resources()
         if username:
             self.node.username = username
 
