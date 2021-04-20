@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5246a5b6_c2821937",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-04-20T06:18:35Z",
+      "side": 1,
+      "message": "I more or less copied this from unmanagedQuotaUsed which uses this approach [1]\n\nPerhaps we could clean up both in a follow on?\n\n[1] https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L121",
+      "parentUuid": "4edf41d7_c2fedcac",
+      "revId": "92b917e9cc0387aadf3440c421742e5c55d8c55f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "426fedb7_e6bd647a",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "92b917e9cc0387aadf3440c421742e5c55d8c55f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45dc8c05_eff45459",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-04-20T06:18:35Z",
+      "side": 1,
+      "message": "OK, I\u0027ve proposed Id78b059cf2121e01e4cd444f6ad3834373cf7fb6 to make a single function to get the resources, and modified the next changeset to use that and put it in the .resources field.",
+      "parentUuid": "426fedb7_e6bd647a",
+      "revId": "92b917e9cc0387aadf3440c421742e5c55d8c55f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
