@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dafb709_0c731064",
+        "filename": "nodepool/zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-04-22T22:50:09Z",
+      "side": 0,
+      "message": "Do we need to keep performing recursive deletes for some time in order to migrate from the old structure to the new structure?\n\nRelated: do we need to check both lock paths for a time? Without that you\u0027ll need to do a full restart I think?",
+      "revId": "252d10510a44542e9c2660887651c0f06712df96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
