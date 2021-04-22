@@ -16,7 +16,6 @@
 
 import logging
 import operator
-import os
 import threading
 import time
 
@@ -93,9 +92,6 @@ class OpenStackProvider(Provider, QuotaSupport):
             config=self.provider.cloud_config,
             use_direct_get=False,
             rate_limit=rate_limit,
-            statsd_host=os.getenv('STATSD_HOST', None),
-            statsd_port=os.getenv('STATSD_PORT ', None),
-            statsd_prefix='nodepool.task.{0}'.format(self.provider.name),
             app_name='nodepool',
             app_version=version.version_info.version_string()
         )
