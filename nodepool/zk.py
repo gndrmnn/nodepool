@@ -73,6 +73,15 @@ def as_list(item):
     return [item]
 
 
+class NodeLock(Lock):
+    '''
+    This is just kazoo.recipe.Lock but with a function to delete
+    the lock node (path).
+    '''
+    def delete_path(self):
+        self.client.delete(self.path)
+
+
 class ZooKeeperConnectionConfig(object):
     '''
     Represents the connection parameters for a ZooKeeper server.
@@ -815,7 +824,7 @@ class ZooKeeper(object):
 
     def _imageUploadNumberLockPath(self, image, build_number, provider,
                                    upload_number):
-        return "%s/%s/lock" % (
+        return "%s/lock-%s" % (
             self._imageUploadPath(image, build_number, provider),
             upload_number)
 
@@ -882,7 +891,7 @@ class ZooKeeper(object):
         lock_path = self._imageUploadNumberLockPath(image, build_number,
                                                     provider, upload_number)
         try:
-            lock = Lock(self.client, lock_path)
+            lock = NodeLock(self.client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -897,7 +906,6 @@ class ZooKeeper(object):
         # because someone else has it.
         if not have_lock:
             raise npe.ZKLockException("Did not get lock on %s" % lock_path)
-
         return lock
 
     def _getImageUploadLock(self, image, build_number, provider,
@@ -1162,15 +1170,17 @@ class ZooKeeper(object):
         '''
         lock = None
         try:
-            lock = self._getImageUploadNumberLock(image_upload.image_name,
-                                                  image_upload.build_id,
-                                                  image_upload.provider_name,
-                                                  image_upload.id,
-                                                  blocking, timeout)
+            lock = self._getImageUploadNumberLock(
+                image_upload.image_name,
+                image_upload.build_id,
+                image_upload.provider_name,
+                image_upload.id,
+                blocking, timeout)
             yield
         finally:
             if lock:
                 lock.release()
+                lock.delete_path()
 
     def getImageNames(self):
         '''
@@ -1648,8 +1658,7 @@ class ZooKeeper(object):
         path = self._imageUploadPath(image, build_number, provider)
         path = path + "/%s" % upload_number
         try:
-            # NOTE: Need to do recursively to remove lock znodes
-            self.client.delete(path, recursive=True)
+            self.client.delete(path)
         except kze.NoNodeError:
             pass
 

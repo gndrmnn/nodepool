@@ -136,12 +136,12 @@ class TestZooKeeper(tests.DBTestCase):
         upload.image_name = "ubuntu-trusty"
         upload.build_id = "0000000003"
         upload.provider_name = "providerA"
+        upload.id = "0000000001"
 
         path = self.zk._imageUploadNumberLockPath(upload.image_name,
                                                   upload.build_id,
                                                   upload.provider_name,
                                                   upload.id)
-
         with self.zk.imageUploadNumberLock(upload, blocking=False):
             self.assertIsNotNone(self.zk.client.exists(path))
             self.zk.deleteUpload(upload.image_name,
@@ -151,11 +151,13 @@ class TestZooKeeper(tests.DBTestCase):
 
         # Pretend we still think the image upload exists
         # (e.g. multiple cleanup workers itertating over uploads)
+        upload_path = self.zk._imageUploadPath(upload.image_name,
+                                               upload.build_id,
+                                               upload.provider_name)
+        upload_path = upload_path + "/%s" % upload.id
         with self.zk.imageUploadNumberLock(upload, blocking=False):
             # We now recreated an empty image upload number node
-            pass
-
-        self.assertIsNotNone(self.zk.client.exists(path))
+            self.zk.client.create(upload_path)
 
         # Should not throw an exception because of the empty upload
         self.zk.getImageUpload(upload.image_name, upload.build_id,
