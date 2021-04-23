@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f96fed1b_ba3f9597",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-04-23T01:17:18Z",
+      "side": 1,
+      "message": "I believe you noted that node didn\u0027t have any data as well.  That\u0027s an important clue.\n\nThat suggests that deleteBuild may be implicated too.  It behaves the same way as deleteUpload.",
+      "revId": "8bb18f38d257b57fa78ddfd8a5e0a3c949a8151b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "73c1e286_9ab1d582",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-04-23T01:17:18Z",
+      "side": 1,
+      "message": "Just to be clear -- they did both get the lock; I don\u0027t think we\u0027re suggesting that one acted without the lock.  I think that\u0027s what you meant.",
+      "revId": "8bb18f38d257b57fa78ddfd8a5e0a3c949a8151b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e0abe59_eee739b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-04-23T01:17:18Z",
+      "side": 1,
+      "message": "I think the mechanism is this:\n\nThe both started cleaning the same image build, and then also the same image upload.  nb02 deleted the image from the provider.  Then nb01 deleted the same image from the provider (this is safe; it\u0027s idempotent) but did so more slowly.  While nb01 was busy doing that, nb02 locked the upload, deleted it, releasing the lock; then it proceded to delete the build from the local disk, then finally deleted the build record from ZK.  At this moment, for almost an entire second, there was no ZK node at /nodepool/images/fedora-32/builds/0000057968 or below.  But then nb01 started moving again and locked the upload.  The lock recipe will happily recreate the entire path, so all of 0000057968/providers/ovh-bhs1/images/lock/... was recreated.  This time the data znodes are empty, which explains why you saw not only the upload node empty, but also the build.",
+      "revId": "8bb18f38d257b57fa78ddfd8a5e0a3c949a8151b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ded2728a_636b0072",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-04-23T01:17:18Z",
+      "side": 1,
+      "message": "This specific error likely happened because we locked something after it was deleted, and so we recreated the thing that was deleted.  If we only look at image uploads, this sibling approach should solve the problem, except that uploads are children of builds, and the build can also be deleted (as in this case).  So not only can this happen to uploads when uploads are deleted, it can also happen to builds when builds are deleted, and the most likely case (due to timing) and what happened in this instance: to uploads when builds are deleted.\n\nSo this patch would not have avoided this issue (the json error would have been on the build data being null instead of the upload data).  But in general, putting locks outside of things that are deleted can be a solution to this problem.  If we want to go that way, we would need to bput both the builds and the image locks outside of the build hierarchy.  We do something similar with node requests right now.  The cleanup for this is indeed a little complicated, though it\u0027s done by a separate thread since we can\u0027t actually rely on the lock owner cleaning itself up in the case of a crash.  See _cleanupNodeRequestLocks().\n\nI can think of two other alternatives:\n\n#1: We could use shared locks to mediate deletes.  Essentially we could acquire a read lock on a build before we do anything to it or any of its images.  Before deleting the build, we acquire a write lock on the build.  You can\u0027t get a write lock if someone has a read lock, and you can\u0027t get a read lock if someone has a write lock.  So we can make sure we\u0027re not deleting a build unless we are certain that no one is in an upload delete loop.  That has some nice characteristics in that it helps avoid duplicate work and collisions, but it doesn\u0027t completely solve the problem since we could have the same issue we\u0027re talking about at the build level (someone grabs a build lock immediately after someone else deletes the entire build).  So we\u0027d still need to either make build locks siblings or do the next idea:\n\n#2: It seems like the especially dangerous thing here is the kazoo.recipe.Lock\u0027s willingness to create entire paths in order to get a lock.  If we make a Lock recipe that omits the _ensure_path method[1], we can know that we will never have a lock on a deleted entry.  We would explicity create the \"lock\" path when we first create our upload number nodes or build nodes, etc.  Thereafter, if anyone tried to obtain a lock and \".../lock\" didn\u0027t exist, it would be an error.\n\n#2 seems like a fairly simple and straightforward method which avoids the complexity of dealing with sibling lock nodes.\n\n[1] https://kazoo.readthedocs.io/en/latest/_modules/kazoo/recipe/lock.html",
+      "revId": "8bb18f38d257b57fa78ddfd8a5e0a3c949a8151b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
