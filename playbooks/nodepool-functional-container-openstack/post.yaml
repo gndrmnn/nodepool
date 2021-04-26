@@ -5,6 +5,16 @@
     - name: Copy nodepool logs
       ignore_errors: yes
       block:
+        - name: Write out openstack logs
+          become: true
+          shell:
+            cmd: |
+              u=""
+              name=""
+              for u in $(systemctl list-unit-files | grep devstack | awk '{print $1}'); do
+                name=$(echo $u | sed 's/devstack@/screen-/' | sed 's/\.service//')
+                journalctl -o short-precise --unit $u  > /var/log/nodepool/$name.txt
+              done
         - name: Copy nodepool log files
           synchronize:
             src: /var/log/nodepool
