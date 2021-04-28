@@ -15,102 +15,6 @@
       tox_envlist: nodepool
 
 - job:
-    name: nodepool-functional-openstack-base
-    description: |
-      Test Nodepool with an OpenStack.
-
-      Sets up a working OpenStack system, builds an image, launches a
-      node, and verifies SSH access to the node.
-
-      .. zuul:jobvar:: nodepool_extra_packages
-         :type: list
-
-         A list of extra packages to install at the start of the job
-         (i.e., anything needed for the DIB build).
-
-      .. zuul:jobvar:: nodepool_diskimage
-         :type: dict
-
-         .. zuul:jobvar:: base_element
-
-            The base element to use when building the disk image.
-
-         .. zuul:jobvar:: elements-dir
-            :type: string
-
-            Path to directory with external elements
-
-         .. zuul:jobvar:: extra_elements
-            :type: list
-            :default: []
-
-            List of extra DIB elements to be added to image
-            configuration.
-
-         .. zuul:jobvar:: release
-
-            The release number or name to use with the base element.
-
-         .. zuul:jobvar:: mirror
-
-            The URL for the package mirror to use when building the
-            disk image.  This is optional.
-
-         .. zuul:jobvar:: env-vars
-            :type: dict
-
-            A dictionary of environment variables and values to add
-            to the DIB environment when building the image.
-
-         .. zuul:jobvar:: nodepool_debug
-
-            Boolean flag to enable debug logging for the nodepool builder
-            and launcher services. By default we log at INFO level and
-            higher. This enables DEBUG and higher. This is optional.
-
-    timeout: 5400
-    required-projects:
-      - zuul/nodepool
-    pre-run: playbooks/nodepool-functional-openstack/pre.yaml
-    run: playbooks/nodepool-functional-openstack/run.yaml
-    post-run: playbooks/nodepool-functional-openstack/post.yaml
-    vars:
-      zuul_copy_output:
-        /var/log/nodepool: logs
-
-- job:
-    name: nodepool-functional-openstack
-    description: Test Nodepool with an OpenStack
-    parent: nodepool-functional-openstack-base
-    vars: &nodepool_diskimage_vars
-      nodepool_extra_packages:
-        - rpm
-        - yum-utils
-      nodepool_diskimage:
-        base_element: centos-minimal
-        release: 8
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
-        env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
-
-- job:
-    name: nodepool-functional-openstack-src-base
-    description: Test Nodepool and OpenStack, with some projects from source
-    parent: nodepool-functional-openstack-base
-    required-projects:
-      - name: github.com/sqlalchemy/dogpile.cache
-      - name: opendev/glean
-      - name: zuul/nodepool
-      - name: openstack/diskimage-builder
-      - name: openstack/openstacksdk
-
-- job:
-    name: nodepool-functional-openstack-src
-    description: Test Nodepool and OpenStack, with some projects from source
-    parent: nodepool-functional-openstack-src-base
-    vars: *nodepool_diskimage_vars
-
-- job:
     description: |
       Test that nodepool works with kubernetes.
     name: nodepool-functional-k8s
@@ -255,9 +159,6 @@
     abstract: true
     description: |
       Test Nodepool containers with an OpenStack.
-
-      This is similar to nodepool-functional-openstack-base, but
-      uses containers to deploy nodepool.
 
       Note this is an abstract job and does not define an image to
       build and test, and you should not inherit directly from this
