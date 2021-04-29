@@ -23,17 +23,15 @@
       args:
         executable: /bin/bash
       shell: |
-        source /opt/devstack/openrc admin admin
-        openstack --os-project-name demo --os-username demo security group rule create --ingress --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
-        openstack --os-project-name demo --os-username demo security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
+        openstack --os-cloud=devstack security group rule create --ingress --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
+        openstack --os-cloud=devstack security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
     - name: Create unmanaged VM
       args:
         executable: /bin/bash
       shell: |
-        source /opt/devstack/openrc admin admin
-        openstack network list
-        cirros_image=$(openstack --os-project-name demo --os-username demo image list | grep cirros | awk '{print $4}' | head -n1)
-        openstack --os-project-name demo --os-username demo server create --flavor cirros256 --image $cirros_image unmanaged-vm --network public
+        openstack --os-cloud=devstack network list
+        cirros_image=$(openstack --os-cloud=devstack image list | grep cirros | awk '{print $4}' | head -n1)
+        openstack --os-cloud=devstack server create --flavor cirros256 --image $cirros_image unmanaged-vm --network public
 
     - name: Create nodepool SSH keypair
       args:
