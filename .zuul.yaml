@@ -161,8 +161,8 @@
     dependencies:
       - opendev-buildset-registry
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.9-container-image
+      - python-base-3.9-container-image
     provides: nodepool-container-image
     vars: &nodepool_image_vars
       docker_images:
@@ -197,8 +197,8 @@
     description: Build Docker images and upload to Docker Hub.
     timeout: *image_build_timeout
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.9-container-image
+      - python-base-3.9-container-image
     provides: nodepool-container-image
     vars: *nodepool_image_vars
     secrets:
@@ -228,8 +228,8 @@
       - openstack/diskimage-builder
       - openstack/openstacksdk
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.9-container-image
+      - python-base-3.9-container-image
     provides: nodepool-siblings-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
@@ -360,10 +360,11 @@
         NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
 
 - job:
-    name: nodepool-tox-py38
+    name: nodepool-tox-py39
     description: |
       Nodepool unit tests with ZooKeeper running
-    parent: tox-py38
+    parent: tox-py39
+    nodeset: ubuntu-focal
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: *nodepool_tox_vars
 
@@ -378,7 +379,7 @@
         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py36
-        - nodepool-tox-py38
+        - nodepool-tox-py39
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-openstack:
@@ -401,7 +402,7 @@
         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py36
-        - nodepool-tox-py38
+        - nodepool-tox-py39
         - nodepool-functional-openstack
         - nodepool-functional-openstack-src
         - nodepool-functional-k8s
