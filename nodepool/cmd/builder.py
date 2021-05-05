@@ -48,9 +48,10 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
         return parser
 
     def parse_args(self):
-        super(NodePoolBuilderApp, self).parse_args()
-        self.config_file = self.get_path(self.args.config)
-        self.secure_file = self.get_path(self.args.secure)
+        args = super(NodePoolBuilderApp, self).parse_args()
+        self.config_file = self.get_path(args.config)
+        self.secure_file = self.get_path(args.secure)
+        return args
 
     def run(self):
         self.nb = builder.NodePoolBuilder(

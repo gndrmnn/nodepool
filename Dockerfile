@@ -25,7 +25,7 @@ RUN /output/install-from-bindep
 CMD ["/usr/local/bin/nodepool"]
 
 FROM nodepool as nodepool-launcher
-CMD ["/usr/local/bin/nodepool-launcher", "-f"]
+CMD ["/usr/local/bin/nodepool-launcher"]
 
 FROM nodepool as nodepool-builder
-CMD ["/usr/local/bin/nodepool-builder", "-f"]
+CMD ["/usr/local/bin/nodepool-builder"]

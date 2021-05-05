@@ -42,9 +42,10 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
         return parser
 
     def parse_args(self):
-        super().parse_args()
-        self.config_file = self.get_path(self.args.config)
-        self.secure_file = self.get_path(self.args.secure)
+        args = super(NodePoolLauncherApp, self).parse_args()
+        self.config_file = self.get_path(args.config)
+        self.secure_file = self.get_path(args.secure)
+        return args
 
     def exit_handler(self, signum, frame):
         self.pool.stop()
