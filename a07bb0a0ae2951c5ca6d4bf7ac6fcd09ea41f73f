@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d43504b4_263c282a",
+        "filename": "playbooks/nodepool-functional-container-openstack/templates/docker-compose.yaml.j2",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-06T02:53:44Z",
+      "side": 1,
+      "message": "Instead of putting this in this docker-compose file, should we put a VOLUME statement in the Dockerfile, so that anyone running the builder gets an appropriate volume?\n\nIt\u0027s true than only folks using the containerfile element would need that, but, if we don\u0027t put it in the dockerfile, we\u0027ll need to document that they need to add a scratch volume to their deployment.\n\nThen again, I don\u0027t see us doing any of that for the DIB directories, so maybe this is at least consistent, and if we want to do that, we should look at doing it for all the things in a followup?",
+      "revId": "a07bb0a0ae2951c5ca6d4bf7ac6fcd09ea41f73f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
