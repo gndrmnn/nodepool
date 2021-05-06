@@ -83,9 +83,6 @@
     description: Test Nodepool with an OpenStack
     parent: nodepool-functional-openstack-base
     vars: &nodepool_diskimage_vars
-      nodepool_extra_packages:
-        - rpm
-        - yum-utils
       nodepool_diskimage:
         base_element: centos-minimal
         release: 8
@@ -352,6 +349,7 @@
     description: |
       Nodepool unit tests with ZooKeeper running
     parent: tox-py36
+    nodeset: ubuntu-bionic
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: &nodepool_tox_vars
       tox_environment:
