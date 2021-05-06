@@ -16,6 +16,24 @@
       "revId": "a07bb0a0ae2951c5ca6d4bf7ac6fcd09ea41f73f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6abe9d8d_a3e57b76",
+        "filename": "playbooks/nodepool-functional-container-openstack/templates/docker-compose.yaml.j2",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-05-06T07:04:18Z",
+      "side": 1,
+      "message": "\u003e Instead of putting this in this docker-compose file, should we put a VOLUME statement in the Dockerfile, so that anyone running the builder gets an appropriate volume?\n\u003e \n\u003e It\u0027s true than only folks using the containerfile element would need that, but, if we don\u0027t put it in the dockerfile, we\u0027ll need to document that they need to add a scratch volume to their deployment.\n\u003e \n\u003e Then again, I don\u0027t see us doing any of that for the DIB directories, so maybe this is at least consistent, and if we want to do that, we should look at doing it for all the things in a followup?\n\nyeah, I feel like it\u0027s maybe more of a runtime thing to get the underlying /var/lib/containers into the container; but agree if people come along needing more \"generic\" images we can revist all these mappings.",
+      "parentUuid": "d43504b4_263c282a",
+      "revId": "a07bb0a0ae2951c5ca6d4bf7ac6fcd09ea41f73f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
