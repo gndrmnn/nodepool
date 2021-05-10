@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb953a1d_74c4a8f6",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-05-10T21:28:07Z",
+      "side": 1,
+      "message": "Maybe I confused this but this looks to me like it it run synchronously within the state machine. If that\u0027s correct I guess this could become a serious performance issue. I wonder if we need to add something like asyncio in the mix to make high performance state machines work.",
+      "revId": "7ce4dbe26d22c1e673c1c3e105625028b84df1a2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
