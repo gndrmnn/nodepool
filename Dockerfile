@@ -104,6 +104,13 @@ RUN \
   mkdir -p /etc/containers \
   && echo 'cgroup_manager="cgroupfs"' >> /etc/containers/libpod.conf
 
+# Included kernel doesn't support metacopy options, need to turn them
+# off.  See various error messages related to:
+#   Error: error creating libpod runtime: failed to mount overlay for
+#   metacopy check: invalid argument
+RUN \
+  sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
+
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
     /usr/local/bin/nodepool-builder ${_DAEMON_FLAG}
