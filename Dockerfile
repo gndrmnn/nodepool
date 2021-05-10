@@ -74,8 +74,6 @@ COPY tools/kubic.asc /etc/apt/trusted.gpg.d/
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu focal main" >> /etc/apt/sources.list \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
-  && echo "deb https://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
-  && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
   && apt-get update \
   && apt-get install -y \
       curl \
@@ -92,25 +90,37 @@ RUN \
       xz-utils \
       yum \
       yum-utils \
-      zypper \
-      libseccomp2/buster-backports \
-      podman \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+      zypper
 
+# Podman install mainly for the "containerfile" elements of dib that
+# build images from extracts of upstream containers.
+# --install-recommends is important for getting
+# containernetwork-plugins and other packages.  Current podman
+# requires a later libseccomp2 only provided by backports.
+#
 # Podman defaults to trying to use systemd to do cgroup things (insert
-# hand-wavy motion) but it's not in the container.
-RUN \
-  mkdir -p /etc/containers \
-  && echo 'cgroup_manager="cgroupfs"' >> /etc/containers/libpod.conf
-
+# hand-wavy motion) but it's not in the container; disable this in
+# config.
+#
 # Kernel may not support overlayfsmetacopy options (bionic?), need to
 # turn that off for compatability.  See various error messages related
 # to:
 #   Error: error creating libpod runtime: failed to mount overlay for
 #   metacopy check: invalid argument
 RUN \
-  sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
+  && echo "deb https://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
+  && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
+  && apt-get update \
+  && apt-get install -y --install-recommends \
+      libseccomp2/buster-backports \
+      podman \
+  && echo 'cgroup_manager="cgroupfs"' >> /etc/containers/libpod.conf \
+  && sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
+
+# Cleanup
+RUN \
+  apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
