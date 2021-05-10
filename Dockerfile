@@ -99,8 +99,8 @@ RUN \
 # requires a later libseccomp2 only provided by backports.
 #
 # Podman defaults to trying to use systemd to do cgroup things (insert
-# hand-wavy motion) but it's not in the container; disable this in
-# config.
+# hand-wavy motion) but it's not in the container; override to use
+# cgroupfs manager.  Also disable trying to send logs to the journal.
 #
 # Kernel may not support overlayfsmetacopy options (bionic?), need to
 # turn that off for compatability.  See various error messages related
@@ -114,7 +114,7 @@ RUN \
   && apt-get install -y --install-recommends \
       libseccomp2/buster-backports \
       podman \
-  && echo 'cgroup_manager="cgroupfs"' >> /etc/containers/libpod.conf \
+  && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf \
   && sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
 
 # Cleanup
