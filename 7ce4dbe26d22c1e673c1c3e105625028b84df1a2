@@ -16,6 +16,23 @@
       "revId": "7ce4dbe26d22c1e673c1c3e105625028b84df1a2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d2d2bc3_9086cad5",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-10T22:04:04Z",
+      "side": 1,
+      "message": "It is an issue, but happily we can address it without going full-on asyncio.  This is moved to a threadpool and future model in https://review.opendev.org/779379 (about 2 or 3 changes down the stack from here).",
+      "revId": "7ce4dbe26d22c1e673c1c3e105625028b84df1a2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
