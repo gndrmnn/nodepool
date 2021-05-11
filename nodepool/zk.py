@@ -493,6 +493,14 @@ class NodeRequest(BaseModel):
         else:
             return False
 
+    @property
+    def priority(self):
+        # Sort requests by queue priority, then, for all requests at
+        # the same priority, use the relative_priority field to
+        # further sort, then finally, the submission order.
+        precedence, sequence = self.id.split('-')
+        return precedence, self.relative_priority, sequence
+
     def toDict(self):
         '''
         Convert a NodeRequest object's attributes to a dictionary.
