@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77b87235_20fa5401",
+        "filename": ".zuul.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-05-18T23:04:12Z",
+      "side": 1,
+      "message": "While not strictly necessary now I guess this has the benefit of not failing if the default changes later.",
+      "revId": "5011a06b8140fe3dfa9be406b57cd404bdffe8d7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
