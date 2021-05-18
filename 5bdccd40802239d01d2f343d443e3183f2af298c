@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c36998e_06587edc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-18T23:09:56Z",
+      "side": 1,
+      "message": "They also test nodepool, which is a really good reason for them to be in nodepool\u0027s gate.  :)",
+      "revId": "5bdccd40802239d01d2f343d443e3183f2af298c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
