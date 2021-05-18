@@ -134,7 +134,7 @@
     requires:
       - python-builder-3.8-container-image
       - python-base-3.8-container-image
-    provides: nodepool-siblings-container-image
+    provides: nodepool-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
       docker_images:
@@ -193,8 +193,8 @@
       Note, this job does not define an image to build.  It should be
       inherited from and nodepool_diskimage defined.
     parent: nodepool-functional-container-openstack-base
-    dependencies:
-      - nodepool-build-image
+    requires:
+      - nodepool-container-image
     required-projects:
       - name: opendev/glean # note, installed by dib
       - name: zuul/nodepool
@@ -293,11 +293,15 @@
         - build-python-release
     gate:
       jobs:
-        - nodepool-upload-image
-        - zuul-tox-docs
+        - opendev-buildset-registry
+         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py36
         - nodepool-tox-py38
+        - nodepool-upload-image
+        - nodepool-functional-container-openstack-release
+        - nodepool-build-image-siblings
+        - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
