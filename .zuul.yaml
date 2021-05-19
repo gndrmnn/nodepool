@@ -219,6 +219,7 @@
 # NOTE(ianw) : kept separate as these aren't intended to be released
 - job:
     name: nodepool-build-image-siblings
+    timeout: *image_build_timeout
     dependencies:
       - opendev-buildset-registry
     parent: opendev-build-docker-image
@@ -239,6 +240,8 @@
           target: nodepool-launcher
           tags:
             - siblings
+          arch:
+            - linux/amd64
           siblings:
             - opendev.org/openstack/openstacksdk
         - context: .
@@ -246,8 +249,39 @@
           target: nodepool-builder
           tags:
             - siblings
+          arch:
+            - linux/amd64
           siblings:
             - opendev.org/openstack/openstacksdk
+            - opendev.org/openstack/diskimage-builder
+
+- job:
+    name: nodepool-build-image-builder-arm64
+    timeout: *image_build_timeout
+    dependencies:
+      - opendev-buildset-registry
+    parent: opendev-build-docker-image
+    description: Build ARM64 nodepool-builder image with sibling DIB
+    required-projects:
+      - zuul/nodepool
+      - openstack/diskimage-builder
+      - opendev/system-config
+    depends:
+      - system-config-build-image-python-base-3.8
+      - system-config-build-image-python-builder-3.8
+#      - python-builder-3.8-container-image
+#      - python-base-3.8-container-image
+    vars:
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+      docker_images:
+        - context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+          tags:
+            - siblings
+          arch:
+            - linux/arm64
+          siblings:
             - opendev.org/openstack/diskimage-builder
 
 - job:
