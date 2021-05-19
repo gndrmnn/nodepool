@@ -219,6 +219,7 @@
 # NOTE(ianw) : kept separate as these aren't intended to be released
 - job:
     name: nodepool-build-image-siblings
+    timeout: *image_build_timeout
     dependencies:
       - opendev-buildset-registry
     parent: opendev-build-docker-image
@@ -239,6 +240,8 @@
           target: nodepool-launcher
           tags:
             - siblings
+          arch:
+            - linux/amd64
           siblings:
             - opendev.org/openstack/openstacksdk
         - context: .
@@ -246,8 +249,48 @@
           target: nodepool-builder
           tags:
             - siblings
+          arch:
+            - linux/amd64
           siblings:
             - opendev.org/openstack/openstacksdk
+            - opendev.org/openstack/diskimage-builder
+
+- job:
+    name: nodepool-build-image-siblings-builder-arm64
+    # NOTE(ianw) 2021-05-21 : see note below; if we can buildx/arm64
+    # image creation faster, we can drop this and just build all archs
+    # in the main -siblings job and use that.
+    description: |
+        This job creates a nodepool-builder container with DIB
+        installed as a sibling.  The only current user of this is the
+        DIB functional tests, where we run disk-image-create out of
+        this container to minimise the environments we support
+        (i.e. the container nodepool-builder runs is considered the
+        canonical environment to run DIB).  x86 just uses the other
+        -siblings job; unfortunately the cross-compilation is quite
+        slow so for ARM64 we use this to only create the builder.
+    timeout: *image_build_timeout
+    dependencies:
+      - opendev-buildset-registry
+    parent: opendev-build-docker-image
+    description: Build ARM64 nodepool-builder image with sibling DIB
+    required-projects:
+      - zuul/nodepool
+      - openstack/diskimage-builder
+    requires:
+      - python-builder-3.7-container-image
+      - python-base-3.7-container-image
+    vars:
+      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+      docker_images:
+        - context: .
+          repository: zuul/nodepool-builder
+          target: nodepool-builder
+          tags:
+            - siblings
+          arch:
+            - linux/arm64
+          siblings:
             - opendev.org/openstack/diskimage-builder
 
 - job:
