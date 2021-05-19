@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31b55ce3_2740f9d5",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-19T17:37:44Z",
+      "side": 1,
+      "message": "nodepool-upload-image is the \u0027gate\u0027 equivalent of nodepool-build image, this shouldn\u0027t be necessary.",
+      "revId": "4e06c8311c6d082b38ac87a4a0ef2ce8c3812a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
