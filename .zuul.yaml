@@ -219,6 +219,7 @@
 # NOTE(ianw) : kept separate as these aren't intended to be released
 - job:
     name: nodepool-build-image-siblings
+    timeout: *image_build_timeout
     dependencies:
       - opendev-buildset-registry
     parent: opendev-build-docker-image
@@ -239,6 +240,9 @@
           target: nodepool-launcher
           tags:
             - siblings
+          arch:
+            - linux/amd64
+            - linux/arm64
           siblings:
             - opendev.org/openstack/openstacksdk
         - context: .
@@ -246,6 +250,9 @@
           target: nodepool-builder
           tags:
             - siblings
+          arch:
+            - linux/amd64
+            - linux/arm64
           siblings:
             - opendev.org/openstack/openstacksdk
             - opendev.org/openstack/diskimage-builder
