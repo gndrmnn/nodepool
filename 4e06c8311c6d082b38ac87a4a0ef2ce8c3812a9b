@@ -16,6 +16,24 @@
       "revId": "4e06c8311c6d082b38ac87a4a0ef2ce8c3812a9b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e1c2d07_a5cec7ea",
+        "filename": ".zuul.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-05-20T06:03:26Z",
+      "side": 1,
+      "message": "i guess we need a requires/provides model here",
+      "parentUuid": "31b55ce3_2740f9d5",
+      "revId": "4e06c8311c6d082b38ac87a4a0ef2ce8c3812a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
