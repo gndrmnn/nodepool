@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c2964c0_fcca74be",
+        "filename": "nodepool/driver/azurestate/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-05-21T19:01:39Z",
+      "side": 1,
+      "message": "Don\u0027t we need to check the response status here? Like\n\n  response \u003d requests.put(url, headers\u003dheaders, data\u003ddata)\n  response.raise_for_status()",
+      "revId": "a8ecde7985459f7862361af5b76c34279a7a453a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0bef0c4_7f0f7721",
+        "filename": "nodepool/driver/azurestate/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-05-21T19:01:39Z",
+      "side": 1,
+      "message": "I think we likely want to log an error here, especially when hitting the last attempt we just hide the error and log nothing at all. And I think we need to re-raise the error if it\u0027s the last attempt to make the whole upload fail.",
+      "revId": "a8ecde7985459f7862361af5b76c34279a7a453a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
