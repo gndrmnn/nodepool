@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0235d089_36b7976a",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-05-21T18:01:57Z",
+      "side": 1,
+      "message": "I wonder if we can move this method into the base class.",
+      "revId": "63f38dfd6ccd2523251e2437da5dc0d92ca2f3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
