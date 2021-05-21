@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89fffa06_cc5dbc0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-05-21T18:42:36Z",
+      "side": 1,
+      "message": "Is that meant as this?\n\n network:\n    network: nodepool\n    subnet: foo",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 23
+      },
+      "revId": "121ee01979fdcae8954f37f33ac2efc218a342cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
