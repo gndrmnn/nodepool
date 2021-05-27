@@ -117,6 +117,11 @@ set -o errexit
 # Show the built nodes
 $NODEPOOL list
 
+## ianw : fail for comparision
+if grep -q 'DIB_RELEASE=focal' /var/log/nodepool/builds/*; then
+    exit 1
+fi
+
 # Try to delete the nodes that were just built
 $NODEPOOL delete --now 0000000000
 
