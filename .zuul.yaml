@@ -216,6 +216,22 @@
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
 - job:
+    name: nodepool-functional-container-openstack-release-focal
+    description: |
+      Test Nodepool containers and OpenStack, with released projects
+
+      This builds, uploads and boots a CentOS 8 image into a
+      OpenStack cloud.
+    parent: nodepool-functional-container-openstack-release-base
+    vars:
+      nodepool_diskimage:
+        base_element: ubuntu-minimal
+        release: focal
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        env-vars:
+          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+
+- job:
     name: nodepool-functional-container-openstack-siblings-base
     abstract: true
     description: |
@@ -284,6 +300,7 @@
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-container-openstack-release
+        - nodepool-functional-container-openstack-release-focal
         - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift
