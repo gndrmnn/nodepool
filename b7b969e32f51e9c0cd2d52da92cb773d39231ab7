@@ -39,6 +39,23 @@
       "revId": "b7b969e32f51e9c0cd2d52da92cb773d39231ab7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ece92aaa_92e3266e",
+        "filename": "nodepool/driver/azurestate/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-27T23:15:55Z",
+      "side": 1,
+      "message": "The pip4/pip6 is a huge change, it\u0027s used everywhere.  It doesn\u0027t bother me, and in fact, I like it, because there\u0027s so much boilerplate network stuff in azure that it\u0027s nice to abbreviate it.  But if you feel strongly about it, I\u0027m willing to change.\n\nBut I\u0027d like to do that after the end of the stack if that\u0027s okay (since it\u0027s a change with a large amount of textual conflicts and no functionality change).\n\nI\u0027m happy to add the initializers here.",
+      "revId": "b7b969e32f51e9c0cd2d52da92cb773d39231ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
