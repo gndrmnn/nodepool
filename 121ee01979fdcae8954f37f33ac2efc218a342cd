@@ -22,6 +22,23 @@
       "revId": "121ee01979fdcae8954f37f33ac2efc218a342cd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f4932d3_448ce549",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-27T23:18:24Z",
+      "side": 1,
+      "message": "Actually either.  I checked the docs patch at the end of the series, and I think it covers it, so I think no change is required here.",
+      "revId": "121ee01979fdcae8954f37f33ac2efc218a342cd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
