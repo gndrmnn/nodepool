@@ -10,7 +10,10 @@
     - ensure-docker
     # Note: keep after ensure-docker
     - use-buildset-registry
-    - ensure-devstack
+    - role: ensure-devstack
+      vars:
+        ensure_devstack_git_refspec: 'refs/changes/97/793397/1'
+        ensure_devstack_git_version: 'FETCH_HEAD'
   tasks:
     - name: Install docker-compose dependencies
       package:
