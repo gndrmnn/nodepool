@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "c4c929a7_86f0d1da",
+        "filename": "nodepool/driver/azurestate/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-27T23:25:41Z",
+      "side": 1,
+      "message": "Yep.",
+      "revId": "a8ecde7985459f7862361af5b76c34279a7a453a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0bef0c4_7f0f7721",
         "filename": "nodepool/driver/azurestate/azul.py",
         "patchSetId": 6
@@ -33,6 +50,23 @@
       "revId": "a8ecde7985459f7862361af5b76c34279a7a453a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d02fa34_403a9370",
+        "filename": "nodepool/driver/azurestate/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-05-27T23:25:41Z",
+      "side": 1,
+      "message": "That\u0027s probably better, though the next step would fail anyway.  I\u0027ll add that.",
+      "revId": "a8ecde7985459f7862361af5b76c34279a7a453a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
