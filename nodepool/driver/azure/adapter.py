@@ -42,7 +42,8 @@ def quota_info_from_sku(sku):
 
 
 class AzureInstance(statemachine.Instance):
-    def __init__(self, vm, nic=None, pip4=None, pip6=None, sku=None):
+    def __init__(self, vm, nic=None, public_ipv4=None,
+                 public_ipv6=None, sku=None):
         self.external_id = vm['name']
         self.metadata = vm['tags'] or {}
         self.private_ipv4 = None
@@ -60,10 +61,10 @@ class AzureInstance(statemachine.Instance):
                     self.private_ipv6 = ip_config_prop['privateIPAddress']
         # public_ipv6
 
-        if pip4:
-            self.public_ipv4 = pip4['properties'].get('ipAddress')
-        if pip6:
-            self.public_ipv6 = pip6['properties'].get('ipAddress')
+        if public_ipv4:
+            self.public_ipv4 = public_ipv4['properties'].get('ipAddress')
+        if public_ipv6:
+            self.public_ipv6 = public_ipv6['properties'].get('ipAddress')
 
         self.interface_ip = (self.public_ipv4 or self.public_ipv6 or
                              self.private_ipv4 or self.private_ipv6)
@@ -94,8 +95,8 @@ class AzureDeleteStateMachine(statemachine.StateMachine):
         self.external_id = external_id
         self.disk_names = []
         self.disks = []
-        self.pip4 = None
-        self.pip6 = None
+        self.public_ipv4 = None
+        self.public_ipv6 = None
 
     def advance(self):
         if self.state == self.START:
@@ -116,16 +117,16 @@ class AzureDeleteStateMachine(statemachine.StateMachine):
         if self.state == self.NIC_DELETING:
             self.nic = self.adapter._refresh_delete(self.nic)
             if self.nic is None:
-                self.pip4 = self.adapter._deletePublicIPAddress(
+                self.public_ipv4 = self.adapter._deletePublicIPAddress(
                     self.external_id + '-pip-IPv4')
-                self.pip6 = self.adapter._deletePublicIPAddress(
+                self.public_ipv6 = self.adapter._deletePublicIPAddress(
                     self.external_id + '-pip-IPv6')
                 self.state = self.PIP_DELETING
 
         if self.state == self.PIP_DELETING:
-            self.pip4 = self.adapter._refresh_delete(self.pip4)
-            self.pip6 = self.adapter._refresh_delete(self.pip6)
-            if self.pip4 is None and self.pip6 is None:
+            self.public_ipv4 = self.adapter._refresh_delete(self.public_ipv4)
+            self.public_ipv6 = self.adapter._refresh_delete(self.public_ipv6)
+            if self.public_ipv4 is None and self.public_ipv6 is None:
                 self.disks = []
                 for name in self.disk_names:
                     disk = self.adapter._deleteDisk(name)
@@ -164,8 +165,8 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.tags.update(metadata)
         self.hostname = hostname
         self.label = label
-        self.pip4 = None
-        self.pip6 = None
+        self.public_ipv4 = None
+        self.public_ipv6 = None
         self.nic = None
         self.vm = None
         # There are two parameters for IP addresses: SKU and
@@ -189,30 +190,30 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         if self.state == self.START:
             self.external_id = self.hostname
             if self.label.pool.public_ipv4:
-                self.pip4 = self.adapter._createPublicIPAddress(
+                self.public_ipv4 = self.adapter._createPublicIPAddress(
                     self.tags, self.hostname, self.ip_sku, 'IPv4',
                     self.ip_method)
             if self.label.pool.public_ipv6:
-                self.pip6 = self.adapter._createPublicIPAddress(
+                self.public_ipv6 = self.adapter._createPublicIPAddress(
                     self.tags, self.hostname, self.ip_sku, 'IPv6',
                     self.ip_method)
             self.state = self.PIP_CREATING
 
         if self.state == self.PIP_CREATING:
-            if self.pip4:
-                self.pip4 = self.adapter._refresh(self.pip4)
-                if not self.adapter._succeeded(self.pip4):
+            if self.public_ipv4:
+                self.public_ipv4 = self.adapter._refresh(self.public_ipv4)
+                if not self.adapter._succeeded(self.public_ipv4):
                     return
-            if self.pip6:
-                self.pip6 = self.adapter._refresh(self.pip6)
-                if not self.adapter._succeeded(self.pip6):
+            if self.public_ipv6:
+                self.public_ipv6 = self.adapter._refresh(self.public_ipv6)
+                if not self.adapter._succeeded(self.public_ipv6):
                     return
             # At this point, every pip we have has succeeded (we may
             # have 0, 1, or 2).
             self.nic = self.adapter._createNetworkInterface(
                 self.tags, self.hostname,
                 self.label.pool.ipv4, self.label.pool.ipv6,
-                self.pip4, self.pip6)
+                self.public_ipv4, self.public_ipv6)
             self.state = self.NIC_CREATING
 
         if self.state == self.NIC_CREATING:
@@ -257,20 +258,23 @@ class AzureCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.PIP_QUERY:
             all_found = True
-            if self.pip4:
-                self.pip4 = self.adapter._refresh(self.pip4, force=True)
-                if 'ipAddress' not in self.pip4['properties']:
+            if self.public_ipv4:
+                self.public_ipv4 = self.adapter._refresh(
+                    self.public_ipv4, force=True)
+                if 'ipAddress' not in self.public_ipv4['properties']:
                     all_found = False
-            if self.pip6:
-                self.pip6 = self.adapter._refresh(self.pip6, force=True)
-                if 'ipAddress' not in self.pip6['properties']:
+            if self.public_ipv6:
+                self.public_ipv6 = self.adapter._refresh(
+                    self.public_ipv6, force=True)
+                if 'ipAddress' not in self.public_ipv6['properties']:
                     all_found = False
             if all_found:
                 self.state = self.COMPLETE
 
         if self.state == self.COMPLETE:
             self.complete = True
-            return AzureInstance(self.vm, self.nic, self.pip4, self.pip6)
+            return AzureInstance(self.vm, self.nic,
+                                 self.public_ipv4, self.public_ipv6)
 
 
 class AzureAdapter(statemachine.Adapter):
@@ -560,7 +564,8 @@ class AzureAdapter(statemachine.Adapter):
         with self.rate_limiter:
             return self.azul.network_interfaces.list(self.resource_group)
 
-    def _createNetworkInterface(self, tags, hostname, ipv4, ipv6, pip4, pip6):
+    def _createNetworkInterface(self, tags, hostname, ipv4, ipv6,
+                                public_ipv4, public_ipv6):
 
         def make_ip_config(name, version, subnet_id, pip):
             ip_config = {
@@ -583,11 +588,11 @@ class AzureAdapter(statemachine.Adapter):
         if ipv4:
             ip_configs.append(make_ip_config('nodepool-v4-ip-config',
                                              'IPv4', self.subnet_id,
-                                             pip4))
+                                             public_ipv4))
         if ipv6:
             ip_configs.append(make_ip_config('nodepool-v6-ip-config',
                                              'IPv6', self.subnet_id,
-                                             pip6))
+                                             public_ipv6))
 
         nic_data = {
             'location': self.provider.location,
