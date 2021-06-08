@@ -10,7 +10,7 @@ PrettyTable>=0.6,<0.8
 # 0.28.0-0.31.0 fail to upload images with glance tasks.
 # 0.31.1 and 0.31.2 have a bug with image deletion in tasks API
 openstacksdk>=0.27.0,!=0.28.0,!=0.29.0,!=0.30.0,!=0.31.0,!=0.31.1,!=0.31.2
-diskimage-builder>=3.11.0
+diskimage-builder>=3.12.0
 voluptuous
 kazoo>=2.8.0
 Paste
