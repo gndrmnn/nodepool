@@ -16,6 +16,23 @@
       "revId": "63f38dfd6ccd2523251e2437da5dc0d92ca2f3b3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a1cd8fe_95cecbb3",
+        "filename": "nodepool/driver/azure/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-06-11T13:35:24Z",
+      "side": 1,
+      "message": "The state machine driver is going to have a different implementation of this.  We could move it into the base class and then override it, but i didn\u0027t want to have any assumptions about a thread in the base class (but we could add a comment to remind us that some providers override it).  We could make a thin subclass with just this method.  But we have a lot of duplication in the providers anyway.  I guess they\u0027re all options.  :)",
+      "revId": "63f38dfd6ccd2523251e2437da5dc0d92ca2f3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
