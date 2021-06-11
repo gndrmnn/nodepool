@@ -24,6 +24,7 @@ from nodepool import exceptions
 from nodepool import nodeutils
 from nodepool import zk
 from nodepool.driver import Provider
+from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.static.handler import StaticNodeRequestHandler
 
 
@@ -388,6 +389,11 @@ class StaticNodeProvider(Provider):
             for p in self.provider.pools.values()
             for n in p.nodes
         }
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self.zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         return True

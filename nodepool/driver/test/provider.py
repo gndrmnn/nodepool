@@ -16,6 +16,7 @@
 
 from nodepool.driver import Provider
 from nodepool.driver.test import handler
+from nodepool.driver.utils import NodeDeleter
 
 
 class TestProvider(Provider):
@@ -23,7 +24,7 @@ class TestProvider(Provider):
         self.provider = provider
 
     def start(self, zk_conn):
-        pass
+        self._zk = zk_conn
 
     def stop(self):
         pass
@@ -33,6 +34,11 @@ class TestProvider(Provider):
 
     def labelReady(self, name):
         return True
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, node_id):
         pass

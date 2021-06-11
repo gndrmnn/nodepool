@@ -261,7 +261,8 @@ class NodePoolCmd(NodepoolApp):
             provider = self.pool.config.providers[node.provider]
             manager = provider_manager.get_provider(provider)
             manager.start(self.zk)
-            launcher.NodeDeleter.delete(self.zk, manager, node)
+            node_deleter = manager.startNodeCleanup(node)
+            node_deleter.join()
             manager.stop()
         else:
             node.state = zk.DELETING

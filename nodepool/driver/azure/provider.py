@@ -16,6 +16,7 @@ import logging
 import json
 
 from nodepool.driver import Provider
+from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.azure import handler
 from nodepool import zk
 
@@ -195,6 +196,11 @@ class AzureProvider(Provider):
                 node.provider = self.provider.name
                 node.state = zk.DELETING
                 self._zk.storeNode(node)
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         self.log.debug('Server ID: %s' % server_id)

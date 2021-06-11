@@ -18,6 +18,7 @@ import botocore.exceptions
 import nodepool.exceptions
 
 from nodepool.driver import Provider
+from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
 
 
@@ -53,6 +54,7 @@ class AwsProvider(Provider):
         return AwsNodeRequestHandler(poolworker, request)
 
     def start(self, zk_conn):
+        self._zk = zk_conn
         if self.ec2 is not None:
             return True
         self.log.debug("Starting")
@@ -151,6 +153,11 @@ class AwsProvider(Provider):
     def cleanupLeakedResources(self):
         # TODO: remove leaked resources if any
         pass
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         if self.ec2 is None:

@@ -46,73 +46,6 @@ LOCK_CLEANUP = 8 * HOURS
 SUSPEND_WAIT_TIME = 30
 
 
-class NodeDeleter(threading.Thread):
-    log = logging.getLogger("nodepool.NodeDeleter")
-
-    def __init__(self, zk, provider_manager, node):
-        threading.Thread.__init__(self, name='NodeDeleter for %s %s' %
-                                  (node.provider, node.external_id))
-        self._zk = zk
-        self._provider_manager = provider_manager
-        self._node = node
-
-    @staticmethod
-    def delete(zk_conn, manager, node, node_exists=True):
-        '''
-        Delete a server instance and ZooKeeper node.
-
-        This is a class method so we can support instantaneous deletes.
-
-        :param ZooKeeper zk_conn: A ZooKeeper object to use.
-        :param ProviderManager provider_manager: ProviderManager object to
-            use fo deleting the server.
-        :param Node node: A locked Node object that describes the server to
-            delete.
-        :param bool node_exists: True if the node actually exists in ZooKeeper.
-            An artifical Node object can be passed that can be used to delete
-            a leaked instance.
-        '''
-        try:
-            node.state = zk.DELETING
-            zk_conn.storeNode(node)
-            if node.external_id:
-                manager.cleanupNode(node.external_id)
-                manager.waitForNodeCleanup(node.external_id)
-        except exceptions.NotFound:
-            NodeDeleter.log.info("Instance %s not found in provider %s",
-                                 node.external_id, node.provider)
-        except Exception:
-            NodeDeleter.log.exception(
-                "Exception deleting instance %s from %s:",
-                node.external_id, node.provider)
-            # Don't delete the ZK node in this case, but do unlock it
-            if node_exists:
-                zk_conn.unlockNode(node)
-            return
-
-        if node_exists:
-            NodeDeleter.log.info(
-                "Deleting ZK node id=%s, state=%s, external_id=%s",
-                node.id, node.state, node.external_id)
-            # This also effectively releases the lock
-            zk_conn.deleteNode(node)
-            manager.nodeDeletedNotification(node)
-
-    def run(self):
-        # Since leaked instances won't have an actual node in ZooKeeper,
-        # we need to check 'id' to see if this is an artificial Node.
-        if self._node.id is None:
-            node_exists = False
-        else:
-            node_exists = True
-
-        try:
-            self.delete(self._zk, self._provider_manager,
-                        self._node, node_exists)
-        except Exception:
-            self.log.exception("Error deleting node %s:", self._node)
-
-
 class PoolWorker(threading.Thread, stats.StatsReporter):
     '''
     Class that manages node requests for a single provider pool.
@@ -699,11 +632,8 @@ class DeletedNodeWorker(BaseCleanupWorker):
         self.log.info("Deleting %s instance %s from %s",
                       node.state, node.external_id, node.provider)
         try:
-            t = NodeDeleter(
-                self._nodepool.getZK(),
-                self._nodepool.getProviderManager(node.provider),
-                node)
-            t.start()
+            pm = self._nodepool.getProviderManager(node.provider)
+            pm.startNodeCleanup(node)
         except Exception:
             self.log.exception("Could not delete instance %s on provider %s",
                                node.external_id, node.provider)

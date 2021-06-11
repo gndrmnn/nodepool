@@ -20,6 +20,7 @@ import time
 from kubernetes import client as k8s_client
 from kubernetes import config as k8s_config
 
+from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.openshift.provider import OpenshiftProvider
 from nodepool.driver.openshiftpods import handler
 
@@ -61,6 +62,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
 
     def start(self, zk_conn):
         self.log.debug("Starting")
+        self._zk = zk_conn
         if self.ready or not self.k8s_client:
             return
         self.ready = True
@@ -102,6 +104,11 @@ class OpenshiftPodsProvider(OpenshiftProvider):
                 pod_name = server_id[len(pool) + 1:]
                 return pool, pod_name
         return None, None
+
+    def startNodeCleanup(self, node):
+        t = NodeDeleter(self._zk, self, node)
+        t.start()
+        return t
 
     def cleanupNode(self, server_id):
         if not self.ready:

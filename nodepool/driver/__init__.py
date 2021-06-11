@@ -221,6 +221,19 @@ class Provider(ProviderNotifications):
         """
         pass
 
+    def startNodeCleanup(self, node):
+        '''Starts a background process to delete a node
+
+        This should return a NodeDeleter to implement and track the
+        deletion of a node.
+
+        :param Node node: A locked Node object representing the
+            instance to delete.
+
+        :returns: A NodeDeleter instance.
+        '''
+        pass
+
     @abc.abstractmethod
     def cleanupNode(self, node_id):
         """Cleanup a node after use
@@ -798,7 +811,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
     def launchesComplete(self):
         '''
         Handler needs to implement this to check if all nodes in self.nodeset
-        have completed the launch sequence..
+        have completed the launch sequence.
 
         This method will be called periodically to check on launch progress.
 
