@@ -203,3 +203,38 @@ See the ``gce`` provider for an example.
    :members:
 .. autoclass:: nodepool.driver.simple.SimpleTaskManagerDriver
    :members:
+
+State Machine Drivers
+---------------------
+
+.. note:: This system is still in development and lacks robust support
+          for quotas or image building.
+
+To use this system, you will need to implement a few subclasses.
+First, create a :ref:`provider_config` subclass as you would for any
+driver.
+
+Then, subclass :py:class:`~nodepool.driver.statemachine.Instance` to
+map remote instance data into a format the driver can understand.
+
+Next, create two subclasses of
+:py:class:`~nodepool.driver.statemachine.StateMachine` to
+implement creating and deleting instances.
+
+Subclass :py:class:`~nodepool.driver.statemachine.Adapter` to
+implement the main methods that interact with the cloud.
+
+Finally, subclass
+:py:class:`~nodepool.driver.statemachine.StateMachineDriver` to tie
+them all together.
+
+See the ``example`` provider for an example.
+
+.. autoclass:: nodepool.driver.statemachine.Instance
+   :members:
+.. autoclass:: nodepool.driver.statemachine.StateMachine
+   :members:
+.. autoclass:: nodepool.driver.statemachine.Adapter
+   :members:
+.. autoclass:: nodepool.driver.statemachine.StateMachineDriver
+   :members:
