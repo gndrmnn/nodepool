@@ -56,6 +56,24 @@
       "revId": "b7b969e32f51e9c0cd2d52da92cb773d39231ab7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acfb6606_a5b52b84",
+        "filename": "nodepool/driver/azurestate/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-06-14T09:12:01Z",
+      "side": 1,
+      "message": "No it\u0027s fine, I guess I can adapt to this terminology ;)",
+      "parentUuid": "ece92aaa_92e3266e",
+      "revId": "b7b969e32f51e9c0cd2d52da92cb773d39231ab7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
