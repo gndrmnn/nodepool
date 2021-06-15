@@ -103,8 +103,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         pool = self.handler.pool
         label = pool.labels[self.node.type[0]]
 
-        if pool.use_internal_ip and instance.private_ipv4:
-            server_ip = instance.private_ipv4
+        if (pool.use_internal_ip and
+            (instance.private_ipv4 or instance.private_ipv6)):
+            server_ip = instance.private_ipv4 or instance.private_ipv6
         else:
             server_ip = instance.interface_ip
 
@@ -160,8 +161,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                 node.external_id = state_machine.external_id
                 self.zk.storeNode(node)
             if state_machine.complete and not self.keyscan_future:
-                self.log.debug("Submitting keyscan request")
                 self.updateNodeFromInstance(instance)
+                self.log.debug("Submitting keyscan request for %s",
+                               node.interface_ip)
                 future = self.manager.keyscan_worker.submit(
                     keyscan,
                     node.id, node.interface_ip,
@@ -427,7 +429,6 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     def stop(self):
         self.log.debug("Stopping")
-        self.running = False
         if self.state_machine_thread:
             while self.launchers or self.deleters:
                 time.sleep(1)
