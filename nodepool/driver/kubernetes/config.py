@@ -22,31 +22,14 @@ from nodepool.driver import ProviderConfig
 
 
 class KubernetesLabel(ConfigValue):
-    def __eq__(self, other):
-        if isinstance(other, KubernetesLabel):
-            return (other.name == self.name and
-                    other.type == self.type and
-                    other.image_pull == self.image_pull and
-                    other.python_path == self.python_path and
-                    other.shell_type == self.shell_type and
-                    other.image == self.image and
-                    other.cpu == self.cpu and
-                    other.memory == self.memory and
-                    other.env == self.env and
-                    other.node_selector == self.node_selector)
-        return False
+    ignore_equality = ['pool']
 
     def __repr__(self):
         return "<KubternetesLabel %s>" % self.name
 
 
 class KubernetesPool(ConfigPool):
-    def __eq__(self, other):
-        if isinstance(other, KubernetesPool):
-            return (super().__eq__(other) and
-                    other.name == self.name and
-                    other.labels == self.labels)
-        return False
+    ignore_equality = ['provider']
 
     def __repr__(self):
         return "<KubernetesPool %s>" % self.name
@@ -77,13 +60,6 @@ class KubernetesProviderConfig(ProviderConfig):
         self.driver_object = driver
         self.__pools = {}
         super().__init__(provider)
-
-    def __eq__(self, other):
-        if isinstance(other, KubernetesProviderConfig):
-            return (super().__eq__(other) and
-                    other.context == self.context and
-                    other.pools == self.pools)
-        return False
 
     @property
     def pools(self):
