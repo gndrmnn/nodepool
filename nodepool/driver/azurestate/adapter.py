@@ -23,14 +23,32 @@ from nodepool.driver import statemachine
 from . import azul
 
 
+def quota_info_from_sku(sku):
+    if not sku:
+        return QuotaInformation(instances=1)
+
+    cores = None
+    ram = None
+    for cap in sku['capabilities']:
+        if cap['name'] == 'vCPUs':
+            cores = int(cap['value'])
+        if cap['name'] == 'MemoryGB':
+            ram = int(float(cap['value']) * 1024)
+    return QuotaInformation(
+        cores=cores,
+        ram=ram,
+        instances=1)
+
+
 class AzureInstance(statemachine.Instance):
-    def __init__(self, vm, nic=None, pip4=None, pip6=None):
+    def __init__(self, vm, nic=None, pip4=None, pip6=None, sku=None):
         self.external_id = vm['name']
         self.metadata = vm['tags'] or {}
         self.private_ipv4 = None
         self.private_ipv6 = None
         self.public_ipv4 = None
         self.public_ipv6 = None
+        self.sku = sku
 
         if nic:
             for ip_config_data in nic['properties']['ipConfigurations']:
@@ -50,6 +68,9 @@ class AzureInstance(statemachine.Instance):
                              self.private_ipv4 or self.private_ipv6)
         self.region = vm['location']
         self.az = ''
+
+    def getQuotaInformation(self):
+        return quota_info_from_sku(self.sku)
 
 
 class AzureDeleteStateMachine(statemachine.StateMachine):
@@ -255,6 +276,8 @@ class AzureAdapter(statemachine.Adapter):
                 net_info['network'],
                 net_info.get('subnet', 'default'))
             self.subnet_id = subnet['id']
+        self.skus = {}
+        self._getSKUs()
 
     def getCreateStateMachine(self, hostname, label, metadata, retries):
         return AzureCreateStateMachine(
@@ -290,13 +313,26 @@ class AzureAdapter(statemachine.Adapter):
 
     def listInstances(self):
         for vm in self._listVirtualMachines():
-            yield AzureInstance(vm)
+            sku = self.skus.get((vm['properties']['hardwareProfile']['vmSize'],
+                                 vm['location']))
+            yield AzureInstance(vm, sku=sku)
 
     def getQuotaLimits(self):
-        return QuotaInformation(default=math.inf)
+        r = self.azul.compute_usages.list(self.provider.location)
+        cores = instances = math.inf
+        for item in r:
+            if item['name']['value'] == 'cores':
+                cores = item['limit']
+            elif item['name']['value'] == 'virtualMachines':
+                instances = item['limit']
+        return QuotaInformation(cores=cores,
+                                instances=instances,
+                                default=math.inf)
 
     def getQuotaForLabel(self, label):
-        return QuotaInformation(instances=1)
+        sku = self.skus.get((label.hardware_profile["vm-size"],
+                             self.provider.location))
+        return quota_info_from_sku(sku)
 
     # Local implementation below
 
@@ -343,6 +379,14 @@ class AzureAdapter(statemachine.Adapter):
             if new_obj['id'] == obj['id']:
                 return new_obj
         return None
+
+    def _getSKUs(self):
+        self.log.debug("Querying compute SKUs")
+        for sku in self.azul.compute_skus.list():
+            for location in sku['locations']:
+                key = (sku['name'], location)
+                self.skus[key] = sku
+        self.log.debug("Done querying compute SKUs")
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listPublicIPAddresses(self):

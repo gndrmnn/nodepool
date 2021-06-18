@@ -835,6 +835,9 @@ class ConfigValue(object, metaclass=abc.ABCMeta):
             return True
         return False
 
+    def __hash__(self):
+        return hash(frozenset(self.__dict__))
+
     def __ne__(self, other):
         return not self.__eq__(other)
 
