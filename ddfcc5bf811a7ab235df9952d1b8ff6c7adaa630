@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10ad3eff_666ccf04",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-06-18T21:15:09Z",
+      "side": 1,
+      "message": "I don\u0027t know if it is worth a comment here, but it is important that we only try to delete nodes and uploads if they had nodepool metadata associated with them. Resources without this metadata may have been externally managed and we don\u0027t want nodepool touching those.",
+      "revId": "ddfcc5bf811a7ab235df9952d1b8ff6c7adaa630",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
