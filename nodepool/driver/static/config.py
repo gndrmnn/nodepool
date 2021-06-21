@@ -22,6 +22,8 @@ from nodepool.config import as_list
 
 
 class StaticPool(ConfigPool):
+    ignore_equality = ['provider']
+
     def __init__(self):
         self.name = None
         self.nodes = []
@@ -30,13 +32,6 @@ class StaticPool(ConfigPool):
 
         # Initialize base class attributes
         super().__init__()
-
-    def __eq__(self, other):
-        if isinstance(other, StaticPool):
-            return (super().__eq__(other) and
-                    other.name == self.name and
-                    other.nodes == self.nodes)
-        return False
 
     def __repr__(self):
         return "<StaticPool %s>" % self.name

@@ -38,6 +38,8 @@ class TestDriverStatic(tests.DBTestCase):
         configfile = self.setup_config('static.yaml')
         config = nodepool_config.loadConfig(configfile)
         self.assertIn('static-provider', config.providers)
+        config2 = nodepool_config.loadConfig(configfile)
+        self.assertEqual(config, config2)
 
     def test_static_basic(self):
         '''
