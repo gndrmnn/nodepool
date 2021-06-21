@@ -67,6 +67,43 @@ class AzureProviderCloudImage(ConfigValue):
         }
 
 
+class AzureProviderDiskImage(ConfigValue):
+    def __init__(self, image, diskimage):
+        default_port_mapping = {
+            'ssh': 22,
+            'winrm': 5986,
+        }
+        self.name = image['name']
+        diskimage.image_types.add('vhd')
+        self.pause = bool(image.get('pause', False))
+        self.python_path = image.get('python-path')
+        self.username = image.get('username')
+        self.key = image.get('key')
+        self.connection_type = image.get('connection-type', 'ssh')
+        self.connection_port = image.get(
+            'connection-port',
+            default_port_mapping.get(self.connection_type, 22))
+        self.meta = {}
+
+    @property
+    def external_name(self):
+        '''Human readable version of external.'''
+        return self.name
+
+    @staticmethod
+    def getSchema():
+        return {
+            v.Required('name'): str,
+            'username': str,
+            'key': str,
+            'pause': bool,
+            'connection-type': str,
+            'connection-port': int,
+            'python-path': str,
+            # TODO(corvus): shell-type
+        }
+
+
 class AzureLabel(ConfigValue):
     ignore_equality = ['pool']
 
@@ -76,15 +113,31 @@ class AzureLabel(ConfigValue):
         self.name = label['name']
         self.pool = provider_pool
 
-        cloud_image_name = label['cloud-image']
-        cloud_image = provider_config.cloud_images.get(
-            cloud_image_name, None)
-        if not cloud_image:
-            raise ValueError(
-                "cloud-image %s does not exist in provider %s"
-                " but is referenced in label %s" %
-                (cloud_image_name, provider_config.name, self.name))
-        self.cloud_image = cloud_image
+        cloud_image_name = label.get('cloud-image')
+        if cloud_image_name:
+            cloud_image = provider_config.cloud_images.get(
+                cloud_image_name, None)
+            if not cloud_image:
+                raise ValueError(
+                    "cloud-image %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (cloud_image_name, provider_config.name, self.name))
+            self.cloud_image = cloud_image
+        else:
+            self.cloud_image = None
+
+        diskimage_name = label.get('diskimage')
+        if diskimage_name:
+            diskimage = provider_config.diskimages.get(
+                diskimage_name, None)
+            if not diskimage:
+                raise ValueError(
+                    "diskimage %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (diskimage_name, provider_config.name, self.name))
+            self.diskimage = diskimage
+        else:
+            self.diskimage = None
 
         self.hardware_profile = label['hardware-profile']
         self.tags = label.get('tags', {})
@@ -97,7 +150,8 @@ class AzureLabel(ConfigValue):
 
         return {
             v.Required('name'): str,
-            v.Required('cloud-image'): str,
+            'cloud-image': str,
+            'diskimage': str,
             v.Required('hardware-profile'): azure_hardware_profile,
             'tags': dict,
         }
@@ -160,19 +214,23 @@ class AzureProviderConfig(ProviderConfig):
 
     @property
     def manage_images(self):
-        return False
+        return True
 
     @staticmethod
     def reset():
         pass
 
     def load(self, config):
+        self.image_type = 'vhd'
+        self.image_name_format = '{image_name}-{timestamp}'
+        self.post_upload_hook = self.provider.get('post-upload-hook')
+
         self.rate_limit = self.provider.get('rate-limit', 1)
         self.launch_retries = self.provider.get('launch-retries', 3)
         self.boot_timeout = self.provider.get('boot-timeout', 60)
 
         # TODO(corvus): remove
-        self.zuul_public_key = self.provider['zuul-public-key']
+        self.zuul_public_key = self.provider.get('zuul-public-key')
         self.location = self.provider['location']
         self.subnet_id = self.provider.get('subnet-id')
         self.network = self.provider.get('network')
@@ -193,6 +251,12 @@ class AzureProviderConfig(ProviderConfig):
         for image in self.provider['cloud-images']:
             i = AzureProviderCloudImage(image, self.zuul_public_key)
             self.cloud_images[i.name] = i
+
+        self.diskimages = {}
+        for image in self.provider['diskimages']:
+            diskimage = config.diskimages[image['name']]
+            i = AzureProviderDiskImage(image, diskimage)
+            self.diskimages[i.name] = i
 
         for pool in self.provider.get('pools', []):
             pp = AzurePool(self, pool)
