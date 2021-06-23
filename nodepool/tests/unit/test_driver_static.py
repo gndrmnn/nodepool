@@ -367,35 +367,63 @@ class TestDriverStatic(tests.DBTestCase):
         req_waiting1 = zk.NodeRequest()
         req_waiting1.state = zk.REQUESTED
         req_waiting1.node_types.append('fake-label')
-        self.zk.storeNodeRequest(req_waiting1)
+        self.zk.storeNodeRequest(req_waiting1, priority="300")
         req_waiting1 = self.waitForNodeRequest(req_waiting1, zk.PENDING)
 
         req_waiting2 = zk.NodeRequest()
         req_waiting2.state = zk.REQUESTED
         req_waiting2.node_types.append('fake-label')
-        self.zk.storeNodeRequest(req_waiting2)
+        self.zk.storeNodeRequest(req_waiting2, priority="200")
         req_waiting2 = self.waitForNodeRequest(req_waiting2, zk.PENDING)
+
+        req_waiting3 = zk.NodeRequest()
+        req_waiting3.state = zk.REQUESTED
+        req_waiting3.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req_waiting3, priority="200")
+        req_waiting3 = self.waitForNodeRequest(req_waiting3, zk.PENDING)
 
         self.zk.unlockNode(node)
         self.waitForNodeDeletion(node)
 
-        req_waiting1 = self.waitForNodeRequest(req_waiting1, zk.FULFILLED)
-        req_waiting2 = self.zk.getNodeRequest(req_waiting2.id)
-        self.assertEqual(req_waiting2.state, zk.PENDING)
+        req_waiting2 = self.waitForNodeRequest(req_waiting2, zk.FULFILLED)
+        req_waiting1 = self.zk.getNodeRequest(req_waiting1.id)
+        self.assertEqual(req_waiting1.state, zk.PENDING)
+        req_waiting3 = self.zk.getNodeRequest(req_waiting3.id)
+        self.assertEqual(req_waiting3.state, zk.PENDING)
 
-        node_waiting1 = self.zk.getNode(req_waiting1.nodes[0])
-        self.zk.lockNode(node_waiting1)
-        node_waiting1.state = zk.USED
-        self.zk.storeNode(node_waiting1)
-        self.zk.unlockNode(node_waiting1)
+        node_waiting2 = self.zk.getNode(req_waiting2.nodes[0])
+        self.zk.lockNode(node_waiting2)
+        node_waiting2.state = zk.USED
+        self.zk.storeNode(node_waiting2)
+        self.zk.unlockNode(node_waiting2)
 
-        self.waitForNodeRequest(req_waiting2, zk.FULFILLED)
+        req_waiting3 = self.waitForNodeRequest(req_waiting3, zk.FULFILLED)
+        req_waiting1 = self.zk.getNodeRequest(req_waiting1.id)
+        self.assertEqual(req_waiting1.state, zk.PENDING)
+
+        node_waiting3 = self.zk.getNode(req_waiting3.nodes[0])
+        self.zk.lockNode(node_waiting3)
+        node_waiting3.state = zk.USED
+        self.zk.storeNode(node_waiting3)
+        self.zk.unlockNode(node_waiting3)
+
+        self.waitForNodeRequest(req_waiting1, zk.FULFILLED)
 
     def test_static_handler_race_cleanup(self):
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         node = self.waitForNodes('fake-label')[0]
+
+        pool_workers = pool.getPoolWorkers("static-provider")
+
+        # Dummy node request that is not handled by the static provider
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        # Mark request as declined by the static provider
+        req.declined_by.extend(w.launcher_id for w in pool_workers)
+        self.zk.storeNodeRequest(req)
 
         # Create the result of a race between re-registration of a
         # ready node and a new building node.
@@ -405,6 +433,7 @@ class TestDriverStatic(tests.DBTestCase):
             "hostname": "",
             "username": "",
             "connection_port": 22,
+            "allocated_to": req.id,
         })
         building_node = zk.Node.fromDict(data)
         self.zk.storeNode(building_node)
@@ -412,9 +441,8 @@ class TestDriverStatic(tests.DBTestCase):
 
         # Node will be deregistered and assigned to the building node
         self.waitForNodeDeletion(node)
-        nodes = self.waitForNodes('fake-label')
-        self.assertEqual(len(nodes), 1)
-        self.assertEqual(building_node.id, nodes[0].id)
+        node = self.zk.getNode(building_node.id)
+        self.assertEqual(node.state, zk.READY)
 
         building_node.state = zk.USED
         self.zk.storeNode(building_node)

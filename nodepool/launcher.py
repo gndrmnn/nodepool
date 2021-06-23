@@ -16,6 +16,7 @@
 
 import logging
 import math
+import operator
 import os
 import os.path
 import socket
@@ -107,14 +108,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # which express a preference for a specific provider.
         launchers = self.zk.getRegisteredLaunchers()
 
-        # Sort requests by queue priority, then, for all requests at
-        # the same priority, use the relative_priority field to
-        # further sort, then finally, the submission order.
-        requests = list(self.zk.nodeRequestIterator())
-        requests.sort(key=lambda r: (r.id.split('-')[0],
-                                     r.relative_priority,
-                                     r.id.split('-')[1]))
-
+        requests = sorted(self.zk.nodeRequestIterator(),
+                          key=operator.attrgetter("priority"))
         for req in requests:
             if not self.running:
                 return True

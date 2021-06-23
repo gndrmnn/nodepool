@@ -12,13 +12,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import itertools
 import logging
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
-from operator import attrgetter
 
-from collections import Counter
-from collections import namedtuple
+from collections import Counter, defaultdict, namedtuple
 
 from nodepool import exceptions
 from nodepool import nodeutils
@@ -102,17 +101,29 @@ class StaticNodeProvider(Provider):
         return nodes
 
     def getWaitingNodesOfType(self, labels):
-        nodes = []
+        """Get all waiting nodes of a type.
+
+        Nodes are sorted in ascending order by the associated request's
+        priority, which means that they are in descending order of the
+        priority value (a lower value means the request has a higher
+        priority).
+        """
+        nodes_by_prio = defaultdict(list)
         for node in self.zk.nodeIterator():
             if (node.provider != self.provider.name or
                 node.state != zk.BUILDING or
-                not set(node.type).issubset(labels)
+                not set(node.type).issubset(labels) or
+                not node.allocated_to
             ):
                 continue
-            nodes.append(node)
-        return list(
-            sorted(nodes, key=attrgetter("created_time"), reverse=True)
-        )
+            request = self.zk.getNodeRequest(node.allocated_to, cached=True)
+            if request is None:
+                continue
+            nodes_by_prio[request.priority].append(node)
+
+        return list(itertools.chain.from_iterable(
+            nodes_by_prio[p] for p in sorted(nodes_by_prio, reverse=True)
+        ))
 
     def checkNodeLiveness(self, node):
         node_tuple = nodeTuple(node)
