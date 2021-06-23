@@ -29,17 +29,6 @@ class ProviderCloudImage(ConfigValue):
         self.connection_type = None
         self.connection_port = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderCloudImage):
-            return (self.name == other.name
-                    and self.image_id == other.image_id
-                    and self.username == other.username
-                    and self.python_path == other.python_path
-                    and self.shell_type == other.shell_type
-                    and self.connection_type == other.connection_type
-                    and self.connection_port == other.connection_port)
-        return False
-
     def __repr__(self):
         return "<ProviderCloudImage %s>" % self.name
 
@@ -50,6 +39,8 @@ class ProviderCloudImage(ConfigValue):
 
 
 class ProviderLabel(ConfigValue):
+    ignore_equality = ['pool']
+
     def __init__(self):
         self.name = None
         self.cloud_image = None
@@ -64,27 +55,13 @@ class ProviderLabel(ConfigValue):
         self.pool = None
         self.tags = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderLabel):
-            # NOTE(Shrews): We intentionally do not compare 'pool' here
-            # since this causes recursive checks with ProviderPool.
-            return (other.name == self.name
-                    and other.cloud_image == self.cloud_image
-                    and other.ebs_optimized == self.ebs_optimized
-                    and other.instance_type == self.instance_type
-                    and other.key_name == self.key_name
-                    and other.volume_size == self.volume_size
-                    and other.volume_type == self.volume_type
-                    and other.userdata == self.userdata
-                    and other.iam_instance_profile == self.iam_instance_profile
-                    and other.tags == self.tags)
-        return False
-
     def __repr__(self):
         return "<ProviderLabel %s>" % self.name
 
 
 class ProviderPool(ConfigPool):
+    ignore_equality = ['provider']
+
     def __init__(self):
         self.name = None
         self.max_cores = None
@@ -143,19 +120,6 @@ class ProviderPool(ConfigPool):
             ]
             full_config.labels[label['name']].pools.append(self)
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderPool):
-            # NOTE(Shrews): We intentionally do not compare 'provider' here
-            # since this causes recursive checks with OpenStackProviderConfig.
-            return (super().__eq__(other)
-                    and other.name == self.name
-                    and other.subnet_id == self.subnet_id
-                    and other.security_group_id == self.security_group_id
-                    and other.public_ip == self.public_ip
-                    and other.host_key_checking == self.host_key_checking
-                    and other.labels == self.labels)
-        return False
-
     def __repr__(self):
         return "<ProviderPool %s>" % self.name
 
@@ -170,17 +134,6 @@ class AwsProviderConfig(ProviderConfig):
         self.launch_retries = None
         self.cloud_images = {}
         super().__init__(provider)
-
-    def __eq__(self, other):
-        if isinstance(other, AwsProviderConfig):
-            return (super().__eq__(other)
-                    and other.profile_name == self.profile_name
-                    and other.region_name == self.region_name
-                    and other.pools == self.pools
-                    and other.boot_timeout == self.boot_timeout
-                    and other.launch_retries == self.launch_retries
-                    and other.cloud_images == self.cloud_images)
-        return False
 
     @property
     def pools(self):
