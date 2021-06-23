@@ -25,6 +25,7 @@ import boto3
 from moto import mock_ec2
 import yaml
 
+from nodepool import config as nodepool_config
 from nodepool import tests
 from nodepool import zk
 from nodepool.nodeutils import iterate_timeout
@@ -259,3 +260,10 @@ class TestDriverAws(tests.DBTestCase):
     def test_ec2_machine_shell_type(self):
         self._test_ec2_machine('ubuntu1404-with-shell-type',
                                shell_type="csh")
+
+    def test_aws_config(self):
+        configfile = self.setup_config('aws-config.yaml')
+        config = nodepool_config.loadConfig(configfile)
+        self.assertIn('ec2-us-west-2', config.providers)
+        config2 = nodepool_config.loadConfig(configfile)
+        self.assertEqual(config, config2)
