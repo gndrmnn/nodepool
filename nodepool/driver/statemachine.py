@@ -433,6 +433,8 @@ class StateMachineProvider(Provider, QuotaSupport):
        framework"""
     log = logging.getLogger("nodepool.driver.statemachine."
                             "StateMachineProvider")
+    MINIMUM_SLEEP = 1
+    MAXIMUM_SLEEP = 10
 
     def __init__(self, adapter, provider):
         super().__init__()
@@ -495,9 +497,10 @@ class StateMachineProvider(Provider, QuotaSupport):
                     self.launchers.remove(sm)
             loop_end = time.monotonic()
             if self.launchers or self.deleters:
-                time.sleep(max(0, 10 - (loop_end - loop_start)))
+                time.sleep(max(0, self.MAXIMUM_SLEEP -
+                               (loop_end - loop_start)))
             else:
-                time.sleep(1)
+                time.sleep(self.MINIMUM_SLEEP)
 
     def getRequestHandler(self, poolworker, request):
         return StateMachineHandler(poolworker, request)

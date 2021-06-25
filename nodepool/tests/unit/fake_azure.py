@@ -24,6 +24,7 @@ import uuid
 import fixtures
 
 import responses
+import requests
 
 
 class CRUDManager:
@@ -42,7 +43,11 @@ class CRUDManager:
         for item in self.items:
             if item['id'] == url.path:
                 return (200, {}, json.dumps(item))
-        return (404, {}, json.dumps({'error': {'message': 'Not Found'}}))
+        return (404, {}, json.dumps({
+            'error': {
+                'message': 'Not Found',
+                'code': 'NotFound',
+            }}))
 
 
 class ResourceGroupsCRUD(CRUDManager):
@@ -77,7 +82,7 @@ class PublicIPAddressesCRUD(CRUDManager):
             "publicIPAddressVersion": "IPv4",
             "publicIPAllocationMethod": "Dynamic",
             "idleTimeoutInMinutes": 4,
-            "ipTags": []
+            "ipTags": [],
         }
         self.items.append(data)
         ret = json.dumps(data)
@@ -189,7 +194,65 @@ class DisksCRUD(CRUDManager):
             "provisioningState": "Succeeded",
         }
         self.items.append(data)
-        return (200, {}, json.dumps(data))
+        async_url = 'https://management.azure.com/async' + request.path_url
+        headers = {'Azure-AsyncOperation': async_url,
+                   'Retry-After': '0'}
+        return (200, headers, json.dumps(data))
+
+    def post(self, request):
+        data = json.loads(request.body)
+        url = urllib.parse.urlparse(request.path_url)
+        name = url.path.split('/')[-2]
+        action = url.path.split('/')[-1]
+        if action == 'beginGetAccess':
+            async_url = 'https://management.azure.com/async' + request.path_url
+            async_url = async_url.replace('/beginGetAccess', '')
+            for item in self.items:
+                if item['name'] == name:
+                    item['accessSAS'] = (
+                        'https://management.azure.com/sas/' + name)
+        if action == 'endGetAccess':
+            async_url = 'https://management.azure.com/async' + request.path_url
+            async_url = async_url.replace('/endGetAccess', '')
+        headers = {'Azure-AsyncOperation': async_url,
+                   'Retry-After': '0'}
+        return (200, headers, json.dumps(data))
+
+    def delete(self, request):
+        url = urllib.parse.urlparse(request.path_url)
+        name = url.path.split('/')[-1]
+        async_url = 'https://management.azure.com/async' + request.path_url
+        for item in self.items:
+            if item['name'] == name:
+                self.items.remove(item)
+                headers = {'Azure-AsyncOperation': async_url,
+                           'Retry-After': '0'}
+                return (200, headers, '')
+        return (404, {}, json.dumps({
+            'error': {
+                'message': 'Not Found',
+                'code': 'NotFound',
+            }}))
+
+
+class ImagesCRUD(CRUDManager):
+    name = "Microsoft.Compute/images"
+
+    def put(self, request):
+        data = json.loads(request.body)
+        url = urllib.parse.urlparse(request.path_url)
+        name = url.path.split('/')[-1]
+        data['id'] = url.path
+        data['name'] = name
+        data['type'] = self.name
+        data['properties'] = {
+            "provisioningState": "Succeeded",
+        }
+        self.items.append(data)
+        async_url = 'https://management.azure.com/async' + request.path_url
+        headers = {'Azure-AsyncOperation': async_url,
+                   'Retry-After': '0'}
+        return (200, headers, json.dumps(data))
 
 
 class FakeAzureFixture(fixtures.Fixture):
@@ -227,6 +290,34 @@ class FakeAzureFixture(fixtures.Fixture):
                 'expires_on': time.time() + 600,
             })
 
+        self.responses.add_callback(
+            responses.GET,
+            ('https://management.azure.com/subscriptions/'
+             f'{self.subscription_id}/providers/Microsoft.Compute/skus/'
+             '?api-version=2019-04-01'),
+            callback=self._get_compute_skus,
+            content_type='application/json')
+
+        self.responses.add_callback(
+            responses.GET,
+            ('https://management.azure.com/subscriptions/'
+             f'{self.subscription_id}/providers/Microsoft.Compute/locations/'
+             'centralus/usages?api-version=2020-12-01'),
+            callback=self._get_compute_usages,
+            content_type='application/json')
+
+        async_re = re.compile('https://management.azure.com/async/(.*)')
+        self.responses.add_callback(
+            responses.GET, async_re,
+            callback=self._get_async,
+            content_type='application/json')
+
+        sas_re = re.compile('https://management.azure.com/sas/(.*)')
+        self.responses.add_callback(
+            responses.PUT, sas_re,
+            callback=self._put_sas,
+            content_type='application/json')
+
         self._setup_crud(ResourceGroupsCRUD, '2020-06-01',
                          resource_grouped=False)
 
@@ -234,6 +325,7 @@ class FakeAzureFixture(fixtures.Fixture):
         self._setup_crud(NetworkInterfacesCRUD, '2020-07-01')
         self._setup_crud(PublicIPAddressesCRUD, '2020-07-01')
         self._setup_crud(DisksCRUD, '2020-06-30')
+        self._setup_crud(ImagesCRUD, '2020-12-01')
 
         self.addCleanup(self.responses.stop)
         self.addCleanup(self.responses.reset)
@@ -249,11 +341,11 @@ class FakeAzureFixture(fixtures.Fixture):
         list_re = re.compile(
             'https://management.azure.com/subscriptions/'
             + f'{self.subscription_id}/'
-            + rg + f'{manager.name}?\\?api-version={api_version}')
+            + rg + f'{manager.name}/?\\?api-version={api_version}')
         crud_re = re.compile(
             'https://management.azure.com/subscriptions/'
             + f'{self.subscription_id}/'
-            + rg + f'{manager.name}/(.*?)?\\?api-version={api_version}')
+            + rg + f'{manager.name}/(.+?)\\?api-version={api_version}')
         self.responses.add_callback(
             responses.GET, list_re, callback=self.crud[manager.name].list,
             content_type='application/json')
@@ -263,8 +355,100 @@ class FakeAzureFixture(fixtures.Fixture):
         self.responses.add_callback(
             responses.PUT, crud_re, callback=self.crud[manager.name].put,
             content_type='application/json')
+        if hasattr(self.crud[manager.name], 'post'):
+            self.responses.add_callback(
+                responses.POST, crud_re, callback=self.crud[manager.name].post,
+                content_type='application/json')
+        if hasattr(self.crud[manager.name], 'delete'):
+            self.responses.add_callback(
+                responses.DELETE, crud_re,
+                callback=self.crud[manager.name].delete,
+                content_type='application/json')
 
     def _extract_resource_group(self, path):
         url = re.compile('/subscriptions/(.*?)/resourceGroups/(.*?)/')
         m = url.match(path)
         return m.group(2)
+
+    def _get_compute_skus(self, request):
+        data = {
+            'value': [
+                {'capabilities': [
+                    {'name': 'MaxResourceVolumeMB', 'value': '4096'},
+                    {'name': 'OSVhdSizeMB', 'value': '1047552'},
+                    {'name': 'vCPUs', 'value': '1'},
+                    {'name': 'HyperVGenerations', 'value': 'V1,V2'},
+                    {'name': 'MemoryGB', 'value': '0.5'},
+                    {'name': 'MaxDataDiskCount', 'value': '2'},
+                    {'name': 'LowPriorityCapable', 'value': 'False'},
+                    {'name': 'PremiumIO', 'value': 'True'},
+                    {'name': 'VMDeploymentTypes', 'value': 'IaaS'},
+                    {'name': 'CombinedTempDiskAndCachedIOPS', 'value': '200'},
+                    {'name': 'CombinedTempDiskAndCachedReadBytesPerSecond',
+                     'value': '10485760'},
+                    {'name': 'CombinedTempDiskAndCachedWriteBytesPerSecond',
+                     'value': '10485760'},
+                    {'name': 'UncachedDiskIOPS', 'value': '160'},
+                    {'name': 'UncachedDiskBytesPerSecond',
+                     'value': '10485760'},
+                    {'name': 'EphemeralOSDiskSupported', 'value': 'True'},
+                    {'name': 'EncryptionAtHostSupported', 'value': 'True'},
+                    {'name': 'AcceleratedNetworkingEnabled', 'value': 'False'},
+                    {'name': 'RdmaEnabled', 'value': 'False'},
+                    {'name': 'MaxNetworkInterfaces', 'value': '2'}],
+                 'family': 'standardBSFamily',
+                 'locationInfo': [
+                     {'location': 'centralus',
+                      'zoneDetails': [
+                          {'Name': ['3', '2', '1'],
+                           'capabilities': [
+                               {'name': 'UltraSSDAvailable',
+                                'value': 'True'}]}],
+                      'zones': ['3', '1', '2']}],
+                 'locations': ['centralus'],
+                 'name': 'Standard_B1ls',
+                 'resourceType': 'virtualMachines',
+                 'restrictions': [],
+                 'size': 'B1ls',
+                 'tier': 'Standard'}
+            ]
+        }
+        return (200, {}, json.dumps(data))
+
+    def _get_compute_usages(self, request):
+        mgr = self.crud["Microsoft.Compute/virtualMachines"]
+        data = {
+            'value': [
+                {
+                    "limit": 4,
+                    "unit": "Count",
+                    "currentValue": len(mgr.items),
+                    "name": {
+                        "value": "cores",
+                        "localizedValue": "Total Regional vCPUs"
+                    }
+                }, {
+                    "limit": 25000,
+                    "unit": "Count",
+                    "currentValue": len(mgr.items),
+                    "name": {
+                        "value": "virtualMachines",
+                        "localizedValue": "Virtual Machines"
+                    }
+                }
+            ]}
+        return (200, {}, json.dumps(data))
+
+    def _get_async(self, request):
+        path = request.path_url[len('/async'):]
+        ret = requests.get('https://management.azure.com' + path)
+        data = {
+            'status': 'Succeeded',
+            'properties': {
+                'output': ret.json(),
+            }
+        }
+        return (200, {}, json.dumps(data))
+
+    def _put_sas(self, request):
+        return (201, {}, '')
