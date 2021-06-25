@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dddb8d8e_e94061ff",
+        "filename": "nodepool/driver/azure/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-06-25T20:57:53Z",
+      "side": 1,
+      "message": "If anyone is wondering 4MB appears to be the upper limit of page blob write sizes: https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-pageblob-overview?tabs\u003ddotnet#writing-pages-to-a-page-blob\n\nWe might need to double check that pagesize is a multiple of 512 though as the api does require that. Or maybe we don\u0027t make this configurable?",
+      "revId": "79ff141a759b21d04e9f6f99ed394be87c5871fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4027842c_8a5c63f0",
+        "filename": "nodepool/tests/unit/test_driver_azure.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-06-25T20:57:53Z",
+      "side": 1,
+      "message": "Nit this is repeated from before. I think you can just reuse the old configfile object.",
+      "revId": "79ff141a759b21d04e9f6f99ed394be87c5871fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
