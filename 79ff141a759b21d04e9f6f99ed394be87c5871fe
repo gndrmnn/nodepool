@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "702ff691_1bb64ef0",
+        "filename": "nodepool/driver/azure/azul.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-06-26T14:18:42Z",
+      "side": 1,
+      "message": "For nodepool\u0027s use of azul, this is not configurable; here\u0027s the call site:\n        self.log.debug(\"Uploading image\")\n        with open(filename, \"rb\") as fobj:\n            self.azul.upload_page_blob_to_sas_url(sas, fobj)\nSo it will always be 4MiB.",
+      "revId": "79ff141a759b21d04e9f6f99ed394be87c5871fe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4027842c_8a5c63f0",
         "filename": "nodepool/tests/unit/test_driver_azure.py",
         "patchSetId": 6
