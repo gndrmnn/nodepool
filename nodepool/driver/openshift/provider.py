@@ -17,14 +17,13 @@ import logging
 import urllib3
 import time
 
-from kubernetes import client as k8s_client
-from kubernetes import config as k8s_config
-from openshift.dynamic import DynamicClient as os_client
+from openshift.dynamic import DynamicClient
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.openshift import handler
+from nodepool.driver.utils_k8s import get_client
 
 urllib3.disable_warnings()
 
@@ -35,23 +34,11 @@ class OpenshiftProvider(Provider):
     def __init__(self, provider, *args):
         self.provider = provider
         self.ready = False
-        try:
-            self.os_client, self.k8s_client = self._get_client(
-                provider.context)
-        except k8s_config.config_exception.ConfigException:
-            self.log.exception(
-                "Couldn't load context %s from config", provider.context)
-            self.os_client = None
-            self.k8s_client = None
+        _, _, self.k8s_client, self.os_client = get_client(
+            self.log, provider.context, DynamicClient)
         self.project_names = set()
         for pool in provider.pools.values():
             self.project_names.add(pool.name)
-
-    def _get_client(self, context):
-        conf = k8s_config.new_client_from_config(context=context)
-        return (
-            os_client(conf),
-            k8s_client.CoreV1Api(conf))
 
     def start(self, zk_conn):
         self.log.debug("Starting")

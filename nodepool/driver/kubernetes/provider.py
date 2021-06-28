@@ -19,13 +19,13 @@ import urllib3
 import time
 
 from kubernetes import client as k8s_client
-from kubernetes import config as k8s_config
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.kubernetes import handler
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils_k8s import get_client
 
 urllib3.disable_warnings()
 
@@ -38,38 +38,11 @@ class KubernetesProvider(Provider, QuotaSupport):
         self.provider = provider
         self._zk = None
         self.ready = False
-        try:
-            self.k8s_client, self.rbac_client = self._get_client(
-                provider.context)
-        except k8s_config.config_exception.ConfigException:
-            self.log.exception("Couldn't load client from config")
-            self.log.info("Get context list using this command: "
-                          "python3 -c \"from kubernetes import config; "
-                          "print('\\n'.join([i['name'] for i in "
-                          "config.list_kube_config_contexts()[0]]))\"")
-            self.k8s_client = None
-            self.rbac_client = None
+        _, _, self.k8s_client, self.rbac_client = get_client(
+            self.log, provider.context, k8s_client.RbacAuthorizationV1beta1Api)
         self.namespace_names = set()
         for pool in provider.pools.values():
             self.namespace_names.add(pool.name)
-
-    def _get_client(self, context):
-        try:
-            conf = k8s_config.new_client_from_config(context=context)
-        except FileNotFoundError:
-            self.log.debug("Kubernetes config file not found, attempting "
-                           "to load in-cluster configs")
-            conf = k8s_config.load_incluster_config()
-        except k8s_config.config_exception.ConfigException as e:
-            if 'Invalid kube-config file. No configuration found.' in str(e):
-                self.log.debug("Kubernetes config file not found, attempting "
-                               "to load in-cluster configs")
-                conf = k8s_config.load_incluster_config()
-            else:
-                raise
-        return (
-            k8s_client.CoreV1Api(conf),
-            k8s_client.RbacAuthorizationV1beta1Api(conf))
 
     def start(self, zk_conn):
         self.log.debug("Starting")
