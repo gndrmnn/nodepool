@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bca75f0_7b92c256",
+        "filename": "nodepool/driver/utils_k8s.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-06-28T20:02:15Z",
+      "side": 1,
+      "message": "Nit if you open the file in binary mode then you won\u0027t have to convert the utf8 result below to bytes for b64encode().",
+      "revId": "05927dae03ac1ef727b2864eb306c0e460c41a72",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
