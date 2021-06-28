@@ -190,6 +190,10 @@ class QuotaInformation:
         :param default: The default value to use for any attribute not supplied
                         (usually 0 or math.inf).
         '''
+        # Note that the self.quota['compute'] map is inserted into ZK as
+        # a node property (via get_resources) and is consumed by Zuul to
+        # calculate resource usage.  Thus care should be taken if
+        # modifying fields below.
         self.quota = {
             'compute': {
                 'cores': self._get_default(cores, default),
@@ -240,6 +244,10 @@ class QuotaInformation:
                 if value < 0:
                     return False
         return True
+
+    def get_resources(self):
+        '''Return resources value to register in ZK node'''
+        return self.quota['compute']
 
     def __str__(self):
         return str(self.quota)
