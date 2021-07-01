@@ -31,6 +31,10 @@ services:
       - nested_var_lib_containers:/var/lib/containers
       # zookeeper certs
       - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
+      # workaround for rng-tools installation issue
+      # that uses udev settle on this device; see
+      #  https://bugzilla.redhat.com/show_bug.cgi?id=1975588
+      - /dev/hwrng:/dev/hwrng:ro
 
   nodepool-launcher:
     image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}
