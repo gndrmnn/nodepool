@@ -469,7 +469,10 @@ class NodeRequest(BaseModel):
         self.node_types = []
         self.nodes = []
         self.reuse = True
+        # The identity of the requestor; used in reporting statistics
         self.requestor = None
+        # Opaque data for use by the requestor (unused by Nodepool)
+        self.requestor_data = None
         self.provider = None
         self.relative_priority = 0
         self.event_id = None
@@ -488,6 +491,7 @@ class NodeRequest(BaseModel):
                     self.nodes == other.nodes and
                     self.reuse == other.reuse and
                     self.requestor == other.requestor and
+                    self.requestor_data == other.requestor_data and
                     self.provider == other.provider and
                     self.relative_priority == other.relative_priority)
         else:
@@ -511,6 +515,7 @@ class NodeRequest(BaseModel):
         d['nodes'] = self.nodes
         d['reuse'] = self.reuse
         d['requestor'] = self.requestor
+        d['requestor_data'] = self.requestor_data
         d['provider'] = self.provider
         d['relative_priority'] = self.relative_priority
         d['event_id'] = self.event_id
@@ -538,6 +543,7 @@ class NodeRequest(BaseModel):
         self.nodes = d.get('nodes', [])
         self.reuse = d.get('reuse', True)
         self.requestor = d.get('requestor')
+        self.requestor_data = d.get('requestor_data')
         self.provider = d.get('provider')
         self.relative_priority = d.get('relative_priority', 0)
         self.event_id = d.get('event_id')
