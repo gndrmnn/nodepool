@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Fix Kubernetes in-cluster configuration loading if no local config
+    is present.  The previous release missed a fallback case which has
+    been corrected.

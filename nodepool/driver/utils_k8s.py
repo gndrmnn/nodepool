@@ -41,10 +41,11 @@ def get_client(log, context, extra_client_constructor=None):
     token, ca, client, extra_client = None, None, None, None
     try:
         conf = _get_conf(log, context)
-        auth = conf.configuration.api_key.get('authorization')
-        if auth:
-            token = auth.split()[-1]
-        if conf.configuration.ssl_ca_cert:
+        if conf:
+            auth = conf.configuration.api_key.get('authorization')
+            if auth:
+                token = auth.split()[-1]
+        if conf and conf.configuration.ssl_ca_cert:
             with open(conf.configuration.ssl_ca_cert) as ca_file:
                 ca = ca_file.read()
                 ca = base64.b64encode(ca.encode('utf-8')).decode('utf-8')
