@@ -31,6 +31,7 @@ from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
+from nodepool.driver.utils import QuotaInformation
 from nodepool.logconfig import get_annotated_logger
 
 
@@ -161,6 +162,21 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                                   req.provider, candidate_launchers)
                         continue
 
+            pm = self.getProviderManager()
+
+            # check tenant quota if the request has a tenant associated
+            # and there are resource limits configured for this tenant
+            check_tenant_quota = req.tenant_name and req.tenant_name \
+                in self.nodepool.config.tenant_resource_limits
+
+            if check_tenant_quota and not self._hasTenantQuota(req, pm):
+                # do not decline request as it would pause the provider for
+                # requests of other tenants.
+                # Instead defer it to be handled and fulfilled at a later run.
+                log.debug(
+                    "Deferring request because it would exceed tenant quota")
+                continue
+
             log.debug("Locking request")
             try:
                 self.zk.lockNodeRequest(req, blocking=False)
@@ -177,7 +193,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # Got a lock, so assign it
             log.info("Assigning node request %s" % req)
 
-            pm = self.getProviderManager()
             rh = pm.getRequestHandler(self, req)
             rh.run()
             if rh.paused:
@@ -218,6 +233,49 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.request_handlers = active_handlers
         active_reqs = [r.request.id for r in self.request_handlers]
         self.log.debug("Active requests: %s", active_reqs)
+
+    def _hasTenantQuota(self, request, provider_manager):
+        '''
+        Checks if a tenant has enough quota to handle a list of nodes.
+        This takes into account the all currently existing nodes as reported
+        by zk.
+
+        :param request: the node request in question
+        :param provider_manager: the provider manager for the request
+        :param request_handler: the handler for the request
+        :return: True if there is enough quota for the tenant, False otherwise
+        '''
+        log = get_annotated_logger(self.log, event_id=request.event_id,
+                                   node_request_id=request.id)
+
+        tenant_name = request.tenant_name
+        needed_quota = QuotaInformation()
+
+        for ntype in request.node_types:
+            needed_quota.add(
+                provider_manager.quotaNeededByLabel(
+                    ntype, self.getPoolConfig()))
+
+        used_quota = self._getUsedQuotaForTenant(tenant_name)
+        tenant_quota = QuotaInformation(
+            default=math.inf,
+            **self.nodepool.config.tenant_resource_limits[tenant_name])
+
+        tenant_quota.subtract(used_quota)
+        log.debug("Current tenant quota: %s", tenant_quota)
+        tenant_quota.subtract(needed_quota)
+        log.debug("Predicted remaining tenant quota: %s", tenant_quota)
+        return tenant_quota.non_negative()
+
+    def _getUsedQuotaForTenant(self, tenant_name):
+        used_quota = QuotaInformation()
+        for node in self.zk.nodeIterator(cached_ids=True):
+            if not node.resources:
+                continue
+            if node.tenant_name == tenant_name:
+                resources = QuotaInformation(**node.resources)
+                used_quota.add(resources)
+        return used_quota
 
     # ---------------------------------------------------------------
     # Public methods
