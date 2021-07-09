@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    Added the option to set quota on resources on a per-tenant basis (i.e.
+    Zuul tenants).
+
+    A new top-level config structure ``tenant-resource-limits`` has been added
+    under which one can specify a number of tenants, each with ``max-servers``,
+    ``max-cores``, and ``max-ram`` limits.  These limits are valid globally,
+    i.e., for all providers. This differs from currently existing provider and
+    pool quotas, which only are considered for nodes of the same provider.
+    This feature is optional and tenant quotas are ignored for any NodeRequests
+    that do not deliver tenant information with them. Also no quota is
+    evaluated for tenants that have no limits configured for them.
