@@ -379,6 +379,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.pool = self.pw.getPoolConfig()
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
+        # this is set by a child class if it overrides this method
+        # usually set via `manager.estimatedNodepoolQuotaUsed`
+        # which requrires the manager to implement `QuotaSupport`
+        self._nodepool_quota_used = None
 
     @property
     def failed_nodes(self):
@@ -465,6 +469,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                             node.id)
                         got_a_node = True
                         node.allocated_to = self.request.id
+                        node.tenant = self.request.tenant
                         self.zk.storeNode(node)
                         self.nodeset.append(node)
                         self._satisfied_types.add(ntype, node.id)
@@ -512,6 +517,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 node.pool = self.pool.name
                 node.launcher = self.launcher_id
                 node.allocated_to = self.request.id
+                node.tenant = self.request.tenant
 
                 # This sets static data defined in the config file in the
                 # ZooKeeper Node object.
@@ -564,6 +570,20 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         elif not self.hasProviderQuota(self.request.node_types):
             declined_reasons.append('it would exceed quota')
 
+        # check tenant quota if the request has a tenant associated
+        # and there are resource limits configured for this tenant
+        check_tenant_quota = self.request.tenant and self.request.tenant \
+            in self.pw.nodepool.config.tenant_resource_limits
+        if check_tenant_quota and not self.hasTenantQuota(
+            self.request.tenant, self.request.node_types):
+            # do not decline request as it would pause the provider for
+            # requests of other tenants.
+            # Instead defer it to be handled and fulfilled at a later run.
+            self.log.info(
+                "Deferring node request because it would exceed tenant quota")
+            self._declinedHandlerCleanup(unpause=False)
+            return
+
         if declined_reasons:
             self.log.info("Declining node request because %s",
                           ', '.join(declined_reasons))
@@ -580,7 +600,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         self._waitForNodeSet()
 
-    def _declinedHandlerCleanup(self):
+    def _declinedHandlerCleanup(self, unpause=True):
         """
         After declining a request, do necessary cleanup actions.
         """
@@ -588,7 +608,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         # If conditions have changed for a paused request to now cause us
         # to decline it, we need to unpause so we don't keep trying it
-        if self.paused:
+        if self.paused and unpause:
             self.paused = False
 
         try:
@@ -754,6 +774,17 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         :param ntype: node type for the quota check
         :return: True if there is enough quota, False otherwise
+        '''
+        return True
+
+    def hasTenantQuota(self, tenant, node_types):
+        '''
+        Checks if a tenant has enough quota to handle a list of nodes.
+        This takes into account the all currently existing nodes as reported
+        by zk.
+
+        :param node_types list of node types to check
+        :return: True if there is enough quota for the tenant, False otherwise
         '''
         return True
 

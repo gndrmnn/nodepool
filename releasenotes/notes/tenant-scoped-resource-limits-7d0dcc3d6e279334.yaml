@@ -1,0 +1,17 @@
+---
+---
+features:
+  - |
+    Add Tenant-Scoped Resource Quota
+
+    Adding the option to put quota on resources on a per-tenant basis (i.e.
+    Zuul tenants).
+
+    It adds a new top-level config structure ``tenant-resource-limits`` under
+    which one can specify a number of tenants, each with ``max-servers``,
+    ``max-cores``, and ``max-ram`` limits.  These limits are valid globally,
+    i.e., for all providers. This is contrary to currently existing provider
+    and pool quotas, which only are consindered for nodes of the same provider.
+    This feature is optional and tenant quotas are ignored for any NodeRequests
+    that do not deliver tenant information with them. Also no quota is
+    evaluated for tenants that have no limits configured for them.
