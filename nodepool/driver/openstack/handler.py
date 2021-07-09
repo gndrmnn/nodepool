@@ -313,6 +313,10 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
         self.chosen_az = None
         self._threads = []
 
+    def _setFromPoolWorker(self):
+        super()._setFromPoolWorker()
+        self._nodepool_quota_used = self.manager.estimatedNodepoolQuotaUsed()
+
     @property
     def alive_thread_count(self):
         count = 0
@@ -349,8 +353,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
             # Calculate remaining quota which is calculated as:
             # quota = <total nodepool quota> - <used quota> - <quota for node>
             cloud_quota = self.manager.estimatedNodepoolQuota()
-            cloud_quota.subtract(
-                self.manager.estimatedNodepoolQuotaUsed())
+            cloud_quota.subtract(self._nodepool_quota_used["provider_quota"])
             cloud_quota.subtract(needed_quota)
             self.log.debug("Predicted remaining provider quota: %s",
                            cloud_quota)
@@ -365,7 +368,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                                       ram=self.pool.max_ram,
                                       default=math.inf)
         pool_quota.subtract(
-            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+            self._nodepool_quota_used["pool_quota"][self.pool.name])
         self.log.debug("Current pool quota: %s" % pool_quota)
         pool_quota.subtract(needed_quota)
         self.log.debug("Predicted remaining pool quota: %s", pool_quota)
@@ -394,6 +397,23 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
                                       default=math.inf)
         pool_quota.subtract(needed_quota)
         return pool_quota.non_negative()
+
+    def hasTenantQuota(self, tenant, node_types):
+        needed_quota = QuotaInformation()
+
+        for ntype in node_types:
+            needed_quota.add(
+                self.manager.quotaNeededByLabel(ntype, self.pool))
+
+        used_quota = self._nodepool_quota_used["tenant_quota"][tenant]
+        tenant_quota = QuotaInformation(
+            default=math.inf,
+            **self.pw.nodepool.config.tenant_resource_limits[tenant])
+        self.log.info(str(tenant_quota))
+
+        tenant_quota.subtract(used_quota)
+        tenant_quota.subtract(needed_quota)
+        return tenant_quota.non_negative()
 
     def checkReusableNode(self, node):
         if self.chosen_az and node.az != self.chosen_az:

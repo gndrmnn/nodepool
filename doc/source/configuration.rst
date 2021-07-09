@@ -505,3 +505,43 @@ Options
          For details on the extra options required and provided by the
          static driver, see the separate section
          :ref:`static-driver`
+
+.. attr:: tenant-resource-limits
+   :type: list
+
+   A list of global resource limits enforced per tenant (i.e. Zuul tenants)
+
+   .. code-block:: yaml
+
+      tenant-resource-limits:
+        - tenant-name: example-tenant
+          max-servers: 10
+          max-cores: 200
+          max-ram: 16565
+
+   Each entry is a dictionary with the following keys
+
+   .. attr:: tenant-name
+      :type: str
+      :example: example-tenant
+      :required:
+
+      A tenant name which should correspond to a Zuul tenant
+
+   .. attr:: max-servers
+      :default: infinity
+      :type: int
+
+      The maximum number of servers a tenant can allocate
+
+   .. attr:: max-cores
+      :default: infinity
+      :type: int
+
+      The maximum number of CPU cores a tenant can allocate
+
+   .. attr:: max-ram
+      :default: infinity
+      :type: int
+
+      The maximum number of main memory (RAM) a tenant can allocate

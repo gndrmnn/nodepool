@@ -327,6 +327,10 @@ class StateMachineHandler(NodeRequestHandler):
         super().__init__(pw, request)
         self.launchers = []
 
+    def _setFromPoolWorker(self):
+        super()._setFromPoolWorker()
+        self._nodepool_quota_used = self.manager.estimatedNodepoolQuotaUsed()
+
     @property
     def alive_thread_count(self):
         return len([nl for nl in self.launchers if nl.complete])
@@ -384,8 +388,7 @@ class StateMachineHandler(NodeRequestHandler):
         # Calculate remaining quota which is calculated as:
         # quota = <total nodepool quota> - <used quota> - <quota for node>
         cloud_quota = self.manager.estimatedNodepoolQuota()
-        cloud_quota.subtract(
-            self.manager.estimatedNodepoolQuotaUsed())
+        cloud_quota.subtract(self._nodepool_quota_used["provider_quota"])
         cloud_quota.subtract(needed_quota)
         self.log.debug("Predicted remaining provider quota: %s",
                        cloud_quota)
@@ -401,7 +404,7 @@ class StateMachineHandler(NodeRequestHandler):
             ram=getattr(self.pool, 'max_ram', None),
             default=math.inf)
         pool_quota.subtract(
-            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+            self._nodepool_quota_used["pool_quota"][self.pool.name])
         self.log.debug("Current pool quota: %s" % pool_quota)
         pool_quota.subtract(needed_quota)
         self.log.debug("Predicted remaining pool quota: %s", pool_quota)

@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import abc
+from collections import defaultdict
 import copy
 import logging
 import math
@@ -337,21 +338,32 @@ class QuotaSupport:
 
         return copy.deepcopy(nodepool_quota)
 
-    def estimatedNodepoolQuotaUsed(self, pool=None):
+    def estimatedNodepoolQuotaUsed(self):
         '''
-        Sums up the quota used (or planned) currently by nodepool. If pool is
-        given it is filtered by the pool.
+        Sums up the quota used (or planned) currently by nodepool.
 
-        :param pool: If given, filtered by the pool.
-        :return: Calculated quota in use by nodepool
+        :return: Calculated quotas in use by nodepool for the whole provider,
+                 per pool, and per tenant
         '''
-        used_quota = QuotaInformation()
+        provider_quota = QuotaInformation()
+        # gather the tenant quota here in addition to the 'total_quota'
+        # because we iterate over all current nodes here anyway and don't want
+        # to do that twice
+        tenant_quota = defaultdict(QuotaInformation)
+        pool_quota = defaultdict(QuotaInformation)
 
         for node in self._zk.nodeIterator():
+            # sum up resources of nodes by their tenant
+            # assuming there might be nodes with no tenant associated
+            # (e.g. min-ready nodes) and with no resources attribute
+            # (i.e. not all drivers set this)
+            # -> we simply ignore them
+            if node.tenant and node.resources:
+                resources = QuotaInformation(**node.resources)
+                tenant_quota[node.tenant].add(resources)
+
             if node.provider == self.provider.name:
                 try:
-                    if pool and not node.pool == pool.name:
-                        continue
                     provider_pool = self.provider.pools.get(node.pool)
                     if not provider_pool:
                         self.log.warning(
@@ -369,11 +381,16 @@ class QuotaSupport:
                         continue
                     node_resources = self.quotaNeededByLabel(
                         node.type[0], provider_pool)
-                    used_quota.add(node_resources)
+                    provider_quota.add(node_resources)
+                    pool_quota[node.pool].add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)
-        return used_quota
+        return {
+            "provider_quota": provider_quota,
+            "pool_quota": pool_quota,
+            "tenant_quota": tenant_quota
+        }
 
 
 class RateLimiter:

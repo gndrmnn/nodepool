@@ -47,6 +47,7 @@ class Config(ConfigValue):
         self.build_log_retention = None
         self.max_hold_age = None
         self.webapp = None
+        self.tenant_resource_limits = {}
 
     def __eq__(self, other):
         if isinstance(other, Config):
@@ -60,7 +61,9 @@ class Config(ConfigValue):
                     self.build_log_dir == other.build_log_dir and
                     self.build_log_retention == other.build_log_retention and
                     self.max_hold_age == other.max_hold_age and
-                    self.webapp == other.webapp)
+                    self.webapp == other.webapp and
+                    self.tenant_resource_limits == other.tenant_resource_limits
+                    )
         return False
 
     def setElementsDir(self, value):
@@ -176,6 +179,25 @@ class Config(ConfigValue):
             p = get_provider_config(provider)
             p.load(self)
             self.providers[p.name] = p
+
+    def setTenantResourceLimits(self, tenant_resource_limits_cfg):
+        if not tenant_resource_limits_cfg:
+            return
+        for resource_limit in tenant_resource_limits_cfg:
+            tenant_name = resource_limit['tenant-name']
+            max_cores = resource_limit.get('max-cores')
+            max_ram = resource_limit.get('max-ram')
+            max_servers = resource_limit.get('max-servers')
+
+            limits = {}
+            if max_cores:
+                limits['cores'] = max_cores
+            if max_servers:
+                limits['instances'] = max_servers
+            if max_ram:
+                limits['ram'] = max_ram
+
+            self.tenant_resource_limits[tenant_name] = limits
 
 
 class Label(ConfigValue):
@@ -350,6 +372,7 @@ def loadConfig(config_path, env=os.environ):
     newconfig.setLabels(config.get('labels'))
     newconfig.setProviders(config.get('providers'))
     newconfig.setZooKeeperTLS(config.get('zookeeper-tls'))
+    newconfig.setTenantResourceLimits(config.get('tenant-resource-limits'))
 
     return newconfig
 
