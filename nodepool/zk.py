@@ -471,8 +471,8 @@ class NodeRequest(BaseModel):
         self.reuse = True
         # The identity of the requestor; used in reporting statistics
         self.requestor = None
-        # Opaque data for use by the requestor (unused by Nodepool)
-        self.requestor_data = None
+        # Opaque data for use by the requestor
+        self.requestor_data = {}
         self.provider = None
         self.relative_priority = 0
         self.event_id = None
@@ -588,6 +588,7 @@ class Node(BaseModel):
         self.resources = None
         self.attributes = None
         self.python_path = None
+        self.tenant_name = None
 
     def __repr__(self):
         d = self.toDict()
@@ -627,7 +628,8 @@ class Node(BaseModel):
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
                     self.attributes == other.attributes and
-                    self.python_path == other.python_path)
+                    self.python_path == other.python_path and
+                    self.tenant_name == other.tenant_name)
         else:
             return False
 
@@ -678,6 +680,7 @@ class Node(BaseModel):
         d['resources'] = self.resources
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
+        d['tenant_name'] = self.tenant_name
         return d
 
     @staticmethod
@@ -743,6 +746,7 @@ class Node(BaseModel):
         self.attributes = d.get('attributes')
         self.python_path = d.get('python_path')
         self.shell_type = d.get('shell_type')
+        self.tenant_name = d.get('tenant_name')
 
 
 class ZooKeeper(object):

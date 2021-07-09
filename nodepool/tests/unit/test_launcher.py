@@ -264,6 +264,100 @@ class TestLauncher(tests.DBTestCase):
         self._test_node_assignment_at_quota(
             config='node_quota_pool_ram.yaml')
 
+    def _test_node_assignment_at_tenant_quota(self, config):
+        configfile = self.setup_config(config)
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        nodepool.launcher.LOCK_CLEANUP = 1
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+
+        # wait for min-ready nodes if configured
+        # node requests must be deferred when at tenant quota even if there
+        # are ready nodes available
+        min_ready = pool.config.labels['fake-label'].min_ready
+        if min_ready:
+            self.waitForNodes('fake-label', min_ready)
+
+        # request some nodes for tenant-1 which has a limit
+        req1_tenant1 = zk.NodeRequest()
+        req1_tenant1.state = zk.REQUESTED
+        req1_tenant1.requestor_data = {'tenant_name': 'tenant-1'}
+        req1_tenant1.node_types.append('fake-label')
+        req1_tenant1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1_tenant1)
+
+        # request some more nodes for tenant-1 which is now at quota
+        req2_tenant1 = zk.NodeRequest()
+        req2_tenant1.state = zk.REQUESTED
+        req2_tenant1.requestor_data = {'tenant_name': 'tenant-1'}
+        req2_tenant1.node_types.append('fake-label')
+        req2_tenant1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req2_tenant1)
+
+        # request more nodes for tenant-2 which has no limit
+        req3_tenant2 = zk.NodeRequest()
+        req3_tenant2.state = zk.REQUESTED
+        req3_tenant2.requestor_data = {'tenant_name': 'tenant-2'}
+        req3_tenant2.node_types.append('fake-label')
+        req3_tenant2.node_types.append('fake-label')
+        req3_tenant2.node_types.append('fake-label')
+        req3_tenant2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req3_tenant2)
+
+        # nodes for req1 should be fulfilled right away
+        self.log.debug("Waiting for 1st request %s", req1_tenant1.id)
+        req1_tenant1 = self.waitForNodeRequest(req1_tenant1, (zk.FULFILLED,))
+        self.assertEqual(len(req1_tenant1.nodes), 2)
+
+        # also nodes from req2 (another thenant) should be fulfilled
+        self.log.debug("Waiting for 2nd request %s", req3_tenant2.id)
+        req1_tenant2 = self.waitForNodeRequest(req3_tenant2, (zk.FULFILLED,))
+        self.assertEqual(len(req1_tenant2.nodes), 4)
+
+        # Mark the first request's nodes as in use so they won't be deleted
+        # when we pause. Locking them is enough.
+        req1_node1 = self.zk.getNode(req1_tenant1.nodes[0])
+        req1_node2 = self.zk.getNode(req1_tenant1.nodes[1])
+        self.zk.lockNode(req1_node1, blocking=False)
+        self.zk.lockNode(req1_node2, blocking=False)
+
+        # nodes from req3 should stay in reuqested state until req1 nodes
+        # are removed
+        self.log.debug("Waiting for 3rd request %s", req2_tenant1.id)
+        req2_tenant1 = self.waitForNodeRequest(req2_tenant1, (zk.REQUESTED,))
+        self.assertEqual(len(req2_tenant1.nodes), 0)
+
+        # mark nodes from req1 as used and have them deleted
+        for node in (req1_node1, req1_node2):
+            node.state = zk.USED
+            self.zk.storeNode(node)
+            self.zk.unlockNode(node)
+            self.waitForNodeDeletion(node)
+
+        # now the 3rd request (tenant-1) should be fulfilled
+        self.log.debug("Waiting for 3rd request %s", req2_tenant1.id)
+        req2_tenant1 = self.waitForNodeRequest(req2_tenant1, (zk.FULFILLED,))
+        self.assertEqual(len(req2_tenant1.nodes), 2)
+
+    def test_node_assignment_at_tenant_quota_cores(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_cores.yaml')
+
+    def test_node_assignment_at_tenant_quota_instances(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_instances.yaml')
+
+    def test_node_assignment_at_tenant_quota_ram(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_ram.yaml')
+
+    def test_node_assignment_at_tenant_quota_min_ready(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_min_ready.yaml')
+
     def test_node_assignment_at_cloud_cores_quota(self):
         self._test_node_assignment_at_quota(config='node_quota_cloud.yaml',
                                             max_cores=8,
