@@ -62,6 +62,13 @@ class ConfigValidator:
             ca=v.Required(str),
         )
 
+        tenant_resouce_limit = {
+            'tenant-name': v.Required(str),
+            'max-cores': int,
+            'max-ram': int,
+            'max-servers': int,
+        }
+
         top_level = {
             'webapp': webapp,
             'elements-dir': str,
@@ -78,6 +85,7 @@ class ConfigValidator:
             'labels': [label],
             'diskimages': [diskimage],
             'max-hold-age': int,
+            'tenant-resource-limits': [tenant_resouce_limit],
         }
         return v.Schema(top_level)
 
