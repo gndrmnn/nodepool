@@ -476,6 +476,7 @@ class NodeRequest(BaseModel):
         self.provider = None
         self.relative_priority = 0
         self.event_id = None
+        self.tenant = None
 
     def __repr__(self):
         d = self.toDict()
@@ -493,7 +494,8 @@ class NodeRequest(BaseModel):
                     self.requestor == other.requestor and
                     self.requestor_data == other.requestor_data and
                     self.provider == other.provider and
-                    self.relative_priority == other.relative_priority)
+                    self.relative_priority == other.relative_priority and
+                    self.tenant == other.tenant)
         else:
             return False
 
@@ -519,6 +521,7 @@ class NodeRequest(BaseModel):
         d['provider'] = self.provider
         d['relative_priority'] = self.relative_priority
         d['event_id'] = self.event_id
+        d['tenant'] = self.tenant
         return d
 
     @staticmethod
@@ -547,6 +550,7 @@ class NodeRequest(BaseModel):
         self.provider = d.get('provider')
         self.relative_priority = d.get('relative_priority', 0)
         self.event_id = d.get('event_id')
+        self.tenant = d.get('tenant')
 
 
 class Node(BaseModel):
@@ -588,6 +592,7 @@ class Node(BaseModel):
         self.resources = None
         self.attributes = None
         self.python_path = None
+        self.tenant = None
 
     def __repr__(self):
         d = self.toDict()
@@ -627,7 +632,8 @@ class Node(BaseModel):
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
                     self.attributes == other.attributes and
-                    self.python_path == other.python_path)
+                    self.python_path == other.python_path and
+                    self.tenant == other.tenant)
         else:
             return False
 
@@ -678,6 +684,7 @@ class Node(BaseModel):
         d['resources'] = self.resources
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
+        d['tenant'] = self.tenant
         return d
 
     @staticmethod
@@ -743,6 +750,7 @@ class Node(BaseModel):
         self.attributes = d.get('attributes')
         self.python_path = d.get('python_path')
         self.shell_type = d.get('shell_type')
+        self.tenant = d.get('tenant')
 
 
 class ZooKeeper(object):
