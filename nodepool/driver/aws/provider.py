@@ -14,6 +14,8 @@
 
 import logging
 import boto3
+
+import cachetools.func
 import botocore.exceptions
 import nodepool.exceptions
 
@@ -114,6 +116,7 @@ class AwsProvider(Provider):
         else:
             return images[0].get("ImageId")
 
+    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def getImageId(self, cloud_image):
         image_id = cloud_image.image_id
         image_filters = cloud_image.image_filters
