@@ -14,6 +14,8 @@
 
 import logging
 import boto3
+
+import cachetools.func
 import botocore.exceptions
 import nodepool.exceptions
 
@@ -97,6 +99,7 @@ class AwsProvider(Provider):
             n += 1
         return n
 
+    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def getLatestImageIdByFilters(self, image_filters):
         res = self.ec2_client.describe_images(
             Filters=image_filters
