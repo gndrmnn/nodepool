@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ $# -ne 6 ]
+then
+    echo "Usage: $0 <IMAGENAME> <SOURCEIMAGE> <PROVIDER> <CLOUD> <BUILDID> <UPLOADID>"
+    exit 1
+fi
+
+IMAGENAME="${1}"
+SOURCEIMAGE="${2}"
+PROVIDER="${3}"
+CLOUD="${4}"
+BUILDID="${5}"
+UPLOADID="${6}"
+
+echo "Uploading $IMAGENAME to $CLOUD"
+# e.g.: do upload with glance image-create ...
+
+# Mandatory: Return the external image ID
+echo "Image ID: fake-image-12345-abcdef"
