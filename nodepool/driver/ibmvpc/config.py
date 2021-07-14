@@ -240,6 +240,7 @@ class IBMVPCProviderConfig(ProviderConfig):
     def load(self, config):
         self.image_type = self.provider.get('image-format', 'qcow2')
         self.image_name_format = 'npimage{upload_id}'
+        self.upload_script = self.provider.get('upload-script')
         self.post_upload_hook = self.provider.get('post-upload-hook')
 
         self.rate = self.provider.get('rate', 1)
