@@ -1098,21 +1098,50 @@ class UploadWorker(BaseWorker):
         meta['nodepool_build_id'] = build_id
         meta['nodepool_upload_id'] = upload_id
 
-        try:
-            external_id = manager.uploadImage(
-                ext_image_name, filename,
-                image_type=image.extension,
-                meta=meta,
-                md5=image.md5,
-                sha256=image.sha256,
-            )
-        except Exception:
-            self.log.exception(
-                "Failed to upload build %s of image %s to provider %s" %
-                (build_id, image_name, provider.name))
-            data = zk.ImageUpload()
-            data.state = zk.FAILED
-            return data
+        if provider.upload_script:
+            try:
+                cmd = [
+                    provider.upload_script,
+                    ext_image_name,
+                    filename,
+                    provider.name
+                ]
+                self.log.info('Running upload script %s', cmd)
+                p = subprocess.run(cmd, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, check=True)
+            except Exception as e:
+                if isinstance(e, subprocess.CalledProcessError):
+                    self.log.error('Upload script failed with '
+                                   'exit code %s\nstdout:\n%s\nstderr:\n%s',
+                                   e.returncode, e.stdout.decode(),
+                                   e.stderr.decode())
+                else:
+                    self.log.exception(
+                        'Unknown exception during upload script')
+                data = zk.ImageUpload()
+                data.state = zk.FAILED
+                return data
+
+            self.log.info(
+                'Upload script success with exit code %s\n'
+                'stdout:\n%s\nstderr:\n%s',
+                p.returncode, p.stdout.decode(), p.stderr.decode())
+        else:
+            try:
+                external_id = manager.uploadImage(
+                    ext_image_name, filename,
+                    image_type=image.extension,
+                    meta=meta,
+                    md5=image.md5,
+                    sha256=image.sha256,
+                )
+            except Exception:
+                self.log.exception(
+                    "Failed to upload build %s of image %s to provider %s" %
+                    (build_id, image_name, provider.name))
+                data = zk.ImageUpload()
+                data.state = zk.FAILED
+                return data
 
         if provider.post_upload_hook:
             try:
