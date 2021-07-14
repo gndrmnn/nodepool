@@ -152,6 +152,23 @@ Selecting the ``aws`` driver adds the following options to the
       The number of times to retry launching a node before considering
       the request failed.
 
+   .. attr:: upload-script
+      :type: string
+      :default: None
+
+      Filename of an optional script that can be called to upload an image. This
+      can be used to by-pass the drivers upload mehtod and do the upload by a
+      scrpt. The script will be called as follows and should have the external
+      image ID in the output:
+
+      ``<SCRIPT> <IMAGE_NAME> <PATH_TO_IMAGE_FILE> <PROVIDER_NAME> <CLOUD_NAME>
+      <BUILD_ID> <UPLOAD_ID>``
+
+      If the script returns with result code 0 it is treated as successful and
+      the external image ID will parsed from the output with the regex ``Image
+      ID: ([\w-]+)``. Otherwise or when the regex did not match the upload is
+      treated as failed.
+
    .. attr:: post-upload-hook
       :type: string
       :default: None

@@ -80,6 +80,7 @@ providers:
     boot-timeout: 120
     rate: 0.001
     port-cleanup-interval: 0
+    upload-script: /usr/bin/upload-script
     post-upload-hook: /usr/bin/upload-hook
     diskimages:
       - name: trusty

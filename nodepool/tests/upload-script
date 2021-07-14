@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ $# -ne 6 ]
+then
+    echo "Usage: $0 <IMAGENAME> <SOURCEIMAGE> <PROVIDER> <CLOUD> <BUILDID> <UPLOADID>"
+    exit 1
+fi
+
+IMAGENAME="${1}"
+SOURCEIMAGE="${2}"
+PROVIDER="${3}"
+CLOUD="${4}"
+BUILDID="${5}"
+UPLOADID="${6}"
+
+echo "Uploading $IMAGENAME to $CLOUD"
+
+# For a better performace the image is directly uploaded to ceph instead of using the glance api for uploading the image
+#
+# Create a new image UUID
+# UUID=$(uuidgen)
+#
+# Create an empty image
+# glance image-create --disk-format "${SOURCEIMAGE##*.}" --container-format bare --id "${UUID}" --name "${IMAGENAME}" --visibility "private" --property "nodepool_build_id=${BUILDID}" --property "nodepool_upload_id=${UPLOADID}" <&-
+#
+# Import the image directly to ceph
+# rbd import "${SOURCEIMAGE}" "${POOL}/${UUID}"
+#
+# Create a snap from the imported image
+# rbd -p "${POOL}" snap create "${UUID}@snap"
+# rbd -p "${POOL}" snap protect "${UUID}@snap"
+#
+# Add the ceph snap to the "empty" image
+# glance location-add --url "rbd://${FSID}/${POOL}/${UUID}/snap" "${UUID}"
+#
+# Return the external image ID for the new created image
+# echo "Image ID: ${UUID}"
+
+
+# Mandatory: Return the external image ID
+echo "Image ID: fake-image-12345-abcdef"

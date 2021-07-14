@@ -300,6 +300,7 @@ class AwsProviderConfig(ProviderConfig):
         self.image_name_format = '{image_name}-{timestamp}'
         self.image_import_timeout = self.provider.get(
             'image-import-timeout', None)
+        self.upload_script = self.provider.get('upload-script')
         self.post_upload_hook = self.provider.get('post-upload-hook')
         self.max_servers = self.provider.get('max-servers', math.inf)
         self.max_cores = self.provider.get('max-cores', math.inf)
