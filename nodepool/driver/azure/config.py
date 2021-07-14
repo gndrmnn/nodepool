@@ -223,6 +223,7 @@ class AzureProviderConfig(ProviderConfig):
     def load(self, config):
         self.image_type = 'vhd'
         self.image_name_format = '{image_name}-{timestamp}'
+        self.post_upload_hook = self.provider.get('upload-script')
         self.post_upload_hook = self.provider.get('post-upload-hook')
 
         self.rate = self.provider.get('rate', 1)
