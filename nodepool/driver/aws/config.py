@@ -294,6 +294,7 @@ class AwsProviderConfig(ProviderConfig):
         self.object_storage = self.provider.get('object-storage')
         self.image_type = self.provider.get('image-format', 'raw')
         self.image_name_format = '{image_name}-{timestamp}'
+        self.upload_script = self.provider.get('upload-script')
         self.post_upload_hook = self.provider.get('post-upload-hook')
         self.max_servers = self.provider.get('max-servers', math.inf)
         self.max_cores = self.provider.get('max-cores', math.inf)

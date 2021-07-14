@@ -584,6 +584,17 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.waitForUploadRecordDeletion(image.provider_name, image.image_name,
                                          image.build_id, image.id)
 
+    def test_upload_script(self):
+        configfile = self.setup_config('node_upload_script.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        newest_builds = self.zk.getMostRecentBuilds(1, 'fake-image',
+                                                    state=zk.READY)
+        uploads = self.zk.getUploads('fake-image', newest_builds[0].id,
+                                     'fake-provider', states=[zk.READY])
+        self.assertTrue(uploads[0].external_id, 'fake-image-12345-abcdef')
+
     def test_post_upload_hook(self):
         configfile = self.setup_config('node_upload_hook.yaml')
         bldr = self.useBuilder(configfile)
