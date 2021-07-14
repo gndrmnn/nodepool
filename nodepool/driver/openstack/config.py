@@ -177,6 +177,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.diskimages = {}
         self.cloud_images = {}
         self.image_name_format = None
+        self.upload_script = None
         self.post_upload_hook = None
         super().__init__(provider)
 
@@ -217,6 +218,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'image-name-format',
             '{image_name}-{timestamp}'
         )
+        self.upload_script = self.provider.get('upload-script')
         self.post_upload_hook = self.provider.get('post-upload-hook')
 
         default_port_mapping = {
@@ -349,6 +351,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'pools': [pool],
             'diskimages': [provider_diskimage],
             'cloud-images': [provider_cloud_images],
+            'upload-script': str,
             'post-upload-hook': str,
         })
         return v.Schema(schema)
