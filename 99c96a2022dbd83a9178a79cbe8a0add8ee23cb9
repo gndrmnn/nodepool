@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a6dec76_81a4059a",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "It would be helpful to describe what this is and what it\u0027s used for.  But I\u0027m not sure we\u0027ll be able to keep it as-is -- se the comment about removing the estimatedQuotaUsed calls.\n\nI think the simplest thing would be to leave the existing system alone, and then add a new launcher method that iterates over all the ZK nodes and returns a QuotaInformation object.  You can use the nodeIterator to make sure we\u0027re iterating over the TreeCache which means we don\u0027t need to talk to ZK.  It should be fairly efficient.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "836abd96_101bde20",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "I think it would be better if we could avoid getting this far -- a fair bit of work has already been done needlessly to get to this point: we\u0027ve locked the node request, created a request handler, added it to the launcher\u0027s list of ongoing requests, and then we\u0027re going to immediately unlock the request and remove the request handler record because it\u0027s done.\n\nIf we could perform this check inside the _assignHandlers method in the launcher, we could avoid all of that (especially the zk writes).  That could get pretty important in a bad situation, where a tenant is fully at quota and still has lots of requests in the queue; we would need to lock and unlock every one of them just to get past them to any requests from other tenants that are behind them.\n\nNow, there\u0027s still a race condition, in that another launcher could fulfill a request which puts the tenant at quota between the check in _assignHandlers and here.  But there\u0027s already a race condition even with only this check -- two launchers could be executing this code at exactly the same time.  This is a situation that is unique to cluster-wide quota calculations -- we don\u0027t have it anywhere else in nodepool.\n\nFixing that race condition would be very costly indeed (we would either need to add some kind of tenant lock for all providers, or check the tenant quota yet again after fulfilling the request to see if we need to give it back).  But perhaps we\u0027re okay with the possibility a tenant might go over quota due to a race condition across providers.  If so, then we don\u0027t need to solve that problem.  And if we\u0027re okay with that, then we probably don\u0027t need a second check here and can just move this to _assignHandlers.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f87c448b_5d31fcce",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "I\u0027m a little concerned here.  Several calls to self.manager.estimatedNodepoolQuotaUsed have been removed from hasRemainingQuota in favor of using this value.  But this value is only set when a NodeRequestHandler is created.  They can live for quite a long time and exist in a sort of suspended state while they wait for quota to become available.  I\u0027m not convinced we can remove those calls.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "301a1bb2_b720db20",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "Leftover from development?",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "020184b2_075cfde6",
+        "filename": "releasenotes/notes/tenant-scoped-resource-limits-7d0dcc3d6e279334.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "This is written a bit like a commit message instead of a release note.  I\u0027d drop the first sentance.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "975158d2_c4c5f3d5",
+        "filename": "releasenotes/notes/tenant-scoped-resource-limits-7d0dcc3d6e279334.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "s/Adding/Added/ and s/put/set/ and then this is a good introductory sentence.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "191c7e7c_cc6c5480",
+        "filename": "releasenotes/notes/tenant-scoped-resource-limits-7d0dcc3d6e279334.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "Maybe say \"A new top-level config structure has been added:\" since the antecedent of \"it\" isn\u0027t clear.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5133234a_c6378c20",
+        "filename": "releasenotes/notes/tenant-scoped-resource-limits-7d0dcc3d6e279334.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-07-15T22:19:18Z",
+      "side": 1,
+      "message": "Maybe say \"This differs from currently existing...\"; \"contrary\" sounds like they work against each other rather than working together.",
+      "revId": "99c96a2022dbd83a9178a79cbe8a0add8ee23cb9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
