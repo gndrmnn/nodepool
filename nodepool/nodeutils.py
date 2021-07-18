@@ -78,10 +78,17 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
             timeout, exceptions.ConnectionTimeoutException,
             "connection to %s on port %s" % (ip, port)):
         sock = None
+        t = None
         try:
             sock = socket.socket(family, socket.SOCK_STREAM)
             sock.settimeout(10)
             sock.connect(sockaddr)
+            # NOTE(pabelanger): Try to connect to SSH first, before breaking
+            # our loop. This is to ensure the SSHd on the remote node is
+            # properly running before we scan keys below.
+            if gather_hostkeys:
+                t = paramiko.transport.Transport(sock)
+                t.start_client(timeout=timeout)
             break
         except socket.error as e:
             if e.errno not in [errno.ECONNREFUSED, errno.EHOSTUNREACH, None]:
@@ -90,6 +97,11 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
         except Exception:
             log.exception("ssh socket connection failure")
         finally:
+            try:
+                if t:
+                    t.close()
+            except Exception as e:
+                log.exception('Exception closing paramiko: %s', e)
             try:
                 if sock:
                     sock.close()
