@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Fixes a regression in gathering public SSH host keys on slower nodes. We
+    now wait until SSHd on the remote node is started before gathering host
+    keys.
