@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56b226ed_a51a493c",
+        "filename": "releasenotes/notes/ssh-protocol-banner-5ddbf9263a950b5c.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-07-19T23:59:39Z",
+      "side": 1,
+      "message": "Nit: gathering",
+      "range": {
+        "startLine": 5,
+        "startChar": 61,
+        "endLine": 5,
+        "endChar": 67
+      },
+      "revId": "5e9ae29349d27798e49e1a1abbe1c6c0956738e0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
