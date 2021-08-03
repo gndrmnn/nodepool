@@ -26,6 +26,7 @@
         source /opt/devstack/openrc admin admin
         openstack --os-project-name demo --os-username demo security group rule create --ingress --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
         openstack --os-project-name demo --os-username demo security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
+        openstack --os-project-name demo --os-username demo subnet set --dns-nameserver 8.8.8.8 private-subnet
     - name: Create unmanaged VM
       args:
         executable: /bin/bash

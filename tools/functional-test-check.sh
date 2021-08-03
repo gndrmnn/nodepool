@@ -53,6 +53,15 @@ function sshintonode {
         FAILURE_REASON="Failed to find meta-data in config-drive for $node"
         RETURN=1
     fi
+
+    # Check for external connectivity
+    /tmp/ssh_wrapper $node \
+        "ls -l /etc/resolv.conf; cat /etc/resolv.conf; ping -c5 google.com"
+    if [[ $? -ne 0 ]]; then
+        echo "*** Failed to establish external connection"
+        FAILURE_REASON="Failed to establish external connection from $node"
+        RETURN=1
+    fi
 }
 
 function checknm {
