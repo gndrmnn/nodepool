@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93dec979_d5f9a16c",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-08-11T17:35:13Z",
+      "side": 1,
+      "message": "nit: Maybe e.g. instead of i.e. here since programs other than zuul could supply a tenant.  Also, feel free to end sentences with punctuation.  :)  (I think some lines in the previous section omitted it probably only because the author may have been concerned with the interaction with :ref: (but they needn\u0027t be)).\n\nI wouldn\u0027t -1 this, but since there are some more significant changes I\u0027m requesting below, it might be nice to go ahead and tidy this up.",
+      "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c85ce45_dc9337de",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-08-11T17:35:13Z",
+      "side": 1,
+      "message": "We usually log things we don\u0027t do (especially things that we repeatedly don\u0027t do, like this) at debug level.  Otherwise a user running at info level would see this message over and over.  Note that this is similar to line 128 above or 182 below.",
+      "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4bd5ae4_4c4c8c82",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-08-11T17:35:13Z",
+      "side": 1,
+      "message": "Imagine one large tenant with thousands of requests, and it\u0027s at tenant quota.  assignHandlers is going to call hasTenantQuota for every one of those requests, and each of those calls is going to iterate over all of the the nodes in ZK (and there should be a lot, because that big tenant is at quota).  That makes this polynomial time.\n\nThe easiest fix would probably be to do a short (30 seconds?) TTL cache on getUsedQutoaForTenant.  Then we\u0027re back to linear time for assignHandlers.",
+      "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
