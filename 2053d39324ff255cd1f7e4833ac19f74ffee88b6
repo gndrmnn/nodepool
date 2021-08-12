@@ -50,6 +50,24 @@
       "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a08aa96e_268b8b38",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2021-08-12T11:06:46Z",
+      "side": 1,
+      "message": "Referring to your comment on patch set 3 [1], the nodeIterator is already a cached view of the nodes in zk and should be quite efficient.\n\nIntroducing a ttl_cache here would be difficult at least at the corresponding unit tests because we\u0027d either need to make sure the cache is disabled for the tests (ttl\u003d0) or make the tests pause for at least ttl+1 at several points for them to not be flaky (this potentially introduces a considerable time penalty, depending on the chosen ttl value).\n\nAlso, I\u0027m a bit concerned that a ttl-cached view on the tenant quota would make the race condition you mentioned here [2] even worse.\n\nSo all in all I\u0027d rather cope with the additional iteration over the cached/local node list.\n\n[1] https://review.opendev.org/c/zuul/nodepool/+/800765/3/nodepool/driver/__init__.py#384\n[2] https://review.opendev.org/c/zuul/nodepool/+/800765/3/nodepool/driver/__init__.py#585",
+      "parentUuid": "e4bd5ae4_4c4c8c82",
+      "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
     }
   ]
 }
