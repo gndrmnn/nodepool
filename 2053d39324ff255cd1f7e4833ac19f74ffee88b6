@@ -68,6 +68,23 @@
       "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7d6865a_b2f7897a",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-08-17T00:51:19Z",
+      "side": 1,
+      "message": "Those are good points; I stand corrected on the nodeIterator cache :).  The nodeIterator uses cached data to provide the actual node info, but the list of nodes still comes from ZK.  So at least we won\u0027t be performing nodes*requests fetches of data, but we will perform a get_children for each request that we consider processing.  Maybe we can reduce that by altering nodeIterator to use the cache to provide the list of nodes for this?  It should be almost accurate (modulo the lag introduced by the ZK watch firing).\n\nThis might need to be an additional argument to nodeIterator if the existing usages of it are expecting an authoritative list of nodes.\n\nIf that\u0027s difficult, I agree it\u0027s not a showstopper, but I think it might be relatively simple and still sufficiently accurate for this purpose.\n\nIt\u0027s possible if the tests run very quickly we might see the race and so we might need to make sure all the nodes the test expects are in the tree cache before proceeding.",
+      "revId": "2053d39324ff255cd1f7e4833ac19f74ffee88b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
