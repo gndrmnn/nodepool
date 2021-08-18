@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46905ab9_8e071edf",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-08-18T13:56:58Z",
+      "side": 1,
+      "message": "I think it\u0027s fine to keep this caveat in the docs, though I don\u0027t think it\u0027s fair to blame the cache.\n\nThis was true before too -- there is no global coordination, so even if we performed zk queries for everything in real time, multiple launchers would still race to fill the quota.  That race could occur over seconds or even minutes as they performed cloud operations.  Whereas the additional skew introduced by using a cached node list is on the order of milliseconds.\n\nIt would me more correct to say that because multiple launchers do not coordinate with each other the limits are not guaranteed to be exact.",
+      "revId": "2bf8a55edcf43a4d9108f068c5bda1655d40d0e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
