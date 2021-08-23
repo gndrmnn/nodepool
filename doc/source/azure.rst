@@ -392,6 +392,12 @@ section of the configuration.
 
           A unique name within the provider for this pool of resources.
 
+       .. attr:: node-attributes
+          :type: dict
+
+          A dictionary of key-value pairs that will be stored with the node data
+          in ZooKeeper. The keys and values can be any arbitrary string.
+
        .. attr:: ipv4
           :type: bool
 
