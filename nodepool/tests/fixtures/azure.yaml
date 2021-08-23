@@ -36,6 +36,9 @@ providers:
     pools:
       - name: main
         max-servers: 10
+        node-attributes:
+          key1: value1
+          key2: value2
         labels:
           - name: bionic
             cloud-image: bionic
