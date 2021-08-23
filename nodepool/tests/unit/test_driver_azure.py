@@ -54,6 +54,8 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.state, zk.READY)
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
 
     def test_azure_diskimage(self):
         configfile = self.setup_config(
@@ -83,3 +85,5 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.state, zk.READY)
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})

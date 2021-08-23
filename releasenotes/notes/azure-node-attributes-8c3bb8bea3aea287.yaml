@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The node-attributes setting has been added to the Azure driver.
