@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Two new nodepool commands, `nodepool export-image-data` and
+    `nodepool import-image-data` have been added to back up the image
+    data in ZooKeeper to a file in case the ZooKeeper cluster is lost.

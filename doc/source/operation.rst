@@ -202,6 +202,31 @@ alien-image-list
 .. program-output:: nodepool alien-image-list --help
    :nostderr:
 
+Image builds and uploads can take a lot of time, so there is a pair of
+commands to export and import the image build and upload metadata from
+Nodepool's internal storage in ZooKeeper.  These can be used to backup
+and restore data in case the ZooKeeper cluster is lost.  Note that
+these commands do not save or restore the actual image data, only the
+records in ZooKeeper.  If the data are important, consider backing
+them up as well.  Even without the local image builds, restoring the
+image metadata will allow nodepool-launcher to continue to operate
+while new builds are created.
+
+These commands do not export or import any node information.  It is
+expected that any existing nodes will be detected as leaked and
+automatically deleted if the ZooKeeper storage is reset.
+
+export-image-data
+^^^^^^^^^^^^^^^^^
+.. program-output:: nodepool export-image-data --help
+   :nostderr:
+
+import-image-data
+^^^^^^^^^^^^^^^^^
+.. program-output:: nodepool import-image-data --help
+   :nostderr:
+
+
 Removing a Provider
 -------------------
 

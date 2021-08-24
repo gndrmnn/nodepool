@@ -2479,3 +2479,46 @@ class ZooKeeper(object):
     def getStatsElection(self, identifier):
         path = self._electionPath('stats')
         return Election(self.client, path, identifier)
+
+    def exportImageData(self):
+        '''
+        Export the DIB image and upload data from ZK for backup purposes.
+        '''
+        ret = {}
+        for image_name in self.getImageNames():
+            paused = self.getImagePaused(image_name)
+            if paused:
+                paused_path = self._imagePausePath(image_name)
+                ret[paused_path] = ''
+            for build_no in self.getBuildNumbers(image_name):
+                build_path = self._imageBuildsPath(image_name) + "/" + build_no
+                try:
+                    build_data, stat = self.client.get(build_path)
+                except kze.NoNodeError:
+                    continue
+                ret[build_path] = build_data.decode('utf8')
+                for provider_name in self.getBuildProviders(image_name,
+                                                            build_no):
+                    for upload_no in self.getImageUploadNumbers(
+                            image_name, build_no, provider_name):
+                        upload_path = self._imageUploadPath(
+                            image_name, build_no, provider_name) + "/"
+                        upload_path += upload_no
+                        try:
+                            upload_data, stat = self.client.get(upload_path)
+                        except kze.NoNodeError:
+                            continue
+                        ret[upload_path] = upload_data.decode('utf8')
+        return ret
+
+    def importImageData(self, import_data):
+        '''Import the DIB image and upload data to ZK.
+
+        This makes no guarantees about locking; it is expected to be
+        run on a quiescent system with no daemons running.
+
+        '''
+        for path, data in import_data.items():
+            self.client.create(path,
+                               value=data.encode('utf8'),
+                               makepath=True)
