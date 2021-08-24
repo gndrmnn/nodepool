@@ -16,6 +16,7 @@
 import logging
 import os.path
 import sys  # noqa making sure its available for monkey patching
+import tempfile
 
 import fixtures
 import mock
@@ -399,3 +400,34 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(1, len(nodes))
         self.assertEqual(p1_nodes[0], nodes[0])
+
+    def test_export_image_data(self):
+        configfile = self.setup_config('node.yaml')
+        builder = self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label')
+
+        pool.stop()
+        builder.stop()
+        # Save a copy of the data in ZK
+        old_data = self.getZKTree('/nodepool/images')
+        # We aren't backing up the lock data
+        old_data.pop('/nodepool/images/fake-image/builds/0000000001'
+                     '/providers/fake-provider/images/lock')
+        old_data.pop('/nodepool/images/fake-image/builds/lock')
+
+        with tempfile.NamedTemporaryFile() as tf:
+            self.patch_argv(
+                "-c", configfile, 'export-image-data', tf.name)
+            nodepoolcmd.main()
+            # Delete data from ZK
+            self.zk.client.delete('/nodepool', recursive=True)
+
+            self.patch_argv(
+                "-c", configfile, 'import-image-data', tf.name)
+            nodepoolcmd.main()
+
+        new_data = self.getZKTree('/nodepool/images')
+        self.assertEqual(new_data, old_data)

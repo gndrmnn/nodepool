@@ -12,7 +12,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import json
 import logging.config
+import os
 
 from prettytable import PrettyTable
 
@@ -143,6 +145,24 @@ class NodePoolCmd(NodepoolApp):
             help='unpause an image')
         cmd_image_unpause.set_defaults(func=self.image_unpause)
         cmd_image_unpause.add_argument('image', help='image name')
+
+        cmd_export_image_data = subparsers.add_parser(
+            'export-image-data',
+            help='Export image data from ZooKeeper')
+        cmd_export_image_data.add_argument(
+            'path',
+            type=str,
+            help='Export file path')
+        cmd_export_image_data.set_defaults(func=self.export_image_data)
+
+        cmd_import_image_data = subparsers.add_parser(
+            'import-image-data',
+            help='Import image data to ZooKeeper')
+        cmd_import_image_data.add_argument(
+            'path',
+            type=str,
+            help='Import file path')
+        cmd_import_image_data.set_defaults(func=self.import_image_data)
 
         return parser
 
@@ -368,6 +388,16 @@ class NodePoolCmd(NodepoolApp):
         image_name = self.args.image
         self.zk.setImagePaused(image_name, False)
 
+    def export_image_data(self):
+        data = self.zk.exportImageData()
+        with open(os.open(self.args.path,
+                          os.O_CREAT | os.O_WRONLY, 0o600), 'w') as f:
+            json.dump(data, f)
+
+    def import_image_data(self):
+        with open(self.args.path, 'r') as f:
+            self.zk.importImageData(json.load(f))
+
     def _wait_for_threads(self, threads):
         for t in threads:
             if t:
@@ -393,7 +423,8 @@ class NodePoolCmd(NodepoolApp):
                                  'image-delete', 'alien-image-list',
                                  'list', 'delete',
                                  'request-list', 'info', 'erase',
-                                 'image-pause', 'image-unpause'):
+                                 'image-pause', 'image-unpause',
+                                 'export-image-data', 'import-image-data'):
             self.zk = zk.ZooKeeper(enable_cache=False)
             self.zk.connect(
                 list(config.zookeeper_servers.values()),
