@@ -77,19 +77,17 @@ RUN \
   && apt-get update \
   && apt-get install -y \
       curl \
+      dnf \
       debian-keyring \
       dosfstools \
       gdisk \
       git \
       kpartx \
       qemu-utils \
-      ubuntu-keyring \
       vhd-util \
       debootstrap \
       procps \
       xz-utils \
-      yum \
-      yum-utils \
       zypper
 
 # Podman install mainly for the "containerfile" elements of dib that
@@ -107,15 +105,21 @@ RUN \
 # to:
 #   Error: error creating libpod runtime: failed to mount overlay for
 #   metacopy check: invalid argument
+#
 RUN \
-  echo "deb https://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
-  && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
+  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
   && apt-get update \
   && apt-get install -y --install-recommends \
-      libseccomp2/buster-backports \
       podman \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf \
   && sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
+
+RUN \
+  git clone https://github.com/rpm-software-management/dnf-plugins-core \
+  && mkdir /usr/lib/python3/dist-packages/dnf-plugins \
+  && cp -r dnf-plugins-core/plugins/dnfpluginscore /usr/lib/python3/dist-packages \
+  && cp dnf-plugins-core/plugins/download.py /usr/lib/python3/dist-packages/dnf-plugins \
+  && rm -rf dnf-plugins-core
 
 # Cleanup
 RUN \
