@@ -67,8 +67,8 @@
     dependencies:
       - opendev-buildset-registry
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.7-bullseye-container-image
+      - python-base-3.7-bullseye-container-image
     provides: nodepool-container-image
     vars: &nodepool_image_vars
       docker_images:
@@ -103,8 +103,8 @@
     description: Build Docker images and upload to Docker Hub.
     timeout: *image_build_timeout
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.7-bullseye-container-image
+      - python-base-3.7-bullseye-container-image
     provides: nodepool-container-image
     vars: *nodepool_image_vars
     secrets:
@@ -134,8 +134,8 @@
       - openstack/diskimage-builder
       - openstack/openstacksdk
     requires:
-      - python-builder-3.8-container-image
-      - python-base-3.8-container-image
+      - python-builder-3.7-bullseye-container-image
+      - python-base-3.7-bullseye-container-image
     provides: nodepool-siblings-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
