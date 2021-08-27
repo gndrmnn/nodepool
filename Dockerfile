@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker.io/opendevorg/python-builder:3.7-buster as builder
+FROM docker.io/opendevorg/python-builder:3.7-bullseye as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
@@ -25,7 +25,7 @@ RUN if [ `uname -m` = "aarch64" ] ; then \
     fi
 RUN assemble
 
-FROM docker.io/opendevorg/python-base:3.7-buster as nodepool-base
+FROM docker.io/opendevorg/python-base:3.7-bullseye as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
@@ -77,19 +77,17 @@ RUN \
   && apt-get update \
   && apt-get install -y \
       curl \
+      dnf \
       debian-keyring \
       dosfstools \
       gdisk \
       git \
       kpartx \
       qemu-utils \
-      ubuntu-keyring \
       vhd-util \
       debootstrap \
       procps \
       xz-utils \
-      yum \
-      yum-utils \
       zypper
 
 # Podman install mainly for the "containerfile" elements of dib that
@@ -102,20 +100,23 @@ RUN \
 # hand-wavy motion) but it's not in the container; override to use
 # cgroupfs manager.  Also disable trying to send logs to the journal.
 #
-# Kernel may not support overlayfsmetacopy options (bionic?), need to
-# turn that off for compatability.  See various error messages related
-# to:
-#   Error: error creating libpod runtime: failed to mount overlay for
-#   metacopy check: invalid argument
 RUN \
-  echo "deb https://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
-  && echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_10/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
+  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
   && apt-get update \
   && apt-get install -y --install-recommends \
-      libseccomp2/buster-backports \
       podman \
-  && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf \
-  && sed -i 's/,metacopy=on//g' /etc/containers/storage.conf
+  && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
+
+# There is a Debian package in the NEW queue currently for dnf-plugins-core
+#  https://ftp-master.debian.org/new/dnf-plugins-core_4.0.21-1~exp1.html
+# Until this is generally available; manually install "dnf download"
+# for the yum-minimal element
+RUN \
+  git clone https://github.com/rpm-software-management/dnf-plugins-core \
+  && mkdir /usr/lib/python3/dist-packages/dnf-plugins \
+  && cp -r dnf-plugins-core/plugins/dnfpluginscore /usr/lib/python3/dist-packages \
+  && cp dnf-plugins-core/plugins/download.py /usr/lib/python3/dist-packages/dnf-plugins \
+  && rm -rf dnf-plugins-core
 
 # Cleanup
 RUN \
