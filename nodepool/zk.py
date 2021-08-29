@@ -588,6 +588,8 @@ class Node(BaseModel):
         self.resources = None
         self.attributes = None
         self.python_path = None
+        self.tenant_name = None
+        self.driver_data = None
 
     def __repr__(self):
         d = self.toDict()
@@ -627,7 +629,9 @@ class Node(BaseModel):
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
                     self.attributes == other.attributes and
-                    self.python_path == other.python_path)
+                    self.python_path == other.python_path and
+                    self.tenant_name == other.tenant_name and
+                    self.driver_data == other.driver_data)
         else:
             return False
 
@@ -678,6 +682,8 @@ class Node(BaseModel):
         d['resources'] = self.resources
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
+        d['tenant_name'] = self.tenant_name
+        d['driver_data'] = self.driver_data
         return d
 
     @staticmethod
@@ -743,6 +749,8 @@ class Node(BaseModel):
         self.attributes = d.get('attributes')
         self.python_path = d.get('python_path')
         self.shell_type = d.get('shell_type')
+        self.tenant_name = d.get('tenant_name')
+        self.driver_data = d.get('driver_data')
 
 
 class ZooKeeper(object):
@@ -1931,7 +1939,8 @@ class ZooKeeper(object):
         request.lock.release()
         request.lock = None
 
-    def lockNode(self, node, blocking=True, timeout=None):
+    def lockNode(self, node, blocking=True, timeout=None,
+                 ephemeral=True, identifier=None):
         '''
         Lock a node.
 
@@ -1945,6 +1954,10 @@ class ZooKeeper(object):
             acquire the lock
         :param int timeout: When blocking, how long to wait for the lock
             to get acquired. None, the default, waits forever.
+        :param bool ephemeral: Whether to use an ephemeral lock.  Unless
+            you have a really good reason, use the default of True.
+        :param bool identifier: Identifies the lock holder.  The default
+            of None is usually fine.
 
         :raises: TimeoutException if we failed to acquire the lock when
             blocking with a timeout. ZKLockException if we are not blocking
@@ -1952,8 +1965,8 @@ class ZooKeeper(object):
         '''
         path = self._nodeLockPath(node.id)
         try:
-            lock = Lock(self.client, path)
-            have_lock = lock.acquire(blocking, timeout)
+            lock = Lock(self.client, path, identifier)
+            have_lock = lock.acquire(blocking, timeout, ephemeral)
         except kze.LockTimeout:
             raise npe.TimeoutException(
                 "Timeout trying to acquire lock %s" % path)
@@ -1985,6 +1998,26 @@ class ZooKeeper(object):
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
         node.lock.release()
         node.lock = None
+
+    def forceUnlockNode(self, node):
+        '''
+        Forcibly unlock a node.
+
+        :param Node node: The node to unlock.
+        '''
+        path = self._nodeLockPath(node.id)
+        try:
+            self.client.delete(path, recursive=True)
+        except kze.NoNodeError:
+            pass
+
+    def getNodeLockContenders(self, node):
+        '''
+        Return the contenders for a node lock.
+        '''
+        path = self._nodeLockPath(node.id)
+        lock = Lock(self.client, path)
+        return lock.contenders()
 
     def getNodes(self):
         '''
