@@ -44,6 +44,7 @@ def quota_info_from_sku(sku):
 class AzureInstance(statemachine.Instance):
     def __init__(self, vm, nic=None, public_ipv4=None,
                  public_ipv6=None, sku=None):
+        super().__init__()
         self.external_id = vm['name']
         self.metadata = vm.get('tags', {})
         self.private_ipv4 = None
