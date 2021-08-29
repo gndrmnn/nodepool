@@ -149,6 +149,15 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.public_ipv6 = instance.public_ipv6
         node.region = instance.region
         node.az = instance.az
+        node.driver_data = instance.driver_data
+
+        # Optionally, if the node has updated values that we set from
+        # the image attributes earlier, set those.
+        for attr in ('username', 'python_path', 'connection_port',
+                     'connection_type'):
+            if hasattr(instance, attr):
+                setattr(node, attr, getattr(instance, attr))
+
         self.zk.storeNode(node)
 
     def runStateMachine(self):
@@ -696,6 +705,15 @@ class Instance:
     * private_ipv4: str
     * az: str
     * region: str
+    * driver_data: any
+
+    And the following are even more optional (as they are usually
+    already set from the image configuration):
+
+    * username: str
+    * python_path: str
+    * connection_port: str
+    * connection_type: str
     """
     def __init__(self):
         self.ready = False
@@ -708,6 +726,7 @@ class Instance:
         self.az = None
         self.region = None
         self.metadata = {}
+        self.driver_data = None
 
     def __repr__(self):
         state = []
