@@ -31,6 +31,7 @@ The following drivers are available.
    openshift-pods
    openstack
    static
+   metastatic
 
 The following sections are available.  All are required unless
 otherwise indicated.
