@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker.io/opendevorg/python-builder:3.7 as builder
+FROM docker.io/opendevorg/python-builder:3.7-buster as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
@@ -25,7 +25,7 @@ RUN if [ `uname -m` = "aarch64" ] ; then \
     fi
 RUN assemble
 
-FROM docker.io/opendevorg/python-base:3.7 as nodepool-base
+FROM docker.io/opendevorg/python-base:3.7-buster as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
