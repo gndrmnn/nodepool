@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c474fd9_adb20aab",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-08-30T06:48:50Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "7275ecfe3c95d3375921fcf36d437b5598b48f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87bcb91f_5190449a",
+        "filename": "doc/source/configuration.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-08-30T06:48:50Z",
+      "side": 1,
+      "message": "nit: drop the e.g.,",
+      "revId": "7275ecfe3c95d3375921fcf36d437b5598b48f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a750370b_05d66655",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-08-30T06:48:50Z",
+      "side": 1,
+      "message": "Note that 785821 adds resources so I think you could account for them using this; see ~\n\nhttps://review.opendev.org/c/zuul/nodepool/+/785821/3/nodepool/driver/utils.py",
+      "revId": "7275ecfe3c95d3375921fcf36d437b5598b48f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
