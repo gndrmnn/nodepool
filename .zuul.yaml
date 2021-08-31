@@ -275,22 +275,10 @@
     check:
       jobs:
         - opendev-buildset-registry
-        - nodepool-build-image
         - nodepool-build-image-siblings
-        - zuul-tox-docs
-        - tox-pep8
-        - nodepool-tox-py36
-        - nodepool-tox-py38
-        - nodepool-zuul-functional:
-            voting: false
-        - nodepool-functional-container-openstack-release
-        - nodepool-functional-container-openstack-siblings
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            requires: zuul-container-image
-            dependencies: nodepool-build-image
-        - build-python-release
+        - dib-nodepool-functional-openstack-ubuntu-xenial-src
+        - dib-nodepool-functional-openstack-ubuntu-bionic-src
+        - dib-nodepool-functional-openstack-ubuntu-focal-src
     gate:
       jobs:
         - nodepool-upload-image
