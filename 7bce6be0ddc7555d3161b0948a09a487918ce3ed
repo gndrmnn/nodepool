@@ -16,6 +16,24 @@
       "revId": "7bce6be0ddc7555d3161b0948a09a487918ce3ed",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "744b1d48_7be58b83",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-09-02T20:37:26Z",
+      "side": 1,
+      "message": "It appears the zookeeper interactions under this method are try excepted. We should be fine unless that changes.",
+      "parentUuid": "e83d05c8_c0369288",
+      "revId": "7bce6be0ddc7555d3161b0948a09a487918ce3ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
