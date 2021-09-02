@@ -1086,6 +1086,7 @@ class NodePool(threading.Thread):
                             t.start()
                             self._pool_threads[key] = t
                         elif not self._pool_threads[key].is_alive():
+                            self._pool_threads[key].stop()
                             self._pool_threads[key].join()
                             t = PoolWorker(self, provider.name, pool.name)
                             self.log.info("Restarting %s" % t.name)
