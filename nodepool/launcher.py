@@ -256,27 +256,28 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.running = True
 
         while self.running:
-            # Don't do work if we've lost communication with the ZK cluster
-            did_suspend = False
-            while self.zk and (self.zk.suspended or self.zk.lost):
-                did_suspend = True
-                self.log.info("ZooKeeper suspended. Waiting")
-                time.sleep(SUSPEND_WAIT_TIME)
-            if did_suspend:
-                self.log.info("ZooKeeper available. Resuming")
-
-            # Make sure we're always registered with ZK
-            launcher = zk.Launcher()
-            launcher.id = self.launcher_id
-            for prov_cfg in self.nodepool.config.providers.values():
-                launcher.supported_labels.update(prov_cfg.getSupportedLabels())
-            launcher.provider_name = self.provider_name
-            self.zk.registerLauncher(launcher)
-
-            self.updateProviderLimits(
-                self.nodepool.config.providers.get(self.provider_name))
-
             try:
+                # Don't do work if we've lost communication with the ZK cluster
+                did_suspend = False
+                while self.zk and (self.zk.suspended or self.zk.lost):
+                    did_suspend = True
+                    self.log.info("ZooKeeper suspended. Waiting")
+                    time.sleep(SUSPEND_WAIT_TIME)
+                if did_suspend:
+                    self.log.info("ZooKeeper available. Resuming")
+
+                # Make sure we're always registered with ZK
+                launcher = zk.Launcher()
+                launcher.id = self.launcher_id
+                for prov_cfg in self.nodepool.config.providers.values():
+                    launcher.supported_labels.update(
+                        prov_cfg.getSupportedLabels())
+                launcher.provider_name = self.provider_name
+                self.zk.registerLauncher(launcher)
+
+                self.updateProviderLimits(
+                    self.nodepool.config.providers.get(self.provider_name))
+
                 if not self.paused_handler:
                     while not self._assignHandlers():
                         # _assignHandlers can take quite some time on a busy
