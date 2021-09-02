@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e83d05c8_c0369288",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-09-02T20:33:36Z",
+      "side": 1,
+      "message": "Can this crash?",
+      "revId": "7bce6be0ddc7555d3161b0948a09a487918ce3ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
