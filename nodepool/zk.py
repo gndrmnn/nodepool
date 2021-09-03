@@ -581,6 +581,7 @@ class Node(BaseModel):
         self.external_id = None
         self.hostname = None
         self.comment = None
+        self.user_data = None
         self.hold_job = None
         self.username = None
         self.host_keys = []
@@ -618,6 +619,7 @@ class Node(BaseModel):
                     self.external_id == other.external_id and
                     self.hostname == other.hostname and
                     self.comment == other.comment and
+                    self.user_data == other.user_data and
                     self.hold_job == other.hold_job and
                     self.username == other.username and
                     self.connection_type == other.connection_type and
@@ -668,6 +670,7 @@ class Node(BaseModel):
         d['external_id'] = self.external_id
         d['hostname'] = self.hostname
         d['comment'] = self.comment
+        d['user_data'] = self.user_data
         d['hold_job'] = self.hold_job
         d['host_keys'] = self.host_keys
         d['username'] = self.username
@@ -722,6 +725,7 @@ class Node(BaseModel):
         self.external_id = d.get('external_id')
         self.hostname = d.get('hostname')
         self.comment = d.get('comment')
+        self.user_data = d.get('user_data')
         self.hold_job = d.get('hold_job')
         self.username = d.get('username', 'zuul')
         self.connection_type = d.get('connection_type')
