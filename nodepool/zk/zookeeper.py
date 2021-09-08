@@ -520,6 +520,7 @@ class Node(BaseModel):
         self.host_keys = []
         self.hold_expiration = None
         self.resources = None
+        self.slot = None
         self.attributes = None
         self.python_path = None
         self.tenant_name = None
@@ -564,6 +565,7 @@ class Node(BaseModel):
                     self.host_keys == other.host_keys and
                     self.hold_expiration == other.hold_expiration and
                     self.resources == other.resources and
+                    self.slot == other.slot and
                     self.attributes == other.attributes and
                     self.python_path == other.python_path and
                     self.tenant_name == other.tenant_name and
@@ -618,6 +620,7 @@ class Node(BaseModel):
         d['shell_type'] = self.shell_type
         d['hold_expiration'] = self.hold_expiration
         d['resources'] = self.resources
+        d['slot'] = self.slot
         d['attributes'] = self.attributes
         d['python_path'] = self.python_path
         d['tenant_name'] = self.tenant_name
@@ -686,6 +689,8 @@ class Node(BaseModel):
         else:
             self.hold_expiration = hold_expiration
         self.resources = d.get('resources')
+        # Use a default slot number to prevent returning None when upgrading.
+        self.slot = d.get('slot', 0)
         self.attributes = d.get('attributes')
         self.python_path = d.get('python_path')
         self.shell_type = d.get('shell_type')
