@@ -609,7 +609,8 @@ class DBTestCase(BaseTestCase):
             if label in ready_nodes and len(ready_nodes[label]) == count:
                 break
         self.wait_for_threads()
-        return ready_nodes[label]
+        return sorted(ready_nodes[label],
+                      key=lambda x: x.id)
 
     def waitForAnyNodeInState(self, state):
         # Wait for a node to be in the aborted state
