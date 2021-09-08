@@ -181,5 +181,8 @@ Selecting the static driver adds the following options to the
             :type: int
             :default: 1
 
-            The number of jobs that can run in parallel on this node.
-
+            The number of jobs that can run in parallel on this node. These
+            jobs will share ``name``, ``username``, and ``connection-port``
+            from the node attributes, but have distinct ``slot`` numbers.
+            This facilitates avoiding workspace collisions on nodes with
+            :attr:`max-parallel-jobs` >1.
