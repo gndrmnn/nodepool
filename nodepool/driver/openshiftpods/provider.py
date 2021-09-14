@@ -103,7 +103,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
         }
         try:
             self.k8s_client.delete_namespaced_pod(
-                pod_name, project_name, delete_body)
+                pod_name, project_name, **delete_body)
             self.log.info("%s: pod removed" % server_id)
         except Exception:
             # TODO: implement better exception handling
