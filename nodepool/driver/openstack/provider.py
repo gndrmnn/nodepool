@@ -508,7 +508,8 @@ class OpenStackProvider(Provider, QuotaSupport):
         '''
         ret = []
         for p in ports:
-            if p.device_owner is None or p.device_owner.startswith("compute:"):
+            if (p.device_owner is None or p.device_owner == '' or
+                    p.device_owner.startswith("compute:")):
                 ret.append(p)
         return ret
 
