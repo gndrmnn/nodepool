@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d8d8510_f23d4c0c",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-09-21T22:04:07Z",
+      "side": 1,
+      "message": "This is definitely a grey area, but since this isn\u0027t strictly a k8s YAML value, we should probably stick with the nodepool convention and call it mount-path.",
+      "revId": "a9572895492b8bf06c2ef02748ddad276ec126b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac4210f2_219307ff",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-09-21T22:04:07Z",
+      "side": 1,
+      "message": "Nit: feel free to throw a period on the end of the sentence.  :)",
+      "revId": "a9572895492b8bf06c2ef02748ddad276ec126b5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
+    }
+  ]
+}
