@@ -266,6 +266,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             'command': ["/bin/sh", "-c"],
             'args': ["while true; do sleep 30; done;"],
             'env': label.env,
+            'volumeMounts': [],
         }
 
         if label.cpu or label.memory:
@@ -278,8 +279,18 @@ class KubernetesProvider(Provider, QuotaSupport):
                     rbody['memory'] = '%dMi' % int(label.memory)
                 container_body['resources'][rtype] = rbody
 
+        volumes = []
+        if label.volumes:
+            for v in label.volumes:
+                volumes.append(v['volume'])
+                container_body['volumeMounts'].append({
+                    'name': v['volume']['name'],
+                    'mountPath': v['mount-path'],
+                })
+
         spec_body = {
-            'containers': [container_body]
+            'containers': [container_body],
+            'volumes': volumes,
         }
 
         if label.node_selector:
