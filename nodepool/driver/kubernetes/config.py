@@ -50,6 +50,7 @@ class KubernetesPool(ConfigPool):
             pl.memory = label.get('memory')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.volumes = label.get('volumes', [])
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
