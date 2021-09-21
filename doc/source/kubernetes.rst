@@ -193,3 +193,24 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: volumes
+            :type: list
+            :default: []
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type; a
+            list of volumes to mount when the Pod is created. Each entry is a
+            dictionary with the following keys:
+
+            .. attr:: mountPath
+               :type: str
+               :required:
+
+               Where the volume should be mounted in the Pod
+
+            .. attr:: volume
+               :type: dict
+               :required:
+
+               Volume specification as described by the
+               `Kubernetes Volume API <https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/volume/>`_
