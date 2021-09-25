@@ -152,6 +152,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.region = instance.region
         node.az = instance.az
         node.driver_data = instance.driver_data
+        node.slot = instance.slot
 
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
@@ -708,6 +709,7 @@ class Instance:
     * az: str
     * region: str
     * driver_data: any
+    * slot: int
 
     And the following are even more optional (as they are usually
     already set from the image configuration):
@@ -730,6 +732,7 @@ class Instance:
         self.region = None
         self.metadata = {}
         self.driver_data = None
+        self.slot = None
 
     def __repr__(self):
         state = []
