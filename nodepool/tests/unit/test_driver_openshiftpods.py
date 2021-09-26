@@ -56,7 +56,7 @@ class FakeCoreClient(object):
                 phase = "Running"
         return FakePod
 
-    def delete_namespaced_pod(self, name, project, delete_body):
+    def delete_namespaced_pod(self, name, project):
         to_delete = None
         for pod in self.pods:
             if pod.metadata.name == name:
