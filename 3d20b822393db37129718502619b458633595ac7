@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7692261_bc24be39",
+        "filename": "doc/source/openshift.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2021-09-26T09:25:28Z",
+      "side": 1,
+      "message": "I think this should link to \u0027providers.[openshift].pools.labels.type.pod\u0027",
+      "revId": "3d20b822393db37129718502619b458633595ac7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
