@@ -16,6 +16,24 @@
       "revId": "3d20b822393db37129718502619b458633595ac7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5342afc6_2c620c6a",
+        "filename": "doc/source/openshift.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2021-09-27T20:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7692261_bc24be39",
+      "revId": "3d20b822393db37129718502619b458633595ac7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": false
     }
   ]
 }
