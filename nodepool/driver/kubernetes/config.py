@@ -48,6 +48,7 @@ class KubernetesPool(ConfigPool):
             pl.shell_type = label.get('shell-type')
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
+            pl.kvm = label.get('devices.kubevirt.io/kvm')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.pool = self
@@ -93,6 +94,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'shell-type': str,
             'cpu': int,
             'memory': int,
+            'devices.kubevirt.io/kvm': int,
             'env': [env_var],
             'node-selector': dict,
         }

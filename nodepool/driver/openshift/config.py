@@ -47,6 +47,7 @@ class OpenshiftPool(ConfigPool):
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
+            pl.kvm = label.get('devices.kubevirt.io/kvm')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
@@ -94,6 +95,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'cpu': int,
             'memory': int,
             'python-path': str,
+            'devices.kubevirt.io/kvm': int,
             'shell-type': str,
             'env': [env_var],
             'node-selector': dict,

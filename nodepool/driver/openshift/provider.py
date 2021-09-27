@@ -224,6 +224,8 @@ class OpenshiftProvider(Provider):
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
                     rbody['memory'] = '%dMi' % int(label.memory)
+                if label.kvm:
+                    rbody['devices.kubevirt.io/kvm'] = int(label.kvm)
                 container_body['resources'][rtype] = rbody
 
         spec_body = {
