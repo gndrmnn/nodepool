@@ -167,6 +167,14 @@ Selecting the openshift driver adds the following options to the
          :value:`providers.[openshift].labels.type.pod` label type;
          specifies the amount of memory in MB to request for the pod.
 
+      .. attr:: devices.kubevirt.io/kvm
+         :type: int
+
+         Only used by the
+         :value:`providers.[openshift].labels.type.pod` label type;
+         indicates the number of kvm node resources of the same name to
+         allocate from kubevirt, which exposes /dev/kvm to the container.
+
       .. attr:: env
          :type: list
          :default: []
