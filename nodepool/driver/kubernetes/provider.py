@@ -19,12 +19,13 @@ import urllib3
 import time
 
 from kubernetes import client as k8s_client
+from kubernetes.utils import parse_quantity
 
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.kubernetes import handler
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
-from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils import NodeDeleter, Timeout
 from nodepool.driver.utils_k8s import get_client
 
 urllib3.disable_warnings()
@@ -298,13 +299,21 @@ class KubernetesProvider(Provider, QuotaSupport):
 
         self.k8s_client.create_namespaced_pod(namespace, pod_body)
 
-        for retry in range(300):
-            pod = self.k8s_client.read_namespaced_pod(label.name, namespace)
-            if pod.status.phase == "Running":
-                break
+        def getPod():
+            nonlocal namespace
+            nonlocal label
+            return self.k8s_client.read_namespaced_pod(label.name, namespace)
+
+        timeout = Timeout(label.startup_timeout)
+
+        pod = getPod()
+        while not timeout.expired() and \
+                pod.status.phase in ("Pending", "Unknown"):
             self.log.debug("%s: pod status is %s", namespace, pod.status.phase)
             time.sleep(1)
-        if retry == 299:
+            pod = getPod()
+
+        if pod.status.phase != "Running":
             raise exceptions.LaunchNodepoolException(
                 "%s: pod failed to initialize (%s)" % (
                     namespace, pod.status.phase))
