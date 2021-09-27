@@ -193,3 +193,12 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+
+        .. attr:: startup-timeout
+           :type: float
+           :default: 300
+
+           Only used by the
+           :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+           number of seconds to wait while a pod is in the ``Pending`` state
+           after it is created.

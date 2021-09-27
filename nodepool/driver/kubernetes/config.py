@@ -50,6 +50,7 @@ class KubernetesPool(ConfigPool):
             pl.memory = label.get('memory')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.startup_timeout = float(label.get('startup-timeout', 300))
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -95,6 +96,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'memory': int,
             'env': [env_var],
             'node-selector': dict,
+            'startup-timeout': float,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

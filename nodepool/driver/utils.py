@@ -408,3 +408,39 @@ class RateLimiter:
 
     def __exit__(self, etype, value, tb):
         self.last_ts = time.monotonic()
+
+
+class Timeout(object):
+    """Manage a timeout
+
+    :param float timeout: The duration of the timeout, in seconds
+
+    Example:
+    .. code:: python
+
+        t = Timeout(10)
+        while not t.expired():
+            time.sleep(t.remaining())
+    """
+    def __init__(self, timeout):
+        self.expiration_time = time.monotonic() + timeout
+
+    def remaining(self):
+        """
+        Calculates the number of seconds remaining until the timeout expires.
+
+        Will always return a positive value to remove the need to call
+        `expired` and thus prevent races
+
+        :return: The float number of seconds until the timeout expires, or 0.0
+                 if it has already expired
+        """
+        return min(self.expiration_time - time.monotonic(), 0.0)
+
+    def expired(self):
+        """
+        Check if timeout is expired
+
+        :returns: True if the timer is expired and False if not
+        """
+        return time.monotonic() >= self.expiration_time
