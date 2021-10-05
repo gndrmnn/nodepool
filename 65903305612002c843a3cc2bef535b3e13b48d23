@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b772e38f_078725a6",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 34108
+      },
+      "writtenOn": "2021-10-05T11:37:44Z",
+      "side": 1,
+      "message": "Is it possible to set multiple backing-labels?\nFor example: \nbacking-label: large-node1, large-node2",
+      "range": {
+        "startLine": 53,
+        "startChar": 33,
+        "endLine": 53,
+        "endChar": 43
+      },
+      "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
+      "unresolved": true
+    }
+  ]
+}
