@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "b772e38f_078725a6",
         "filename": "doc/source/metastatic.rst",
@@ -20,10 +21,10 @@
         "endChar": 43
       },
       "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
-      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
-      "unresolved": true
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "249c9732_0e3e696e",
         "filename": "doc/source/metastatic.rst",
@@ -37,8 +38,25 @@
       "side": 1,
       "message": "No; Nodepool only allows you to request a single label.  I\u0027m curious why that would be necessary.  If large-node1 and large-node2 are really interchangable, then you can give them both the same label.",
       "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
-      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543",
-      "unresolved": false
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dee65ba5_1ab34654",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 34108
+      },
+      "writtenOn": "2021-10-11T05:01:26Z",
+      "side": 1,
+      "message": "Sorry, I see know that I made a mistake. I meant the “- name:” and not the “– backing-label:”. \n\nWe have old SW tags which have an old label, called x. In the git master we have a new label, called y. Now both jobs can actually run using the same image and node. \n\nTherefore, we wonder if it possible to set:\n            - name: x, y\n              backing-label: backing-node\n\nOtherwise, I guess we have to set it like this.\n            - name: x\n              backing-label: backing-node\n            - name: y\n              backing-label: backing-node\n\nAgain, sorry for the confusion previously.",
+      "parentUuid": "249c9732_0e3e696e",
+      "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
