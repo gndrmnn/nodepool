@@ -57,6 +57,23 @@
       "parentUuid": "249c9732_0e3e696e",
       "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79ec1f7e_bf4d6470",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-10-14T17:05:52Z",
+      "side": 1,
+      "message": "Ah, yep.  You\u0027ll need to do the second thing.",
+      "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
