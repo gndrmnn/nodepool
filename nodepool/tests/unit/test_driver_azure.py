@@ -54,6 +54,7 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.state, zk.READY)
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
 
     def test_azure_diskimage(self):
         configfile = self.setup_config(
