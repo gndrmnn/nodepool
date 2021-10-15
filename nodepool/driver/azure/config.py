@@ -35,6 +35,7 @@ class AzureProviderCloudImage(ConfigValue):
         self.key = image.get('key', zuul_public_key)
         self.image_reference = image['image-reference']
         self.python_path = image.get('python-path')
+        self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
         self.connection_port = image.get(
             'connection-port',
@@ -63,7 +64,7 @@ class AzureProviderCloudImage(ConfigValue):
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
-            # TODO(corvus): shell-type
+            'shell-type': str,
         }
 
 
@@ -77,6 +78,7 @@ class AzureProviderDiskImage(ConfigValue):
         diskimage.image_types.add('vhd')
         self.pause = bool(image.get('pause', False))
         self.python_path = image.get('python-path')
+        self.shell_type = image.get('shell-type')
         self.username = image.get('username')
         self.key = image.get('key')
         self.connection_type = image.get('connection-type', 'ssh')
@@ -100,7 +102,7 @@ class AzureProviderDiskImage(ConfigValue):
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
-            # TODO(corvus): shell-type
+            'shell-type': str,
         }
 
 

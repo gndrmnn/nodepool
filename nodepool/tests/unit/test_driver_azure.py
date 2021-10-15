@@ -54,6 +54,7 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.state, zk.READY)
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, 'sh')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
 
@@ -85,5 +86,6 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.state, zk.READY)
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, None)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
