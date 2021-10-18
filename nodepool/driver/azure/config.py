@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import voluptuous as v
+import base64
 import os
 
 from nodepool.driver import ConfigPool
@@ -143,6 +144,13 @@ class AzureLabel(ConfigValue):
 
         self.hardware_profile = label['hardware-profile']
         self.tags = label.get('tags', {})
+        self.user_data = self._encodeData(label.get('user-data', None))
+        self.custom_data = self._encodeData(label.get('custom-data', None))
+
+    def _encodeData(self, s):
+        if not s:
+            return None
+        return base64.b64encode(s.encode('utf8')).decode('utf8')
 
     @staticmethod
     def getSchema():
@@ -156,6 +164,8 @@ class AzureLabel(ConfigValue):
             'diskimage': str,
             v.Required('hardware-profile'): azure_hardware_profile,
             'tags': dict,
+            'user-data': str,
+            'custom-data': str,
         }
 
 

@@ -49,3 +49,5 @@ providers:
               department: R&D
               team: DevOps
               systemPurpose: CI
+            user-data: "This is the user data"
+            custom-data: "This is the custom data"

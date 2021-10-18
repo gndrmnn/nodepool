@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import json
 import time
 import os
@@ -33,6 +34,7 @@ class CRUDManager:
     def __init__(self, cloud):
         self.cloud = cloud
         self.items = []
+        self.requests = []
 
     def list(self, request):
         resp = {'value': self.items}
@@ -139,6 +141,7 @@ class VirtualMachinesCRUD(CRUDManager):
 
     def put(self, request):
         data = json.loads(request.body)
+        self.requests.append(copy.deepcopy(data))
         url = urllib.parse.urlparse(request.path_url)
         name = url.path.split('/')[-1]
         data['id'] = url.path

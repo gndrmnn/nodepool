@@ -58,6 +58,14 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            items[0]['properties']['osProfile']['customData'],
+            'VGhpcyBpcyB0aGUgY3VzdG9tIGRhdGE=')  # This is the custom data
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['userData'],
+            'VGhpcyBpcyB0aGUgdXNlciBkYXRh')  # This is the user data
 
     def test_azure_diskimage(self):
         configfile = self.setup_config(
