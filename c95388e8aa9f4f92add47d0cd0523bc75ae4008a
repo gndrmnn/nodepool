@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "c95388e8aa9f4f92add47d0cd0523bc75ae4008a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0fa2faf_06fe0e5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-18T05:34:56Z",
+      "side": 1,
+      "message": "this needs a dib release for the release job to pass",
+      "revId": "c95388e8aa9f4f92add47d0cd0523bc75ae4008a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
