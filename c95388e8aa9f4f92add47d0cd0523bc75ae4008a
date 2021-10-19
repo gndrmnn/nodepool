@@ -33,6 +33,29 @@
       "message": "this needs a dib release for the release job to pass",
       "revId": "c95388e8aa9f4f92add47d0cd0523bc75ae4008a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45c241a5_a6da2b40",
+        "filename": "Dockerfile",
+        "patchSetId": 11
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2021-10-19T19:58:02Z",
+      "side": 1,
+      "message": "This is also obsolete now?",
+      "range": {
+        "startLine": 96,
+        "startChar": 48,
+        "endLine": 97,
+        "endChar": 58
+      },
+      "revId": "c95388e8aa9f4f92add47d0cd0523bc75ae4008a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
