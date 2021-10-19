@@ -309,9 +309,15 @@ class AzureProviderConfig(ProviderConfig):
             'public-ipv6': bool,
             'use-internal-ip': bool,
             'host-key-checking': bool,
+            'post-upload-hook': str,
+            'rate': v.Coerce(float),
+            'boot-timeout': int,
+            'launch-timeout': int,
+            'launch-retries': int,
             # TODO: remove
             'zuul-public-key': str,
         })
+
         return v.Schema(provider)
 
     def getSupportedLabels(self, pool_name=None):
