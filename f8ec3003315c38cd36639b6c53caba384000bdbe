@@ -16,6 +16,24 @@
       "message": "hrm, one thing I\u0027ve now just thought of is if we have the right wheels to build this fast enough on arm64 in the gate ...",
       "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "081899e1_fa49e00e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-20T22:23:28Z",
+      "side": 1,
+      "message": "ahh nodepool-build-image builds both.  so we might be able to get it faster, but shouldn\u0027t be slower",
+      "parentUuid": "bb182836_2ea765e1",
+      "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
