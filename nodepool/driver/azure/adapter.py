@@ -366,6 +366,7 @@ class AzureAdapter(statemachine.Adapter):
 
     def uploadImage(self, image_name, filename, image_format,
                     metadata, md5, sha256):
+        self.log.debug(f"Uploading image {image_name}")
         file_sz = os.path.getsize(filename)
         disk_info = {
             "location": self.provider.location,
@@ -449,13 +450,16 @@ class AzureAdapter(statemachine.Adapter):
         if r['status'] != 'Succeeded':
             raise Exception("Unable to delete disk for image upload")
 
+        self.log.info(f"Uploaded image {image_name}")
         return image_name
 
     def deleteImage(self, external_id):
+        self.log.debug(f"Deleting image {external_id}")
         with self.rate_limiter:
             r = self.azul.images.delete(self.resource_group, external_id)
         r = self.azul.wait_for_async_operation(r)
 
+        self.log.info(f"Deleted image {external_id}")
         if r['status'] != 'Succeeded':
             raise Exception("Unable to delete image")
 
@@ -542,10 +546,12 @@ class AzureAdapter(statemachine.Adapter):
                 'publicIpAllocationMethod': allocation_method,
             },
         }
+        name = "%s-pip-%s" % (hostname, version)
         with self.rate_limiter:
+            self.log.debug(f"Creating external IP address {name}")
             return self.azul.public_ip_addresses.create(
                 self.resource_group,
-                "%s-pip-%s" % (hostname, version),
+                name,
                 v4_params_create,
             )
 
@@ -556,6 +562,7 @@ class AzureAdapter(statemachine.Adapter):
         else:
             return None
         with self.rate_limiter:
+            self.log.debug(f"Deleting external IP address {name}")
             self.azul.public_ip_addresses.delete(self.resource_group, name)
         return pip
 
@@ -601,10 +608,12 @@ class AzureAdapter(statemachine.Adapter):
                 'ipConfigurations': ip_configs
             }
         }
+        name = "%s-nic" % hostname
         with self.rate_limiter:
+            self.log.debug(f"Creating NIC {name}")
             return self.azul.network_interfaces.create(
                 self.resource_group,
-                "%s-nic" % hostname,
+                name,
                 nic_data
             )
 
@@ -615,6 +624,7 @@ class AzureAdapter(statemachine.Adapter):
         else:
             return None
         with self.rate_limiter:
+            self.log.debug(f"Deleting NIC {name}")
             self.azul.network_interfaces.delete(self.resource_group, name)
         return nic
 
@@ -673,6 +683,7 @@ class AzureAdapter(statemachine.Adapter):
         if label.user_data:
             spec['properties']['userData'] = label.user_data
         with self.rate_limiter:
+            self.log.debug(f"Creating VM {hostname}")
             return self.azul.virtual_machines.create(
                 self.resource_group, hostname, spec)
 
@@ -683,6 +694,7 @@ class AzureAdapter(statemachine.Adapter):
         else:
             return None
         with self.rate_limiter:
+            self.log.debug(f"Deleting VM {name}")
             self.azul.virtual_machines.delete(self.resource_group, name)
         return vm
 

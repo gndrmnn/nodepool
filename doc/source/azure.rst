@@ -14,6 +14,9 @@ the instructions at `Azure CLI`_ and use the ``--sdk-auth`` flag::
 You must also have created a network for Nodepool to use.  Be sure to
 enable IPv6 on the network if you plan to use it.
 
+You may also need to register the `Microsoft.Compute` resource
+provider with your subscription.
+
 Selecting the azure driver adds the following options to the :attr:`providers`
 section of the configuration.
 
