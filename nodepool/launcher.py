@@ -33,6 +33,7 @@ from nodepool import config as nodepool_config
 from nodepool import zk
 from nodepool.driver.utils import QuotaInformation
 from nodepool.logconfig import get_annotated_logger
+from nodepool.version import version_info as npd_version_info
 
 
 MINS = 60
@@ -1090,6 +1091,8 @@ class NodePool(threading.Thread):
         '''
         Start point for the NodePool thread.
         '''
+        self.log.info("Nodepool launcher %s starting",
+                      npd_version_info.release_string())
         while not self._stopped:
             try:
                 self.updateConfig()
