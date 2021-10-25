@@ -68,6 +68,24 @@
       "message": "You also need to update the docker image jobs in .zuul.yaml to match the new images used.\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L69-L71\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L105-L107\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L136-L138",
       "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c4858cc_e92d57ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-25T22:28:18Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "43a8b392_24c0e9b4",
+      "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
