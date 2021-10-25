@@ -51,6 +51,23 @@
       "message": "I have noticed in the dib gate this breaks openeuler\n\nI don\u0027t think this is a blocker -- openeuler will have to get itself fixed as we can\u0027t stay on bionic forever.  i\u0027ll try to notify people more officially tomorrow, for now i\u0027ve filed https://bugs.launchpad.net/diskimage-builder/+bug/1947960",
       "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43a8b392_24c0e9b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-10-25T17:58:41Z",
+      "side": 1,
+      "message": "You also need to update the docker image jobs in .zuul.yaml to match the new images used.\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L69-L71\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L105-L107\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L136-L138",
+      "revId": "f8ec3003315c38cd36639b6c53caba384000bdbe",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
