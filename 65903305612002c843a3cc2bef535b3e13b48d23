@@ -74,6 +74,24 @@
       "message": "Ah, yep.  You\u0027ll need to do the second thing.",
       "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4f13d13_abdca987",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 34108
+      },
+      "writtenOn": "2021-10-25T14:27:19Z",
+      "side": 1,
+      "message": "Ok, if we have 2 metastatic nodes according to this configuration.\n\n            - name: x\n              backing-label: backing-node\n            - name: y\n              backing-label: backing-node\n\nIf a job is triggered via x label and another job via y label. Will the jobs then be routed to the same backing node or will there be two separate backing nodes? We would like them to be routed to the same backing node.",
+      "parentUuid": "79ec1f7e_bf4d6470",
+      "revId": "65903305612002c843a3cc2bef535b3e13b48d23",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
