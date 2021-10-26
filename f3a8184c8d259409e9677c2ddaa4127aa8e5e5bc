@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fc83357_64529904",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-26T22:12:57Z",
+      "side": 1,
+      "message": "recheck\n\nfailure due to upstream package issues",
+      "revId": "f3a8184c8d259409e9677c2ddaa4127aa8e5e5bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
