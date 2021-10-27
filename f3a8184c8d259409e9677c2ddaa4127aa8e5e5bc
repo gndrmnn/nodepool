@@ -16,6 +16,23 @@
       "message": "recheck\n\nfailure due to upstream package issues",
       "revId": "f3a8184c8d259409e9677c2ddaa4127aa8e5e5bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a499f25d_475a94d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-10-27T15:47:10Z",
+      "side": 1,
+      "message": "recheck examining the mirror it seems to have correct data in the Packages file now",
+      "revId": "f3a8184c8d259409e9677c2ddaa4127aa8e5e5bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
