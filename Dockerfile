@@ -69,7 +69,6 @@ RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
 #    are incoporated into the openstack-ci-core version
 
 COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
-COPY tools/kubic.asc /etc/apt/trusted.gpg.d/
 
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu focal main" >> /etc/apt/sources.list \
@@ -100,11 +99,7 @@ RUN \
 # hand-wavy motion) but it's not in the container; override to use
 # cgroupfs manager.  Also disable trying to send logs to the journal.
 #
-RUN \
-  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_11/ /" > "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list" \
-  && apt-get update \
-  && apt-get install -y --install-recommends \
-      podman \
+RUN apt-get install -y --install-recommends podman \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
