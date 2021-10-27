@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63a75913_2c6884b9",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-10-27T21:35:03Z",
+      "side": 1,
+      "message": "Since these are both Depends in bullseye, we should update the comment to say something like \"several programs such as slirp4netns and uidmap which are necessary for running as non-root\".",
+      "revId": "35b2834d6e9a3606f439a06442437aad2092144f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
