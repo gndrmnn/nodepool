@@ -50,6 +50,24 @@
       "message": "Note that this will correctly pull only the podman package from unstable, and will take iptables from stable as it has a higher apt-pinning priority.",
       "revId": "bf112d5522672fa21aeeadd5796919d2dd3966a6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "faebd03d_b7b85172",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-28T21:27:51Z",
+      "side": 1,
+      "message": "Yeah this was intended, I just wanted the minimum viable things-from-unstable we could get",
+      "parentUuid": "485078f6_a177257f",
+      "revId": "bf112d5522672fa21aeeadd5796919d2dd3966a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
