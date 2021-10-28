@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a255db3_fc07d9ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-10-28T00:48:13Z",
+      "side": 1,
+      "message": "This builds Fedora 34 so is working (https://review.opendev.org/c/openstack/diskimage-builder/+/815763)\n\nA tangential problem is that upstream Fedora 34 has a broken initramfs that practically doesn\u0027t boot on Xen and some other environments.  Switching to Fedora 35 is a logical step, but we have found this version of podman is broken due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug\u003d995777\n\nSo this is fine to get the gate going, but practically we\u0027ll need a different version going forward.",
+      "revId": "cce7dbc669cea619766b4bbe7e310f75b9461d2d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
