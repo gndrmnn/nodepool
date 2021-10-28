@@ -98,7 +98,19 @@ RUN \
 # hand-wavy motion) but it's not in the container; override to use
 # cgroupfs manager.  Also disable trying to send logs to the journal.
 #
-RUN apt-get install -y --install-recommends podman \
+# The glibc in Fedora >35 uses clone3() which causes seccomp issues.
+# For details see
+#  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=995777
+# We install podman from unstable until these fixes make it into bullseye
+#
+
+# For some reason, the unstable podman only suggests iptables (not
+# recommends) so we need to pull that too (BUG: to come)
+
+RUN echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
+  && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
+  && apt-get update \
+  && apt-get install -y --install-recommends podman/unstable iptables \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
