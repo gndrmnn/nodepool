@@ -116,7 +116,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 return True
 
             if self.paused_handler:
-                self.log.debug("Handler is now paused")
+                self.log.info("Handler is now paused")
                 return True
 
             # Get active threads for all pools for this provider
@@ -176,7 +176,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     "Deferring request because it would exceed tenant quota")
                 continue
 
-            log.debug("Locking request")
+            log.info("Locking request")
             try:
                 self.zk.lockNodeRequest(req, blocking=False)
             except exceptions.ZKLockException:
@@ -231,7 +231,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 active_handlers.append(r)
         self.request_handlers = active_handlers
         active_reqs = [r.request.id for r in self.request_handlers]
-        self.log.debug("Active requests: %s", active_reqs)
+        self.log.info("Active requests: %s", active_reqs)
 
     def _hasTenantQuota(self, request, provider_manager):
         '''
