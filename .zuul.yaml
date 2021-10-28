@@ -271,6 +271,14 @@
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: *nodepool_tox_vars
 
+- job:
+    name: nodepool-tox-py39
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py39
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: *nodepool_tox_vars
+
 - project:
     vars:
       release_python: python3
@@ -283,6 +291,7 @@
         - tox-pep8
         - nodepool-tox-py36
         - nodepool-tox-py38
+        - nodepool-tox-py39
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-container-openstack-release
@@ -300,6 +309,7 @@
         - tox-pep8
         - nodepool-tox-py36
         - nodepool-tox-py38
+        - nodepool-tox-py39
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
