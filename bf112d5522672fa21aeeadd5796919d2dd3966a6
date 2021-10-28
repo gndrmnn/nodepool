@@ -68,6 +68,23 @@
       "parentUuid": "485078f6_a177257f",
       "revId": "bf112d5522672fa21aeeadd5796919d2dd3966a6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d01d07cd_cd792060",
+        "filename": "Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2021-10-28T21:37:33Z",
+      "side": 1,
+      "message": "One other thing to consider, if podman 3.3.1 is new enough we could get podman from bookworm (testing) instead, which would be slightly more \"stable\" an option than using sid which might end up uninstallable at times due to in-progress library transitions and the like.",
+      "revId": "bf112d5522672fa21aeeadd5796919d2dd3966a6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
