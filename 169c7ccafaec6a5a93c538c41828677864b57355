@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "169c7ccafaec6a5a93c538c41828677864b57355",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f15d68dd_11dbd39a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-11-02T23:00:05Z",
+      "side": 1,
+      "message": "Approving as logs show it only took a few seconds to make the necessary wheel: https://zuul.opendev.org/t/zuul/build/1adef12661804ffb89edb98fe576f160/log/job-output.txt#5178-5183",
+      "revId": "169c7ccafaec6a5a93c538c41828677864b57355",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
