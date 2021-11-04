@@ -293,9 +293,19 @@ section of the configuration.
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``
 
+      .. attr:: image-id
+         :type: str
+
+         Specifies a private image to use.  Either this field or
+         :attr:`providers.[azure].cloud-images.image-reference` must be
+         provided.
+
       .. attr:: image-reference
          :type: dict
-         :required:
+
+         Specifies a public image to use.  Either this field or
+         :attr:`providers.[azure].cloud-images.image-id` must be
+         provided.
 
          .. attr:: sku
             :type: str

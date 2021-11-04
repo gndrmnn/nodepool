@@ -34,7 +34,8 @@ class AzureProviderCloudImage(ConfigValue):
         self.username = image['username']
         # TODO(corvus): remove zuul_public_key
         self.key = image.get('key', zuul_public_key)
-        self.image_reference = image['image-reference']
+        self.image_reference = image.get('image-reference')
+        self.image_id = image.get('image-id')
         self.python_path = image.get('python-path')
         self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
@@ -45,7 +46,7 @@ class AzureProviderCloudImage(ConfigValue):
     @property
     def external_name(self):
         '''Human readable version of external.'''
-        return self.image_id or self.name
+        return self.image_id or self.image_reference or self.name
 
     @staticmethod
     def getSchema():
@@ -56,17 +57,24 @@ class AzureProviderCloudImage(ConfigValue):
             v.Required('offer'): str,
         }
 
-        return {
+        return v.All({
             v.Required('name'): str,
             v.Required('username'): str,
             # TODO(corvus): make required when zuul_public_key removed
             'key': str,
-            v.Required('image-reference'): azure_image_reference,
+            v.Exclusive('image-reference', 'spec'): azure_image_reference,
+            v.Exclusive('image-id', 'spec'): str,
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
-        }
+        }, {
+            v.Required(
+                v.Any('image-reference', 'image-id'),
+                msg='Provide either "image-reference" or "image-id" keys'
+            ): object,
+            object: object,
+        })
 
 
 class AzureProviderDiskImage(ConfigValue):
