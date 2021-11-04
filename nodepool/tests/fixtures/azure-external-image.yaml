@@ -1,0 +1,49 @@
+webapp:
+  port: 8005
+  listen_address: '0.0.0.0'
+
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+labels:
+  - name: bionic
+    min-ready: 0
+
+providers:
+  - name: azure
+    driver: azure
+    zuul-public-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+mplenM+m6pNY9Un3fpO9eqf808Jrfb3d1gXg7BZVawCvtEZ/cDYvLQ3OF1AeL2kcIC0UAIglM5JXae7yO5CJbJRdkbXvv0u1LvpLxYSPM4ATR0r4IseC5YVxkfJQNi4ixSwTqD4ScEkuCXcSqSU9M+hB+KlnwXoR4IcYHf7vD2Z0Mdwm2ikk3SeERmspmMxx/uz0SPn58QxONuoTlNWQKqDWsV6bRyoPa6HWccMrIH1/e7E69Nw/30oioOQpKBgaDCauh+QkDtSkjRpRMOV47ZFh16Q9DqMgLx+FD8z6++9rsHlB65Zas1xyQsiRCFG09s00b7OR7Xz9ukQ5+vXV
+    resource-group-location: centralus
+    location: centralus
+    resource-group: nodepool
+    auth-path: {auth_path}
+    subnet-id: /subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/resourceGroups/nodepool/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
+    cloud-images:
+      - name: bionic
+        username: zuul
+        shell-type: sh
+        image-id: /subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/resourceGroups/nodepool/providers/Microsoft.Compute/images/test-image-1234
+    pools:
+      - name: main
+        max-servers: 10
+        node-attributes:
+          key1: value1
+          key2: value2
+        labels:
+          - name: bionic
+            cloud-image: bionic
+            hardware-profile:
+              vm-size: Standard_B1ls
+            tags:
+              department: R&D
+              team: DevOps
+              systemPurpose: CI
+            user-data: "This is the user data"
+            custom-data: "This is the custom data"

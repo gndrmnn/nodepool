@@ -98,3 +98,42 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.shell_type, None)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+
+    def test_azure_external_image(self):
+        configfile = self.setup_config(
+            'azure-external-image.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('bionic')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, 'sh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            items[0]['properties']['osProfile']['customData'],
+            'VGhpcyBpcyB0aGUgY3VzdG9tIGRhdGE=')  # This is the custom data
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['userData'],
+            'VGhpcyBpcyB0aGUgdXNlciBkYXRh')  # This is the user data
+
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['storageProfile']['imageReference']['id'],
+            "/subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/resourceGroups"
+            "/nodepool/providers/Microsoft.Compute/images/test-image-1234")

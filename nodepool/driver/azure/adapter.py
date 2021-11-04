@@ -641,7 +641,10 @@ class AzureAdapter(statemachine.Adapter):
             image_reference = {'id': remote_image['id']}
         else:
             image = label.cloud_image
-            image_reference = label.cloud_image.image_reference
+            if label.cloud_image.image_reference:
+                image_reference = label.cloud_image.image_reference
+            else:
+                image_reference = {'id': label.cloud_image.image_id}
         os_profile = {'computerName': hostname}
         if image.username and image.key:
             linux_config = {
