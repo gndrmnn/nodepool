@@ -54,6 +54,8 @@ class ProviderCloudImage(ConfigValue):
 
 
 class ProviderLabel(ConfigValue):
+    ignore_equality = ['pool']
+
     def __init__(self):
         self.name = None
         self.cloud_image = None
@@ -79,6 +81,8 @@ class ProviderLabel(ConfigValue):
 
 
 class ProviderPool(ConfigPool):
+    ignore_equality = ['provider']
+
     def __init__(self):
         self.name = None
         self.host_key_checking = True
