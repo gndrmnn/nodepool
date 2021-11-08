@@ -16,6 +16,24 @@
       "message": "I guess this update isn\u0027t strictly necessary since __eq__ here doesn\u0027t call super, but belts and suspenders seem fine.",
       "revId": "559e3098d1f30bfd522c4b0afa57e097a28572b7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ec10bbd_c1ff9472",
+        "filename": "nodepool/driver/gce/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 6488
+      },
+      "writtenOn": "2021-11-08T20:43:49Z",
+      "side": 1,
+      "message": "Yeah this is mostly for uniformity with the AWS driver. I do wonder if there\u0027s something that can be done generically, as it feels like every driver with pools will likely have this problem.",
+      "parentUuid": "936812c9_6cf131ef",
+      "revId": "559e3098d1f30bfd522c4b0afa57e097a28572b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
