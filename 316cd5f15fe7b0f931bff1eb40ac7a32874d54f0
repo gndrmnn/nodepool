@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54519e86_083eb7dd",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-11-09T23:00:57Z",
+      "side": 1,
+      "message": "Use log.exception so as not to mask where the loss occurred.\n\nCapitalize the log message.  Omit the period.",
+      "revId": "316cd5f15fe7b0f931bff1eb40ac7a32874d54f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e44791f9_c764d5f0",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-11-09T23:00:57Z",
+      "side": 1,
+      "message": "If the connection loss resulted in the loss of the lock (which I normally would expect) then we should not keep the run handler around.  Doing so could cause more problems than this fixes.",
+      "revId": "316cd5f15fe7b0f931bff1eb40ac7a32874d54f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
