@@ -193,10 +193,15 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             log.info("Assigning node request %s" % req)
 
             rh = pm.getRequestHandler(self, req)
-            rh.run()
+            try:
+                rh.run()
+            except kze.ConnectionLoss:
+                log.error("zookeeper connection lost during node request.")
+                pass
+            finally:
+                self.request_handlers.append(rh)
             if rh.paused:
                 self.paused_handler = rh
-            self.request_handlers.append(rh)
 
             # if we exceeded the timeout stop iterating here
             if time.monotonic() - start > timeout:
