@@ -5,6 +5,7 @@ zookeeper-servers:
 
 labels:
   - name: debian-stretch-f1-micro
+  - name: debian-altnet
 
 providers:
   - name: gcloud-provider
@@ -27,6 +28,16 @@ providers:
           key2: value2
         labels:
           - name: debian-stretch-f1-micro
+            instance-type: f1-micro
+            cloud-image: debian-stretch
+            volume-type: standard
+            volume-size: 10
+      - name: altnet
+        max-servers: 1
+        network: global/networks/altnet
+        subnetwork: altnet-usc1
+        labels:
+          - name: debian-altnet
             instance-type: f1-micro
             cloud-image: debian-stretch
             volume-type: standard

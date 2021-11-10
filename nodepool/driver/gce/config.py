@@ -90,6 +90,8 @@ class ProviderPool(ConfigPool):
         self.labels = None
         # The ProviderConfig object that owns this pool.
         self.provider = None
+        self.network = None
+        self.subnetwork = None
 
         # Initialize base class attributes
         super().__init__()
@@ -97,6 +99,8 @@ class ProviderPool(ConfigPool):
     def load(self, pool_config, full_config, provider):
         super().load(pool_config)
         self.name = pool_config['name']
+        self.network = pool_config.get('network')
+        self.subnetwork = pool_config.get('subnetwork')
         self.provider = provider
 
         self.host_key_checking = bool(
@@ -134,6 +138,7 @@ class ProviderPool(ConfigPool):
                     and other.name == self.name
                     and other.host_key_checking == self.host_key_checking
                     and other.use_internal_ip == self.use_internal_ip
+                    and other.network == self.network
                     and other.labels == self.labels)
         return False
 
@@ -227,6 +232,8 @@ class GCEProviderConfig(ProviderConfig):
 
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
+            'network': str,
+            'subnetwork': str,
             v.Required('name'): str,
             v.Required('labels'): [pool_label],
             'use-internal-ip': bool,

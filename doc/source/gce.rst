@@ -195,6 +195,18 @@ section of the configuration.
 
          A unique name within the provider for this pool of resources.
 
+      .. attr:: network
+         :type: string
+
+         Which network to attach to instances. Defaults to
+         `global/network/default`. See `GCE insert arguments`_,
+         `networkInterfaces[].network`.
+
+      .. attr:: subnetwork
+         :type: string
+
+         Identifier for a specific subnetwork to use. See `GCE insert arguments`_, `networkInterfaces[].subnetwork`
+
       .. attr:: node-attributes
          :type: dict
 
@@ -270,5 +282,6 @@ section of the configuration.
 .. _`Application Default Credentials`: https://cloud.google.com/docs/authentication/production
 .. _`GCE regions and zones`: https://cloud.google.com/compute/docs/regions-zones/
 .. _`GCE machine types`: https://cloud.google.com/compute/docs/machine-types
+.. _`insert arguments`: https://cloud.google.com/compute/docs/reference/rest/v1/instances/insert
 
 

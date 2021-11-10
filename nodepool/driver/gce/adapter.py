@@ -120,7 +120,8 @@ class GCEAdapter(SimpleTaskManagerAdapter):
                     initializeParams=disk_init)
         mtype = self._getMachineType(task_manager, label.instance_type)
         machine_type = mtype['selfLink']
-        network = dict(network='global/networks/default',
+        network = dict(network=label.pool.network or 'global/networks/default',
+                       subnetwork=label.pool.subnetwork,
                        accessConfigs=[dict(
                            type='ONE_TO_ONE_NAT',
                            name='External NAT')])
