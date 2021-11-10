@@ -269,7 +269,7 @@ class TestDriverGce(tests.DBTestCase):
         pool.updateConfig()
 
     @_test_with_pool
-    def _test_gce_machine(self, pool, label,
+    def _test_gce_machine(self, pool, label, node_assertions,
                           is_valid_config=True,
                           host_key_checking=True):
         pool.start()
@@ -300,8 +300,7 @@ class TestDriverGce(tests.DBTestCase):
             self.assertEqual(node.state, zk.READY)
             self.assertIsNotNone(node.launcher)
             self.assertEqual(node.connection_type, 'ssh')
-            self.assertEqual(node.attributes,
-                             {'key1': 'value1', 'key2': 'value2'})
+            node_assertions(node)
             if host_key_checking:
                 nodescan.assert_called_with(
                     node.interface_ip,
@@ -339,4 +338,13 @@ class TestDriverGce(tests.DBTestCase):
             self.waitForNodeDeletion(node)
 
     def test_gce_machine(self):
-        self._test_gce_machine('debian-stretch-f1-micro')
+        def node_assertions(node):
+
+            self.assertEqual(node.attributes,
+                             {'key1': 'value1', 'key2': 'value2'})
+        self._test_gce_machine('debian-stretch-f1-micro', node_assertions)
+
+    def test_gce_machine_altnet(self):
+        def node_assertions(node):
+            pass
+        self._test_gce_machine('debian-altnet', node_assertions)
