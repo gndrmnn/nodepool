@@ -124,31 +124,9 @@ class KubernetesProvider(Provider, QuotaSupport):
                 break
             time.sleep(1)
 
-    def createNamespace(self, node, pool, restricted_access=False):
-        name = node.id
-        namespace = "%s-%s" % (pool, name)
-        user = "zuul-worker"
-
-        self.log.debug("%s: creating namespace" % namespace)
-        # Create the namespace
-        ns_body = {
-            'apiVersion': 'v1',
-            'kind': 'Namespace',
-            'metadata': {
-                'name': namespace,
-                'nodepool_node_id': name
-            }
-        }
-        proj = self.k8s_client.create_namespace(ns_body)
-        node.external_id = namespace
-
-        # Create the service account
-        sa_body = {
-            'apiVersion': 'v1',
-            'kind': 'ServiceAccount',
-            'metadata': {'name': user}
-        }
-        self.k8s_client.create_namespaced_service_account(namespace, sa_body)
+    def resourceFromNamespace(self, namespace, user, proj=None):
+        if proj is None:
+            proj = self.k8s_client.read_namespace(namespace)
 
         # Wait for the token to be created
         for retry in range(30):
@@ -173,6 +151,44 @@ class KubernetesProvider(Provider, QuotaSupport):
             raise exceptions.LaunchNodepoolException(
                 "%s: couldn't find token for service account %s" %
                 (namespace, sa))
+        
+        resource = {
+            'name': proj.metadata.name,
+            'namespace': namespace,
+            'host': self.k8s_client.api_client.configuration.host,
+            'skiptls': not self.k8s_client.api_client.configuration.verify_ssl,
+            'token': token,
+            'user': user,
+        }
+        if not resource['skiptls']:
+            resource['ca_crt'] = ca_crt
+
+        return resource
+
+    def createNamespace(self, user, node, pool, restricted_access=False):
+        name = node.id
+        namespace = "%s-%s" % (pool, name)
+
+        self.log.debug("%s: creating namespace" % namespace)
+        # Create the namespace
+        ns_body = {
+            'apiVersion': 'v1',
+            'kind': 'Namespace',
+            'metadata': {
+                'name': namespace,
+                'nodepool_node_id': name
+            }
+        }
+        proj = self.k8s_client.create_namespace(ns_body)
+        node.external_id = namespace
+
+        # Create the service account
+        sa_body = {
+            'apiVersion': 'v1',
+            'kind': 'ServiceAccount',
+            'metadata': {'name': user}
+        }
+        self.k8s_client.create_namespaced_service_account(namespace, sa_body)
 
         # Create service account role
         all_verbs = ["create", "delete", "get", "list", "patch",
@@ -238,22 +254,12 @@ class KubernetesProvider(Provider, QuotaSupport):
                 'name': user,
                 'namespace': namespace,
             }],
-            'userNames': ['system:serviceaccount:%s:zuul-worker' % namespace]
+            'userNames': ['system:serviceaccount:%s:%s' % (namespace, user)]
         }
         self.rbac_client.create_namespaced_role_binding(
             namespace, role_binding_body)
 
-        resource = {
-            'name': proj.metadata.name,
-            'namespace': namespace,
-            'host': self.k8s_client.api_client.configuration.host,
-            'skiptls': not self.k8s_client.api_client.configuration.verify_ssl,
-            'token': token,
-            'user': user,
-        }
-
-        if not resource['skiptls']:
-            resource['ca_crt'] = ca_crt
+        resource = self.resourceFromNamespace(namespace, user, proj)
 
         self.log.info("%s: namespace created" % namespace)
         return resource
@@ -292,9 +298,13 @@ class KubernetesProvider(Provider, QuotaSupport):
             'spec': spec_body,
             'restartPolicy': 'Never',
         }
-
-        resource = self.createNamespace(node, pool, restricted_access=True)
-        namespace = resource['namespace']
+        user = label.service_account
+        if label.namespace is not None:
+            namespace = label.namespace
+            resource = self.resourceFromNamespace(namespace, user)
+        else:
+            resource = self.createNamespace(user, node, pool, restricted_access=True)
+            namespace = resource['namespace']
 
         self.k8s_client.create_namespaced_pod(namespace, pod_body)
 

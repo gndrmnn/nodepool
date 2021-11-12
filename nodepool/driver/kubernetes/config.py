@@ -44,6 +44,8 @@ class KubernetesPool(ConfigPool):
             pl.type = label['type']
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
+            pl.namespace = label.get('namespace')
+            pl.service_account = label.get('service-account', 'zuul-worker')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
             pl.cpu = label.get('cpu')
@@ -89,6 +91,8 @@ class KubernetesProviderConfig(ProviderConfig):
             v.Required('type'): str,
             'image': str,
             'image-pull': str,
+            'namespace': str,
+            'service-account': str,
             'python-path': str,
             'shell-type': str,
             'cpu': int,

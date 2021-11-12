@@ -101,13 +101,13 @@ class TestDriverKubernetes(tests.DBTestCase):
             'nodepool.driver.kubernetes.provider.get_client',
             fake_get_client))
 
-    def test_kubernetes_machine(self):
+    def _test_kubernetes_machine(self, label):
         configfile = self.setup_config('kubernetes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
-        req.node_types.append('pod-fedora')
+        req.node_types.append(label)
         self.zk.storeNodeRequest(req)
 
         self.log.debug("Waiting for request %s", req.id)
@@ -128,6 +128,12 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.zk.storeNode(node)
 
         self.waitForNodeDeletion(node)
+
+    def test_kubernetes_machine(self):
+        self._test_kubernetes_machine('pod-fedora')
+
+    def test_kubernetes_shared_ns_pods(self):
+        self._test_kubernetes_machine('shared-ns-pods')
 
     def test_kubernetes_native(self):
         configfile = self.setup_config('kubernetes.yaml')

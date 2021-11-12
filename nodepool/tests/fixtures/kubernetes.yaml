@@ -11,6 +11,7 @@ zookeeper-tls:
 labels:
   - name: pod-fedora
   - name: kubernetes-namespace
+  - name: shared-ns-pods
 
 providers:
   - name: kubespray
@@ -28,3 +29,6 @@ providers:
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28
+          - name: shared-ns-pods
+            type: pod
+            image: docker.io/ubuntu:focal

@@ -45,6 +45,10 @@ Selecting the kubernetes driver adds the following options to the
                - name: pod-fedora
                  type: pod
                  image: docker.io/fedora:28
+               - name: shared-ns-pods
+                 type: pod
+                 image: docker.io/ubuntu:focal
+                 namespace: shared-pods
 
 
    .. attr:: context
@@ -125,6 +129,27 @@ Selecting the kubernetes driver adds the following options to the
             :type: str
 
             The ImagePullPolicy, can be IfNotPresent, Always or Never.
+
+         .. attr:: namespace
+            :type: str
+
+            You can run all of the pods in a single namespace that has been
+            pre-configured to work as Zuul expects. This requires that the
+            context setup includes access to the configured service account.
+
+            This introduces a risk, as any label configured to use a single
+            namespace will spin up pods that can affect other labels using the
+            same namespace. Within a single label the jobs will also be able to
+            affect one another. As such, it is recommended that you consider
+            making use of `allowed-labels` and `disallowed-labels` to isolate
+            these namespaces between tenants.
+
+         .. attr:: service-account
+            :default: zuul-worker
+            :type: str
+
+            This is the name of the service account to use when configuring
+            `providers.[kubernetes].pools.labels.type.pod`.
 
          .. attr:: python-path
             :type: str

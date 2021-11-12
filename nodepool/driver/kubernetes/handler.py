@@ -31,6 +31,7 @@ class K8SLauncher(NodeLauncher):
         self.log.debug("Creating resource")
         if self.label.type == "namespace":
             resource = self.handler.manager.createNamespace(
+                self.label.service_account,
                 self.node, self.handler.pool.name)
         else:
             resource = self.handler.manager.createPod(
