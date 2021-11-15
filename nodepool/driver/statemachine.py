@@ -122,7 +122,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.node.connection_type = image.connection_type
         self.zk.storeNode(self.node)
 
-        hostname = 'nodepool-' + self.node.id
+        # Windows computer names can be no more than 15 chars long.
+        hostname = 'np' + self.node.id
         retries = self.manager.provider.launch_retries
         metadata = {'nodepool_node_id': self.node.id,
                     'nodepool_pool_name': self.handler.pool.name,
