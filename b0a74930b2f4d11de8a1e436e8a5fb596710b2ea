@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "100de09d_32100c3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-11-15T19:36:45Z",
+      "side": 1,
+      "message": "-1 as it seems like the cleanup is not going to work as expected.",
+      "revId": "b0a74930b2f4d11de8a1e436e8a5fb596710b2ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a313810b_4724534c",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-11-15T19:36:45Z",
+      "side": 1,
+      "message": "Should we check that setting namespace is only valid when type is pod?",
+      "revId": "b0a74930b2f4d11de8a1e436e8a5fb596710b2ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb48e4a1_15363f48",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-11-15T19:36:45Z",
+      "side": 1,
+      "message": "It seems like this is assuming a kubernetes node \u003d\u003d a namespace.",
+      "revId": "b0a74930b2f4d11de8a1e436e8a5fb596710b2ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b2c6aa2_321ea6a1",
+        "filename": "nodepool/tests/fixtures/kubernetes.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-11-15T19:36:45Z",
+      "side": 1,
+      "message": "Is this missing the namespace attribute?",
+      "revId": "b0a74930b2f4d11de8a1e436e8a5fb596710b2ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
