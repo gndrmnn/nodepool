@@ -15,6 +15,10 @@ zookeeper-tls:
 labels:
   - name: bionic
     min-ready: 0
+  - name: windows-password
+    min-ready: 0
+  - name: windows-generate
+    min-ready: 0
 
 providers:
   - name: azure
@@ -34,6 +38,22 @@ providers:
           publisher: Canonical
           version: latest
           offer: UbuntuServer
+      - name: windows-password
+        image-reference:
+          sku: 2022-datacenter-azure-edition
+          publisher: MicrosoftWindowsServer
+          version: latest
+          offer: WindowsServer
+        username: foobar
+        password: reallybadpassword123
+      - name: windows-generate
+        image-reference:
+          sku: 2022-datacenter-azure-edition
+          publisher: MicrosoftWindowsServer
+          version: latest
+          offer: WindowsServer
+        username: foobar
+        generate-password: True
     pools:
       - name: main
         max-servers: 10
@@ -51,3 +71,11 @@ providers:
               systemPurpose: CI
             user-data: "This is the user data"
             custom-data: "This is the custom data"
+          - name: windows-password
+            cloud-image: windows-password
+            hardware-profile:
+              vm-size: Standard_B1ls
+          - name: windows-generate
+            cloud-image: windows-generate
+            hardware-profile:
+              vm-size: Standard_B1ls

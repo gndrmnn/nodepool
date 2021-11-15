@@ -32,6 +32,8 @@ class AzureProviderCloudImage(ConfigValue):
         }
         self.name = image['name']
         self.username = image['username']
+        self.password = image.get('password')
+        self.generate_password = image.get('generate-password', False)
         # TODO(corvus): remove zuul_public_key
         self.key = image.get('key', zuul_public_key)
         self.image_reference = image.get('image-reference')
@@ -60,6 +62,8 @@ class AzureProviderCloudImage(ConfigValue):
         return v.All({
             v.Required('name'): str,
             v.Required('username'): str,
+            'password': str,
+            'generate-password': bool,
             # TODO(corvus): make required when zuul_public_key removed
             'key': str,
             v.Exclusive('image-reference', 'spec'): azure_image_reference,
