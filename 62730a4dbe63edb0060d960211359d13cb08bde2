@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d8fa82b_d41a7ef1",
+        "filename": "nodepool/driver/gce/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-11-15T19:31:22Z",
+      "side": 1,
+      "message": "shouldn\u0027t this also check for subnetwork ?",
+      "revId": "62730a4dbe63edb0060d960211359d13cb08bde2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
