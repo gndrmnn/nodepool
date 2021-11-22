@@ -29,6 +29,7 @@ function sshintonode {
     state='ready'
 
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
+
     /tmp/ssh_wrapper $node ls /
 
     # Check that the root partition grew on boot; it should be a 5GiB
@@ -52,6 +53,21 @@ function sshintonode {
         echo "*** Failed to find metadata in config-drive"
         FAILURE_REASON="Failed to find meta-data in config-drive for $node"
         RETURN=1
+    fi
+
+    # We have sometime seen issues where various build environments
+    # setup grub to point at devices/partitions/uuid's etc. that work
+    # in the gate, but don't work generally.  All images should have a
+    # root partition labeled "cloudimg-rootfs" and be setup to boot
+    # from that.
+    /tmp/ssh_wrapper $node -- cat /etc/os-release
+    /tmp/ssh_wrapper $node -- blkid
+    kernel_cmd_line=$(/tmp/ssh_wrapper $node -- cat /proc/cmdline)
+    echo "Kernel command line: ${kernel_cmd_line}"
+    if [[ ! $kernel_cmd_line =~ 'root=LABEL=cloudimg-rootfs' ]];
+       echo "*** Failed to find correct root label"
+       FAILURE_REASON="Failed to find correct root label for $node"
+       RETURN=1
     fi
 }
 
