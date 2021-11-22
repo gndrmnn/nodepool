@@ -29,6 +29,9 @@ function sshintonode {
     state='ready'
 
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
+
+    /tmp/ssh_wrapper $node cat /etc/os-release
+
     /tmp/ssh_wrapper $node ls /
 
     # Check that the root partition grew on boot; it should be a 5GiB
