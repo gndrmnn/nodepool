@@ -29,6 +29,7 @@ function sshintonode {
     state='ready'
 
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
+
     /tmp/ssh_wrapper $node ls /
 
     # Check that the root partition grew on boot; it should be a 5GiB
@@ -52,6 +53,38 @@ function sshintonode {
         echo "*** Failed to find metadata in config-drive"
         FAILURE_REASON="Failed to find meta-data in config-drive for $node"
         RETURN=1
+    fi
+
+    # Debugging that we're seeing the right node
+    /tmp/ssh_wrapper $node -- "cat /etc/os-release; blkid"
+
+    # This ensures DIB setup the bootloader kernel arguments correctly
+    # by looking for the default console setup it does.  In the past
+    # we have seen issues with bootloader installation for all sorts
+    # of reasons (our errors and upstream changes); but generally what
+    # has happened is that case grub has silently fallen-back to
+    # "guessing" from the running build-system what kernel flags to
+    # use.
+    #
+    # DIB images should be booting from a root device labeled
+    # "cloudimg-rootfs".  In the gate, where you're *using* a
+    # DIB-image to build a DIB-image, it's /proc/cmdline contains
+    # "root=LABEL=cloudimg-rootfs" and a misconfigured grub can
+    # actually guess the correct root device.  However, when this
+    # builds an image in production on a totally different host you
+    # get a non-booting, wrong image.  Ergo, although this is mostly
+    # what we're interested in validating, this is not a reliable
+    # thing to test directly.
+    #
+    # So below, we probe for something else; the console setup that
+    # DIB will put in.  If this is missing, it's an indication that
+    # the bootloader is not setting up the kernel arguments correctly.
+    kernel_cmd_line=$(/tmp/ssh_wrapper $node -- cat /proc/cmdline)
+    echo "Kernel command line: ${kernel_cmd_line}"
+    if [[ ! $kernel_cmd_line =~ 'console=tty0 console=ttyS0,115200' ]]; then
+       echo "*** Failed to find correct kernel boot flags"
+       FAILURE_REASON="Failed to find correct kernel boot flags $node"
+       RETURN=1
     fi
 }
 
