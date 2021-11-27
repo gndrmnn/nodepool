@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added support for filtering Azure images.  Use the
+    :attr:`providers.[azure].cloud-images.image-filter` setting to
+    specify a private image using filters (tags, for example).

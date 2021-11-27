@@ -23,6 +23,34 @@ from nodepool.driver.statemachine import StateMachineProvider
 from . import fake_azure
 
 
+def make_image(name, tags):
+    return {
+        'name': name,
+        'id': ('/subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/'
+               'resourceGroups/nodepool/providers/Microsoft.Compute/'
+               f'images/{name}'),
+        'type': 'Microsoft.Compute/images',
+        'location': 'eastus',
+        'tags': tags,
+        'properties': {
+            'storageProfile': {
+                'osDisk': {
+                    'osType': 'Linux',
+                    'osState': 'Generalized',
+                    'diskSizeGB': 1,
+                    'blobUri': 'https://example.net/nodepoolstorage/img.vhd',
+                    'caching': 'ReadWrite',
+                    'storageAccountType': 'Standard_LRS'
+                },
+                'dataDisks': [],
+                'zoneResilient': False
+            },
+            'provisioningState': 'Succeeded',
+            'hyperVGeneration': 'V1'
+        }
+    }
+
+
 class TestDriverAzure(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAzure")
 
@@ -139,6 +167,76 @@ class TestDriverAzure(tests.DBTestCase):
             "/subscriptions/c35cf7df-ed75-4c85-be00-535409a85120"
             "/resourceGroups/nodepool/providers/Microsoft.Compute"
             "/images/test-image-1234")
+
+    def test_azure_image_filter_name(self):
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test1', {'foo': 'bar'}))
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test2', {}))
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test3', {'foo': 'bar'}))
+
+        configfile = self.setup_config(
+            'azure.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('image-by-name')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['storageProfile']
+            ['imageReference']['id'],
+            "/subscriptions/c35cf7df-ed75-4c85-be00-535409a85120"
+            "/resourceGroups/nodepool/providers/Microsoft.Compute"
+            "/images/test1")
+
+    def test_azure_image_filter_tag(self):
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test1', {'foo': 'bar'}))
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test2', {}))
+        self.fake_azure.crud['Microsoft.Compute/images'].items.append(
+            make_image('test3', {'foo': 'bar'}))
+
+        configfile = self.setup_config(
+            'azure.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('image-by-tag')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['storageProfile']
+            ['imageReference']['id'],
+            "/subscriptions/c35cf7df-ed75-4c85-be00-535409a85120"
+            "/resourceGroups/nodepool/providers/Microsoft.Compute"
+            "/images/test3")
 
     def test_azure_windows_image_password(self):
         configfile = self.setup_config(

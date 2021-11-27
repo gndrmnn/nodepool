@@ -37,6 +37,7 @@ class AzureProviderCloudImage(ConfigValue):
         # TODO(corvus): remove zuul_public_key
         self.key = image.get('key', zuul_public_key)
         self.image_reference = image.get('image-reference')
+        self.image_filter = image.get('image-filter')
         self.image_id = image.get('image-id')
         self.python_path = image.get('python-path')
         self.shell_type = image.get('shell-type')
@@ -48,7 +49,8 @@ class AzureProviderCloudImage(ConfigValue):
     @property
     def external_name(self):
         '''Human readable version of external.'''
-        return self.image_id or self.image_reference or self.name
+        return (self.image_id or self.image_reference or
+                self.image_filter or self.name)
 
     @staticmethod
     def getSchema():
@@ -57,6 +59,12 @@ class AzureProviderCloudImage(ConfigValue):
             v.Required('publisher'): str,
             v.Required('version'): str,
             v.Required('offer'): str,
+        }
+
+        azure_image_filter = {
+            'location': str,
+            'name': str,
+            'tags': dict,
         }
 
         return v.All({
@@ -68,14 +76,16 @@ class AzureProviderCloudImage(ConfigValue):
             'key': str,
             v.Exclusive('image-reference', 'spec'): azure_image_reference,
             v.Exclusive('image-id', 'spec'): str,
+            v.Exclusive('image-filter', 'spec'): azure_image_filter,
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
         }, {
             v.Required(
-                v.Any('image-reference', 'image-id'),
-                msg='Provide either "image-reference" or "image-id" keys'
+                v.Any('image-reference', 'image-id', 'image-filter'),
+                msg=('Provide either "image-reference", '
+                     '"image-filter", or "image-id" keys')
             ): object,
             object: object,
         })
