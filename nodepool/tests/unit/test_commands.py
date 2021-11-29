@@ -50,11 +50,11 @@ class TestNodepoolCMD(tests.DBTestCase):
                     for args, kwargs in m_add_row.call_args_list:
                         row = args[0]
                         if col_count:
-                            self.assertEquals(len(row), col_count)
+                            self.assertEqual(len(row), col_count)
                         log.debug(row)
                         if col < len(row) and row[col] == val:
                             rows_with_val += 1
-                    self.assertEquals(rows_with_val, count)
+                    self.assertEqual(rows_with_val, count)
                 break
             except AssertionError:
                 # retry
