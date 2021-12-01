@@ -45,6 +45,7 @@ class OpenshiftPool(ConfigPool):
             pl.type = label['type']
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
+            pl.runtime_class_name = label.get('runtime-class-name')
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
             pl.python_path = label.get('python-path', 'auto')
@@ -91,6 +92,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             v.Required('type'): str,
             'image': str,
             'image-pull': str,
+            'runtime-class-name': str,
             'cpu': int,
             'memory': int,
             'python-path': str,

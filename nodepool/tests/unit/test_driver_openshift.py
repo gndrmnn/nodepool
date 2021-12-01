@@ -92,6 +92,10 @@ class FakeOpenshiftClient(object):
 
 
 class FakeCoreClient(object):
+
+    def __init__(self):
+        self.pod_requests = []
+
     def create_namespaced_service_account(self, ns, sa_body):
         return
 
@@ -108,6 +112,10 @@ class FakeCoreClient(object):
         return FakeSecret
 
     def create_namespaced_pod(self, ns, pod_body):
+        self.pod_requests.append({
+            "ns": ns,
+            "body": pod_body
+        })
         return
 
     def read_namespaced_pod(self, name, ns):
@@ -156,6 +164,35 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.assertEqual(node.shell_type, 'csh')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+
+        self.waitForNodeDeletion(node)
+
+    def test_openshift_runtime_class_name(self):
+        configfile = self.setup_config('openshift.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('pod-fedora-kata')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+
+        pod_request_body = self.fake_k8s_client.pod_requests[0]["body"]
+        self.assertEqual(
+            pod_request_body["spec"]["runtimeClassName"],
+            "kata"
+        )
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
