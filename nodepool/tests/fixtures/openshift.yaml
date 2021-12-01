@@ -29,3 +29,6 @@ providers:
             image: docker.io/fedora:28
             python-path: '/usr/bin/python3'
             shell-type: csh
+          - name: pod-fedora-kata
+            image: docker.io/fedora:28
+            runtime-class-name: kata

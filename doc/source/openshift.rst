@@ -128,6 +128,15 @@ Selecting the openshift driver adds the following options to the
 
          The ImagePullPolicy, can be IfNotPresent, Always or Never.
 
+      .. attr:: runtime-class-name
+         :type: str
+
+         The runtime class name to be used by the pods.
+         For example this could be set to `kata` to use the
+         Openshift Sandboxed Containers operator.
+
+         runtime-class-name only affects labels with type `pod`.
+
       .. attr:: python-path
          :type: str
          :default: auto

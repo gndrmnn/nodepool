@@ -230,6 +230,11 @@ class OpenshiftProvider(Provider):
             'containers': [container_body]
         }
 
+        if label.runtime_class_name:
+            spec_body.update({
+                'runtimeClassName': label.runtime_class_name
+            })
+
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
 
