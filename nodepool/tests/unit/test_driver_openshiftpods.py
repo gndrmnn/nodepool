@@ -109,3 +109,31 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         self.zk.storeNode(node)
 
         self.waitForNodeDeletion(node)
+
+    def test_openshift_runtime_class_name(self):
+        configfile = self.setup_config('openshiftpods.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('pod-fedora-kata')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'kubectl')
+        self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertEqual(node.runtime_class_name, 'kata')
+
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+
+        self.waitForNodeDeletion(node)
+

@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Added the option to configure runtimeClassName for the Openshift and
+    Openshift Pods drivers to use non-default container runtimes in openshift.
+    For example this enables running workloads in kata containers by using
+    the Openshift Sandboxed Container Operator and configuring an openshift pod
+    label with `runtime-class-name: kata`.
