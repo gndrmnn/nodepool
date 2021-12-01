@@ -23,3 +23,6 @@ providers:
         labels:
           - name: pod-fedora
             image: docker.io/fedora:28
+          - name: pod-fedora-kata
+            image: docker.io/fedora:28
+            runtime-class-name: kata
