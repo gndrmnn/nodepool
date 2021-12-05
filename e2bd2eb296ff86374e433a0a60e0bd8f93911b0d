@@ -33,6 +33,23 @@
       "message": "recheck\n\nzk",
       "revId": "e2bd2eb296ff86374e433a0a60e0bd8f93911b0d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4092e020_2423942f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2021-12-05T20:06:23Z",
+      "side": 1,
+      "message": "Self approving as it only bumps dib.  I will monitor opendev production builds with this new version",
+      "revId": "e2bd2eb296ff86374e433a0a60e0bd8f93911b0d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
