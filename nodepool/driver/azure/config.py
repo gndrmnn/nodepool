@@ -166,6 +166,7 @@ class AzurePool(ConfigPool):
         self.load(pool_config)
 
     def load(self, pool_config):
+        super().load(pool_config)
         self.name = pool_config['name']
         self.max_servers = pool_config['max-servers']
         self.public_ipv4 = pool_config.get('public-ipv4',
