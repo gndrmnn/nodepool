@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "016a194b_b17e3b83",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "Nit this line and the one above it have an extra space of indentation.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87699dd6_80120d25",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "Should we emit this log if this method is unused?",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b898bad5_bbb3a9a7",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "Nit this method name makes it seem like this method deletes the backing nodes. But it really just removes slot entries then the listResources() calls will deallocate empty and not recently used backing nodes.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0df6b279_da1c56d8",
+        "filename": "nodepool/driver/metastatic/config.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "I think you need to insert into label_defs to make this check work.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98baac52_3386f31d",
+        "filename": "nodepool/driver/metastatic/config.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "Is this line redundant with the MetastaticPool.load() method? When we create pp above it should populate this dict.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "219c7ee5_d755b056",
+        "filename": "nodepool/tests/unit/test_driver_metastatic.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-08T23:10:18Z",
+      "side": 1,
+      "message": "If we sort in the other direction we get the backing node first then node1 and node2. Not super important but it might make the test cases below a bit clearer.\n\nI guess this might be more difficult to sort properly when creating the second backing node though.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
