@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b87517ec_b3fb31e9",
+        "filename": "doc/source/metastatic.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-08T23:59:39Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87699dd6_80120d25",
@@ -31,6 +48,23 @@
       "writtenOn": "2021-12-08T23:10:18Z",
       "side": 1,
       "message": "Should we emit this log if this method is unused?",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8838f02e_6c67bbcc",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-08T23:59:39Z",
+      "side": 1,
+      "message": "Fair question.  I\u0027m inclined to leave it in so that if we ever do use it, it\u0027s there.",
       "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -52,6 +86,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c121b2_bfe0826f",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-08T23:59:39Z",
+      "side": 1,
+      "message": "WRT terminology, I was going for a distinction between \"deallocating\" and \"deleting\".  Our fake node previously had a backing node allocated to it, and this deallocates that backing node (so that yes, it can be garbage collected later if it\u0027s the last).",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0df6b279_da1c56d8",
@@ -69,6 +120,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac4515ec_470964f1",
+        "filename": "nodepool/driver/metastatic/config.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-08T23:59:39Z",
+      "side": 1,
+      "message": "It certainly seems to be missing something.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98baac52_3386f31d",
@@ -82,6 +150,23 @@
       "writtenOn": "2021-12-08T23:10:18Z",
       "side": 1,
       "message": "Is this line redundant with the MetastaticPool.load() method? When we create pp above it should populate this dict.",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ecb953_a9dda835",
+        "filename": "nodepool/driver/metastatic/config.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-08T23:59:39Z",
+      "side": 1,
+      "message": "Sure looks that way.",
       "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
