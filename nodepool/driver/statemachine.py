@@ -165,7 +165,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if (self.state_machine.complete and self.keyscan_future
                 and self.keyscan_future.done()):
                 keys = self.keyscan_future.result()
-                node.keys = keys
+                node.host_keys = keys
                 self.log.debug(f"Node {node.id} is ready")
                 node.state = zk.READY
                 self.zk.storeNode(node)
