@@ -16,6 +16,40 @@
       "message": "recheck",
       "revId": "3a1cf158c9bff09c60c94e2478382a26d26bc272",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b189a586_ebf3edc8",
+        "filename": "nodepool/tests/unit/test_driver_metastatic.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-09T19:07:22Z",
+      "side": 1,
+      "message": "I think this file may not have been git added.",
+      "revId": "3a1cf158c9bff09c60c94e2478382a26d26bc272",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b6849ff_b44f85e6",
+        "filename": "nodepool/tests/unit/test_driver_metastatic.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-09T19:07:22Z",
+      "side": 1,
+      "message": "This file too.",
+      "revId": "3a1cf158c9bff09c60c94e2478382a26d26bc272",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
