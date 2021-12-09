@@ -646,30 +646,35 @@ class AzureAdapter(statemachine.Adapter):
             }
             os_profile['adminUsername'] = image.username
             os_profile['linuxConfiguration'] = linux_config
+        if label.custom_data:
+            os_profile['customData'] = label.custom_data
 
+        spec = {
+            'location': self.provider.location,
+            'tags': tags,
+            'properties': {
+                'osProfile': os_profile,
+                'hardwareProfile': {
+                    'vmSize': label.hardware_profile["vm-size"]
+                },
+                'storageProfile': {
+                    'imageReference': image_reference,
+                },
+                'networkProfile': {
+                    'networkInterfaces': [{
+                        'id': nic['id'],
+                        'properties': {
+                            'primary': True,
+                        }
+                    }]
+                },
+            },
+        }
+        if label.user_data:
+            spec['properties']['userData'] = label.user_data
         with self.rate_limiter:
             return self.azul.virtual_machines.create(
-                self.resource_group, hostname, {
-                    'location': self.provider.location,
-                    'tags': tags,
-                    'properties': {
-                        'osProfile': os_profile,
-                        'hardwareProfile': {
-                            'vmSize': label.hardware_profile["vm-size"]
-                        },
-                        'storageProfile': {
-                            'imageReference': image_reference,
-                        },
-                        'networkProfile': {
-                            'networkInterfaces': [{
-                                'id': nic['id'],
-                                'properties': {
-                                    'primary': True,
-                                }
-                            }]
-                        },
-                    },
-                })
+                self.resource_group, hostname, spec)
 
     def _deleteVirtualMachine(self, name):
         for vm in self._listVirtualMachines():

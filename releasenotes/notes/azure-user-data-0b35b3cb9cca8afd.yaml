@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The Azure driver now supports user-data and custom-data.

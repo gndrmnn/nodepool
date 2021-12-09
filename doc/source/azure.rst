@@ -510,7 +510,29 @@ section of the configuration.
                 list on `azure.microsoft.com`_ for the list of sizes
                 availabile in each region.
 
+          .. attr:: tags
+             :type: dict
+             :default: None
+
+             A dictionary of tags to add to newly created VMs.
+
+          .. attr:: user-data
+             :type: str
+             :default: None
+
+             The `Azure User Data`_ value for newly created VMs.
+
+          .. attr:: custom-data
+             :type: str
+             :default: None
+
+             The `Azure Custom Data`_ value for newly created VMs.
+
 
 .. _`Azure CLI`: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest
 
 .. _azure.microsoft.com: https://azure.microsoft.com/en-us/global-infrastructure/services/?products=virtual-machines
+
+.. _`Azure User Data`: https://docs.microsoft.com/en-us/azure/virtual-machines/user-data
+
+.. _`Azure Custom Data`: https://docs.microsoft.com/en-us/azure/virtual-machines/custom-data
