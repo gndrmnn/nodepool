@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The shell-type setting has been added to the Azure driver.

@@ -28,6 +28,7 @@ providers:
     cloud-images:
       - name: bionic
         username: zuul
+        shell-type: sh
         image-reference:
           sku: 18.04-LTS
           publisher: Canonical

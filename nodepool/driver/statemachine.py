@@ -117,6 +117,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
         self.node.username = image.username
         self.node.python_path = image.python_path
+        self.node.shell_type = image.shell_type
         self.node.connection_port = image.connection_port
         self.node.connection_type = image.connection_type
         self.zk.storeNode(self.node)
