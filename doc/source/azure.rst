@@ -311,18 +311,65 @@ section of the configuration.
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``
 
+      .. attr:: image-filter
+         :type: dict
+
+         Specifies a private image to use via filters.  Either this field,
+         :attr:`providers.[azure].cloud-images.image-reference`, or
+         :attr:`providers.[azure].cloud-images.image-id` must be
+         provided.
+
+         If a filter is provided, Nodepool will list all of the images
+         in the provider's resource group and reduce the list using
+         the supplied filter.  All items specified in the filter must
+         match in order for an image to match.  If more than one image
+         matches, the images are sorted by name and the last one
+         matches.
+
+         Example:
+
+         .. code-block:: yaml
+
+            cloud-images:
+              - name: image-by-name
+                image-filter:
+                  name: test-image
+              - name: image-by-tag
+                image-filter:
+                  tags:
+                    foo: bar
+
+         The following filters are available:
+
+         .. attr:: name
+            :type: str
+
+            The name of the image.
+
+         .. attr:: location
+            :type: str
+
+            The location of the image.
+
+         .. attr:: tags
+            :type: dict
+
+            The image tags.
+
       .. attr:: image-id
          :type: str
 
-         Specifies a private image to use.  Either this field or
-         :attr:`providers.[azure].cloud-images.image-reference` must be
+         Specifies a private image to use by ID.  Either this field,
+         :attr:`providers.[azure].cloud-images.image-reference`, or
+         :attr:`providers.[azure].cloud-images.image-filter` must be
          provided.
 
       .. attr:: image-reference
          :type: dict
 
-         Specifies a public image to use.  Either this field or
-         :attr:`providers.[azure].cloud-images.image-id` must be
+         Specifies a public image to use.  Either this field,
+         :attr:`providers.[azure].cloud-images.image-id`, or
+         :attr:`providers.[azure].cloud-images.image-filter` must be
          provided.
 
          .. attr:: sku

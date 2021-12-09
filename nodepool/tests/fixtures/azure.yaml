@@ -19,6 +19,10 @@ labels:
     min-ready: 0
   - name: windows-generate
     min-ready: 0
+  - name: image-by-name
+    min-ready: 0
+  - name: image-by-tag
+    min-ready: 0
 
 providers:
   - name: azure
@@ -54,6 +58,15 @@ providers:
           offer: WindowsServer
         username: foobar
         generate-password: True
+      - name: image-by-name
+        username: zuul
+        image-filter:
+          name: test1
+      - name: image-by-tag
+        username: zuul
+        image-filter:
+          tags:
+            foo: bar
     pools:
       - name: main
         max-servers: 10
@@ -71,6 +84,14 @@ providers:
               systemPurpose: CI
             user-data: "This is the user data"
             custom-data: "This is the custom data"
+          - name: image-by-name
+            cloud-image: image-by-name
+            hardware-profile:
+              vm-size: Standard_B1ls
+          - name: image-by-tag
+            cloud-image: image-by-tag
+            hardware-profile:
+              vm-size: Standard_B1ls
           - name: windows-password
             cloud-image: windows-password
             hardware-profile:

@@ -174,6 +174,7 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.retries = retries
         self.attempts = 0
         self.image_external_id = image_external_id
+        self.image_reference = None
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
         self.tags.update(metadata)
@@ -203,6 +204,12 @@ class AzureCreateStateMachine(statemachine.StateMachine):
     def advance(self):
         if self.state == self.START:
             self.external_id = self.hostname
+
+            # Find an appropriate image if filters were provided
+            if self.label.cloud_image and self.label.cloud_image.image_filter:
+                self.image_reference = self.adapter._getImageFromFilter(
+                    self.label.cloud_image.image_filter)
+
             if self.label.pool.public_ipv4:
                 self.public_ipv4 = self.adapter._createPublicIPAddress(
                     self.tags, self.hostname, self.ip_sku, 'IPv4',
@@ -234,8 +241,9 @@ class AzureCreateStateMachine(statemachine.StateMachine):
             self.nic = self.adapter._refresh(self.nic)
             if self.adapter._succeeded(self.nic):
                 self.vm = self.adapter._createVirtualMachine(
-                    self.label, self.image_external_id, self.tags,
-                    self.hostname, self.nic)
+                    self.label, self.image_external_id,
+                    self.image_reference, self.tags, self.hostname,
+                    self.nic)
                 self.state = self.VM_CREATING
             else:
                 return
@@ -647,13 +655,20 @@ class AzureAdapter(statemachine.Adapter):
         with self.rate_limiter:
             return self.azul.virtual_machines.list(self.resource_group)
 
-    def _createVirtualMachine(self, label, image_external_id, tags,
-                              hostname, nic):
+    def _createVirtualMachine(self, label, image_external_id,
+                              image_reference, tags, hostname, nic):
         if image_external_id:
+            # This is a diskimage
             image = label.diskimage
             remote_image = self._getImage(image_external_id)
             image_reference = {'id': remote_image['id']}
+        elif image_reference:
+            # This is a cloud image with aser supplied image-filter;
+            # we already found the reference.
+            image = label.cloud_image
         else:
+            # This is a cloud image with a user-supplied reference or
+            # id.
             image = label.cloud_image
             if label.cloud_image.image_reference:
                 image_reference = label.cloud_image.image_reference
@@ -741,3 +756,24 @@ class AzureAdapter(statemachine.Adapter):
     def _listImages(self):
         with self.rate_limiter:
             return self.azul.images.list(self.resource_group)
+
+    def _getImageFromFilter(self, image_filter):
+        images = self._listImages()
+        images = [i for i in images
+                  if i['properties']['provisioningState'] == 'Succeeded']
+        if 'name' in image_filter:
+            images = [i for i in images
+                      if i['name'] == image_filter['name']]
+        if 'location' in image_filter:
+            images = [i for i in images
+                      if i['location'] == image_filter['location']]
+        if 'tags' in image_filter:
+            for k, v in image_filter['tags'].items():
+                images = [i for i in images if i['tags'].get(k) == v]
+        images = sorted(images, key=lambda i: i['name'])
+        if not images:
+            raise Exception("Unable to find image matching filter: %s",
+                            image_filter)
+        image = images[-1]
+        self.log.debug("Found image matching filter: %s", image)
+        return {'id': image['id']}
