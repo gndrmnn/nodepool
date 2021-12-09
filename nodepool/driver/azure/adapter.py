@@ -12,10 +12,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import os
-import math
-import logging
 import json
+import logging
+import math
+import os
+import random
+import string
 
 import cachetools.func
 
@@ -39,6 +41,18 @@ def quota_info_from_sku(sku):
         cores=cores,
         ram=ram,
         instances=1)
+
+
+def generate_password():
+    while True:
+        chars = random.choices(string.ascii_lowercase +
+                               string.ascii_uppercase +
+                               string.digits,
+                               k=64)
+        if ((set(string.ascii_lowercase) & set(chars)) and
+            (set(string.ascii_uppercase) & set(chars)) and
+            (set(string.digits) & set(chars))):
+            return(''.join(chars))
 
 
 class AzureInstance(statemachine.Instance):
@@ -646,7 +660,7 @@ class AzureAdapter(statemachine.Adapter):
             else:
                 image_reference = {'id': label.cloud_image.image_id}
         os_profile = {'computerName': hostname}
-        if image.username and image.key:
+        if image.key:
             linux_config = {
                 'ssh': {
                     'publicKeys': [{
@@ -657,8 +671,13 @@ class AzureAdapter(statemachine.Adapter):
                 },
                 "disablePasswordAuthentication": True,
             }
-            os_profile['adminUsername'] = image.username
             os_profile['linuxConfiguration'] = linux_config
+        if image.username:
+            os_profile['adminUsername'] = image.username
+        if image.password:
+            os_profile['adminPassword'] = image.password
+        elif image.generate_password:
+            os_profile['adminPassword'] = generate_password()
         if label.custom_data:
             os_profile['customData'] = label.custom_data
 

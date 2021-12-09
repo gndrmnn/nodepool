@@ -248,6 +248,24 @@ section of the configuration.
 
          The username that should be used when connecting to the node.
 
+      .. attr:: password
+         :type: str
+
+         If booting a Windows image, an administrative password is
+         required.  Either supply it here, or set
+         :attr:`providers.[azure].cloud-images.generate-password`.
+         Nodepool does not provide the password to requesting clients;
+         to be used it must be provided in some other manner.
+
+      .. attr:: generate-password
+         :type: bool
+
+         If booting a Windows image, an administrative password is
+         required.  If the password is not actually used (e.g., the
+         image has key-based authentication enabled), a random
+         password can be provided by enabling this option.  The
+         password is not stored anywhere and is not retrievable.
+
       .. attr:: key
          :type: str
 
