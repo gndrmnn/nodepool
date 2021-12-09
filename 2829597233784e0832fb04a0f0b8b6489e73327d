@@ -69,6 +69,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f93745cb_e95d5a9f",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2021-12-09T15:33:04Z",
+      "side": 1,
+      "message": "But I\u0027ll change the log message to be less wrong.  :)",
+      "revId": "2829597233784e0832fb04a0f0b8b6489e73327d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b898bad5_bbb3a9a7",
