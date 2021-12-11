@@ -32,7 +32,7 @@ from kazoo import exceptions as kze
 import cachetools
 
 
-def keyscan(node_id, interface_ip,
+def keyscan(host_key_checking, node_id, interface_ip,
             connection_type, connection_port,
             timeout):
     """A standalone function for scanning keys to pass to a thread/process
@@ -40,6 +40,8 @@ def keyscan(node_id, interface_ip,
     """
 
     keys = []
+    if not host_key_checking:
+        return keys
     try:
         if (connection_type == 'ssh' or
             connection_type == 'network_cli'):
@@ -197,6 +199,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                                node.interface_ip)
                 future = self.manager.keyscan_worker.submit(
                     keyscan,
+                    self.handler.pool.host_key_checking,
                     node.id, node.interface_ip,
                     node.connection_type, node.connection_port,
                     self.manager.provider.boot_timeout)

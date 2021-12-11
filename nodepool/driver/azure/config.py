@@ -218,7 +218,7 @@ class AzurePool(ConfigPool):
         self.use_internal_ip = pool_config.get(
             'use-internal-ip', self.provider.use_internal_ip)
         self.host_key_checking = pool_config.get(
-            'host-key-checking', self.provider.use_internal_ip)
+            'host-key-checking', self.provider.host_key_checking)
 
     @staticmethod
     def getSchema():
