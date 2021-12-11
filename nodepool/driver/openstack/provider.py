@@ -374,8 +374,8 @@ class OpenStackProvider(Provider, QuotaSupport):
             return False
         return True
 
-    def uploadImage(self, image_name, filename, image_type=None, meta=None,
-                    md5=None, sha256=None):
+    def uploadImage(self, provider_image, image_name, filename,
+                    image_type=None, meta=None, md5=None, sha256=None):
         # configure glance and upload image.  Note the meta flags
         # are provided as custom glance properties
         # NOTE: we have wait=True set here. This is not how we normally

@@ -1068,7 +1068,9 @@ class UploadWorker(BaseWorker):
         filename = image.to_path(self._config.images_dir)
 
         ext_image_name = provider.image_name_format.format(
-            image_name=image_name, timestamp=str(timestamp)
+            image_name=image_name,
+            upload_id=upload_id,
+            timestamp=str(timestamp)
         )
 
         self.log.info("Uploading DIB image build %s from %s to %s" %
@@ -1087,6 +1089,7 @@ class UploadWorker(BaseWorker):
 
         try:
             external_id = manager.uploadImage(
+                provider_image,
                 ext_image_name, filename,
                 image_type=image.extension,
                 meta=meta,
