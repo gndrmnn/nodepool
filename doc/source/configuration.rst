@@ -26,6 +26,7 @@ The following drivers are available.
    aws
    azure
    gce
+   ibmvpc
    kubernetes
    openshift
    openshift-pods
