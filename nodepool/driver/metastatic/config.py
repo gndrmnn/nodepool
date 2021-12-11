@@ -73,6 +73,8 @@ class MetastaticPool(ConfigPool):
         self.labels = {}
         # We will just use the interface_ip of the backing node
         self.use_internal_ip = False
+        self.host_key_checking = False
+
         self.load(pool_config)
 
     def load(self, pool_config):
