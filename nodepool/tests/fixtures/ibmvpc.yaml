@@ -1,0 +1,98 @@
+elements-dir: .
+images-dir: '{images_dir}'
+build-log-dir: '{build_log_dir}'
+build-log-retention: 1
+
+webapp:
+  port: 8005
+  listen_address: '0.0.0.0'
+
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+labels:
+  - name: debian-private
+    min-ready: 0
+  - name: debian-public
+    min-ready: 0
+  - name: debian-filter
+    min-ready: 0
+  - name: fake-image
+    min-ready: 0
+
+providers:
+  - name: ibmvpc
+    driver: ibmvpc
+    rate: 1000
+    object-storage:
+       instance-name: 'Cloud Object Storage-r6'
+       endpoint: 'https://s3.us-south.cloud-object-storage.appdomain.cloud'
+       bucket-name: np-testbucket
+    vpc: nodepool
+    region: us-south
+    subnet: sn-nodepool
+    boot-timeout: 240
+    quota:
+      cores: 200
+    cloud-images:
+      - name: debian-by-name
+        username: zuul
+        keys:
+          - testuser
+        image-name: ibm-debian-9-13-minimal-amd64-4
+      - name: debian-by-filter
+        username: zuul
+        keys:
+          - testuser
+        image-filter:
+          operating-system:
+            family: "Debian GNU/Linux"
+            version: "9.x Stretch/Stable - Minimal Install"
+
+    diskimages:
+      - name: fake-image
+        # This actually works for booting a fedora image
+        operating-system: 'debian-9-amd64'
+    pools:
+      - name: private
+        zone: us-south-1
+        max-servers: 10
+        host-key-checking: false
+        labels:
+          - name: debian-private
+            cloud-image: debian-by-name
+            profile: cx2-2x4
+          - name: debian-filter
+            cloud-image: debian-by-filter
+            profile: cx2-2x4
+          - name: fake-image
+            diskimage: fake-image
+            profile: cx2-2x4
+      - name: public
+        zone: us-south-1
+        max-servers: 10
+        public-ipv4: True
+        labels:
+          - name: debian-public
+            cloud-image: debian-by-name
+            profile: cx2-2x4
+
+diskimages:
+  - name: fake-image
+    elements:
+      - fedora
+      - vm
+    release: 21
+    dib-cmd: nodepool/tests/fake-image-create
+    env-vars:
+      TMPDIR: /opt/dib_tmp
+      DIB_IMAGE_CACHE: /opt/dib_cache
+      DIB_CLOUD_IMAGES: http://download.fedoraproject.org/pub/fedora/linux/releases/test/21-Beta/Cloud/Images/x86_64/
+      BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
