@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "168c2884_2d714bfe",
+        "filename": "doc/source/ibmvpc.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2021-12-14T16:27:13Z",
+      "side": 1,
+      "message": "Isn\u0027t the username already defined in the top level diskimage definition?",
+      "revId": "505266c9f805eca8784163e3a691d5ddd9e51025",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
