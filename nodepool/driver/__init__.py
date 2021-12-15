@@ -131,7 +131,7 @@ class Driver(object, metaclass=abc.ABCMeta):
 
 class ProviderNotifications(object):
     """
-    Notification interface for :class:`.Provider` objects.
+    Notification interface for :py:class:`.Provider` objects.
 
     This groups all notification messages bound for the Provider. The
     Provider class inherits from this by default. A Provider overrides the
@@ -326,7 +326,7 @@ class LabelRecorder(object):
 
 class NodeRequestHandlerNotifications(object):
     """
-    Notification interface for :class:`.NodeRequestHandler` objects.
+    Notification interface for :py:class:`.NodeRequestHandler` objects.
 
     This groups all notification messages bound for the NodeRequestHandler.
     The NodeRequestHandler class inherits from this by default. A request
