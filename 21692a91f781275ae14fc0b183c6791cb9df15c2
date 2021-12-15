@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b63b6ace_84f585dc",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2021-12-15T22:01:41Z",
+      "side": 1,
+      "message": "3.2.0 is the first version I see available for nodepool. https://zuul-ci.org/docs/nodepool/3.0.1/ and https://zuul-ci.org/docs/nodepool/3.1.0/ 404 for me.",
+      "revId": "21692a91f781275ae14fc0b183c6791cb9df15c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
