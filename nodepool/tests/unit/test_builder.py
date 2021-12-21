@@ -19,8 +19,6 @@ import fixtures
 import mock
 import time
 
-from pathlib import Path
-
 from nodepool import builder, exceptions, tests
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool import zk
@@ -29,18 +27,6 @@ from nodepool.nodeutils import iterate_timeout
 
 
 class TestNodepoolBuilderDibImage(tests.BaseTestCase):
-    def test_from_path(self):
-        image = builder.DibImageFile.from_path(
-            '/foo/bar/myid1234.qcow2')
-        self.assertEqual(image.image_id, 'myid1234')
-        self.assertEqual(image.extension, 'qcow2')
-
-    def test_from_path_with_Path(self):
-        image = builder.DibImageFile.from_path(
-            Path('/foo/bar/myid1234.qcow2'))
-        self.assertEqual(image.image_id, 'myid1234')
-        self.assertEqual(image.extension, 'qcow2')
-
     def test_from_image_id(self):
         tempdir = fixtures.TempDir()
         self.useFixture(tempdir)
