@@ -56,7 +56,7 @@ class DibImageFile(object):
     a unique ID, but can be available in multiple formats (with different
     extensions).
     '''
-    def __init__(self, image_id, extension=None):
+    def __init__(self, image_id, extension):
         self.image_id = image_id
         self.extension = extension
         self.md5 = None
@@ -79,14 +79,8 @@ class DibImageFile(object):
                     images.append(image)
         return images
 
-    def to_path(self, images_dir, with_extension=True):
-        my_path = Path(images_dir) / self.image_id
-        if with_extension:
-            if self.extension is None:
-                raise exceptions.BuilderError(
-                    'Cannot specify image extension of None'
-                )
-            my_path = my_path.with_suffix('.' + self.extension)
+    def to_path(self, images_dir):
+        my_path = Path(images_dir) / f'{self.image_id}.{self.extension}'
 
         # Path.with_suffix() will replace an existing suffix, so we create
         # new Path objects from strings for the checksum files.
@@ -260,7 +254,7 @@ class CleanupWorker(BaseWorker):
         manifest_dir = None
 
         for f in files:
-            filename = f.to_path(images_dir, True)
+            filename = f.to_path(images_dir)
             if not manifest_dir:
                 path, ext = filename.rsplit('.', 1)
                 manifest_dir = path + ".d"
@@ -1071,7 +1065,7 @@ class UploadWorker(BaseWorker):
         self.log.debug("Found image file of type %s for image id: %s" %
                        (image.extension, image.image_id))
 
-        filename = image.to_path(self._config.images_dir, with_extension=True)
+        filename = image.to_path(self._config.images_dir)
 
         ext_image_name = provider.image_name_format.format(
             image_name=image_name, timestamp=str(timestamp)
