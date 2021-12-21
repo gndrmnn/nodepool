@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab5c1d27_b9bd4d22",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2021-12-21T20:51:35Z",
+      "side": 1,
+      "message": "I continue to struggle with pathlib\u0027s / operator, but I will eventually come to terms with it. It\u0027s been available since 3.4, so plenty old enough for us to use wherever we like.",
+      "revId": "5704ce75fccdc9c6f534f76c5ce287cfa46f32cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb7b72b_6e7c2e15",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 800,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2021-12-21T20:51:35Z",
+      "side": 1,
+      "message": "This variable name implies it\u0027s the full filename even though it\u0027s not. Granted, so did the old variable name too, and it\u0027s consistent with DIB\u0027s envvar.",
+      "revId": "5704ce75fccdc9c6f534f76c5ce287cfa46f32cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
