@@ -19,7 +19,7 @@ import fixtures
 import mock
 import time
 
-from nodepool import builder, exceptions, tests
+from nodepool import builder, tests
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool import zk
 from nodepool.config import Config
@@ -61,11 +61,6 @@ class TestNodepoolBuilderDibImage(tests.BaseTestCase):
                          '/imagedir/myid1234.qcow2')
         self.assertEqual(image.to_path('/imagedir/'),
                          '/imagedir/myid1234.qcow2')
-        self.assertEqual(image.to_path('/imagedir/', False),
-                         '/imagedir/myid1234')
-
-        image = builder.DibImageFile('myid1234')
-        self.assertRaises(exceptions.BuilderError, image.to_path, '/imagedir/')
 
 
 class TestNodepoolBuilderImageInheritance(tests.BaseTestCase):
