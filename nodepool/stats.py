@@ -41,6 +41,10 @@ def get_client():
         return None
 
 
+def normalize_statsd_name(name):
+    return name.replace('.', '_').replace(':', '_')
+
+
 class StatsReporter(object):
     '''
     Class adding statsd reporting functionality.
@@ -72,8 +76,7 @@ class StatsReporter(object):
         if self.handler.request.requestor:
             # Replace '.' which is a graphite hierarchy, and ':' which is
             # a statsd delimeter.
-            requestor = self.handler.request.requestor.replace('.', '_')
-            requestor = requestor.replace(':', '_')
+            requestor = normalize_statsd_name(self.handler.request.requestor)
             keys.append('nodepool.launch.requestor.%s.%s' %
                         (requestor, subkey))
 
@@ -158,4 +161,20 @@ class StatsReporter(object):
                            if p.max_servers])
         pipeline.gauge(key, max_servers)
 
+        pipeline.send()
+
+    def updateTenantLimits(self, tenant_limits):
+        if not self._statsd:
+            return
+
+        pipeline = self._statsd.pipeline()
+        # nodepool.tenant.TENANT.max_[cores,ram,instances]
+        key_template = 'nodepool.tenant.%s.%s'
+        for tenant, limits in tenant_limits.items():
+            for k, lim in limits.items():
+                key = key_template % (tenant, 'max_%s' % k)
+                # normalize stat name, as parts come from arbitrary user config
+                key = normalize_statsd_name(key)
+                pipeline.gauge(key, lim)
+                self._statsd.gauge()
         pipeline.send()
