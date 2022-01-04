@@ -495,6 +495,17 @@ The following metrics are produced by a ``nodepool-launcher`` process:
    Number of nodes with a specific label in a specific state. See
    :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
 
+.. zuul:stat:: nodepool.tenant_limits.<tenant>.<limit>
+   :type: guage
+
+   The currently configured resource limits of a tenant.
+
+   limit can be:
+
+   * cores
+   * instances
+   * ram
+
 Provider Metrics
 ^^^^^^^^^^^^^^^^
 
