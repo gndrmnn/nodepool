@@ -159,3 +159,19 @@ class StatsReporter(object):
         pipeline.gauge(key, max_servers)
 
         pipeline.send()
+
+    def updateTenantLimits(self, tenant_limits):
+        if not self._statsd:
+            return
+
+        pipeline = self._statsd.pipeline()
+        # nodepool.tenant.TENANT.max_[cores,ram,instances]
+        key_template = 'nodepool.tenant.%s.%s'
+        for tenant, limits in tenant_limits.items():
+            for k, lim in limits.items():
+                key = key_template % (tenant, 'max_%s' % k)
+                # normalize stat name, as parts come from arbitrary user config
+                key = key.replace('.', '_').replace(':', '_')
+                pipeline.gauge(key, lim)
+                self._statsd.gauge()
+        pipeline.send()
