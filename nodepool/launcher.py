@@ -338,6 +338,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
                 self.updateProviderLimits(
                     self.nodepool.config.providers.get(self.provider_name))
+                self.updateTenantLimits(
+                    self.nodepool.config.tenant_resource_limits)
 
                 if not self.paused_handler:
                     while not self._assignHandlers():
