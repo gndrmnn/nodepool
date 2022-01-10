@@ -291,6 +291,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             'metadata': {'name': label.name},
             'spec': spec_body,
             'restartPolicy': 'Never',
+            'imagePullSecret': label.image_pull_secrets,
         }
 
         resource = self.createNamespace(node, pool, restricted_access=True)
