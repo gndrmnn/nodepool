@@ -239,6 +239,7 @@ class OpenshiftProvider(Provider):
             'metadata': {'name': pod_name},
             'spec': spec_body,
             'restartPolicy': 'Never',
+            'imagePullSecret': label.image_pull_secrets,
         }
 
         self.k8s_client.create_namespaced_pod(project, pod_body)
