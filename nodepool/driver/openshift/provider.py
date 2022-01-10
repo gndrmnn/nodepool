@@ -228,6 +228,7 @@ class OpenshiftProvider(Provider):
 
         spec_body = {
             'containers': [container_body]
+            'imagePullSecret': label.image_pull_secrets,
         }
 
         if label.node_selector:

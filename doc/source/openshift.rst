@@ -128,6 +128,23 @@ Selecting the openshift driver adds the following options to the
 
          The ImagePullPolicy, can be IfNotPresent, Always or Never.
 
+      .. attr:: image-pull-secrets
+         :default: []
+         :type: list
+
+         The imagePullSecrets needed to pull container images from a private
+         registry.
+
+         Example:
+
+         .. code-block:: yaml
+
+            labels:
+              - name: openshift-pod
+                image: docker.io/fedora:28
+                image-pull-secrets:
+                  - name: registry-secret
+
       .. attr:: python-path
          :type: str
          :default: auto
