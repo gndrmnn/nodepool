@@ -53,6 +53,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             v.Required('name'): str,
             v.Required('image'): str,
             'image-pull': str,
+            'image-pull-secrets': list,
             'cpu': int,
             'memory': int,
             'python-path': str,
