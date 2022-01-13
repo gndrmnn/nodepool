@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e78a61dc_1ddcdd40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-01-13T16:02:00Z",
+      "side": 1,
+      "message": "Early integration tests are working as expected, thanks!",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a18030b_8c112aa7",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-01-13T16:02:00Z",
+      "side": 1,
+      "message": "I guess this won\u0027t work when using different credentials-file, should this setting be unique per nodepool-launcher instance (instead of per provider)?",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "118fdc24_542c44f7",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-01-13T16:02:00Z",
+      "side": 1,
+      "message": "It seems like the region name is not passed to the sdk. I could not find what is the right way to do this, but after reading the source code, this is what we found to make it work with a custom region:\n\n  service_url \u003d f\"https://{self.provider.region}.iaas.cloud.ibm.com/v1\" % self.provider.region \n  self.cloud_vpc.set_service_url(service_url)",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d456199_dddde5b0",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-01-13T16:02:00Z",
+      "side": 1,
+      "message": "it might be useful to check that the selected subnet is in the correct zone, otherwise if there is a mismatch, it will fail when creating the instance (`Error: the network interface\u0027s subnet is located in a different zone from the vsi`).\n\nThat should do the trick:\n\n    subnet_zone \u003d self.subnets[self.provider.subnet][\u0027zone\u0027][\u0027name\u0027]\n    if subnet_zone !\u003d self.provider.zone:\n        raise Exception(f\"Subnet is {self.provider.subnet} zone mismatch: {subnet_zone} /\u003d {self.provider.zone}\")",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
