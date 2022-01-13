@@ -16,6 +16,8 @@ import logging
 import math
 import time
 
+import botocore.exceptions
+
 from nodepool import exceptions
 from nodepool import zk
 from nodepool.driver.utils import NodeLauncher, QuotaInformation
@@ -54,8 +56,14 @@ class AwsInstanceLauncher(NodeLauncher):
         self.zk.storeNode(self.node)
 
         boot_start = time.monotonic()
+        state = None
         while time.monotonic() - boot_start < self.boot_timeout:
-            state = instance.state.get('Name')
+            try:
+                state = instance.state.get('Name')
+            except botocore.exceptions.ClientError:
+                # This can happen if we try to get the instance too quickly.
+                time.sleep(0.5)
+                continue
             self.log.debug("Instance %s is %s" % (instance_id, state))
             if state == 'running':
                 instance.create_tags(
@@ -77,7 +85,7 @@ class AwsInstanceLauncher(NodeLauncher):
                 break
             time.sleep(0.5)
             instance.reload()
-        if state != 'running':
+        if state is None or state != 'running':
             raise exceptions.LaunchStatusException(
                 "Instance %s failed to start: %s" % (instance_id, state))
 
