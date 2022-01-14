@@ -957,6 +957,9 @@ class NodePool(threading.Thread):
         self.reconfigureZooKeeper(config)
         provider_manager.ProviderManager.reconfigure(self.config, config,
                                                      self.getZK())
+        for provider_name in list(config.providers.keys()):
+            if provider_name not in config.provider_managers:
+                del config.providers[provider_name]
         self.setConfig(config)
 
     def removeCompletedRequests(self):

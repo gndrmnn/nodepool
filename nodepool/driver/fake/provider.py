@@ -421,3 +421,8 @@ class FakeProvider(OpenStackProvider):
 
     def getRequestHandler(self, poolworker, request):
         return FakeNodeRequestHandler(poolworker, request)
+
+    def start(self, zk_conn):
+        if self.provider.region_name == 'broken-region':
+            raise Exception("Broken cloud config")
+        super().start(zk_conn)
