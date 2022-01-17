@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6aaa596_252e5f10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31995
+      },
+      "writtenOn": "2022-01-17T08:40:12Z",
+      "side": 1,
+      "message": "Also, is it possible for nodepool config checker to verify the token for cloud provider?",
+      "revId": "b8035de65f563b6b4c31a2de3439fcdfcdca5a84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47900ace_123a1ae0",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 31995
+      },
+      "writtenOn": "2022-01-17T08:40:12Z",
+      "side": 1,
+      "message": "should we directly delete the provider? Is it possible for nodepool to maintain the old working config and throw out the error which wrong config is planned to be updated but failed",
+      "range": {
+        "startLine": 962,
+        "startChar": 16,
+        "endLine": 962,
+        "endChar": 51
+      },
+      "revId": "b8035de65f563b6b4c31a2de3439fcdfcdca5a84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
