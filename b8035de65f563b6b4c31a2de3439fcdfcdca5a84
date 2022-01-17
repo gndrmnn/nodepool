@@ -39,6 +39,23 @@
       },
       "revId": "b8035de65f563b6b4c31a2de3439fcdfcdca5a84",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6538d84f_0ecbf7e7",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-17T18:27:00Z",
+      "side": 1,
+      "message": "I think deleting it is the right thing to do here.  This method runs very often, so if it is fixed, it will immediately be recreated.\n\nIf we were to keep the old configuration, there would be no indication to the user that there was a problem, and if the launcher was restarted, there would be no old configuration to use.  That means that a configuration error could persist for quite a long time before being discovered only after some kind of fault that caused the launcher to restart.",
+      "revId": "b8035de65f563b6b4c31a2de3439fcdfcdca5a84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
