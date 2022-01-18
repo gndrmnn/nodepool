@@ -31,7 +31,7 @@ from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool import zk
-from nodepool.driver.utils import QuotaInformation
+from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.logconfig import get_annotated_logger
 from nodepool.version import version_info as npd_version_info
 
@@ -168,7 +168,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # check tenant quota if the request has a tenant associated
             # and there are resource limits configured for this tenant
             check_tenant_quota = req.tenant_name and req.tenant_name \
-                in self.nodepool.config.tenant_resource_limits
+                in self.nodepool.config.tenant_resource_limits \
+                and isinstance(pm, QuotaSupport)
 
             if check_tenant_quota and not self._hasTenantQuota(req, pm):
                 # Defer request for it to be handled and fulfilled at a later
