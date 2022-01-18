@@ -26,6 +26,7 @@ import voluptuous as v
 
 from nodepool import zk
 from nodepool import exceptions
+from nodepool.driver.utils import QuotaInformation
 from nodepool.logconfig import get_annotated_logger
 
 
@@ -283,6 +284,9 @@ class Provider(ProviderNotifications):
         # cleanupLeakedResources so that drivers can figure out how to
         # determine their own leaked instances.
         pass
+
+    def quotaNeededByLabel(self, ntype, pool):
+        return QuotaInformation()
 
 
 class LabelRecorder(object):
