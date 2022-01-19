@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa808087_ffd5d281",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-19T22:54:43Z",
+      "side": 1,
+      "message": "I think we can make this safe for multiple providers by wrapping it in a global threading.Lock.  Once the authenticator is constructed, the env variables aren\u0027t used any more.",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "118fdc24_542c44f7",
@@ -52,6 +69,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6d3b119_ec151684",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-19T22:54:43Z",
+      "side": 1,
+      "message": "That looks like a good update; I don\u0027t think it\u0027s strictly required to contact the API endpoint of the region being used, but it sure makes sense.  :)",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d456199_dddde5b0",
@@ -65,6 +99,23 @@
       "writtenOn": "2022-01-13T16:02:00Z",
       "side": 1,
       "message": "it might be useful to check that the selected subnet is in the correct zone, otherwise if there is a mismatch, it will fail when creating the instance (`Error: the network interface\u0027s subnet is located in a different zone from the vsi`).\n\nThat should do the trick:\n\n    subnet_zone \u003d self.subnets[self.provider.subnet][\u0027zone\u0027][\u0027name\u0027]\n    if subnet_zone !\u003d self.provider.zone:\n        raise Exception(f\"Subnet is {self.provider.subnet} zone mismatch: {subnet_zone} /\u003d {self.provider.zone}\")",
+      "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1246a27c_74c10eeb",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-19T22:54:43Z",
+      "side": 1,
+      "message": "LGTM.",
       "revId": "805ae0d44dbca5bb81e8d9c3eb52a07dad808a9b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
