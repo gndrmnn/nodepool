@@ -280,6 +280,7 @@ class TestDriverGce(tests.DBTestCase):
             nodescan.return_value = 'MOCK KEY'
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
+            req.tenant_name = 'tenant-1'
             req.node_types.append(label)
             self.zk.storeNodeRequest(req)
 

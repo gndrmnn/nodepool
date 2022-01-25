@@ -3,6 +3,10 @@ zookeeper-servers:
     port: null
     chroot: null
 
+tenant-resource-limits:
+  - tenant-name: tenant-1
+    max-cores: 1024
+
 labels:
   - name: debian-stretch-f1-micro
 

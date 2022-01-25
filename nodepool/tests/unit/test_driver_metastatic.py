@@ -35,6 +35,7 @@ class TestDriverMetastatic(tests.DBTestCase):
     def _requestNode(self):
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
         req.node_types.append('user-label')
 
         self.zk.storeNodeRequest(req)
