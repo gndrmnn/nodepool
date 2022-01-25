@@ -1,0 +1,40 @@
+labels:
+  - name: backing-label
+    min-ready: 0
+  - name: user-label
+    min-ready: 0
+  - name: bad-label
+    min-ready: 0
+
+providers:
+  # The backing node provider: a cloud
+  - name: fake-provider
+    cloud: fake
+    driver: fake
+    region-name: fake-region
+    rate: 0.0001
+    cloud-images:
+      - name: fake-image
+    pools:
+      - name: main
+        max-servers: 96
+        labels:
+          - name: backing-label
+            cloud-image: fake-image
+            min-ram: 8192
+            flavor-name: 'Fake'
+
+  - name: meta-provider
+    driver: metastatic
+    pools:
+      - name: main
+        max-servers: 10
+        labels:
+          - name: user-label
+            backing-label: backing-label
+            max-parallel-jobs: 2
+            grace-time: 2
+          - name: bad-label
+            backing-label: backing-label
+            max-parallel-jobs: 4  # We can't have different numbers of max-parallel-jobs
+            grace-time: 2
