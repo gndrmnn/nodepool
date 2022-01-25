@@ -133,6 +133,7 @@ class TestDriverAws(tests.DBTestCase):
 
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
+            req.tenant_name = 'tenant-1'
             req.node_types.append(label)
             with patch('nodepool.driver.aws.handler.nodescan') as nodescan:
                 nodescan.return_value = 'MOCK KEY'

@@ -138,6 +138,7 @@ class TestDriverOpenshift(tests.DBTestCase):
         pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
         req.node_types.append('pod-fedora')
         self.zk.storeNodeRequest(req)
 

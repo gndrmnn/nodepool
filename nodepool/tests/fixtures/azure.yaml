@@ -12,6 +12,10 @@ zookeeper-tls:
   cert: {zookeeper_cert}
   key: {zookeeper_key}
 
+tenant-resource-limits:
+  - tenant-name: tenant-1
+    max-cores: 1024
+
 labels:
   - name: bionic
     min-ready: 0
