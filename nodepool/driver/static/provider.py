@@ -14,6 +14,7 @@
 
 import itertools
 import logging
+import math
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -24,6 +25,7 @@ from nodepool import nodeutils
 from nodepool import zk
 from nodepool.driver import Provider
 from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.driver.static.handler import StaticNodeRequestHandler
 
 
@@ -42,7 +44,7 @@ def nodeTuple(node):
         return Node(node.hostname, node.username, node.connection_port)
 
 
-class StaticNodeProvider(Provider):
+class StaticNodeProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.static."
                             "StaticNodeProvider")
 
@@ -493,3 +495,18 @@ class StaticNodeProvider(Provider):
             except Exception:
                 self.log.exception("Cannot re-register deleted node %s:",
                                    node_tuple)
+
+    def getProviderLimits(self):
+        return QuotaInformation(
+            cores=math.inf,
+            instances=math.inf,
+            ram=math.inf,
+            default=math.inf)
+
+    def quotaNeededByLabel(self, ntype, pool):
+        # TODO: return real quota information about a label
+        return QuotaInformation(cores=0, instances=1, ram=0, default=1)
+
+    def unmanagedQuotaUsed(self):
+        # TODO: return real quota information about quota
+        return QuotaInformation()

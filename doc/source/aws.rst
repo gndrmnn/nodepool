@@ -8,6 +8,8 @@ AWS EC2 Driver
 Selecting the aws driver adds the following options to the :attr:`providers`
 section of the configuration.
 
+.. note:: Quota support is not implemented.
+
 .. attr-overview::
    :prefix: providers.[aws]
    :maxdepth: 3

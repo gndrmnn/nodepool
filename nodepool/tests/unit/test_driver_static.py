@@ -109,6 +109,7 @@ class TestDriverStatic(tests.DBTestCase):
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
         req.node_types.append('fake-label')
         self.zk.storeNodeRequest(req)
         req = self.waitForNodeRequest(req, zk.FULFILLED)
