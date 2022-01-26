@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be21e636_9399eade",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-01-26T17:36:26Z",
+      "side": 1,
+      "message": "I think the static driver has no unmanaged quota (aka resources that are not managed by nodepool) used by definition so we could remove this todo.",
+      "revId": "9c90d5bf2b935d6a2806ef5ea9ea0fa4b2e76b0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
