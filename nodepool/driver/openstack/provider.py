@@ -139,10 +139,12 @@ class OpenStackProvider(Provider, QuotaSupport):
             # it returns the information we're looking for. If we get the
             # information, we do not have to attempt to look up the ram or
             # vcpus.
-            if hasattr(server.flavor, 'id'):
-                flavor = flavors.get(server.flavor.id)
-            else:
+            if hasattr(server.flavor, 'vcpus'):
                 flavor = server.flavor
+            else:
+                flavor = flavors.get(server.flavor.id)
+            if not flavor:
+                continue
             used_quota.add(QuotaInformation.construct_from_flavor(flavor))
 
         return used_quota
