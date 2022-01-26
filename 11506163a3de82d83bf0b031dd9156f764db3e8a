@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddd2ea36_845aafd5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-01-26T22:43:51Z",
+      "side": 1,
+      "message": "Note this is re-enabled in Id268993dd88079f54516a020555b3e2b40de8394, which is also the change that should fix dib\u0027s usage of this job.",
+      "revId": "11506163a3de82d83bf0b031dd9156f764db3e8a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
