@@ -441,3 +441,7 @@ class NodePoolCmd(NodepoolApp):
 
 def main():
     return NodePoolCmd.main()
+
+
+if __name__ == '__main__':
+    main()

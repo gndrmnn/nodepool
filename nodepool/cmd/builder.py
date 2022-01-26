@@ -64,3 +64,7 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
 
 def main():
     return NodePoolBuilderApp.main()
+
+
+if __name__ == '__main__':
+    main()
