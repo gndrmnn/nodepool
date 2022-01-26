@@ -286,7 +286,6 @@
       jobs:
         - opendev-buildset-registry
         - nodepool-build-image
-        - nodepool-build-image-siblings
         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py36
@@ -295,7 +294,6 @@
         - nodepool-zuul-functional:
             voting: false
         - nodepool-functional-container-openstack-release
-        - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
