@@ -1,5 +1,12 @@
 - hosts: all
   tasks:
+    - name: Copy zookeeper logs
+      synchronize:
+        src: '/opt/zookeeper/logs/'
+        dest: '{{ zuul.executor.log_root }}/zookeeper/'
+        mode: pull
+        verify_host: true
+
     - name: Copy nodepool logs from /tmp
       synchronize:
         src: '/tmp/nodepool/'

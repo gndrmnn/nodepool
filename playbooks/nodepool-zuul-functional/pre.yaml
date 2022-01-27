@@ -4,4 +4,6 @@
     - role: bindep
       bindep_profile: default
       bindep_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
+    - role: ensure-zookeeper
+      zookeeper_use_tls: true
     - nodepool-zuul-functional

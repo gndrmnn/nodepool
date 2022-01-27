@@ -1,9 +1,12 @@
-- name: Install packages
-  shell:
-    cmd: |+
-      sudo pip3 install --upgrade pip setuptools wheel
-      sudo pip3 install -e .
-    chdir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+- name: Ensure pip
+  include_role:
+    name: ensure-pip
+
+- name: Install nodepool packages
+  pip:
+    name: "{{ ansible_user_dir }}/{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+    virtualenv: '{{ ansible_user_dir}}/nodepool-venv'
+    virtualenv_command: '{{ ensure_pip_virtualenv_command }}'
 
 - name: Run zuul-nodepool-integration/start.sh
   shell:
