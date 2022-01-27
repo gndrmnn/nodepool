@@ -3,6 +3,12 @@ build-log-dir: /tmp/nodepool/builds
 
 zookeeper-servers:
   - host: localhost
+    port: 2281
+
+zookeeper-tls:
+  ca: /opt/zookeeper/ca/certs/cacert.pem
+  cert: /opt/zookeeper/ca/certs/client.pem
+  key: /opt/zookeeper/ca/keys/clientkey.pem
 
 diskimages:
   - name: fake-nodepool
