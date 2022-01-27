@@ -50,6 +50,23 @@
       "message": "recheck gate doesn\u0027t seem to be too stable these days",
       "revId": "c9e10021512b4ec5be103c3cd281ed301756d4de",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53536737_ffb30447",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-01-27T08:59:23Z",
+      "side": 1,
+      "message": "I\u0027m also wondering why this job isn\u0027t being gated upon if it is voting.",
+      "revId": "c9e10021512b4ec5be103c3cd281ed301756d4de",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
