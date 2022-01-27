@@ -345,18 +345,26 @@ class TestLauncher(tests.DBTestCase):
     def test_node_assignment_at_tenant_quota_cores(self):
         self._test_node_assignment_at_tenant_quota(
             'node_quota_tenant_cores.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.cores',
+                                value='8', kind='g')
 
     def test_node_assignment_at_tenant_quota_instances(self):
         self._test_node_assignment_at_tenant_quota(
             'node_quota_tenant_instances.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.instances',
+                                value='2', kind='g')
 
     def test_node_assignment_at_tenant_quota_ram(self):
         self._test_node_assignment_at_tenant_quota(
             'node_quota_tenant_ram.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.ram',
+                                value='16384', kind='g')
 
     def test_node_assignment_at_tenant_quota_min_ready(self):
         self._test_node_assignment_at_tenant_quota(
             'node_quota_tenant_min_ready.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.instances',
+                                value='2', kind='g')
 
     def test_node_assignment_at_cloud_cores_quota(self):
         self._test_node_assignment_at_quota(config='node_quota_cloud.yaml',
