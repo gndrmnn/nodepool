@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9270cea2_03b849e2",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-27T18:09:31Z",
+      "side": 1,
+      "message": "I tried to match existing similar drivers.  Since this driver should but doesn\u0027t implement core/ram metrics, I omitted them here (so it will behave the same as before).  For openshift, I matched what we already did for the k8s driver, where we just assume 1 core.",
+      "revId": "9c90d5bf2b935d6a2806ef5ea9ea0fa4b2e76b0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be21e636_9399eade",
@@ -35,6 +52,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ec28242_0e24ecd7",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-27T18:09:31Z",
+      "side": 1,
+      "message": "True, this is mostly copypasta, but I sort of left it thinking we really should think about whether we can apply some quota info here (maybe statically defined?).  But I should have either deleted the comment or changed it to that.  :/",
+      "revId": "9c90d5bf2b935d6a2806ef5ea9ea0fa4b2e76b0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4014eb7e_18cd86cf",
@@ -48,6 +82,23 @@
       "writtenOn": "2022-01-27T18:04:57Z",
       "side": 1,
       "message": "This line is redundant with the one before it.",
+      "revId": "9c90d5bf2b935d6a2806ef5ea9ea0fa4b2e76b0a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "771a6ad8_12235bfa",
+        "filename": "nodepool/tests/unit/test_driver_openshiftpods.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-01-27T18:09:31Z",
+      "side": 1,
+      "message": "Gah.",
       "revId": "9c90d5bf2b935d6a2806ef5ea9ea0fa4b2e76b0a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
