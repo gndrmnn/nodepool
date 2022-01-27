@@ -1,20 +1,4 @@
 - job:
-    name: nodepool-zuul-functional
-    parent: tox
-    description: |
-      Test that zuul works with current nodepool sources.
-
-      This test runs the zuul project ``nodepool`` environment.
-    pre-run: playbooks/nodepool-zuul-functional/pre.yaml
-    post-run: playbooks/nodepool-zuul-functional/post.yaml
-    required-projects:
-      - zuul/nodepool
-      - zuul/zuul
-    vars:
-      zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/zuul'].src_dir }}"
-      tox_envlist: nodepool
-
-- job:
     description: |
       Test that nodepool works with kubernetes.
     name: nodepool-functional-k8s
@@ -291,8 +275,6 @@
         - nodepool-tox-py36
         - nodepool-tox-py38
         - nodepool-tox-py39
-        - nodepool-zuul-functional:
-            voting: false
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - nodepool-functional-openshift
