@@ -13,12 +13,15 @@
 # under the License.
 
 import logging
+import math
+
 import boto3
 import botocore.exceptions
-import nodepool.exceptions
 
+import nodepool.exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.driver.aws.handler import AwsNodeRequestHandler
 
 
@@ -43,7 +46,7 @@ class AwsInstance:
         return getattr(self, name, default)
 
 
-class AwsProvider(Provider):
+class AwsProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.aws.AwsProvider")
 
     def __init__(self, provider, *args):
@@ -242,3 +245,19 @@ class AwsProvider(Provider):
 
         instances = self.ec2.create_instances(**args)
         return self.ec2.Instance(instances[0].id)
+
+    def getProviderLimits(self):
+        # TODO: query the api to get real limits
+        return QuotaInformation(
+            cores=math.inf,
+            instances=math.inf,
+            ram=math.inf,
+            default=math.inf)
+
+    def quotaNeededByLabel(self, ntype, pool):
+        # TODO: return real quota information about a label
+        return QuotaInformation(cores=0, instances=1, ram=0, default=1)
+
+    def unmanagedQuotaUsed(self):
+        # TODO: return real quota information about quota
+        return QuotaInformation()

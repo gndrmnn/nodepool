@@ -14,6 +14,7 @@
 
 import base64
 import logging
+import math
 import urllib3
 import time
 
@@ -22,13 +23,14 @@ from openshift.dynamic import DynamicClient
 from nodepool import exceptions
 from nodepool.driver import Provider
 from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.driver.openshift import handler
 from nodepool.driver.utils_k8s import get_client
 
 urllib3.disable_warnings()
 
 
-class OpenshiftProvider(Provider):
+class OpenshiftProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.openshift.OpenshiftProvider")
 
     def __init__(self, provider, *args):
@@ -257,3 +259,19 @@ class OpenshiftProvider(Provider):
 
     def getRequestHandler(self, poolworker, request):
         return handler.OpenshiftNodeRequestHandler(poolworker, request)
+
+    def getProviderLimits(self):
+        # TODO: query the api to get real limits
+        return QuotaInformation(
+            cores=math.inf,
+            instances=math.inf,
+            ram=math.inf,
+            default=math.inf)
+
+    def quotaNeededByLabel(self, ntype, pool):
+        # TODO: return real quota information about a label
+        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+
+    def unmanagedQuotaUsed(self):
+        # TODO: return real quota information about quota
+        return QuotaInformation()
