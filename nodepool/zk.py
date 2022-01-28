@@ -2271,7 +2271,12 @@ class ZooKeeper(object):
                                 cache.
         '''
 
-        node_ids = self._cached_nodes.keys() if cached_ids else self.getNodes()
+        if cached_ids:
+            # get a copy of the keys view to avoid runtime errors in the event
+            # the _cached_nodes dict gets updated while iterating
+            node_ids = list(self._cached_nodes.keys())
+        else:
+            node_ids = self.getNodes()
 
         for node_id in node_ids:
             node = self.getNode(node_id, cached=cached)
