@@ -208,7 +208,7 @@
     vars:
       nodepool_diskimage:
         base_element: centos-minimal
-        release: 8
+        release: 9-stream
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
@@ -241,7 +241,7 @@
     vars:
       nodepool_diskimage:
         base_element: centos-minimal
-        release: 8
+        release: 9-stream
         mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
         env-vars:
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
