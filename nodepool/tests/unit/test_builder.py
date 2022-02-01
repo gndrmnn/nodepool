@@ -69,23 +69,6 @@ class TestNodepoolBuilderDibImage(tests.BaseTestCase):
         self.assertEqual(images[0].extension, 'qcow2')
         self.assertEqual(images[1].extension, 'raw')
 
-    def test_from_images_dir(self):
-        tempdir = fixtures.TempDir()
-        self.useFixture(tempdir)
-        image_path_1 = os.path.join(tempdir.path, 'myid1234.qcow2')
-        image_path_2 = os.path.join(tempdir.path, 'myid1234.raw')
-        open(image_path_1, 'w')
-        open(image_path_2, 'w')
-
-        images = builder.DibImageFile.from_images_dir(tempdir.path)
-        images = sorted(images, key=lambda x: x.extension)
-        self.assertEqual(len(images), 2)
-
-        self.assertEqual(images[0].image_id, 'myid1234')
-        self.assertEqual(images[0].extension, 'qcow2')
-        self.assertEqual(images[1].image_id, 'myid1234')
-        self.assertEqual(images[1].extension, 'raw')
-
     def test_to_path(self):
         image = builder.DibImageFile('myid1234', 'qcow2')
         self.assertEqual(image.to_path('/imagedir'),

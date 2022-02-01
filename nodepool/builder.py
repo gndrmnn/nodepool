@@ -85,10 +85,6 @@ class DibImageFile(object):
                     images.append(image)
         return images
 
-    @staticmethod
-    def from_images_dir(images_dir):
-        return [DibImageFile.from_path(x) for x in Path(images_dir).iterdir()]
-
     def to_path(self, images_dir, with_extension=True):
         my_path = Path(images_dir) / self.image_id
         if with_extension:
