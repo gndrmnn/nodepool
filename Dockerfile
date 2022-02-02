@@ -92,7 +92,9 @@ RUN \
 # Podman install mainly for the "containerfile" elements of dib that
 # build images from extracts of upstream containers.
 # --install-recommends is important for getting some reccommends like
-# slirp4netns and uidmap that help with non-root usage.
+# slirp4netns and uidmap that help with non-root usage -- by default
+# our base container sets no-reccomends in apt config to keep package
+# sizes down.
 #
 # Podman defaults to trying to use systemd to do cgroup things (insert
 # hand-wavy motion) but it's not in the container; override to use
@@ -107,11 +109,21 @@ RUN \
 # recommends) so we need to pull that explicitly too.  Unclear if
 # this is a feature or a bug; see:
 #  https://bugs.debian.org/997976
+#
+# We are getting errors like
+#  level=warning msg="\"/\" is not a shared mount, this could cause issues or missing mounts with rootless containers"
+#  Error: command required for rootless mode with multiple IDs: exec: "newuidmap": executable file not found in $PATH
+# on the production hosts (but not in the gate?).  uidmap is a
+# recommended package, but we need to explicitly pull in its
+# unstable requirements or it seems like apt decides just not install it.
+# The problem is uidmap -> libsubid4 -> libsemanage2 -> libsemanage-common
+# and so unless we have the unstable version of libsemanage-common, it won't
+# install.
 
 RUN echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
   && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
   && apt-get update \
-  && apt-get install -y --install-recommends podman/unstable iptables \
+  && apt-get install -y --install-recommends podman/unstable iptables uidmap/unstable libsemanage-common/unstable \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
