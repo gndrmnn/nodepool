@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f19c666_b879e972",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-02-02T06:00:43Z",
+      "side": 1,
+      "message": "I can see this installing in the docker build.\n\nThis has been manually applied to nb01/nb02 and they are building Fedora 34/35 (the containerfile elements) correctly.  I honestly have no idea why it works in the gate without it.",
+      "revId": "43d3b21491196b1eeaa9d4d91f9f7a21d2d507dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
