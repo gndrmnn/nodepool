@@ -16,6 +16,47 @@
       "message": "I can see this installing in the docker build.\n\nThis has been manually applied to nb01/nb02 and they are building Fedora 34/35 (the containerfile elements) correctly.  I honestly have no idea why it works in the gate without it.",
       "revId": "43d3b21491196b1eeaa9d4d91f9f7a21d2d507dd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcf7bc4f_6a7e2732",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-02-02T07:26:38Z",
+      "side": 1,
+      "message": "Maybe because we only seem to build centos in the CI jobs? e.g. https://storage.gra.cloud.ovh.net/v1/AUTH_dcaab5e32b234d56b626f72581e3644c/zuul_opendev_logs_71d/827388/1/check/nodepool-functional-container-openstack-release/71d9d26/nodepool/builds/index.html",
+      "parentUuid": "1f19c666_b879e972",
+      "revId": "43d3b21491196b1eeaa9d4d91f9f7a21d2d507dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62dd649c_c9063d5d",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-02-02T07:26:38Z",
+      "side": 1,
+      "message": "nit: recommends",
+      "range": {
+        "startLine": 96,
+        "startChar": 29,
+        "endLine": 96,
+        "endChar": 39
+      },
+      "revId": "43d3b21491196b1eeaa9d4d91f9f7a21d2d507dd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
