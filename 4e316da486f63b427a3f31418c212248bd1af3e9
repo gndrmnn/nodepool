@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "4e316da486f63b427a3f31418c212248bd1af3e9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "395997e5_6d2fe54b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-05T17:03:18Z",
+      "side": 1,
+      "message": "This needs a test and documentation about the requirements towards the script (call parameters, image id printed).",
+      "revId": "4e316da486f63b427a3f31418c212248bd1af3e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
