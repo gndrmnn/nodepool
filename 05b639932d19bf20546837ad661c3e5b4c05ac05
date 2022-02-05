@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37750da0_6483a943",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-05T18:02:36Z",
+      "side": 1,
+      "message": "What\u0027s the reason for maxsize\u003d1? This seems to cache only the last retrieved image?",
+      "revId": "05b639932d19bf20546837ad661c3e5b4c05ac05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
