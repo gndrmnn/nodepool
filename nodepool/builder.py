@@ -789,13 +789,15 @@ class BuildWorker(BaseWorker):
         :raises: BuilderError if we failed to execute the build command.
         '''
         base = "-".join([diskimage.name, build_id])
-        image_file = DibImageFile(base)
-        filename = image_file.to_path(self._config.images_dir, False)
+        image_filename = Path(self._config.images_dir) / base
 
         env = os.environ.copy()
         env['DIB_RELEASE'] = diskimage.release
         env['DIB_IMAGE_NAME'] = diskimage.name
-        env['DIB_IMAGE_FILENAME'] = filename
+        # This is just the basename.  DIB may create multiple images
+        # here based on img_types; each will produce a final output
+        # file image_filename.<type>
+        env['DIB_IMAGE_FILENAME'] = image_filename
 
         # Note we use a reference to the nodepool config here so
         # that whenever the config is updated we get up to date
@@ -820,7 +822,7 @@ class BuildWorker(BaseWorker):
 
         cmd = ('%s -x -t %s --checksum --no-tmpfs %s -o %s %s' %
                (dib_cmd, img_types, qemu_img_options,
-                filename, img_elements))
+                image_filename, img_elements))
 
         self._pruneBuildLogs(diskimage.name)
         log_fn = self._getBuildLog(diskimage.name, build_id)
@@ -957,9 +959,10 @@ class BuildWorker(BaseWorker):
                     # purposes of watching if we've added too much stuff
                     # into the image.  Note that st_blocks is defined as
                     # 512-byte blocks by stat(2)
-                    size = os.stat("%s.%s" % (filename, ext)).st_blocks * 512
+                    size = os.stat("%s.%s" %
+                                   (image_filename, ext)).st_blocks * 512
                     self.log.debug("%s created image %s.%s (size: %d) " %
-                                   (diskimage.name, filename, ext, size))
+                                   (diskimage.name, image_filename, ext, size))
                     pipeline.gauge(key, size)
 
         if self._statsd:
