@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "80eaf352_a467fb0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-05T17:21:14Z",
+      "side": 1,
+      "message": "A release note might make sense since this is a new feature.",
+      "revId": "62730a4dbe63edb0060d960211359d13cb08bde2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1abc2fce_ef76df5b",
