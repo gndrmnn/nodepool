@@ -70,17 +70,11 @@ class DibImageFile(object):
             self.extension = self.extension.lstrip('.')
 
     @staticmethod
-    def from_path(path):
-        if isinstance(path, str):
-            path = Path(path)
-        return DibImageFile(path.stem, path.suffix)
-
-    @staticmethod
     def from_image_id(images_dir, image_id):
         images = []
         for image_file in Path(images_dir).iterdir():
             if image_file.is_file():
-                image = DibImageFile.from_path(image_file)
+                image = DibImageFile(image_file.stem, image_file.suffix)
                 if image.image_id == image_id:
                     images.append(image)
         return images
