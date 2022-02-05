@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1abc2fce_ef76df5b",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-05T17:18:24Z",
+      "side": 1,
+      "message": "Do we know that this doesn\u0027t break if no subnetwork is given (aka subnetwork is explicitly set to None)?",
+      "revId": "62730a4dbe63edb0060d960211359d13cb08bde2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d8fa82b_d41a7ef1",
         "filename": "nodepool/driver/gce/config.py",
         "patchSetId": 2
@@ -14,6 +31,24 @@
       "writtenOn": "2021-11-15T19:31:22Z",
       "side": 1,
       "message": "shouldn\u0027t this also check for subnetwork ?",
+      "revId": "62730a4dbe63edb0060d960211359d13cb08bde2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b25c25db_8e682e77",
+        "filename": "nodepool/driver/gce/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-05T17:18:24Z",
+      "side": 1,
+      "message": "I think it should",
+      "parentUuid": "0d8fa82b_d41a7ef1",
       "revId": "62730a4dbe63edb0060d960211359d13cb08bde2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
