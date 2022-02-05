@@ -57,8 +57,13 @@ class ProviderManager(object):
             else:
                 ProviderManager.log.debug("Creating new ProviderManager object"
                                           " for %s" % p.name)
-                new_config.provider_managers[p.name] = get_provider(p)
-                new_config.provider_managers[p.name].start(zk_conn)
+                try:
+                    pm = get_provider(p)
+                    pm.start(zk_conn)
+                    new_config.provider_managers[p.name] = pm
+                except Exception:
+                    ProviderManager.log.exception(
+                        "Error starting provider %s", p.name)
 
         for stop_manager in stop_managers:
             stop_manager.stop()

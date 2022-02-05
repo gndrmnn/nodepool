@@ -1805,6 +1805,36 @@ class TestLauncher(tests.DBTestCase):
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FAILED)
 
+    def test_broken_provider(self):
+        '''
+        If a provider has a broken config, it should not be started, and
+        any requests for it should be declined/failed.  Other
+        providers should be started and should be able to fulfill
+        requests.
+        '''
+        configfile = self.setup_config('broken_provider_config.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+
+        manager = pool.getProviderManager('good-provider')
+        manager._client.create_image(name="good-image")
+
+        good_req = zk.NodeRequest()
+        good_req.state = zk.REQUESTED
+        good_req.node_types.append('good-label')
+        self.zk.storeNodeRequest(good_req)
+
+        broken_req = zk.NodeRequest()
+        broken_req.state = zk.REQUESTED
+        broken_req.node_types.append('broken-label')
+        self.zk.storeNodeRequest(broken_req)
+
+        good_req = self.waitForNodeRequest(good_req)
+        broken_req = self.waitForNodeRequest(broken_req)
+        self.assertEqual(good_req.state, zk.FULFILLED)
+        self.assertEqual(broken_req.state, zk.FAILED)
+
     def test_provider_wont_wedge(self):
         '''
         A provider should not wedge itself when it is at (1) maximum capacity

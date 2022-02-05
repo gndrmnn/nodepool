@@ -1,0 +1,49 @@
+elements-dir: .
+images-dir: '{images_dir}'
+build-log-dir: '{build_log_dir}'
+
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+labels:
+  - name: broken-label
+    min-ready: 0
+  - name: good-label
+    min-ready: 0
+
+providers:
+  - name: good-provider
+    cloud: fake
+    driver: fake
+    region-name: fake
+    rate: 0.0001
+    cloud-images:
+      - name: good-image
+    pools:
+      - name: main
+        labels:
+          - name: good-label
+            cloud-image: good-image
+            min-ram: 8192
+            flavor-name: 'Fake'
+  - name: broken-provider
+    cloud: fake
+    driver: fake
+    region-name: broken-region
+    rate: 0.0001
+    cloud-images:
+      - name: broken-image
+    pools:
+      - name: main
+        labels:
+          - name: broken-label
+            cloud-image: broken-image
+            min-ram: 8192
+            flavor-name: 'Fake'
