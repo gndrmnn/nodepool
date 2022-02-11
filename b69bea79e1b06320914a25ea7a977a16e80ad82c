@@ -22,6 +22,23 @@
       },
       "revId": "b69bea79e1b06320914a25ea7a977a16e80ad82c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8173fb07_dca2784d",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-02-11T23:01:21Z",
+      "side": 1,
+      "message": "Agreed.  This is an internal API, so hopefully we will not merge a change that allows that.",
+      "revId": "b69bea79e1b06320914a25ea7a977a16e80ad82c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
