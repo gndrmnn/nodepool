@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac5d9cd5_80188954",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-02-11T22:54:53Z",
+      "side": 1,
+      "message": "We should be careful about this as people may think it is a good idea to use image specific host keys rather than instance specific host keys.",
+      "range": {
+        "startLine": 718,
+        "startChar": 25,
+        "endLine": 718,
+        "endChar": 44
+      },
+      "revId": "b69bea79e1b06320914a25ea7a977a16e80ad82c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
