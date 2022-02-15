@@ -2,13 +2,16 @@
 
 .. default-domain:: zuul
 
-AWS EC2 Driver
---------------
+AWS Driver
+----------
 
-Selecting the aws driver adds the following options to the :attr:`providers`
-section of the configuration.
+If using the AWS driver to upload diskimages, see
+`VM Import/Export service role`_ for information on configuring
+the required permissions in AWS.  You must also create an S3 Bucket
+for use by Nodepool.
 
-.. note:: Quota support is not implemented.
+Selecting the ``aws`` driver adds the following options to the
+:attr:`providers` section of the configuration.
 
 .. attr-overview::
    :prefix: providers.[aws]
@@ -86,17 +89,59 @@ section of the configuration.
 
    .. attr:: boot-timeout
       :type: int seconds
-      :default: 60
+      :default: 180
 
       Once an instance is active, how long to try connecting to the
       image via SSH.  If the timeout is exceeded, the node launch is
       aborted and the instance deleted.
 
+   .. attr:: launch-timeout
+      :type: int seconds
+      :default: 3600
+
+      The time to wait from issuing the command to create a new instance
+      until that instance is reported as "active".  If the timeout is
+      exceeded, the node launch is aborted and the instance deleted.
+
    .. attr:: launch-retries
       :default: 3
 
       The number of times to retry launching a node before considering
-      the job failed.
+      the request failed.
+
+   .. attr:: post-upload-hook
+      :type: string
+      :default: None
+
+      Filename of an optional script that can be called after an image has
+      been uploaded to a provider but before it is taken into use. This is
+      useful to perform last minute validation tests before an image is
+      really used for build nodes. The script will be called as follows:
+
+      ``<SCRIPT> <PROVIDER> <EXTERNAL_IMAGE_ID> <LOCAL_IMAGE_FILENAME>``
+
+      If the script returns with result code 0 it is treated as successful
+      otherwise it is treated as failed and the image gets deleted.
+
+   .. attr:: object-storage
+
+      This section is only required when using Nodepool to upload
+      diskimages.
+
+      .. attr:: bucket-name
+
+         The name of a bucket to use for temporary storage of
+         diskimages while creating snapshots.  The bucket must already
+         exist.
+
+   .. attr:: image-format
+      :type: str
+      :default: raw
+
+      The image format that should be requested from diskimage-builder
+      and also specified to AWS when importing images.  One of:
+      ``ova``, ``vhd``, ``vhdx``, ``vmdk``, ``raw`` (not all of which
+      are supported by diskimage-builder).
 
    .. attr:: cloud-images
       :type: list
@@ -137,15 +182,19 @@ section of the configuration.
       .. attr:: image-id
          :type: str
 
-         If this is provided, it is used to select the image from the cloud
-         provider by ID.
+         If this is provided, it is used to select the image from the
+         cloud provider by ID.  Either this field or
+         :attr:`providers.[aws].cloud-images.image-filters` must be
+         provided.
 
       .. attr:: image-filters
          :type: list
 
-         If provided, this is used to select an AMI by filters.  If the filters
-         provided match more than one image, the most recent will be returned.
-         `image-filters` are not valid if `image-id` is also specified.
+         If provided, this is used to select an AMI by filters.  If
+         the filters provided match more than one image, the most
+         recent will be returned.  Either this field or
+         :attr:`providers.[aws].cloud-images.image-id` must be
+         provided.
 
          Each entry is a dictionary with the following keys
 
@@ -159,7 +208,7 @@ section of the configuration.
             :type: list
             :required:
 
-            A list of str values to filter on
+            A list of string values on which to filter.
 
       .. attr:: username
          :type: str
@@ -204,7 +253,93 @@ section of the configuration.
          - If the default shell is not Bourne compatible (sh), but instead
            e.g. ``csh`` or ``fish``, and the user is aware that there is a
            long-standing issue with ``ansible_shell_type`` in combination
-           with ``become``
+           with ``become``.
+
+   .. attr:: diskimages
+      :type: list
+
+      Each entry in a provider's `diskimages` section must correspond
+      to an entry in :attr:`diskimages`.  Such an entry indicates that
+      the corresponding diskimage should be uploaded for use in this
+      provider.  Additionally, any nodes that are created using the
+      uploaded image will have the associated attributes (such as
+      flavor or metadata).
+
+      If an image is removed from this section, any previously uploaded
+      images will be deleted from the provider.
+
+      .. code-block:: yaml
+
+         diskimages:
+           - name: bionic
+             pause: False
+           - name: windows
+             connection-type: winrm
+             connection-port: 5986
+
+
+      Each entry is a dictionary with the following keys
+
+      .. attr:: name
+         :type: string
+         :required:
+
+         Identifier to refer this image from
+         :attr:`providers.[aws].pools.labels` and
+         :attr:`diskimages` sections.
+
+      .. attr:: pause
+         :type: bool
+         :default: False
+
+         When set to True, nodepool-builder will not upload the image
+         to the provider.
+
+      .. attr:: username
+         :type: str
+
+         The username that should be used when connecting to the node.
+
+      .. attr:: connection-type
+         :type: string
+
+         The connection type that a consumer should use when connecting
+         to the node. For most diskimages this is not
+         necessary. However when creating Windows images this could be
+         ``winrm`` to enable access via ansible.
+
+      .. attr:: connection-port
+         :type: int
+         :default: 22 / 5986
+
+         The port that a consumer should use when connecting to the
+         node. For most diskimages this is not necessary. This defaults
+         to 22 for ssh and 5986 for winrm.
+
+      .. attr:: python-path
+         :type: str
+         :default: auto
+
+         The path of the default python interpreter.  Used by Zuul to set
+         ``ansible_python_interpreter``.  The special value ``auto`` will
+         direct Zuul to use inbuilt Ansible logic to select the
+         interpreter on Ansible >=2.8, and default to
+         ``/usr/bin/python2`` for earlier versions.
+
+      .. attr:: shell-type
+         :type: str
+         :default: sh
+
+         The shell type of the node's default shell executable. Used by Zuul
+         to set ``ansible_shell_type``. This setting should only be used
+
+         - For a windows image with the experimental `connection-type` ``ssh``
+           in which case ``cmd`` or ``powershell`` should be set
+           and reflect the node's ``DefaultShell`` configuration.
+         - If the default shell is not Bourne compatible (sh), but instead
+           e.g. ``csh`` or ``fish``, and the user is aware that there is a
+           long-standing issue with ``ansible_shell_type`` in combination
+           with ``become``.
 
    .. attr:: pools
       :type: list
@@ -238,7 +373,26 @@ section of the configuration.
          :type: bool
          :default: True
 
-         Specify if a public ip address shall be attached to nodes.
+         Deprecated alias for :attr:`providers.[aws].pools.public-ipv4`.
+
+      .. attr:: public-ipv4
+         :type: bool
+         :default: True
+
+         Specify if a public IPv4 address shall be attached to nodes.
+
+      .. attr:: public-ipv6
+         :type: bool
+         :default: True
+
+         Specify if a public IPv6 address shall be attached to nodes.
+
+      .. attr:: use-internal-ip
+         :type: bool
+         :default: false
+
+         If a public IP is attached but Nodepool should prefer the
+         private IP, set this to true.
 
       .. attr:: host-key-checking
          :type: bool
@@ -269,9 +423,7 @@ section of the configuration.
               :type: str
               :required:
 
-              Identifier to refer this label.
-              Nodepool will use this to set the name of the instance unless
-              the name is specified as a tag.
+              Identifier to refer to this label.
 
            .. attr:: cloud-image
               :type: str
@@ -279,9 +431,20 @@ section of the configuration.
 
               Refers to the name of an externally managed image in the
               cloud that already exists on the provider. The value of
-              ``cloud-image`` should match the ``name`` of a previously
-              configured entry from the ``cloud-images`` section of the
-              provider. See :attr:`providers.[aws].cloud-images`.
+              ``cloud-image`` should match the ``name`` of a
+              previously configured entry from the ``cloud-images``
+              section of the provider. See
+              :attr:`providers.[aws].cloud-images`.  Mutually
+              exclusive with
+              :attr:`providers.[aws].pools.labels.diskimage`
+
+           .. attr:: diskimage
+              :type: str
+              :required:
+
+              Refers to provider's diskimages, see
+              :attr:`providers.[aws].diskimages`.  Mutually exclusive
+              with :attr:`providers.[aws].pools.labels.cloud-image`
 
            .. attr:: ebs-optimized
               :type: bool
@@ -343,9 +506,11 @@ section of the configuration.
               :type: dict
               :default: None
 
-              A dictionary of tags to add to the EC2 instances
+              A dictionary of tags to add to the EC2 instances.
+              Values must be supplied as strings.
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html
 .. _`Boto configuration`: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
 .. _`Boto describe images`: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_images
+.. _`VM Import/Exportservice role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role

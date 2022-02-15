@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from nodepool.driver import Driver
+from nodepool.driver.statemachine import StateMachineDriver
 from nodepool.driver.aws.config import AwsProviderConfig
-from nodepool.driver.aws.provider import AwsProvider
+from nodepool.driver.aws.adapter import AwsAdapter
 
 
-class AwsDriver(Driver):
+class AwsDriver(StateMachineDriver):
     def getProviderConfig(self, provider):
         return AwsProviderConfig(self, provider)
 
-    def getProvider(self, provider_config):
-        return AwsProvider(provider_config)
+    def getAdapter(self, provider_config):
+        return AwsAdapter(provider_config)

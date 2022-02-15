@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,180 +22,149 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
 
-class ProviderCloudImage(ConfigValue):
-    def __init__(self):
-        self.name = None
-        self.image_id = None
-        self.username = None
-        self.connection_type = None
-        self.connection_port = None
-
-    def __repr__(self):
-        return "<ProviderCloudImage %s>" % self.name
-
-    @property
-    def external_name(self):
-        '''Human readable version of external.'''
-        return self.image_id or self.name
-
-
-class ProviderLabel(ConfigValue):
-    ignore_equality = ['pool']
-
-    def __init__(self):
-        self.name = None
-        self.cloud_image = None
-        self.ebs_optimized = None
-        self.instance_type = None
-        self.key_name = None
-        self.volume_size = None
-        self.volume_type = None
-        self.userdata = None
-        self.iam_instance_profile = None
-        # The ProviderPool object that owns this label.
-        self.pool = None
-        self.tags = None
-
-    def __repr__(self):
-        return "<ProviderLabel %s>" % self.name
-
-
-class ProviderPool(ConfigPool):
-    ignore_equality = ['provider']
-
-    def __init__(self):
-        self.name = None
-        self.max_cores = None
-        self.max_ram = None
-        self.subnet_id = None
-        self.security_group_id = None
-        self.public_ip = True
-        self.host_key_checking = True
-        self.labels = None
-        # The ProviderConfig object that owns this pool.
-        self.provider = None
-
-        # Initialize base class attributes
-        super().__init__()
-
-    def load(self, pool_config, full_config, provider):
-        super().load(pool_config)
-        self.name = pool_config['name']
-        self.provider = provider
-
-        self.security_group_id = pool_config.get('security-group-id')
-        self.subnet_id = pool_config.get('subnet-id')
-        self.host_key_checking = bool(
-            pool_config.get('host-key-checking', True))
-        self.public_ip = bool(pool_config.get('public-ip-address', True))
-
-        for label in pool_config.get('labels', []):
-            pl = ProviderLabel()
-            pl.name = label['name']
-            pl.pool = self
-            self.labels[pl.name] = pl
-            cloud_image_name = label.get('cloud-image', None)
-            if cloud_image_name:
-                cloud_image = self.provider.cloud_images.get(
-                    cloud_image_name, None)
-                if not cloud_image:
-                    raise ValueError(
-                        "cloud-image %s does not exist in provider %s"
-                        " but is referenced in label %s" %
-                        (cloud_image_name, self.name, pl.name))
-            else:
-                cloud_image = None
-            pl.cloud_image = cloud_image
-            pl.ebs_optimized = bool(label.get('ebs-optimized', False))
-            pl.instance_type = label['instance-type']
-            pl.key_name = label['key-name']
-            pl.volume_type = label.get('volume-type')
-            pl.volume_size = label.get('volume-size')
-            pl.userdata = label.get('userdata', None)
-            pl.iam_instance_profile = label.get('iam-instance-profile', None)
-            pl.tags = [
-                {
-                    "Key": k,
-                    "Value": str(v)
-                } for k, v in label.get('tags', {}).items()
-            ]
-            full_config.labels[label['name']].pools.append(self)
-
-    def __repr__(self):
-        return "<ProviderPool %s>" % self.name
-
-
-class AwsProviderConfig(ProviderConfig):
-    def __init__(self, driver, provider):
-        self.driver_object = driver
-        self.__pools = {}
-        self.profile_name = None
-        self.region_name = None
-        self.boot_timeout = None
-        self.launch_retries = None
-        self.cloud_images = {}
-        super().__init__(provider)
-
-    @property
-    def pools(self):
-        return self.__pools
-
-    @property
-    def manage_images(self):
-        # Currently we have no image management for AWS. This should
-        # be updated if that changes.
-        return False
-
-    @staticmethod
-    def reset():
-        pass
-
-    def load(self, config):
-        self.profile_name = self.provider.get('profile-name')
-        self.region_name = self.provider.get('region-name')
-        self.boot_timeout = self.provider.get('boot-timeout', 60)
-        self.launch_retries = self.provider.get('launch-retries', 3)
-
+class AwsProviderCloudImage(ConfigValue):
+    def __init__(self, image):
         default_port_mapping = {
             'ssh': 22,
             'winrm': 5986,
         }
-        # TODO: diskimages
+        self.name = image['name']
+        self.username = image['username']
+        self.image_id = image.get('image-id')
+        self.python_path = image.get('python-path')
+        self.shell_type = image.get('shell-type')
+        self.connection_type = image.get('connection-type', 'ssh')
+        self.connection_port = image.get(
+            'connection-port',
+            default_port_mapping.get(self.connection_type, 22))
 
-        for image in self.provider.get('cloud-images', []):
-            i = ProviderCloudImage()
-            i.name = image['name']
-            i.image_id = image.get('image-id', None)
+        image_filters = image.get("image-filters", None)
+        if image_filters is not None:
+            # ensure 'name' and 'values' keys are capitalized for boto
+            def capitalize_keys(image_filter):
+                return {
+                    k.capitalize(): v for (k, v) in image_filter.items()
+                }
 
-            image_filters = image.get("image-filters", None)
-            if image_filters is not None:
-                # ensure 'name' and 'values' keys are capitalized for boto
-                def capitalize_keys(image_filter):
-                    return {
-                        k.capitalize(): v for (k, v) in image_filter.items()
-                    }
+            image_filters = [capitalize_keys(f) for f in image_filters]
+        self.image_filters = image_filters
 
-                image_filters = [capitalize_keys(f) for f in image_filters]
-            i.image_filters = image_filters
+    @property
+    def external_name(self):
+        '''Human readable version of external.'''
+        return (self.image_id or self.name)
 
-            i.username = image.get('username', None)
-            i.python_path = image.get('python-path', 'auto')
-            i.shell_type = image.get('shell-type', None)
-            i.connection_type = image.get('connection-type', 'ssh')
-            i.connection_port = image.get(
-                'connection-port',
-                default_port_mapping.get(i.connection_type, 22))
-            self.cloud_images[i.name] = i
+    @staticmethod
+    def getSchema():
+        image_filters = {
+            v.Any('Name', 'name'): str,
+            v.Any('Values', 'values'): [str]
+        }
 
-        for pool in self.provider.get('pools', []):
-            pp = ProviderPool()
-            pp.load(pool, config, self)
-            self.pools[pp.name] = pp
-
-    def getSchema(self):
-        pool_label = {
+        return v.All({
             v.Required('name'): str,
-            v.Exclusive('cloud-image', 'label-image'): str,
+            v.Required('username'): str,
+            v.Exclusive('image-id', 'spec'): str,
+            v.Exclusive('image-filters', 'spec'): [image_filters],
+            'connection-type': str,
+            'connection-port': int,
+            'python-path': str,
+            'shell-type': str,
+        }, {
+            v.Required(
+                v.Any('image-id', 'image-filters'),
+                msg=('Provide either '
+                     '"image-filters", or "image-id" keys')
+            ): object,
+            object: object,
+        })
+
+
+class AwsProviderDiskImage(ConfigValue):
+    def __init__(self, image_type, image, diskimage):
+        default_port_mapping = {
+            'ssh': 22,
+            'winrm': 5986,
+        }
+        self.name = image['name']
+        diskimage.image_types.add(image_type)
+        self.pause = bool(image.get('pause', False))
+        self.python_path = image.get('python-path')
+        self.shell_type = image.get('shell-type')
+        self.username = image.get('username')
+        self.connection_type = image.get('connection-type', 'ssh')
+        self.connection_port = image.get(
+            'connection-port',
+            default_port_mapping.get(self.connection_type, 22))
+        self.meta = {}
+        self.architecture = image.get('architecture', 'x86_64')
+
+    @property
+    def external_name(self):
+        '''Human readable version of external.'''
+        return self.name
+
+    @staticmethod
+    def getSchema():
+        return {
+            v.Required('name'): str,
+            'username': str,
+            'pause': bool,
+            'connection-type': str,
+            'connection-port': int,
+            'python-path': str,
+            'shell-type': str,
+        }
+
+
+class AwsLabel(ConfigValue):
+    ignore_equality = ['pool']
+
+    def __init__(self, label, provider_config, provider_pool):
+        self.name = label['name']
+        self.pool = provider_pool
+
+        cloud_image_name = label.get('cloud-image', None)
+        if cloud_image_name:
+            cloud_image = provider_config.cloud_images.get(
+                cloud_image_name, None)
+            if not cloud_image:
+                raise ValueError(
+                    "cloud-image %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (cloud_image_name, provider_config.name, self.name))
+            self.cloud_image = cloud_image
+        else:
+            self.cloud_image = None
+
+        diskimage_name = label.get('diskimage')
+        if diskimage_name:
+            diskimage = provider_config.diskimages.get(
+                diskimage_name, None)
+            if not diskimage:
+                raise ValueError(
+                    "diskimage %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (diskimage_name, provider_config.name, self.name))
+            self.diskimage = diskimage
+        else:
+            self.diskimage = None
+
+        self.ebs_optimized = bool(label.get('ebs-optimized', False))
+        self.instance_type = label['instance-type']
+        self.key_name = label.get('key-name')
+        self.volume_type = label.get('volume-type')
+        self.volume_size = label.get('volume-size')
+        self.userdata = label.get('userdata', None)
+        self.iam_instance_profile = label.get('iam-instance-profile', None)
+        self.tags = label.get('tags', {})
+
+    @staticmethod
+    def getSchema():
+        return {
+            v.Required('name'): str,
+            v.Exclusive('cloud-image', 'image'): str,
+            v.Exclusive('diskimage', 'image'): str,
             v.Required('instance-type'): str,
             v.Required('key-name'): str,
             'ebs-optimized': bool,
@@ -208,41 +178,133 @@ class AwsProviderConfig(ProviderConfig):
             'tags': dict,
         }
 
+
+class AwsPool(ConfigPool):
+    ignore_equality = ['provider']
+
+    def __init__(self, provider_config, pool_config):
+        super().__init__()
+        self.provider = provider_config
+        self.load(pool_config)
+
+    def load(self, pool_config):
+        super().load(pool_config)
+        self.name = pool_config['name']
+        self.security_group_id = pool_config.get('security-group-id')
+        self.subnet_id = pool_config.get('subnet-id')
+        self.public_ipv4 = pool_config.get(
+            'public-ipv4', self.provider.public_ipv4)
+        self.public_ipv6 = pool_config.get(
+            'public-ipv6', self.provider.public_ipv6)
+        # TODO: Deprecate public-ip-address
+        self.public_ipv4 = pool_config.get(
+            'public-ip-address', self.public_ipv4)
+        self.use_internal_ip = pool_config.get(
+            'use-internal-ip', self.provider.use_internal_ip)
+        self.host_key_checking = pool_config.get(
+            'host-key-checking', self.provider.host_key_checking)
+
+    @staticmethod
+    def getSchema():
+        aws_label = AwsLabel.getSchema()
+
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
-            v.Required('labels'): [pool_label],
-            'host-key-checking': bool,
+            v.Required('labels'): [aws_label],
             'security-group-id': str,
             'subnet-id': str,
             'public-ip-address': bool,
+            'public-ipv4': bool,
+            'public-ipv6': bool,
+            'host-key-checking': bool,
         })
+        return pool
 
-        image_filters = {
-            v.Any('Name', 'name'): str,
-            v.Any('Values', 'values'): [str]
-        }
 
-        provider_cloud_images = {
-            'name': str,
-            'connection-type': str,
-            'connection-port': int,
-            'shell-type': str,
-            'image-id': str,
-            "image-filters": [image_filters],
-            'username': str,
-            'python-path': str,
+class AwsProviderConfig(ProviderConfig):
+    def __init__(self, driver, provider):
+        super().__init__(provider)
+        self._pools = {}
+        self.rate = None
+        self.launch_retries = None
+        self.profile_name = None
+        self.region_name = None
+        self.boot_timeout = None
+        self.launch_retries = None
+        self.cloud_images = {}
+        self.diskimages = {}
+
+    @property
+    def pools(self):
+        return self._pools
+
+    @property
+    def manage_images(self):
+        return True
+
+    @staticmethod
+    def reset():
+        pass
+
+    def load(self, config):
+        self.profile_name = self.provider.get('profile-name')
+        self.region_name = self.provider.get('region-name')
+
+        self.rate = self.provider.get('rate', 1)
+        self.launch_retries = self.provider.get('launch-retries', 3)
+        self.launch_timeout = self.provider.get('launch-timeout', 3600)
+        self.boot_timeout = self.provider.get('boot-timeout', 180)
+        self.use_internal_ip = self.provider.get('use-internal-ip', False)
+        self.host_key_checking = self.provider.get('host-key-checking', True)
+        self.public_ipv4 = self.provider.get('public-ipv4', True)
+        self.public_ipv6 = self.provider.get('public-ipv6', False)
+        self.object_storage = self.provider.get('object-storage')
+        self.image_type = self.provider.get('image-format', 'raw')
+        self.image_name_format = '{image_name}-{timestamp}'
+        self.post_upload_hook = self.provider.get('post-upload-hook')
+
+        self.cloud_images = {}
+        for image in self.provider.get('cloud-images', []):
+            i = AwsProviderCloudImage(image)
+            self.cloud_images[i.name] = i
+
+        self.diskimages = {}
+        for image in self.provider.get('diskimages', []):
+            diskimage = config.diskimages[image['name']]
+            i = AwsProviderDiskImage(self.image_type, image, diskimage)
+            self.diskimages[i.name] = i
+
+        for pool in self.provider.get('pools', []):
+            pp = AwsPool(self, pool)
+            self._pools[pp.name] = pp
+
+            for label in pool.get('labels', []):
+                pl = AwsLabel(label, self, pp)
+                pp.labels[pl.name] = pl
+                config.labels[pl.name].pools.append(pp)
+
+    def getSchema(self):
+        pool = AwsPool.getSchema()
+        provider_cloud_images = AwsProviderCloudImage.getSchema()
+        provider_diskimages = AwsProviderDiskImage.getSchema()
+        object_storage = {
+            v.Required('bucket-name'): str,
         }
 
         provider = ProviderConfig.getCommonSchemaDict()
         provider.update({
             v.Required('pools'): [pool],
             v.Required('region-name'): str,
+            'rate': v.Any(int, float),
             'profile-name': str,
             'cloud-images': [provider_cloud_images],
+            'diskimages': [provider_diskimages],
             'hostname-format': str,
             'boot-timeout': int,
             'launch-retries': int,
+            'object-storage': object_storage,
+            'image-format': v.Any('ova', 'vhd', 'vhdx', 'vmdk', 'raw'),
         })
         return v.Schema(provider)
 

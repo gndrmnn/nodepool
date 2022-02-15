@@ -1,0 +1,38 @@
+---
+prelude: >
+  The AWS driver has been updated to achieve parity with other
+  Nodepool drivers.
+features:
+  - |
+    The AWS driver now supports rate limiting.  It utilizes a two-tier
+    rate limiting system to match AWS's request token buckets.  The
+    rate specified in the config file is used as the rate for mutating
+    requests.  Non-mutating requests will have their rate limited to
+    10 times that amount.
+  - |
+    The AWS driver now supports quota.  AWS only provides a quota
+    value for the number of cores.
+  - |
+    The AWS driver now support diskimage uploads.
+  - |
+    The AWS driver uses a new state machine framework within Nodepool
+    with significant caching in order to improve performance at scale.
+  - |
+    The AWS driver now supports IPv6 addresses.
+upgrade:
+  - |
+    The AWS driver will now ignore the "Name" tag if specified.
+    Instead, it matches the behavior of other Nodepool drivers and
+    sets the instance name to the Nodepool hostname (which is derived
+    from the node name; e.g, "np0000000001")
+deprecations:
+  - |
+    In AWS providers, the ``public-ip-address`` setting is deprecated.
+    Use ``public-ipv4`` or ``public-ipv6`` instead.
+  - |
+    In AWS providers, specifying image filter values as non-string
+    values is deprecated.  The current behavior is that Nodepool
+    coerces non-string values (such as ``true`` or integers) into
+    strings, but a later version of Nodepool will produce an error.
+    Please update config files to use literal (quoted if necessary)
+    YAML strings.
