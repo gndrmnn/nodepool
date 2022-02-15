@@ -24,6 +24,7 @@ from unittest.mock import patch
 import boto3
 from moto import mock_ec2
 import yaml
+import testtools
 
 from nodepool import config as nodepool_config
 from nodepool import tests
@@ -39,7 +40,7 @@ class TestDriverAws(tests.DBTestCase):
                 30, Exception, 'wait for provider'):
             try:
                 provider_manager = nodepool.getProviderManager(provider)
-                if provider_manager.ec2 is not None:
+                if provider_manager.adapter.ec2 is not None:
                     break
             except Exception:
                 pass
@@ -124,18 +125,28 @@ class TestDriverAws(tests.DBTestCase):
                     self.assertEqual(
                         False,
                         interfaces[0].get('AssociatePublicIpAddress'))
-                return provider_manager.ec2.create_instances_orig(
+                return provider_manager.adapter.ec2.create_instances_orig(
                     *args, **kwargs)
 
-            provider_manager.ec2.create_instances_orig = \
-                provider_manager.ec2.create_instances
-            provider_manager.ec2.create_instances = _fake_create_instances
+            provider_manager.adapter.ec2.create_instances_orig =\
+                provider_manager.adapter.ec2.create_instances
+            provider_manager.adapter.ec2.create_instances =\
+                _fake_create_instances
+
+            # moto does not mock service-quotas, so we do it ourselves:
+
+            def _fake_get_service_quota(*args, **kwargs):
+                # This is a simple fake that only returns the number
+                # of cores.
+                return {'Quota': {'Value': 100}}
+            provider_manager.adapter.aws_quotas.get_service_quota =\
+                _fake_get_service_quota
 
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
             req.tenant_name = 'tenant-1'
             req.node_types.append(label)
-            with patch('nodepool.driver.aws.handler.nodescan') as nodescan:
+            with patch('nodepool.driver.statemachine.nodescan') as nodescan:
                 nodescan.return_value = 'MOCK KEY'
                 self.zk.storeNodeRequest(req)
 
@@ -221,8 +232,10 @@ class TestDriverAws(tests.DBTestCase):
                                is_valid_config=False)
 
     def test_ec2_machine_bad_config(self):
-        self._test_ec2_machine('ubuntu1404-bad-config',
-                               is_valid_config=False)
+        # This fails config schema validation
+        with testtools.ExpectedException(ValueError,
+                                         ".*?could not be validated.*?"):
+            self.setup_config('aws-bad-config-images.yaml')
 
     def test_ec2_machine_non_host_key_checking(self):
         self._test_ec2_machine('ubuntu1404-non-host-key-checking',
@@ -249,13 +262,15 @@ class TestDriverAws(tests.DBTestCase):
                                tags=[
                                    {"Key": "has-tags", "Value": "true"},
                                    {"Key": "Name",
-                                    "Value": "ubuntu1404-with-tags"}
+                                    "Value": "np0000000000"}
                                ])
 
     def test_ec2_machine_name_tag(self):
+        # This ignores the Name value in the configuration, but still
+        # succeeds.
         self._test_ec2_machine('ubuntu1404-with-name-tag',
                                tags=[
-                                   {"Key": "Name", "Value": "different-name"}
+                                   {"Key": "Name", "Value": "np0000000000"}
                                ])
 
     def test_ec2_machine_shell_type(self):
