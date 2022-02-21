@@ -16,6 +16,24 @@
       "message": "What\u0027s the reason for maxsize\u003d1? This seems to cache only the last retrieved image?",
       "revId": "05b639932d19bf20546837ad661c3e5b4c05ac05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58596cc8_f3e4edc9",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 29946
+      },
+      "writtenOn": "2022-02-21T15:15:38Z",
+      "side": 1,
+      "message": "You right, in the case of a multi images configuration, this cache does not work as expected, we can keep the default maxsize",
+      "parentUuid": "37750da0_6483a943",
+      "revId": "05b639932d19bf20546837ad661c3e5b4c05ac05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
