@@ -1,4 +1,5 @@
 # Copyright (C) 2018 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,270 +17,236 @@ import base64
 
 import fixtures
 import logging
-import os
-import tempfile
-import time
-from unittest.mock import patch
 
 import boto3
 from moto import mock_ec2
-import yaml
 import testtools
 
 from nodepool import config as nodepool_config
 from nodepool import tests
 from nodepool import zk
 from nodepool.nodeutils import iterate_timeout
+import nodepool.driver.statemachine
+from nodepool.driver.statemachine import StateMachineProvider
+
+
+def fake_nodescan(*args, **kw):
+    return ['ssh-rsa FAKEKEY']
 
 
 class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
+    mock_ec2 = mock_ec2()
 
-    def _wait_for_provider(self, nodepool, provider):
-        for _ in iterate_timeout(
-                30, Exception, 'wait for provider'):
-            try:
-                provider_manager = nodepool.getProviderManager(provider)
-                if provider_manager.adapter.ec2 is not None:
-                    break
-            except Exception:
-                pass
+    def setUp(self):
+        super().setUp()
 
-    @mock_ec2
-    def _test_ec2_machine(self, label,
-                          is_valid_config=True,
-                          host_key_checking=True,
-                          userdata=None,
-                          public_ip=True,
-                          tags=[],
-                          shell_type=None):
+        self.mock_ec2.start()
+        StateMachineProvider.MINIMUM_SLEEP = 0.1
+        StateMachineProvider.MAXIMUM_SLEEP = 1
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
             fixtures.EnvironmentVariable('AWS_ACCESS_KEY_ID', aws_id))
         self.useFixture(
             fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
-
-        ec2_resource = boto3.resource('ec2', region_name='us-west-2')
-        ec2 = boto3.client('ec2', region_name='us-west-2')
+        self.ec2 = boto3.resource('ec2', region_name='us-west-2')
+        self.ec2_client = boto3.client('ec2', region_name='us-west-2')
 
         # TEST-NET-3
-        vpc = ec2.create_vpc(CidrBlock='203.0.113.0/24')
-
-        subnet = ec2.create_subnet(
-            CidrBlock='203.0.113.128/25', VpcId=vpc['Vpc']['VpcId'])
-        subnet_id = subnet['Subnet']['SubnetId']
-        sg = ec2.create_security_group(
-            GroupName='zuul-nodes', VpcId=vpc['Vpc']['VpcId'],
+        self.vpc = self.ec2_client.create_vpc(CidrBlock='203.0.113.0/24')
+        self.subnet = self.ec2_client.create_subnet(
+            CidrBlock='203.0.113.128/25', VpcId=self.vpc['Vpc']['VpcId'])
+        self.subnet_id = self.subnet['Subnet']['SubnetId']
+        self.security_group = self.ec2_client.create_security_group(
+            GroupName='zuul-nodes', VpcId=self.vpc['Vpc']['VpcId'],
             Description='Zuul Nodes')
-        sg_id = sg['GroupId']
+        self.security_group_id = self.security_group['GroupId']
+        self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
 
-        ec2_template = os.path.join(
-            os.path.dirname(__file__), '..', 'fixtures', 'aws.yaml')
-        with open(ec2_template) as f:
-            raw_config = yaml.safe_load(f)
-        raw_config['zookeeper-servers'][0] = {
-            'host': self.zookeeper_host,
-            'port': self.zookeeper_port,
-            'chroot': self.zookeeper_chroot,
-        }
-        raw_config['zookeeper-tls'] = {
-            'ca': self.zookeeper_ca,
-            'cert': self.zookeeper_cert,
-            'key': self.zookeeper_key,
-        }
-        raw_config['providers'][0]['pools'][0]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][0]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][1]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][1]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][2]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][2]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][3]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][3]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][4]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][4]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][5]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][5]['security-group-id'] = sg_id
-        raw_config['providers'][0]['pools'][6]['subnet-id'] = subnet_id
-        raw_config['providers'][0]['pools'][6]['security-group-id'] = sg_id
+    def tearDown(self):
+        self.mock_ec2.stop()
+        super().tearDown()
 
-        with tempfile.NamedTemporaryFile() as tf:
-            tf.write(yaml.safe_dump(
-                raw_config, default_flow_style=False).encode('utf-8'))
-            tf.flush()
-            configfile = self.setup_config(tf.name)
-            pool = self.useNodepool(configfile, watermark_sleep=1)
-            pool.start()
+    def setup_config(self, *args, **kw):
+        kw['subnet_id'] = self.subnet_id
+        kw['security_group_id'] = self.security_group_id
+        return super().setup_config(*args, **kw)
 
-            self._wait_for_provider(pool, 'ec2-us-west-2')
-            provider_manager = pool.getProviderManager('ec2-us-west-2')
+    def patchProvider(self, nodepool, provider_name='ec2-us-west-2'):
+        for _ in iterate_timeout(
+                30, Exception, 'wait for provider'):
+            try:
+                provider_manager = nodepool.getProviderManager(provider_name)
+                if provider_manager.adapter.ec2 is not None:
+                    break
+            except Exception:
+                pass
 
-            # Note: boto3 doesn't handle private ip addresses correctly
-            # when in fake mode so we need to intercept the
-            # create_instances call and validate the args we supply.
-            def _fake_create_instances(*args, **kwargs):
-                self.assertIsNotNone(kwargs.get('NetworkInterfaces'))
-                interfaces = kwargs.get('NetworkInterfaces')
-                self.assertEqual(1, len(interfaces))
-                if not public_ip:
-                    self.assertEqual(
-                        False,
-                        interfaces[0].get('AssociatePublicIpAddress'))
-                return provider_manager.adapter.ec2.create_instances_orig(
-                    *args, **kwargs)
+        # moto does not mock service-quotas, so we do it ourselves:
+        def _fake_get_service_quota(*args, **kwargs):
+            # This is a simple fake that only returns the number
+            # of cores.
+            return {'Quota': {'Value': 100}}
+        provider_manager.adapter.aws_quotas.get_service_quota =\
+            _fake_get_service_quota
 
-            provider_manager.adapter.ec2.create_instances_orig =\
-                provider_manager.adapter.ec2.create_instances
-            provider_manager.adapter.ec2.create_instances =\
-                _fake_create_instances
+    def requestNode(self, config_path, label):
+        # A helper method to perform a single node request
+        configfile = self.setup_config(config_path)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool)
 
-            # moto does not mock service-quotas, so we do it ourselves:
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
+        req.node_types.append(label)
 
-            def _fake_get_service_quota(*args, **kwargs):
-                # This is a simple fake that only returns the number
-                # of cores.
-                return {'Quota': {'Value': 100}}
-            provider_manager.adapter.aws_quotas.get_service_quota =\
-                _fake_get_service_quota
+        self.zk.storeNodeRequest(req)
 
-            req = zk.NodeRequest()
-            req.state = zk.REQUESTED
-            req.tenant_name = 'tenant-1'
-            req.node_types.append(label)
-            with patch('nodepool.driver.statemachine.nodescan') as nodescan:
-                nodescan.return_value = 'MOCK KEY'
-                self.zk.storeNodeRequest(req)
+        self.log.debug("Waiting for request %s", req.id)
+        return self.waitForNodeRequest(req)
 
-                self.log.debug("Waiting for request %s", req.id)
-                req = self.waitForNodeRequest(req)
+    def assertSuccess(self, req):
+        # Assert values common to most requests
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
 
-                if is_valid_config is False:
-                    self.assertEqual(req.state, zk.FAILED)
-                    self.assertEqual(req.nodes, [])
-                    return
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        return node
 
-                self.assertEqual(req.state, zk.FULFILLED)
-                self.assertNotEqual(req.nodes, [])
+    def test_aws_node(self):
+        req = self.requestNode('aws/aws.yaml', 'ubuntu1404')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
 
-                node = self.zk.getNode(req.nodes[0])
-                self.assertEqual(node.allocated_to, req.id)
-                self.assertEqual(node.state, zk.READY)
-                self.assertIsNotNone(node.launcher)
-                self.assertEqual(node.connection_type, 'ssh')
-                self.assertEqual(node.attributes,
-                                 {'key1': 'value1', 'key2': 'value2'})
-                self.assertEqual(node.shell_type, shell_type)
-                if host_key_checking:
-                    nodescan.assert_called_with(
-                        node.interface_ip,
-                        port=22,
-                        timeout=180,
-                        gather_hostkeys=True)
-                if userdata:
-                    instance = ec2_resource.Instance(node.external_id)
-                    response = instance.describe_attribute(
-                        Attribute='userData')
-                    self.assertIn('UserData', response)
-                    userdata = base64.b64decode(
-                        response['UserData']['Value']).decode()
-                    self.assertEqual('fake-user-data', userdata)
-                if tags:
-                    instance = ec2_resource.Instance(node.external_id)
-                    tag_list = instance.tags
-                    for tag in tags:
-                        self.assertIn(tag, tag_list)
+        self.assertIsNotNone(node.public_ipv4)
+        self.assertIsNotNone(node.private_ipv4)
+        self.assertIsNone(node.public_ipv6)
+        self.assertIsNotNone(node.interface_ip)
+        self.assertEqual(node.public_ipv4, node.interface_ip)
+        self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
+        self.assertFalse(node.public_ipv4.startswith('203.0.113.'))
 
-                # A new request will be paused and for lack of quota
-                # until this one is deleted
-                req2 = zk.NodeRequest()
-                req2.state = zk.REQUESTED
-                req2.node_types.append(label)
-                self.zk.storeNodeRequest(req2)
-                req2 = self.waitForNodeRequest(
-                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-                self.assertEqual(req2.state, zk.PENDING)
-                # It could flip from PENDING to one of the others,
-                # so sleep a bit and be sure
-                time.sleep(1)
-                req2 = self.waitForNodeRequest(
-                    req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-                self.assertEqual(req2.state, zk.PENDING)
+        instance = self.ec2.Instance(node.external_id)
+        response = instance.describe_attribute(Attribute='ebsOptimized')
+        self.assertFalse(response['EbsOptimized']['Value'])
 
-                node.state = zk.DELETING
-                self.zk.storeNode(node)
+    def test_aws_by_filters(self):
+        req = self.requestNode('aws/aws.yaml', 'ubuntu1404-by-filters')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404-by-filters')
 
-                self.waitForNodeDeletion(node)
+    def test_aws_by_capitalized_filters(self):
+        req = self.requestNode('aws/aws.yaml',
+                               'ubuntu1404-by-capitalized-filters')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404-by-capitalized-filters')
 
-                req2 = self.waitForNodeRequest(req2,
-                                               (zk.FAILED, zk.FULFILLED))
-                self.assertEqual(req2.state, zk.FULFILLED)
-                node = self.zk.getNode(req2.nodes[0])
-                node.state = zk.DELETING
-                self.zk.storeNode(node)
-                self.waitForNodeDeletion(node)
+    def test_aws_bad_ami_name(self):
+        req = self.requestNode('aws/aws.yaml', 'ubuntu1404-bad-ami-name')
+        self.assertEqual(req.state, zk.FAILED)
+        self.assertEqual(req.nodes, [])
 
-    def test_ec2_machine(self):
-        self._test_ec2_machine('ubuntu1404')
-
-    def test_ec2_machine_by_filters(self):
-        self._test_ec2_machine('ubuntu1404-by-filters')
-
-    def test_ec2_machine_by_filters_capitalized(self):
-        self._test_ec2_machine('ubuntu1404-by-capitalized-filters')
-
-    def test_ec2_machine_bad_ami_name(self):
-        self._test_ec2_machine('ubuntu1404-bad-ami-name',
-                               is_valid_config=False)
-
-    def test_ec2_machine_bad_config(self):
+    def test_aws_bad_config(self):
         # This fails config schema validation
         with testtools.ExpectedException(ValueError,
                                          ".*?could not be validated.*?"):
-            self.setup_config('aws-bad-config-images.yaml')
+            self.setup_config('aws/bad-config-images.yaml')
 
-    def test_ec2_machine_non_host_key_checking(self):
-        self._test_ec2_machine('ubuntu1404-non-host-key-checking',
-                               host_key_checking=False)
+    def test_aws_non_host_key_checking(self):
+        req = self.requestNode('aws/non-host-key-checking.yaml',
+                               'ubuntu1404-non-host-key-checking')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, [])
 
-    def test_ec2_machine_userdata(self):
-        self._test_ec2_machine('ubuntu1404-userdata',
-                               userdata=True)
+    def test_aws_userdata(self):
+        req = self.requestNode('aws/aws.yaml', 'ubuntu1404-userdata')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        instance = self.ec2.Instance(node.external_id)
+        response = instance.describe_attribute(
+            Attribute='userData')
+        self.assertIn('UserData', response)
+        userdata = base64.b64decode(
+            response['UserData']['Value']).decode()
+        self.assertEqual('fake-user-data', userdata)
 
     # Note(avass): moto does not yet support attaching an instance profile
     # but these two at least tests to make sure that the instances 'starts'
-    def test_ec2_machine_iam_instance_profile_name(self):
-        self._test_ec2_machine('ubuntu1404-iam-instance-profile-name')
+    def test_aws_iam_instance_profile_name(self):
+        req = self.requestNode('aws/aws.yaml',
+                               'ubuntu1404-iam-instance-profile-name')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
 
-    def test_ec2_machine_iam_instance_profile_arn(self):
-        self._test_ec2_machine('ubuntu1404-iam-instance-profile-arn')
+    def test_aws_iam_instance_profile_arn(self):
+        req = self.requestNode('aws/aws.yaml',
+                               'ubuntu1404-iam-instance-profile-arn')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
 
-    def test_ec2_machine_private_ip(self):
-        self._test_ec2_machine('ubuntu1404-private-ip',
-                               public_ip=False)
+    def test_aws_private_ip(self):
+        req = self.requestNode('aws/private-ip.yaml', 'ubuntu1404-private-ip')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
 
-    def test_ec2_machine_tags(self):
-        self._test_ec2_machine('ubuntu1404-with-tags',
-                               tags=[
-                                   {"Key": "has-tags", "Value": "true"},
-                                   {"Key": "Name",
-                                    "Value": "np0000000000"}
-                               ])
+        self.assertIsNone(node.public_ipv4)
+        self.assertIsNotNone(node.private_ipv4)
+        self.assertIsNone(node.public_ipv6)
+        self.assertIsNotNone(node.interface_ip)
+        self.assertEqual(node.private_ipv4, node.interface_ip)
+        self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
 
-    def test_ec2_machine_name_tag(self):
-        # This ignores the Name value in the configuration, but still
-        # succeeds.
-        self._test_ec2_machine('ubuntu1404-with-name-tag',
-                               tags=[
-                                   {"Key": "Name", "Value": "np0000000000"}
-                               ])
+    def test_aws_tags(self):
+        req = self.requestNode('aws/aws.yaml', 'ubuntu1404-with-tags')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
 
-    def test_ec2_machine_shell_type(self):
-        self._test_ec2_machine('ubuntu1404-with-shell-type',
-                               shell_type="csh")
+        instance = self.ec2.Instance(node.external_id)
+        tag_list = instance.tags
+        self.assertIn({"Key": "has-tags", "Value": "true"}, tag_list)
+        self.assertIn({"Key": "Name", "Value": "np0000000000"}, tag_list)
+        self.assertNotIn({"Key": "Name", "Value": "ignored-name"}, tag_list)
+
+    def test_aws_shell_type(self):
+        req = self.requestNode('aws/shell-type.yaml',
+                               'ubuntu1404-with-shell-type')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404-with-shell-type')
+        self.assertEqual(node.shell_type, 'csh')
 
     def test_aws_config(self):
-        configfile = self.setup_config('aws-config.yaml')
+        configfile = self.setup_config('aws/config.yaml')
         config = nodepool_config.loadConfig(configfile)
         self.assertIn('ec2-us-west-2', config.providers)
         config2 = nodepool_config.loadConfig(configfile)
         self.assertEqual(config, config2)
+
+    def test_aws_ebs_optimized(self):
+        req = self.requestNode('aws/aws.yaml',
+                               'ubuntu1404-ebs-optimized')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        instance = self.ec2.Instance(node.external_id)
+        response = instance.describe_attribute(Attribute='ebsOptimized')
+        self.assertTrue(response['EbsOptimized']['Value'])
