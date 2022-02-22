@@ -159,6 +159,8 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 class AwsAdapter(statemachine.Adapter):
     log = logging.getLogger("nodepool.driver.aws.AwsAdapter")
 
+    IMAGE_UPLOAD_SLEEP = 30
+
     def __init__(self, provider_config):
         self.provider = provider_config
         # The standard rate limit, this might be 1 request per second
@@ -274,7 +276,7 @@ class AwsAdapter(statemachine.Adapter):
 
         # Import image as AMI
         self.log.debug(f"Importing {image_name}")
-        import_image_task = self.ec2_client.import_image(
+        import_image_task = self._import_image(
             Architecture=provider_image.architecture,
             DiskContainers=[
                 {
@@ -294,11 +296,10 @@ class AwsAdapter(statemachine.Adapter):
         )
         task_id = import_image_task['ImportTaskId']
 
-        paginator = self.ec2_client.get_paginator(
-            'describe_import_image_tasks')
+        paginator = self._get_paginator('describe_import_image_tasks')
         done = False
         while not done:
-            time.sleep(30)
+            time.sleep(self.IMAGE_UPLOAD_SLEEP)
             with self.non_mutating_rate_limiter:
                 for page in paginator.paginate(ImportTaskIds=[task_id]):
                     for task in page['ImportImageTasks']:
@@ -390,8 +391,7 @@ class AwsAdapter(statemachine.Adapter):
                     self.not_our_snapshots.add(snap.id)
 
     def _getImportImageTask(self, task_id):
-        paginator = self.ec2_client.get_paginator(
-            'describe_import_image_tasks')
+        paginator = self._get_paginator('describe_import_image_tasks')
         with self.non_mutating_rate_limiter:
             for page in paginator.paginate(ImportTaskIds=[task_id]):
                 for task in page['ImportImageTasks']:
@@ -442,11 +442,13 @@ class AwsAdapter(statemachine.Adapter):
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listAmis(self):
+        # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return self.ec2.images.filter(Owners=['self'])
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listSnapshots(self):
+        # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return self.ec2.snapshots.filter(OwnerIds=['self'])
 
@@ -635,3 +637,12 @@ class AwsAdapter(statemachine.Adapter):
         with self.rate_limiter:
             self.log.debug(f"Deleting object {external_id}")
             self.s3.Object(bucket_name, external_id).delete()
+
+    # These methods allow the tests to patch our use of boto to
+    # compensate for missing methods in the boto mocks.
+    def _import_image(self, *args, **kw):
+        return self.ec2_client.import_image(*args, **kw)
+
+    def _get_paginator(self, *args, **kw):
+        return self.ec2_client.get_paginator(*args, **kw)
+    # End test methods
