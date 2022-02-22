@@ -17,9 +17,11 @@ import base64
 
 import fixtures
 import logging
+import urllib.parse
 
 import boto3
-from moto import mock_ec2
+import botocore.exceptions
+from moto import mock_ec2, mock_s3
 import testtools
 
 from nodepool import config as nodepool_config
@@ -28,22 +30,33 @@ from nodepool import zk
 from nodepool.nodeutils import iterate_timeout
 import nodepool.driver.statemachine
 from nodepool.driver.statemachine import StateMachineProvider
+from nodepool.driver.aws.adapter import AwsInstance, AwsAdapter
+
+from nodepool.tests.unit.fake_aws import FakeAws
 
 
 def fake_nodescan(*args, **kw):
     return ['ssh-rsa FAKEKEY']
 
 
+class Dummy:
+    pass
+
+
 class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
     mock_ec2 = mock_ec2()
+    mock_s3 = mock_s3()
 
     def setUp(self):
         super().setUp()
 
+        self.fake_aws = FakeAws()
         self.mock_ec2.start()
+        self.mock_s3.start()
         StateMachineProvider.MINIMUM_SLEEP = 0.1
         StateMachineProvider.MAXIMUM_SLEEP = 1
+        AwsAdapter.IMAGE_UPLOAD_SLEEP = 1
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -52,12 +65,37 @@ class TestDriverAws(tests.DBTestCase):
             fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
+        self.s3 = boto3.resource('s3', region_name='us-west-2')
+        self.s3_client = boto3.client('s3', region_name='us-west-2')
+        self.s3.create_bucket(
+            Bucket='nodepool',
+            CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
+
+        # A list of args to create instance for validation
+        self.create_instance_calls = []
 
         # TEST-NET-3
-        self.vpc = self.ec2_client.create_vpc(CidrBlock='203.0.113.0/24')
-        self.subnet = self.ec2_client.create_subnet(
-            CidrBlock='203.0.113.128/25', VpcId=self.vpc['Vpc']['VpcId'])
-        self.subnet_id = self.subnet['Subnet']['SubnetId']
+        ipv6 = False
+        if ipv6:
+            # This is currently unused, but if moto gains IPv6 support
+            # on instance creation, this may be useful.
+            self.vpc = self.ec2_client.create_vpc(
+                CidrBlock='203.0.113.0/24',
+                AmazonProvidedIpv6CidrBlock=True)
+            ipv6_cidr = self.vpc['Vpc'][
+                'Ipv6CidrBlockAssociationSet'][0]['Ipv6CidrBlock']
+            ipv6_cidr = ipv6_cidr.split('/')[0] + '/64'
+            self.subnet = self.ec2_client.create_subnet(
+                CidrBlock='203.0.113.128/25',
+                Ipv6CidrBlock=ipv6_cidr,
+                VpcId=self.vpc['Vpc']['VpcId'])
+            self.subnet_id = self.subnet['Subnet']['SubnetId']
+        else:
+            self.vpc = self.ec2_client.create_vpc(CidrBlock='203.0.113.0/24')
+            self.subnet = self.ec2_client.create_subnet(
+                CidrBlock='203.0.113.128/25', VpcId=self.vpc['Vpc']['VpcId'])
+            self.subnet_id = self.subnet['Subnet']['SubnetId']
+
         self.security_group = self.ec2_client.create_security_group(
             GroupName='zuul-nodes', VpcId=self.vpc['Vpc']['VpcId'],
             Description='Zuul Nodes')
@@ -66,6 +104,7 @@ class TestDriverAws(tests.DBTestCase):
 
     def tearDown(self):
         self.mock_ec2.stop()
+        self.mock_s3.stop()
         super().tearDown()
 
     def setup_config(self, *args, **kw):
@@ -82,6 +121,19 @@ class TestDriverAws(tests.DBTestCase):
                     break
             except Exception:
                 pass
+
+        # Note: boto3 doesn't handle ipv6 addresses correctly
+        # when in fake mode so we need to intercept the
+        # create_instances call and validate the args we supply.
+        def _fake_create_instances(*args, **kwargs):
+            self.create_instance_calls.append(kwargs)
+            return provider_manager.adapter.ec2.create_instances_orig(
+                *args, **kwargs)
+
+        provider_manager.adapter.ec2.create_instances_orig =\
+            provider_manager.adapter.ec2.create_instances
+        provider_manager.adapter.ec2.create_instances =\
+            _fake_create_instances
 
         # moto does not mock service-quotas, so we do it ourselves:
         def _fake_get_service_quota(*args, **kwargs):
@@ -213,6 +265,46 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.private_ipv4, node.interface_ip)
         self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
 
+    def test_aws_ipv6(self):
+        req = self.requestNode('aws/ipv6.yaml', 'ubuntu1404-ipv6')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        self.assertIsNotNone(node.public_ipv4)
+        self.assertIsNotNone(node.private_ipv4)
+        # Not supported by moto
+        # self.assertIsNotNone(node.public_ipv6)
+        self.assertIsNotNone(node.interface_ip)
+        self.assertEqual(node.public_ipv4, node.interface_ip)
+        self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
+
+        # Moto doesn't support ipv6 assignment on creation, so we can
+        # only unit test the parts.
+
+        # Make sure we make the call to AWS as expected
+        self.assertEqual(
+            self.create_instance_calls[0]['NetworkInterfaces']
+            [0]['Ipv6AddressCount'], 1)
+
+        # This is like what we should get back from AWS, verify the
+        # statemachine instance object has the parameters set
+        # correctly.
+        instance = Dummy()
+        instance.id = 'test'
+        instance.tags = []
+        instance.private_ip_address = '10.0.0.1'
+        instance.public_ip_address = '1.2.3.4'
+        iface = Dummy()
+        iface.ipv6_addresses = [{'Ipv6Address': 'fe80::dead:beef'}]
+        instance.network_interfaces = [iface]
+        awsi = AwsInstance(instance, None)
+        self.assertEqual(awsi.public_ipv4, '1.2.3.4')
+        self.assertEqual(awsi.private_ipv4, '10.0.0.1')
+        self.assertEqual(awsi.public_ipv6, 'fe80::dead:beef')
+        self.assertIsNone(awsi.private_ipv6)
+        self.assertEqual(awsi.public_ipv4, awsi.interface_ip)
+
     def test_aws_tags(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404-with-tags')
         node = self.assertSuccess(req)
@@ -250,3 +342,163 @@ class TestDriverAws(tests.DBTestCase):
         instance = self.ec2.Instance(node.external_id)
         response = instance.describe_attribute(Attribute='ebsOptimized')
         self.assertTrue(response['EbsOptimized']['Value'])
+
+    def test_aws_diskimage(self):
+        self.patch(AwsAdapter, '_import_image', self.fake_aws.import_image)
+        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
+        configfile = self.setup_config('aws/diskimage.yaml')
+
+        self.useBuilder(configfile)
+
+        image = self.waitForImage('ec2-us-west-2', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool)
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('diskimage')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+
+    def test_aws_resource_cleanup(self):
+        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
+
+        # Start by setting up leaked resources
+        instance_tags = [
+            {'Key': 'nodepool_node_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_pool_name', 'Value': 'main'},
+            {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
+        ]
+        image_tags = [
+            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
+        ]
+
+        reservation = self.ec2_client.run_instances(
+            ImageId="ami-12c6146b", MinCount=1, MaxCount=1,
+            BlockDeviceMappings=[{
+                'DeviceName': '/dev/sda1',
+                'Ebs': {
+                    'VolumeSize': 80,
+                    'DeleteOnTermination': False
+                }
+            }],
+            TagSpecifications=[{
+                'ResourceType': 'instance',
+                'Tags': instance_tags
+            }, {
+                'ResourceType': 'volume',
+                'Tags': instance_tags
+            }]
+        )
+        instance_id = reservation['Instances'][0]['InstanceId']
+
+        task = self.fake_aws.import_image(
+            DiskContainers=[{
+                'Format': 'ova',
+                'UserBucket': {
+                    'S3Bucket': 'nodepool',
+                    'S3Key': 'testfile',
+                }
+            }],
+            TagSpecifications=[{
+                'ResourceType': 'import-image-task',
+                'Tags': image_tags,
+            }])
+        image_id, snapshot_id = self.fake_aws.finish_import_image(task)
+
+        # Note that the resulting image and snapshot do not have tags
+        # applied, so we test the automatic retagging methods in the
+        # adapter.
+
+        s3_tags = {
+            'nodepool_build_id': '0000000042',
+            'nodepool_upload_id': '0000000042',
+            'nodepool_provider_name': 'ec2-us-west-2',
+        }
+
+        bucket = self.s3.Bucket('nodepool')
+        bucket.put_object(Body=b'hi',
+                          Key='testimage',
+                          Tagging=urllib.parse.urlencode(s3_tags))
+        obj = self.s3.Object('nodepool', 'testimage')
+        # This effectively asserts the object exists
+        self.s3_client.get_object_tagging(
+            Bucket=obj.bucket_name, Key=obj.key)
+
+        instance = self.ec2.Instance(instance_id)
+        self.assertEqual(instance.state['Name'], 'running')
+
+        volume_id = list(instance.volumes.all())[0].id
+        volume = self.ec2.Volume(volume_id)
+        self.assertEqual(volume.state, 'in-use')
+
+        image = self.ec2.Image(image_id)
+        self.assertEqual(image.state, 'available')
+
+        snap = self.ec2.Snapshot(snapshot_id)
+        self.assertEqual(snap.state, 'completed')
+
+        # Now that the leaked resources exist, start the provider and
+        # wait for it to clean them.
+
+        configfile = self.setup_config('aws/diskimage.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool)
+
+        for _ in iterate_timeout(30, Exception, 'instance deletion'):
+            instance = self.ec2.Instance(instance_id)
+            if instance.state['Name'] == 'terminated':
+                break
+
+        for _ in iterate_timeout(30, Exception, 'volume deletion'):
+            volume = self.ec2.Volume(volume_id)
+            try:
+                if volume.state == 'deleted':
+                    break
+            except botocore.exceptions.ClientError:
+                # Probably not found
+                break
+
+        for _ in iterate_timeout(30, Exception, 'ami deletion'):
+            image = self.ec2.Image(image_id)
+            try:
+                if image.state == 'deleted':
+                    break
+            except botocore.exceptions.ClientError:
+                # Probably not found
+                break
+
+        for _ in iterate_timeout(30, Exception, 'snapshot deletion'):
+            snap = self.ec2.Snapshot(snapshot_id)
+            try:
+                if snap.state == 'deleted':
+                    break
+            except botocore.exceptions.ClientError:
+                # Probably not found
+                break
+
+        for _ in iterate_timeout(30, Exception, 'object deletion'):
+            obj = self.s3.Object('nodepool', 'testimage')
+            try:
+                self.s3_client.get_object_tagging(
+                    Bucket=obj.bucket_name, Key=obj.key)
+            except self.s3_client.exceptions.NoSuchKey:
+                break
