@@ -1,0 +1,39 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+tenant-resource-limits:
+  - tenant-name: tenant-1
+    max-cores: 1024
+
+labels:
+  - name: ubuntu1404-private-ip
+
+providers:
+  - name: ec2-us-west-2
+    driver: aws
+    region-name: us-west-2
+    cloud-images:
+      - name: ubuntu1404
+        image-id: ami-1e749f67
+        username: ubuntu
+    pools:
+      - name: main
+        max-servers: 1
+        subnet-id: {subnet_id}
+        security-group-id: {security_group_id}
+        public-ip-address: false
+        node-attributes:
+          key1: value1
+          key2: value2
+        labels:
+          - name: ubuntu1404-private-ip
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
