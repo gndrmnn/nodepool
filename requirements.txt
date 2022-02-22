@@ -11,7 +11,7 @@ PrettyTable>=0.6,<0.8
 # 0.31.1 and 0.31.2 have a bug with image deletion in tasks API
 # We expect 1.0.0 to break the API we use
 openstacksdk>=0.27.0,!=0.28.0,!=0.29.0,!=0.30.0,!=0.31.0,!=0.31.1,!=0.31.2,<1.0.0
-diskimage-builder>=3.18.0
+diskimage-builder>=3.19.0
 voluptuous
 kazoo>=2.8.0
 Paste
