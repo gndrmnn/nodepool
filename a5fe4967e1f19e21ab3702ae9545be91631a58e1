@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6ee8355_d9d679e4",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-23T21:20:12Z",
+      "side": 1,
+      "message": "I guess the quite low ttl of 10s is because you want quick updates if cloud_image doesn\u0027t contain an image_id?",
+      "revId": "a5fe4967e1f19e21ab3702ae9545be91631a58e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
