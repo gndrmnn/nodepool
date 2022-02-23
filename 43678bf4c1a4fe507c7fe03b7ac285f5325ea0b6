@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25b030bf_7d121024",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-23T23:02:32Z",
+      "side": 1,
+      "message": "nit: Ansible 2.7 has been removed in Zuul 4.0 so we might not need to mention this case anymore.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffa6e079_83d9ef19",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-23T23:02:32Z",
+      "side": 1,
+      "message": "One thought about quotas. AWS has separated quotas for some instance families. For the start I think this quota code is fine andcovers the most used instance types.\n\nI wonder if we could improve that later by mapping the quotas to codes-standard for the standard images and cores-p for p instances and so on. This way we could generically cover the individual quotas for the currently 8 different instance quotas.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
