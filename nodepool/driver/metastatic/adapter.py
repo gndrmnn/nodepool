@@ -122,6 +122,7 @@ class MetastaticInstance(statemachine.Instance):
             self.shell_type = backing_node.shell_type
             self.connection_port = backing_node.connection_port
             self.connection_type = backing_node.connection_type
+            self.host_keys = backing_node.host_keys
             backing_node_id = backing_node.id
         else:
             backing_node_id = None

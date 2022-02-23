@@ -32,7 +32,7 @@ from kazoo import exceptions as kze
 import cachetools
 
 
-def keyscan(node_id, interface_ip,
+def keyscan(host_key_checking, node_id, interface_ip,
             connection_type, connection_port,
             timeout):
     """A standalone function for scanning keys to pass to a thread/process
@@ -40,6 +40,8 @@ def keyscan(node_id, interface_ip,
     """
 
     keys = []
+    if not host_key_checking:
+        return keys
     try:
         if (connection_type == 'ssh' or
             connection_type == 'network_cli'):
@@ -156,7 +158,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
         for attr in ('username', 'python_path', 'shell_type',
-                     'connection_port', 'connection_type'):
+                     'connection_port', 'connection_type',
+                     'host_keys'):
             if hasattr(instance, attr):
                 setattr(node, attr, getattr(instance, attr))
 
@@ -175,7 +178,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if (self.state_machine.complete and self.keyscan_future
                 and self.keyscan_future.done()):
                 keys = self.keyscan_future.result()
-                node.host_keys = keys
+                if keys:
+                    node.host_keys = keys
                 self.log.debug(f"Node {node.id} is ready")
                 node.state = zk.READY
                 self.zk.storeNode(node)
@@ -206,6 +210,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                                node.interface_ip)
                 future = self.manager.keyscan_worker.submit(
                     keyscan,
+                    self.handler.pool.host_key_checking,
                     node.id, node.interface_ip,
                     node.connection_type, node.connection_port,
                     self.manager.provider.boot_timeout)
@@ -717,6 +722,7 @@ class Instance:
     * shell_type: str
     * connection_port: str
     * connection_type: str
+    * host_keys: [str]
     """
     def __init__(self):
         self.ready = False
