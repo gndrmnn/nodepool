@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d1c0bd9_ea09f0d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-02-23T23:16:23Z",
+      "side": 1,
+      "message": "This will be superceded soon by the aws driver rework: https://review.opendev.org/c/zuul/nodepool/+/830525",
+      "revId": "4368440089be901b36f51d491c3ebeaea58a1dd3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
