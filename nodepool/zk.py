@@ -476,6 +476,7 @@ class NodeRequest(BaseModel):
         self.provider = None
         self.relative_priority = 0
         self.event_id = None
+        self.created_time = None
         self.tenant_name = None
 
     def __repr__(self):
@@ -495,6 +496,7 @@ class NodeRequest(BaseModel):
                     self.requestor_data == other.requestor_data and
                     self.provider == other.provider and
                     self.relative_priority == other.relative_priority and
+                    self.created_time == other.created_time and
                     self.tenant_name == other.tenant_name)
         else:
             return False
@@ -521,6 +523,7 @@ class NodeRequest(BaseModel):
         d['provider'] = self.provider
         d['relative_priority'] = self.relative_priority
         d['event_id'] = self.event_id
+        d['created_time'] = self.created_time
         d['tenant_name'] = self.tenant_name
         return d
 
@@ -550,6 +553,7 @@ class NodeRequest(BaseModel):
         self.provider = d.get('provider')
         self.relative_priority = d.get('relative_priority', 0)
         self.event_id = d.get('event_id')
+        self.created_time = d.get('created_time')
         self.tenant_name = d.get('tenant_name')
 
 
