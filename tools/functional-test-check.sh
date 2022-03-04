@@ -86,6 +86,22 @@ function sshintonode {
        FAILURE_REASON="Failed to find correct kernel boot flags $node"
        RETURN=1
     fi
+
+    # Ensure glean services have loaded
+    # The output is like:
+    # ---
+    #  glean-early.service loaded active exited    Early glean execution
+    #  glean@ens3.service  loaded active exited    Glean for interface ens3 with NetworkManager
+    #  glean@lo.service    loaded active exited    Glean for interface lo with NetworkManager
+    # ---
+    # So if we see anything other than 'loaded active exited' we have a problem.
+    glean_status=$(/tmp/ssh_wrapper $node -- "systemctl | egrep 'glean[@|-]' | { grep -v 'loaded active exited' || true; }")
+    if [[ ${glean_status} != '' ]]; then
+        echo "*** Glean not loaded correctly"
+        echo "*** saw: ${glean_status}"
+        FAILURE_REASON="Failed to start glean correctly"
+        RETURN=1
+    fi
 }
 
 function checknm {
