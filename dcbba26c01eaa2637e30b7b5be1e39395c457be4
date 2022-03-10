@@ -16,6 +16,23 @@
       "message": "\u003e Patch Set 1:\n\u003e \n\u003e This basically changes \"no valid host was found\" from always fatal to never fatal.  Is that really the case?\n\nThe no valid host errors are returned by Nova when its placement service is unable to find a valid location to place a VM. In a typical deployment of openstack this means that either Nova is truly full up or that there is an accounting error of some kind that requires cloud operator intervention. In my opinion it is desireable in both cases to have Nodepool return an error so that we can try to schedule the node in another provider or if there are no other providers bubble up the NODE_FAILURE so that people can look into why the cloud isn\u0027t operating as expected.",
       "revId": "dcbba26c01eaa2637e30b7b5be1e39395c457be4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01d265ef_cd78b0c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-03-10T15:33:47Z",
+      "side": 1,
+      "message": "\u003e Patch Set 1:\n\u003e \n\u003e This basically changes \"no valid host was found\" from always fatal to never fatal.  Is that really the case?\n\nUnfortunately, I inherited this change, so I\u0027m not exactly sure. It seems we were occasionally getting that error when spinning up nodes; speculation was that it happened when the quota was changed after the node started spinning up, but this was never confirmed.\n\nI\u0027d be willing to try without that particular part of the change and try to sort out whats going on if we can figure out an upstream way to keep retrying when there is no quota.",
+      "revId": "dcbba26c01eaa2637e30b7b5be1e39395c457be4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
