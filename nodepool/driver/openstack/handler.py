@@ -16,6 +16,7 @@
 import math
 import pprint
 import random
+import time
 
 from kazoo import exceptions as kze
 import openstack
@@ -298,8 +299,9 @@ class OpenStackNodeLauncher(NodeLauncher):
                     # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
-                    raise exceptions.QuotaException("Quota exceeded")
-                attempts += 1
+                    time.sleep(10)
+                else:
+                    attempts += 1
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
