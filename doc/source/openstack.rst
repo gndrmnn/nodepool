@@ -459,6 +459,19 @@ Selecting the OpenStack driver adds the following options to the
         circumstances where the provider is incorrectly calculating
         quota.
 
+     .. attr:: reactive-quota
+        :type: bool
+        :default: False
+
+        The quota for this provider is dynamically adjusted based on
+        the demand for nodes from nodepool, usually using an out-of-band
+        mechanism. If a node request gets a quota error from OpenStack,
+        it will not be removed so that the "pressure" of requested nodes
+        remains and the quota can be increased.
+
+        Note that this means a node allocation that fails due to a quota
+        problem will not fall thought to another provider.
+
      .. attr:: availability-zones
         :type: list
 

@@ -16,6 +16,7 @@
 import math
 import pprint
 import random
+import time
 
 from kazoo import exceptions as kze
 import openstack
@@ -294,12 +295,20 @@ class OpenStackNodeLauncher(NodeLauncher):
                     quota_exceeded = True
 
                 if quota_exceeded:
-                    # A quota exception is not directly recoverable so bail
-                    # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
-                    raise exceptions.QuotaException("Quota exceeded")
-                attempts += 1
+                    if self.node.pool.reactive_quota:
+                        # Sleep for a bit and then try again. This allows the
+                        # node request to remain active in nodepool so that the
+                        # "pressure" of node allocation remains and the quota
+                        # can be adjusted
+                        time.sleep(5)
+                    else:
+                        # A quota exception is not directly recoverable so bail
+                        # out immediately with a specific exception.
+                        raise exceptions.QuotaException("Quota exceeded")
+                else:
+                    attempts += 1
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
