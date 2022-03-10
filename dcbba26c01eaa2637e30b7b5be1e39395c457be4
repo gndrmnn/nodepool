@@ -33,6 +33,24 @@
       "message": "\u003e Patch Set 1:\n\u003e \n\u003e This basically changes \"no valid host was found\" from always fatal to never fatal.  Is that really the case?\n\nUnfortunately, I inherited this change, so I\u0027m not exactly sure. It seems we were occasionally getting that error when spinning up nodes; speculation was that it happened when the quota was changed after the node started spinning up, but this was never confirmed.\n\nI\u0027d be willing to try without that particular part of the change and try to sort out whats going on if we can figure out an upstream way to keep retrying when there is no quota.",
       "revId": "dcbba26c01eaa2637e30b7b5be1e39395c457be4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a237e72_8101deae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-10T15:58:28Z",
+      "side": 1,
+      "message": "\u003e I\u0027d be willing to try without that particular part of the change and try to sort out whats going on if we can figure out an upstream way to keep retrying when there is no quota.\n\nThis seems much safer. Currently nodepool will pause when it hits no quota and wait for quota to free up. But if we retry during that pause we shouldn\u0027t change the functional behavior of nodepool very much. We\u0027ll just do some extra API calls but that shouldn\u0027t be a big deal.\n\nOld Behavior:\n\n  Boot node\n  Get quota error\n  Pause\n  Delete used node freeing quota\n  Unpause\n  Boot node\n\nNew Behavior:\n\n  Boot node\n  While quote error\n    Sleep\n  Boot node",
+      "parentUuid": "01d265ef_cd78b0c6",
+      "revId": "dcbba26c01eaa2637e30b7b5be1e39395c457be4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
