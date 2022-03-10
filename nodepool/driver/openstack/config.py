@@ -139,6 +139,7 @@ class ProviderPool(ConfigPool):
         self.max_ram = pool_config.get('max-ram', math.inf)
         self.ignore_provider_quota = pool_config.get('ignore-provider-quota',
                                                      False)
+        self.reactive_quota = pool_config.get('reactive-quota', False)
         self.azs = pool_config.get('availability-zones')
         self.networks = pool_config.get('networks', [])
         self.security_groups = pool_config.get('security-groups', [])
@@ -355,6 +356,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'auto-floating-ip': bool,
             'host-key-checking': bool,
             'ignore-provider-quota': bool,
+            'reactive-quota': bool,
             'max-cores': int,
             'max-ram': int,
             'labels': [pool_label],
