@@ -16,6 +16,7 @@
 import math
 import pprint
 import random
+import time
 
 from kazoo import exceptions as kze
 import openstack
@@ -259,6 +260,11 @@ class OpenStackNodeLauncher(NodeLauncher):
                 # again in order to retrieve the fault reason as this is not
                 # included in the server object we already have.
                 quota_exceeded = False
+
+                # Sometimes openstack can't find the right hardware to spin up a node.
+                # In this case we should not fail the build as typically this will
+                # resolve itself once more hardware becomes available.
+                invalid_host_found = False
                 if self.node.external_id:
                     try:
                         server = self.handler.manager.getServerById(
@@ -268,6 +274,8 @@ class OpenStackNodeLauncher(NodeLauncher):
                             self.log.error('Detailed node error: %s', fault)
                             if 'quota' in fault:
                                 quota_exceeded = True
+                            elif 'No valid host was found' in fault:
+                                invalid_host_found = True
                     except Exception:
                         self.log.exception(
                             'Failed to retrieve node error information:')
@@ -292,14 +300,23 @@ class OpenStackNodeLauncher(NodeLauncher):
                     raise
                 if 'quota exceeded' in str(e).lower():
                     quota_exceeded = True
+                elif 'no valid host was found' in str(e).lower():
+                    invalid_host_found = True
 
                 if quota_exceeded:
                     # A quota exception is not directly recoverable so bail
                     # out immediately with a specific exception.
                     self.log.info("Quota exceeded, invalidating quota cache")
                     self.handler.manager.invalidateQuotaCache()
-                    raise exceptions.QuotaException("Quota exceeded")
-                attempts += 1
+                    #raise exceptions.QuotaException("Quota exceeded")
+                    time.sleep(10)
+                elif invalid_host_found:
+                    # Invalid host was found, something bad is happening on openstack!
+                    # Usually this means the nova scheduler could not find a bare metal
+                    # node suitable for booting the new instance.
+                    time.sleep(60)
+                else:
+                    attempts += 1
 
         self.node.state = zk.READY
         self.zk.storeNode(self.node)
