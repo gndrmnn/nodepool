@@ -399,7 +399,8 @@ class StaticNodeProvider(Provider, QuotaSupport):
                         self.log.warning("Couldn't sync node: %s", exc)
                         continue
                     except Exception:
-                        self.log.exception("Couldn't sync node:")
+                        self.log.exception("Couldn't sync node %s:",
+                                           nodeTuple(node))
                         continue
 
     def getRequestHandler(self, poolworker, request):
