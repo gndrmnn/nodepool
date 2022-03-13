@@ -45,7 +45,14 @@ def set_node_ip(node):
     '''
     if 'fake' in node.hostname:
         return
-    addrinfo = socket.getaddrinfo(node.hostname, node.connection_port)[0]
+    try:
+        addrinfo = socket.getaddrinfo(node.hostname, node.connection_port)[0]
+    except socket.error:
+        log.exception(
+            'Exception connecting to %s on port %s', node.hostname,
+            node.connection_port)
+        raise
+
     if addrinfo[0] == socket.AF_INET:
         node.public_ipv4 = addrinfo[4][0]
     elif addrinfo[0] == socket.AF_INET6:
