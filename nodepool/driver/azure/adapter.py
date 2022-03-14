@@ -387,8 +387,8 @@ class AzureAdapter(statemachine.Adapter):
                              self.provider.location))
         return quota_info_from_sku(sku)
 
-    def uploadImage(self, image_name, filename, image_format,
-                    metadata, md5, sha256):
+    def uploadImage(self, provider_image, image_name, filename,
+                    image_format, metadata, md5, sha256):
         self.log.debug(f"Uploading image {image_name}")
         file_sz = os.path.getsize(filename)
         disk_info = {

@@ -642,11 +642,12 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     # Image handling
 
-    def uploadImage(self, image_name, filename, image_type=None, meta=None,
-                    md5=None, sha256=None):
+    def uploadImage(self, provider_image, image_name, filename,
+                    image_type=None, meta=None, md5=None, sha256=None):
         meta = meta.copy()
         meta['nodepool_provider_name'] = self.provider.name
-        return self.adapter.uploadImage(image_name, filename,
+        return self.adapter.uploadImage(provider_image, image_name,
+                                        filename,
                                         image_format=image_type,
                                         metadata=meta, md5=md5,
                                         sha256=sha256)
@@ -909,10 +910,13 @@ class Adapter:
     # The following methods must be implemented only if image
     # management is supported:
 
-    def uploadImage(self, image_name, filename, image_format=None,
-                    metadata=None, md5=None, sha256=None):
+    def uploadImage(self, provider_image, image_name, filename,
+                    image_format=None, metadata=None, md5=None,
+                    sha256=None):
         """Upload the image to the cloud
 
+        :param provider_image ProviderImageConfig:
+            The provider's config for this image
         :param image_name str: The name of the image
         :param filename str: The path to the local file to be uploaded
         :param image_format str: The format of the image (e.g., "qcow")
