@@ -193,3 +193,18 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: override-container-command
+            :type: bool
+            :default: True
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            Specify if a default string (``["/bin/sh", "-c"]``) should be set on container spec for ``command`` field. When set to False, the default string will not be sent to the container for ``command`` field and this will allow the container to use its own correspondent value. The default value is True.
+
+         .. attr:: override-container-args
+            :type: bool
+            :default: True
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            Specify if a default string (``["while true; do sleep 30; done;"]``) should be set on container spec for ``args`` field. When set to False, the default string will not be sent to the container for ``args`` field and this will allow the container to use its own correspondent value. The default value is True.
