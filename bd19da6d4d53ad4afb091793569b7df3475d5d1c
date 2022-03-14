@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22e7a042_37012bfe",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Intentionally not elif -- we should do as much work as we can in one pass.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d913f84b_8c3dc260",
@@ -52,6 +69,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e05e1d5_bbb2d929",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Yes.  The intent is to dedicate a bucket for this though, so it should only grow large if it leaks.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbb4510e_1f8f0659",
@@ -65,6 +99,23 @@
       "writtenOn": "2022-03-14T21:42:48Z",
       "side": 1,
       "message": "You might want a sleep here just to keep this from consuming the rate limit capacity? For image uploads this is probably not much of a concern though as they happen infrequently.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61a743aa_1b25ff79",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Good idea; will followup.",
       "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -92,6 +143,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b121c81_4b3ba778",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "If there is a \u0027next\u0027, we will either get the \u0027start\u0027 value from it, or raise an exception.  If there is no next, then we break after one pass through the loop.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bee5e884_9fb86768",
@@ -109,6 +177,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8989a4fc_a7ddc514",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "This API call is not paginated: https://cloud.ibm.com/apidocs/resource-controller/resource-manager#list-resource-groups",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c00fcd88_2b7cb54c",
@@ -122,6 +207,23 @@
       "writtenOn": "2022-03-14T21:42:48Z",
       "side": 1,
       "message": "Does this need to handle pagination?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40b97a0b_dce812cd",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Nope: https://cloud.ibm.com/apidocs/vpc#list-instance-profiles",
       "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -166,6 +268,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db6add6c_b91a89e5",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Probably image_id.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8142aaf9_964fce6f",
@@ -189,6 +308,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc257141_230b47d8",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "It allows everything in the previous dictionary (name, username, etc) to pass through.\n\nGetting the exclusive-and-required behavior we want for the image-* attributes is tricky with voluptuous.  We have to do it in two steps:\n\n  1) The schema should match the (name, username, etc) dictionary.  This includes a requirement than no more than one image-* attribute be present (but doesn\u0027t indicate that any of them are required).\n  2) At least one image-* must be present, and beyond that we don\u0027t care what else is there.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa934502_32d2780b",
@@ -202,6 +338,23 @@
       "writtenOn": "2022-03-14T21:42:48Z",
       "side": 1,
       "message": "Do we need to check for setting one of cloud_image_name or diskimage here?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2d6ab31_250a590b",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "That might be a good improvement, but I don\u0027t think we do that anywhere yet.",
       "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -236,6 +389,23 @@
       "writtenOn": "2022-03-14T21:42:48Z",
       "side": 1,
       "message": "Is there any reason to make this configurable? I wonder if ibm cloud boots multiple image formats. I guess it doesn\u0027t hurt if they grow that feature.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "170ede71_a599c378",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-14T22:38:47Z",
+      "side": 1,
+      "message": "Yeah, was just future-proofing.",
       "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
