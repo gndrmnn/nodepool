@@ -50,6 +50,10 @@ class KubernetesPool(ConfigPool):
             pl.memory = label.get('memory')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.override_container_command = label.get(
+              'override-container-command', True)
+            pl.override_container_args = label.get(
+              'override-container-args', True)
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -95,6 +99,8 @@ class KubernetesProviderConfig(ProviderConfig):
             'memory': int,
             'env': [env_var],
             'node-selector': dict,
+            'override-container-command': bool,
+            'override-container-args': bool,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

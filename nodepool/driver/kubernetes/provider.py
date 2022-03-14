@@ -263,10 +263,14 @@ class KubernetesProvider(Provider, QuotaSupport):
             'name': label.name,
             'image': label.image,
             'imagePullPolicy': label.image_pull,
-            'command': ["/bin/sh", "-c"],
-            'args': ["while true; do sleep 30; done;"],
             'env': label.env,
         }
+
+        if label.override_container_command:
+            container_body['command'] = ["/bin/sh", "-c"]
+
+        if label.override_container_args:
+            container_body['args'] = ["while true; do sleep 30; done;"]
 
         if label.cpu or label.memory:
             container_body['resources'] = {}
