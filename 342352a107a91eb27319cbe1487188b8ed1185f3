@@ -1,0 +1,40 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d42614c4_d9605b7c",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 34641
+      },
+      "writtenOn": "2022-03-14T21:28:20Z",
+      "side": 1,
+      "message": "\u003e pep8: E501 line too long (89 \u003e 79 characters)\n\nPlease fix.",
+      "parentUuid": "e8e6a572_28b64ae9",
+      "revId": "342352a107a91eb27319cbe1487188b8ed1185f3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e3d2195_aeaaefb2",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 34641
+      },
+      "writtenOn": "2022-03-14T21:28:20Z",
+      "side": 1,
+      "message": "\u003e pep8: E501 line too long (83 \u003e 79 characters)\n\nPlease fix.",
+      "parentUuid": "d2f7f2c7_08a72683",
+      "revId": "342352a107a91eb27319cbe1487188b8ed1185f3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
