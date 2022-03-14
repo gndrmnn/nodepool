@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d7613fd_4f192d40",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-14T10:31:17Z",
+      "side": 1,
+      "message": "IIUC the above socket call is not actually attempting a connection, but just preparing to do so, so the exception is an issue with name resolution most likely, not with the actual connection.\n\nTo me this seems to be a special case of the \"else\" below, so maybe we should stick to that exception being raised and just add the hostname into the generated message? Likely both here and below.",
+      "revId": "6c1aec18b4eb7cc90bc85856b09c80ea00fcc5ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
