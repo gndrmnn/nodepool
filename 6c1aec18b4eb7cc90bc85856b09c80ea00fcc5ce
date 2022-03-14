@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4e8b8d7_9d709c13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-03-14T11:02:09Z",
+      "side": 1,
+      "message": "I think a better way would be to include the node tuple when we log the exception during cleanup as we already do in other places https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/static/provider.py#L353-L354",
+      "revId": "6c1aec18b4eb7cc90bc85856b09c80ea00fcc5ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d7613fd_4f192d40",
