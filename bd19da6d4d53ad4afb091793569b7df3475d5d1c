@@ -1,0 +1,277 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3275375_199a816f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "This is a new driver so I\u0027m not sure any of my inline comments rise to the level of a -1 but will let corvus self approve if nothing is worth a new patchset.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b10ba70a_ea08d208",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Just noting that the first advance call is likely enter this block as well as the block above. If we wanted to make it more step wise then these should be elifs. I don\u0027t think that is necessary though.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d913f84b_8c3dc260",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Just talking out loud here listing the object store resources along side the other resources may not be super desireable if that set of resources grows large. In this case the objects should be removed after image creation which should keep this manageable. But if they leak or if we don\u0027t delete them as expected objects should hang around for quite some time.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbb4510e_1f8f0659",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "You might want a sleep here just to keep this from consuming the rate limit capacity? For image uploads this is probably not much of a concern though as they happen infrequently.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70df77b6_49b7f5cd",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "If this is a default value will we end up returning a \"double\" list in the case of no href being present?",
+      "range": {
+        "startLine": 562,
+        "startChar": 68,
+        "endLine": 562,
+        "endChar": 75
+      },
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bee5e884_9fb86768",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Does this need to handle pagination?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c00fcd88_2b7cb54c",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Does this need to handle pagination?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c89b37c3_1db5d762",
+        "filename": "nodepool/driver/ibmvpc/adapter.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Might want to also double check that vm \u003d\u003d target? Otherwise you could detach from a different instance? This is unused so also not very important.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1b1e4b0_9dcfd63f",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "This is redundant since it is the first value checked. Was this meant to be image_id?",
+      "range": {
+        "startLine": 50,
+        "startChar": 16,
+        "endLine": 50,
+        "endChar": 31
+      },
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8142aaf9_964fce6f",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "What does this extra object: object key value pair do in the schema?",
+      "range": {
+        "startLine": 87,
+        "startChar": 12,
+        "endLine": 87,
+        "endChar": 27
+      },
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa934502_32d2780b",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Do we need to check for setting one of cloud_image_name or diskimage here?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd68f1eb_43be6336",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Or maybe checking the above item at a schema level here is preferred.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bed302fe_71c50534",
+        "filename": "nodepool/driver/ibmvpc/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Is there any reason to make this configurable? I wonder if ibm cloud boots multiple image formats. I guess it doesn\u0027t hurt if they grow that feature.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e435cc3e_a6ada2e0",
+        "filename": "nodepool/tests/unit/test_driver_ibmvpc.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "Is this leftover from azure testing? Can we remove it?",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9c4ee9d_2425180d",
+        "filename": "requirements.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T21:42:48Z",
+      "side": 1,
+      "message": "All three of these new deps appear to be Apache 2 licensed. Should be happy with this Apache 2 licensed code base as a result.",
+      "revId": "bd19da6d4d53ad4afb091793569b7df3475d5d1c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
