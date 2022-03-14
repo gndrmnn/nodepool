@@ -16,6 +16,23 @@
       "message": "Is this what you had in mind?",
       "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e6308b9_307f2432",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-14T16:12:52Z",
+      "side": 1,
+      "message": "I think this long sleep is why the testing fails. We probably check states before this sleep is completed.\n\nAs far as implementing the sleep I wonder if we need to do a hybrid between the current pause and the sleeping with retries to ensure we don\u0027t end up with a provider that grabs all the node requests but they fail for a long time due to quota errors. Something like having the first node to hit a quota error continue to retry but pause all other requests? That should provide the request pressure you want against the API while also avoiding having a single provider take all requests then fail to service them due to quotas.",
+      "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
