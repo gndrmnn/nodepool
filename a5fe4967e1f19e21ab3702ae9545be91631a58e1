@@ -16,6 +16,24 @@
       "message": "I guess the quite low ttl of 10s is because you want quick updates if cloud_image doesn\u0027t contain an image_id?",
       "revId": "a5fe4967e1f19e21ab3702ae9545be91631a58e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d24aea8_772fbb87",
+        "filename": "nodepool/driver/aws/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 29946
+      },
+      "writtenOn": "2022-03-16T16:06:00Z",
+      "side": 1,
+      "message": "This TTL is low to prevent only the concurrent call on the AWS API, but we want to retrieve the new image in a brief time.\n\nEg: If we ran 200 instances at the same time, the cache returns the same value without perform API call",
+      "parentUuid": "a6ee8355_d9d679e4",
+      "revId": "a5fe4967e1f19e21ab3702ae9545be91631a58e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
