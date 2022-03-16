@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bba20dd_7b2d0f23",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-16T18:35:47Z",
+      "side": 1,
+      "message": "I think this matters less with python3 but tearDowns don\u0027t run in all situations. In particular I think if there is an exception throw in setUp() then this isn\u0027t called? using addCleanup() to add cleanup methods in setUp() has been the long time workaround for this.",
+      "revId": "89b3d6a4df1a73c42c44294004a50653354ca800",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
