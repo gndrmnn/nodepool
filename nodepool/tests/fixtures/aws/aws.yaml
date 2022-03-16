@@ -1,7 +1,12 @@
 zookeeper-servers:
-  - host: null
-    port: null
-    chroot: null
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
 
 tenant-resource-limits:
   - tenant-name: tenant-1
@@ -12,15 +17,13 @@ labels:
   - name: ubuntu1404-bad-ami-name
   - name: ubuntu1404-by-filters
   - name: ubuntu1404-by-capitalized-filters
-  - name: ubuntu1404-ebs-optimized
   - name: ubuntu1404-non-host-key-checking
-  - name: ubuntu1404-private-ip
   - name: ubuntu1404-userdata
   - name: ubuntu1404-iam-instance-profile-name
   - name: ubuntu1404-iam-instance-profile-arn
   - name: ubuntu1404-with-tags
-  - name: ubuntu1404-with-name-tag
   - name: ubuntu1404-with-shell-type
+  - name: ubuntu1404-ebs-optimized
 
 providers:
   - name: ec2-us-west-2
@@ -50,23 +53,10 @@ providers:
         username: ubuntu
         shell-type: csh
     pools:
-      - name: ebs-optimized
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
-          - name: ubuntu1404-ebs-optimized
-            cloud-image: ubuntu1404
-            ebs-optimized: True
-            instance-type: t3.medium
-            key-name: zuul
       - name: main
         max-servers: 1
-        subnet-id: null
-        security-group-id: null
+        subnet-id: {subnet_id}
+        security-group-id: {security_group_id}
         node-attributes:
           key1: value1
           key2: value2
@@ -104,69 +94,19 @@ providers:
             key-name: zuul
             iam-instance-profile:
               arn: arn:aws:iam::123456789012:instance-profile/not-a-real-profile
-      - name: non-host-key-checking
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        host-key-checking: false
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
-          - name: ubuntu1404-non-host-key-checking
-            cloud-image: ubuntu1404
-            instance-type: t3.medium
-            key-name: zuul
-      - name: private-ip-address
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        public-ip-address: false
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
-          - name: ubuntu1404-private-ip
-            cloud-image: ubuntu1404
-            instance-type: t3.medium
-            key-name: zuul
-      - name: tags
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
           - name: ubuntu1404-with-tags
             cloud-image: ubuntu1404
             instance-type: t3.medium
             key-name: zuul
             tags:
               has-tags: true
-      - name: name-tag
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
-          - name: ubuntu1404-with-name-tag
-            cloud-image: ubuntu1404
-            instance-type: t3.medium
-            key-name: zuul
-            tags:
-              Name: different-name
-      - name: shell-type
-        max-servers: 1
-        subnet-id: null
-        security-group-id: null
-        node-attributes:
-          key1: value1
-          key2: value2
-        labels:
+              Name: ignored-name
           - name: ubuntu1404-with-shell-type
             cloud-image: ubuntu1404-with-shell-type
+            instance-type: t3.medium
+            key-name: zuul
+          - name: ubuntu1404-ebs-optimized
+            cloud-image: ubuntu1404
+            ebs-optimized: True
             instance-type: t3.medium
             key-name: zuul
