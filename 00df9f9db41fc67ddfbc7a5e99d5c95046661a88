@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18a9d7b4_cff5cdda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-03-16T21:05:46Z",
+      "side": 1,
+      "message": "It would be good to know when that would be useful. The pod type is made to simulate a regular instance where zuul can execute job similarly to the other nodes provided by openstack or aws. Thus the pod should not be doing anything else than waiting for the ansible driven exec call.",
+      "revId": "00df9f9db41fc67ddfbc7a5e99d5c95046661a88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f14216e9_c1e9f01f",
