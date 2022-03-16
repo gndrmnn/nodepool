@@ -12,7 +12,6 @@ labels:
   - name: ubuntu1404-bad-ami-name
   - name: ubuntu1404-by-filters
   - name: ubuntu1404-by-capitalized-filters
-  - name: ubuntu1404-bad-config
   - name: ubuntu1404-ebs-optimized
   - name: ubuntu1404-non-host-key-checking
   - name: ubuntu1404-private-ip
@@ -44,13 +43,6 @@ providers:
         image-filters:
           - Name: name
             Values:
-              - ubuntu*
-        username: ubuntu
-      - name: ubuntu1404-bad-config
-        image-id: ami-1e749f67
-        image-filters:
-          - name: name
-            values:
               - ubuntu*
         username: ubuntu
       - name: ubuntu1404-with-shell-type
@@ -93,10 +85,6 @@ providers:
             key-name: zuul
           - name: ubuntu1404-by-capitalized-filters
             cloud-image: ubuntu1404-by-capitalized-filters
-            instance-type: t3.medium
-            key-name: zuul
-          - name: ubuntu1404-bad-config
-            cloud-image: ubuntu1404-bad-config
             instance-type: t3.medium
             key-name: zuul
           - name: ubuntu1404-userdata
