@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4058c716_1e6526de",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "Oh yep.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "567fccc4_86c67731",
@@ -69,6 +86,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b453e922_ab0fb5cb",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "Well, that creates an AwsInstance object instead of an AwsResource; which is probably fine, but it may have some extra requirements which I wouldn\u0027t want to guarantee we could fulfill here, since we may be dealing with leaked instances so all the requirements may not be present.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffa6e079_83d9ef19",
@@ -82,6 +116,23 @@
       "writtenOn": "2022-02-23T23:02:32Z",
       "side": 1,
       "message": "One thought about quotas. AWS has separated quotas for some instance families. For the start I think this quota code is fine andcovers the most used instance types.\n\nI wonder if we could improve that later by mapping the quotas to codes-standard for the standard images and cores-p for p instances and so on. This way we could generically cover the individual quotas for the currently 8 different instance quotas.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2913b7a0_cb5cf63f",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "Yeah, the quota system is pretty flexible (thanks!), I think that might be a nice improvement.",
       "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -103,6 +154,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e5948eb_0c3bae95",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "Internal AWS implementation detail: AFAICT, this is actually implemented in AWS by booting an instance from this image, then they run some stuff on it, and take a snapshot.\n\nAn interesting side effect of this is that you can\u0027t really upload an image that doesn\u0027t closely correspond to an image they already support natively.  Especially the kernel must be a supported version.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f77cda3_967cbfa5",
@@ -116,6 +184,23 @@
       "writtenOn": "2022-03-16T18:26:06Z",
       "side": 1,
       "message": "This method and the next one seem a bit at odds with what the uploadImage does. It applies tags to both AMIs and snapshots. Should we maybe call these methods from uploadImage instead to brute for this a bit more?",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cb253dd_dd44152b",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "I thought about that, but the tagging action in uploadImage is so straightforward (because we actually have the IDs in that case) and this is so complex (because we have to guess them!) that it seemed better to have different routines, even if they are slightly redundant.  Hopefully these are noops 99% of the time.",
       "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -160,6 +245,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a82291a9_c63e5343",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "I guess we could.",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d40d4f9d_51a88218",
@@ -173,6 +275,23 @@
       "writtenOn": "2022-03-16T18:26:06Z",
       "side": 1,
       "message": "Should we check if it is a snapshot before removing the flag?",
+      "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be1078a9_e9d420d1",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-16T18:50:25Z",
+      "side": 1,
+      "message": "This bit was copy-pasta from the old driver.  That does sound like a good improvement.",
       "revId": "43678bf4c1a4fe507c7fe03b7ac285f5325ea0b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
