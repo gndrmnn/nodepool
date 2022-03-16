@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f14216e9_c1e9f01f",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-16T20:26:18Z",
+      "side": 1,
+      "message": "Reading these new docs it isn\u0027t clear to me what the old behavior was and why it is useful.\n\nLooking more closely I believe the intent was that the container would be started in a pod then told to sit idle while the rest of the job connected to it and directed it to do work. Knowing this it might be better to set this up as a single flag something like:\n\n   .. attr:: override-container-command\n      :type: bool\n      :default: True\n\n      Only used by the :value:`providers[kubernetes].pools.labels.type.pod`\n      label type. The default behavior is to run \"/bin/sh -c \u0027while true;\n      do sleep 30; done;\u0027\" in the container forcing it to idle except for\n      the tasks run against the container by your job definition. This can\n      be set to false if you would prefer to run the container\u0027s default\n      CMD value instead.\n\nThen don\u0027t bother with override-container-args. Basically make this a single toggle and make it more clear why one might want to set it.",
+      "revId": "00df9f9db41fc67ddfbc7a5e99d5c95046661a88",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
