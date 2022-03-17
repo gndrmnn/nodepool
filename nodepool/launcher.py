@@ -110,8 +110,18 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # which express a preference for a specific provider.
         launchers = self.zk.getRegisteredLaunchers()
 
-        requests = sorted(self.zk.nodeRequestIterator(),
-                          key=operator.attrgetter("priority"))
+        pool = self.getPoolConfig()
+        pool_labels = set(pool.labels)
+
+        def _sort_key(request):
+            missing_labels = set(request.node_types) - pool_labels
+            # Return a tuple with the number of labels that are *not* served by
+            # this pool and the request priority. This will sort the requests
+            # that we can serve (no missing labels) before the requests that we
+            # need to decline (missing labels > 0).
+            return len(missing_labels), request.priority
+
+        requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
         for req in requests:
             if not self.running:
                 return True
