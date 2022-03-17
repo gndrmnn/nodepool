@@ -22,6 +22,30 @@
       },
       "revId": "5319085046da780803021a9b6a6ae6c6686d3bac",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb4664de_17b0ece0",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-17T08:10:31Z",
+      "side": 1,
+      "message": "re-acquainting myself with the problem ... if the flavor doesn\u0027t set the vcpu\u0027s, which previously was filled in as \"0\" but now the value is not present?\n\nSo it\u0027s probably fair to say this has the same overall affect, in that nothing is added to the quota.\n\nthe comments here should be updated, I would say, at least.\n\nA better question might be how should we be getting the vcpu\u0027s of these hosts?  The vcpu\u0027s is a required property of a flavor, right?  it doesn\u0027t seem to make sense to not have this info.",
+      "parentUuid": "bd1ebc2c_432a092d",
+      "range": {
+        "startLine": 146,
+        "startChar": 12,
+        "endLine": 147,
+        "endChar": 24
+      },
+      "revId": "5319085046da780803021a9b6a6ae6c6686d3bac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
