@@ -49,6 +49,8 @@ class TestLauncher(tests.DBTestCase):
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('fake-label')
+        req.tenant_name = 'tenant-1'
+        req.requestor = 'unit-test'
         self.zk.storeNodeRequest(req)
 
         req = self.waitForNodeRequest(req)
@@ -67,6 +69,8 @@ class TestLauncher(tests.DBTestCase):
             self.assertEqual(node.connection_type, 'ssh')
             self.assertEqual(node.connection_port, 22)
             self.assertEqual(node.python_path, '/usr/bin/python3')
+            self.assertEqual(node.tenant_name, 'tenant-1')
+            self.assertEqual(node.requestor, 'unit-test')
             p = "{path}/{id}".format(
                 path=self.zk._imageUploadPath(image.image_name,
                                               image.build_id,
