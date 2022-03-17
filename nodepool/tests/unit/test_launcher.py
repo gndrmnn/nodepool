@@ -2276,6 +2276,56 @@ class TestLauncher(tests.DBTestCase):
         self.assertTrue(req2.id > req1.id)
         self.assertTrue(req2.state_time < req1.state_time)
 
+    def test_request_order_missing_label(self):
+        """Test that requests that can be be fulfilled are prioritized over
+        requests that need to be rejected (based on the request labels).
+        """
+        configfile = self.setup_config('node_no_min_ready.yaml')
+        self.useBuilder(configfile)
+        image = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image.username, 'fake-username')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+
+        # Get the list of request handlers to assert the correct processing
+        # order. The timestamps of the requests won't work for that as the
+        # request to be rejected will be handled faster most of the time.
+        while True:
+            workers = pool.getPoolWorkers('fake-provider')
+            if workers:
+                pool_worker = workers[0]
+                break
+            time.sleep(0.1)
+        request_handlers = pool_worker.request_handlers
+
+        # Request with a higher relative priority coming in first, but
+        # requesting a label that is not available.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('not-available')
+        req1.relative_priority = 1
+        self.zk.storeNodeRequest(req1)
+
+        # Later request with a lower relative priority, but a valid label
+        # which should be handled first.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+        req2.relative_priority = 2
+        self.zk.storeNodeRequest(req2)
+
+        req2 = self.waitForNodeRequest(req2)
+        self.assertEqual(req2.state, zk.FULFILLED)
+        req1 = self.waitForNodeRequest(req1)
+        self.assertEqual(req1.state, zk.FAILED)
+
+        self.assertGreater(req2.id, req1.id)
+        self.assertEqual(len(request_handlers), 2)
+        self.assertEqual(request_handlers[0].request.id, req2.id)
+        self.assertEqual(request_handlers[1].request.id, req1.id)
+
     def test_empty_node_deleted(self):
         """Test that empty nodes are deleted by the cleanup thread"""
         configfile = self.setup_config('node.yaml')
