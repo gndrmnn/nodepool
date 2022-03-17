@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd1ebc2c_432a092d",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-17T08:02:14Z",
+      "side": 1,
+      "message": "this seems to suggest if we don\u0027t get the flavor, we don\u0027t add to the quota?  that doesn\u0027t seem right?",
+      "range": {
+        "startLine": 146,
+        "startChar": 12,
+        "endLine": 147,
+        "endChar": 24
+      },
+      "revId": "5319085046da780803021a9b6a6ae6c6686d3bac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
