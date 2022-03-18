@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98387fe6_49a4c492",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-18T12:47:21Z",
+      "side": 1,
+      "message": "Thx for the fix, I reindented the comment after writing it, which obviously was a bad idea.",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
