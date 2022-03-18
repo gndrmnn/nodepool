@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f9492a6_6753d0d9",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-03-18T14:45:27Z",
+      "side": 1,
+      "message": "The docs say that sorted is stable, so this should still keep the requests in the correct order otherwise.",
+      "revId": "ed445367f447e3edf5eda1758b7b7faef092e2a3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
