@@ -33,6 +33,23 @@
       "message": "recheck",
       "revId": "034c207990e9b1594f0ebc2510e4b67183b80f60",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c15b62ec_1f66715b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-03-18T07:43:37Z",
+      "side": 1,
+      "message": "LGTM; maybe you can add a small test for that e.g. somewhere in here https://opendev.org/zuul/nodepool/src/branch/master/nodepool/tests/unit/test_launcher.py#L69",
+      "revId": "034c207990e9b1594f0ebc2510e4b67183b80f60",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
