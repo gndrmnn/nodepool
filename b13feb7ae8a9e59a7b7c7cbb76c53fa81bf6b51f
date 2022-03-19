@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "b13feb7ae8a9e59a7b7c7cbb76c53fa81bf6b51f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3b7de1b_286684ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2022-03-19T21:58:54Z",
+      "side": 1,
+      "message": "The tests failed differently, and the failure does not seems related:\n\ntox-py38: test_metastatic_startup\ntox-py39: test_ibmvpc_cloud_image_public",
+      "revId": "b13feb7ae8a9e59a7b7c7cbb76c53fa81bf6b51f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
