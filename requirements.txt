@@ -27,4 +27,4 @@ azure-mgmt-resource<15.0.0
 urllib3>=1.26.0
 ibm-vpc
 ibm-platform-services
-ibm-cos-sdk
+ibm-cos-sdk>=2.11.0
