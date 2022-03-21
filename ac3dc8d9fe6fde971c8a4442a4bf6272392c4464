@@ -16,6 +16,57 @@
       "message": "Thx for the fix, I reindented the comment after writing it, which obviously was a bad idea.",
       "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c3e5f00_93a1ab16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-21T00:29:40Z",
+      "side": 1,
+      "message": "See inline, I think the fact we might be regressing on the RAM calculations should get us to probe a bit deeper on what is really going on here. ",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ce31579_055d8ced",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-21T00:29:40Z",
+      "side": 1,
+      "message": "If feel like this doesn\u0027t quite capture what\u0027s going on with the \"vcpus\" probe here.\n\nIt seems that prior to the recent changes, we would get back a flavor object, but that could have \"0\" vcpu\u0027s listed, per [1]:\n\n\"ah, I guess I know now what is happening: vcpus is not set in the tested flavor and as such param is empty. Previously as part of normalization it was set to 0 in such case. This is a tricky one\"\n\nNow, we get back a flavor that doesn\u0027t have a vcpus field if the flavor doesn\u0027t set it.  This raises a few questions:\n\n* The number of VCPU\u0027s doesn\u0027t seem like an optional component of the flavor?\n* How are you supposed to get how many VCPUs a server instance has then?  Is there something else we should use here?\n* If it\u0027s not there, should we assume \"1\"?  This doesn\u0027t seem documented in openstacksdk [2]\n\n[1] https://review.opendev.org/c/openstack/openstacksdk/+/826543\n[2] https://docs.openstack.org/openstacksdk/latest/user/resources/compute/v2/flavor.html#openstack.compute.v2.flavor.Flavor",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "932a87df_14dc32e2",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-21T00:29:40Z",
+      "side": 1,
+      "message": "In the old case (where vcpu\u0027s would apparently be \"0\" in some cases?), construct_from_flavor() would still account for the RAM.  I am presuming at it could/was/is set, separate to vcpus?  \n\nIt seems now we\u0027re going to skip that too -- which seems wrong.\n\nI\u0027m not sure what to suggest without knowing answers to the above -- how do we really handle a missing \"vcpu\" field?",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
