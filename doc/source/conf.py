@@ -69,8 +69,8 @@ pygments_style = 'sphinx'
 html_theme = "sphinx_rtd_theme"
 
 if version.is_release:
-    version = version.release_string
     current_version = version.release_string
+    version = version.release_string
     versions = [('latest', f'{doc_root}/')]
 else:
     # Uncomment this if we want to use the in-development version
