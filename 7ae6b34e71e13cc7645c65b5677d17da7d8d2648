@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73fe9a20_3a7d01f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-03-21T09:22:00Z",
+      "side": 1,
+      "message": "\u003e Patch Set 1: Code-Review-1\n\u003e \n\u003e Agree re adding an assertion for it in the test.  Otherwise lgtm.\n\nAdded an assertion also for the tenant_name attribute. Hope that\u0027s okay to do in this change.",
+      "revId": "7ae6b34e71e13cc7645c65b5677d17da7d8d2648",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
