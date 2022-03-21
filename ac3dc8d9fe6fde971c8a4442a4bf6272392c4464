@@ -52,6 +52,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58cfb854_2009f458",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-21T05:51:55Z",
+      "side": 1,
+      "message": "The comment in [1] is wrong IMO. Whether we check for \"vcpus\" or \"ram\" or \"swap\" or whatever doesn\u0027t matter, either all of them are there or none. The cases that can happen are:\n\na) Very old sdk or very old nova (not supporting microversion 2.47). In this case \"server.flavor\" will be a dict with only .id and .links and we need to consult our \"flavors\" list in order to get details about the flavor.\n\nb) not-too-old sdk and nova: \"server.flavor\" is a dict containing .vcpus, .ram, etc. and we can simply use these values [3].\n\nc) sdk 1.0: the result from b) will be returned as a Flavor object [2], which synthesizes an .id field from .original_name\n\nThe old code tries to distinguish a) and b) by checking for the presence of .id, which is missing in b). But it mishandles c), trying to use the flavors list with the id seens from the Flavor object, which fails and returns None because \"flavors\" is indexed by the flavor (UU)ID only and not by (original_)name. Also, servers may still be running that were created with a flavor that has since been deleted, so we couldn\u0027t find it in our \"flavors\" list even if we were checking by name instead of id.\nSo by checking for .vcpus we simply bundle b) and c) together, since in both cases we will have both vcpus and ram present in the flavor data.\n\n[3] https://docs.openstack.org/api-ref/compute/?expanded\u003dshow-server-details-detail#show-server-details",
+      "parentUuid": "8ce31579_055d8ced",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "932a87df_14dc32e2",
@@ -65,6 +83,24 @@
       "writtenOn": "2022-03-21T00:29:40Z",
       "side": 1,
       "message": "In the old case (where vcpu\u0027s would apparently be \"0\" in some cases?), construct_from_flavor() would still account for the RAM.  I am presuming at it could/was/is set, separate to vcpus?  \n\nIt seems now we\u0027re going to skip that too -- which seems wrong.\n\nI\u0027m not sure what to suggest without knowing answers to the above -- how do we really handle a missing \"vcpu\" field?",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0821464_40b12ffe",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-21T05:51:55Z",
+      "side": 1,
+      "message": "Maybe I should make this a different patch then or drop it completely, but this is only going to happen in the case a) above and only in the case that the original flavor has been deleted. The old code would then simply fail, but my idea was that calculating a lower bound for the used quota, skipping servers that we don\u0027t have data for, would be still better than not having any quota information at all.",
+      "parentUuid": "932a87df_14dc32e2",
       "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
