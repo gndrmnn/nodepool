@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ae403955_e2517edb",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-22T23:35:05Z",
+      "side": 1,
+      "message": "Thanks for the details.  \n\nSo in short, the flavor can never not be filled in for an active server with the more recent sdks.  It\u0027s just the \"id\" field changed with sdk 1.0, confusing our check.",
+      "parentUuid": "58cfb854_2009f458",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "932a87df_14dc32e2",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 2
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Maybe I should make this a different patch then or drop it completely, but this is only going to happen in the case a) above and only in the case that the original flavor has been deleted. The old code would then simply fail, but my idea was that calculating a lower bound for the used quota, skipping servers that we don\u0027t have data for, would be still better than not having any quota information at all.",
       "parentUuid": "932a87df_14dc32e2",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ba48e7c_a9625ea7",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-03-22T23:35:05Z",
+      "side": 1,
+      "message": "I think then this would be made clear if we did the continue in the branch where we are looking up the flavor, then?  something ~ like\n\n flavor \u003d flavors.get(server.flavor.id)\n # ... only here with old sdk because all modern sdk\u0027s have returned\n # flavor info directly with the server info call ...\n # ... possible the flavor this server is running is has been deleted\n # and isn\u0027t in our cache, therefore skip if we don\u0027t find ...\n continue\n\n?\n\nI agree that execution of this code path is not particularly important.  More interested in making it very clear for future code explorers what the thinking was without having to go through this again! 😊",
+      "parentUuid": "a0821464_40b12ffe",
       "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
