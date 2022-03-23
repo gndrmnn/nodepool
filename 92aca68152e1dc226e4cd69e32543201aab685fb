@@ -51,6 +51,24 @@
       "parentUuid": "8e6308b9_307f2432",
       "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af888a63_92659560",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-03-23T20:07:10Z",
+      "side": 1,
+      "message": "We also need to take into consideration that we raise here for a reason which is to release the node request and give a different provider on a different cloud the chance to fulfill the node request. The reason for this is that otherwise we\u0027d block the request until it can be satisfied while having free resources on a different cloud. This can be especially an issue on small multi-cloud systems.",
+      "parentUuid": "73a226b5_2520071a",
+      "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
