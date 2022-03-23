@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7edda257_654cd8f6",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-23T10:50:56Z",
+      "side": 1,
+      "message": "At least with recent enough nova, i.e. \u003e\u003d pike, yes. I\u0027m not really sure what sdk 1.0 will produce when running against even older clouds, but I also have no way of testing that and I\u0027m not sure if anyone would still care.\nhttps://docs.openstack.org/nova/latest/reference/api-microversion-history.html#id43\n\nWhat\u0027s really confusing is IMO not the pure existence of the id field, but that it has different content in the server.flavor context compared to the bare flavor context. In essence, these are two similar but not identical objects, so it is questionable for the sdk to use the same object type for both.",
+      "parentUuid": "ae403955_e2517edb",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "932a87df_14dc32e2",
         "filename": "nodepool/driver/openstack/provider.py",
         "patchSetId": 2
@@ -137,6 +155,24 @@
       "side": 1,
       "message": "I think then this would be made clear if we did the continue in the branch where we are looking up the flavor, then?  something ~ like\n\n flavor \u003d flavors.get(server.flavor.id)\n # ... only here with old sdk because all modern sdk\u0027s have returned\n # flavor info directly with the server info call ...\n # ... possible the flavor this server is running is has been deleted\n # and isn\u0027t in our cache, therefore skip if we don\u0027t find ...\n continue\n\n?\n\nI agree that execution of this code path is not particularly important.  More interested in making it very clear for future code explorers what the thinking was without having to go through this again! 😊",
       "parentUuid": "a0821464_40b12ffe",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61436545_aaf4a973",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-03-23T10:50:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure what your intention is with this comment, do you want to change the code or only the comment? Feel free to submit a new PS with your idea, that might make discussing it easier.",
+      "parentUuid": "8ba48e7c_a9625ea7",
       "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
