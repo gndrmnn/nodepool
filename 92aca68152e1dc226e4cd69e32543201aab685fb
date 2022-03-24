@@ -69,6 +69,24 @@
       "parentUuid": "73a226b5_2520071a",
       "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb2a62a3_70872e48",
+        "filename": "nodepool/driver/openstack/handler.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-03-24T13:18:33Z",
+      "side": 1,
+      "message": "Right, I\u0027m not sure how to reconcile those two; our setup needs the quota pressure to get the quote increased, but another setup might want to fall through to another provider... I\u0027m not sure how to saitisfy both constraints since they seem contradictory; I hate to add a configuration option to control the behavior, but it\u0027s all I can really think of right know.",
+      "parentUuid": "af888a63_92659560",
+      "revId": "92aca68152e1dc226e4cd69e32543201aab685fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
