@@ -162,6 +162,11 @@ Options
 
       The path to the PEM encoded CA certificate.
 
+.. attr:: zookeeper-timeout
+   :type: float
+   :default: 10.0
+
+   The ZooKeeper session timeout, in seconds.
 
 .. attr:: labels
    :type: list

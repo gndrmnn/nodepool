@@ -1397,7 +1397,9 @@ class NodePoolBuilder(object):
                 list(self._config.zookeeper_servers.values()),
                 tls_cert=self._config.zookeeper_tls_cert,
                 tls_key=self._config.zookeeper_tls_key,
-                tls_ca=self._config.zookeeper_tls_ca)
+                tls_ca=self._config.zookeeper_tls_ca,
+                timeout=self._config.zookeeper_timeout,
+            )
 
             self.log.debug('Starting listener for build jobs')
 

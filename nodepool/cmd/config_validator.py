@@ -81,6 +81,7 @@ class ConfigValidator:
                 'chroot': str,
             }],
             'zookeeper-tls': zk_tls,
+            'zookeeper-timeout': float,
             'providers': list,
             'labels': [label],
             'diskimages': [diskimage],
