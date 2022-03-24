@@ -466,6 +466,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                         got_a_node = True
                         node.allocated_to = self.request.id
                         node.tenant_name = self.request.tenant_name
+                        node.requestor = self.request.requestor
                         self.zk.storeNode(node)
                         self.nodeset.append(node)
                         self._satisfied_types.add(ntype, node.id)
@@ -514,6 +515,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 node.launcher = self.launcher_id
                 node.allocated_to = self.request.id
                 node.tenant_name = self.request.tenant_name
+                node.requestor = self.request.requestor
 
                 # This sets static data defined in the config file in the
                 # ZooKeeper Node object.
