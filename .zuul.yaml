@@ -231,19 +231,6 @@
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
 - job:
-    name: nodepool-tox-py36
-    description: |
-      Nodepool unit tests with ZooKeeper running
-    parent: tox-py36
-    nodeset: ubuntu-bionic
-    pre-run: playbooks/nodepool-tox/pre.yaml
-    vars: &nodepool_tox_vars
-      tox_environment:
-        NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
-        NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
-        NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
-
-- job:
     name: nodepool-tox-py38
     description: |
       Nodepool unit tests with ZooKeeper running
@@ -259,6 +246,14 @@
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: *nodepool_tox_vars
 
+- job:
+    name: nodepool-tox-py310
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py310
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: *nodepool_tox_vars
+
 - project:
     vars:
       release_python: python3
@@ -269,9 +264,9 @@
         - nodepool-build-image-siblings
         - zuul-tox-docs
         - tox-pep8
-        - nodepool-tox-py36
         - nodepool-tox-py38
         - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-container-openstack-release
         - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
@@ -285,9 +280,9 @@
         - nodepool-upload-image
         - zuul-tox-docs
         - tox-pep8
-        - nodepool-tox-py36
         - nodepool-tox-py38
         - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
