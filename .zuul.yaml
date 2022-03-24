@@ -250,6 +250,18 @@
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: *nodepool_tox_vars
 
+- job:
+    name: nodepool-tox-py310
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py310
+    nodeset:
+      nodes:
+        - name: fedora-35
+          label: fedora-35
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: *nodepool_tox_vars
+
 - project:
     vars:
       release_python: python3
@@ -262,6 +274,7 @@
         - tox-pep8
         - nodepool-tox-py38
         - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-container-openstack-release
         - nodepool-functional-container-openstack-siblings
         - nodepool-functional-k8s
@@ -277,6 +290,7 @@
         - tox-pep8
         - nodepool-tox-py38
         - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
