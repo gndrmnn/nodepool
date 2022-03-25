@@ -748,6 +748,36 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(req1.nodes), 1)
         self.zk.getNode(req1.nodes[0])
 
+    def test_node_request_provider_label_mismatch(self):
+        """Test that a node request for a specific provider is only honored
+        when the requested labels are supported."""
+        configfile = self.setup_config('node.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForNodes('fake-label', 1)
+
+        # Create a dummy launcher with a different set of supported labels
+        # than what we are going to request.
+        dummy_launcher = zk.Launcher()
+        dummy_launcher.provider_name = 'other-provider'
+        dummy_launcher.supported_labels = {'other-label', }
+        self.zk.registerLauncher(dummy_launcher)
+
+        # Node request for a specific provider that doesn't support the
+        # requested node type.
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.provider = 'other-provider'
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 1)
+        self.zk.getNode(req.nodes[0])
+
     def test_node_boot_from_volume(self):
         """Test that an image and node are created from a volume"""
         configfile = self.setup_config('node_boot_from_volume.yaml')

@@ -162,8 +162,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if req.provider and req.provider != self.provider_name:
                 # The request is asking for a specific provider
                 candidate_launchers = set(
-                    [x.id for x in launchers
-                     if x.provider_name == req.provider])
+                    x.id for x in launchers
+                    if x.provider_name == req.provider
+                    and x.supported_labels.issuperset(req.node_types))
                 if candidate_launchers:
                     # There is a launcher online which can satisfy the request
                     if not candidate_launchers.issubset(set(req.declined_by)):
