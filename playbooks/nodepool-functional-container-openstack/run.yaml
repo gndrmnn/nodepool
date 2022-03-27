@@ -22,22 +22,22 @@
       args:
         executable: /bin/bash
       shell: |
-        openstack --os-cloud=devstack-admin security group rule create --ingress --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
-        openstack --os-cloud=devstack-admin security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
+        openstack --os-cloud=devstack security group rule create --ingress --protocol tcp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
+        openstack --os-cloud=devstack security group rule create --ingress --protocol udp --dst-port 1:65535 --remote-ip 0.0.0.0/0 default
     - name: Create unmanaged VM
       args:
         executable: /bin/bash
       shell: |
         openstack --os-cloud=devstack-admin network list
-        cirros_image=$(openstack --os-cloud=devstack-admin image list | grep cirros | awk '{print $4}' | head -n1)
-        openstack --os-cloud=devstack-admin server create --flavor=cirros256 --image="$cirros_image" --network=public unmanaged-vm
+        cirros_image=$(openstack --os-cloud=devstack image list -f value -C name | grep cirros | head -n1)
+        openstack --os-cloud=devstack server create --flavor=cirros256 --image="$cirros_image" --network=public unmanaged-vm
 
     - name: Create nodepool SSH keypair
       args:
         executable: /bin/bash
       shell: |
         ssh-keygen -f {{ NODEPOOL_KEY }} -P ""
-        openstack --os-cloud=devstack-admin keypair create --public-key="{{ NODEPOOL_PUBKEY }}" {{ NODEPOOL_KEY_NAME }}
+        openstack --os-cloud=devstack keypair create --public-key="{{ NODEPOOL_PUBKEY }}" {{ NODEPOOL_KEY_NAME }}
 
     - name: Write nodepool elements
       args:
