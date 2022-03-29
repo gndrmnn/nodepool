@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa95572e_03fb6aab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-03-29T22:46:44Z",
+      "side": 1,
+      "message": "This feels a bit clunky particularly since I\u0027m not sure this is a standard feature of openstack. However, nodepool has long worked around provider specific behaviors to the benefit of users so this seems to fall in line with that history.",
+      "revId": "0db1eb2382078fe567f3e3b8c8a053a79925359f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
