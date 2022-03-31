@@ -20,6 +20,7 @@ import logging
 import math
 import threading
 import time
+from collections import defaultdict
 
 from kazoo import exceptions as kze
 
@@ -374,6 +375,13 @@ class QuotaSupport:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)
         return used_quota
+
+    def getLabelQuota(self):
+        """Return available quota per label.
+
+        :returns: Mapping of labels to available quota
+        """
+        return defaultdict(lambda: math.inf)
 
 
 class RateLimiter:

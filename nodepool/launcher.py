@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import contextlib
 import logging
 import math
 import os
@@ -109,6 +110,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # which express a preference for a specific provider.
         launchers = self.zk.getRegisteredLaunchers()
 
+        pm = self.getProviderManager()
+        has_quota_support = isinstance(pm, QuotaSupport)
+        if has_quota_support:
+            # The label quota limits will be used for the whole loop since we
+            # don't want to accept lower priority requests when a label becomes
+            # available after we've already deferred higher priority requests.
+            label_quota = pm.getLabelQuota()
+
         pool = self.getPoolConfig()
         pool_labels = set(pool.labels)
 
@@ -173,13 +182,18 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                                   req.provider, candidate_launchers)
                         continue
 
-            pm = self.getProviderManager()
+            if has_quota_support and not all(label_quota.get(l, math.inf) > 0
+                                             for l in req.node_types):
+                # Defer the request as we can't provide the required labels at
+                # the moment.
+                log.debug("Deferring request because labels are unavailable")
+                continue
 
             # check tenant quota if the request has a tenant associated
             # and there are resource limits configured for this tenant
             check_tenant_quota = req.tenant_name and req.tenant_name \
                 in self.nodepool.config.tenant_resource_limits \
-                and isinstance(pm, QuotaSupport)
+                and has_quota_support
 
             if check_tenant_quota and not self._hasTenantQuota(req, pm):
                 # Defer request for it to be handled and fulfilled at a later
@@ -203,6 +217,13 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             # Got a lock, so assign it
             log.info("Assigning node request %s" % req)
+
+            if has_quota_support:
+                # Adjust the label quota so we don't accept more requests
+                # than we have labels available.
+                for label in req.node_types:
+                    with contextlib.suppress(KeyError):
+                        label_quota[label] -= 1
 
             rh = pm.getRequestHandler(self, req)
             rh.run()
