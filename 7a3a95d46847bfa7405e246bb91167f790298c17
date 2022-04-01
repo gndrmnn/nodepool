@@ -16,6 +16,24 @@
       "message": "When removing or significantly altering a test, it\u0027s nice to mention that in the commit message and give a reason.  From looking at this, I think this doesn\u0027t make sense any more since we no longer \"re-register\".",
       "revId": "7a3a95d46847bfa7405e246bb91167f790298c17",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f264c094_883e247d",
+        "filename": "nodepool/tests/unit/test_driver_static.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-04-01T05:11:55Z",
+      "side": 0,
+      "message": "Ack. Yes, this test doesn\u0027t make sense anymore.\n\nThe rest of the changes to the test are also related to that as we no longer accept the node requests when we\u0027ve exceeded the label quota.",
+      "parentUuid": "aa249ea6_00212a80",
+      "revId": "7a3a95d46847bfa7405e246bb91167f790298c17",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
