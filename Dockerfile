@@ -63,16 +63,19 @@ RUN echo "nodepool ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nodepool-sudo \
 #      https://docs.openstack.org/diskimage-builder/latest/developer/vhd_creation.html
 #
 #  * debootstrap unmounts /proc in the container causing havoc when
-#    using -minimal elements on debuntu.  Two unmerged fixes:
+#    using -minimal elements on debuntu.  Two unmerged fixes are in the bullseye version:
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/26
 #      https://salsa.debian.org/installer-team/debootstrap/-/merge_requests/27
-#    are incoporated into the openstack-ci-core version
+#    are at least required.  We also need a later version to support jammy.  We
+#    grab from unstable for this reason.
 
 COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
 
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu focal main" >> /etc/apt/sources.list \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
+  && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
   && apt-get update \
   && apt-get install -y \
       curl \
@@ -84,10 +87,10 @@ RUN \
       kpartx \
       qemu-utils \
       vhd-util \
-      debootstrap \
       procps \
       xz-utils \
-      zypper
+      zypper \
+      debootstrap/unstable
 
 # Podman install mainly for the "containerfile" elements of dib that
 # build images from extracts of upstream containers.
@@ -120,10 +123,7 @@ RUN \
 # and so unless we have the unstable version of libsemanage-common, it won't
 # install.
 
-RUN echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
-  && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
-  && apt-get update \
-  && apt-get install -y --install-recommends podman/unstable iptables uidmap/unstable libsemanage-common/unstable \
+RUN apt-get install -y --install-recommends podman/unstable iptables uidmap/unstable libsemanage-common/unstable \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
