@@ -33,6 +33,24 @@
       "message": "Is the openstack-ci-core repo still necessary?  I read the comments as saying that we are switching to the debian version.",
       "revId": "cea6fb92377138a83d50bdf40d64976088b1e4f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c44251b7_0b309216",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-04-04T17:58:33Z",
+      "side": 1,
+      "message": "I believe the vhd conversion utility comes from this repo.",
+      "parentUuid": "a066c1ca_ba85bcdd",
+      "revId": "cea6fb92377138a83d50bdf40d64976088b1e4f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
