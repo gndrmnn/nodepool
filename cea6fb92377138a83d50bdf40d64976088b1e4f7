@@ -68,6 +68,24 @@
       "message": "Wouldn\u0027t that be the one above it; line 75?\n\nTo be clear, I\u0027m only talking about the repo on line 76.",
       "revId": "cea6fb92377138a83d50bdf40d64976088b1e4f7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9850dbde_67540aa1",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-04-04T21:15:18Z",
+      "side": 1,
+      "message": "Yup, the repo for debootstrap should be removed. But the openstack-ci-core PPA should be kept for vhd-util.",
+      "parentUuid": "5cd95c1a_b488df85",
+      "revId": "cea6fb92377138a83d50bdf40d64976088b1e4f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
