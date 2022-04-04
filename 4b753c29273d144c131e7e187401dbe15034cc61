@@ -16,6 +16,24 @@
       "message": "These fail because the admin user sees multiple security groups named \"default\". I think the easiest fix is to use \"--os-cloud devstack\", which uses the demo user and project directly.",
       "revId": "4b753c29273d144c131e7e187401dbe15034cc61",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d699d0e2_a3388c84",
+        "filename": "playbooks/nodepool-functional-container-openstack/run.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-04-04T01:16:16Z",
+      "side": 1,
+      "message": "Thanks, good fix!",
+      "parentUuid": "cc9fa7c5_c369d77a",
+      "revId": "4b753c29273d144c131e7e187401dbe15034cc61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
