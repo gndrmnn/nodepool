@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81c6d3af_c2012fb9",
+        "filename": "Dockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-04-04T15:36:08Z",
+      "side": 1,
+      "message": "Are these fixes now unmerged? Seems they must\u0027ve merged just into the unstable version?",
+      "revId": "cea6fb92377138a83d50bdf40d64976088b1e4f7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
