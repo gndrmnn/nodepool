@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb503840_cfc28738",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-04-06T20:47:00Z",
+      "side": 1,
+      "message": "\u003e Patch Set 4: Code-Review+2\n\u003e \n\u003e This seems appropriate -- but let\u0027s hold approval for another day or so to give more folks a chance to weigh in on the min version.\n\nWorks for me. Note that 1.8 went EOL in 2018.",
+      "revId": "046a7da0866a67112b82e124ad13c44446b132be",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
