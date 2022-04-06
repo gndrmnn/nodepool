@@ -1,0 +1,6 @@
+---
+other:
+  - |
+    Kubernetes 1.8 or newer is required by the Kubernetes driver.
+    This was necessary to support Kubernetes 1.22.0 and newer which
+    requires using APIs that are not supported before version 1.8.
