@@ -181,7 +181,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             role_name = "zuul-restricted"
             role_body = {
                 'kind': 'Role',
-                'apiVersion': 'rbac.authorization.k8s.io/v1beta1',
+                'apiVersion': 'rbac.authorization.k8s.io/v1',
                 'metadata': {
                     'name': role_name,
                 },
@@ -207,7 +207,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             role_name = "zuul"
             role_body = {
                 'kind': 'Role',
-                'apiVersion': 'rbac.authorization.k8s.io/v1beta1',
+                'apiVersion': 'rbac.authorization.k8s.io/v1',
                 'metadata': {
                     'name': role_name,
                 },
@@ -225,7 +225,7 @@ class KubernetesProvider(Provider, QuotaSupport):
 
         # Give service account admin access
         role_binding_body = {
-            'apiVersion': 'rbac.authorization.k8s.io/v1beta1',
+            'apiVersion': 'rbac.authorization.k8s.io/v1',
             'kind': 'RoleBinding',
             'metadata': {'name': 'zuul-role'},
             'roleRef': {
