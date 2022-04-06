@@ -7,8 +7,6 @@
     post-run: playbooks/nodepool-functional-k8s/post.yaml
     required-projects:
       - zuul/nodepool
-    vars:
-      minikube_version: v1.22.0  # NOTE(corvus): 1.23.0 failed with 404 on create_namespaced_role
 
 - job:
     description: |
