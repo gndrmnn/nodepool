@@ -1,0 +1,9 @@
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: Ian Wienand <iwienand@redhat.com>
+Workflow+1: Ian Wienand <iwienand@redhat.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 08 Apr 2022 03:01:28 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/837035
+Project: zuul/nodepool
+Branch: refs/heads/master
