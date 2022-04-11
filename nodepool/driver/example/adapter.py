@@ -93,10 +93,10 @@ class Adapter(statemachine.Adapter):
                                         provider_config.rate_limit)
         self.cloud = object()
 
-    def getCreateStateMachine(self, hostname, label, metadata, retries):
+    def getCreateStateMachine(self, hostname, label, metadata, retries, log):
         return CreateStateMachine(self, hostname, label, metadata, retries)
 
-    def getDeleteStateMachine(self, external_id):
+    def getDeleteStateMachine(self, external_id, log):
         return DeleteStateMachine(self, external_id)
 
     def cleanupLeakedResources(self, known_nodes, metadata):

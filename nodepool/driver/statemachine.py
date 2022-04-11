@@ -69,7 +69,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
     def __init__(self, handler, node, provider_config):
         super().__init__()
         # Based on utils.NodeLauncher
-        logger = logging.getLogger("nodepool.StateMachineNodeLauncher")
+        logger = logging.getLogger(
+            f"nodepool.StateMachineNodeLauncher.{provider_config.name}")
         request = handler.request
         self.log = get_annotated_logger(logger,
                                         event_id=request.event_id,
@@ -131,7 +132,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     'nodepool_pool_name': self.handler.pool.name,
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
-            hostname, label, image_external_id, metadata, retries)
+            hostname, label, image_external_id, metadata, retries, self.log)
 
     def updateNodeFromInstance(self, instance):
         if instance is None:
@@ -267,7 +268,11 @@ class StateMachineNodeDeleter:
 
     def __init__(self, zk, provider_manager, node):
         # Based on utils.NodeDeleter
-        self.log = logging.getLogger("nodepool.StateMachineNodeDeleter")
+        logger = logging.getLogger(
+            "nodepool.StateMachineNodeDeleter."
+            f"{provider_manager.provider.name}")
+        self.log = get_annotated_logger(logger,
+                                        node_id=node.id)
         self.manager = provider_manager
         self.zk = zk
         # Note: the node is locked
@@ -275,7 +280,7 @@ class StateMachineNodeDeleter:
         # Local additions:
         self.start_time = time.monotonic()
         self.state_machine = self.manager.adapter.getDeleteStateMachine(
-            node.external_id)
+            node.external_id, self.log)
 
     @property
     def complete(self):
@@ -449,12 +454,12 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     """The Provider implementation for the StateMachineManager driver
        framework"""
-    log = logging.getLogger("nodepool.driver.statemachine."
-                            "StateMachineProvider")
     MINIMUM_SLEEP = 1
     MAXIMUM_SLEEP = 10
 
     def __init__(self, adapter, provider):
+        self.log = logging.getLogger(
+            f"nodepool.StateMachineProvider.{provider.name}")
         super().__init__()
         self.provider = provider
         self.adapter = adapter
@@ -500,7 +505,11 @@ class StateMachineProvider(Provider, QuotaSupport):
         while self.running:
             to_remove = []
             loop_start = time.monotonic()
-            for sm in self.deleters + self.launchers:
+            state_machines = self.deleters + self.launchers
+            if state_machines:
+                self.log.debug("Running %s state machines",
+                               len(state_machines))
+            for sm in state_machines:
                 try:
                     sm.runStateMachine()
                     if sm.complete:
@@ -514,6 +523,9 @@ class StateMachineProvider(Provider, QuotaSupport):
                 if sm in self.launchers:
                     self.launchers.remove(sm)
             loop_end = time.monotonic()
+            if state_machines:
+                self.log.debug("Ran %s state machines in %s seconds",
+                               len(state_machines), loop_end - loop_start)
             if self.launchers or self.deleters:
                 time.sleep(max(0, self.MAXIMUM_SLEEP -
                                (loop_end - loop_start)))
@@ -810,7 +822,8 @@ class Adapter:
         pass
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries):
+                              image_external_id, metadata, retries,
+                              log):
         """Return a state machine suitable for creating an instance
 
         This method should return a new state machine object
@@ -828,13 +841,15 @@ class Adapter:
             returned from `listInstances`.
         :param retries int: The number of attempts which should be
             made to launch the node.
+        :param log Logger: A logger instance for emitting annotated
+            logs related to the request.
 
         :returns: A :py:class:`StateMachine` object.
 
         """
         raise NotImplementedError()
 
-    def getDeleteStateMachine(self, external_id):
+    def getDeleteStateMachine(self, external_id, log):
         """Return a state machine suitable for deleting an instance
 
         This method should return a new state machine object
@@ -842,6 +857,8 @@ class Adapter:
 
         :param str external_id: The external_id of the instance, as
             supplied by a creation StateMachine or an Instance.
+        :param log Logger: A logger instance for emitting annotated
+            logs related to the request.
         """
         raise NotImplementedError()
 

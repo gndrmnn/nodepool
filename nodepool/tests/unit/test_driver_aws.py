@@ -194,6 +194,10 @@ class TestDriverAws(tests.DBTestCase):
         response = instance.describe_attribute(Attribute='ebsOptimized')
         self.assertFalse(response['EbsOptimized']['Value'])
 
+        node.state = zk.USED
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
     def test_aws_by_filters(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404-by-filters')
         node = self.assertSuccess(req)

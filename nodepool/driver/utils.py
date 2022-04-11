@@ -376,6 +376,25 @@ class QuotaSupport:
         return used_quota
 
 
+class RateLimitInstance:
+    def __init__(self, limiter, logger, msg):
+        self.limiter = limiter
+        self.logger = logger
+        self.msg = msg
+
+    def __enter__(self):
+        self.delay = self.limiter._enter()
+        self.start_time = time.monotonic()
+
+    def __exit__(self, etype, value, tb):
+        end_time = time.monotonic()
+        self.limiter._exit(etype, value, tb)
+        self.logger("%s in %ss after %ss delay",
+                    self.msg,
+                    end_time - self.start_time,
+                    self.delay)
+
+
 class RateLimiter:
     """A Rate limiter
 
@@ -389,6 +408,16 @@ class RateLimiter:
         rate_limiter = RateLimiter('provider', 1.0)
         with rate_limiter:
             api_call()
+
+    You can optionally use the limiter as a callable in which case it
+    will log a supplied message with timing information.
+
+    .. code:: python
+
+        rate_limiter = RateLimiter('provider', 1.0)
+        with rate_limiter(log.debug, "an API call"):
+            api_call()
+
     """
 
     def __init__(self, name, rate_limit):
@@ -397,14 +426,27 @@ class RateLimiter:
         self.delta = 1.0 / rate_limit
         self.last_ts = None
 
+    def __call__(self, logmethod, msg):
+        return RateLimitInstance(self, logmethod, msg)
+
     def __enter__(self):
+        self._enter()
+
+    def _enter(self):
+        total_delay = 0.0
         if self.last_ts is None:
-            return
+            return total_delay
         while True:
             delta = time.monotonic() - self.last_ts
             if delta >= self.delta:
                 break
-            time.sleep(self.delta - delta)
+            delay = self.delta - delta
+            time.sleep(delay)
+            total_delay += delay
+        return total_delay
 
     def __exit__(self, etype, value, tb):
+        self._exit(etype, value, tb)
+
+    def _exit(self, etype, value, tb):
         self.last_ts = time.monotonic()

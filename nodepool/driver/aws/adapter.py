@@ -76,7 +76,8 @@ class AwsDeleteStateMachine(statemachine.StateMachine):
     DISK_DELETING = 'deleting disk'
     COMPLETE = 'complete'
 
-    def __init__(self, adapter, external_id):
+    def __init__(self, adapter, external_id, log):
+        self.log = log
         super().__init__()
         self.adapter = adapter
         self.external_id = external_id
@@ -84,7 +85,7 @@ class AwsDeleteStateMachine(statemachine.StateMachine):
     def advance(self):
         if self.state == self.START:
             self.instance = self.adapter._deleteInstance(
-                self.external_id)
+                self.external_id, self.log)
             self.state = self.VM_DELETING
 
         if self.state == self.VM_DELETING:
@@ -102,7 +103,8 @@ class AwsCreateStateMachine(statemachine.StateMachine):
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries):
+                 metadata, retries, log):
+        self.log = log
         super().__init__()
         self.adapter = adapter
         self.retries = retries
@@ -125,7 +127,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
             self.instance = self.adapter._createInstance(
                 self.label, self.image_external_id,
-                self.tags, self.hostname)
+                self.tags, self.hostname, self.log)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -140,7 +142,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                     raise Exception("Too many retries")
                 self.attempts += 1
                 self.instance = self.adapter._deleteInstance(
-                    self.external_id)
+                    self.external_id, self.log)
                 self.state = self.INSTANCE_RETRY
             else:
                 return
@@ -157,11 +159,11 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
 
 class AwsAdapter(statemachine.Adapter):
-    log = logging.getLogger("nodepool.driver.aws.AwsAdapter")
-
     IMAGE_UPLOAD_SLEEP = 30
 
     def __init__(self, provider_config):
+        self.log = logging.getLogger(
+            f"nodepool.AwsAdapter.{provider_config.name}")
         self.provider = provider_config
         # The standard rate limit, this might be 1 request per second
         self.rate_limiter = RateLimiter(self.provider.name,
@@ -189,12 +191,12 @@ class AwsAdapter(statemachine.Adapter):
         self.not_our_snapshots = set()
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries):
+                              image_external_id, metadata, retries, log):
         return AwsCreateStateMachine(self, hostname, label,
-                                     image_external_id, metadata, retries)
+                                     image_external_id, metadata, retries, log)
 
-    def getDeleteStateMachine(self, external_id):
-        return AwsDeleteStateMachine(self, external_id)
+    def getDeleteStateMachine(self, external_id, log):
+        return AwsDeleteStateMachine(self, external_id, log)
 
     def listResources(self):
         self._tagAmis()
@@ -249,6 +251,7 @@ class AwsAdapter(statemachine.Adapter):
 
     def getQuotaLimits(self):
         with self.non_mutating_rate_limiter:
+            self.log.debug("Getting quota limits")
             response = self.aws_quotas.get_service_quota(
                 ServiceCode='ec2',
                 QuotaCode='L-1216C47A'
@@ -432,7 +435,8 @@ class AwsAdapter(statemachine.Adapter):
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listInstances(self):
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed instances"):
             return self.ec2.instances.all()
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
@@ -505,7 +509,7 @@ class AwsAdapter(statemachine.Adapter):
             return self.ec2.Image(image_id)
 
     def _createInstance(self, label, image_external_id,
-                        tags, hostname):
+                        tags, hostname, log):
         if image_external_id:
             image_id = image_external_id
         else:
@@ -579,20 +583,23 @@ class AwsAdapter(statemachine.Adapter):
                     del mapping['Ebs']['Encrypted']
                 args['BlockDeviceMappings'] = [mapping]
 
-        with self.rate_limiter:
-            self.log.debug(f"Creating VM {hostname}")
+        with self.rate_limiter(log.debug, "Created instance"):
+            log.debug(f"Creating VM {hostname}")
             instances = self.ec2.create_instances(**args)
+            log.debug(f"Created VM {hostname} as instance {instances[0].id}")
             return self.ec2.Instance(instances[0].id)
 
-    def _deleteInstance(self, external_id):
+    def _deleteInstance(self, external_id, log=None):
+        if log is None:
+            log = self.log
         for instance in self._listInstances():
             if instance.id == external_id:
                 break
         else:
-            self.log.warning(f"Instance not found when deleting {external_id}")
+            log.warning(f"Instance not found when deleting {external_id}")
             return None
-        with self.rate_limiter:
-            self.log.debug(f"Deleting instance {external_id}")
+        with self.rate_limiter(log.debug, "Deleted instance"):
+            log.debug(f"Deleting instance {external_id}")
             instance.terminate()
         return instance
 
@@ -603,7 +610,7 @@ class AwsAdapter(statemachine.Adapter):
         else:
             self.log.warning(f"Volume not found when deleting {external_id}")
             return None
-        with self.rate_limiter:
+        with self.rate_limiter(self.log.debug, "Deleted volume"):
             self.log.debug(f"Deleting volume {external_id}")
             volume.delete()
         return volume

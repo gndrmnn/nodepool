@@ -379,11 +379,11 @@ class IBMVPCAdapter(statemachine.Adapter):
         return authenticator
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries):
+                              image_external_id, metadata, retries, log):
         return IBMVPCCreateStateMachine(self, hostname, label,
                                         image_external_id, metadata, retries)
 
-    def getDeleteStateMachine(self, external_id):
+    def getDeleteStateMachine(self, external_id, log):
         return IBMVPCDeleteStateMachine(self, external_id)
 
     def listResources(self):

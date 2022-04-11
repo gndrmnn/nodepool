@@ -192,6 +192,12 @@ class BaseTestCase(testtools.TestCase):
         l = logging.getLogger('stevedore')
         l.setLevel(logging.INFO)
         l.propagate = False
+        l = logging.getLogger('botocore')
+        l.setLevel(logging.INFO)
+        l.propagate = False
+        l = logging.getLogger('boto3')
+        l.setLevel(logging.INFO)
+        l.propagate = False
         self.useFixture(fixtures.NestedTempfile())
 
         self.subprocesses = []

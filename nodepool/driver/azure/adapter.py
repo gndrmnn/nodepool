@@ -329,11 +329,11 @@ class AzureAdapter(statemachine.Adapter):
         self._getSKUs()
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries):
+                              image_external_id, metadata, retries, log):
         return AzureCreateStateMachine(self, hostname, label,
                                        image_external_id, metadata, retries)
 
-    def getDeleteStateMachine(self, external_id):
+    def getDeleteStateMachine(self, external_id, log):
         return AzureDeleteStateMachine(self, external_id)
 
     def listResources(self):
