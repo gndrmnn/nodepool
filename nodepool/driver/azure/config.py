@@ -39,7 +39,7 @@ class AzureProviderCloudImage(ConfigValue):
         self.image_reference = image.get('image-reference')
         self.image_filter = image.get('image-filter')
         self.image_id = image.get('image-id')
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
         self.connection_port = image.get(
@@ -100,7 +100,7 @@ class AzureProviderDiskImage(ConfigValue):
         self.name = image['name']
         diskimage.image_types.add('vhd')
         self.pause = bool(image.get('pause', False))
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.username = image.get('username')
         self.password = image.get('password')

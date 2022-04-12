@@ -94,6 +94,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
         self.assertEqual(node.host_keys, [])
+        self.assertEqual(node.python_path, 'auto')
 
         node.state = zk.USED
         self.zk.storeNode(node)
@@ -120,6 +121,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.python_path, 'auto')
 
         node.state = zk.USED
         self.zk.storeNode(node)

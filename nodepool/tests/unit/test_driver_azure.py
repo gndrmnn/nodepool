@@ -87,6 +87,7 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.python_path, 'auto')
         self.assertEqual(
             self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
             items[0]['properties']['osProfile']['customData'],
@@ -127,6 +128,7 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(node.shell_type, None)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.python_path, 'auto')
 
     def test_azure_external_image(self):
         configfile = self.setup_config(

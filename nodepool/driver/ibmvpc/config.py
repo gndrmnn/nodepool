@@ -36,7 +36,7 @@ class IBMVPCProviderCloudImage(ConfigValue):
         self.image_id = image.get('image-id')
         self.image_name = image.get('image-name')
         self.image_filter = image.get('image-filter')
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
         self.connection_port = image.get(
@@ -97,7 +97,7 @@ class IBMVPCProviderDiskImage(ConfigValue):
         self.name = image['name']
         diskimage.image_types.add(image_type)
         self.pause = bool(image.get('pause', False))
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.username = diskimage.username
         self.connection_type = image.get('connection-type', 'ssh')

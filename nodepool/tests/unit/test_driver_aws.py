@@ -189,6 +189,7 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.public_ipv4, node.interface_ip)
         self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
         self.assertFalse(node.public_ipv4.startswith('203.0.113.'))
+        self.assertEqual(node.python_path, 'auto')
 
         instance = self.ec2.Instance(node.external_id)
         response = instance.describe_attribute(Attribute='ebsOptimized')

@@ -31,7 +31,7 @@ class AwsProviderCloudImage(ConfigValue):
         self.name = image['name']
         self.username = image['username']
         self.image_id = image.get('image-id')
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
         self.connection_port = image.get(
@@ -89,7 +89,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.name = image['name']
         diskimage.image_types.add(image_type)
         self.pause = bool(image.get('pause', False))
-        self.python_path = image.get('python-path')
+        self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.username = image.get('username')
         self.connection_type = image.get('connection-type', 'ssh')
