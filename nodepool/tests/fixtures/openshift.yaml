@@ -15,6 +15,7 @@ tenant-resource-limits:
 labels:
   - name: pod-fedora
   - name: openshift-project
+  - name: pod-fedora-secret
 
 providers:
   - name: openshift
@@ -33,3 +34,8 @@ providers:
             image: docker.io/fedora:28
             python-path: '/usr/bin/python3'
             shell-type: csh
+          - name: pod-fedora-secret
+            type: pod
+            image: docker.io/fedora:28
+            image-pull-secrets:
+              - name: registry-secret

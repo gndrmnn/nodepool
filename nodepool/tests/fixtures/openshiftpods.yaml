@@ -14,6 +14,7 @@ tenant-resource-limits:
 
 labels:
   - name: pod-fedora
+  - name: pod-fedora-secret
 
 providers:
   - name: openshift
@@ -27,3 +28,7 @@ providers:
         labels:
           - name: pod-fedora
             image: docker.io/fedora:28
+          - name: pod-fedora-secret
+            image: docker.io/fedora:28
+            image-pull-secrets:
+              - name: registry-secret
