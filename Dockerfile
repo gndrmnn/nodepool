@@ -75,6 +75,7 @@ RUN \
   && echo "deb http://ppa.launchpad.net/openstack-ci-core/debootstrap/ubuntu focal main" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install -y \
+      binutils \
       curl \
       dnf \
       debian-keyring \
