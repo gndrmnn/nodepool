@@ -60,7 +60,7 @@ diskimages:
 {%   endfor %}
 {% endif %}
       - vm
-      - simple-init
+      - dhcp-all-interfaces
       - growroot
       - devuser
       - openssh-server
@@ -72,7 +72,7 @@ diskimages:
       DIB_CHECKSUM: '1'
       DIB_SHOW_IMAGE_USAGE: '1'
       DIB_IMAGE_CACHE: '{{ NODEPOOL_DIB_BASE_PATH }}/cache'
-      DIB_DEV_USER_AUTHORIZED_KEYS: '{{ NODEPOOL_PUBKEY }}'
+      DIB_DEV_USER_AUTHORIZED_KEYS: '/home/zuul/.ssh/id_nodepool.pub'
 {% if 'mirror' in nodepool_diskimage %}
       DIB_DISTRIBUTION_MIRROR: '{{ nodepool_diskimage.mirror }}'
 {% endif %}

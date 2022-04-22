@@ -19,7 +19,7 @@ fi
 
 cat > /tmp/ssh_wrapper <<EOF
 #!/bin/bash -ex
-sudo -H -u zuul ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_nodepool root@\$@
+sudo -H -u zuul ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_nodepool devuser@\$@
 
 EOF
 sudo chmod 0755 /tmp/ssh_wrapper
@@ -31,6 +31,7 @@ function sshintonode {
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
 
     /tmp/ssh_wrapper $node ls /
+    /tmp/ssh_wrapper $node -- "cat /etc/network/interfaces"
 
     # Check that the root partition grew on boot; it should be a 5GiB
     # partition minus some space for the boot partition.  However
