@@ -77,6 +77,7 @@ RUN \
   && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
   && apt-get update \
   && apt-get install -y \
+      binutils \
       curl \
       dnf \
       debian-keyring \
