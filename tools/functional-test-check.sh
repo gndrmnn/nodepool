@@ -19,7 +19,7 @@ fi
 
 cat > /tmp/ssh_wrapper <<EOF
 #!/bin/bash -ex
-sudo -H -u zuul ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_nodepool root@\$@
+sudo -H -u zuul ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/id_nodepool devuser@\$@
 
 EOF
 sudo chmod 0755 /tmp/ssh_wrapper
@@ -31,6 +31,7 @@ function sshintonode {
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
 
     /tmp/ssh_wrapper $node ls /
+    /tmp/ssh_wrapper $node -- "cat /etc/network/interfaces"
 
     # Check that the root partition grew on boot; it should be a 5GiB
     # partition minus some space for the boot partition.  However
@@ -38,7 +39,7 @@ function sshintonode {
     # (possibly with alignment?) that means we can vary up to even
     # 64MiB.  Thus we choose an expected value that gives us enough
     # slop to avoid false matches, but still indicates we resized up.
-    root_size=$(/tmp/ssh_wrapper $node -- lsblk -rbno SIZE /dev/vda1)
+    root_size=$(/tmp/ssh_wrapper $node -- sudo lsblk -rbno SIZE /dev/vda1)
     expected_root_size=$(( 5000000000 ))
     if [[ $root_size -lt $expected_root_size ]]; then
         echo "*** Root device does not appear to have grown: $root_size"
@@ -48,7 +49,7 @@ function sshintonode {
 
     # Check we saw metadata deployed to the config-drive
     /tmp/ssh_wrapper $node \
-        "dd status=none if=/dev/sr0 | tr -cd '[:print:]' | grep -q nodepool_devstack"
+        "sudo dd status=none if=/dev/sr0 | tr -cd '[:print:]' | grep -q nodepool_devstack"
     if [[ $? -ne 0 ]]; then
         echo "*** Failed to find metadata in config-drive"
         FAILURE_REASON="Failed to find meta-data in config-drive for $node"
@@ -95,7 +96,7 @@ function sshintonode {
     #  glean@lo.service    loaded active exited    Glean for interface lo with NetworkManager
     # ---
     # So if we see anything other than 'loaded active exited' we have a problem.
-    glean_status=$(/tmp/ssh_wrapper $node -- "systemctl | egrep 'glean[@|-]' | { grep -v 'loaded active exited' || true; }")
+    glean_status=$(/tmp/ssh_wrapper $node -- "sudo systemctl | egrep 'glean[@|-]' | { grep -v 'loaded active exited' || true; }")
     if [[ ${glean_status} != '' ]]; then
         echo "*** Glean not loaded correctly"
         echo "*** saw: ${glean_status}"
@@ -109,13 +110,13 @@ function checknm {
     state='ready'
 
     node=`$NODEPOOL list | grep $name | grep $state | cut -d '|' -f6 | tr -d ' '`
-    nm_output=$(/tmp/ssh_wrapper $node -- nmcli c)
+    nm_output=$(/tmp/ssh_wrapper $node -- sudo nmcli c)
 
     # virtio device is eth0 on older, ens3 on newer
     if [[ ! ${nm_output} =~ (eth0|ens3) ]]; then
         echo "*** Failed to find interface in NetworkManager connections"
-        /tmp/ssh_wrapper $node -- nmcli c
-        /tmp/ssh_wrapper $node -- nmcli device
+        /tmp/ssh_wrapper $node -- sudo nmcli c
+        /tmp/ssh_wrapper $node -- sudo nmcli device
         FAILURE_REASON="Failed to find interface in NetworkManager connections"
         RETURN=1
     fi
