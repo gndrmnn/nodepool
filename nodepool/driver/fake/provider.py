@@ -105,14 +105,17 @@ class FakeOpenStackCloud(object):
         ]
         self._azs = ['az1', 'az2']
         self._server_list = []
-        self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
-            _get_quota()
+        self._update_quota()
         self._down_ports = [
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner="compute:nova"),
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner=None),
         ]
+
+    def _update_quota(self):
+        self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
+            _get_quota()
 
     def _get(self, name_or_id, instance_list):
         self.log.debug("Get %s in %s" % (name_or_id, repr(instance_list)))
@@ -162,6 +165,7 @@ class FakeOpenStackCloud(object):
             private_v4 = 'fake'
             host_id = 'fake'
             interface_ip = 'fake'
+        self._update_quota()
         over_quota = False
         if (instance_type == Dummy.INSTANCE and
             self.max_instances > -1 and
@@ -292,6 +296,7 @@ class FakeOpenStackCloud(object):
         return self._azs.copy()
 
     def get_compute_limits(self):
+        self._update_quota()
         return Dummy(
             'limits',
             max_total_cores=self.max_cores,
