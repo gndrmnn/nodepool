@@ -290,7 +290,8 @@ class QuotaSupport:
         pass
 
     def invalidateQuotaCache(self):
-        self._current_nodepool_quota['timestamp'] = 0
+        if self._current_nodepool_quota:
+            self._current_nodepool_quota['timestamp'] = 0
 
     def estimatedNodepoolQuota(self):
         '''
