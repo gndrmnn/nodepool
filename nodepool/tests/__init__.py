@@ -583,6 +583,15 @@ class DBTestCase(BaseTestCase):
         self.wait_for_threads()
         return ready_nodes[label]
 
+    def waitForAnyNodeInState(self, state):
+        # Wait for a node to be in the aborted state
+        for _ in iterate_timeout(ONE_MINUTE, Exception,
+                                f"Timeout waiting for node in {state} state",
+                                interval=1):
+            for node in self.zk.nodeIterator(False):
+                if node.state == state:
+                    return node
+
     def waitForNodeRequest(self, req, states=None):
         '''
         Wait for a node request to transition to a final state.

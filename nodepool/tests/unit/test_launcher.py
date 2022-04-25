@@ -403,6 +403,7 @@ class TestLauncher(tests.DBTestCase):
 
         # patch the cloud with requested quota
         def fake_get_quota():
+            nonlocal max_cores, max_instances, max_ram
             return (max_cores, max_instances, max_ram)
         self.useFixture(fixtures.MockPatchObject(
             fakeprovider.FakeProvider.fake_cloud, '_get_quota',
@@ -435,7 +436,7 @@ class TestLauncher(tests.DBTestCase):
 
         # Now, reduce the quota so the next node unexpectedly
         # (according to nodepool's quota estimate) fails.
-        client.max_instances = 1
+        max_instances = 1
 
         # Request a second node; this request should pause the handler.
         req2 = zk.NodeRequest()
@@ -2279,6 +2280,53 @@ class TestLauncher(tests.DBTestCase):
 
         req3 = self.waitForNodeRequest(req3)
         self.assertEqual(req3.state, zk.FAILED)
+
+    def test_ignore_provider_quota_true_with_provider_error(self):
+        '''
+        Tests that quota errors returned from the provider when allocating a
+        node are correctly handled and retried. The node request should be
+        retried until there is sufficient quota to satisfy it.
+        '''
+        max_instances = 0
+
+        def fake_get_quota():
+            nonlocal max_instances
+            return (100, max_instances, 1000000)
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        configfile = self.setup_config('ignore_provider_quota_true.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Create a request with ignore-provider-quota set to true that should
+        # pass regardless of the lack of cloud/provider quota.
+        self.replace_config(configfile, 'ignore_provider_quota_true.yaml')
+
+        self.log.debug(
+            "Submitting an initial request with ignore-provider-quota True")
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        self.waitForAnyNodeInState(zk.ABORTED)
+
+        self.assertReportedStat(
+            'nodepool.launch.provider.fake-provider.error.quota')
+        self.assertReportedStat(
+            'nodepool.launch.error.quota')
+
+        # Bump up the quota to allow the provider to allocate a node
+        max_instances = 1
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
 
     def test_request_order(self):
         """Test that requests are handled in sorted order"""
