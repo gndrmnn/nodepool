@@ -1,0 +1,8 @@
+---
+fixes:
+  - |
+    Fixes an exception that was raised by the OpenStack driver when attempting
+    to reset the quota timestamp and `ignore-provider-quota` is `true`. This
+    exception prevented nodepool from seeing quota errors from OpenStack,
+    causing it to fail the node request instead of retrying as it does for
+    other providers.
