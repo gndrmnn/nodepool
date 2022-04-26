@@ -16,6 +16,40 @@
       "message": "This feels a bit clunky particularly since I\u0027m not sure this is a standard feature of openstack. However, nodepool has long worked around provider specific behaviors to the benefit of users so this seems to fall in line with that history.",
       "revId": "0db1eb2382078fe567f3e3b8c8a053a79925359f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9fb3a4f_11067a50",
+        "filename": "doc/source/openstack.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-04-26T22:15:03Z",
+      "side": 1,
+      "message": "The name of this option and the description seems overly prescriptive.  Really what this option does is cause quota errors to not be treated as fatal for the provider (and so node requests will be continually retried).  Could we change the name and description to match that, rather than the specific scenario that you want to use it for?  I think it would be okay to also describe your use case in the docs if you want.",
+      "revId": "0db1eb2382078fe567f3e3b8c8a053a79925359f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7c6be41_76a71cf5",
+        "filename": "doc/source/openstack.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-04-26T22:15:03Z",
+      "side": 1,
+      "message": "typo: fall \"through\"",
+      "revId": "0db1eb2382078fe567f3e3b8c8a053a79925359f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
