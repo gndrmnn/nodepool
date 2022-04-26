@@ -52,6 +52,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c798d5ac_39d6cab6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-04-26T19:03:33Z",
+      "side": 1,
+      "message": "hrm, same error in boto3?\n\n File \"/home/zuul/src/opendev.org/zuul/nodepool/.tox/py38/lib/python3.8/site-packages/boto3/resources/factory.py\", line 386, in property_loader\n    return self.meta.data.get(name)\n AttributeError: \u0027NoneType\u0027 object has no attribute \u0027get\u0027\n",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ce31579_055d8ced",
