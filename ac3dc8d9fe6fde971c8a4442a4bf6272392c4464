@@ -175,6 +175,24 @@
       "parentUuid": "8ba48e7c_a9625ea7",
       "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b27b8a88_1fc18758",
+        "filename": "nodepool/driver/openstack/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-04-26T05:14:05Z",
+      "side": 1,
+      "message": "I\u0027m sorry for not getting back to this.  After coming back to this, and re-reading the code again, it seems fine.  We\u0027ll likely get the info (new sdk) or if we don\u0027t (old sdk, unlikely anyway) we\u0027ll look it up and then, in the even more unlikley case, skip over it.  I think this is fine, thanks",
+      "parentUuid": "61436545_aaf4a973",
+      "revId": "ac3dc8d9fe6fde971c8a4442a4bf6272392c4464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
