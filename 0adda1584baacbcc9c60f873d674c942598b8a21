@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65cef119_8c70698c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-04-26T05:14:38Z",
+      "side": 1,
+      "message": "gtg with updated flavor handling from https://review.opendev.org/c/zuul/nodepool/+/834152/2",
+      "revId": "0adda1584baacbcc9c60f873d674c942598b8a21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
