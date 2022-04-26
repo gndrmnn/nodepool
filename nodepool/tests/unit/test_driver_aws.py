@@ -492,6 +492,16 @@ class TestDriverAws(tests.DBTestCase):
             except botocore.exceptions.ClientError:
                 # Probably not found
                 break
+            except AttributeError:
+                # NOTE(ianw) 2022-04-27 For reasons that are unclear
+                # but have been filed as
+                #  https://github.com/spulec/moto/issues/5067
+                # accessing the image.state property of a deleted image
+                # with moto 1.3.6  will no longer result in the ClientError
+                # above, but boto will get blank response and try to
+                # dereference a None value.  Thus catching this is a
+                # work-around until we have a better solution.
+                break
 
         for _ in iterate_timeout(30, Exception, 'snapshot deletion'):
             snap = self.ec2.Snapshot(snapshot_id)
