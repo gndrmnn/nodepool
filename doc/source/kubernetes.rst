@@ -82,6 +82,45 @@ Selecting the kubernetes driver adds the following options to the
          A dictionary of key-value pairs that will be stored with the node data
          in ZooKeeper. The keys and values can be any arbitrary string.
 
+      .. attr:: max-cores
+         :type: int
+
+         Maximum number of cores usable from this pool. This can be used
+         to limit usage of the kubernetes backend. If not defined nodepool can
+         use all cores up to the limit of the backend.
+
+      .. attr:: max-servers
+         :type: int
+
+         Maximum number of pods spawnable from this pool. This can
+         be used to limit the number of pods. If not defined
+         nodepool can create as many servers the kubernetes backend allows.
+
+      .. attr:: max-ram
+         :type: int
+
+         Maximum ram usable from this pool. This can be used to limit
+         the amount of ram allocated by nodepool. If not defined
+         nodepool can use as much ram as the kubernetes backend allows.
+
+      .. attr:: default-label-cpu
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies specifies a default value for
+         :attr:`providers.[kubernetes].pools.labels.cpu` for all labels of
+         this pool that do not set their own value.
+
+      .. attr:: default-label-memory
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies a default value for
+         :attr:`providers.[kubernetes].pools.labels.memory` for all labels of
+         this pool that do not set their own value.
+
       .. attr:: labels
          :type: list
 

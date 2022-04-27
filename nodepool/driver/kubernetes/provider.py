@@ -288,7 +288,16 @@ class KubernetesProvider(Provider, QuotaSupport):
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
-            'metadata': {'name': label.name},
+            'metadata': {
+                'name': label.name,
+                'labels': {
+                    'nodepool_node_id': node.id,
+                    'nodepool_provider_name': self.provider.name,
+                    'nodepool_pool_name': pool,
+                    'nodepool_node_label': label.name,
+                    'nodepool_image_name': label.image,
+                }
+            },
             'spec': spec_body,
             'restartPolicy': 'Never',
         }
@@ -323,8 +332,13 @@ class KubernetesProvider(Provider, QuotaSupport):
             default=math.inf)
 
     def quotaNeededByLabel(self, ntype, pool):
-        # TODO: return real quota information about a label
-        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+        provider_label = pool.labels[ntype]
+        resources = {}
+        if provider_label.cpu:
+            resources["cores"] = provider_label.cpu
+        if provider_label.memory:
+            resources["ram"] = provider_label.memory
+        return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota
