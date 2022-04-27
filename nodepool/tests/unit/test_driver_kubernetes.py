@@ -156,15 +156,83 @@ class TestDriverKubernetes(tests.DBTestCase):
 
         self.waitForNodeDeletion(node)
 
-    def test_kubernetes_max_servers(self):
-        configfile = self.setup_config('kubernetes.yaml')
+    def test_kubernetes_default_label_resources(self):
+        configfile = self.setup_config('kubernetes-default-limits.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('pod-default')
+        req.node_types.append('pod-custom-cpu')
+        req.node_types.append('pod-custom-mem')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        self.assertNotEqual(req.nodes, [])
+        node_default = self.zk.getNode(req.nodes[0])
+        node_cust_cpu = self.zk.getNode(req.nodes[1])
+        node_cust_mem = self.zk.getNode(req.nodes[2])
+
+        resources_default = {
+            'instances': 1,
+            'cores': 2,
+            'ram': 1024,
+        }
+        resources_cust_cpu = {
+            'instances': 1,
+            'cores': 4,
+            'ram': 1024,
+        }
+        resources_cust_mem = {
+            'instances': 1,
+            'cores': 2,
+            'ram': 2048,
+        }
+
+        self.assertDictEqual(resources_default, node_default.resources)
+        self.assertDictEqual(resources_cust_cpu, node_cust_cpu.resources)
+        self.assertDictEqual(resources_cust_mem, node_cust_mem.resources)
+
+        for node in (node_default, node_cust_cpu, node_cust_mem):
+            node.state = zk.DELETING
+            self.zk.storeNode(node)
+            self.waitForNodeDeletion(node)
+
+    def test_kubernetes_pool_quota_servers(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-servers.yaml')
+
+    def test_kubernetes_pool_quota_cores(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-cores.yaml')
+
+    def test_kubernetes_pool_quota_ram(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-ram.yaml')
+
+    def test_kubernetes_tenant_quota_servers(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-servers.yaml', pause=False)
+
+    def test_kubernetes_tenant_quota_cores(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-cores.yaml', pause=False)
+
+    def test_kubernetes_tenant_quota_ram(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-ram.yaml', pause=False)
+
+    def _test_kubernetes_quota(self, config, pause=True):
+        configfile = self.setup_config(config)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         # Start two pods to hit max-server limit
         reqs = []
-        for x in [1, 2]:
+        for _ in [1, 2]:
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
+            req.tenant_name = 'tenant-1'
             req.node_types.append('pod-fedora')
             self.zk.storeNodeRequest(req)
             reqs.append(req)
@@ -179,13 +247,19 @@ class TestDriverKubernetes(tests.DBTestCase):
         # Now request a third pod that will hit the limit
         max_req = zk.NodeRequest()
         max_req.state = zk.REQUESTED
+        max_req.tenant_name = 'tenant-1'
         max_req.node_types.append('pod-fedora')
         self.zk.storeNodeRequest(max_req)
 
-        # The previous request should pause the handler
-        pool_worker = pool.getPoolWorkers('kubespray')
-        while not pool_worker[0].paused_handler:
-            time.sleep(0.1)
+        # if at pool quota, the handler will get paused
+        # but not if at tenant quota
+        if pause:
+            # The previous request should pause the handler
+            pool_worker = pool.getPoolWorkers('kubespray')
+            while not pool_worker[0].paused_handler:
+                time.sleep(0.1)
+
+        self.waitForNodeRequest(max_req, (zk.REQUESTED,))
 
         # Delete the earlier two pods freeing space for the third.
         for req in fulfilled_reqs:
@@ -195,5 +269,5 @@ class TestDriverKubernetes(tests.DBTestCase):
             self.waitForNodeDeletion(node)
 
         # We should unpause and fulfill this now
-        req = self.waitForNodeRequest(max_req)
+        req = self.waitForNodeRequest(max_req, (zk.FULFILLED,))
         self.assertEqual(req.state, zk.FULFILLED)

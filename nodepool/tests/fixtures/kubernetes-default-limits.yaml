@@ -8,13 +8,10 @@ zookeeper-tls:
   cert: {zookeeper_cert}
   key: {zookeeper_key}
 
-tenant-resource-limits:
-  - tenant-name: tenant-1
-    max-cores: 2
-
 labels:
-  - name: pod-fedora
-  - name: kubernetes-namespace
+  - name: pod-default
+  - name: pod-custom-cpu
+  - name: pod-custom-mem
 
 providers:
   - name: kubespray
@@ -22,12 +19,14 @@ providers:
     context: admin-cluster.local
     pools:
       - name: main
-        node-attributes:
-          key1: value1
-          key2: value2
+        default-label-cpu: 2
+        default-label-memory: 1024
         labels:
-          - name: kubernetes-namespace
-            type: namespace
-          - name: pod-fedora
+          - name: pod-default
             type: pod
-            image: docker.io/fedora:28
+          - name: pod-custom-cpu
+            type: pod
+            cpu: 4
+          - name: pod-custom-mem
+            type: pod
+            memory: 2048

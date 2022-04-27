@@ -8,13 +8,8 @@ zookeeper-tls:
   cert: {zookeeper_cert}
   key: {zookeeper_key}
 
-tenant-resource-limits:
-  - tenant-name: tenant-1
-    max-cores: 2
-
 labels:
   - name: pod-fedora
-  - name: kubernetes-namespace
 
 providers:
   - name: kubespray
@@ -22,12 +17,8 @@ providers:
     context: admin-cluster.local
     pools:
       - name: main
-        node-attributes:
-          key1: value1
-          key2: value2
+        max-servers: 2
         labels:
-          - name: kubernetes-namespace
-            type: namespace
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28

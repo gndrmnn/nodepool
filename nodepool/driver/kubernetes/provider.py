@@ -323,8 +323,13 @@ class KubernetesProvider(Provider, QuotaSupport):
             default=math.inf)
 
     def quotaNeededByLabel(self, ntype, pool):
-        # TODO: return real quota information about a label
-        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+        provider_label = pool.labels[ntype]
+        resources = {}
+        if provider_label.cpu:
+            resources["cores"] = provider_label.cpu
+        if provider_label.memory:
+            resources["ram"] = provider_label.memory
+        return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota
