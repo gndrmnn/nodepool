@@ -37,6 +37,10 @@ class KubernetesPool(ConfigPool):
     def load(self, pool_config, full_config):
         super().load(pool_config)
         self.name = pool_config['name']
+        self.max_cores = pool_config.get('max-cores')
+        self.max_ram = pool_config.get('max-ram')
+        self.default_label_cpu = pool_config.get('default-label-cpu')
+        self.default_label_memory = pool_config.get('default-label-memory')
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = KubernetesLabel()
@@ -46,8 +50,8 @@ class KubernetesPool(ConfigPool):
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
-            pl.cpu = label.get('cpu')
-            pl.memory = label.get('memory')
+            pl.cpu = label.get('cpu', self.default_label_cpu)
+            pl.memory = label.get('memory', self.default_label_memory)
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.pool = self
@@ -101,6 +105,10 @@ class KubernetesProviderConfig(ProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [k8s_label],
+            v.Optional('max-cores'): int,
+            v.Optional('max-ram'): int,
+            v.Optional('default-label-cpu'): int,
+            v.Optional('default-label-memory'): int,
         })
 
         provider = {
