@@ -18,7 +18,7 @@ import math
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 
-from collections import Counter, defaultdict, namedtuple
+from collections import Counter, namedtuple
 
 from nodepool import exceptions
 from nodepool import nodeutils
@@ -102,31 +102,6 @@ class StaticNodeProvider(Provider, QuotaSupport):
             nodes.append(node)
         return nodes
 
-    def getWaitingNodesOfType(self, labels):
-        """Get all waiting nodes of a type.
-
-        Nodes are sorted in ascending order by the associated request's
-        priority, which means that they are in descending order of the
-        priority value (a lower value means the request has a higher
-        priority).
-        """
-        nodes_by_prio = defaultdict(list)
-        for node in self.zk.nodeIterator():
-            if (node.provider != self.provider.name or
-                node.state != zk.BUILDING or
-                not set(node.type).issubset(labels) or
-                not node.allocated_to
-            ):
-                continue
-            request = self.zk.getNodeRequest(node.allocated_to, cached=True)
-            if request is None:
-                continue
-            nodes_by_prio[request.priority].append(node)
-
-        return list(itertools.chain.from_iterable(
-            nodes_by_prio[p] for p in sorted(nodes_by_prio, reverse=True)
-        ))
-
     def checkNodeLiveness(self, node):
         node_tuple = nodeTuple(node)
         static_node = self.poolNodes().get(node_tuple)
@@ -178,9 +153,6 @@ class StaticNodeProvider(Provider, QuotaSupport):
         A node can be registered multiple times to support max-parallel-jobs.
         These nodes will share the same node tuple.
 
-        In case there are 'building' nodes waiting for a label, those nodes
-        will be updated and marked 'ready'.
-
         :param int count: Number of times to register this node.
         :param str provider_name: Name of the provider.
         :param str pool: Config of the pool owning the node.
@@ -188,14 +160,10 @@ class StaticNodeProvider(Provider, QuotaSupport):
         '''
         pool_name = pool.name
         host_keys = self.checkHost(static_node)
-        waiting_nodes = self.getWaitingNodesOfType(static_node["labels"])
         node_tuple = nodeTuple(static_node)
 
         for i in range(0, count):
-            try:
-                node = waiting_nodes.pop()
-            except IndexError:
-                node = zk.Node()
+            node = zk.Node()
             node.state = zk.READY
             node.provider = provider_name
             node.pool = pool_name
@@ -433,28 +401,6 @@ class StaticNodeProvider(Provider, QuotaSupport):
                     except Exception:
                         self.log.exception("Couldn't sync node:")
                         continue
-                    try:
-                        self.assignReadyNodes(node, pool)
-                    except StaticNodeError as exc:
-                        self.log.warning("Couldn't assign ready node: %s", exc)
-                    except Exception:
-                        self.log.exception("Couldn't assign ready nodes:")
-
-    def assignReadyNodes(self, node, pool):
-        waiting_nodes = self.getWaitingNodesOfType(node["labels"])
-        if not waiting_nodes:
-            return
-        ready_nodes = self.getRegisteredReadyNodes(nodeTuple(node))
-        if not ready_nodes:
-            return
-
-        leaked_count = min(len(waiting_nodes), len(ready_nodes))
-        self.log.info("Found %s ready node(s) that can be assigned to a "
-                      "waiting node", leaked_count)
-
-        self.deregisterNode(leaked_count, nodeTuple(node))
-        self.registerNodeFromConfig(
-            leaked_count, self.provider.name, pool, node)
 
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)
@@ -508,3 +454,14 @@ class StaticNodeProvider(Provider, QuotaSupport):
 
     def unmanagedQuotaUsed(self):
         return QuotaInformation()
+
+    def getLabelQuota(self):
+        label_quota = Counter()
+        for pool in self.provider.pools.values():
+            for label in pool.labels:
+                label_quota[label] = 0
+        label_quota.update(
+            itertools.chain.from_iterable(
+                n.type for n in self.zk.nodeIterator()
+                if n.state == zk.READY and n.allocated_to is None))
+        return label_quota

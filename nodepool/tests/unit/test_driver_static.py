@@ -311,7 +311,6 @@ class TestDriverStatic(tests.DBTestCase):
         req_waiting.state = zk.REQUESTED
         req_waiting.node_types.append('fake-label')
         self.zk.storeNodeRequest(req_waiting)
-        req_waiting = self.waitForNodeRequest(req_waiting, zk.PENDING)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -320,7 +319,8 @@ class TestDriverStatic(tests.DBTestCase):
         req = self.waitForNodeRequest(req, zk.FULFILLED)
 
         req_waiting = self.zk.getNodeRequest(req_waiting.id)
-        self.assertEqual(req_waiting.state, zk.PENDING)
+        self.assertEqual(req_waiting.state, zk.REQUESTED)
+        self.assertEqual(req_waiting.declined_by, [])
 
         self.zk.unlockNode(node)
         self.waitForNodeDeletion(node)
@@ -344,7 +344,7 @@ class TestDriverStatic(tests.DBTestCase):
         req_waiting.state = zk.REQUESTED
         req_waiting.node_types.append('fake-label')
         self.zk.storeNodeRequest(req_waiting)
-        req_waiting = self.waitForNodeRequest(req_waiting, zk.PENDING)
+        req_waiting = self.waitForNodeRequest(req_waiting, zk.REQUESTED)
 
         # Make sure the node is not reallocated
         node = self.zk.getNode(req.nodes[0])
@@ -369,28 +369,25 @@ class TestDriverStatic(tests.DBTestCase):
         req_waiting1.state = zk.REQUESTED
         req_waiting1.node_types.append('fake-label')
         self.zk.storeNodeRequest(req_waiting1, priority="300")
-        req_waiting1 = self.waitForNodeRequest(req_waiting1, zk.PENDING)
 
         req_waiting2 = zk.NodeRequest()
         req_waiting2.state = zk.REQUESTED
         req_waiting2.node_types.append('fake-label')
         self.zk.storeNodeRequest(req_waiting2, priority="200")
-        req_waiting2 = self.waitForNodeRequest(req_waiting2, zk.PENDING)
 
         req_waiting3 = zk.NodeRequest()
         req_waiting3.state = zk.REQUESTED
         req_waiting3.node_types.append('fake-label')
         self.zk.storeNodeRequest(req_waiting3, priority="200")
-        req_waiting3 = self.waitForNodeRequest(req_waiting3, zk.PENDING)
 
         self.zk.unlockNode(node)
         self.waitForNodeDeletion(node)
 
         req_waiting2 = self.waitForNodeRequest(req_waiting2, zk.FULFILLED)
         req_waiting1 = self.zk.getNodeRequest(req_waiting1.id)
-        self.assertEqual(req_waiting1.state, zk.PENDING)
+        self.assertEqual(req_waiting1.state, zk.REQUESTED)
         req_waiting3 = self.zk.getNodeRequest(req_waiting3.id)
-        self.assertEqual(req_waiting3.state, zk.PENDING)
+        self.assertEqual(req_waiting3.state, zk.REQUESTED)
 
         node_waiting2 = self.zk.getNode(req_waiting2.nodes[0])
         self.zk.lockNode(node_waiting2)
@@ -400,7 +397,7 @@ class TestDriverStatic(tests.DBTestCase):
 
         req_waiting3 = self.waitForNodeRequest(req_waiting3, zk.FULFILLED)
         req_waiting1 = self.zk.getNodeRequest(req_waiting1.id)
-        self.assertEqual(req_waiting1.state, zk.PENDING)
+        self.assertEqual(req_waiting1.state, zk.REQUESTED)
 
         node_waiting3 = self.zk.getNode(req_waiting3.nodes[0])
         self.zk.lockNode(node_waiting3)
@@ -409,46 +406,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.zk.unlockNode(node_waiting3)
 
         self.waitForNodeRequest(req_waiting1, zk.FULFILLED)
-
-    def test_static_handler_race_cleanup(self):
-        configfile = self.setup_config('static-basic.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        node = self.waitForNodes('fake-label')[0]
-
-        pool_workers = pool.getPoolWorkers("static-provider")
-
-        # Dummy node request that is not handled by the static provider
-        req = zk.NodeRequest()
-        req.state = zk.REQUESTED
-        req.node_types.append('fake-label')
-        # Mark request as declined by the static provider
-        req.declined_by.extend(w.launcher_id for w in pool_workers)
-        self.zk.storeNodeRequest(req)
-
-        # Create the result of a race between re-registration of a
-        # ready node and a new building node.
-        data = node.toDict()
-        data.update({
-            "state": zk.BUILDING,
-            "hostname": "",
-            "username": "",
-            "connection_port": 22,
-            "allocated_to": req.id,
-        })
-        building_node = zk.Node.fromDict(data)
-        self.zk.storeNode(building_node)
-        self.zk.lockNode(building_node)
-
-        # Node will be deregistered and assigned to the building node
-        self.waitForNodeDeletion(node)
-        node = self.zk.getNode(building_node.id)
-        self.assertEqual(node.state, zk.READY)
-
-        building_node.state = zk.USED
-        self.zk.storeNode(building_node)
-        self.zk.unlockNode(building_node)
-        self.waitForNodeDeletion(building_node)
 
     def test_static_multinode_handler(self):
         configfile = self.setup_config('static.yaml')
