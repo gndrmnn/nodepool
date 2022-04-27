@@ -341,7 +341,17 @@ class AwsAdapter(statemachine.Adapter):
         return task['ImageId']
 
     def deleteImage(self, external_id):
+        snaps = set()
         self.log.debug(f"Deleting image {external_id}")
+        for ami in self._listAmis():
+            if ami.id == external_id:
+                for bdm in ami.block_device_mappings:
+                    snapid = bdm.get('Ebs', {}).get('SnapshotId')
+                    if snapid:
+                        snaps.add(snapid)
+        self._deleteAmi(external_id)
+        for snapshot_id in snaps:
+            self._deleteSnapshot(snapshot_id)
 
     # Local implementation below
 

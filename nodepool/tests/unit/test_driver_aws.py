@@ -382,6 +382,16 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
 
+    def test_aws_diskimage_removal(self):
+        self.patch(AwsAdapter, '_import_image', self.fake_aws.import_image)
+        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
+        configfile = self.setup_config('aws/diskimage.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('ec2-us-west-2', 'fake-image')
+        self.replace_config(configfile, 'aws/config.yaml')
+        self.waitForImageDeletion('ec2-us-west-2', 'fake-image')
+        self.waitForBuildDeletion('fake-image', '0000000001')
+
     def test_aws_resource_cleanup(self):
         self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
 

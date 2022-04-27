@@ -1,3 +1,8 @@
+elements-dir: .
+images-dir: '{images_dir}'
+build-log-dir: '{build_log_dir}'
+build-log-retention: 1
+
 zookeeper-servers:
   - host: {zookeeper_host}
     port: {zookeeper_port}
