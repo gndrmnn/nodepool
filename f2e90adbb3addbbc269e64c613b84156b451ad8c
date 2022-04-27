@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "343bf6af_f422961e",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-04-27T19:34:56Z",
+      "side": 1,
+      "message": "It feels a little weird to have this map here. Is there a reason to have this here instead of having just an is_active property on the drivers themselves?",
+      "revId": "f2e90adbb3addbbc269e64c613b84156b451ad8c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
