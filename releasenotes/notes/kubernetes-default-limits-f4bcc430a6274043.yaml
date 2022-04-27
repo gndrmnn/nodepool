@@ -1,0 +1,21 @@
+---
+features:
+  - |
+    Config options for kubernetes providers were added to define default limits
+    for cpu and memory for pod-type labels.
+
+    * attr:`providers.[kubernetes].pools.default-label-cpu`
+    * attr:`providers.[kubernetes].pools.default-label-memory`
+
+    These values will apply to all pod-type labels within the same pool that do
+    not override these limits. This allows to enforce resource limits on pod
+    labels. It thereby enables to account for pool and tenant quotas in terms
+    of cpu and memory consumption. New config options for kubernetes pools
+    therefore also include
+
+    * attr:`providers.[kubernetes].pools.max-cores`
+    * attr:`providers.[kubernetes].pools.max-ram`
+
+    The exsisting tenant quota settings apply accordingly. Note that cpu and
+    memory quotas can still not be considered for labels that do not specify
+    any limits, i.e. neither a pool default, nor label specific limit is set.
