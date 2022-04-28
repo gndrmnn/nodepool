@@ -33,6 +33,23 @@
       "message": "recheck unrelated unstable unit test",
       "revId": "0adda1584baacbcc9c60f873d674c942598b8a21",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea35eb09_b13991d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27900
+      },
+      "writtenOn": "2022-04-28T10:36:22Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "0adda1584baacbcc9c60f873d674c942598b8a21",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
