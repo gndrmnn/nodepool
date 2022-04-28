@@ -487,20 +487,13 @@ class TestDriverAws(tests.DBTestCase):
         for _ in iterate_timeout(30, Exception, 'ami deletion'):
             image = self.ec2.Image(image_id)
             try:
-                if image.state == 'deleted':
-                    break
-            except botocore.exceptions.ClientError:
-                # Probably not found
-                break
+                # If this has a value the image was not deleted
+                self.assertIsNone(image.state)
             except AttributeError:
-                # NOTE(ianw) 2022-04-27 For reasons that are unclear
-                # but have been filed as
-                #  https://github.com/spulec/moto/issues/5067
-                # accessing the image.state property of a deleted image
-                # with moto 1.3.6  will no longer result in the ClientError
-                # above, but boto will get blank response and try to
-                # dereference a None value.  Thus catching this is a
-                # work-around until we have a better solution.
+                # Per AWS API, a recently deleted image is empty and
+                # looking at the state raises an AttributeFailure; see
+                # https://github.com/boto/boto3/issues/2531.  The image
+                # was deleted, so we continue on here
                 break
 
         for _ in iterate_timeout(30, Exception, 'snapshot deletion'):
