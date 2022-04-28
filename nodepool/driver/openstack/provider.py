@@ -135,14 +135,18 @@ class OpenStackProvider(Provider, QuotaSupport):
                     # It has not leaked.
                     continue
 
-            # In earlier versions of nova, flavor is an id. In later versions
-            # it returns the information we're looking for. If we get the
-            # information, we do not have to attempt to look up the ram or
-            # vcpus.
-            if hasattr(server.flavor, 'id'):
-                flavor = flavors.get(server.flavor.id)
-            else:
+            # In earlier versions of nova or the sdk, flavor has just an id.
+            # In later versions it returns the information we're looking for.
+            # If we get the information we want, we do not need to try to
+            # lookup the flavor in our list.
+            if hasattr(server.flavor, 'vcpus'):
                 flavor = server.flavor
+            else:
+                flavor = flavors.get(server.flavor.id)
+                # If we still haven't found the flavor, skip handling this
+                # server instead of failing completely
+                if not flavor:
+                    continue
             used_quota.add(QuotaInformation.construct_from_flavor(flavor))
 
         return used_quota
