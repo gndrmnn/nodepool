@@ -128,7 +128,7 @@ class FakeAws:
         raise NotImplementedError()
 
     def _listAmis(self):
-        return self.ec2.images.filter()
+        return list(self.ec2.images.filter())
 
     def _listSnapshots(self):
-        return self.ec2.snapshots.filter()
+        return list(self.ec2.snapshots.filter())

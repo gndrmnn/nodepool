@@ -128,11 +128,11 @@ class AwsCreateStateMachine(statemachine.StateMachine):
             self.instance = self.adapter._createInstance(
                 self.label, self.image_external_id,
                 self.tags, self.hostname, self.log)
+            self.quota = self.adapter._getQuotaForInstanceType(
+                self.instance.instance_type)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
-            self.quota = self.adapter._getQuotaForInstanceType(
-                self.instance.instance_type)
             self.instance = self.adapter._refresh(self.instance)
 
             if self.instance.state["Name"].lower() == "running":
@@ -448,24 +448,24 @@ class AwsAdapter(statemachine.Adapter):
     def _listInstances(self):
         with self.non_mutating_rate_limiter(
                 self.log.debug, "Listed instances"):
-            return self.ec2.instances.all()
+            return list(self.ec2.instances.all())
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listVolumes(self):
         with self.non_mutating_rate_limiter:
-            return self.ec2.volumes.all()
+            return list(self.ec2.volumes.all())
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
-            return self.ec2.images.filter(Owners=['self'])
+            return list(self.ec2.images.filter(Owners=['self']))
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
-            return self.ec2.snapshots.filter(OwnerIds=['self'])
+            return list(self.ec2.snapshots.filter(OwnerIds=['self']))
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listObjects(self):
@@ -475,7 +475,7 @@ class AwsAdapter(statemachine.Adapter):
 
         bucket = self.s3.Bucket(bucket_name)
         with self.non_mutating_rate_limiter:
-            return bucket.objects.all()
+            return list(bucket.objects.all())
 
     def _getLatestImageIdByFilters(self, image_filters):
         # Normally we would decorate this method, but our cache key is
@@ -487,9 +487,9 @@ class AwsAdapter(statemachine.Adapter):
             return val
 
         with self.non_mutating_rate_limiter:
-            res = self.ec2_client.describe_images(
+            res = list(self.ec2_client.describe_images(
                 Filters=image_filters
-            ).get("Images")
+            ).get("Images"))
 
         images = sorted(
             res,
@@ -598,7 +598,7 @@ class AwsAdapter(statemachine.Adapter):
             log.debug(f"Creating VM {hostname}")
             instances = self.ec2.create_instances(**args)
             log.debug(f"Created VM {hostname} as instance {instances[0].id}")
-            return self.ec2.Instance(instances[0].id)
+            return instances[0]
 
     def _deleteInstance(self, external_id, log=None):
         if log is None:
