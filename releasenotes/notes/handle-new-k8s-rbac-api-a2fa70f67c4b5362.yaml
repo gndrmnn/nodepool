@@ -4,3 +4,8 @@ other:
     Kubernetes 1.8 or newer is required by the Kubernetes driver.
     This was necessary to support Kubernetes 1.22.0 and newer which
     requires using APIs that are not supported before version 1.8.
+upgrade:
+  - |
+    Python 3.8 or newer is now required. This change was made for
+    two reasaons. The IBM SDK requires Python 3.7 or newer and Zuul
+    now requires 3.8 due to Ansible 5. Update Nodepool to match.
