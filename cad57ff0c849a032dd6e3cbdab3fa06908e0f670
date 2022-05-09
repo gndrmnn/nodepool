@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfcfce5b_458e6625",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-09T22:26:02Z",
+      "side": 1,
+      "message": "Would it be better to set the value to {} here instead? One potential upside to that is that as python 3.11 gets closer to reality we may see performance improvements if we manage to be more consistent about the \"shape\" of our objects.",
+      "revId": "cad57ff0c849a032dd6e3cbdab3fa06908e0f670",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce28e7fe_b9847526",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2322,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-09T22:26:02Z",
+      "side": 1,
+      "message": "This will wait for an entire minute. Is there anyway we can assert this more quickly? Maybe by checking zk state directly or some other side effect?\n\nThis is why I\u0027ve -1\u0027d the other comment is more for discussion.",
+      "revId": "cad57ff0c849a032dd6e3cbdab3fa06908e0f670",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
