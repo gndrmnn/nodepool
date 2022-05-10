@@ -36,6 +36,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e6decbf_83c853c6",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-05-10T14:44:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6051a64_1071a009",
+      "revId": "cad57ff0c849a032dd6e3cbdab3fa06908e0f670",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce28e7fe_b9847526",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "Yes. I added a helper API to get any node in a specific state, so we can look for any node in the zk.ABORTED state to know if a quota error has occurred.",
       "parentUuid": "ce28e7fe_b9847526",
+      "revId": "cad57ff0c849a032dd6e3cbdab3fa06908e0f670",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bee08ca_67de9f33",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2322,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-05-10T14:44:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8bb1dd7_c3bf1cfc",
       "revId": "cad57ff0c849a032dd6e3cbdab3fa06908e0f670",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
