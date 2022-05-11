@@ -104,6 +104,9 @@ class BaseComponent(ZooKeeperBase):
         if name not in self.content.keys():
             return super().__setattr__(name, value)
 
+        if self.content[name] == value:
+            return
+
         # Set the value in the local content dict
         self.content[name] = value
 
@@ -214,6 +217,8 @@ class PoolComponent(BaseComponent):
             "id": None,
             "provider_name": None,
             "supported_labels": [],
+            "priority": 100,
+            "paused": False,
         }
         self.content.update(self.initial_state)
 
