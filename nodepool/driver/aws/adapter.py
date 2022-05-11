@@ -431,6 +431,7 @@ class AwsAdapter(statemachine.Adapter):
         for instance in self._listInstances():
             if instance.id == obj.id:
                 return instance
+        return obj
 
     def _refreshDelete(self, obj):
         if obj is None:
