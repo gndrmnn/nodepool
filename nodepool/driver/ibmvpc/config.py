@@ -297,12 +297,11 @@ class IBMVPCProviderConfig(ProviderConfig):
             'ram': int,
         }
 
-        provider = {
+        provider = ProviderConfig.getCommonSchemaDict()
+        provider.update({
             # Normally provided by superclass; we override to add the
             # underscore restriction
             v.Required('name'): v.Match(r'^[^_]+$'),
-            'driver': str,
-            'max-concurrency': int,
             # For this class
             v.Required('pools'): [pool],
             v.Required('vpc'): str,
@@ -322,7 +321,7 @@ class IBMVPCProviderConfig(ProviderConfig):
             'launch-retries': int,
             'credentials-file': str,
             'object-storage': object_storage,
-        }
+        })
         return v.Schema(provider)
 
     def getSupportedLabels(self, pool_name=None):

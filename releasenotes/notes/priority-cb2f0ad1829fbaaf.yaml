@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Priority may now be set at the provider or provider-pool level.
+    Providers or pools with the highest priority will fulfill requests
+    first, until they are at quota, at which point lower-priority
+    providers will begin to be used.
+
+    See :attr:`providers.priority` for details.
