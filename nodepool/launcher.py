@@ -30,7 +30,8 @@ from nodepool import exceptions
 from nodepool import provider_manager
 from nodepool import stats
 from nodepool import config as nodepool_config
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
+from nodepool.zk import ZooKeeperClient
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.logconfig import get_annotated_logger
 from nodepool.version import version_info as npd_version_info
@@ -962,26 +963,28 @@ class NodePool(threading.Thread):
 
     def reconfigureZooKeeper(self, config):
         if self.config:
-            running = list(self.config.zookeeper_servers.values())
+            running = self.config.zookeeper_servers
         else:
             running = None
 
-        configured = list(config.zookeeper_servers.values())
+        configured = config.zookeeper_servers
         if running == configured:
             return
 
         if not self.zk and configured:
             self.log.debug("Connecting to ZooKeeper servers")
-            self.zk = zk.ZooKeeper()
-            self.zk.connect(configured,
-                            tls_cert=config.zookeeper_tls_cert,
-                            tls_key=config.zookeeper_tls_key,
-                            tls_ca=config.zookeeper_tls_ca,
-                            timeout=config.zookeeper_timeout,
-                            )
+            self.zk_client = ZooKeeperClient(
+                configured,
+                tls_cert=config.zookeeper_tls_cert,
+                tls_key=config.zookeeper_tls_key,
+                tls_ca=config.zookeeper_tls_ca,
+                timeout=config.zookeeper_timeout,
+            )
+            self.zk_client.connect()
+            self.zk = zk.ZooKeeper(self.zk_client)
         else:
             self.log.debug("Detected ZooKeeper server changes")
-            self.zk.resetHosts(configured)
+            self.zk_client.resetHosts(configured)
 
     def setConfig(self, config):
         self.config = config

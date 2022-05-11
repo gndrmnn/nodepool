@@ -28,7 +28,7 @@ from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.driver.utils import NodeDeleter
 from nodepool import stats
 from nodepool import version
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 # Import entire module to avoid partial-loading, circular import
 from nodepool.driver.openstack import handler

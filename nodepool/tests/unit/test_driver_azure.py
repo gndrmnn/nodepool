@@ -17,7 +17,7 @@
 import logging
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver.statemachine import StateMachineProvider
 
 from . import fake_azure

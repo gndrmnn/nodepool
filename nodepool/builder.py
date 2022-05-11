@@ -30,7 +30,8 @@ from nodepool import config as nodepool_config
 from nodepool import exceptions
 from nodepool import provider_manager
 from nodepool import stats
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
+from nodepool.zk import ZooKeeperClient
 
 
 MINS = 60
@@ -1362,7 +1363,7 @@ class NodePoolBuilder(object):
         config = nodepool_config.loadConfig(self._config_path)
         if self._secure_path:
             nodepool_config.loadSecureConfig(config, self._secure_path)
-        if not config.zookeeper_servers.values():
+        if not config.zookeeper_servers:
             raise RuntimeError('No ZooKeeper servers specified in config.')
         if not config.images_dir:
             raise RuntimeError('No images-dir specified in config.')
@@ -1392,15 +1393,15 @@ class NodePoolBuilder(object):
             builder_id = self._getBuilderID(builder_id_file)
 
             # All worker threads share a single ZooKeeper instance/connection.
-            self.zk = zk.ZooKeeper(enable_cache=False)
-            self.zk.connect(
-                list(self._config.zookeeper_servers.values()),
+            self.zk_client = ZooKeeperClient(
+                self._config.zookeeper_servers,
                 tls_cert=self._config.zookeeper_tls_cert,
                 tls_key=self._config.zookeeper_tls_key,
                 tls_ca=self._config.zookeeper_tls_ca,
                 timeout=self._config.zookeeper_timeout,
             )
-
+            self.zk_client.connect()
+            self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
             self.log.debug('Starting listener for build jobs')
 
             # Create build and upload worker objects

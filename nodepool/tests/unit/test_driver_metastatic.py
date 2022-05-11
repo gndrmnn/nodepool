@@ -19,7 +19,7 @@ import logging
 import testtools
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver.statemachine import StateMachineProvider
 from nodepool.cmd.config_validator import ConfigValidator
 

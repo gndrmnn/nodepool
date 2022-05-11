@@ -24,7 +24,7 @@ import testtools
 
 from nodepool.cmd import nodepoolcmd
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 
 

@@ -26,7 +26,7 @@ import googleapiclient.discovery
 import googleapiclient.errors
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 
 

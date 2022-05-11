@@ -24,7 +24,7 @@ import math
 import os
 import voluptuous as v
 
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool import exceptions
 from nodepool.logconfig import get_annotated_logger
 

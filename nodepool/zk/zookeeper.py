@@ -13,15 +13,13 @@
 from contextlib import contextmanager
 from copy import copy
 import abc
-import ipaddress
 import json
 import logging
 import time
 import uuid
 
-from kazoo.client import KazooClient, KazooState
+from kazoo.client import KazooState
 from kazoo import exceptions as kze
-from kazoo.handlers.threading import KazooTimeoutError
 from kazoo.recipe.lock import Lock
 from kazoo.recipe.cache import TreeCache, TreeEvent
 from kazoo.recipe.election import Election
@@ -71,66 +69,6 @@ def as_list(item):
     if isinstance(item, list):
         return item
     return [item]
-
-
-class ZooKeeperConnectionConfig(object):
-    '''
-    Represents the connection parameters for a ZooKeeper server.
-    '''
-
-    def __eq__(self, other):
-        if isinstance(other, ZooKeeperConnectionConfig):
-            if other.__dict__ == self.__dict__:
-                return True
-        return False
-
-    def __init__(self, host, port=2181, chroot=None):
-        '''Initialize the ZooKeeperConnectionConfig object.
-
-        :param str host: The hostname of the ZooKeeper server.
-        :param int port: The port on which ZooKeeper is listening.
-            Optional, default: 2181.
-        :param str chroot: A chroot for this connection.  All
-            ZooKeeper nodes will be underneath this root path.
-            Optional, default: None.
-
-        (one per server) defining the ZooKeeper cluster servers. Only
-        the 'host' attribute is required.'.
-
-        '''
-        self.host = host
-        self.port = port
-        self.chroot = chroot or ''
-
-    def __repr__(self):
-        return "host=%s port=%s chroot=%s" % \
-            (self.host, self.port, self.chroot)
-
-
-def buildZooKeeperHosts(host_list):
-    '''
-    Build the ZK cluster host list for client connections.
-
-    :param list host_list: A list of
-        :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects (one
-        per server) defining the ZooKeeper cluster servers.
-    '''
-    if not isinstance(host_list, list):
-        raise Exception("'host_list' must be a list")
-    hosts = []
-    for host_def in host_list:
-        h = host_def.host
-        # If this looks like a ipv6 literal address, make sure it's
-        # quoted in []'s
-        try:
-            addr = ipaddress.ip_address(host_def.host)
-            if addr.version == 6:
-                h = '[%s]' % addr
-        except ValueError:
-            pass
-        host = '%s:%s%s' % (h, host_def.port, host_def.chroot)
-        hosts.append(host)
-    return ",".join(hosts)
 
 
 class ZooKeeperWatchEvent(object):
@@ -191,6 +129,9 @@ class Launcher(Serializable):
                     self.supported_labels == other.supported_labels)
         else:
             return False
+
+    def __hash__(self):
+        return hash(self.id)
 
     @property
     def supported_labels(self):
@@ -797,11 +738,12 @@ class ZooKeeper(object):
     # Log zookeeper retry every 10 seconds
     retry_log_rate = 10
 
-    def __init__(self, enable_cache=True):
+    def __init__(self, zk_client, enable_cache=True):
         '''
         Initialize the ZooKeeper object.
         '''
-        self.client = None
+        self.zk_client = zk_client  # nodepool.zk.ZooKeeperClient
+        self.client = zk_client.client  # KazooClient
         self._became_lost = False
         self._last_retry_log = 0
         self._node_cache = None
@@ -809,8 +751,18 @@ class ZooKeeper(object):
         self._cached_nodes = {}
         self._cached_node_requests = {}
         self.enable_cache = enable_cache
-
         self.node_stats_event = None
+
+        if self.enable_cache:
+            self._node_cache = TreeCache(self.client, self.NODE_ROOT)
+            self._node_cache.listen_fault(self.cacheFaultListener)
+            self._node_cache.listen(self.nodeCacheListener)
+            self._node_cache.start()
+
+            self._request_cache = TreeCache(self.client, self.REQUEST_ROOT)
+            self._request_cache.listen_fault(self.cacheFaultListener)
+            self._request_cache.listen(self.requestCacheListener)
+            self._request_cache.start()
 
     # =======================================================================
     # Private Methods
@@ -1011,61 +963,6 @@ class ZooKeeper(object):
     def resetLostFlag(self):
         self._became_lost = False
 
-    def connect(self, host_list, read_only=False, tls_cert=None,
-                tls_key=None, tls_ca=None, timeout=10.0):
-        '''
-        Establish a connection with ZooKeeper cluster.
-
-        Convenience method if a pre-existing ZooKeeper connection is not
-        supplied to the ZooKeeper object at instantiation time.
-
-        :param list host_list: A list of
-            :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
-            (one per server) defining the ZooKeeper cluster servers.
-        :param bool read_only: If True, establishes a read-only connection.
-        :param str tls_key: Path to TLS key
-        :param str tls_cert: Path to TLS cert
-        :param str tls_ca: Path to TLS CA cert
-
-        '''
-        if self.client is None:
-            hosts = buildZooKeeperHosts(host_list)
-            args = dict(
-                hosts=hosts,
-                read_only=read_only,
-                timeout=timeout,
-            )
-
-            args['use_ssl'] = True
-            if not (tls_key and tls_cert and tls_ca):
-                raise Exception("A TLS ZooKeeper connection is required; "
-                                "please supply the zookeeper-tls "
-                                "config values.")
-
-            args['keyfile'] = tls_key
-            args['certfile'] = tls_cert
-            args['ca'] = tls_ca
-            self.client = KazooClient(**args)
-            self.client.add_listener(self._connection_listener)
-            # Manually retry initial connection attempt
-            while True:
-                try:
-                    self.client.start(1)
-                    break
-                except KazooTimeoutError:
-                    self.logConnectionRetryEvent()
-
-            if self.enable_cache:
-                self._node_cache = TreeCache(self.client, self.NODE_ROOT)
-                self._node_cache.listen_fault(self.cacheFaultListener)
-                self._node_cache.listen(self.nodeCacheListener)
-                self._node_cache.start()
-
-                self._request_cache = TreeCache(self.client, self.REQUEST_ROOT)
-                self._request_cache.listen_fault(self.cacheFaultListener)
-                self._request_cache.listen(self.requestCacheListener)
-                self._request_cache.start()
-
     def disconnect(self):
         '''
         Close the ZooKeeper cluster connection.
@@ -1087,16 +984,13 @@ class ZooKeeper(object):
             self.client.close()
             self.client = None
 
-    def resetHosts(self, host_list):
+    def resetHosts(self, hosts):
         '''
         Reset the ZooKeeper cluster connection host list.
 
-        :param list host_list: A list of
-            :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects
-            (one per server) defining the ZooKeeper cluster servers.
+        :param str host_list: A ZK host list
         '''
         if self.client is not None:
-            hosts = buildZooKeeperHosts(host_list)
             self.client.set_hosts(hosts=hosts)
 
     @contextmanager
