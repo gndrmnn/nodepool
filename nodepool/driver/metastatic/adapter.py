@@ -19,7 +19,7 @@ import time
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 
 """ This driver behaves like a static driver execpt that the backing

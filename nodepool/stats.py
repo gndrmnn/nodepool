@@ -18,7 +18,7 @@ import os
 import logging
 import statsd
 
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 log = logging.getLogger("nodepool.stats")
 

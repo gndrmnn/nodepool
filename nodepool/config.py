@@ -15,14 +15,74 @@
 # limitations under the License.
 
 import functools
+import ipaddress
 import math
 import os
 import time
 import yaml
 
-from nodepool import zk
 from nodepool.driver import ConfigValue
 from nodepool.driver import Drivers
+
+
+class ZooKeeperConnectionConfig(object):
+    '''
+    Represents the connection parameters for a ZooKeeper server.
+    '''
+
+    def __eq__(self, other):
+        if isinstance(other, ZooKeeperConnectionConfig):
+            if other.__dict__ == self.__dict__:
+                return True
+        return False
+
+    def __init__(self, host, port=2181, chroot=None):
+        '''Initialize the ZooKeeperConnectionConfig object.
+
+        :param str host: The hostname of the ZooKeeper server.
+        :param int port: The port on which ZooKeeper is listening.
+            Optional, default: 2181.
+        :param str chroot: A chroot for this connection.  All
+            ZooKeeper nodes will be underneath this root path.
+            Optional, default: None.
+
+        (one per server) defining the ZooKeeper cluster servers. Only
+        the 'host' attribute is required.'.
+
+        '''
+        self.host = host
+        self.port = port
+        self.chroot = chroot or ''
+
+    def __repr__(self):
+        return "host=%s port=%s chroot=%s" % \
+            (self.host, self.port, self.chroot)
+
+
+def buildZooKeeperHosts(host_list):
+    '''
+    Build the ZK cluster host list for client connections.
+
+    :param list host_list: A list of
+        :py:class:`~nodepool.zk.ZooKeeperConnectionConfig` objects (one
+        per server) defining the ZooKeeper cluster servers.
+    '''
+    if not isinstance(host_list, list):
+        raise Exception("'host_list' must be a list")
+    hosts = []
+    for host_def in host_list:
+        h = host_def.host
+        # If this looks like a ipv6 literal address, make sure it's
+        # quoted in []'s
+        try:
+            addr = ipaddress.ip_address(host_def.host)
+            if addr.version == 6:
+                h = '[%s]' % addr
+        except ValueError:
+            pass
+        host = '%s:%s%s' % (h, host_def.port, host_def.chroot)
+        hosts.append(host)
+    return ",".join(hosts)
 
 
 class Config(ConfigValue):
@@ -104,12 +164,13 @@ class Config(ConfigValue):
         if not zk_cfg:
             return
 
+        hosts = []
         for server in zk_cfg:
-            z = zk.ZooKeeperConnectionConfig(server['host'],
-                                             server.get('port', 2281),
-                                             server.get('chroot', None))
-            name = z.host + '_' + str(z.port)
-            self.zookeeper_servers[name] = z
+            z = ZooKeeperConnectionConfig(server['host'],
+                                          server.get('port', 2281),
+                                          server.get('chroot', None))
+            hosts.append(z)
+        self.zookeeper_servers = buildZooKeeperHosts(hosts)
 
     def setZooKeeperTimeout(self, timeout):
         self.zookeeper_timeout = float(timeout)

@@ -18,7 +18,7 @@ import logging
 import time
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 
 class FakeCoreClient(object):

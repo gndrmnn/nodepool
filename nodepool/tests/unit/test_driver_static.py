@@ -19,7 +19,7 @@ import os
 
 from nodepool import config as nodepool_config
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.cmd.config_validator import ConfigValidator
 
 

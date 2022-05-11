@@ -17,7 +17,7 @@ import logging
 from kazoo import exceptions as kze
 
 from nodepool import exceptions
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver.utils import NodeLauncher
 from nodepool.driver import NodeRequestHandler
 

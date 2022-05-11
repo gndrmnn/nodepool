@@ -26,7 +26,7 @@ from nodepool.nodeutils import nodescan
 from nodepool.logconfig import get_annotated_logger
 from nodepool import stats
 from nodepool import exceptions
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 from kazoo import exceptions as kze
 import cachetools

@@ -14,7 +14,7 @@
 
 import logging
 
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 from nodepool.driver.openshift.handler import OpenshiftLauncher
 from nodepool.driver.openshift.handler import OpenshiftNodeRequestHandler
