@@ -61,6 +61,20 @@ Selecting the openshift pods driver adds the following options to the
 
          The project's (namespace) name that will be used to create the pods.
 
+      .. attr:: priority
+         :type: int
+         :default: 100
+
+         The priority of this provider pool (a lesser number is a higher
+         priority).  Nodepool launchers will yield requests to other
+         provider pools with a higher priority as long as they are not
+         paused.  This means that in general, higher priority pools will
+         reach quota first before lower priority pools begin to be used.
+
+         This setting may be specified at the provider level in order
+         to apply to all pools within that provider, or it can be
+         overridden here for a specific pool.
+
       .. attr:: node-attributes
          :type: dict
 

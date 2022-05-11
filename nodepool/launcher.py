@@ -81,6 +81,17 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                                          uuid.uuid4().hex)
         stats.StatsReporter.__init__(self)
 
+    def getPriority(self):
+        pool = self.getPoolConfig()
+        provider = self.getProviderConfig()
+        if pool.priority is not None:
+            priority = pool.priority
+        elif provider.priority is not None:
+            priority = provider.priority
+        else:
+            priority = 100
+        return priority
+
     # ---------------------------------------------------------------
     # Private methods
     # ---------------------------------------------------------------
@@ -168,21 +179,37 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             log = get_annotated_logger(self.log, event_id=req.event_id,
                                        node_request_id=req.id)
+            # Get the candidate launchers for these nodes
+            candidate_launchers = set(
+                x for x in launchers
+                if (set(x.supported_labels).issuperset(set(req.node_types)) and
+                    x.id not in req.declined_by)
+            )
             # Skip this request if it is requesting another provider
             # which is online
             if req.provider and req.provider != self.provider_name:
                 # The request is asking for a specific provider
-                candidate_launchers = set(
-                    x.id for x in launchers
+                launcher_ids_for_provider = set(
+                    x.id for x in candidate_launchers
                     if x.provider_name == req.provider
-                    and set(x.supported_labels).issuperset(req.node_types))
-                if candidate_launchers:
-                    # There is a launcher online which can satisfy the request
-                    if not candidate_launchers.issubset(set(req.declined_by)):
-                        # It has not yet declined the request, so yield to it.
-                        log.debug("Yielding request to provider %s %s",
-                                  req.provider, candidate_launchers)
-                        continue
+                )
+                if launcher_ids_for_provider:
+                    # There is a launcher online which can satisfy the
+                    # request that has not yet declined the request,
+                    # so yield to it.
+                    log.debug("Yielding request to provider %s %s",
+                              req.provider, launcher_ids_for_provider)
+                    continue
+
+            priority = self.getPriority()
+            launcher_ids_with_higher_priority = set(
+                x.id for x in candidate_launchers
+                if x.priority < priority and not x.paused
+            )
+            if launcher_ids_with_higher_priority:
+                log.debug("Yielding request to higher priority providers %s",
+                          launcher_ids_with_higher_priority)
+                continue
 
             if has_quota_support and not all(label_quota.get(l, math.inf) > 0
                                              for l in req.node_types):
@@ -363,6 +390,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 'provider_name': self.provider_name,
                 'supported_labels': list(labels),
                 'state': self.component_info.RUNNING,
+                'priority': self.getPriority(),
             })
         self.component_info.register()
 
@@ -380,8 +408,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 labels = set()
                 for prov_cfg in self.nodepool.config.providers.values():
                     labels.update(prov_cfg.getSupportedLabels())
-                if set(self.component_info.supported_labels) != labels:
-                    self.component_info.supported_labels = list(labels)
+                self.component_info.supported_labels = list(labels)
+                self.component_info.priority = self.getPriority()
 
                 self.updateProviderLimits(
                     self.nodepool.config.providers.get(self.provider_name))
@@ -389,6 +417,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     self.nodepool.config.tenant_resource_limits)
 
                 if not self.paused_handler:
+                    self.component_info.paused = False
                     while not self._assignHandlers():
                         # _assignHandlers can take quite some time on a busy
                         # system so sprinkle _removeCompletedHandlers in
@@ -396,6 +425,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                         # requests that already have all nodes.
                         self._removeCompletedHandlers()
                 else:
+                    self.component_info.paused = True
                     # If we are paused, one request handler could not
                     # satisfy its assigned request, so give it
                     # another shot. Unpause ourselves if it completed.

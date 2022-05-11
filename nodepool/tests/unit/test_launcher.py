@@ -2455,3 +2455,47 @@ class TestLauncher(tests.DBTestCase):
         # Ready for the real delete now
         zk.ZooKeeper.deleteRawNode = real_method
         self.waitForNodeDeletion(node)
+
+    def test_provider_priority(self):
+        """Test provider priorities"""
+        configfile = self.setup_config('priority.yaml')
+        self.useBuilder(configfile)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.waitForImage('low-provider', 'fake-image')
+        self.waitForImage('high-provider', 'fake-image')
+
+        # The first request should be handled by the highest priority
+        # provider (high-provider; priority 1)
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1)
+        req1 = self.waitForNodeRequest(req1)
+        self.assertEqual(req1.state, zk.FULFILLED)
+        self.assertEqual(len(req1.nodes), 1)
+        node1 = self.zk.getNode(req1.nodes[0])
+        self.assertEqual(node1.provider, 'high-provider')
+
+        # The second request should also be handled by the highest
+        # priority provider, but since it has max-servers=1, this
+        # request should be paused, which will cause the provider to
+        # be paused.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req2)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+        self.assertEqual(req2.state, zk.PENDING)
+
+        # The third request should be handled by the low priority
+        # provider now that the high provider is paused.
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req3)
+        req3 = self.waitForNodeRequest(req3)
+        self.assertEqual(req3.state, zk.FULFILLED)
+        self.assertEqual(len(req3.nodes), 1)
+        node3 = self.zk.getNode(req3.nodes[0])
+        self.assertEqual(node3.provider, 'low-provider')

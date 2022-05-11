@@ -860,6 +860,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         self.labels = {}
         self.max_servers = math.inf
         self.node_attributes = None
+        self.priority = None
 
     @classmethod
     def getCommonSchemaDict(self):
@@ -876,6 +877,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         return {
             'max-servers': int,
             'node-attributes': dict,
+            'priority': int,
         }
 
     @abc.abstractmethod
@@ -894,6 +896,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         '''
         self.max_servers = pool_config.get('max-servers', math.inf)
         self.node_attributes = pool_config.get('node-attributes')
+        self.priority = pool_config.get('priority', None)
 
 
 class DriverConfig(ConfigValue):
@@ -913,13 +916,15 @@ class ProviderConfig(ConfigValue, metaclass=abc.ABCMeta):
         self.driver = DriverConfig()
         self.driver.name = provider.get('driver', 'openstack')
         self.max_concurrency = provider.get('max-concurrency', -1)
+        self.priority = provider.get('priority', None)
 
     @classmethod
     def getCommonSchemaDict(self):
         return {
             v.Required('name'): str,
             'driver': str,
-            'max-concurrency': int
+            'max-concurrency': int,
+            'priority': int,
         }
 
     @property
