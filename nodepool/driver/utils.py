@@ -445,16 +445,18 @@ class RateLimiter:
         if self.last_ts is None:
             return total_delay
         while True:
-            delta = time.monotonic() - self.last_ts
+            now = time.monotonic()
+            delta = now - self.last_ts
             if delta >= self.delta:
                 break
             delay = self.delta - delta
             time.sleep(delay)
             total_delay += delay
+        self.last_ts = time.monotonic()
         return total_delay
 
     def __exit__(self, etype, value, tb):
         self._exit(etype, value, tb)
 
     def _exit(self, etype, value, tb):
-        self.last_ts = time.monotonic()
+        pass
