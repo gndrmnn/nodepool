@@ -22,7 +22,7 @@ import openstack
 
 from nodepool import exceptions
 from nodepool import nodeutils as utils
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver.utils import NodeLauncher, QuotaInformation
 from nodepool.driver import NodeRequestHandler
 

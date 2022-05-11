@@ -21,7 +21,7 @@ import time
 
 from nodepool import builder, tests
 from nodepool.driver.fake import provider as fakeprovider
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.config import Config
 from nodepool.nodeutils import iterate_timeout
 

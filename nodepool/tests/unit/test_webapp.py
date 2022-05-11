@@ -20,7 +20,7 @@ from urllib import request
 from urllib.error import HTTPError
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 
 

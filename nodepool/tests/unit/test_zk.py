@@ -17,7 +17,8 @@ import uuid
 
 from nodepool import exceptions as npe
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
+from nodepool.config import ZooKeeperConnectionConfig, buildZooKeeperHosts
 from nodepool.nodeutils import iterate_timeout
 
 
@@ -28,38 +29,38 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_buildZooKeeperHosts_single(self):
         hosts = [
-            zk.ZooKeeperConnectionConfig('127.0.0.1', port=2181,
-                                         chroot='/test1')
+            ZooKeeperConnectionConfig('127.0.0.1', port=2181,
+                                      chroot='/test1')
         ]
         self.assertEqual('127.0.0.1:2181/test1',
-                         zk.buildZooKeeperHosts(hosts))
+                         buildZooKeeperHosts(hosts))
 
     def test_buildZooKeeperHosts_multiple(self):
         hosts = [
-            zk.ZooKeeperConnectionConfig('127.0.0.1', port=2181,
-                                         chroot='/test1'),
-            zk.ZooKeeperConnectionConfig('127.0.0.2', port=2182,
-                                         chroot='/test2')
+            ZooKeeperConnectionConfig('127.0.0.1', port=2181,
+                                      chroot='/test1'),
+            ZooKeeperConnectionConfig('127.0.0.2', port=2182,
+                                      chroot='/test2')
         ]
         self.assertEqual('127.0.0.1:2181/test1,127.0.0.2:2182/test2',
-                         zk.buildZooKeeperHosts(hosts))
+                         buildZooKeeperHosts(hosts))
 
     def test_buildZooKeeperHosts_ipv6(self):
         hosts = [
-            zk.ZooKeeperConnectionConfig(
+            ZooKeeperConnectionConfig(
                 '2001:4800:7817:103:be76:4eff:fe04:e359', port=2181,
                 chroot='/test1'),
-            zk.ZooKeeperConnectionConfig(
+            ZooKeeperConnectionConfig(
                 '[2002:4800:7817:103:be76:4eff:fe04:e359]', port=2181,
                 chroot='/test2'),
-            zk.ZooKeeperConnectionConfig('127.0.0.2', port=2182,
-                                         chroot='/test3')
+            ZooKeeperConnectionConfig('127.0.0.2', port=2182,
+                                      chroot='/test3')
         ]
         self.assertEqual((
             '[2001:4800:7817:103:be76:4eff:fe04:e359]:2181/test1,'
             '[2002:4800:7817:103:be76:4eff:fe04:e359]:2181/test2,'
             '127.0.0.2:2182/test3'
-        ), zk.buildZooKeeperHosts(hosts))
+        ), buildZooKeeperHosts(hosts))
 
     def test_imageBuildLock(self):
         path = self.zk._imageBuildLockPath("ubuntu-trusty")

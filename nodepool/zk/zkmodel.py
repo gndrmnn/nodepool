@@ -183,6 +183,7 @@ class Launcher(Serializable):
     def __init__(self):
         self.id = None
         self.provider_name = None
+        self.priority = 100
         self._supported_labels = set()
 
     def __eq__(self, other):
@@ -191,6 +192,9 @@ class Launcher(Serializable):
                     self.supported_labels == other.supported_labels)
         else:
             return False
+
+    def __hash__(self):
+        return hash(self.id)
 
     @property
     def supported_labels(self):
@@ -208,6 +212,7 @@ class Launcher(Serializable):
         d['provider_name'] = self.provider_name
         # sets are not JSON serializable, so use a sorted list
         d['supported_labels'] = sorted(self.supported_labels)
+        d['priority'] = self.priority
         return d
 
     @staticmethod
@@ -219,6 +224,7 @@ class Launcher(Serializable):
         #                removed later.
         obj.provider_name = d.get('provider_name', 'unknown')
         obj.supported_labels = set(d.get('supported_labels', []))
+        obj.priority = d.get('priority', 100)
         return obj
 
 

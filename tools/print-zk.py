@@ -16,7 +16,8 @@ import argparse
 import logging
 
 import nodepool.config
-import nodepool.zk
+from nodepool.zk import zookeeper as zk
+from nodepool.zk import ZooKeeperClient
 
 # A script to print the zookeeper tree given a nodepool config file.
 
@@ -30,8 +31,15 @@ args = parser.parse_args()
 
 config = nodepool.config.loadConfig(args.config)
 
-zk = nodepool.zk.ZooKeeper(enable_cache=False)
-zk.connect(list(config.zookeeper_servers.values()))
+zk_client = ZooKeeperClient(
+    config.zookeeper_servers,
+    tls_cert=config.zookeeper_tls_cert,
+    tls_key=config.zookeeper_tls_key,
+    tls_ca=config.zookeeper_tls_ca,
+    timeout=config.zookeeper_timeout,
+)
+zk_client.connect()
+zk = zk.ZooKeeper(zk_client, enable_cache=False)
 
 def join(a, b):
     if a.endswith('/'):

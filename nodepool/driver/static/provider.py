@@ -22,7 +22,7 @@ from collections import Counter, namedtuple
 
 from nodepool import exceptions
 from nodepool import nodeutils
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver import Provider
 from nodepool.driver.utils import NodeDeleter
 from nodepool.driver.utils import QuotaInformation, QuotaSupport

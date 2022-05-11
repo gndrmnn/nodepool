@@ -21,7 +21,8 @@ from prettytable import PrettyTable
 from nodepool import launcher
 from nodepool import provider_manager
 from nodepool import status
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
+from nodepool.zk import ZooKeeperClient
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
 
@@ -425,12 +426,15 @@ class NodePoolCmd(NodepoolApp):
                                  'request-list', 'info', 'erase',
                                  'image-pause', 'image-unpause',
                                  'export-image-data', 'import-image-data'):
-            self.zk = zk.ZooKeeper(enable_cache=False)
-            self.zk.connect(
-                list(config.zookeeper_servers.values()),
+            self.zk_client = ZooKeeperClient(
+                config.zookeeper_servers,
                 tls_cert=config.zookeeper_tls_cert,
                 tls_key=config.zookeeper_tls_key,
-                tls_ca=config.zookeeper_tls_ca)
+                tls_ca=config.zookeeper_tls_ca,
+                timeout=config.zookeeper_timeout,
+            )
+            self.zk_client.connect()
+            self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
 
         self.pool.setConfig(config)
         self.args.func()
