@@ -1591,66 +1591,6 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             pass
 
-    def registerLauncher(self, launcher):
-        '''
-        Register an active node launcher.
-
-        The launcher is de-registered when the launcher process terminates or
-        otherwise disconnects from ZooKeeper, or via deregisterLauncher().
-        It will need to re-register after a lost connection. This method is
-        safe to call multiple times.
-
-        :param Launcher launcher: Object describing the launcher.
-        '''
-        path = self._launcherPath(launcher.id)
-
-        if self.client.exists(path):
-            data, _ = self.client.get(path)
-            obj = Launcher.fromDict(self._bytesToDict(data))
-            if obj != launcher:
-                self.client.set(path, launcher.serialize())
-                self.log.debug("Updated registration for launcher %s",
-                               launcher.id)
-        else:
-            self.client.create(path, value=launcher.serialize(),
-                               makepath=True, ephemeral=True)
-            self.log.debug("Registered launcher %s", launcher.id)
-
-    def deregisterLauncher(self, launcher_id):
-        '''
-        Deregister an active node launcher.
-
-        :param str launcher_id: ID of the launcher to deregister.
-        '''
-        path = self._launcherPath(launcher_id)
-        try:
-            self.client.delete(path, recursive=True)
-        except kze.NoNodeError:
-            pass
-
-    def getRegisteredLaunchers(self):
-        '''
-        Get a list of all launchers that have registered with ZooKeeper.
-
-        :returns: A list of Launcher objects, or empty list if none are found.
-        '''
-        try:
-            launcher_ids = self.client.get_children(self.LAUNCHER_ROOT)
-        except kze.NoNodeError:
-            return []
-
-        objs = []
-        for launcher in launcher_ids:
-            path = self._launcherPath(launcher)
-            try:
-                data, _ = self.client.get(path)
-            except kze.NoNodeError:
-                # launcher disappeared
-                continue
-
-            objs.append(Launcher.fromDict(self._bytesToDict(data)))
-        return objs
-
     def getNodeRequests(self):
         '''
         Get the current list of all node requests in priority sorted order.

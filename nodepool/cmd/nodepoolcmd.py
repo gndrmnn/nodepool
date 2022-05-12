@@ -23,6 +23,7 @@ from nodepool import provider_manager
 from nodepool import status
 from nodepool.zk import zookeeper as zk
 from nodepool.zk import ZooKeeperClient
+from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.cmd import NodepoolApp
 from nodepool.cmd.config_validator import ConfigValidator
 
@@ -435,6 +436,7 @@ class NodePoolCmd(NodepoolApp):
             )
             self.zk_client.connect()
             self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
+            COMPONENT_REGISTRY.create(self.zk_client)
 
         self.pool.setConfig(config)
         self.args.func()

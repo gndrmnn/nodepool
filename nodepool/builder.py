@@ -32,6 +32,10 @@ from nodepool import provider_manager
 from nodepool import stats
 from nodepool.zk import zookeeper as zk
 from nodepool.zk import ZooKeeperClient
+from nodepool.zk.components import (
+    COMPONENT_REGISTRY, BuilderComponent
+)
+from nodepool.version import get_version_string
 
 
 MINS = 60
@@ -1402,6 +1406,14 @@ class NodePoolBuilder(object):
             )
             self.zk_client.connect()
             self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
+
+            hostname = socket.gethostname()
+            self.component_info = BuilderComponent(
+                self.zk_client, hostname,
+                version=get_version_string())
+            self.component_info.register()
+            COMPONENT_REGISTRY.create(self.zk_client)
+
             self.log.debug('Starting listener for build jobs')
 
             # Create build and upload worker objects
