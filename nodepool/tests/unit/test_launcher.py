@@ -18,13 +18,16 @@ import math
 import time
 import fixtures
 import mock
+import socket
 import testtools
 
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
+from nodepool.zk.components import PoolComponent
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool.nodeutils import iterate_timeout
 import nodepool.launcher
+from nodepool.version import get_version_string
 
 from kazoo import exceptions as kze
 
@@ -760,10 +763,17 @@ class TestLauncher(tests.DBTestCase):
 
         # Create a dummy launcher with a different set of supported labels
         # than what we are going to request.
-        dummy_launcher = zk.Launcher()
-        dummy_launcher.provider_name = 'other-provider'
-        dummy_launcher.supported_labels = {'other-label', }
-        self.zk.registerLauncher(dummy_launcher)
+        hostname = socket.gethostname()
+        dummy_component = PoolComponent(
+            self.zk.zk_client, hostname,
+            version=get_version_string())
+        dummy_component.content.update({
+            'id': 'dummy',
+            'provider_name': 'other-provider',
+            'supported_labels': ['other-label'],
+            'state': dummy_component.RUNNING,
+        })
+        dummy_component.register()
 
         # Node request for a specific provider that doesn't support the
         # requested node type.
@@ -777,6 +787,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req.state, zk.FULFILLED)
         self.assertEqual(len(req.nodes), 1)
         self.zk.getNode(req.nodes[0])
+        dummy_component.unregister()
 
     def test_node_boot_from_volume(self):
         """Test that an image and node are created from a volume"""

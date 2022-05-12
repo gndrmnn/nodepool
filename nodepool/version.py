@@ -30,3 +30,9 @@ try:
         git_version = _metadata['git_version']
 except Exception:
     pass
+
+
+def get_version_string():
+    if is_release:
+        return release_string
+    return "{} {}".format(release_string, git_version)
