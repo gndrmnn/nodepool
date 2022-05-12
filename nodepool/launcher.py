@@ -32,9 +32,12 @@ from nodepool import stats
 from nodepool import config as nodepool_config
 from nodepool.zk import zookeeper as zk
 from nodepool.zk import ZooKeeperClient
+from nodepool.zk.components import (
+    COMPONENT_REGISTRY, LauncherComponent, PoolComponent
+)
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.logconfig import get_annotated_logger
-from nodepool.version import version_info as npd_version_info
+from nodepool.version import get_version_string
 
 
 MINS = 60
@@ -109,7 +112,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # become out of date as the loop progresses, but it should be
         # good enough to determine whether we should process requests
         # which express a preference for a specific provider.
-        launchers = self.zk.getRegisteredLaunchers()
+        launchers = COMPONENT_REGISTRY.registry.all(kind='pool')
 
         pm = self.getProviderManager()
         has_quota_support = isinstance(pm, QuotaSupport)
@@ -174,7 +177,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 candidate_launchers = set(
                     x.id for x in launchers
                     if x.provider_name == req.provider
-                    and x.supported_labels.issuperset(req.node_types))
+                    and set(x.supported_labels).issuperset(req.node_types))
                 if candidate_launchers:
                     # There is a launcher online which can satisfy the request
                     if not candidate_launchers.issubset(set(req.declined_by)):
@@ -349,6 +352,22 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
     def run(self):
         self.running = True
 
+        # Make sure we're always registered with ZK
+        hostname = socket.gethostname()
+        self.component_info = PoolComponent(
+            self.zk.zk_client, hostname,
+            version=get_version_string())
+        labels = set()
+        for prov_cfg in self.nodepool.config.providers.values():
+            labels.update(prov_cfg.getSupportedLabels())
+            self.component_info.content.update({
+                'id': self.launcher_id,
+                'provider_name': self.provider_name,
+                'supported_labels': list(labels),
+                'state': self.component_info.RUNNING,
+            })
+        self.component_info.register()
+
         while self.running:
             try:
                 # Don't do work if we've lost communication with the ZK cluster
@@ -359,15 +378,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     time.sleep(SUSPEND_WAIT_TIME)
                 if did_suspend:
                     self.log.info("ZooKeeper available. Resuming")
-
-                # Make sure we're always registered with ZK
-                launcher = zk.Launcher()
-                launcher.id = self.launcher_id
-                for prov_cfg in self.nodepool.config.providers.values():
-                    launcher.supported_labels.update(
-                        prov_cfg.getSupportedLabels())
-                launcher.provider_name = self.provider_name
-                self.zk.registerLauncher(launcher)
 
                 self.updateProviderLimits(
                     self.nodepool.config.providers.get(self.provider_name))
@@ -408,7 +418,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         '''
         self.log.info("%s received stop" % self.name)
         self.running = False
-        self.zk.deregisterLauncher(self.launcher_id)
+        self.component_info.unregister()
         self.stop_event.set()
 
 
@@ -982,6 +992,13 @@ class NodePool(threading.Thread):
             )
             self.zk_client.connect()
             self.zk = zk.ZooKeeper(self.zk_client)
+
+            COMPONENT_REGISTRY.create(self.zk_client)
+            hostname = socket.gethostname()
+            self.component_info = LauncherComponent(
+                self.zk_client, hostname,
+                version=get_version_string())
+            self.component_info.register()
         else:
             self.log.debug("Detected ZooKeeper server changes")
             self.zk_client.resetHosts(configured)
@@ -1142,7 +1159,7 @@ class NodePool(threading.Thread):
         Start point for the NodePool thread.
         '''
         self.log.info("Nodepool launcher %s starting",
-                      npd_version_info.release_string())
+                      get_version_string())
         while not self._stopped:
             try:
                 self.updateConfig()
@@ -1156,6 +1173,8 @@ class NodePool(threading.Thread):
                 if did_suspend:
                     self.log.info("ZooKeeper available. Resuming")
 
+                if self.component_info.state != self.component_info.RUNNING:
+                    self.component_info.state = self.component_info.RUNNING
                 self.createMinReady()
 
                 if not self._cleanup_thread:
