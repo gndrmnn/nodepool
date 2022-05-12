@@ -20,6 +20,7 @@ import statsd
 
 from nodepool.zk import zookeeper as zk
 
+
 log = logging.getLogger("nodepool.stats")
 
 
@@ -97,7 +98,7 @@ class StatsReporter(object):
 
         states = {}
 
-        launchers = zk_conn.getRegisteredLaunchers()
+        launchers = zk_conn.getRegisteredPools()
         labels = set()
         for launcher in launchers:
             labels.update(launcher.supported_labels)

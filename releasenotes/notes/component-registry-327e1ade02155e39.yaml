@@ -1,0 +1,11 @@
+---
+upgrade:
+  - |
+    Due to an internal change in how Nodepool launchers communicate
+    with each other, all launchers should be upgraded to the same
+    version within a short period of time.
+
+    They will generally continue to work at different versions, but
+    the mechanism that allows them to yield to specific providers when
+    requested is being changed and so that will not function correctly
+    unless they are upgraded near-simultaneously.

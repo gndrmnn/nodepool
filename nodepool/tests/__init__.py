@@ -38,6 +38,7 @@ from nodepool import launcher
 from nodepool import webapp
 from nodepool.zk import zookeeper as zk
 from nodepool.zk import ZooKeeperClient
+from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.cmd.config_validator import ConfigValidator
 from nodepool.nodeutils import iterate_timeout
 
@@ -160,9 +161,19 @@ class StatsdFixture(fixtures.Fixture):
         self.thread.join()
 
 
+class GlobalRegistryFixture(fixtures.Fixture):
+    def _setUp(self):
+        self.addCleanup(self._cleanup)
+
+    def _cleanup(self):
+        # Remove our component registry from the global
+        COMPONENT_REGISTRY.clearRegistry()
+
+
 class BaseTestCase(testtools.TestCase):
     def setUp(self):
         super(BaseTestCase, self).setUp()
+        self.useFixture(GlobalRegistryFixture())
         test_timeout = os.environ.get('OS_TEST_TIMEOUT', 60)
         try:
             test_timeout = int(test_timeout)
