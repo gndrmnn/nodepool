@@ -25,6 +25,7 @@ import os
 import voluptuous as v
 
 from nodepool.zk import zookeeper as zk
+from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool import exceptions
 from nodepool.logconfig import get_annotated_logger
 
@@ -641,7 +642,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # want to make sure we don't continuously grow this array.
         if self.launcher_id not in self.request.declined_by:
             self.request.declined_by.append(self.launcher_id)
-        launchers = set([x.id for x in self.zk.getRegisteredLaunchers()])
+        launchers = set([x.id for x in
+                         COMPONENT_REGISTRY.registry.all(kind='pool')])
         if launchers.issubset(set(self.request.declined_by)):
             # All launchers have declined it
             self.log.debug("Failing declined node request")
