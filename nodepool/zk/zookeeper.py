@@ -26,6 +26,7 @@ from kazoo.recipe.election import Election
 
 from nodepool import exceptions as npe
 from nodepool.logconfig import get_annotated_logger
+from nodepool.zk.components import COMPONENT_REGISTRY
 
 # States:
 # We are building this image (or node) but it is not ready for use.
@@ -111,59 +112,6 @@ class Serializable(abc.ABC):
         Used for storing the object data in ZooKeeper.
         '''
         return json.dumps(self.toDict()).encode('utf8')
-
-
-class Launcher(Serializable):
-    '''
-    Class to describe a nodepool launcher.
-    '''
-
-    def __init__(self):
-        self.id = None
-        self.provider_name = None
-        self.priority = 100
-        self._supported_labels = set()
-
-    def __eq__(self, other):
-        if isinstance(other, Launcher):
-            return (self.id == other.id and
-                    self.supported_labels == other.supported_labels)
-        else:
-            return False
-
-    def __hash__(self):
-        return hash(self.id)
-
-    @property
-    def supported_labels(self):
-        return self._supported_labels
-
-    @supported_labels.setter
-    def supported_labels(self, value):
-        if not isinstance(value, set):
-            raise TypeError("'supported_labels' attribute must be a set")
-        self._supported_labels = value
-
-    def toDict(self):
-        d = {}
-        d['id'] = self.id
-        d['provider_name'] = self.provider_name
-        # sets are not JSON serializable, so use a sorted list
-        d['supported_labels'] = sorted(self.supported_labels)
-        d['priority'] = self.priority
-        return d
-
-    @staticmethod
-    def fromDict(d):
-        obj = Launcher()
-        obj.id = d.get('id')
-        # TODO(tobiash): The fallback to 'unknown' is only needed to avoid
-        #                having a full nodepool shutdown on upgrade. It can be
-        #                removed later.
-        obj.provider_name = d.get('provider_name', 'unknown')
-        obj.supported_labels = set(d.get('supported_labels', []))
-        obj.priority = d.get('priority', 100)
-        return obj
 
 
 class BaseModel(Serializable):
@@ -766,6 +714,8 @@ class ZooKeeper(object):
             self._request_cache.listen_fault(self.cacheFaultListener)
             self._request_cache.listen(self.requestCacheListener)
             self._request_cache.start()
+
+        COMPONENT_REGISTRY.create(self.zk_client)
 
     # =======================================================================
     # Private Methods
@@ -1591,65 +1541,14 @@ class ZooKeeper(object):
         except kze.NoNodeError:
             pass
 
-    def registerLauncher(self, launcher):
+    def getRegisteredPools(self):
         '''
-        Register an active node launcher.
+        Get a list of all launcher pools that have registered with ZooKeeper.
 
-        The launcher is de-registered when the launcher process terminates or
-        otherwise disconnects from ZooKeeper, or via deregisterLauncher().
-        It will need to re-register after a lost connection. This method is
-        safe to call multiple times.
-
-        :param Launcher launcher: Object describing the launcher.
+        :returns: A list of PoolComponent objects, or empty list if none
+        are found.
         '''
-        path = self._launcherPath(launcher.id)
-
-        if self.client.exists(path):
-            data, _ = self.client.get(path)
-            obj = Launcher.fromDict(self._bytesToDict(data))
-            if obj != launcher:
-                self.client.set(path, launcher.serialize())
-                self.log.debug("Updated registration for launcher %s",
-                               launcher.id)
-        else:
-            self.client.create(path, value=launcher.serialize(),
-                               makepath=True, ephemeral=True)
-            self.log.debug("Registered launcher %s", launcher.id)
-
-    def deregisterLauncher(self, launcher_id):
-        '''
-        Deregister an active node launcher.
-
-        :param str launcher_id: ID of the launcher to deregister.
-        '''
-        path = self._launcherPath(launcher_id)
-        try:
-            self.client.delete(path, recursive=True)
-        except kze.NoNodeError:
-            pass
-
-    def getRegisteredLaunchers(self):
-        '''
-        Get a list of all launchers that have registered with ZooKeeper.
-
-        :returns: A list of Launcher objects, or empty list if none are found.
-        '''
-        try:
-            launcher_ids = self.client.get_children(self.LAUNCHER_ROOT)
-        except kze.NoNodeError:
-            return []
-
-        objs = []
-        for launcher in launcher_ids:
-            path = self._launcherPath(launcher)
-            try:
-                data, _ = self.client.get(path)
-            except kze.NoNodeError:
-                # launcher disappeared
-                continue
-
-            objs.append(Launcher.fromDict(self._bytesToDict(data)))
-        return objs
+        return list(COMPONENT_REGISTRY.registry.all(kind='pool'))
 
     def getNodeRequests(self):
         '''

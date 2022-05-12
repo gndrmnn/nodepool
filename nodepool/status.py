@@ -267,9 +267,9 @@ def label_list(zk):
     # NOTE(ianw): maybe add to each entry a list of which
     #             launchers support the label?
     labels = set()
-    launchers = zk.getRegisteredLaunchers()
+    launchers = zk.getRegisteredPools()
     for launcher in launchers:
-        labels.update(launcher.supported_labels)
+        labels.update(set(launcher.supported_labels))
 
     for label in labels:
         objs.append({'label': label})
