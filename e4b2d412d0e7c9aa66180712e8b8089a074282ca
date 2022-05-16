@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01c5928b_6c8d19f9",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-05-16T15:57:57Z",
+      "side": 1,
+      "message": "I was going to write some question regarding \"True\" vs. \"true\", but that mismatch seems to go through all of these docs, so maybe nevermind. Like due to the indeterminateness of whether we are talking about bools in python here or bools in the yaml configuration.",
+      "revId": "e4b2d412d0e7c9aa66180712e8b8089a074282ca",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
