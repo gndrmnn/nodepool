@@ -158,10 +158,13 @@ section of the configuration.
       :default: true
 
       Specify custom behavior of validation of SSH host keys.  When
-      set to False, nodepool-launcher will not ssh-keyscan nodes after
-      they are booted. This might be needed if nodepool-launcher and
-      the nodes it launches are on different networks.  The default
-      value is true.
+      set to true, this helps ensure that nodes are ready to receive
+      SSH connections before they are handed off to the Zuul
+      scheduler.  When set to false, nodepool-launcher will not
+      ssh-keyscan nodes after they are booted. This might be needed if
+      nodepool-launcher and the nodes it launches are on different
+      networks, where the launcher is unable to reach the nodes
+      directly.  The default value is true.
 
    .. attr:: rate
       :type: float seconds
@@ -530,10 +533,13 @@ section of the configuration.
           :default: true
 
           Specify custom behavior of validation of SSH host keys.  When
-          set to False, nodepool-launcher will not ssh-keyscan nodes after
-          they are booted. This might be needed if nodepool-launcher and
-          the nodes it launches are on different networks.  The default
-          value is true.
+          set to true, this helps ensure that nodes are ready to receive
+          SSH connections before they are handed off to the Zuul
+          scheduler.  When set to false, nodepool-launcher will not
+          ssh-keyscan nodes after they are booted. This might be needed if
+          nodepool-launcher and the nodes it launches are on different
+          networks, where the launcher is unable to reach the nodes
+          directly.  The default value is true.
 
        .. attr:: labels
           :type: list
