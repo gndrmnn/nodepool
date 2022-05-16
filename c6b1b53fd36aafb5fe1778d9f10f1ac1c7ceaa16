@@ -16,6 +16,23 @@
       "message": "We generally try to avoid assuming that the user is Zuul; maybe just say \"before node requests are fulfilled\" or \"supplied to the requestor\" or something similar?",
       "revId": "c6b1b53fd36aafb5fe1778d9f10f1ac1c7ceaa16",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66f4f4fb_373dd0be",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2022-05-16T15:10:17Z",
+      "side": 1,
+      "message": "Ooh, yes I had my Zuul blinders on when I drafted this. Thanks for the suggestion! I\u0027ll revise accordingly.",
+      "revId": "c6b1b53fd36aafb5fe1778d9f10f1ac1c7ceaa16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
