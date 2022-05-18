@@ -434,7 +434,9 @@ class BaseCleanupWorker(threading.Thread):
             if did_suspend:
                 self.log.info("ZooKeeper available. Resuming")
 
+            self.log.info('Starting cleanup')
             self._run()
+            self.log.info('Finished cleanup')
             self._stop_event.wait(self._interval)
 
         self.log.info("Stopped")
@@ -825,7 +827,9 @@ class DeletedNodeWorker(BaseCleanupWorker):
 
     def _run(self):
         try:
+            self.log.info('Starting cleanupNodes')
             self._cleanupNodes()
+            self.log.info('Finished cleanupNodes')
         except Exception:
             self.log.exception("Exception in DeletedNodeWorker:")
 
