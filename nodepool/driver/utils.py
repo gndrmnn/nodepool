@@ -259,7 +259,8 @@ class QuotaSupport:
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
-        self._current_nodepool_quota = None
+        self._current_nodepool_quota_timestamp = 0
+        self._current_nodepool_quota = {}
 
     @abc.abstractmethod
     def quotaNeededByLabel(self, label, pool):
@@ -291,7 +292,7 @@ class QuotaSupport:
         pass
 
     def invalidateQuotaCache(self):
-        self._current_nodepool_quota['timestamp'] = 0
+        self._current_nodepool_quota_timestamp = 0
 
     def estimatedNodepoolQuota(self):
         '''
@@ -307,8 +308,8 @@ class QuotaSupport:
 
         if self._current_nodepool_quota:
             now = time.time()
-            if now < self._current_nodepool_quota['timestamp'] + MAX_QUOTA_AGE:
-                return copy.deepcopy(self._current_nodepool_quota['quota'])
+            if now < self._current_nodepool_quota_timestamp + MAX_QUOTA_AGE:
+                return copy.deepcopy(self._current_nodepool_quota)
 
         # This is initialized with the full tenant quota and later becomes
         # the quota available for nodepool.
@@ -318,7 +319,7 @@ class QuotaSupport:
             if self._current_nodepool_quota:
                 self.log.exception("Unable to get provider quota, "
                                    "using cached value")
-                return copy.deepcopy(self._current_nodepool_quota['quota'])
+                return copy.deepcopy(self._current_nodepool_quota)
             raise
 
         self.log.debug("Provider quota for %s: %s",
@@ -328,10 +329,8 @@ class QuotaSupport:
         # to get the quota available for us.
         nodepool_quota.subtract(self.unmanagedQuotaUsed())
 
-        self._current_nodepool_quota = {
-            'quota': nodepool_quota,
-            'timestamp': time.time()
-        }
+        self._current_nodepool_quota = nodepool_quota
+        self._current_nodepool_quota_timestamp = time.time()
 
         self.log.debug("Available quota for %s: %s",
                        self.provider.name, nodepool_quota)
