@@ -398,10 +398,14 @@ Selecting the ``aws`` driver adds the following options to the
          :type: bool
          :default: True
 
-         Specify custom behavior of validation of SSH host keys.  When set to
-         False, nodepool-launcher will not ssh-keyscan nodes after they are
-         booted. This might be needed if nodepool-launcher and the nodes it
-         launches are on different networks.  The default value is True.
+         Whether to validate SSH host keys.  When true, this helps ensure
+         that nodes are ready to receive SSH connections before they are
+         supplied to the requestor.  When set to false, nodepool-launcher
+         will not attempt to ssh-keyscan nodes after they are booted.
+         Disable this if nodepool-launcher and the nodes it launches are
+         on different networks, where the launcher is unable to reach the
+         nodes directly, or when using Nodepool with non-SSH node
+         platforms.  The default value is true.
 
       .. attr:: labels
          :type: list
