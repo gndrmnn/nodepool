@@ -20,6 +20,40 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "70f14f64_5a148f9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-20T20:36:01Z",
+      "side": 1,
+      "message": "Not approving as there is some hope ianw can review this and make sure we aren\u0027t missing something important. Also left a note that may want to be addressed.",
+      "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84e81241_34ca0ff2",
+        "filename": "doc/source/openstack.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-20T20:36:01Z",
+      "side": 1,
+      "message": "Nit, since we\u0027re updating this documentation we should update this to reflect it sets glance image properties not server instance metadata.\n\nSomething like:\n\n  Arbitrary key/value metadata to store as glance image properties.",
+      "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "b4e080db_0487cae4",
         "filename": "releasenotes/notes/remove-diskimage-meta-checks-90f705903000eece.yaml",
         "patchSetId": 2
