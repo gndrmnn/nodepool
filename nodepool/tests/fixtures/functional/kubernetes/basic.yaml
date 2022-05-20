@@ -26,4 +26,4 @@ providers:
             type: namespace
           - name: pod-fedora
             type: pod
-            image: docker.io/fedora:28
+            image: quay.io/fedora/fedora:34-x86_64
