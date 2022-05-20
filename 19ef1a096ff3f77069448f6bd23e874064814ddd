@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f5f568b_ad6ae729",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-05-20T18:19:45Z",
+      "side": 1,
+      "message": "I tried this on our version of OpenStack and it allowed us to add more than 5 metadata properties.",
+      "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
