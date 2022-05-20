@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    Removes diskimage.meta checks from the OpenStack driver. The limit of only
+    5 entries is anacronistic and now removed. Rather than trying to pre-guess
+    what OpenStack wants the metadata is now passed as-is and OpenStack will
+    reject it at upload time.
