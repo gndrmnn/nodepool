@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import logging
+import os
 import threading
 import time
 import uuid
@@ -431,3 +432,35 @@ class FakeProvider(OpenStackProvider):
         if self.provider.region_name == 'broken-region':
             raise Exception("Broken cloud config")
         super().start(zk_conn)
+
+
+class FakeProviderImageTestFail(FakeOpenStackCloud):
+    """
+    It is sometimes needed to verify that nodepool actually did delete the
+    image. Implemented files creation to leave a trace of image created and
+    removed.
+    """
+    def __init__(self, path=None):
+        super(FakeProviderImageTestFail, self).__init__()
+        self.image_traces_path = path
+
+    def _filename(self, name):
+        if self.image_traces_path and name:
+            image_name = '_'.join([name, 'trace'])
+            return os.path.join(image_traces_path, image_name)
+        else:
+            return None
+
+    def create_image(self, **kwargs):
+        image_file = self._filename(kwargs.geet(image_name, None))
+        if image_file:
+            with open(image_file, 'a'):
+                pass
+        return super(FakeProviderImageTestFail, self).createImage(**kwargs)
+
+    def delete_image(self, **kwargs):
+        image_file = self._filename(kwargs.geet(image_name, None))
+        if image_file:
+            if os.path.isfile(image_file):
+                os.remove(image_file)
+        return super(FakeProviderImageTestFail, self).deleteImage(**kwargs)
