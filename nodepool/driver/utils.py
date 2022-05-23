@@ -26,7 +26,7 @@ from kazoo import exceptions as kze
 
 from nodepool import exceptions
 from nodepool import stats
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.logconfig import get_annotated_logger
 
 

@@ -21,7 +21,7 @@ import mock
 import testtools
 
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.driver.fake import provider as fakeprovider
 from nodepool.nodeutils import iterate_timeout
 import nodepool.launcher
@@ -1659,11 +1659,10 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('secret', fake_image.env_vars['REG_PASSWORD'])
 
         zk_servers = pool.config.zookeeper_servers
-        self.assertEqual(1, len(zk_servers))
-        key = list(zk_servers.keys())[0]
-        self.assertEqual(self.zookeeper_host, zk_servers[key].host)
-        self.assertEqual(self.zookeeper_port, zk_servers[key].port)
-        self.assertEqual(self.zookeeper_chroot, zk_servers[key].chroot)
+        self.assertTrue(len(zk_servers) > 0)
+        expected = (f'{self.zookeeper_host}:{self.zookeeper_port}'
+                    f'{self.zookeeper_chroot}')
+        self.assertEqual(expected, zk_servers)
 
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
@@ -2478,8 +2477,8 @@ class TestLauncher(tests.DBTestCase):
         # We want the first call to deleteRawNode() to fail, but subsequent
         # ones to succeed, so we store a pointer to the actual method so we
         # can reset it at the point we want to really delete.
-        real_method = nodepool.zk.ZooKeeper.deleteRawNode
-        nodepool.zk.ZooKeeper.deleteRawNode = mock.Mock(
+        real_method = zk.ZooKeeper.deleteRawNode
+        zk.ZooKeeper.deleteRawNode = mock.Mock(
             side_effect=Exception('mock exception'))
 
         # This call should leave the node in the DELETED state
@@ -2490,5 +2489,5 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(zk.DELETED, node.state)
 
         # Ready for the real delete now
-        nodepool.zk.ZooKeeper.deleteRawNode = real_method
+        zk.ZooKeeper.deleteRawNode = real_method
         self.waitForNodeDeletion(node)

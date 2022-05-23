@@ -36,7 +36,8 @@ import testtools
 from nodepool import builder
 from nodepool import launcher
 from nodepool import webapp
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
+from nodepool.zk import ZooKeeperClient
 from nodepool.cmd.config_validator import ConfigValidator
 from nodepool.nodeutils import iterate_timeout
 
@@ -646,14 +647,16 @@ class DBTestCase(BaseTestCase):
             self.zookeeper_key,
         ))
         self.zookeeper_chroot = kz_fxtr.zookeeper_chroot
-        self.zk = zk.ZooKeeper(enable_cache=False)
-        host = zk.ZooKeeperConnectionConfig(
-            self.zookeeper_host, self.zookeeper_port, self.zookeeper_chroot,
+        host = (f'{self.zookeeper_host}:{self.zookeeper_port}'
+                f'{self.zookeeper_chroot}')
+        self.zk_client = ZooKeeperClient(
+            host,
+            tls_ca=self.zookeeper_ca,
+            tls_cert=self.zookeeper_cert,
+            tls_key=self.zookeeper_key
         )
-        self.zk.connect([host],
-                        tls_ca=self.zookeeper_ca,
-                        tls_cert=self.zookeeper_cert,
-                        tls_key=self.zookeeper_key)
+        self.zk_client.connect()
+        self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
         self.addCleanup(self.zk.disconnect)
 
     def printZKTree(self, node):

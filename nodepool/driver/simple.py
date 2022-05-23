@@ -22,7 +22,7 @@ from nodepool.driver.utils import NodeLauncher, QuotaInformation, QuotaSupport
 from nodepool.driver.utils import NodeDeleter
 from nodepool.nodeutils import iterate_timeout, nodescan
 from nodepool import exceptions
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 
 
 # Private support classes

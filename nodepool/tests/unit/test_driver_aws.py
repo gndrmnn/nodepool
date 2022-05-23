@@ -26,7 +26,7 @@ import testtools
 
 from nodepool import config as nodepool_config
 from nodepool import tests
-from nodepool import zk
+from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 import nodepool.driver.statemachine
 from nodepool.driver.statemachine import StateMachineProvider
