@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e6f63c0d_dd30ec75",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-05-23T16:37:52Z",
+      "side": 0,
+      "message": "It\u0027s unclear from the documentation if the 255 limit is for both the key and the value combined, or the key and value separately; FWIW I\u0027d prefer to just pass it to glance and let it deal with the validation instead of try to second guess it (even on the length), if that\u0027s OK with you.",
+      "parentUuid": "54b45231_94b15d2f",
+      "range": {
+        "startLine": 272,
+        "startChar": 19,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "5551f99ca2aa08aba566f463d1ffa86344e61b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ffe20de3_a6f7b05b",
         "filename": "nodepool/driver/openstack/config.py",
         "patchSetId": 2
