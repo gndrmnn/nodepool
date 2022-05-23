@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "679dc778_e5e31150",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T20:18:29Z",
+      "side": 1,
+      "message": "Does this need to filter out launchers that have already declined the request? We do similar above in the case where a specific provider has been requested, but if we haven\u0027t requested a specific provider we may not have filtered that yet.",
+      "revId": "3245c6b9104a81d8752f16e1e2e602849883dd30",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "190855fc_39461e07",
         "filename": "nodepool/launcher.py",
         "patchSetId": 2
