@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3030d2db_bed96a58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 28619
+      },
+      "writtenOn": "2022-05-23T07:39:02Z",
+      "side": 1,
+      "message": "I think unit test should be also fixed here, as it seems it\u0027s missing that assertion. I guess that\u0027s the proper one that should contain check https://opendev.org/zuul/nodepool/src/branch/master/nodepool/tests/unit/test_builder.py#L172",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
