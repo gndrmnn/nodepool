@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6783c83d_4192b901",
+        "filename": "releasenotes/notes/remove-diskimage-meta-checks-90f705903000eece.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5263
+      },
+      "writtenOn": "2022-05-23T17:15:16Z",
+      "side": 1,
+      "message": "I guess Ian\u0027s prior question is whether Glance will actually return an error vs silently discarding the non-conforming entries (but the prior implementation in Nodepool was silently discarding them, so I\u0027m not sure that\u0027s effectively a regression even if so).",
+      "revId": "a6bb2fff426ebc8d031ec992afe4f1a8547305ee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
