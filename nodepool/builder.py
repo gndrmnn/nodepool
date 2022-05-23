@@ -1154,7 +1154,7 @@ class UploadWorker(BaseWorker):
                     self.log.exception('Unknown exception during upload hook')
 
                 try:
-                    manager.deleteImage(ext_image_name)
+                    manager.deleteImage(ext_image_name, external_id)
                 except Exception:
                     # Image delete failed but we cannot do anything about this
                     # right now so just log the exception.

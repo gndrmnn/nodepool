@@ -566,3 +566,26 @@ class TestNodePoolBuilder(tests.DBTestCase):
         post_file = os.path.join(
             images_dir, 'fake-image-0000000001.qcow2.post')
         self.assertTrue(os.path.exists(post_file), 'Post hook file exists')
+
+    def test_post_upload_hook_fail(self):
+        configfile = self.setup_config('node_upload_hook_fail.yaml')
+        bldr = self.useBuilder(configfile)
+        images_dir = bldr._config.images_dir
+        # Add file creation and removal to identify that the image was removed
+        fake_client = fakeprovider.FakeProviderImageTestFail(images_dir)
+
+        def get_fake_client(*args, **kwargs):
+            return fake_client
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider, '_getClient',
+            get_fake_client))
+
+        image = self.waitForImage('fake-provider', 'fake-image',
+                                  state=zk.FAILED)
+        failed_image_name = "-".join([
+            image.image_name, str(int(image.state_time)), "trace"])
+        failed_image_file = os.path.join(images_dir, failed_image_name)
+
+        self.assertFalse(os.path.exists(failed_image_file),
+                         'Image was not removed from the provider')
