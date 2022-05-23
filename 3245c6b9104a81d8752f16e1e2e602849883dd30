@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32b13ece_8a3bcf66",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T20:28:43Z",
+      "side": 1,
+      "message": "Good idea.  I\u0027ll rework this to do that for both at the start.",
+      "revId": "3245c6b9104a81d8752f16e1e2e602849883dd30",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "190855fc_39461e07",
