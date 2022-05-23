@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd1eb79e_30dd1d1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T15:33:25Z",
+      "side": 1,
+      "message": "I agree that a test would be helpful. But I don\u0027t think there is a mismatch of interfaces here.",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb48e40c_f30131fe",
@@ -48,6 +65,24 @@
       "writtenOn": "2022-05-23T10:46:09Z",
       "side": 1,
       "message": "Also are you sure that this should be patched instead of patching https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L216 to require only uuid and get name by it?\n\nAt this point it feels like providers are not in sync about amount of arguments to accept. And it also feels, like accepting single argument would be more correct, but not sure.",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5c0b61e_ac9c2dfa",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T15:33:25Z",
+      "side": 1,
+      "message": "I don\u0027t think this code was ever correct. This should call into https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L667 for all of the drivers which has the same signature whether aws or openstack or azure.",
+      "parentUuid": "fb48e40c_f30131fe",
       "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
