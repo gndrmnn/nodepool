@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a893ff4_4f538c88",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1408,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-05-23T14:50:12Z",
+      "side": 1,
+      "message": "Discussed in chat: since this is not used as identity it\u0027s fine to keep it as is and cleanup this at a later point.",
+      "parentUuid": "7b15d2da_bdb419ef",
+      "revId": "56d532364399893b846d45cad5cbbe47bd2e40b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb5a9974_06ce11ba",
         "filename": "nodepool/launcher.py",
         "patchSetId": 5
