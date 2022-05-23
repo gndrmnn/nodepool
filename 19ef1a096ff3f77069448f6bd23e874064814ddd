@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2bb785c_3f7d8044",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-05-23T03:33:10Z",
+      "side": 1,
+      "message": "I think this is worth a respin for a couple of comments inline.  \n\nI\u0027m not really opposed to removing it, if someone can confirm the keys can still only be 255 chars long, that would be interesting and maybe we should keep that check here.",
+      "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84e81241_34ca0ff2",
@@ -48,6 +65,24 @@
       "writtenOn": "2022-05-20T20:36:01Z",
       "side": 1,
       "message": "Nit, since we\u0027re updating this documentation we should update this to reflect it sets glance image properties not server instance metadata.\n\nSomething like:\n\n  Arbitrary key/value metadata to store as glance image properties.",
+      "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4497b123_0104a2a9",
+        "filename": "doc/source/openstack.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-05-23T03:33:10Z",
+      "side": 1,
+      "message": "++ I think this is worth fixing up here.  It is mighty confusing as is.",
+      "parentUuid": "84e81241_34ca0ff2",
       "revId": "19ef1a096ff3f77069448f6bd23e874064814ddd",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },

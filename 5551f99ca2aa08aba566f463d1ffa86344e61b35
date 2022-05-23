@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54b45231_94b15d2f",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-05-23T03:33:10Z",
+      "side": 0,
+      "message": "I think that this 255 characters is still (partly) the case?  It\u0027s all so long ago ...\n\nBut I think that nova used to enforce these limits, and over the years of API movement it has been passed of to glance directly.\n\nI think that the original check was removed with Ibec92e278887cd06e91687ca91e75f9b7b28098c which used to be in the create_image() path and enforced 255 for the property and value\n\nhttps://docs.openstack.org/api-ref/image/v2/index.html?expanded\u003dcreate-image-detail#request still says\n\n\"Additionally, you may include additional properties specified as key:value pairs, where the value must be a string data type. Keys are limited to 255 chars in length.\"\n\nSo maybe the value part is irrelevant, but the key length checking is still valid?",
+      "range": {
+        "startLine": 272,
+        "startChar": 19,
+        "endLine": 273,
+        "endChar": 53
+      },
+      "revId": "5551f99ca2aa08aba566f463d1ffa86344e61b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffe20de3_a6f7b05b",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-05-23T03:33:10Z",
+      "side": 0,
+      "message": "This appears to have been commented out with code movement in I3d1ae0f0a6cc6675169974dd1beece8429071a49.  I do not think that was intentional",
+      "range": {
+        "startLine": 275,
+        "startChar": 20,
+        "endLine": 276,
+        "endChar": 45
+      },
+      "revId": "5551f99ca2aa08aba566f463d1ffa86344e61b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bc447cf_0bb5ac18",
+        "filename": "nodepool/driver/openstack/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-05-23T03:33:10Z",
+      "side": 0,
+      "message": "overall my minor concern here is that previously if you had a long key (and maybe value) it would be ignored here, and things would be working.  once we gave an error -- per the prior comment it seems we\u0027re not even giving that now -- but it was then ignored.\n\nThere is a *minuscule* chance that this breaks something that was working.  We should probably just call out explicitly in the changelog \"previously metadata was checked in nodepool and invalid values would be silently ignored, now it will be passed to the image service directly and cause an API error\" or similar.",
+      "range": {
+        "startLine": 277,
+        "startChar": 19,
+        "endLine": 277,
+        "endChar": 31
+      },
+      "revId": "5551f99ca2aa08aba566f463d1ffa86344e61b35",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
