@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b15d2da_bdb419ef",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1408,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-05-23T14:40:50Z",
+      "side": 1,
+      "message": "I think we should put this into a method and call it here. There are other parts of the builder (BaseWorker) that also uses its hostname but use socket.getfqdn().",
+      "revId": "56d532364399893b846d45cad5cbbe47bd2e40b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb5a9974_06ce11ba",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-05-23T14:40:50Z",
+      "side": 1,
+      "message": "Same here (hostname vs fqdn used by the launcher_id), but I\u0027m on the fence on this one.",
+      "revId": "56d532364399893b846d45cad5cbbe47bd2e40b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
