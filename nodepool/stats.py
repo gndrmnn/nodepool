@@ -98,13 +98,13 @@ class StatsReporter(object):
 
         states = {}
 
-        launchers = zk_conn.getRegisteredPools()
+        launcher_pools = zk_conn.getRegisteredPools()
         labels = set()
-        for launcher in launchers:
-            labels.update(launcher.supported_labels)
+        for launcher_pool in launcher_pools:
+            labels.update(launcher_pool.supported_labels)
         providers = set()
-        for launcher in launchers:
-            providers.add(launcher.provider_name)
+        for launcher_pool in launcher_pools:
+            providers.add(launcher_pool.provider_name)
 
         # Initialize things we know about to zero
         for state in zk.Node.VALID_STATES:

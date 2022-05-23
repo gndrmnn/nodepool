@@ -121,7 +121,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # become out of date as the loop progresses, but it should be
         # good enough to determine whether we should process requests
         # which express a preference for a specific provider.
-        launchers = self.zk.getRegisteredPools()
+        launcher_pools = self.zk.getRegisteredPools()
 
         pm = self.getProviderManager()
         has_quota_support = isinstance(pm, QuotaSupport)
@@ -180,38 +180,38 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             log = get_annotated_logger(self.log, event_id=req.event_id,
                                        node_request_id=req.id)
             # Get the candidate launchers for these nodes
-            candidate_launchers = set(
-                x for x in launchers
+            candidate_launcher_pools = set(
+                x for x in launcher_pools
                 if set(x.supported_labels).issuperset(set(req.node_types))
             )
             # Skip this request if it is requesting another provider
             # which is online
             if req.provider and req.provider != self.provider_name:
                 # The request is asking for a specific provider
-                candidate_launchers = set(
-                    x for x in candidate_launchers
+                candidate_launcher_pools = set(
+                    x for x in candidate_launcher_pools
                     if x.provider_name == req.provider
                 )
-                if candidate_launchers:
-                    candidate_launcher_ids = set(
-                        x.id for x in candidate_launchers
+                if candidate_launcher_pools:
+                    candidate_launcher_pool_ids = set(
+                        x.id for x in candidate_launcher_pools
                     )
                     # There is a launcher online which can satisfy the request
-                    if not candidate_launcher_ids.issubset(
+                    if not candidate_launcher_pool_ids.issubset(
                             set(req.declined_by)):
                         # It has not yet declined the request, so yield to it.
                         log.debug("Yielding request to provider %s %s",
-                                  req.provider, candidate_launcher_ids)
+                                  req.provider, candidate_launcher_pool_ids)
                         continue
 
             priority = self.getPriority()
-            launcher_ids_with_higher_priority = set(
-                x.id for x in candidate_launchers
+            launcher_pool_ids_with_higher_priority = set(
+                x.id for x in candidate_launcher_pools
                 if x.priority < priority and not x.paused
             )
-            if launcher_ids_with_higher_priority:
+            if launcher_pool_ids_with_higher_priority:
                 log.debug("Yielding request to higher priority providers %s",
-                          launcher_ids_with_higher_priority)
+                          launcher_pool_ids_with_higher_priority)
                 continue
 
             if has_quota_support and not all(label_quota.get(l, math.inf) > 0
