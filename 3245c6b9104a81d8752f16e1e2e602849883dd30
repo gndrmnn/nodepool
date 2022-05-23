@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "660735cf_997ab623",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-05-23T15:09:22Z",
+      "side": 1,
+      "message": "nit: if we return the priorities directly we could get rid of the elifs and elses which would make it slightly easier to read.",
+      "revId": "3245c6b9104a81d8752f16e1e2e602849883dd30",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "190855fc_39461e07",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-05-23T15:09:22Z",
+      "side": 1,
+      "message": "It doesn\u0027t look like the BaseComponent checks if this has been changed in __setattr__ (correct me if I\u0027m wrong). So we should either catch non-changes there or keep the if expression here to keep traffic on zk low.",
+      "revId": "3245c6b9104a81d8752f16e1e2e602849883dd30",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
