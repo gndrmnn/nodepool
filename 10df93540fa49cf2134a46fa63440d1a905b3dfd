@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61829169_ed8caf15",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T17:35:23Z",
+      "side": 1,
+      "message": "In testing and the builder we disable the cache but don\u0027t do so for the launcher here. Is that something we should make consistent?",
+      "revId": "10df93540fa49cf2134a46fa63440d1a905b3dfd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa9c22a4_5e16393f",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T17:35:23Z",
+      "side": 1,
+      "message": "This assertion basically checks that we have a zk_servers string with more than one character in it. Previously we were asserting the length of the number of servers was one and not greater, but this new check would allow more than one.\n\nThe next assertion validates the single entry is present. May just want to remove this assertion? Not a huge deal, but calling out the difference.",
+      "revId": "10df93540fa49cf2134a46fa63440d1a905b3dfd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c58fe00d_360f40b9",
+        "filename": "nodepool/zk/__init__.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-05-23T17:35:23Z",
+      "side": 1,
+      "message": "Nit (I expect this cleanup can go into zuul as well?) we require tls now and throw and error in __init__ if not provided. That means we don\u0027t need this check anymore.",
+      "revId": "10df93540fa49cf2134a46fa63440d1a905b3dfd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
