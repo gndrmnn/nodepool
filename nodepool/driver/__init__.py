@@ -641,9 +641,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         # want to make sure we don't continuously grow this array.
         if self.launcher_id not in self.request.declined_by:
             self.request.declined_by.append(self.launcher_id)
-        launchers = set([x.id for x in self.zk.getRegisteredPools()])
-        if launchers.issubset(set(self.request.declined_by)):
-            # All launchers have declined it
+        launcher_pools = set([x.id for x in self.zk.getRegisteredPools()])
+        if launcher_pools.issubset(set(self.request.declined_by)):
+            # All launcher_pools have declined it
             self.log.debug("Failing declined node request")
             self.request.state = zk.FAILED
         else:
