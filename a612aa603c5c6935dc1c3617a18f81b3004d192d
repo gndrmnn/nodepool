@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a363ec57_3f9a1150",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T18:49:10Z",
+      "side": 1,
+      "message": "I thought about that, but there is so much code that calls these things launchers that I think it\u0027s easier to go with this for now.\n\nIt would be easier to have just called the pools launches as the component, but I\u0027m trying to set us up for being able to rectify this eventually.\n\nAnyway, long story short -- yes, but I think I see that as a longer-term change.",
+      "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf082faa_1a1e4c69",
@@ -86,6 +103,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9969b6a9_046f54a9",
+        "filename": "nodepool/zk/components.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T18:49:10Z",
+      "side": 1,
+      "message": "This isn\u0027t necessary for this change, nor is the builder.  I\u0027m trying to set us up for being able to actually have a view of the whole system like we do with Zuul.\n\nNodepool itself only needs to care about the pool workers (which have been misleadingly called \"launchers\" up to this point).  If we want to have all the procesess represented, then we need to have something registered for the \"nodepool-launcher\" command.  I think *that* should be called a launcher.  So yes, this change starts calling the pool workers within the launchers pools, but doesn\u0027t change all of the code in nodepool to use different variable names.\n\nI am trying to set us up for avoiding confusion later.  The best way I know to do that is to call launchers launchers, and pools pools.",
+      "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ece45462_e4a0af88",
@@ -99,6 +133,23 @@
       "writtenOn": "2022-05-23T18:19:24Z",
       "side": 1,
       "message": "What determines this? It seems that BaseComponent.__setattr__ doesn\u0027t check/prevent updates.",
+      "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6c0d097_cc22bc7e",
+        "filename": "nodepool/zk/components.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T18:49:10Z",
+      "side": 1,
+      "message": "Line 327.",
       "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -126,6 +177,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa179047_6b9e55de",
+        "filename": "nodepool/zk/components.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T18:49:10Z",
+      "side": 1,
+      "message": "The \"hostname\" is the ZK path component which includes the sequence id.",
+      "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b10cc96d_408d0573",
@@ -139,6 +207,23 @@
       "writtenOn": "2022-05-23T18:19:24Z",
       "side": 1,
       "message": "I feel like we discussed this when zuul added model api versioning, but I find this particular case to be confusing. If on startup we hit this condition we exit(1) to prevent data corruption. But if it occurs after we\u0027ve set self.model_api we\u0027ll fast forward our local version ahead of our MODEL_API after we hit this case? That doesn\u0027t seem correct.",
+      "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b409343c_55cd51d9",
+        "filename": "nodepool/zk/components.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T18:49:10Z",
+      "side": 1,
+      "message": "This is copied from Zuul to achieve parity.\n\nThis could only happen if our registration was somehow dropped (since if our version is lower than the rest, we should be the ones setting the minimum).\n\nIf we\u0027re having trouble with ZK such that this happens, it\u0027s arguable whether it\u0027s better to just resume as before or exit because someone might have been tricked into doing an upgrade that needs to be rolled back.\n\nMy inclination is to avoid exiting here because it could lead to a minor ZK hiccup causing the whole system to exit.  But I don\u0027t think there\u0027s a clear right answer.",
       "revId": "a612aa603c5c6935dc1c3617a18f81b3004d192d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
