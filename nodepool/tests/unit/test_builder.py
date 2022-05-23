@@ -566,3 +566,10 @@ class TestNodePoolBuilder(tests.DBTestCase):
         post_file = os.path.join(
             images_dir, 'fake-image-0000000001.qcow2.post')
         self.assertTrue(os.path.exists(post_file), 'Post hook file exists')
+
+    def test_post_upload_hook_fail(self):
+        configfile = self.setup_config('node_upload_hook_fail.yaml')
+        self.useBuilder(configfile)
+        image = self.waitForImage('fake-provider', 'fake-image',
+                                  state=zk.FAILED)
+        self.assertEqual(image.state, zk.FAILED)
