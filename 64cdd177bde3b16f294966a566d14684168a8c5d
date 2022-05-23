@@ -16,6 +16,23 @@
       "message": "I think unit test should be also fixed here, as it seems it\u0027s missing that assertion. I guess that\u0027s the proper one that should contain check https://opendev.org/zuul/nodepool/src/branch/master/nodepool/tests/unit/test_builder.py#L172",
       "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e31ec619_e00fea83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 28619
+      },
+      "writtenOn": "2022-05-23T07:40:26Z",
+      "side": 1,
+      "message": "Oh, sorry, I\u0027m wrong. Just another test should be written, like `test_post_upload_hook_failure`, as only positive test is present (https://opendev.org/zuul/nodepool/src/branch/master/nodepool/tests/unit/test_builder.py#L560)",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
