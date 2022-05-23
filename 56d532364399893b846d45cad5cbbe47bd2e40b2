@@ -36,6 +36,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "320428e8_37c310bf",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1408,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-05-23T14:51:16Z",
+      "side": 1,
+      "message": "I\u0027m trying to keep the hostname behavior we get with zuul, so the component registry behaves the same way.  So I\u0027d like to either keep this as is, or if we want to switch this to fqdn, then switch it in zuul as well.\n\nI think hostname (which may be appreviated, but isn\u0027t always) is okay for this use case.",
+      "revId": "56d532364399893b846d45cad5cbbe47bd2e40b2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb5a9974_06ce11ba",
