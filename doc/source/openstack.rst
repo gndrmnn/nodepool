@@ -257,10 +257,7 @@ Selecting the OpenStack driver adds the following options to the
      .. attr:: meta
         :type: dict
 
-        Arbitrary key/value metadata to store for this server using
-        the Nova metadata service. A maximum of five entries is
-        allowed, and both keys and values must be 255 characters or
-        less.
+        Arbitrary key/value metadata to store as glance image properties.
 
      .. attr:: connection-type
         :type: string

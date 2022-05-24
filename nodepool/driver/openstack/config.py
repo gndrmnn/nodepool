@@ -265,16 +265,6 @@ class OpenStackProviderConfig(ProviderConfig):
             # This dict is expanded and used as custom properties when
             # the image is uploaded.
             i.meta = image.get('meta', {})
-            # 5 elements, and no key or value can be > 255 chars
-            # per Nova API rules
-            if i.meta:
-                if len(i.meta) > 5 or \
-                   any([len(k) > 255 or len(v) > 255
-                        for k, v in i.meta.items()]):
-                    # soft-fail
-                    # self.log.error("Invalid metadata for %s; ignored"
-                    #               % i.name)
-                    i.meta = {}
 
         for image in self.provider.get('cloud-images', []):
             i = ProviderCloudImage()

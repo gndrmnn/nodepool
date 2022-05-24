@@ -1,0 +1,13 @@
+---
+fixes:
+  - |
+    Removes diskimage.meta checks from the OpenStack driver. The limit of only
+    5 entries is anachronistic and now removed. Rather than trying to pre-guess
+    what OpenStack wants the metadata is now passed as-is and OpenStack will
+    reject it at upload time.
+
+    Previously, metadata was checked by nodepool and invalid values would cause
+    all metadata to be silently ignored. Now, metadata will be passed directly
+    to glance, and an API error will occur. This may mean that images that
+    previously uploaded (with no metadata) will now cause an API error when
+    uploading.
