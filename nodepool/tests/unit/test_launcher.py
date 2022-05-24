@@ -1670,7 +1670,6 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual('secret', fake_image.env_vars['REG_PASSWORD'])
 
         zk_servers = pool.config.zookeeper_servers
-        self.assertTrue(len(zk_servers) > 0)
         expected = (f'{self.zookeeper_host}:{self.zookeeper_port}'
                     f'{self.zookeeper_chroot}')
         self.assertEqual(expected, zk_servers)
@@ -1925,19 +1924,20 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
 
         self.waitForNodes('fake-label')
-        launchers = self.zk.getRegisteredPools()
-        self.assertEqual(1, len(launchers))
+        launcher_pools = self.zk.getRegisteredPools()
+        self.assertEqual(1, len(launcher_pools))
 
         # the fake-label-unused label should not appear
-        self.assertEqual({'fake-label'}, set(launchers[0].supported_labels))
+        self.assertEqual({'fake-label'},
+                         set(launcher_pools[0].supported_labels))
 
         self.replace_config(configfile, 'launcher_reg2.yaml')
 
         # we should get 1 additional label now
-        while (set(launchers[0].supported_labels) !=
+        while (set(launcher_pools[0].supported_labels) !=
                {'fake-label', 'fake-label2'}):
             time.sleep(1)
-            launchers = self.zk.getRegisteredPools()
+            launcher_pools = self.zk.getRegisteredPools()
 
     @mock.patch('nodepool.driver.openstack.handler.'
                 'OpenStackNodeLauncher._launchNode')

@@ -40,13 +40,13 @@ class TestComponentRegistry(tests.DBTestCase):
         })
         launcher.register()
 
-        launchers = self.zk.getRegisteredPools()
-        self.assertEqual(1, len(launchers))
-        self.assertEqual(launcher.id, list(launchers)[0].id)
+        launcher_pools = self.zk.getRegisteredPools()
+        self.assertEqual(1, len(launcher_pools))
+        self.assertEqual(launcher.id, list(launcher_pools)[0].id)
 
         launcher.unregister()
-        launchers = self.zk.getRegisteredPools()
-        self.assertEqual(0, len(launchers))
+        launcher_pools = self.zk.getRegisteredPools()
+        self.assertEqual(0, len(launcher_pools))
 
 
 class TestZooKeeper(tests.DBTestCase):
