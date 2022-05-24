@@ -14,12 +14,39 @@
 import testtools
 import time
 import uuid
+import socket
 
 from nodepool import exceptions as npe
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
+from nodepool.zk.components import PoolComponent
 from nodepool.config import ZooKeeperConnectionConfig, buildZooKeeperHosts
 from nodepool.nodeutils import iterate_timeout
+from nodepool.version import get_version_string
+
+
+class TestComponentRegistry(tests.DBTestCase):
+
+    def test_pool_component(self):
+        hostname = socket.gethostname()
+        launcher = PoolComponent(
+            self.zk.zk_client, hostname,
+            version=get_version_string())
+        launcher.content.update({
+            'id': "launcher-Poolworker.provider-main-" + uuid.uuid4().hex,
+            'provider_name': 'provider',
+            'supported_labels': [],
+            'state': launcher.RUNNING,
+        })
+        launcher.register()
+
+        launchers = self.zk.getRegisteredPools()
+        self.assertEqual(1, len(launchers))
+        self.assertEqual(launcher.id, list(launchers)[0].id)
+
+        launcher.unregister()
+        launchers = self.zk.getRegisteredPools()
+        self.assertEqual(0, len(launchers))
 
 
 class TestZooKeeper(tests.DBTestCase):
@@ -563,23 +590,6 @@ class TestZooKeeper(tests.DBTestCase):
         self.zk.client.create(path, makepath=True)
         self.zk.deleteUpload("trusty", "000", "rax", "000001")
         self.assertIsNone(self.zk.client.exists(path))
-
-    def test_registerLauncher(self):
-        launcher = zk.Launcher()
-        launcher.id = "launcher-Poolworker.provider-main-" + uuid.uuid4().hex
-        self.zk.registerLauncher(launcher)
-        launchers = self.zk.getRegisteredLaunchers()
-        self.assertEqual(1, len(launchers))
-        self.assertEqual(launcher.id, launchers[0].id)
-
-    def test_registerLauncher_safe_repeat(self):
-        launcher = zk.Launcher()
-        launcher.id = "launcher-Poolworker.provider-main-" + uuid.uuid4().hex
-        self.zk.registerLauncher(launcher)
-        self.zk.registerLauncher(launcher)
-        launchers = self.zk.getRegisteredLaunchers()
-        self.assertEqual(1, len(launchers))
-        self.assertEqual(launcher.id, launchers[0].id)
 
     def test_getNodeRequests_empty(self):
         self.assertEqual([], self.zk.getNodeRequests())
