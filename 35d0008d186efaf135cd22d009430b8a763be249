@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a78e670_6dc99d7d",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-05-24T09:40:25Z",
+      "side": 1,
+      "message": "We have ubuntu-jammy available now, please use that instead as it is LTS and will be available for a longer time frame.",
+      "revId": "35d0008d186efaf135cd22d009430b8a763be249",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
