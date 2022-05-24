@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b463ec8f_f8c540ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 32053
+      },
+      "writtenOn": "2022-05-24T13:54:10Z",
+      "side": 1,
+      "message": "Trying to write a test which could cover deleteImage invocation. It seems that most of the tests rely on zookeeper information and miss a lot. \n\nI added an test to check that the image is failed on post_upload_hook failure and it is marked failed in zookeeper. But exception isn\u0027t tracked. Will try to find how to get a list of images from fake provider to verify.",
+      "revId": "1ae68996c7ab023fa17a94f83ebbda41e49efe67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}

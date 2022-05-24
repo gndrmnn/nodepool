@@ -52,6 +52,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50bf42c4_8653c39a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 32053
+      },
+      "writtenOn": "2022-05-24T13:54:10Z",
+      "side": 1,
+      "message": "I tried to write a test, but faced the following problem:\nNodepool skips failures and retry image building and uploading continuously. And this can\u0027t be tracked trough zookeeper as failed image marked failed. There is no way to check that typeerror was raised during image upload. And there is no way to get a list of images from fake provider to compare them during builder run. At lease I haven\u0027t found how.",
+      "parentUuid": "e31ec619_e00fea83",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb48e40c_f30131fe",
