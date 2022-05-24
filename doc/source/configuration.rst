@@ -459,6 +459,19 @@ Options
       thread, this can be useful for limiting the number of threads
       used by the nodepool-launcher daemon.
 
+   .. attr:: priority
+      :type: int
+      :default: 100
+
+      The priority of this provider (a lesser number is a higher
+      priority).  Nodepool launchers will yield requests to other
+      provider pools with a higher priority as long as they are not
+      paused.  This means that in general, higher priority pools will
+      reach quota first before lower priority pools begin to be used.
+
+      This setting provides the default for each provider pool, but
+      the value can be overidden in the pool configuration.
+
    .. attr:: driver
       :type: string
       :default: openstack
