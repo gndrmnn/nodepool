@@ -1,6 +1,7 @@
 - job:
     description: |
       Test that nodepool works with kubernetes.
+    ansible-version: 5
     name: nodepool-functional-k8s
     pre-run: playbooks/nodepool-functional-k8s/pre.yaml
     run: playbooks/nodepool-functional-k8s/run.yaml
@@ -11,6 +12,7 @@
 - job:
     description: |
       Test that nodepool works with openshift.
+    ansible-version: 5
     name: nodepool-functional-openshift
     pre-run: playbooks/nodepool-functional-openshift/pre.yaml
     run: playbooks/nodepool-functional-openshift/run.yaml
@@ -43,6 +45,7 @@
 
 - job:
     name: nodepool-build-image
+    ansible-version: 5
     parent: opendev-build-docker-image
     description: Build Docker images.
     timeout: &image_build_timeout 4800
@@ -81,6 +84,7 @@
 
 - job:
     name: nodepool-upload-image
+    ansible-version: 5
     parent: opendev-upload-docker-image
     description: Build Docker images and upload to Docker Hub.
     timeout: *image_build_timeout
@@ -96,6 +100,7 @@
 
 - job:
     name: nodepool-promote-image
+    ansible-version: 5
     parent: opendev-promote-docker-image
     description: Promote previously uploaded Docker images.
     vars: *nodepool_image_vars
@@ -107,6 +112,7 @@
 # NOTE(ianw) : kept separate as these aren't intended to be released
 - job:
     name: nodepool-build-image-siblings
+    ansible-version: 5
     dependencies:
       - opendev-buildset-registry
     parent: opendev-build-docker-image
@@ -140,6 +146,7 @@
 
 - job:
     name: nodepool-functional-container-openstack-base
+    ansible-version: 5
     abstract: true
     description: |
       Test Nodepool containers with an OpenStack.
@@ -169,6 +176,7 @@
 
 - job:
     name: nodepool-functional-container-openstack-release-base
+    ansible-version: 5
     abstract: true
     description: |
       Test Nodepool containers and OpenStack, against released
@@ -185,6 +193,7 @@
 
 - job:
     name: nodepool-functional-container-openstack-release
+    ansible-version: 5
     description: |
       Test Nodepool containers and OpenStack, with released projects
 
@@ -201,6 +210,7 @@
 
 - job:
     name: nodepool-functional-container-openstack-siblings-base
+    ansible-version: 5
     abstract: true
     description: |
       Test Nodepool containers and OpenStack, with some projects from source
@@ -218,6 +228,7 @@
 
 - job:
     name: nodepool-functional-container-openstack-siblings
+    ansible-version: 5
     description: |
       Test Nodepool containers and OpenStack, with some projects from source
 
@@ -234,6 +245,7 @@
 
 - job:
     name: nodepool-tox-py38
+    ansible-version: 5
     description: |
       Nodepool unit tests with ZooKeeper running
     parent: tox-py38
@@ -246,6 +258,7 @@
 
 - job:
     name: nodepool-tox-py39
+    ansible-version: 5
     description: |
       Nodepool unit tests with ZooKeeper running
     parent: tox-py39
