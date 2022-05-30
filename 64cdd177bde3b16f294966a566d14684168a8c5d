@@ -103,6 +103,23 @@
       "parentUuid": "fb48e40c_f30131fe",
       "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b303390_6880fc89",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 34932
+      },
+      "writtenOn": "2022-05-30T07:59:44Z",
+      "side": 1,
+      "message": "It definetely will keep failing with TypeError at least because following methods in AWS, Azure and IBM VPC drivers accept only one parameter:\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/azure/adapter.py#L479\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/aws/adapter.py#L343\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/ibmvpc/adapter.py#L523\n\nI learned sources for a while and found an interface-class for adapters (https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L808) with same named method `deleteImage(external_id)` taking exactly one parameter.\nThough provider for OpenStack (https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L40) doesn\u0027t inherit that class excplicitly, they both have a common methods supposed to provide the same functionality and probably might have same signatures (`deleteImage()`, `uploadImage()`). \n\nSo i would propose getting rid from `name` parameter in the following lines:\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L216\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L667\nas Dmitriy suggested above. As a quick fix. \n\nFurther maybe there will be good to see reimplementing of base classes for all drivers to enhance uniformity of interfaces.",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
