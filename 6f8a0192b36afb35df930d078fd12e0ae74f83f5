@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ef0ab74_8074f7f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 32053
+      },
+      "writtenOn": "2022-05-31T07:13:07Z",
+      "side": 1,
+      "message": "Wrote a test scenario which creates files during the image creation and then remove them on a delete. This is done within image directory so being removed after testing. \n\nI do not know any other way to test the behaviour. ",
+      "revId": "6f8a0192b36afb35df930d078fd12e0ae74f83f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}

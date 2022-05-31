@@ -120,6 +120,42 @@
       "message": "It definetely will keep failing with TypeError at least because following methods in AWS, Azure and IBM VPC drivers accept only one parameter:\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/azure/adapter.py#L479\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/aws/adapter.py#L343\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/ibmvpc/adapter.py#L523\n\nI learned sources for a while and found an interface-class for adapters (https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L808) with same named method `deleteImage(external_id)` taking exactly one parameter.\nThough provider for OpenStack (https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L40) doesn\u0027t inherit that class excplicitly, they both have a common methods supposed to provide the same functionality and probably might have same signatures (`deleteImage()`, `uploadImage()`). \n\nSo i would propose getting rid from `name` parameter in the following lines:\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/provider.py#L216\nhttps://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L667\nas Dmitriy suggested above. As a quick fix. \n\nFurther maybe there will be good to see reimplementing of base classes for all drivers to enhance uniformity of interfaces.",
       "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88e57212_5bf74395",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 32053
+      },
+      "writtenOn": "2022-05-31T07:13:07Z",
+      "side": 1,
+      "message": "does this mean that I have to refactor openstack provider to use statemachine instead of just additional argument passing?",
+      "parentUuid": "a5c0b61e_ac9c2dfa",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f50b1088_9305cb82",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 32053
+      },
+      "writtenOn": "2022-05-31T07:13:07Z",
+      "side": 1,
+      "message": "I agree that it would be cool to rewrite code for the openstack provider and make it using statemachine, but does this mean that purposed fix isn\u0027t an option and It should be solved by the provider refactor?",
+      "parentUuid": "0b303390_6880fc89",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
