@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5d85963_a07858d4",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-05-31T08:14:25Z",
+      "side": 1,
+      "message": "nit: is this in MiB or GiB?",
+      "revId": "d60a27a787b47832182168f06e98c48c868bb1e9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
