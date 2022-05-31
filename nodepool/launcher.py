@@ -227,8 +227,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if check_tenant_quota and not self._hasTenantQuota(req, pm):
                 # Defer request for it to be handled and fulfilled at a later
                 # run.
-                log.debug(
-                    "Deferring request because it would exceed tenant quota")
+                log.debug("Deferring request %s because it would "
+                          "exceed tenant quota", req)
                 continue
 
             log.debug("Locking request")
@@ -326,9 +326,10 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             **self.nodepool.config.tenant_resource_limits[tenant_name])
 
         tenant_quota.subtract(used_quota)
-        log.debug("Current tenant quota: %s", tenant_quota)
+        log.debug("Current tenant quota for %s: %s", tenant_name, tenant_quota)
         tenant_quota.subtract(needed_quota)
-        log.debug("Predicted remaining tenant quota: %s", tenant_quota)
+        log.debug("Predicted remaining tenant quota for %s: %s",
+                  tenant_name, tenant_quota)
         return tenant_quota.non_negative()
 
     def _getUsedQuotaForTenant(self, tenant_name):
