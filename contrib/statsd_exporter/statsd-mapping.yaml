@@ -19,6 +19,13 @@ mappings:
       provider: "$1"
       state: "$2"
 
+  - match: nodepool.provider.*.requests.*
+    name: nodepool_requests_by_provider
+    help: Node requests by provider and state
+    labels:
+      provider: "$1"
+      state: "$2"
+
   - match: nodepool.label.*.nodes.*
     name: nodepool_nodes_by_label
     help: Nodes by label and state
@@ -26,9 +33,22 @@ mappings:
       label: "$1"
       state: "$2"
 
+  - match: nodepool.label.*.requests.*
+    name: nodepool_requests_by_label
+    help: Node requests by label and state
+    labels:
+      label: "$1"
+      state: "$2"
+
   - match: nodepool.nodes.*
     name: nodepool_nodes
     help: Nodes by state
+    labels:
+      state: "$1"
+
+  - match: nodepool.requests.*
+    name: nodepool_requests
+    help: Node requests by state
     labels:
       state: "$1"
 

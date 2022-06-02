@@ -935,6 +935,10 @@ class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
                 self.updateNodeStats(zk)
             except Exception:
                 self.log.exception("Exception while reporting stats:")
+            try:
+                self.updateNodeRequestStats(zk)
+            except Exception:
+                self.log.exception("Exception while reporting stats:")
             time.sleep(1)
 
         # Unregister from node stats events

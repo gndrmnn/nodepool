@@ -100,6 +100,11 @@ class TestLauncher(tests.DBTestCase):
         self.assertReportedStat('nodepool.label.fake-label.nodes.ready',
                                 value='1', kind='g')
 
+        self.assertReportedStat('nodepool.requests.requested', value='0', kind='g')
+        self.assertReportedStat('nodepool.requests.pending', value='0', kind='g')
+        self.assertReportedStat('nodepool.requests.fulfilled', value='0', kind='g')
+        self.assertReportedStat('nodepool.requests.failed', value='0', kind='g')
+
         # Verify that we correctly initialized unused label stats to 0
         self.assertReportedStat('nodepool.label.fake-label2.nodes.building',
                                 value='0', kind='g')
@@ -120,6 +125,15 @@ class TestLauncher(tests.DBTestCase):
         self.assertReportedStat('nodepool.label.fake-label2.nodes.init',
                                 value='0', kind='g')
         self.assertReportedStat('nodepool.label.fake-label2.nodes.aborted',
+                                value='0', kind='g')
+
+        self.assertReportedStat('nodepool.label.fake-label2.requests.requested',
+                                value='0', kind='g')
+        self.assertReportedStat('nodepool.label.fake-label2.requests.pending',
+                                value='0', kind='g')
+        self.assertReportedStat('nodepool.label.fake-label2.requests.fulfilled',
+                                value='0', kind='g')
+        self.assertReportedStat('nodepool.label.fake-label2.requests.failed',
                                 value='0', kind='g')
 
     def test_node_assignment_order(self):
