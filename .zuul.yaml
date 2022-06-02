@@ -114,7 +114,6 @@
     required-projects:
       - zuul/nodepool
       - openstack/diskimage-builder
-      - openstack/openstacksdk
     requires:
       - python-builder-3.9-bullseye-container-image
       - python-base-3.9-bullseye-container-image
@@ -127,15 +126,12 @@
           target: nodepool-launcher
           tags:
             - siblings
-          siblings:
-            - opendev.org/openstack/openstacksdk
         - context: .
           repository: zuul/nodepool-builder
           target: nodepool-builder
           tags:
             - siblings
           siblings:
-            - opendev.org/openstack/openstacksdk
             - opendev.org/openstack/diskimage-builder
 
 - job:
