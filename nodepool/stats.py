@@ -150,6 +150,70 @@ class StatsReporter(object):
 
         pipeline.send()
 
+    def updateNodeRequestStats(self, zk_conn):
+        '''
+        Refresh statistics for all known node requests
+
+        :param ZooKeeper zk_conn: A ZooKeeper connection object.
+        '''
+        if not self._statsd:
+            return
+
+        states = {}
+
+        launcher_pools = zk_conn.getRegisteredPools()
+        labels = set()
+        for launcher_pool in launcher_pools:
+            labels.update(launcher_pool.supported_labels)
+        providers = set()
+        for launcher_pool in launcher_pools:
+            providers.add(launcher_pool.provider_name)
+
+        # Initialize things we know about to zero
+        for state in zk.NodeRequest.VALID_STATES:
+            key = 'nodepool.requests.%s' % state
+            states[key] = 0
+            for provider in providers:
+                key = 'nodepool.provider.%s.requests.%s' % (provider, state)
+                states[key] = 0
+
+        # Initialize label stats to 0
+        for label in labels:
+            for state in zk.NodeRequest.VALID_STATES:
+                key = 'nodepool.label.%s.requests.%s' % (label, state)
+                states[key] = 0
+
+        for node in zk_conn.nodeRequestIterator():
+            # nodepool.requests.STATE
+            key = 'nodepool.requests.%s' % node.state
+            states[key] += 1
+
+            # nodepool.label.LABEL.requests.STATE
+            # nodes can have several labels
+            for label in node.node_type:
+                key = 'nodepool.label.%s.requests.%s' % (label, node.state)
+                # It's possible we could see node types that aren't in our
+                # config
+                if key in states:
+                    states[key] += 1
+                else:
+                    states[key] = 1
+
+            # nodepool.provider.PROVIDER.requests.STATE
+            key = 'nodepool.provider.%s.requests.%s' % (node.provider,
+                                                        node.state)
+            # It's possible we could see providers that aren't in our config
+            if key in states:
+                states[key] += 1
+            else:
+                states[key] = 1
+
+        pipeline = self._statsd.pipeline()
+        for key, count in states.items():
+            pipeline.gauge(key, count)
+
+        pipeline.send()
+
     def updateProviderLimits(self, provider):
         if not self._statsd:
             return

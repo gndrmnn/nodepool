@@ -489,11 +489,29 @@ The following metrics are produced by a ``nodepool-launcher`` process:
    * ready
    * used
 
+.. zuul:stat:: nodepool.requests.<state>
+  :type: gauge
+
+   Number of requests node in a specific state.
+
+   state can be:
+
+   * requested
+   * pending
+   * fulfilled
+   * failed
+
 .. zuul:stat:: nodepool.label.<label>.nodes.<state>
    :type: counter
 
    Number of nodes with a specific label in a specific state. See
    :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+
+.. zuul:stat:: nodepool.label.<label>.requests.<state>
+   :type: gauge
+
+   Number of node requests with a specific label in a specific state. See
+   :ref:`nodepool.requests <nodepool_nodes>` for a list of possible states.
 
 .. zuul:stat:: nodepool.tenant_limits.<tenant>.<limit>
    :type: guage
@@ -520,6 +538,12 @@ Provider Metrics
 
    Number of nodes per provider that are in one specific state. See
    :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
+
+.. zuul:stat:: nodepool.provider.<provider>.requests.<state>
+   :type: gauge
+
+   Number of node requests per provider that are in one specific state. See
+   :ref:`nodepool.requests <nodepool_nodes>` for a list of possible states.
 
 .. zuul:stat:: nodepool.provider.<provider>.leaked.ports
    :type: counter

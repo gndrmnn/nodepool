@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Nodepool will now report stats about node requests via statsd.
