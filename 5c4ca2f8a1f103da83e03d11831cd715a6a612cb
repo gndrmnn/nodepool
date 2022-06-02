@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "5c4ca2f8a1f103da83e03d11831cd715a6a612cb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f574c88_641b893f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-06-02T04:28:02Z",
+      "side": 1,
+      "message": "Tested with\n\nhttps://zuul.opendev.org/t/zuul/build/56cbe356c7bb424397ad52f89e866080\n\nI think we had discussions over removing this from the gate wrt. If9f45e24a71f349a85e94150e6a4d9ee9672173b.  glean and dib are both using this job, perhaps it should at least be non-voting here?",
+      "revId": "5c4ca2f8a1f103da83e03d11831cd715a6a612cb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
