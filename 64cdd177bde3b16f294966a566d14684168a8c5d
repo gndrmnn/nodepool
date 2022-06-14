@@ -156,6 +156,42 @@
       "parentUuid": "0b303390_6880fc89",
       "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab54508e_563790f0",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-14T15:43:28Z",
+      "side": 1,
+      "message": "No, I was suggesting that the change as written is correct. You don\u0027t need to rewrite openstack to use statemachine in order to fix this. I was responding to the suggestion above that suggested patching a different part of the code. The providers are in sync. They all use the same interface.",
+      "parentUuid": "88e57212_5bf74395",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d21e9cf3_49b3f755",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-14T15:43:28Z",
+      "side": 1,
+      "message": "As mentioned perviously the manager.deleteImage() call should be https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/statemachine.py#L667 which then calls the methods listed above that only accept the id parameter. What this means is that everything is currently in sync except for this driver.\n\nWe should not need to rewrite the openstack driver to use statemanager to fix this. The proposed fix should be fine. Separately rewriting the driver to use statemanager may be a good idea but I do not think it is necessary here and a significant amount of work in comparison.\n\nBasically lets fix the bug in the most straightforward manner (which I believe this change already does), then followup with any suggested refactoring to reduce confusion.",
+      "parentUuid": "f50b1088_9305cb82",
+      "revId": "64cdd177bde3b16f294966a566d14684168a8c5d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
