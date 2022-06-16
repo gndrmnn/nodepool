@@ -245,6 +245,7 @@ class BackingNodeRecord:
         idx = self.allocated_nodes.index(node_id)
         self.allocated_nodes[idx] = None
         self.last_used = time.time()
+        return idx
 
     def backsNode(self, node_id):
         return node_id in self.allocated_nodes
@@ -287,8 +288,14 @@ class MetastaticAdapter(statemachine.Adapter):
             self.backing_node_records.items():
             for bnr in backing_node_records[:]:
                 label_config = self.provider._getLabel(bnr.label_name)
+                if label_config:
+                    grace_time = label_config.grace_time
+                else:
+                    # The label doesn't exist in our config any more,
+                    # it must have been removed.
+                    grace_time = 0
                 if (bnr.isEmpty() and
-                    now - bnr.last_used > label_config.grace_time):
+                    now - bnr.last_used > grace_time):
                     self.log.info("Backing node %s has been idle for "
                                   "%s seconds, releasing",
                                   bnr.node_id, now - bnr.last_used)
@@ -396,7 +403,10 @@ class MetastaticAdapter(statemachine.Adapter):
             self.backing_node_records.items():
             for bn in backing_node_records:
                 if bn.backsNode(node_id):
-                    bn.deallocateSlot(node_id)
+                    slot = bn.deallocateSlot(node_id)
+                    self.log.info(
+                        "Unassigned node %s from backing node %s slot %s",
+                        node_id, bn.node_id, slot)
                     return
 
     def _checkBackingNodeRequests(self):

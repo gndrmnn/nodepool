@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import json
 import logging
+import os
 
 import testtools
 
@@ -180,3 +181,40 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.assertEqual(nodes, [node1, bn1, node2, node3, bn2])
         self.assertEqual(bn2.id, node3.driver_data['backing_node'])
         self.assertNotEqual(bn1.id, bn2.id)
+
+    def test_metastatic_config_change(self):
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager._client.create_image(name="fake-image")
+
+        # Request a node, verify that there is a backing node, and it
+        # has the same connection info
+        node1 = self._requestNode()
+        nodes = self._getNodes()
+        bn1 = nodes[1]
+        self.assertEqual(nodes, [node1, bn1])
+
+        # Update the node to indicate it was for a non-existent label
+        user_data = json.loads(bn1.user_data)
+        user_data['label'] = 'old-label'
+        bn1.user_data = json.dumps(user_data)
+        self.zk.storeNode(bn1)
+
+        # Restart the provider and make sure we load data correctly
+        pool.stop()
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager._client.create_image(name="fake-image")
+
+        # Delete the metastatic node and verify that backing is deleted
+        node1.state = zk.DELETING
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+        self.waitForNodeDeletion(bn1)
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [])
