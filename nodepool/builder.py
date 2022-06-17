@@ -578,6 +578,11 @@ class BuildWorker(BaseWorker):
                                           interval, zk)
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
+        self._lost_zk_connection = False
+        zk.client.on_connection_lost_listeners.append(self._onConnectionLost)
+
+    def _onConnectionLost(self):
+        self._lost_zk_connection = True
 
     def _getBuildLogRoot(self, name):
         log_dir = self._config.build_log_dir
@@ -678,6 +683,7 @@ class BuildWorker(BaseWorker):
 
         :returns: The updated ImageBuild data structure.
         '''
+        self._lost_zk_connection = False
         data = zk.ImageBuild()
         data.state = zk.BUILDING
         data.builder_id = self._builder_id
@@ -932,9 +938,8 @@ class BuildWorker(BaseWorker):
         if self._statsd:
             pipeline = self._statsd.pipeline()
 
-        if self._zk.didLoseConnection:
+        if self._lost_zk_connection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
-            self._zk.resetLostFlag()
             build_data.state = zk.FAILED
         elif p.returncode or did_timeout:
             self.log.info(

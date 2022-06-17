@@ -689,21 +689,21 @@ class DBTestCase(BaseTestCase):
                 return a + b
             return a + '/' + b
 
-        data, stat = self.zk.client.get(node)
+        data, stat = self.zk.kazoo_client.get(node)
         self.log.debug("Node: %s" % (node,))
         if data:
             self.log.debug(data)
 
-        for child in self.zk.client.get_children(node):
+        for child in self.zk.kazoo_client.get_children(node):
             self.printZKTree(join(node, child))
 
     def getZKTree(self, path, ret=None):
         """Return the contents of a ZK tree as a dictionary"""
         if ret is None:
             ret = {}
-        for key in self.zk.client.get_children(path):
+        for key in self.zk.kazoo_client.get_children(path):
             subpath = os.path.join(path, key)
-            ret[subpath] = self.zk.client.get(
+            ret[subpath] = self.zk.kazoo_client.get(
                 os.path.join(path, key))[0]
             self.getZKTree(subpath, ret)
         return ret
