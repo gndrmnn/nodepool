@@ -30,7 +30,7 @@ class TestComponentRegistry(tests.DBTestCase):
     def test_pool_component(self):
         hostname = socket.gethostname()
         launcher = PoolComponent(
-            self.zk.zk_client, hostname,
+            self.zk.client, hostname,
             version=get_version_string())
         launcher.content.update({
             'id': "launcher-Poolworker.provider-main-" + uuid.uuid4().hex,
@@ -92,7 +92,7 @@ class TestZooKeeper(tests.DBTestCase):
     def test_imageBuildLock(self):
         path = self.zk._imageBuildLockPath("ubuntu-trusty")
         with self.zk.imageBuildLock("ubuntu-trusty", blocking=False):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
     def test_imageBuildLock_exception_nonblocking(self):
         image = "ubuntu-trusty"
@@ -115,7 +115,7 @@ class TestZooKeeper(tests.DBTestCase):
         with self.zk.imageBuildNumberLock(
             "ubuntu-trusty", "0000", blocking=False
         ):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
     def test_imageBuildNumberLock_exception_nonblocking(self):
         image = "ubuntu-trusty"
@@ -152,12 +152,12 @@ class TestZooKeeper(tests.DBTestCase):
                                                   upload.provider_name,
                                                   upload.id)
         with self.zk.imageUploadNumberLock(upload, blocking=False):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
             self.zk.deleteUpload(upload.image_name,
                                  upload.build_id,
                                  upload.provider_name,
                                  upload.id)
-        self.assertIsNone(self.zk.client.exists(path))
+        self.assertIsNone(self.zk.kazoo_client.exists(path))
 
     def test_imageUploadNumberLock_orphan(self):
         upload = zk.ImageUpload()
@@ -171,7 +171,7 @@ class TestZooKeeper(tests.DBTestCase):
                                                   upload.id)
 
         with self.zk.imageUploadNumberLock(upload, blocking=False):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
             self.zk.deleteUpload(upload.image_name,
                                  upload.build_id,
                                  upload.provider_name,
@@ -183,7 +183,7 @@ class TestZooKeeper(tests.DBTestCase):
             # We now recreated an empty image upload number node
             pass
 
-        self.assertIsNotNone(self.zk.client.exists(path))
+        self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
         # Should not throw an exception because of the empty upload
         self.zk.getImageUpload(upload.image_name, upload.build_id,
@@ -200,7 +200,7 @@ class TestZooKeeper(tests.DBTestCase):
                                                   upload.provider_name,
                                                   upload.id)
         with self.zk.imageUploadNumberLock(upload, blocking=False):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
     def test_imageUploadNumberLock_exception_nonblocking(self):
         upload = zk.ImageUpload()
@@ -232,7 +232,7 @@ class TestZooKeeper(tests.DBTestCase):
         path = self.zk._imageUploadLockPath("ubuntu-trusty", "0000", "prov1")
         with self.zk.imageUploadLock("ubuntu-trusty", "0000", "prov1",
                                      blocking=False):
-            self.assertIsNotNone(self.zk.client.exists(path))
+            self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
     def test_imageUploadLock_exception_nonblocking(self):
         image = "ubuntu-trusty"
@@ -367,7 +367,7 @@ class TestZooKeeper(tests.DBTestCase):
             # We now created an empty build number node
             pass
 
-        self.assertIsNotNone(self.zk.client.exists(path))
+        self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
         # Should not throw an exception because of the empty upload
         self.assertIsNone(self.zk.getBuild(image, build_number))
@@ -496,11 +496,15 @@ class TestZooKeeper(tests.DBTestCase):
         v3.state = zk.FAILED
         v4 = zk.ImageBuild()
         v4.state = zk.DELETING
-        self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
-        self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
-        self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
-        self.zk.client.create(path + "/4", value=v4.serialize(), makepath=True)
-        self.zk.client.create(path + "/lock", makepath=True)
+        self.zk.kazoo_client.create(path + "/1", value=v1.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/2", value=v2.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/3", value=v3.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/4", value=v4.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/lock", makepath=True)
 
         matches = self.zk.getBuilds(image, None)
         self.assertEqual(4, len(matches))
@@ -516,11 +520,15 @@ class TestZooKeeper(tests.DBTestCase):
         v3.state = zk.FAILED
         v4 = zk.ImageBuild()
         v4.state = zk.DELETING
-        self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
-        self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
-        self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
-        self.zk.client.create(path + "/4", value=v4.serialize(), makepath=True)
-        self.zk.client.create(path + "/lock", makepath=True)
+        self.zk.kazoo_client.create(path + "/1", value=v1.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/2", value=v2.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/3", value=v3.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/4", value=v4.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/lock", makepath=True)
 
         matches = self.zk.getBuilds(image, [zk.DELETING, zk.FAILED])
         self.assertEqual(2, len(matches))
@@ -535,11 +543,15 @@ class TestZooKeeper(tests.DBTestCase):
         v3.state = zk.FAILED
         v4 = zk.ImageUpload()
         v4.state = zk.DELETING
-        self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
-        self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
-        self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
-        self.zk.client.create(path + "/4", value=v4.serialize(), makepath=True)
-        self.zk.client.create(path + "/lock", makepath=True)
+        self.zk.kazoo_client.create(path + "/1", value=v1.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/2", value=v2.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/3", value=v3.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/4", value=v4.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/lock", makepath=True)
 
         matches = self.zk.getUploads("trusty", "000", "rax",
                                      [zk.DELETING, zk.FAILED])
@@ -555,11 +567,15 @@ class TestZooKeeper(tests.DBTestCase):
         v3.state = zk.FAILED
         v4 = zk.ImageUpload()
         v4.state = zk.DELETING
-        self.zk.client.create(path + "/1", value=v1.serialize(), makepath=True)
-        self.zk.client.create(path + "/2", value=v2.serialize(), makepath=True)
-        self.zk.client.create(path + "/3", value=v3.serialize(), makepath=True)
-        self.zk.client.create(path + "/4", value=v4.serialize(), makepath=True)
-        self.zk.client.create(path + "/lock", makepath=True)
+        self.zk.kazoo_client.create(path + "/1", value=v1.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/2", value=v2.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/3", value=v3.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/4", value=v4.serialize(),
+                                    makepath=True)
+        self.zk.kazoo_client.create(path + "/lock", makepath=True)
 
         matches = self.zk.getUploads("trusty", "000", "rax", None)
         self.assertEqual(4, len(matches))
@@ -587,9 +603,9 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_deleteUpload(self):
         path = self.zk._imageUploadPath("trusty", "000", "rax") + "/000001"
-        self.zk.client.create(path, makepath=True)
+        self.zk.kazoo_client.create(path, makepath=True)
         self.zk.deleteUpload("trusty", "000", "rax", "000001")
-        self.assertIsNone(self.zk.client.exists(path))
+        self.assertIsNone(self.zk.kazoo_client.exists(path))
 
     def test_getNodeRequests_empty(self):
         self.assertEqual([], self.zk.getNodeRequests())
@@ -599,10 +615,10 @@ class TestZooKeeper(tests.DBTestCase):
         r2 = self.zk._requestPath("100-456")
         r3 = self.zk._requestPath("100-123")
         r4 = self.zk._requestPath("400-123")
-        self.zk.client.create(r1, makepath=True, ephemeral=True)
-        self.zk.client.create(r2, makepath=True, ephemeral=True)
-        self.zk.client.create(r3, makepath=True, ephemeral=True)
-        self.zk.client.create(r4, makepath=True, ephemeral=True)
+        self.zk.kazoo_client.create(r1, makepath=True, ephemeral=True)
+        self.zk.kazoo_client.create(r2, makepath=True, ephemeral=True)
+        self.zk.kazoo_client.create(r3, makepath=True, ephemeral=True)
+        self.zk.kazoo_client.create(r4, makepath=True, ephemeral=True)
 
         self.assertEqual(
             ["100-123", "100-456", "400-123", "500-123"],
@@ -613,8 +629,8 @@ class TestZooKeeper(tests.DBTestCase):
         r = zk.NodeRequest("500-123")
         r.state = zk.REQUESTED
         path = self.zk._requestPath(r.id)
-        self.zk.client.create(path, value=r.serialize(),
-                              makepath=True, ephemeral=True)
+        self.zk.kazoo_client.create(path, value=r.serialize(),
+                                    makepath=True, ephemeral=True)
         o = self.zk.getNodeRequest(r.id)
         self.assertIsInstance(o, zk.NodeRequest)
         self.assertEqual(r.id, o.id)
@@ -623,8 +639,8 @@ class TestZooKeeper(tests.DBTestCase):
         self.assertIsNone(self.zk.getNodeRequest("invalid"))
 
     def test_getNodes(self):
-        self.zk.client.create(self.zk._nodePath('100'), makepath=True)
-        self.zk.client.create(self.zk._nodePath('200'), makepath=True)
+        self.zk.kazoo_client.create(self.zk._nodePath('100'), makepath=True)
+        self.zk.kazoo_client.create(self.zk._nodePath('200'), makepath=True)
         nodes = self.zk.getNodes()
         self.assertIn('100', nodes)
         self.assertIn('200', nodes)
@@ -633,7 +649,7 @@ class TestZooKeeper(tests.DBTestCase):
         n = zk.Node('100')
         n.state = zk.BUILDING
         path = self.zk._nodePath(n.id)
-        self.zk.client.create(path, value=n.serialize(), makepath=True)
+        self.zk.kazoo_client.create(path, value=n.serialize(), makepath=True)
         o = self.zk.getNode(n.id)
         self.assertIsInstance(o, zk.Node)
         self.assertEqual(n.id, o.id)
@@ -654,7 +670,7 @@ class TestZooKeeper(tests.DBTestCase):
         self.zk.lockNode(node)
         self.assertIsNotNone(node.lock)
         self.assertIsNotNone(
-            self.zk.client.exists(self.zk._nodeLockPath(node.id))
+            self.zk.kazoo_client.exists(self.zk._nodeLockPath(node.id))
         )
         self.zk.unlockNode(node)
         self.assertIsNone(node.lock)
@@ -673,7 +689,7 @@ class TestZooKeeper(tests.DBTestCase):
         self.zk.storeNode(node)
         self.assertIsNotNone(node.id)
         self.assertIsNotNone(
-            self.zk.client.exists(self.zk._nodePath(node.id))
+            self.zk.kazoo_client.exists(self.zk._nodePath(node.id))
         )
         return node
 
@@ -695,7 +711,7 @@ class TestZooKeeper(tests.DBTestCase):
         req.node_types.append('label1')
         self.zk.storeNodeRequest(req)
         self.assertIsNotNone(
-            self.zk.client.exists(self.zk._requestPath(req.id))
+            self.zk.kazoo_client.exists(self.zk._requestPath(req.id))
         )
         return req
 
@@ -717,14 +733,14 @@ class TestZooKeeper(tests.DBTestCase):
         req = self._create_node_request()
         self.zk.deleteNodeRequest(req)
         self.assertIsNone(
-            self.zk.client.exists(self.zk._requestPath(req.id))
+            self.zk.kazoo_client.exists(self.zk._requestPath(req.id))
         )
 
     def test_deleteNode(self):
         n1 = self._create_node()
         self.zk.deleteNode(n1)
         self.assertIsNone(
-            self.zk.client.exists(self.zk._nodePath(n1.id))
+            self.zk.kazoo_client.exists(self.zk._nodePath(n1.id))
         )
 
     def test_getReadyNodesOfTypes(self):
