@@ -426,7 +426,7 @@ class TestNodepoolCMD(tests.DBTestCase):
                 "-c", configfile, 'export-image-data', tf.name)
             nodepoolcmd.main()
             # Delete data from ZK
-            self.zk.client.delete('/nodepool', recursive=True)
+            self.zk.kazoo_client.delete('/nodepool', recursive=True)
 
             self.patch_argv(
                 "-c", configfile, 'import-image-data', tf.name)
