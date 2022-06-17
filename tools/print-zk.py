@@ -47,12 +47,12 @@ def join(a, b):
     return a+'/'+b
 
 def print_tree(node):
-    data, stat = zk.client.get(node)
+    data, stat = zk.kazoo_client.get(node)
     print("Node: %s %s" % (node, stat))
     if data:
         print(data)
 
-    for child in zk.client.get_children(node):
+    for child in zk.kazoo_client.get_children(node):
         print()
         print_tree(join(node, child))
 
