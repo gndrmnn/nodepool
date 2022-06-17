@@ -251,7 +251,7 @@ class AwsProviderConfig(ProviderConfig):
         self.profile_name = self.provider.get('profile-name')
         self.region_name = self.provider.get('region-name')
 
-        self.rate = self.provider.get('rate', 1)
+        self.rate = self.provider.get('rate', 2)
         self.launch_retries = self.provider.get('launch-retries', 3)
         self.launch_timeout = self.provider.get('launch-timeout', 3600)
         self.boot_timeout = self.provider.get('boot-timeout', 180)

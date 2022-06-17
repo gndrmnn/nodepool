@@ -167,10 +167,10 @@ section of the configuration.
       platforms.  The default value is true.
 
    .. attr:: rate
-      :type: float seconds
+      :type: float
       :default: 1.0
 
-      In seconds, amount to wait between operations on the provider.
+      The number of operations per second to perform against the provider.
 
    .. attr:: boot-timeout
       :type: int seconds
