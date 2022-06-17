@@ -493,6 +493,7 @@ class StateMachineProvider(Provider, QuotaSupport):
             self.running = False
         if self.keyscan_worker:
             self.keyscan_worker.shutdown()
+        self.adapter.stop()
         self.log.debug("Stopped")
 
     def join(self):
@@ -819,6 +820,10 @@ class Adapter:
 
     """
     def __init__(self, provider_config):
+        pass
+
+    def stop(self):
+        """Release any resources as this provider is being stopped"""
         pass
 
     def getCreateStateMachine(self, hostname, label,

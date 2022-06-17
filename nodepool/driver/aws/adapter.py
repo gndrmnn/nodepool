@@ -13,18 +13,21 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from concurrent.futures import ThreadPoolExecutor
+import cachetools.func
 import json
 import logging
 import math
-import cachetools.func
-import urllib.parse
-import time
 import re
-
-import boto3
+import threading
+import queue
+import time
+import urllib.parse
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
+
+import boto3
 
 
 def tag_dict_to_list(tagdict):
@@ -71,9 +74,6 @@ class AwsResource(statemachine.Resource):
 
 class AwsDeleteStateMachine(statemachine.StateMachine):
     VM_DELETING = 'deleting vm'
-    NIC_DELETING = 'deleting nic'
-    PIP_DELETING = 'deleting pip'
-    DISK_DELETING = 'deleting disk'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, external_id, log):
@@ -98,6 +98,7 @@ class AwsDeleteStateMachine(statemachine.StateMachine):
 
 
 class AwsCreateStateMachine(statemachine.StateMachine):
+    INSTANCE_CREATING_SUBMIT = 'submit creating instance'
     INSTANCE_CREATING = 'creating instance'
     INSTANCE_RETRY = 'retrying instance creation'
     COMPLETE = 'complete'
@@ -124,10 +125,16 @@ class AwsCreateStateMachine(statemachine.StateMachine):
     def advance(self):
         if self.state == self.START:
             self.external_id = self.hostname
-
-            self.instance = self.adapter._createInstance(
+            self.create_future = self.adapter._submitCreateInstance(
                 self.label, self.image_external_id,
                 self.tags, self.hostname, self.log)
+            self.state = self.INSTANCE_CREATING_SUBMIT
+
+        if self.state == self.INSTANCE_CREATING_SUBMIT:
+            instance = self.adapter._completeCreateInstance(self.create_future)
+            if instance is None:
+                return
+            self.instance = instance
             self.quota = self.adapter._getQuotaForInstanceType(
                 self.instance.instance_type)
             self.state = self.INSTANCE_CREATING
@@ -165,7 +172,39 @@ class AwsAdapter(statemachine.Adapter):
         self.log = logging.getLogger(
             f"nodepool.AwsAdapter.{provider_config.name}")
         self.provider = provider_config
-        # The standard rate limit, this might be 1 request per second
+        self._running = True
+
+        # AWS has a default rate limit for creating instances that
+        # works out to a sustained 2 instances/sec, but the actual
+        # create instance API call takes 1 second or more.  If we want
+        # to achieve faster than 1 instance/second throughput, we need
+        # to parallelize create instance calls, so we set up a
+        # threadworker to do that.
+
+        # A little bit of a heuristic here to set the worker count.
+        # It appears that AWS typically takes 1-1.5 seconds to execute
+        # a create API call.  Figure out how many we have to do in
+        # parallel in order to run at the rate limit, then quadruple
+        # that for headroom.  Max out at 8 so we don't end up with too
+        # many threads.  In practice, this will be 8 with the default
+        # values, and only less if users slow down the rate.
+        workers = max(min(int(self.provider.rate * 4), 8), 1)
+        self.log.info("Create executor with max workers=%s", workers)
+        self.create_executor = ThreadPoolExecutor(max_workers=workers)
+
+        # We can batch delete instances using the AWS API, so to do
+        # that, create a queue for deletes, and a thread to process
+        # the queue.  It will be greedy and collect as many pending
+        # instance deletes as possible to delete together.  Typically
+        # under load, that will mean a single instance delete followed
+        # by larger batches.  That strikes a balance between
+        # responsiveness and efficiency.  Reducing the overall number
+        # of requests leaves more time for create instance calls.
+        self.delete_queue = queue.Queue()
+        self.delete_thread = threading.Thread(target=self._deleteThread)
+        self.delete_thread.daemon = True
+        self.delete_thread.start()
+
         self.rate_limiter = RateLimiter(self.provider.name,
                                         self.provider.rate)
         # Non mutating requests can be made more often at 10x the rate
@@ -189,6 +228,10 @@ class AwsAdapter(statemachine.Adapter):
         # time on that again.
         self.not_our_images = set()
         self.not_our_snapshots = set()
+
+    def stop(self):
+        self.create_executor.shutdown()
+        self._running = False
 
     def getCreateStateMachine(self, hostname, label,
                               image_external_id, metadata, retries, log):
@@ -519,6 +562,18 @@ class AwsAdapter(statemachine.Adapter):
         with self.non_mutating_rate_limiter:
             return self.ec2.Image(image_id)
 
+    def _submitCreateInstance(self, label, image_external_id,
+                              tags, hostname, log):
+        return self.create_executor.submit(
+            self._createInstance,
+            label, image_external_id,
+            tags, hostname, log)
+
+    def _completeCreateInstance(self, future):
+        if not future.done():
+            return None
+        return future.result()
+
     def _createInstance(self, label, image_external_id,
                         tags, hostname, log):
         if image_external_id:
@@ -600,6 +655,33 @@ class AwsAdapter(statemachine.Adapter):
             log.debug(f"Created VM {hostname} as instance {instances[0].id}")
             return instances[0]
 
+    def _deleteThread(self):
+        while self._running:
+            try:
+                self._deleteThreadInner()
+            except Exception:
+                self.log.exception("Error in delete thread:")
+                time.sleep(5)
+
+    def _deleteThreadInner(self):
+        records = []
+        try:
+            records.append(self.delete_queue.get(block=True, timeout=10))
+        except queue.Empty:
+            return
+        while True:
+            try:
+                records.append(self.delete_queue.get(block=False))
+            except queue.Empty:
+                break
+        ids = []
+        for (del_id, log) in records:
+            ids.append(del_id)
+            log.debug(f"Deleting instance {del_id}")
+        count = len(ids)
+        with self.rate_limiter(log.debug, f"Deleted {count} instances"):
+            self.ec2_client.terminate_instances(InstanceIds=ids)
+
     def _deleteInstance(self, external_id, log=None):
         if log is None:
             log = self.log
@@ -609,9 +691,7 @@ class AwsAdapter(statemachine.Adapter):
         else:
             log.warning(f"Instance not found when deleting {external_id}")
             return None
-        with self.rate_limiter(log.debug, "Deleted instance"):
-            log.debug(f"Deleting instance {external_id}")
-            instance.terminate()
+        self.delete_queue.put((external_id, log))
         return instance
 
     def _deleteVolume(self, external_id):
