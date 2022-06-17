@@ -381,7 +381,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # Make sure we're always registered with ZK
         hostname = socket.gethostname()
         self.component_info = PoolComponent(
-            self.zk.zk_client, hostname,
+            self.zk.client, hostname,
             version=get_version_string())
         labels = set()
         for prov_cfg in self.nodepool.config.providers.values():
