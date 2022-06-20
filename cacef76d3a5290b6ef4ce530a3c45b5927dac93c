@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ab991c3_c47305c4",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2415,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-20T23:28:58Z",
+      "side": 1,
+      "message": "In OpenDev we appear to have tens of thousands of builds for some images. Others appear to have crossed the 100k range. Do we really want to create this many nodes only to immediately delete them? I\u0027m not sure how long that will take but wanted to call out the behavior that opendev would see.\n\nI wonder if there is a way to lie to the sequence system and have it skip ahead based on num?",
+      "revId": "cacef76d3a5290b6ef4ce530a3c45b5927dac93c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
