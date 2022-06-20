@@ -257,6 +257,46 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.assert_listed(
             configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
 
+    def test_dib_image_delete_two_builders(self):
+        # This tests deleting an image when its builder is offline
+        # 1. Build the image with builder1
+        configfile1 = self.setup_config('node.yaml')
+        builder1 = self.useBuilder(configfile1)
+        self.waitForImage('fake-provider', 'fake-image')
+        # Check the image exists
+        builds = self.zk.getMostRecentBuilds(1, 'fake-image', zk.READY)
+
+        # 2. Stop builder1; start builder2
+        for worker in builder1._upload_workers:
+            worker.shutdown()
+            worker.join()
+        builder1.stop()
+        # setup_config() makes a new images_dir each time, so this
+        # acts as a different builder.
+        configfile2 = self.setup_config('node.yaml')
+        builder2 = self.useBuilder(configfile2)
+
+        # 3. Set image to 'deleted' in ZK
+        self.patch_argv('-c', configfile1, 'dib-image-delete',
+                        'fake-image-%s' % (builds[0].id))
+        nodepoolcmd.main()
+
+        # 4. Verify builder2 deleted the ZK records, but image is still on disk
+        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.assertTrue(
+            os.path.exists(os.path.join(builder1._config.images_dir,
+                                        'fake-image-0000000001.d')))
+        self.assertFalse(
+            os.path.exists(os.path.join(builder2._config.images_dir,
+                                        'fake-image-0000000001.d')))
+
+        # 5. Start builder1 and verify it deletes image on disk
+        builder1 = self.useBuilder(configfile1)
+        for _ in iterate_timeout(30, AssertionError, 'image file delete'):
+            if not os.path.exists(os.path.join(builder1._config.images_dir,
+                                               'fake-image-0000000001.d')):
+                break
+
     def test_delete(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
