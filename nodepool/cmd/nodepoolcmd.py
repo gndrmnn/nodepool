@@ -182,6 +182,8 @@ class NodePoolCmd(NodepoolApp):
 
             l = logging.getLogger('kazoo')
             l.setLevel(logging.WARNING)
+            l = logging.getLogger('nodepool.ComponentRegistry')
+            l.setLevel(logging.WARNING)
 
     def list(self, node_id=None, detail=False):
         if hasattr(self.args, 'detail'):
