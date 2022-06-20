@@ -15,6 +15,7 @@
 import fcntl
 import logging
 import os
+import re
 import select
 import shutil
 import socket
@@ -226,7 +227,7 @@ class CleanupWorker(BaseWorker):
         return False
 
     @staticmethod
-    def deleteLocalBuild(images_dir, image, build, log):
+    def deleteLocalBuild(images_dir, image_name, build_id, log):
         '''
         Remove expired image build from local disk.
 
@@ -247,12 +248,12 @@ class CleanupWorker(BaseWorker):
                 if e.errno != 2:    # No such file or directory
                     raise e
 
-        base = "-".join([image, build.id])
+        base = "-".join([image_name, build_id])
         files = DibImageFile.from_image_id(images_dir, base)
         if not files:
             return
 
-        log.info("Doing cleanup for %s:%s" % (image, build.id))
+        log.info("Doing cleanup for %s:%s" % (image_name, build_id))
 
         manifest_dir = None
 
@@ -271,9 +272,9 @@ class CleanupWorker(BaseWorker):
             if e.errno != 2:    # No such file or directory
                 raise e
 
-    def _deleteLocalBuild(self, image, build):
+    def _deleteLocalBuild(self, image_name, build_id):
         CleanupWorker.deleteLocalBuild(
-            self._config.images_dir, image, build, self.log)
+            self._config.images_dir, image_name, build_id, self.log)
 
     def _cleanupProvider(self, provider, image, build_id):
         all_uploads = self._zk.getUploads(image, build_id, provider.name)
@@ -377,14 +378,26 @@ class CleanupWorker(BaseWorker):
             except Exception:
                 self.log.exception("Exception cleaning up image %s:", image)
 
-    def _filterLocalBuilds(self, image, builds):
-        '''Return the subset of builds that are local'''
-        ret = []
-        for build in builds:
-            is_local = build.builder_id == self._builder_id
-            if is_local:
-                ret.append(build)
-        return ret
+        for local_build in self._getLocalBuilds():
+            try:
+                image_name, build_id = local_build
+                build = self._zk.getBuild(image_name, build_id)
+                if not build or build.state == zk.DELETING:
+                    self.log.info("Deleting on-disk build: "
+                                  "%s-%s", image_name, build_id)
+                    self._deleteLocalBuild(image_name, build_id)
+            except Exception:
+                self.log.exception("Exception cleaning up local build %s:",
+                                   local_build)
+
+    MANIFEST_RE = re.compile(r'(.*)-(\d+)\.d')
+
+    def _getLocalBuilds(self):
+        for entry in os.scandir(self._config.images_dir):
+            m = self.MANIFEST_RE.match(entry.name)
+            if m and entry.is_dir():
+                image_name, build_id = m.groups()
+                yield (image_name, build_id)
 
     def _cleanupCurrentProviderUploads(self, provider, image, build_id):
         '''
@@ -435,21 +448,16 @@ class CleanupWorker(BaseWorker):
         # Get the list of all builds, then work from that so that we
         # have a consistent view of the data.
         all_builds = self._zk.getBuilds(image)
-        builds_to_keep = set([b for b in sorted(all_builds, reverse=True,
-                                                key=lambda y: y.state_time)
-                              if b.state == zk.READY][:2])
-        local_builds = set(self._filterLocalBuilds(image, all_builds))
         diskimage = self._config.diskimages.get(image)
-        if not diskimage and not local_builds:
-            # This builder is not configured to build this image and was not
-            # responsible for this image build so ignore it.
-            return
-        # Remove any local builds that are not in use.
         if not diskimage or (diskimage and not diskimage.image_types):
-            builds_to_keep -= local_builds
+            builds_to_keep = set()
             # TODO(jeblair): When all builds for an image which is not
             # in use are deleted, the image znode should be deleted as
             # well.
+        else:
+            builds_to_keep = set([b for b in sorted(all_builds, reverse=True,
+                                                    key=lambda y: y.state_time)
+                                  if b.state == zk.READY][:2])
 
         for build in all_builds:
             # Start by deleting any uploads that are no longer needed
@@ -500,13 +508,13 @@ class CleanupWorker(BaseWorker):
             for p in self._zk.getBuildProviders(image, build.id):
                 uploads += self._zk.getUploads(image, build.id, p)
 
-            # If we own this build, delete the local DIB files as soon as all
-            # provider uploads are in a deleting state. This prevents us from
-            # keeping local files around while we wait on clouds to remove
-            # the image on their side (which can be very slow).
+            # Mark the image as deleting (which will permit deleting
+            # local DIB files) as soon as all provider uploads are in
+            # a deleting state. This prevents us from keeping local
+            # files around while we wait on clouds to remove the image
+            # on their side (which can be very slow).
             all_deleting = all(map(lambda x: x.state == zk.DELETING, uploads))
-            is_local = build.builder_id == self._builder_id
-            if (not uploads or all_deleting) and is_local:
+            if (not uploads or all_deleting):
                 # If we got here, it's either an explicit delete (user
                 # activated), or we're deleting because we have newer
                 # images.  We're about to start deleting files, so
@@ -518,16 +526,10 @@ class CleanupWorker(BaseWorker):
                         build.state = zk.DELETING
                         self._zk.storeBuild(image, build, build.id)
 
-                self._deleteLocalBuild(image, build)
-
             if not uploads:
-                if is_local:
-                    # Only remove the db build record from the builder that
-                    # built this image. This prevents us from removing the db
-                    # record without first removing the local image files.
-                    if not self._zk.deleteBuild(image, build.id):
-                        self.log.error("Unable to delete build %s because"
-                                       " uploads still remain.", build)
+                if not self._zk.deleteBuild(image, build.id):
+                    self.log.error("Unable to delete build %s because"
+                                   " uploads still remain.", build)
 
     def run(self):
         '''
@@ -710,7 +712,7 @@ class BuildWorker(BaseWorker):
                 bnum, diskimage.name)
             data.id = bnum
             CleanupWorker.deleteLocalBuild(
-                self._config.images_dir, diskimage.name, data, self.log)
+                self._config.images_dir, diskimage.name, data.id, self.log)
             data.state = zk.FAILED
             return data
 
