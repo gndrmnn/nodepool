@@ -138,7 +138,7 @@ class TestWebApp(tests.DBTestCase):
                                        'formats': ['qcow2'],
                                        'state': 'ready'}, objs[0])
 
-    def test_dib_request_list_json(self):
+    def test_image_status_json(self):
         configfile = self.setup_config("node.yaml")
         pool = self.useNodepool(configfile, watermark_sleep=1)
         builder = self.useBuilder(configfile)
@@ -155,10 +155,8 @@ class TestWebApp(tests.DBTestCase):
         self.waitForImage("fake-provider", "fake-image")
         self.waitForNodes('fake-label')
 
-        self.zk.submitBuildRequest("fake-image")
-
         req = request.Request(
-            "http://localhost:{}/dib-request-list".format(port))
+            "http://localhost:{}/image-status".format(port))
         req.add_header("Accept", "application/json")
 
         f = request.urlopen(req)
@@ -168,7 +166,18 @@ class TestWebApp(tests.DBTestCase):
         data = f.read()
         objs = json.loads(data.decode("utf8"))
         self.assertDictContainsSubset({"image": "fake-image",
-                                       "state": "pending"}, objs[0])
+                                       "paused": False,
+                                       "build_request": None}, objs[0])
+
+        self.zk.submitBuildRequest("fake-image")
+
+        webapp.cache.cache.clear()
+        f = request.urlopen(req)
+        data = f.read()
+        objs = json.loads(data.decode("utf8"))
+        self.assertDictContainsSubset({"image": "fake-image",
+                                       "paused": False,
+                                       "build_request": "pending"}, objs[0])
 
         webapp.cache.cache.clear()
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
@@ -177,7 +186,8 @@ class TestWebApp(tests.DBTestCase):
 
         objs = json.loads(data.decode("utf8"))
         self.assertDictContainsSubset({"image": "fake-image",
-                                       "state": "building"}, objs[0])
+                                       "paused": False,
+                                       "build_request": "building"}, objs[0])
 
     def test_node_list_json(self):
         configfile = self.setup_config('node.yaml')

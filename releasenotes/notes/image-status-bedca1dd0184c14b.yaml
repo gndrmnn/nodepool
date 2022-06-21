@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    A new `image-status` command and accompanying web endpoint are
+    available to easily see what images have been paused via the
+    `image-pause` command and have pending manual build requests via
+    the `build-image` command.

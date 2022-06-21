@@ -101,8 +101,8 @@ class WebApp(threading.Thread):
             results = status.image_list(zk)
         elif path == '/dib-image-list':
             results = status.dib_image_list(zk)
-        elif path == '/dib-request-list':
-            results = status.dib_request_list(zk)
+        elif path == '/image-status':
+            results = status.image_status(zk)
         elif path == '/node-list':
             results = status.node_list(zk,
                                        node_id=params.get('node_id'))
