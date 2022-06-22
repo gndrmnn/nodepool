@@ -474,6 +474,19 @@ class DBTestCase(BaseTestCase):
         self.wait_for_threads()
         return image
 
+    def waitForUpload(self, provider_name, image_name,
+                      build_id, upload_id):
+        for _ in iterate_timeout(ONE_MINUTE, Exception,
+                                 "Image upload to be ready",
+                                 interval=1):
+            self.wait_for_threads()
+            upload = self.zk.getImageUpload(
+                image_name, build_id, provider_name, upload_id)
+            if upload:
+                break
+        self.wait_for_threads()
+        return upload
+
     def waitForUploadRecordDeletion(self, provider_name, image_name,
                                     build_id, upload_id):
         for _ in iterate_timeout(ONE_MINUTE, Exception,

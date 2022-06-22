@@ -2376,7 +2376,56 @@ class ZooKeeper(object):
         run on a quiescent system with no daemons running.
 
         '''
+        # We do some extra work to ensure that the sequence numbers
+        # don't collide.  ZK sequence numbers are stored in the parent
+        # node and ZK isn't smart enough to avoid collisions if there
+        # are missing entries.  So if we restore build 1, and then the
+        # builder later wants to create a new build, it will attempt
+        # to create build 1, and fail since the node already exists.
+        #
+        # NB: The behavior is slightly different for sequence number 1
+        # vs others; if 2 is the lowest number, then ZK will create
+        # node 0 and 1 before colliding with 2.  This is further
+        # complicated in the nodepool context since we create lock
+        # entries under the build/upload znodes which also seem to
+        # have an effect on the counter.
+        #
+        # Regardless, if we pre-create sequence nodes up to our
+        # highest node numbers for builds and uploads, we are
+        # guaranteed that the next sequence node created will be
+        # greater.  So we look at all the sequence nodes in our import
+        # data set and pre-create sequence nodes up to that number.
+
+        highest_num = {}
+        # 0     1      2        3         4        5
+        #  /nodepool/images/fake-image/builds/0000000002/
+        #      6         7            8      9
+        # providers/fake-provider/images/0000000001
         for path, data in import_data.items():
-            self.client.create(path,
-                               value=data.encode('utf8'),
-                               makepath=True)
+            parts = path.split('/')
+            if len(parts) == 6:
+                key = '/'.join(parts[:5])
+                num = int(parts[5])
+                highest_num[key] = max(highest_num.get(key, num), num)
+            if len(parts) == 10:
+                key = '/'.join(parts[:9])
+                num = int(parts[9])
+                highest_num[key] = max(highest_num.get(key, num), num)
+        for path, num in highest_num.items():
+            for x in range(num):
+                node = self.client.create(
+                    path + '/', makepath=True, sequence=True)
+                # If this node isn't in our import data, go ahead and
+                # delete it.
+                if node not in import_data:
+                    self.client.delete(node)
+        for path, data in import_data.items():
+            # We may have already created a node above; in that
+            # case, just set the data on it.
+            if self.client.exists(path):
+                self.client.set(path,
+                                value=data.encode('utf8'))
+            else:
+                self.client.create(path,
+                                   value=data.encode('utf8'),
+                                   makepath=True)

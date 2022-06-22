@@ -409,6 +409,16 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
 
+        build = self.waitForBuild('fake-image', '0000000001')
+        # Delete the first build so that we have a hole in our
+        # numbering.  This lets us validate that we reconstruct the
+        # sequence state correctly.
+        build.state = zk.DELETING
+        with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
+            self.zk.storeBuild('fake-image', build, '0000000001')
+        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.waitForBuild('fake-image', '0000000002')
+
         pool.stop()
         for worker in builder._upload_workers:
             worker.shutdown()
@@ -417,7 +427,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Save a copy of the data in ZK
         old_data = self.getZKTree('/nodepool/images')
         # We aren't backing up the lock data
-        old_data.pop('/nodepool/images/fake-image/builds/0000000001'
+        old_data.pop('/nodepool/images/fake-image/builds/0000000002'
                      '/providers/fake-provider/images/lock')
         old_data.pop('/nodepool/images/fake-image/builds/lock')
 
@@ -434,3 +444,32 @@ class TestNodepoolCMD(tests.DBTestCase):
 
         new_data = self.getZKTree('/nodepool/images')
         self.assertEqual(new_data, old_data)
+
+        # Now restart the builder to make sure new builds/uploads work
+        builder = self.useBuilder(configfile)
+
+        # First test a new upload of the existing image and make sure
+        # it uses the correct sequence number.
+        upload = self.waitForUpload('fake-provider', 'fake-image',
+                                    '0000000002', '0000000001')
+        upload.state = zk.DELETING
+        with self.zk.imageUploadLock(upload.image_name, upload.build_id,
+                                     upload.provider_name, blocking=True,
+                                     timeout=1):
+            self.zk.storeImageUpload(upload.image_name, upload.build_id,
+                                     upload.provider_name, upload, upload.id)
+        # We skip at least one number because upload lock is a sequence
+        # node too (this is why builds and uploads start at 1 instead of 0).
+        upload = self.waitForUpload('fake-provider', 'fake-image',
+                                    '0000000002', '0000000003')
+
+        # Now build a new image and make sure it uses the correct
+        # sequence number.
+        build = self.waitForBuild('fake-image', '0000000002')
+        # Expire rebuild-age (default: 1day) to force a new build.
+        build.state_time -= 86400
+        with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
+            self.zk.storeBuild('fake-image', build, '0000000002')
+        # We skip at least one number because build lock is a sequence
+        # node too (this is why builds and uploads start at 1 instead of 0).
+        self.waitForBuild('fake-image', '0000000004')
