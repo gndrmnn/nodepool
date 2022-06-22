@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aad2b378_fbd077fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-06-22T01:32:10Z",
+      "side": 1,
+      "message": "This LGTM; I was looking for something like this today as another admin had paused an image some days ago, and I wanted to check the status.  Although eventually we realised it is in the output of dib-image-list, I think this is a clearer view for such a situation.",
+      "revId": "138b68a5a7ab0d6cdfda3a95ef4284ea3d6bb863",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
