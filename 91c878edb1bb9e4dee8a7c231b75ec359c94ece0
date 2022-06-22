@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b5d3152_615d6ffa",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-22T20:26:03Z",
+      "side": 1,
+      "message": "Sounds good.",
+      "revId": "91c878edb1bb9e4dee8a7c231b75ec359c94ece0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23f3586e_2829a4c5",
@@ -31,6 +48,23 @@
       "writtenOn": "2022-06-22T13:01:07Z",
       "side": 1,
       "message": "Documentation states that when the delete instances call fails no instance is deleted. So I think for leaked resources we should stay with the direct deletion without the background thread. So what do you think about adding a direct_delete flag here and depending on this put it into the delete queue or directly terminate the instance?",
+      "revId": "91c878edb1bb9e4dee8a7c231b75ec359c94ece0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffda1f4b_34f1482b",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-22T20:26:03Z",
+      "side": 1,
+      "message": "Also sounds good.",
       "revId": "91c878edb1bb9e4dee8a7c231b75ec359c94ece0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
