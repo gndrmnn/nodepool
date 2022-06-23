@@ -71,7 +71,7 @@ def _to_pretty_table(objs, headers_table, fields):
         for k in headers_table:
             if fields and k not in fields:
                 continue
-            if k == 'age':
+            if k == 'age' or k.endswith('_age') and obj[k] is not None:
                 try:
                     obj_age = age(int(obj[k]))
                 except ValueError:
@@ -81,6 +81,8 @@ def _to_pretty_table(objs, headers_table, fields):
             else:
                 if isinstance(obj[k], list):
                     values.append(','.join(obj[k]))
+                elif obj[k] is None:
+                    values.append('')
                 else:
                     values.append(obj[k])
         t.add_row(values)
@@ -202,21 +204,28 @@ def dib_image_list(zk):
     return (objs, headers_table)
 
 
-def dib_request_list(zk):
+def image_status(zk):
     headers_table = OrderedDict([
         ("image", "Image"),
-        ("state", "State"),
-        ("age", "Age")
+        ("paused", "Paused"),
+        ("build_request", "Build Request"),
+        ("build_request_age", "Build Request Age")
     ])
     objs = []
     for image_name in zk.getImageNames():
         request = zk.getBuildRequest(image_name)
-        if request is None:
-            continue
+        paused = zk.getImagePaused(image_name)
+        if request:
+            age = int(request.state_time)
+            req = 'pending' if request.pending else 'building'
+        else:
+            age = None
+            req = None
         objs.append({
-            "image": request.image_name,
-            "state": "pending" if request.pending else "building",
-            "age": int(request.state_time)
+            "image": image_name,
+            "paused": bool(paused),
+            "build_request": req,
+            "build_request_age": age,
         })
     return (objs, headers_table)
 

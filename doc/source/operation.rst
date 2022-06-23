@@ -149,9 +149,9 @@ dib-image-list
 .. program-output:: nodepool dib-image-list --help
    :nostderr:
 
-dib-request-list
-^^^^^^^^^^^^^^^^
-.. program-output:: nodepool dib-request-list --help
+image-status
+^^^^^^^^^^^^
+.. program-output:: nodepool image-status --help
    :nostderr:
 
 image-list
@@ -396,9 +396,9 @@ launchers, all will provide the same information.
    :resheader Content-Type: ``application/json`` or ``text/plain``
                             depending on the :http:header:`Accept` header
 
-.. http:get:: /dib-request-list
+.. http:get:: /image-status
 
-   The status of manual build requests
+   The paused and manual build status of images
 
    :query fields: comma-separated list of fields to display
    :reqheader Accept: ``application/json`` or ``text/*``
