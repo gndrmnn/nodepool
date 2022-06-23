@@ -138,6 +138,47 @@ class TestWebApp(tests.DBTestCase):
                                        'formats': ['qcow2'],
                                        'state': 'ready'}, objs[0])
 
+    def test_dib_request_list_json(self):
+        configfile = self.setup_config("node.yaml")
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        builder = self.useBuilder(configfile)
+        # Make sure we have enough time to test for the build request
+        # before it's processed by the build worker.
+        for worker in builder._build_workers:
+            worker._interval = 60
+
+        pool.start()
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        self.waitForImage("fake-provider", "fake-image")
+        self.waitForNodes('fake-label')
+
+        self.zk.submitBuildRequest("fake-image")
+
+        req = request.Request(
+            "http://localhost:{}/dib-request-list".format(port))
+        req.add_header("Accept", "application/json")
+
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get("Content-Type"),
+                         "application/json")
+
+        data = f.read()
+        objs = json.loads(data.decode("utf8"))
+        self.assertDictContainsSubset({"image": "fake-image",
+                                       "state": "pending"}, objs[0])
+
+        webapp.cache.cache.clear()
+        with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
+            f = request.urlopen(req)
+            data = f.read()
+
+        objs = json.loads(data.decode("utf8"))
+        self.assertDictContainsSubset({"image": "fake-image",
+                                       "state": "building"}, objs[0])
+
     def test_node_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)

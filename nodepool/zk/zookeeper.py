@@ -251,6 +251,21 @@ class ImageBuild(BaseModel):
         return o
 
 
+class ImageBuildRequest(object):
+    """Class representing a manual build request.
+
+    This doesn't need to derive from BaseModel since this class exists only
+    to aggregate information about a build request.
+    """
+    def __init__(self, image_name, pending, state_time):
+        self.image_name = image_name
+        self.state_time = state_time
+        self.pending = pending
+
+    def __repr__(self):
+        return "<ImageBuildRequest {}>".format(self.image_name)
+
+
 class ImageUpload(BaseModel):
     '''
     Class representing a provider image upload within the ZooKeeper cluster.
@@ -736,12 +751,14 @@ class ZooKeeper(object):
     def _imagePausePath(self, image):
         return "%s/pause" % self._imagePath(image)
 
+    def _imageBuildNumberPath(self, image, build_number):
+        return "%s/%s" % (self._imageBuildsPath(image), build_number)
+
     def _imageBuildLockPath(self, image):
         return "%s/lock" % self._imageBuildsPath(image)
 
     def _imageBuildNumberLockPath(self, image, build_number):
-        return "%s/%s/lock" % (self._imageBuildsPath(image),
-                               build_number)
+        return "%s/lock" % self._imageBuildNumberPath(image, build_number)
 
     def _imageProviderPath(self, image, build_number):
         return "%s/%s/providers" % (self._imageBuildsPath(image),
@@ -1473,6 +1490,42 @@ class ZooKeeper(object):
         if self.client.exists(path) is not None:
             return True
         return False
+
+    def _latestImageBuildStat(self, image):
+        builds = self.getBuildNumbers(image)
+        if not builds:
+            return
+
+        latest_build, *_ = builds
+        builds_path = self._imageBuildNumberPath(image, latest_build)
+        return self.client.exists(builds_path)
+
+    def getBuildRequest(self, image):
+        """Get a build request for the given image.
+
+        :param str image: The image name to check.
+
+        :returns: An ImagebuildRequest object, or None if not found
+        """
+        path = self._imageBuildRequestPath(image)
+        try:
+            _, stat = self.client.get(path)
+        except kze.NoNodeError:
+            return
+
+        pending = True
+        lock_path = self._imageBuildLockPath(image)
+        lock_stat = self.client.exists(lock_path)
+        if lock_stat and lock_stat.children_count:
+            build_stat = self._latestImageBuildStat(image)
+            # If there is a lock, but no build we assume that the build
+            # will was not yet created.
+            pending = (
+                build_stat is None or
+                build_stat.created < lock_stat.created
+            )
+
+        return ImageBuildRequest(image, pending, stat.created)
 
     def submitBuildRequest(self, image):
         '''

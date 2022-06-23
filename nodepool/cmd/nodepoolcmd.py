@@ -61,6 +61,11 @@ class NodePoolCmd(NodepoolApp):
             help='list images built with diskimage-builder')
         cmd_dib_image_list.set_defaults(func=self.dib_image_list)
 
+        cmd_dib_request_list = subparsers.add_parser(
+            'dib-request-list',
+            help='list image build requests')
+        cmd_dib_request_list.set_defaults(func=self.dib_request_list)
+
         cmd_image_build = subparsers.add_parser(
             'image-build',
             help='build image using diskimage-builder')
@@ -201,6 +206,10 @@ class NodePoolCmd(NodepoolApp):
 
     def dib_image_list(self):
         results = status.dib_image_list(self.zk)
+        print(status.output(results, 'pretty'))
+
+    def dib_request_list(self):
+        results = status.dib_request_list(self.zk)
         print(status.output(results, 'pretty'))
 
     def image_list(self):
@@ -422,6 +431,7 @@ class NodePoolCmd(NodepoolApp):
 
         # commands needing ZooKeeper
         if self.args.command in ('image-build', 'dib-image-list',
+                                 'dib-request-list',
                                  'image-list', 'dib-image-delete',
                                  'image-delete', 'alien-image-list',
                                  'list', 'delete',

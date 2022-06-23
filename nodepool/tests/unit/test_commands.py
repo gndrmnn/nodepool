@@ -193,6 +193,18 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
         self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
 
+    def test_dib_request_list(self):
+        configfile = self.setup_config('node.yaml')
+        builder = self.useBuilder(configfile)
+        # Make sure we have enough time to test for the build request
+        # before it's processed by the build worker.
+        for worker in builder._build_workers:
+            worker._interval = 60
+        self.waitForImage('fake-provider', 'fake-image')
+        self.zk.submitBuildRequest("fake-image")
+        self.assert_listed(configfile, ['dib-request-list'],
+                           0, 'fake-image', 1)
+
     def test_dib_image_build_pause(self):
         configfile = self.setup_config('node_diskimage_pause.yaml')
         self.useBuilder(configfile)
