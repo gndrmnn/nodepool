@@ -7,8 +7,6 @@
     post-run: playbooks/nodepool-functional-k8s/post.yaml
     required-projects:
       - zuul/nodepool
-    vars:
-      minikube_version: v1.25.2  # NOTE(corvus): https://github.com/kubernetes/minikube/issues/14403 https://github.com/kubernetes/minikube/issues/14397
 
 - job:
     description: |
