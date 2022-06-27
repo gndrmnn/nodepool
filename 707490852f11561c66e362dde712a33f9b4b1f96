@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb51a2f4_6575c4ea",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-27T18:19:49Z",
+      "side": 1,
+      "message": "This log is slightly misleading in the case where build exists and build.state \u003d\u003d zk.DELETING. Maybe split the two cases to log them separately? Or update the log to be less specific?",
+      "range": {
+        "startLine": 386,
+        "startChar": 35,
+        "endLine": 386,
+        "endChar": 72
+      },
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06ba7543_5419e4ae",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-27T18:19:49Z",
+      "side": 1,
+      "message": "This comment is no longer accurate as we don\u0027t care about the local DIB files here anymore. Instead we adjust the zk records then let periodic cleanups delete the files.",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e25769da_dca48d38",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-27T18:19:49Z",
+      "side": 1,
+      "message": "We store the zk build info here before we actually start running DIB below. That means the adjustment made to how we delete images should be safe.",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3487256_b7ce96d6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-27T18:19:49Z",
+      "side": 1,
+      "message": "We\u0027ve kept the deleteLocalBuild call here but removed it from line 521 of the old side of the diff. Do we want to keep the deleteLocalBuild in both locations to speed up local file deletion in most cases?",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
