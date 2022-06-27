@@ -179,6 +179,9 @@ class TestWebApp(tests.DBTestCase):
                                        "paused": False,
                                        "build_request": "pending"}, objs[0])
 
+        builder._janitor._emitBuildRequestStats()
+        self.assertReportedStat('nodepool.image_build_requests', '1', 'g')
+
         webapp.cache.cache.clear()
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
             f = request.urlopen(req)

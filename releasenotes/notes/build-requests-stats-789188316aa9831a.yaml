@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    A new statsd metric, ``nodepool.image_build_requests`` is
+    available.  It reports the number of outstanding manual image
+    build requests.

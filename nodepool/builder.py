@@ -377,6 +377,24 @@ class CleanupWorker(BaseWorker):
             except Exception:
                 self.log.exception("Exception cleaning up image %s:", image)
 
+    def _emitBuildRequestStats(self):
+        '''Emit general build request stats
+
+        This runs in the cleanup worker because it's the least likely
+        thread to be stopped for hours on end.
+        '''
+        if not self._statsd:
+            return
+        count = 0
+        for image_name in self._zk.getImageNames():
+            request = self._zk.getBuildRequest(image_name)
+            if request and request.pending:
+                count += 1
+        pipeline = self._statsd.pipeline()
+        key = 'nodepool.image_build_requests'
+        pipeline.gauge(key, count)
+        pipeline.send()
+
     def _filterLocalBuilds(self, image, builds):
         '''Return the subset of builds that are local'''
         ret = []
@@ -569,6 +587,7 @@ class CleanupWorker(BaseWorker):
         self._config = new_config
 
         self._cleanup()
+        self._emitBuildRequestStats()
 
 
 class BuildWorker(BaseWorker):
