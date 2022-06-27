@@ -24,6 +24,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "afd9505b_729d6de0",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-27T19:59:49Z",
+      "side": 1,
+      "message": "Seems like being less specifc should be okay here.",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06ba7543_5419e4ae",
@@ -37,6 +54,23 @@
       "writtenOn": "2022-06-27T18:19:49Z",
       "side": 1,
       "message": "This comment is no longer accurate as we don\u0027t care about the local DIB files here anymore. Instead we adjust the zk records then let periodic cleanups delete the files.",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6614c361_a64079c6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-27T19:59:49Z",
+      "side": 1,
+      "message": "Done.",
       "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -71,6 +105,23 @@
       "writtenOn": "2022-06-27T18:19:49Z",
       "side": 1,
       "message": "We\u0027ve kept the deleteLocalBuild call here but removed it from line 521 of the old side of the diff. Do we want to keep the deleteLocalBuild in both locations to speed up local file deletion in most cases?",
+      "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "210a819f_b0f8c3e4",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-27T19:59:49Z",
+      "side": 1,
+      "message": "I originally did, but I changed it for some reason that I can\u0027t quite recall -- it may have been a unit test that didn\u0027t work as well, or it may have simply been for consistency (so we don\u0027t have to worry about two different code paths).  This runs every minute, so in practice the additional delay shouldn\u0027t be a big deal.",
       "revId": "707490852f11561c66e362dde712a33f9b4b1f96",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
