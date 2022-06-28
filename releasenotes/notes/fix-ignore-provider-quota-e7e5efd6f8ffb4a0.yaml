@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    The AWS, Azure, and IBMVPC drivers now check provider quota before
+    accepting requests.  This allows them to decline requests which
+    can not possibly be satisfied given provider quota constraints.
