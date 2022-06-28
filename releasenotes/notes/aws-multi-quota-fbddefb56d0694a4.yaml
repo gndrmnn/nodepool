@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The AWS driver now supports multiple quotas for specific instance
+    types.  This support is automatic, but also includes corresponding
+    enhancements to provider, pool, and tenant limits configured in
+    Nodepool.
