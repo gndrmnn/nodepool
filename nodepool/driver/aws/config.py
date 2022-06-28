@@ -15,6 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import defaultdict
+import math
+
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
@@ -203,6 +206,13 @@ class AwsPool(ConfigPool):
             'use-internal-ip', self.provider.use_internal_ip)
         self.host_key_checking = pool_config.get(
             'host-key-checking', self.provider.host_key_checking)
+        self.max_servers = pool_config.get(
+            'max-servers', self.provider.max_servers)
+        self.max_cores = pool_config.get('max-cores', self.provider.max_cores)
+        self.max_ram = pool_config.get('max-ram', self.provider.max_ram)
+        self.max_resources = self.provider.max_resources.copy()
+        for k, val in pool_config.get('max-resources', {}).items():
+            self.max_resources[k] = val
 
     @staticmethod
     def getSchema():
@@ -218,6 +228,9 @@ class AwsPool(ConfigPool):
             'public-ipv4': bool,
             'public-ipv6': bool,
             'host-key-checking': bool,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
         })
         return pool
 
@@ -263,6 +276,12 @@ class AwsProviderConfig(ProviderConfig):
         self.image_type = self.provider.get('image-format', 'raw')
         self.image_name_format = '{image_name}-{timestamp}'
         self.post_upload_hook = self.provider.get('post-upload-hook')
+        self.max_servers = self.provider.get('max-servers', math.inf)
+        self.max_cores = self.provider.get('max-cores', math.inf)
+        self.max_ram = self.provider.get('max-ram', math.inf)
+        self.max_resources = defaultdict(lambda: math.inf)
+        for k, val in self.provider.get('max-resources', {}).items():
+            self.max_resources[k] = val
 
         self.cloud_images = {}
         for image in self.provider.get('cloud-images', []):
@@ -305,6 +324,10 @@ class AwsProviderConfig(ProviderConfig):
             'launch-retries': int,
             'object-storage': object_storage,
             'image-format': v.Any('ova', 'vhd', 'vhdx', 'vmdk', 'raw'),
+            'max-servers': int,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
         })
         return v.Schema(provider)
 

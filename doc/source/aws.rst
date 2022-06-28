@@ -109,6 +109,42 @@ Selecting the ``aws`` driver adds the following options to the
       until that instance is reported as "active".  If the timeout is
       exceeded, the node launch is aborted and the instance deleted.
 
+   .. attr:: max-cores
+      :type: int
+      :default: unlimited
+
+      Maximum number of cores usable from this provider's pools by default.
+
+   .. attr:: max-servers
+      :type: int
+      :default: unlimited
+
+      Maximum number of servers spawnable from this provider's pools by default.
+
+   .. attr:: max-ram
+      :type: int
+      :default: unlimited
+
+      Maximum RAM usable from this provider's pools by default.
+
+   .. attr:: max-resources
+      :type: dict
+      :default: unlimited
+
+      A dictionary of other quota resource limits.  AWS has quotas
+      for certain instance types.  These may be specified here to
+      limit Nodepool's usage.
+
+      The following example limits the number of high-memory
+      instance cores:
+
+      .. code-block:: yaml
+
+         max-resources:
+           'L-43DA4232': 224
+
+      See `instance quotas`_ for more information.
+
    .. attr:: launch-retries
       :default: 3
 
@@ -379,6 +415,42 @@ Selecting the ``aws`` driver adds the following options to the
          A dictionary of key-value pairs that will be stored with the node data
          in ZooKeeper. The keys and values can be any arbitrary string.
 
+      .. attr:: max-cores
+         :type: int
+
+         Maximum number of cores usable from this pool.  Defaults to
+         :attr:`providers.[aws].max-cores`.
+
+      .. attr:: max-servers
+         :type: int
+
+         Maximum number of servers spawnable from this pool.  Defaults to
+         :attr:`providers.[aws].max-servers`.
+
+      .. attr:: max-ram
+         :type: int
+
+         Maximum RAM usable from this pool.  Defaults to
+         :attr:`providers.[aws].max-ram`.
+
+      .. attr:: max-resources
+         :type: dict
+
+         A dictionary of other quota resource limits.  AWS has quotas
+         for certain instance types.  These may be specified here to
+         limit Nodepool's usage.  Defaults to
+         :attr:`providers.[aws].max-resources`.
+
+         The following example limits the number of high-memory
+         instance cores:
+
+         .. code-block:: yaml
+
+            max-resources:
+              'L-43DA4232': 224
+
+         See `instance quotas`_ for more information.
+
       .. attr:: subnet-id
 
          If provided, specifies the subnet to assign to the primary network
@@ -538,3 +610,4 @@ Selecting the ``aws`` driver adds the following options to the
 .. _`Boto configuration`: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html
 .. _`Boto describe images`: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_images
 .. _`VM Import/Export service role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role
+.. _`instance quotas`: https://us-west-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas
