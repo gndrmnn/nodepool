@@ -123,6 +123,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.node.shell_type = image.shell_type
         self.node.connection_port = image.connection_port
         self.node.connection_type = image.connection_type
+        qi = self.manager.quotaNeededByLabel(label.name, self.handler.pool)
+        if qi:
+            self.node.resources = qi.get_resources()
+
         self.zk.storeNode(self.node)
 
         # Windows computer names can be no more than 15 chars long.
@@ -386,11 +390,14 @@ class StateMachineHandler(NodeRequestHandler):
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
-        pool_quota = QuotaInformation(
+        args = dict(
             cores=getattr(self.pool, 'max_cores', None),
             instances=self.pool.max_servers,
             ram=getattr(self.pool, 'max_ram', None),
-            default=math.inf)
+            default=math.inf,
+        )
+        args.update(getattr(self.pool, 'max_resources', {}))
+        pool_quota = QuotaInformation(**args)
         pool_quota.subtract(needed_quota)
         return pool_quota.non_negative()
 
@@ -403,6 +410,7 @@ class StateMachineHandler(NodeRequestHandler):
         :return: True if there is enough quota, False otherwise
         '''
         needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
+        self.log.debug("Needed quota: %s", needed_quota)
 
         # Calculate remaining quota which is calculated as:
         # quota = <total nodepool quota> - <used quota> - <quota for node>
@@ -418,11 +426,14 @@ class StateMachineHandler(NodeRequestHandler):
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
-        pool_quota = QuotaInformation(
+        args = dict(
             cores=getattr(self.pool, 'max_cores', None),
             instances=self.pool.max_servers,
             ram=getattr(self.pool, 'max_ram', None),
-            default=math.inf)
+            default=math.inf,
+        )
+        args.update(getattr(self.pool, 'max_resources', {}))
+        pool_quota = QuotaInformation(**args)
         pool_quota.subtract(
             self.manager.estimatedNodepoolQuotaUsed(self.pool))
         self.log.debug("Current pool quota: %s" % pool_quota)

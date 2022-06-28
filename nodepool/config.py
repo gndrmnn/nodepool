@@ -250,19 +250,14 @@ class Config(ConfigValue):
         if not tenant_resource_limits_cfg:
             return
         for resource_limit in tenant_resource_limits_cfg:
-            tenant_name = resource_limit['tenant-name']
-            max_cores = resource_limit.get('max-cores')
-            max_ram = resource_limit.get('max-ram')
-            max_servers = resource_limit.get('max-servers')
-
+            resource_limit = resource_limit.copy()
+            tenant_name = resource_limit.pop('tenant-name')
             limits = {}
-            if max_cores:
-                limits['cores'] = max_cores
-            if max_servers:
-                limits['instances'] = max_servers
-            if max_ram:
-                limits['ram'] = max_ram
-
+            limits['cores'] = resource_limit.pop('max-cores', math.inf)
+            limits['instances'] = resource_limit.pop('max-servers', math.inf)
+            limits['ram'] = resource_limit.pop('max-ram', math.inf)
+            for k, v in resource_limit.items():
+                limits[k] = v
             self.tenant_resource_limits[tenant_name] = limits
 
 

@@ -67,6 +67,7 @@ class ConfigValidator:
             'max-cores': int,
             'max-ram': int,
             'max-servers': int,
+            str: int,
         }
 
         top_level = {

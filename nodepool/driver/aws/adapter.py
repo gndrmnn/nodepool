@@ -42,6 +42,41 @@ def tag_list_to_dict(taglist):
     return {t["Key"]: t["Value"] for t in taglist}
 
 
+# This is a map of instance types to quota codes.  There does not
+# appear to be an automated way to determine what quota code to use
+# for an instance type, therefore this list was manually created by
+# visiting
+# https://us-west-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas
+# and filtering by "Instances".  An example description is "Running
+# On-Demand P instances" which we can infer means we should use that
+# quota code for instance types starting with the letter "p".  All
+# instance type names follow the format "([a-z\-]+)\d", so we can
+# match the first letters (up to the first number) of the instance
+# type name with the letters in the quota name.  The prefix "u-" for
+# "Running On-Demand High Memory instances" was determined from
+# https://aws.amazon.com/ec2/instance-types/high-memory/
+
+QUOTA_CODES = {
+    'a': 'L-1216C47A',
+    'c': 'L-1216C47A',
+    'd': 'L-1216C47A',
+    'h': 'L-1216C47A',
+    'i': 'L-1216C47A',
+    'm': 'L-1216C47A',
+    'r': 'L-1216C47A',
+    't': 'L-1216C47A',
+    'z': 'L-1216C47A',
+    'dl': 'L-6E869C2A',
+    'f': 'L-74FC7D96',
+    'g': 'L-DB2E81BA',
+    'vt': 'L-DB2E81BA',
+    'u-': 'L-43DA4232',  # 'high memory'
+    'inf': 'L-1945791B',
+    'p': 'L-417A185B',
+    'x': 'L-7295265B',
+}
+
+
 class AwsInstance(statemachine.Instance):
     def __init__(self, instance, quota):
         super().__init__()
@@ -293,15 +328,28 @@ class AwsAdapter(statemachine.Adapter):
             yield AwsInstance(instance, quota)
 
     def getQuotaLimits(self):
-        with self.non_mutating_rate_limiter:
-            self.log.debug("Getting quota limits")
-            response = self.aws_quotas.get_service_quota(
-                ServiceCode='ec2',
-                QuotaCode='L-1216C47A'
-            )
-            cores = response['Quota']['Value']
-        return QuotaInformation(cores=cores,
-                                default=math.inf)
+        # Get the instance types that this provider handles
+        instance_types = set()
+        for pool in self.provider.pools.values():
+            for label in pool.labels.values():
+                instance_types.add(label.instance_type)
+        args = dict(default=math.inf)
+        for instance_type in instance_types:
+            code = self._getQuotaCodeForInstanceType(instance_type)
+            if code in args:
+                continue
+            if not code:
+                self.log.warning("Unknown quota code for instance type: %s",
+                                 instance_type)
+                continue
+            with self.non_mutating_rate_limiter:
+                self.log.debug("Getting quota limits for %s", code)
+                response = self.aws_quotas.get_service_quota(
+                    ServiceCode='ec2',
+                    QuotaCode=code,
+                )
+                args[code] = response['Quota']['Value']
+        return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
         return self._getQuotaForInstanceType(label.instance_type)
@@ -454,13 +502,27 @@ class AwsAdapter(statemachine.Adapter):
                     # Return the first and only task
                     return task
 
+    instance_key_re = re.compile(r'([a-z\-]+)\d.*')
+
+    def _getQuotaCodeForInstanceType(self, instance_type):
+        m = self.instance_key_re.match(instance_type)
+        if m:
+            key = m.group(1)
+            return QUOTA_CODES.get(key)
+
     def _getQuotaForInstanceType(self, instance_type):
         itype = self._getInstanceType(instance_type)
         cores = itype['InstanceTypes'][0]['VCpuInfo']['DefaultCores']
         ram = itype['InstanceTypes'][0]['MemoryInfo']['SizeInMiB']
-        return QuotaInformation(cores=cores,
-                                ram=ram,
-                                instances=1)
+        code = self._getQuotaCodeForInstanceType(instance_type)
+        # We include cores twice: one to match the overall cores quota
+        # (which may be set as a tenant resource limit), and a second
+        # time as the specific AWS quota code which in for a specific
+        # instance type.
+        args = dict(cores=cores, ram=ram, instances=1)
+        if code:
+            args[code] = cores
+        return QuotaInformation(**args)
 
     @cachetools.func.lru_cache(maxsize=None)
     def _getInstanceType(self, instance_type):
