@@ -1,4 +1,5 @@
 # Copyright (C) 2018 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -179,7 +180,7 @@ class NodeDeleter(threading.Thread):
 
 class QuotaInformation:
 
-    def __init__(self, cores=None, instances=None, ram=None, default=0):
+    def __init__(self, cores=None, instances=None, ram=None, default=0, **kw):
         '''
         Initializes the quota information with some values. None values will
         be initialized with default which will be typically 0 or math.inf
@@ -202,6 +203,9 @@ class QuotaInformation:
                 'ram': self._get_default(ram, default),
             }
         }
+        for k, v in kw.items():
+            self.quota['compute'][k] = v
+        self.default = default
 
     @staticmethod
     def construct_from_flavor(flavor):
@@ -225,9 +229,14 @@ class QuotaInformation:
         return value if value is not None else default
 
     def _add_subtract(self, other, add=True):
+        for category in other.quota.keys():
+            self.quota.setdefault(category, {})
+            for resource in other.quota[category].keys():
+                self.quota[category].setdefault(resource, self.default)
         for category in self.quota.keys():
             for resource in self.quota[category].keys():
-                second_value = other.quota.get(category, {}).get(resource, 0)
+                second_value = other.quota.get(category, {}).get(
+                    resource, other.default)
                 if add:
                     self.quota[category][resource] += second_value
                 else:

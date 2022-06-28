@@ -114,7 +114,8 @@ class TestDriverAws(tests.DBTestCase):
         kw['security_group_id'] = self.security_group_id
         return super().setup_config(*args, **kw)
 
-    def patchProvider(self, nodepool, provider_name='ec2-us-west-2'):
+    def patchProvider(self, nodepool, provider_name='ec2-us-west-2',
+                      quotas=None):
         for _ in iterate_timeout(
                 30, Exception, 'wait for provider'):
             try:
@@ -138,10 +139,13 @@ class TestDriverAws(tests.DBTestCase):
             _fake_create_instances
 
         # moto does not mock service-quotas, so we do it ourselves:
-        def _fake_get_service_quota(*args, **kwargs):
+        def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
             # This is a simple fake that only returns the number
             # of cores.
-            return {'Quota': {'Value': 100}}
+            if quotas is None:
+                return {'Quota': {'Value': 100}}
+            else:
+                return {'Quota': {'Value': quotas.get(QuotaCode)}}
         provider_manager.adapter.aws_quotas.get_service_quota =\
             _fake_get_service_quota
 
@@ -203,6 +207,149 @@ class TestDriverAws(tests.DBTestCase):
             self.zk.storeNode(node)
         for node in nodes:
             self.waitForNodeDeletion(node)
+
+    def test_aws_multi_quota(self):
+        # Test multiple instance type quotas (standard and high-mem)
+        configfile = self.setup_config('aws/aws-quota.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool, quotas={
+            'L-1216C47A': 1,
+            'L-43DA4232': 224,
+        })
+
+        # Create a high-memory node request.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('high')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
+        # Create a second high-memory node request; this should be
+        # over quota so it won't be fulfilled.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('high')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        # Make sure we're paused while we attempt to fulfill the
+        # second request.
+        pool_worker = pool.getPoolWorkers('ec2-us-west-2')
+        for _ in iterate_timeout(30, Exception, 'paused handler'):
+            if pool_worker[0].paused_handler:
+                break
+
+        # Release the first node so that the second can be fulfilled.
+        node1.state = zk.USED
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # Make sure the second high node exists now.
+        req2 = self.waitForNodeRequest(req2)
+        self.assertSuccess(req2)
+
+        # Create a standard node request which should succeed even
+        # though we're at quota for high-mem (but not standard).
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('standard')
+        self.zk.storeNodeRequest(req3)
+        self.log.debug("Waiting for request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3)
+        self.assertSuccess(req3)
+
+    def test_aws_multi_pool_limits(self):
+        # Test multiple instance type quotas (standard and high-mem)
+        # with pool resource limits
+        configfile = self.setup_config('aws/aws-limits.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool, quotas={
+            'L-1216C47A': 1000,
+            'L-43DA4232': 1000,
+        })
+
+        # Create a standard node request.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('standard')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
+        # Create a second standard node request; this should be
+        # over quota so it won't be fulfilled.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('standard')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        # Make sure we're paused while we attempt to fulfill the
+        # second request.
+        pool_worker = pool.getPoolWorkers('ec2-us-west-2')
+        for _ in iterate_timeout(30, Exception, 'paused handler'):
+            if pool_worker[0].paused_handler:
+                break
+
+        # Release the first node so that the second can be fulfilled.
+        node1.state = zk.USED
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # Make sure the second standard node exists now.
+        req2 = self.waitForNodeRequest(req2)
+        self.assertSuccess(req2)
+
+    def test_aws_multi_tenant_limits(self):
+        # Test multiple instance type quotas (standard and high-mem)
+        # with tenant resource limits
+        configfile = self.setup_config('aws/aws-limits.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool, quotas={
+            'L-1216C47A': 1000,
+            'L-43DA4232': 1000,
+        })
+
+        # Create a high node request.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.tenant_name = 'tenant-1'
+        req1.node_types.append('high')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        self.assertSuccess(req1)
+
+        # Create a second high node request; this should be
+        # over quota so it won't be fulfilled.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.tenant_name = 'tenant-1'
+        req2.node_types.append('high')
+        self.zk.storeNodeRequest(req2)
+        req2 = self.waitForNodeRequest(req2, (zk.REQUESTED,))
+
+        # Create a standard node request which should succeed even
+        # though we're at quota for high-mem (but not standard).
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.tenant_name = 'tenant-1'
+        req3.node_types.append('standard')
+        self.zk.storeNodeRequest(req3)
+        self.log.debug("Waiting for request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3)
+        self.assertSuccess(req3)
+
+        # Assert that the second request is still being deferred
+        req2 = self.waitForNodeRequest(req2, (zk.REQUESTED,))
 
     def test_aws_node(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404')
