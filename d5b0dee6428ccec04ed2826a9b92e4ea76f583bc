@@ -16,6 +16,57 @@
       "message": "recheck",
       "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bc6e519_8f12aeb0",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-29T17:37:51Z",
+      "side": 1,
+      "message": "I guess the other requests are short enough that we don\u0027t need to farm them out to the thread pool too? Otherwise we may just shift the problem from instance create to making a volume or whatever other little bits are involved.\n\nThat said I suspect that is why deletes are now batched and the other tasks are quick enough to not really matter.",
+      "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "240e6cf0_122db8f3",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-29T17:37:51Z",
+      "side": 1,
+      "message": "The docs say this exception is only raised with non blocking gets. We block above so this try except shouldn\u0027t be necessary.",
+      "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fa0b02a_50e3f7d4",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-06-29T17:37:51Z",
+      "side": 1,
+      "message": "It looks like timeouts to delete are handled in the state machine state machine :) But that means we don\u0027t have to worry about extra deletes for a single instance ending up in this queue. Instead we\u0027ll try once until the timeout. Then later nodepool should notice the deletion failed and try again which will put it in this queue again after it was removed and the attempt expired.",
+      "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
