@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba986dcf_f5da0f30",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-29T17:47:05Z",
+      "side": 1,
+      "message": "Yeah: create takes \u003e 1 sec so that\u0027s bad.  Delete is faster so it\u0027s not a problem.  But we batch it because fewer requests are better regardless.  The only other requests that happen during the normal lifecycle are quota checks (which are heavily cached) and instance lists (also cached).",
+      "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "240e6cf0_122db8f3",
@@ -48,6 +65,23 @@
       "writtenOn": "2022-06-29T17:37:51Z",
       "side": 1,
       "message": "The docs say this exception is only raised with non blocking gets. We block above so this try except shouldn\u0027t be necessary.",
+      "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42037642_4bb336d7",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-06-29T17:47:05Z",
+      "side": 1,
+      "message": "But we set timeout\u003d10 so it does raise Empty in that case.",
       "revId": "d5b0dee6428ccec04ed2826a9b92e4ea76f583bc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
