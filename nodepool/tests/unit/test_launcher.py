@@ -91,7 +91,7 @@ class TestLauncher(tests.DBTestCase):
 
         # Verify the cleanup thread removed the lock
         self.assertIsNotNone(
-            self.zk.client.exists(self.zk._requestLockPath(req.id))
+            self.zk.kazoo_client.exists(self.zk._requestLockPath(req.id))
         )
         self.zk.deleteNodeRequest(req)
         self.waitForNodeRequestLockDeletion(req.id)
@@ -766,7 +766,7 @@ class TestLauncher(tests.DBTestCase):
         # than what we are going to request.
         hostname = socket.gethostname()
         dummy_component = PoolComponent(
-            self.zk.zk_client, hostname,
+            self.zk.client, hostname,
             version=get_version_string())
         dummy_component.content.update({
             'id': 'dummy',
@@ -2426,14 +2426,14 @@ class TestLauncher(tests.DBTestCase):
         # Create empty node
         path = "%s" % self.zk._nodePath("12345")
         self.log.debug("node path %s", path)
-        self.zk.client.create(path, makepath=True)
-        self.assertTrue(self.zk.client.exists(path))
+        self.zk.kazoo_client.create(path, makepath=True)
+        self.assertTrue(self.zk.kazoo_client.exists(path))
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = .1
         pool.start()
 
-        while self.zk.client.exists(path):
+        while self.zk.kazoo_client.exists(path):
             time.sleep(.1)
 
     def test_leaked_port_cleanup(self):
