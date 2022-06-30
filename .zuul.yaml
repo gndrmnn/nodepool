@@ -243,12 +243,13 @@
         NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
 
 - job:
-    name: nodepool-tox-py39
+    name: nodepool-tox-py310
     description: |
       Nodepool unit tests with ZooKeeper running
-    parent: tox-py39
+    parent: tox-py310
     pre-run: playbooks/nodepool-tox/pre.yaml
     vars: *nodepool_tox_vars
+    nodeset: ubuntu-jammy
 
 - project:
     vars:
@@ -260,7 +261,7 @@
         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py38
-        - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - nodepool-functional-openshift
@@ -274,7 +275,7 @@
         - zuul-tox-docs
         - tox-pep8
         - nodepool-tox-py38
-        - nodepool-tox-py39
+        - nodepool-tox-py310
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
