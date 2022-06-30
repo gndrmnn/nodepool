@@ -87,6 +87,12 @@ Selecting the ``aws`` driver adds the following options to the
 
       See `Boto Configuration`_ for more information.
 
+   .. attr:: rate
+      :type: float
+      :default: 2.0
+
+      The number of operations per second to perform against the provider.
+
    .. attr:: boot-timeout
       :type: int seconds
       :default: 180

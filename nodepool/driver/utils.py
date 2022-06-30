@@ -430,8 +430,12 @@ class RateLimiter:
     def __init__(self, name, rate_limit):
         self._running = True
         self.name = name
-        self.delta = 1.0 / rate_limit
+        if not rate_limit:
+            self.delta = 0.0
+        else:
+            self.delta = 1.0 / rate_limit
         self.last_ts = None
+        self.lock = threading.Lock()
 
     def __call__(self, logmethod, msg):
         return RateLimitInstance(self, logmethod, msg)
@@ -440,19 +444,21 @@ class RateLimiter:
         self._enter()
 
     def _enter(self):
-        total_delay = 0.0
-        if self.last_ts is None:
+        with self.lock:
+            total_delay = 0.0
+            if self.last_ts is None:
+                self.last_ts = time.monotonic()
+                return total_delay
+            while True:
+                now = time.monotonic()
+                delta = now - self.last_ts
+                if delta >= self.delta:
+                    break
+                delay = self.delta - delta
+                time.sleep(delay)
+                total_delay += delay
+            self.last_ts = time.monotonic()
             return total_delay
-        while True:
-            now = time.monotonic()
-            delta = now - self.last_ts
-            if delta >= self.delta:
-                break
-            delay = self.delta - delta
-            time.sleep(delay)
-            total_delay += delay
-        self.last_ts = time.monotonic()
-        return total_delay
 
     def __exit__(self, etype, value, tb):
         self._exit(etype, value, tb)

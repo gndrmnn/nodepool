@@ -176,6 +176,34 @@ class TestDriverAws(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         return node
 
+    def test_aws_multiple(self):
+        # Test creating multiple instances at once.  This is most
+        # useful to run manually during development to observe
+        # behavior.
+        configfile = self.setup_config('aws/aws-multiple.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.patchProvider(pool)
+
+        reqs = []
+        for x in range(4):
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.node_types.append('ubuntu1404')
+            self.zk.storeNodeRequest(req)
+            reqs.append(req)
+
+        nodes = []
+        for req in reqs:
+            self.log.debug("Waiting for request %s", req.id)
+            req = self.waitForNodeRequest(req)
+            nodes.append(self.assertSuccess(req))
+        for node in nodes:
+            node.state = zk.USED
+            self.zk.storeNode(node)
+        for node in nodes:
+            self.waitForNodeDeletion(node)
+
     def test_aws_node(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404')
         node = self.assertSuccess(req)
