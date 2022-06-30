@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0642734_d9db8110",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-06-30T05:53:21Z",
+      "side": 1,
+      "message": "nit: looks like the hasattr() check can be removed now that the attribute is always set.",
+      "revId": "4aaacc7919e6f12239713e8f65ab1ccc68d67f50",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
