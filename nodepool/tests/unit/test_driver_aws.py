@@ -498,7 +498,9 @@ class TestDriverAws(tests.DBTestCase):
             image = self.ec2.Image(image_id)
             try:
                 # If this has a value the image was not deleted
-                self.assertIsNone(image.state)
+                if image.state == 'available':
+                    # Definitely not deleted yet
+                    continue
             except AttributeError:
                 # Per AWS API, a recently deleted image is empty and
                 # looking at the state raises an AttributeFailure; see
