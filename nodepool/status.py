@@ -127,7 +127,9 @@ def node_list(zk, node_id=None):
         ("launcher", "Launcher"),
         ("allocated_to", "Allocated To"),
         ("hold_job", "Hold Job"),
-        ("comment", "Comment")
+        ("comment", "Comment"),
+        ("user_data", "User Data"),
+        ("driver_data", "Driver Data"),
     ]
     headers_table = OrderedDict(headers_table)
 
@@ -158,7 +160,9 @@ def node_list(zk, node_id=None):
             node.launcher,
             node.allocated_to,
             node.hold_job,
-            node.comment
+            node.comment,
+            node.user_data,
+            node.driver_data,
         ]
         return values
 
