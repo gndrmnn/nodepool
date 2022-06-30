@@ -13,19 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker.io/opendevorg/python-builder:3.9-bullseye as builder
+FROM docker.io/opendevorg/python-builder:3.10-bullseye as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
-RUN if [ `uname -m` = "aarch64" ] ; then \
-      echo "Installing arm64 pip.conf" ; \
-      cp /tmp/src/tools/pip.conf.arm64 /etc/pip.conf ; \
-      cp /tmp/src/tools/pip.conf.arm64 /output/pip.conf ; \
-    fi
+# Tring to get assemble logs on arm64 but we stopped here last CI build?
+#RUN if [ `uname -m` = "aarch64" ] ; then \
+#      echo "Installing arm64 pip.conf" ; \
+#      cp /tmp/src/tools/pip.conf.arm64 /etc/pip.conf ; \
+#      cp /tmp/src/tools/pip.conf.arm64 /output/pip.conf ; \
+#    fi
 RUN assemble
 
-FROM docker.io/opendevorg/python-base:3.9-bullseye as nodepool-base
+FROM docker.io/opendevorg/python-base:3.10-bullseye as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
