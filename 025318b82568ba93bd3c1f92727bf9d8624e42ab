@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bce4e70_174cf417",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-07-01T01:40:27Z",
+      "side": 1,
+      "message": "recheck\n\nerror not in aws bits.  seems logical that an available image isn\u0027t deleted  ",
+      "revId": "025318b82568ba93bd3c1f92727bf9d8624e42ab",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
