@@ -31,6 +31,8 @@ services:
       - nested_var_lib_containers:/var/lib/containers
       # zookeeper certs
       - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
+      # this is for cgroups v2 <insert hand waving>
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
   nodepool-launcher:
     image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}

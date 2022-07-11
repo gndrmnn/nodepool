@@ -140,4 +140,5 @@ RUN \
 
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
+    bash -c 'mkdir /sys/fs/cgroup/init; for p in $(cat /sys/fs/cgroup/cgroup.procs); do echo $p | sudo tee /sys/fs/cgroup/init/cgroup.procs' && \
     /usr/local/bin/nodepool-builder ${_DAEMON_FLAG}
