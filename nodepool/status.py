@@ -133,13 +133,12 @@ def node_list(zk, node_id=None):
 
     def _get_node_values(node):
         locked = "unlocked"
-        try:
-            zk.lockNode(node, blocking=False)
-        except Exception:
-            locked = "locked"
+        if zk.enable_cache:
+            if node.lock_contenders:
+                locked = "locked"
         else:
-            zk.unlockNode(node)
-
+            if zk.getNodeLockContenders(node):
+                locked = "locked"
         values = [
             node.id,
             node.provider,
@@ -170,7 +169,8 @@ def node_list(zk, node_id=None):
             objs.append(dict(zip(headers_table.keys(),
                                  values)))
     else:
-        for node in zk.nodeIterator():
+        cached_ids = zk.enable_cache
+        for node in zk.nodeIterator(cached_ids=cached_ids):
             values = _get_node_values(node)
 
             objs.append(dict(zip(headers_table.keys(),

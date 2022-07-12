@@ -474,7 +474,11 @@ class Node(BaseModel):
 
     def __init__(self, id=None):
         super(Node, self).__init__(id)
+        # Local lock object; not serialized
         self.lock = None
+        # Cached list of lock contenders; not serialized (and possibly
+        # not up to date; use for status listings only).
+        self.lock_contenders = set()
         self.cloud = None
         self.provider = None
         self.pool = None
@@ -2250,8 +2254,7 @@ class ZooKeeper(ZooKeeperBase):
             if path == self.NODE_ROOT:
                 return
 
-            # Ignore lock nodes
-            if '/lock' in path:
+            if path.endswith('/lock'):
                 return
 
         # Ignore any non-node related events such as connection events here
@@ -2261,7 +2264,23 @@ class ZooKeeper(ZooKeeperBase):
             return
 
         path = event.event_data.path
-        node_id = path.rsplit('/', 1)[1]
+        node_path = path[len(self.NODE_ROOT) + 1:]
+        parts = node_path.split('/')
+        node_id = parts[0]
+        if len(parts) > 1 and parts[1] == 'lock':
+            if len(parts) > 2:
+                # A lock contender is being added or removed
+                contender = parts[2]
+                old_node = self._cached_nodes.get(node_id)
+                if not old_node:
+                    return
+                if event.event_type in (TreeEvent.NODE_ADDED,
+                                        TreeEvent.NODE_UPDATED):
+                    old_node.lock_contenders.add(contender)
+                elif event.event_type == TreeEvent.NODE_REMOVED:
+                    old_node.lock_contenders.discard(contender)
+            # This event was for a lock path; no further handling necessary
+            return
 
         if event.event_type in (TreeEvent.NODE_ADDED, TreeEvent.NODE_UPDATED):
             # Nodes with empty data are invalid so skip add or update these.
