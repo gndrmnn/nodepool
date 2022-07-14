@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed896236_c297bce5",
+        "filename": "Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-14T23:51:22Z",
+      "side": 1,
+      "message": "Note I believe this cgroup name is arbitrary. Since we aren\u0027t using systemd (or another init system) it might be better to call this `nodepool` instead?",
+      "range": {
+        "startLine": 143,
+        "startChar": 30,
+        "endLine": 143,
+        "endChar": 34
+      },
+      "revId": "b8681f32b58395e8a2b4a193685deffa453e8eb4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
