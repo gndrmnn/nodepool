@@ -235,6 +235,33 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.waitForImageDeletion('fake-provider', 'fake-image2')
         self.waitForBuildDeletion('fake-image2', '0000000001')
 
+    def test_image_removal_two_builders(self):
+        # This tests the gap between building and uploading an image.
+        # We build an image on one builder, then delete any uploads
+        # (to simulate the time between when the builder completed a
+        # build and started the first upload).  Then we start a second
+        # builder which is not configured with the same provider as
+        # the first builder and ensure that it doesn't delete the
+        # ready-but-not-yet-uploaded build from the other builder.
+        configfile1 = self.setup_config('builder_image1.yaml')
+        builder1 = self.useBuilder(configfile1)
+        self.waitForImage('fake-provider1', 'fake-image1')
+        self.waitForBuild('fake-image1', '0000000001')
+        for worker in builder1._upload_workers:
+            worker.shutdown()
+            worker.join()
+        builder1.stop()
+
+        self.zk.deleteUpload('fake-image1', '0000000001',
+                             'fake-provider1', '0000000001')
+
+        configfile2 = self.setup_config('builder_image2.yaml')
+        self.useBuilder(configfile2)
+        self.waitForImage('fake-provider2', 'fake-image2')
+        # Don't check files because the image path switched to the
+        # second builder; we're really only interested in ZK.
+        self.waitForBuild('fake-image1', '0000000001', check_files=False)
+
     def test_image_removal_dib_deletes_first(self):
         # Break cloud image deleting
         fake_client = fakeprovider.FakeDeleteImageFailCloud()

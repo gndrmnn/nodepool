@@ -467,7 +467,13 @@ class CleanupWorker(BaseWorker):
         # have a consistent view of the data.
         all_builds = self._zk.getBuilds(image)
         diskimage = self._config.diskimages.get(image)
-        if not diskimage or (diskimage and not diskimage.image_types):
+        if not diskimage:
+            # If the diskimage does not appear in the config at all,
+            # we interpret that as the user intending to remove it.
+            # If it appears in the config, even if it's not used by a
+            # provider, we will assume there is some other builder
+            # responsible for it, so we fall through to the else
+            # condition below and rely on data in ZK.
             builds_to_keep = set()
             # TODO(jeblair): When all builds for an image which is not
             # in use are deleted, the image znode should be deleted as
