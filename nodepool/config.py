@@ -24,6 +24,11 @@ import yaml
 from nodepool.driver import ConfigValue
 from nodepool.driver import Drivers
 
+try:
+    from yaml import CSafeLoader as SafeLoader
+except ImportError:
+    from yaml import SafeLoader
+
 
 class ZooKeeperConnectionConfig(object):
     '''
@@ -407,7 +412,8 @@ def openConfig(path, env):
     while True:
         try:
             with open(path) as f:
-                return yaml.safe_load(substitute_env_vars(f.read(), env))
+                return yaml.load(
+                    substitute_env_vars(f.read(), env), SafeLoader)
         except IOError as e:
             if e.errno == 2:
                 retry = retry - 1
