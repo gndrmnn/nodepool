@@ -296,14 +296,15 @@ class QuotaSupport:
 
     def estimatedNodepoolQuota(self):
         '''
-        Determine how much quota is available for nodepool managed resources.
-        This needs to take into account the quota of the tenant, resources
-        used outside of nodepool and the currently used resources by nodepool,
-        max settings in nodepool config. This is cached for MAX_QUOTA_AGE
+        Determine how much quota is available for nodepool managed
+        resources.  This needs to take into account the quota of the
+        tenant, resources used outside of nodepool, and the max
+        settings in nodepool config. This is cached for MAX_QUOTA_AGE
         seconds.
 
         :return: Total amount of resources available which is currently
                  available to nodepool including currently existing nodes.
+
         '''
 
         if self._current_nodepool_quota:

@@ -1,5 +1,5 @@
 # Copyright 2019 Red Hat
-# Copyright 2021 Acme Gating, LLC
+# Copyright 2021-2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -374,13 +374,15 @@ class StateMachineHandler(NodeRequestHandler):
             needed_quota.add(
                 self.manager.quotaNeededByLabel(ntype, self.pool))
 
+        ignore = False
         if hasattr(self.pool, 'ignore_provider_quota'):
-            if not self.pool.ignore_provider_quota:
-                cloud_quota = self.manager.estimatedNodepoolQuota()
-                cloud_quota.subtract(needed_quota)
+            ignore = self.pool.ignore_provider_quota
+        if not ignore:
+            cloud_quota = self.manager.estimatedNodepoolQuota()
+            cloud_quota.subtract(needed_quota)
 
-                if not cloud_quota.non_negative():
-                    return False
+            if not cloud_quota.non_negative():
+                return False
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.

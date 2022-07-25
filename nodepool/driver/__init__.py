@@ -861,6 +861,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         self.max_servers = math.inf
         self.node_attributes = None
         self.priority = None
+        self.ignore_provider_quota = False
 
     @classmethod
     def getCommonSchemaDict(self):
