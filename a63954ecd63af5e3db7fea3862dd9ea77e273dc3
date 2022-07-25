@@ -16,6 +16,24 @@
       "message": "We should continue here if args[code] is already existing in order to avoid requesting the same code multiple times.",
       "revId": "a63954ecd63af5e3db7fea3862dd9ea77e273dc3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc8c453c_5c0779aa",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T13:59:09Z",
+      "side": 1,
+      "message": "Note that the old code doesn\u0027t do any caching here either.  The reason is that\nthe caching is handled in the QuotaSupport class: https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/utils.py#L310-L313\n\nBy default, it\u0027s only refreshed every 5 minutes, but it is intended to be refreshed so that we can update to new values when it changes.",
+      "parentUuid": "80868896_6709e992",
+      "revId": "a63954ecd63af5e3db7fea3862dd9ea77e273dc3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
