@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80868896_6709e992",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-07-25T07:36:21Z",
+      "side": 1,
+      "message": "We should continue here if args[code] is already existing in order to avoid requesting the same code multiple times.",
+      "revId": "a63954ecd63af5e3db7fea3862dd9ea77e273dc3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
