@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e528039e_f3435752",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "I believe the limits in this block are provider defaults for pools if otherwise unspecified? Might want to update this line and the others below to make that more clear.",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa85f577_76d5fd64",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Amazon wants me to sign in to see this content :(",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ed0b2fe_5d4ea800",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this also include max-servers?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3437cfa_b14ef14a",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Why are max-servers, max-cores, max-ram, and max-resources not needing to be listed here like we do with the pool?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbf4dbd6_110485f5",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Is this block of new code there to handle the config upgrade case with zk records potentially not having the information?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d471d40e_8b544819",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Nit these new argument names using camel case make me think they are classes rather than arguments. I guess these may come from the source that we are overriding hence the difference in convention?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96f517c9_e436c912",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "If anyone is wondering the high mem cpu core flavor that we\u0027re using comes with 224 cores. Neat.",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "219ddde1_6a745f08",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-25T21:22:51Z",
+      "side": 1,
+      "message": "Nit this is over our local max-cores values. Should be fine in cloud quota.",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
