@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c587ba92_4f05f8a5",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "Yeah, we can add that in there.",
+      "parentUuid": "e528039e_f3435752",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa85f577_76d5fd64",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-07-25T21:22:51Z",
       "side": 1,
       "message": "Amazon wants me to sign in to see this content :(",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f90f032_4d9e8e9c",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "Boo.",
+      "parentUuid": "aa85f577_76d5fd64",
       "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -52,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2fb8e1a_94af6183",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "That one\u0027s in the common schema dict so we don\u0027t need to add it.",
+      "parentUuid": "4ed0b2fe_5d4ea800",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3437cfa_b14ef14a",
@@ -65,6 +119,24 @@
       "writtenOn": "2022-07-25T21:22:51Z",
       "side": 1,
       "message": "Why are max-servers, max-cores, max-ram, and max-resources not needing to be listed here like we do with the pool?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b7cf0ef_00de3729",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "We probably should.",
+      "parentUuid": "c3437cfa_b14ef14a",
       "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -86,6 +158,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43acd8b7_d633d07d",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "Yes, except it\u0027s not ZK records because this is all in-memory.  So it\u0027s more like to handle subtracting a QuotaInfo with one specification from another QuotaInfo that doesn\u0027t have it.  For example, a Provider that doesn\u0027t specify a quota for high-memory instances (but to math.inf) and an instance that specifies it needs one high memory instance.  We need that to end up being \"math.inf-1\u003dmath.inf\".  This initializes the first operand in that case.",
+      "parentUuid": "bbf4dbd6_110485f5",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d471d40e_8b544819",
@@ -99,6 +189,24 @@
       "writtenOn": "2022-07-25T21:22:51Z",
       "side": 1,
       "message": "Nit these new argument names using camel case make me think they are classes rather than arguments. I guess these may come from the source that we are overriding hence the difference in convention?",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d20e9688_f5e144f6",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "Yes, and boto frequently does required keyword args, so we\u0027re stuck with it.",
+      "parentUuid": "d471d40e_8b544819",
       "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -120,6 +228,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a109b37_b4636bc9",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "They have some crazy stuff.",
+      "parentUuid": "96f517c9_e436c912",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "219ddde1_6a745f08",
@@ -133,6 +259,24 @@
       "writtenOn": "2022-07-25T21:22:51Z",
       "side": 1,
       "message": "Nit this is over our local max-cores values. Should be fine in cloud quota.",
+      "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05d57108_99aadeab",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-25T21:41:20Z",
+      "side": 1,
+      "message": "I\u0027ll fix this with the others.",
+      "parentUuid": "219ddde1_6a745f08",
       "revId": "2c09d1ccd472deb9be175732657945d2a3d98e68",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
