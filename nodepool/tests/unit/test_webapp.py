@@ -212,13 +212,15 @@ class TestWebApp(tests.DBTestCase):
                          'application/json')
         data = f.read()
         objs = json.loads(data.decode('utf8'))
+        # We don't check the value of 'locked' because we may get a
+        # cached value returned.
         self.assertDictContainsSubset({'id': '0000000000',
                                        'ipv6': '',
                                        'label': ['fake-label'],
-                                       'locked': 'unlocked',
                                        'provider': 'fake-provider',
                                        'public_ipv4': 'fake',
                                        'state': 'ready'}, objs[0])
+        self.assertTrue('locked' in objs[0])
         # specify valid node_id
         req = request.Request(
             "http://localhost:%s/node-list?node_id=%s" % (port,
@@ -229,13 +231,15 @@ class TestWebApp(tests.DBTestCase):
                          'application/json')
         data = f.read()
         objs = json.loads(data.decode('utf8'))
+        # We don't check the value of 'locked' because we may get a
+        # cached value returned.
         self.assertDictContainsSubset({'id': '0000000000',
                                        'ipv6': '',
                                        'label': ['fake-label'],
-                                       'locked': 'unlocked',
                                        'provider': 'fake-provider',
                                        'public_ipv4': 'fake',
                                        'state': 'ready'}, objs[0])
+        self.assertTrue('locked' in objs[0])
         # node_id not found
         req = request.Request(
             "http://localhost:%s/node-list?node_id=%s" % (port,
