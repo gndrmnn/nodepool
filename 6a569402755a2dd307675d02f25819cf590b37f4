@@ -16,6 +16,24 @@
       "message": "OpenDev has ARM64 and x86_64 builders with disjoint providers and diskimage lists: https://opendev.org/openstack/project-config/src/branch/master/nodepool/nb03.opendev.org.yaml#L91-L196 vs https://opendev.org/openstack/project-config/src/branch/master/nodepool/nodepool.yaml#L103-L363. I\u0027m not sure this fix will fix the issue for OpenDev as a result.\n\nIn OpenDev\u0027s case we have to have disjoint diskimages because we can\u0027t do cross arch builds (and even if we could they would very likely be slow due emulation as with docker).",
       "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a063e57_5c5e7a4a",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-28T17:26:12Z",
+      "side": 1,
+      "message": "I think OpenDev will need stub diskimages for everything, but the arm builder won\u0027t build them without any providers using them.",
+      "parentUuid": "42fa892a_f6f91401",
+      "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
