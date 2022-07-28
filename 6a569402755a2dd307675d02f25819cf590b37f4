@@ -87,6 +87,24 @@
       "parentUuid": "5cbf9061_a480bd33",
       "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5975b1f0_482bdca5",
+        "filename": "nodepool/tests/unit/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-28T17:44:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "87186040_e2b99a8f",
+      "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
