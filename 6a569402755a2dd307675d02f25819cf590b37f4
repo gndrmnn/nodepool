@@ -52,6 +52,23 @@
       "parentUuid": "42fa892a_f6f91401",
       "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cbf9061_a480bd33",
+        "filename": "nodepool/tests/unit/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-07-28T17:37:43Z",
+      "side": 1,
+      "message": "Do we also need to assert that builder2 went through a cleanup cycle to ensure it has had a chance to clean up fake-image1? Put another way is there a race here in checking that the zk build record for fake-image1 is present and attempting to delete it?",
+      "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
