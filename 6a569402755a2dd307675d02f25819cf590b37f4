@@ -34,6 +34,24 @@
       "parentUuid": "42fa892a_f6f91401",
       "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5291d921_81fd2c25",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-07-28T17:37:22Z",
+      "side": 1,
+      "message": "https://review.opendev.org/851444 is the change for opendev.",
+      "parentUuid": "42fa892a_f6f91401",
+      "revId": "6a569402755a2dd307675d02f25819cf590b37f4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
