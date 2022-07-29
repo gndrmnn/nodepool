@@ -548,8 +548,13 @@ Options
           max-servers: 10
           max-cores: 200
           max-ram: 16565
+          'L-43DA4232': 224
 
-   Each entry is a dictionary with the following keys.
+   Each entry is a dictionary with the following keys.  Any other keys
+   are interpreted as driver-specific resource limits (otherwise
+   specified as ``max-resources`` in the provider configuration).  The
+   only driver that currently supports additional resource limits is
+   AWS.
 
    .. attr:: tenant-name
       :type: str
