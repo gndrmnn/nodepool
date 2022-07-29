@@ -240,6 +240,12 @@ Options
    remove its entry from ``diskimages``.  All uploads will be deleted
    as well as the files on disk.
 
+   If multiple builders are used to build disjoint images, the
+   `diskimage` stanza for every image must be present on every
+   builder, however, each builder may have different providers
+   configured, and a given builder will only build images used by its
+   configured providers.
+
    A sample configuration section is illustrated below.
 
    .. code-block:: yaml
