@@ -101,6 +101,8 @@ class AwsProviderDiskImage(ConfigValue):
             default_port_mapping.get(self.connection_type, 22))
         self.meta = {}
         self.architecture = image.get('architecture', 'x86_64')
+        self.volume_size = image.get('volume-size', 20)
+        self.volume_type = image.get('volume-type', 'gp2')
 
     @property
     def external_name(self):
@@ -117,6 +119,8 @@ class AwsProviderDiskImage(ConfigValue):
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
+            'volume-size': int,
+            'volume-type': str,
         }
 
 

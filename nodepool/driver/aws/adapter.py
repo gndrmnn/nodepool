@@ -28,6 +28,7 @@ from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
 
 import boto3
+import botocore.exceptions
 
 
 def tag_dict_to_list(tagdict):
@@ -277,33 +278,48 @@ class AwsAdapter(statemachine.Adapter):
         return AwsDeleteStateMachine(self, external_id, log)
 
     def listResources(self):
-        self._tagAmis()
         self._tagSnapshots()
+        self._tagAmis()
         for instance in self._listInstances():
-            if instance.state["Name"].lower() == "terminated":
+            try:
+                if instance.state["Name"].lower() == "terminated":
+                    continue
+            except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(instance.tags),
                               'instance', instance.id)
         for volume in self._listVolumes():
-            if volume.state.lower() == "deleted":
+            try:
+                if volume.state.lower() == "deleted":
+                    continue
+            except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(volume.tags),
                               'volume', volume.id)
         for ami in self._listAmis():
-            if ami.state.lower() == "deleted":
+            try:
+                if ami.state.lower() == "deleted":
+                    continue
+            except (botocore.exceptions.ClientError, AttributeError):
                 continue
             yield AwsResource(tag_list_to_dict(ami.tags),
                               'ami', ami.id)
         for snap in self._listSnapshots():
-            if snap.state.lower() == "deleted":
+            try:
+                if snap.state.lower() == "deleted":
+                    continue
+            except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(snap.tags),
                               'snapshot', snap.id)
         if self.provider.object_storage:
             for obj in self._listObjects():
                 with self.non_mutating_rate_limiter:
-                    tags = self.s3_client.get_object_tagging(
-                        Bucket=obj.bucket_name, Key=obj.key)
+                    try:
+                        tags = self.s3_client.get_object_tagging(
+                            Bucket=obj.bucket_name, Key=obj.key)
+                    except botocore.exceptions.ClientError:
+                        continue
                 yield AwsResource(tag_list_to_dict(tags['TagSet']),
                                   'object', obj.key)
 
@@ -368,36 +384,35 @@ class AwsAdapter(statemachine.Adapter):
                 bucket.upload_fileobj(fobj, object_filename,
                                       ExtraArgs=extra_args)
 
-        # Import image as AMI
+        # Import snapshot
         self.log.debug(f"Importing {image_name}")
-        import_image_task = self._import_image(
-            Architecture=provider_image.architecture,
-            DiskContainers=[
-                {
+        with self.rate_limiter:
+            import_snapshot_task = self._import_snapshot(
+                DiskContainer={
                     'Format': image_format,
                     'UserBucket': {
                         'S3Bucket': bucket_name,
                         'S3Key': object_filename,
-                    }
+                    },
                 },
-            ],
-            TagSpecifications=[
-                {
-                    'ResourceType': 'import-image-task',
-                    'Tags': tag_dict_to_list(metadata),
-                },
-            ]
-        )
-        task_id = import_image_task['ImportTaskId']
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'import-snapshot-task',
+                        'Tags': tag_dict_to_list(metadata),
+                    },
+                ]
+            )
+        task_id = import_snapshot_task['ImportTaskId']
 
-        paginator = self._get_paginator('describe_import_image_tasks')
+        paginator = self._get_paginator('describe_import_snapshot_tasks')
         done = False
         while not done:
             time.sleep(self.IMAGE_UPLOAD_SLEEP)
             with self.non_mutating_rate_limiter:
                 for page in paginator.paginate(ImportTaskIds=[task_id]):
-                    for task in page['ImportImageTasks']:
-                        if task['Status'].lower() in ('completed', 'deleted'):
+                    for task in page['ImportSnapshotTasks']:
+                        if task['SnapshotTaskDetail']['Status'].lower() in (
+                                'completed', 'deleted'):
                             done = True
                             break
 
@@ -405,31 +420,53 @@ class AwsAdapter(statemachine.Adapter):
         with self.rate_limiter:
             self.s3.Object(bucket_name, object_filename).delete()
 
-        if task['Status'].lower() != 'completed':
+        if task['SnapshotTaskDetail']['Status'].lower() != 'completed':
             raise Exception(f"Error uploading image: {task}")
-
-        # Tag the AMI
-        try:
-            with self.non_mutating_rate_limiter:
-                ami = self.ec2.Image(task['ImageId'])
-            with self.rate_limiter:
-                ami.create_tags(Tags=task['Tags'])
-        except Exception:
-            self.log.exception("Error tagging AMI:")
 
         # Tag the snapshot
         try:
             with self.non_mutating_rate_limiter:
                 snap = self.ec2.Snapshot(
-                    task['SnapshotDetails'][0]['SnapshotId'])
+                    task['SnapshotTaskDetail']['SnapshotId'])
             with self.rate_limiter:
                 snap.create_tags(Tags=task['Tags'])
         except Exception:
             self.log.exception("Error tagging snapshot:")
 
-        self.log.debug(f"Upload of {image_name} complete as {task['ImageId']}")
+        # Register the snapshot as an AMI
+        with self.rate_limiter:
+            register_response = self.ec2_client.register_image(
+                Architecture=provider_image.architecture,
+                BlockDeviceMappings=[
+                    {
+                        'DeviceName': '/dev/sda1',
+                        'Ebs': {
+                            'DeleteOnTermination': True,
+                            'SnapshotId': task[
+                                'SnapshotTaskDetail']['SnapshotId'],
+                            'VolumeSize': provider_image.volume_size,
+                            'VolumeType': provider_image.volume_type,
+                        },
+                    },
+                ],
+                RootDeviceName='/dev/sda1',
+                VirtualizationType='hvm',
+                Name=image_name,
+            )
+
+        # Tag the AMI
+        try:
+            with self.non_mutating_rate_limiter:
+                ami = self.ec2.Image(register_response['ImageId'])
+            with self.rate_limiter:
+                ami.create_tags(Tags=task['Tags'])
+        except Exception:
+            self.log.exception("Error tagging AMI:")
+
+        self.log.debug(f"Upload of {image_name} complete as "
+                       f"{register_response['ImageId']}")
         # Last task returned from paginator above
-        return task['ImageId']
+        return register_response['ImageId']
 
     def deleteImage(self, external_id):
         snaps = set()
@@ -449,58 +486,110 @@ class AwsAdapter(statemachine.Adapter):
     def _tagAmis(self):
         # There is no way to tag imported AMIs, so this routine
         # "eventually" tags them.  We look for any AMIs without tags
-        # which correspond to import tasks, and we copy the tags from
-        # those import tasks to the AMI.
+        # and we copy the tags from the associated snapshot import
+        # task.
+        to_examine = []
         for ami in self._listAmis():
-            if (ami.name.startswith('import-ami-') and
-                not ami.tags and
-                ami.id not in self.not_our_images):
-                # This image was imported but has no tags, which means
-                # it's either not a nodepool image, or it's a new one
-                # which doesn't have tags yet.  Copy over any tags
-                # from the import task; otherwise, mark it as an image
-                # we can ignore in future runs.
-                task = self._getImportImageTask(ami.name)
-                tags = tag_list_to_dict(task.get('Tags'))
-                if (tags.get('nodepool_provider_name') == self.provider.name):
-                    # Copy over tags
-                    self.log.debug(
-                        f"Copying tags from import task {ami.name} to AMI")
-                    with self.rate_limiter:
-                        ami.create_tags(Tags=task['Tags'])
-                else:
-                    self.not_our_images.add(ami.id)
+            if ami.id in self.not_our_images:
+                continue
+            try:
+                if ami.tags:
+                    continue
+            except (botocore.exceptions.ClientError, AttributeError):
+                continue
+            # This has no tags, which means it's either not a nodepool
+            # image, or it's a new one which doesn't have tags yet.
+            # Copy over any tags from the snapshot import task,
+            # otherwise, mark it as an image we can ignore in future
+            # runs.
+            if len(ami.block_device_mappings) < 1:
+                self.not_our_images.add(ami.id)
+                continue
+            bdm = ami.block_device_mappings[0]
+            ebs = bdm.get('Ebs')
+            if not ebs:
+                self.not_our_images.add(ami.id)
+                continue
+            snapshot_id = ebs.get('SnapshotId')
+            if not snapshot_id:
+                self.not_our_images.add(ami.id)
+                continue
+            to_examine.append((ami, snapshot_id))
+        if not to_examine:
+            return
+
+        # We have images to examine; get a list of import tasks so
+        # we can copy the tags from the import task that resulted in
+        # this image.
+        task_map = {}
+        for task in self._listImportSnapshotTasks():
+            detail = task['SnapshotTaskDetail']
+            task_snapshot_id = detail.get('SnapshotId')
+            if not task_snapshot_id:
+                continue
+            task_map[task_snapshot_id] = task['Tags']
+
+        for ami, snapshot_id in to_examine:
+            tags = task_map.get(snapshot_id)
+            if not tags:
+                self.not_our_images.add(ami.id)
+                continue
+            metadata = tag_list_to_dict(tags)
+            if (metadata.get('nodepool_provider_name') == self.provider.name):
+                # Copy over tags
+                self.log.debug(
+                    f"Copying tags from import task to image {ami.id}")
+                with self.rate_limiter:
+                    ami.create_tags(Tags=tags)
+            else:
+                self.not_our_images.add(ami.id)
 
     def _tagSnapshots(self):
         # See comments for _tagAmis
+        to_examine = []
         for snap in self._listSnapshots():
-            if ('import-ami-' in snap.description and
-                not snap.tags and
-                snap.id not in self.not_our_snapshots):
+            try:
+                if (snap.id not in self.not_our_snapshots and
+                    not snap.tags):
+                    to_examine.append(snap)
+            except botocore.exceptions.ClientError:
+                # We may have cached a snapshot that doesn't exist
+                continue
+        if not to_examine:
+            return
 
-                match = re.match(r'.*?(import-ami-\w*)', snap.description)
-                if not match:
-                    self.not_our_snapshots.add(snap.id)
-                    continue
-                task_id = match.group(1)
-                task = self._getImportImageTask(task_id)
-                tags = tag_list_to_dict(task.get('Tags'))
-                if (tags.get('nodepool_provider_name') == self.provider.name):
-                    # Copy over tags
-                    self.log.debug(
-                        f"Copying tags from import task {task_id} to snapshot")
-                    with self.rate_limiter:
-                        snap.create_tags(Tags=task['Tags'])
-                else:
-                    self.not_our_snapshots.add(snap.id)
+        # We have snapshots to examine; get a list of import tasks so
+        # we can copy the tags from the import task that resulted in
+        # this snapshot.
+        task_map = {}
+        for task in self._listImportSnapshotTasks():
+            detail = task['SnapshotTaskDetail']
+            task_snapshot_id = detail.get('SnapshotId')
+            if not task_snapshot_id:
+                continue
+            task_map[task_snapshot_id] = task['Tags']
 
-    def _getImportImageTask(self, task_id):
-        paginator = self._get_paginator('describe_import_image_tasks')
+        for snap in to_examine:
+            tags = task_map.get(snap.id)
+            if not tags:
+                self.not_our_snapshots.add(snap.id)
+                continue
+            metadata = tag_list_to_dict(tags)
+            if (metadata.get('nodepool_provider_name') == self.provider.name):
+                # Copy over tags
+                self.log.debug(
+                    f"Copying tags from import task to snapshot {snap.id}")
+                with self.rate_limiter:
+                    snap.create_tags(Tags=tags)
+            else:
+                self.not_our_snapshots.add(snap.id)
+
+    def _listImportSnapshotTasks(self):
+        paginator = self._get_paginator('describe_import_snapshot_tasks')
         with self.non_mutating_rate_limiter:
-            for page in paginator.paginate(ImportTaskIds=[task_id]):
-                for task in page['ImportImageTasks']:
-                    # Return the first and only task
-                    return task
+            for page in paginator.paginate():
+                for task in page['ImportSnapshotTasks']:
+                    yield task
 
     instance_key_re = re.compile(r'([a-z\-]+)\d.*')
 
@@ -809,8 +898,8 @@ class AwsAdapter(statemachine.Adapter):
 
     # These methods allow the tests to patch our use of boto to
     # compensate for missing methods in the boto mocks.
-    def _import_image(self, *args, **kw):
-        return self.ec2_client.import_image(*args, **kw)
+    def _import_snapshot(self, *args, **kw):
+        return self.ec2_client.import_snapshot(*args, **kw)
 
     def _get_paginator(self, *args, **kw):
         return self.ec2_client.get_paginator(*args, **kw)
