@@ -46,6 +46,30 @@
       },
       "revId": "b8681f32b58395e8a2b4a193685deffa453e8eb4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bca683a3_fb43faaa",
+        "filename": "Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-08-02T03:40:50Z",
+      "side": 1,
+      "message": "both of those should be handled by latest ps, thanks",
+      "parentUuid": "70a718cf_dbb70753",
+      "range": {
+        "startLine": 143,
+        "startChar": 30,
+        "endLine": 143,
+        "endChar": 34
+      },
+      "revId": "b8681f32b58395e8a2b4a193685deffa453e8eb4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
