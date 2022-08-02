@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba66ec2b_a096cbed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2022-08-02T14:41:43Z",
+      "side": 1,
+      "message": "\u003e Patch Set 3: Code-Review-1\n\u003e \n\u003e Why this when https://zuul-ci.org/docs/zuul/latest/monitoring.html#stat-zuul.nodepool.requests exists?\n\nThose are counters which are good for rates (how fast are nodes allocated), but not for the current \"instant\" value (like the other nodepool stats). That said, I appear to be missing the zuul.nodepool.requests.current_requests  in my Prometheus, and I think that will do what I want; I\u0027ll check and close this if that is the case",
+      "revId": "5092268da45548e39cc0bc57a400822ff43897b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
