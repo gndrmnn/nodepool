@@ -40,6 +40,7 @@ class FakeCoreClient(object):
         class FakeNamespace:
             class metadata:
                 name = ns_body['metadata']['name']
+                labels = ns_body['metadata']['labels']
         self.namespaces.append(FakeNamespace)
         return FakeNamespace
 
@@ -222,6 +223,31 @@ class TestDriverKubernetes(tests.DBTestCase):
     def test_kubernetes_tenant_quota_ram(self):
         self._test_kubernetes_quota(
             'kubernetes-tenant-quota-ram.yaml', pause=False)
+
+    def test_kubernetes_leaked_node(self):
+        conf = self.setup_config('kubernetes-leaked-node.yaml')
+        pool = self.useNodepool(conf)
+        pool.start()
+
+        # wait for max-ready node to be available
+        nodes = self.waitForNodes('pod-fedora')
+        self.assertEqual(len(nodes), 1)
+        manager = pool.getProviderManager('kubespray')
+        servers = manager.listNodes()
+        self.assertEqual(len(servers), 1)
+
+        # delete node from zk so it becomes 'leaked'
+        self.zk.deleteNode(nodes[0])
+
+        # node gets replaced, wait for that
+        new_nodes = self.waitForNodes('pod-fedora')
+        self.assertEqual(len(new_nodes), 1)
+
+        # original node should get deleted eventually
+        self.waitForInstanceDeletion(manager, nodes[0].external_id)
+
+        servers = manager.listNodes()
+        self.assertEqual(len(servers), 1)
 
     def _test_kubernetes_quota(self, config, pause=True):
         configfile = self.setup_config(config)
