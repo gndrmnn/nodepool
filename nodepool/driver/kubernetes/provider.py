@@ -20,7 +20,7 @@ import time
 
 from kubernetes import client as k8s_client
 
-from nodepool import exceptions
+from nodepool import exceptions, stats, zk
 from nodepool.driver import Provider
 from nodepool.driver.kubernetes import handler
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
@@ -37,6 +37,7 @@ class KubernetesProvider(Provider, QuotaSupport):
         super().__init__()
         self.provider = provider
         self._zk = None
+        self._statsd = stats.get_client()
         self.ready = False
         _, _, self.k8s_client, self.rbac_client = get_client(
             self.log, provider.context, k8s_client.RbacAuthorizationV1Api)
@@ -59,7 +60,7 @@ class KubernetesProvider(Provider, QuotaSupport):
         servers = []
 
         class FakeServer:
-            def __init__(self, namespace, provider, valid_names):
+            def __init__(self, namespace, valid_names):
                 self.id = namespace.metadata.name
                 self.name = namespace.metadata.name
                 self.metadata = {}
@@ -70,8 +71,7 @@ class KubernetesProvider(Provider, QuotaSupport):
                     try:
                         # Make sure last component of name is an id
                         int(node_id)
-                        self.metadata['nodepool_provider_name'] = provider
-                        self.metadata['nodepool_node_id'] = node_id
+                        self.metadata = namespace.metadata.labels
                     except Exception:
                         # Probably not a managed namespace, let's skip metadata
                         pass
@@ -81,8 +81,7 @@ class KubernetesProvider(Provider, QuotaSupport):
 
         if self.ready:
             for namespace in self.k8s_client.list_namespace().items:
-                servers.append(FakeServer(
-                    namespace, self.provider.name, self.namespace_names))
+                servers.append(FakeServer(namespace, self.namespace_names))
         return servers
 
     def labelReady(self, name):
@@ -93,7 +92,57 @@ class KubernetesProvider(Provider, QuotaSupport):
         pass
 
     def cleanupLeakedResources(self):
-        pass
+        '''
+        Delete any leaked server instances.
+
+        Remove any servers found in this provider that are not recorded in
+        the ZooKeeper data.
+        '''
+
+        deleting_nodes = {}
+
+        for node in self._zk.nodeIterator():
+            if node.state == zk.DELETING:
+                if node.provider != self.provider.name:
+                    continue
+                if node.provider not in deleting_nodes:
+                    deleting_nodes[node.provider] = []
+                deleting_nodes[node.provider].append(node.external_id)
+
+        for server in self.listNodes():
+            meta = server.get('metadata', {})
+
+            if 'nodepool_provider_name' not in meta:
+                continue
+
+            if meta['nodepool_provider_name'] != self.provider.name:
+                # Another launcher, sharing this provider but configured
+                # with a different name, owns this.
+                continue
+
+            if (self.provider.name in deleting_nodes and
+                server.id in deleting_nodes[self.provider.name]):
+                # Already deleting this node
+                continue
+
+            if not self._zk.getNode(meta['nodepool_node_id']):
+                self.log.warning(
+                    "Marking for delete leaked instance %s (%s) in %s "
+                    "(unknown node id %s)",
+                    server.name, server.id, self.provider.name,
+                    meta['nodepool_node_id']
+                )
+                # Create an artifical node to use for deleting the server.
+                node = zk.Node()
+                node.external_id = server.id
+                node.provider = self.provider.name
+                node.pool = meta.get('nodepool_pool_name')
+                node.state = zk.DELETING
+                self._zk.storeNode(node)
+                if self._statsd:
+                    key = ('nodepool.provider.%s.leaked.nodes'
+                           % self.provider.name)
+                    self._statsd.incr(key)
 
     def startNodeCleanup(self, node):
         t = NodeDeleter(self._zk, self, node)
@@ -136,7 +185,11 @@ class KubernetesProvider(Provider, QuotaSupport):
             'kind': 'Namespace',
             'metadata': {
                 'name': namespace,
-                'nodepool_node_id': name
+                'labels': {
+                    'nodepool_node_id': node.id,
+                    'nodepool_provider_name': self.provider.name,
+                    'nodepool_pool_name': pool,
+                }
             }
         }
         proj = self.k8s_client.create_namespace(ns_body)
