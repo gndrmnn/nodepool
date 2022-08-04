@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f1045e6_3eceb2b2",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-08-04T18:56:34Z",
+      "side": 1,
+      "message": "Since the snapshot has a size, I think we should default to the snapshot size instead of 20gb. This would eliminate the need to specify a fixed size in the config for larger images.",
+      "revId": "21e4edcebd4b854efff3cb538f5902f08e294923",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
