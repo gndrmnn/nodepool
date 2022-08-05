@@ -388,9 +388,11 @@ class MetastaticAdapter(statemachine.Adapter):
                 label.name, label.max_parallel_jobs)
             backing_node_record.request_id = req.id
             self._addBackingNode(label.name, backing_node_record)
+        backing_node_log = (backing_node_record.node_id or
+                            f'request {backing_node_record.request_id}')
         slot = backing_node_record.allocateSlot(node_id)
         self.log.info("Assigned node %s to backing node %s slot %s",
-                      node_id, backing_node_record.node_id, slot)
+                      node_id, backing_node_log, slot)
         return backing_node_record, slot
 
     def _addBackingNode(self, label_name, backing_node_record):
