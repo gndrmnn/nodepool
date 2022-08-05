@@ -200,7 +200,7 @@ class NodePoolCmd(NodepoolApp):
             fields.extend(['pool', 'hostname', 'private_ipv4', 'AZ',
                            'connection_port', 'launcher',
                            'allocated_to', 'hold_job',
-                           'comment'])
+                           'comment', 'user_data', 'driver_data'])
         results = status.node_list(self.zk, node_id)
         print(status.output(results, 'pretty', fields))
 
