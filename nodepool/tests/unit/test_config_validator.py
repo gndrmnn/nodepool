@@ -76,6 +76,15 @@ class TestConfigValidation(tests.BaseTestCase):
         ret = validator.validate()
         self.assertEqual(ret, 1)
 
+    def test_missing_diskimage_provider(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'missing_diskimage_provider.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
+
     def test_schema(self):
         config = os.path.join(os.path.dirname(tests.__file__),
                               'fixtures', 'config_validate',

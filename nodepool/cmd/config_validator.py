@@ -124,10 +124,18 @@ class ConfigValidator:
 
         # Ensure in openstack provider sections, diskimages have
         # top-level labels
+        diskimages = [x['name'] for x in config.get('diskimages', [])]
         labels = [x['name'] for x in config.get('labels', [])]
         for provider in config.get('providers', []):
             if provider.get('driver', 'openstack') != 'openstack':
                 continue
+            for diskimage in provider.get('diskimages', []):
+                if diskimage['name'] not in diskimages:
+                    errors = True
+                    log.error("diskimage %s in provider %s is not defined in "
+                              "the main diskimages list" %
+                              (diskimage['name'], provider['name']))
+
             for pool in provider.get('pools', []):
                 for label in pool.get('labels', []):
                     if label['name'] not in labels:
