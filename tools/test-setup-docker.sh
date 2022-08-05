@@ -3,9 +3,12 @@
 # This runs ZooKeeper in a docker container, which is required for
 # tests.
 
-# This setup needs to be run as a user that can run docker or podman.
+# This setup needs to be run as a user that can run docker or podman, or by
+# setting $ROOTCMD to a user substitution tool like "sudo" in the calling
+# environment.
 
 set -xeu
+ROOTCMD=${ROOTCMD:-}
 
 cd $(dirname $0)
 SCRIPT_DIR="$(pwd)"
@@ -13,8 +16,8 @@ SCRIPT_DIR="$(pwd)"
 # Select docker or podman
 if command -v docker > /dev/null; then
   DOCKER=docker
-  if ! docker ps; then
-    systemctl start docker
+  if ! ${ROOTCMD} docker ps; then
+    ${ROOTCMD} systemctl start docker
   fi
 elif command -v podman > /dev/null; then
   DOCKER=podman
@@ -38,8 +41,8 @@ CA_DIR=$SCRIPT_DIR/ca
 mkdir -p $CA_DIR
 $SCRIPT_DIR/zk-ca.sh $CA_DIR nodepool-test-zookeeper
 
-${COMPOSE} down
+${ROOTCMD} ${COMPOSE} down
 
-${COMPOSE} up -d
+${ROOTCMD} ${COMPOSE} up -d
 
 echo "Finished"
