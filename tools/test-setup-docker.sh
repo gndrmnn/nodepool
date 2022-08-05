@@ -13,8 +13,8 @@ SCRIPT_DIR="$(pwd)"
 # Select docker or podman
 if command -v docker > /dev/null; then
   DOCKER=docker
-  if ! docker ps; then
-    systemctl start docker
+  if ! ${ROOTCMD} docker ps; then
+    ${ROOTCMD} systemctl start docker
   fi
 elif command -v podman > /dev/null; then
   DOCKER=podman
@@ -38,8 +38,8 @@ CA_DIR=$SCRIPT_DIR/ca
 mkdir -p $CA_DIR
 $SCRIPT_DIR/zk-ca.sh $CA_DIR nodepool-test-zookeeper
 
-${COMPOSE} down
+${ROOTCMD} ${COMPOSE} down
 
-${COMPOSE} up -d
+${ROOTCMD} ${COMPOSE} up -d
 
 echo "Finished"

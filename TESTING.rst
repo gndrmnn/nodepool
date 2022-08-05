@@ -18,15 +18,13 @@ More information on pip here: http://www.pip-installer.org/en/latest/
 
   sudo pip3 install tox
 
-A running zookeeper is required to execute tests.
+A running zookeeper is required to execute tests, but it also needs to be
+configured for TLS and a certificate authority set up to handle socket
+authentication. Because of these complexities, it's recommended to use a
+helper script to set up these dependencies::
 
-*Install zookeeper*::
-
-  sudo apt-get install zookeeperd
-
-*Start zookeeper*::
-
-  sudo service zookeeper start
+  sudo apt-get install docker-compose  # or podman-compose if preferred
+  ROOTCMD=sudo tools/test-setup-docker.sh
 
 Run The Tests
 -------------
