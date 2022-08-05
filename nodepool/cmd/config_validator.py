@@ -128,6 +128,13 @@ class ConfigValidator:
         for provider in config.get('providers', []):
             if provider.get('driver', 'openstack') != 'openstack':
                 continue
+            for diskimage in provider.get('diskimages', []):
+                if diskimage['name'] not in labels:
+                    errors = True
+                    log.error("diskimage %s in provider %s "
+                              "not in top-level labels" %
+                              (diskimage['name'], provider['name']))
+
             for pool in provider.get('pools', []):
                 for label in pool.get('labels', []):
                     if label['name'] not in labels:
