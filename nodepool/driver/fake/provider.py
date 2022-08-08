@@ -196,7 +196,8 @@ class FakeOpenStackCloud(object):
                   key_name=kw.get('key_name', None),
                   should_fail=should_fail,
                   over_quota=over_quota,
-                  event=threading.Event())
+                  event=threading.Event(),
+                  _kw=kw)
         instance_list.append(s)
         t = threading.Thread(target=self._finish,
                              name='FakeProvider create',

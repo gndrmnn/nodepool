@@ -105,6 +105,13 @@ class TestDriverAzure(tests.DBTestCase):
         self.useBuilder(configfile)
         image = self.waitForImage('azure', 'fake-image')
         self.assertEqual(image.username, 'zuul')
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/images'].
+            items[0]['tags']['provider_metadata'], 'provider')
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/images'].
+            items[0]['tags']['diskimage_metadata'], 'diskimage')
+
 
         configfile = self.setup_config(
             'azure-diskimage.yaml',

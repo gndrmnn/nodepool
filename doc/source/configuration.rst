@@ -441,6 +441,15 @@ Options
                 ``disk-image-create`` are not considered an API and
                 may change.
 
+   .. attr:: metadata
+      :type: dict
+
+      This provides default values for the provider-specific
+      `metadata` or `tags` values which can be set for diskimage
+      uploads to specific providers.  This is a dictionary of
+      arbitrary key/value pairs.  Avoid the use of `nodepool_` as a
+      key prefix since Nodepool uses this for internal values.
+
 .. attr:: providers
    :type: list
 

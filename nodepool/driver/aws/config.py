@@ -99,7 +99,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.connection_port = image.get(
             'connection-port',
             default_port_mapping.get(self.connection_type, 22))
-        self.meta = {}
+        self.meta = image.get('tags', {})
         self.architecture = image.get('architecture', 'x86_64')
 
     @property
@@ -117,6 +117,7 @@ class AwsProviderDiskImage(ConfigValue):
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
+            'tags': dict,
         }
 
 

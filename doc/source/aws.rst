@@ -383,6 +383,15 @@ Selecting the ``aws`` driver adds the following options to the
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``.
 
+      .. attr:: tags
+         :type: dict
+         :default: None
+
+         A dictionary of tags to add to uploaded images.  This will be
+         merged with any existing metadata from the global `diskimage`
+         configuration for this image.  Avoid the use of `nodepool_`
+         as a key prefix since Nodepool uses this for internal values.
+
    .. attr:: pools
       :type: list
 
