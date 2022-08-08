@@ -175,7 +175,9 @@ class ProviderPool(ConfigPool):
                                                  False))
             pl.volume_size = label.get('volume-size', 50)
             pl.instance_properties = label.get('instance-properties',
-                                               None)
+                                               {})
+            pl.dynamic_instance_properties = label.get(
+                'dynamic-instance-properties', {})
             pl.userdata = label.get('userdata', None)
             pl.networks = label.get('networks', self.networks)
             pl.host_key_checking = label.get(
@@ -319,6 +321,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'boot-from-volume': bool,
             'volume-size': int,
             'instance-properties': dict,
+            'dynamic-instance-properties': dict,
             'userdata': str,
             'networks': [str],
             'host-key-checking': bool,

@@ -27,6 +27,7 @@ from nodepool import exceptions as npe
 from nodepool.logconfig import get_annotated_logger
 from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.zk import ZooKeeperBase
+from nodepool.nodeutils import Attributes
 
 # States:
 # We are building this image (or node) but it is not ready for use.
@@ -462,6 +463,19 @@ class NodeRequest(BaseModel):
         self.event_id = d.get('event_id')
         self.created_time = d.get('created_time')
         self.tenant_name = d.get('tenant_name')
+
+    def getSafeAttributes(self):
+        '''Return a dict of attributes safe for user-visible templating'''
+        return Attributes(
+            id=self.id,
+            labels=self.node_types,
+            requestor=self.requestor,
+            requestor_data=self.requestor_data,
+            relative_priority=self.relative_priority,
+            event_id=self.event_id,
+            created_time=self.created_time,
+            tenant_name=self.tenant_name,
+        )
 
 
 class Node(BaseModel):

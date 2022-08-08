@@ -161,3 +161,10 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
                 sock = None
 
     return keys
+
+
+class Attributes(object):
+    """A class to hold attributes for string formatting."""
+
+    def __init__(self, **kw):
+        setattr(self, '__dict__', kw)
