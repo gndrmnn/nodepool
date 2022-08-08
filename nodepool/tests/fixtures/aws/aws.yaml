@@ -101,6 +101,11 @@ providers:
             tags:
               has-tags: true
               Name: ignored-name
+            dynamic-tags:
+              # Note: we double the braces to deal with unit-test
+              # pre-processing of this file.  The output and actual
+              # file syntax is single braces.
+              dynamic-tenant: "Tenant is {{request.tenant_name}}"
           - name: ubuntu1404-with-shell-type
             cloud-image: ubuntu1404-with-shell-type
             instance-type: t3.medium

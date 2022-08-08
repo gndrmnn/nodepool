@@ -271,7 +271,8 @@ class MetastaticAdapter(statemachine.Adapter):
         return self._provider._zk
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries, log):
+                              image_external_id, metadata, retries,
+                              request, log):
         return MetastaticCreateStateMachine(self, hostname, label,
                                             image_external_id, metadata,
                                             retries)

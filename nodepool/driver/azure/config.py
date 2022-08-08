@@ -169,6 +169,7 @@ class AzureLabel(ConfigValue):
 
         self.hardware_profile = label['hardware-profile']
         self.tags = label.get('tags', {})
+        self.dynamic_tags = label.get('dynamic-tags', {})
         self.user_data = self._encodeData(label.get('user-data', None))
         self.custom_data = self._encodeData(label.get('custom-data', None))
 
@@ -189,6 +190,7 @@ class AzureLabel(ConfigValue):
             'diskimage': str,
             v.Required('hardware-profile'): azure_hardware_profile,
             'tags': dict,
+            'dynamic-tags': dict,
             'user-data': str,
             'custom-data': str,
         }

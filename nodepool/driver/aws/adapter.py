@@ -77,6 +77,8 @@ QUOTA_CODES = {
     'x': 'L-7295265B',
 }
 
+CACHE_TTL = 10
+
 
 class AwsInstance(statemachine.Instance):
     def __init__(self, instance, quota):
@@ -140,7 +142,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, log):
+                 metadata, retries, request, log):
         self.log = log
         super().__init__()
         self.adapter = adapter
@@ -149,6 +151,11 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         self.image_external_id = image_external_id
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
+        for k, v in label.dynamic_tags.items():
+            try:
+                self.tags[k] = v.format(request=request.getSafeAttributes())
+            except Exception:
+                self.log.exception("Error formatting tag %s", k)
         self.tags.update(metadata)
         self.tags['Name'] = hostname
         self.hostname = hostname
@@ -269,10 +276,10 @@ class AwsAdapter(statemachine.Adapter):
         self.create_executor.shutdown()
         self._running = False
 
-    def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries, log):
-        return AwsCreateStateMachine(self, hostname, label,
-                                     image_external_id, metadata, retries, log)
+    def getCreateStateMachine(self, hostname, label, image_external_id,
+                              metadata, retries, request, log):
+        return AwsCreateStateMachine(self, hostname, label, image_external_id,
+                                     metadata, retries, request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return AwsDeleteStateMachine(self, external_id, log)
@@ -387,7 +394,7 @@ class AwsAdapter(statemachine.Adapter):
         # Import snapshot
         self.log.debug(f"Importing {image_name}")
         with self.rate_limiter:
-            import_snapshot_task = self._import_snapshot(
+            import_snapshot_task = self.ec2_client.import_snapshot(
                 DiskContainer={
                     'Format': image_format,
                     'UserBucket': {
@@ -404,7 +411,8 @@ class AwsAdapter(statemachine.Adapter):
             )
         task_id = import_snapshot_task['ImportTaskId']
 
-        paginator = self._get_paginator('describe_import_snapshot_tasks')
+        paginator = self.ec2_client.get_paginator(
+            'describe_import_snapshot_tasks')
         done = False
         while not done:
             time.sleep(self.IMAGE_UPLOAD_SLEEP)
@@ -586,7 +594,8 @@ class AwsAdapter(statemachine.Adapter):
                 self.not_our_snapshots.add(snap.id)
 
     def _listImportSnapshotTasks(self):
-        paginator = self._get_paginator('describe_import_snapshot_tasks')
+        paginator = self.ec2_client.get_paginator(
+            'describe_import_snapshot_tasks')
         with self.non_mutating_rate_limiter:
             for page in paginator.paginate():
                 for task in page['ImportSnapshotTasks']:
@@ -639,30 +648,30 @@ class AwsAdapter(statemachine.Adapter):
                 return instance
         return None
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listInstances(self):
         with self.non_mutating_rate_limiter(
                 self.log.debug, "Listed instances"):
             return list(self.ec2.instances.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         with self.non_mutating_rate_limiter:
             return list(self.ec2.volumes.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.images.filter(Owners=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.snapshots.filter(OwnerIds=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listObjects(self):
         bucket_name = self.provider.object_storage.get('bucket-name')
         if not bucket_name:
@@ -896,12 +905,3 @@ class AwsAdapter(statemachine.Adapter):
         with self.rate_limiter:
             self.log.debug(f"Deleting object {external_id}")
             self.s3.Object(bucket_name, external_id).delete()
-
-    # These methods allow the tests to patch our use of boto to
-    # compensate for missing methods in the boto mocks.
-    def _import_snapshot(self, *args, **kw):
-        return self.ec2_client.import_snapshot(*args, **kw)
-
-    def _get_paginator(self, *args, **kw):
-        return self.ec2_client.get_paginator(*args, **kw)
-    # End test methods

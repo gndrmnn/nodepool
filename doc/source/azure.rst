@@ -623,6 +623,46 @@ section of the configuration.
 
              A dictionary of tags to add to newly created VMs.
 
+          .. attr:: dynamic-tags
+             :type: dict
+             :default: None
+
+             Similar to
+             :attr:`providers.[azure].pools.labels.tags`,
+             but is interpreted as a format string with the following
+             values available:
+
+             * request: Information about the request which prompted the
+               creation of this node (note that the node may ultimately
+               be used for a different request and in that case this
+               information will not be updated).
+
+               * id: The request ID.
+
+               * labels: The list of labels in the request.
+
+               * requestor: The name of the requestor.
+
+               * requestor_data: Key/value information from the requestor.
+
+               * relative_priority: The relative priority of the request.
+
+               * event_id: The external event ID of the request.
+
+               * created_time: The creation time of the request.
+
+               * tenant_name: The name of the tenant associated with the
+                 request.
+
+             For example:
+
+             .. code-block:: yaml
+
+                labels:
+                  - name: precise
+                    dynamic-tags:
+                      request_info: "Created for request {request.id}"
+
           .. attr:: user-data
              :type: str
              :default: None

@@ -136,7 +136,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     'nodepool_pool_name': self.handler.pool.name,
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
-            hostname, label, image_external_id, metadata, retries, self.log)
+            hostname, label, image_external_id, metadata, retries,
+            self.handler.request, self.log)
 
     def updateNodeFromInstance(self, instance):
         if instance is None:

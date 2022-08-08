@@ -169,8 +169,9 @@ class AzureCreateStateMachine(statemachine.StateMachine):
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries):
+                 metadata, retries, request, log):
         super().__init__()
+        self.log = log
         self.adapter = adapter
         self.retries = retries
         self.attempts = 0
@@ -178,6 +179,11 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.image_reference = None
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
+        for k, v in label.dynamic_tags.items():
+            try:
+                self.tags[k] = v.format(request=request.getSafeAttributes())
+            except Exception:
+                self.log.exception("Error formatting tag %s", k)
         self.tags.update(metadata)
         self.hostname = hostname
         self.label = label
@@ -329,9 +335,11 @@ class AzureAdapter(statemachine.Adapter):
         self._getSKUs()
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries, log):
+                              image_external_id, metadata, retries,
+                              request, log):
         return AzureCreateStateMachine(self, hostname, label,
-                                       image_external_id, metadata, retries)
+                                       image_external_id, metadata,
+                                       retries, request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return AzureDeleteStateMachine(self, external_id)
