@@ -162,6 +162,7 @@ class AwsLabel(ConfigValue):
         self.userdata = label.get('userdata', None)
         self.iam_instance_profile = label.get('iam-instance-profile', None)
         self.tags = label.get('tags', {})
+        self.dynamic_tags = label.get('dynamic-tags', {})
 
     @staticmethod
     def getSchema():
@@ -180,6 +181,7 @@ class AwsLabel(ConfigValue):
                 v.Exclusive('arn', 'iam_instance_profile_id'): str
             },
             'tags': dict,
+            'dynamic-tags': dict,
         }
 
 

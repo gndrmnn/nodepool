@@ -86,6 +86,18 @@ class TestLauncher(tests.DBTestCase):
                 'ram': 8192,
             }
             self.assertEqual(node.resources, resources)
+
+            # We check the "cloud" side attributes are set from nodepool side
+            provider = pool.getProviderManager('fake-provider')
+            cloud_node = provider.getServer(node.hostname)
+            self.assertEqual(
+                cloud_node.metadata['nodepool_provider_name'],
+                'fake-provider')
+            self.assertEqual(cloud_node.metadata['nodepool_pool_name'], 'main')
+            self.assertEqual(cloud_node.metadata['prop1'], 'foo')
+            self.assertEqual(cloud_node.metadata['dynamic-tenant'],
+                             'Tenant is tenant-1')
+
             self.zk.lockNode(node, blocking=False)
             self.zk.unlockNode(node)
 
@@ -632,6 +644,9 @@ class TestLauncher(tests.DBTestCase):
             cloud_node.metadata['nodepool_provider_name'],
             'fake-provider')
         self.assertEqual(cloud_node.metadata['nodepool_pool_name'], 'main')
+        self.assertEqual(cloud_node.metadata['prop1'], 'foo')
+        self.assertEqual(cloud_node.metadata['dynamic-tenant'],
+                         'Tenant is None')
 
     def test_node_network_cli(self):
         """Same as test_node but using connection-type network_cli"""

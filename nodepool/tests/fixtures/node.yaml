@@ -46,6 +46,13 @@ providers:
             diskimage: fake-image
             min-ram: 8192
             flavor-name: 'Fake'
+            instance-properties:
+              prop1: foo
+            dynamic-instance-properties:
+              # Note: we double the braces to deal with unit-test
+              # pre-processing of this file.  The output and actual
+              # file syntax is single braces.
+              dynamic-tenant: "Tenant is {{request.tenant_name}}"
 
 diskimages:
   - name: fake-image

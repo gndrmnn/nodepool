@@ -28,7 +28,8 @@ from nodepool.driver import NodeRequestHandler
 
 
 class OpenStackNodeLauncher(NodeLauncher):
-    def __init__(self, handler, node, provider_config, provider_label):
+    def __init__(self, handler, node, provider_config, provider_label,
+                 request):
         '''
         Initialize the launcher.
 
@@ -38,6 +39,8 @@ class OpenStackNodeLauncher(NodeLauncher):
             describing the provider launching this node.
         :param ProviderLabel provider_label: A ProviderLabel object
             describing the label to use for the node.
+        :param NodeRequest request: The NodeRequest that prompted the
+            launch.
         '''
         super().__init__(handler, node, provider_config)
 
@@ -46,6 +49,7 @@ class OpenStackNodeLauncher(NodeLauncher):
 
         self.label = provider_label
         self.pool = provider_label.pool
+        self.request = request
 
     def _logConsole(self, server_id, hostname):
         if not self.label.console_log:
@@ -123,6 +127,16 @@ class OpenStackNodeLauncher(NodeLauncher):
         # because that isn't available in ZooKeeper until after the server is
         # active, which could cause a race in leak detection.
 
+        props = self.label.instance_properties.copy()
+        for k, v in self.label.dynamic_instance_properties.items():
+            try:
+                props[k] = v.format(request=self.request.getSafeAttributes())
+            except Exception:
+                self.log.exception(
+                    "Error formatting dynamic instance property %s", k)
+        if not props:
+            props = None
+
         try:
             server = self.handler.manager.createServer(
                 hostname,
@@ -140,7 +154,7 @@ class OpenStackNodeLauncher(NodeLauncher):
                 security_groups=self.pool.security_groups,
                 boot_from_volume=self.label.boot_from_volume,
                 volume_size=self.label.volume_size,
-                instance_properties=self.label.instance_properties,
+                instance_properties=props,
                 userdata=self.label.userdata)
         except openstack.cloud.exc.OpenStackCloudCreateException as e:
             if e.resource_id:
@@ -457,6 +471,7 @@ class OpenStackNodeRequestHandler(NodeRequestHandler):
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]
-        thd = OpenStackNodeLauncher(self, node, self.provider, label)
+        thd = OpenStackNodeLauncher(self, node, self.provider, label,
+                                    self.request)
         thd.start()
         self._threads.append(thd)
