@@ -99,7 +99,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.connection_port = image.get(
             'connection-port',
             default_port_mapping.get(self.connection_type, 22))
-        self.meta = {}
+        self.meta = image.get('tags', {})
         self.architecture = image.get('architecture', 'x86_64')
         self.volume_size = image.get('volume-size', None)
         self.volume_type = image.get('volume-type', 'gp2')
@@ -121,6 +121,7 @@ class AwsProviderDiskImage(ConfigValue):
             'shell-type': str,
             'volume-size': int,
             'volume-type': str,
+            'tags': dict,
         }
 
 

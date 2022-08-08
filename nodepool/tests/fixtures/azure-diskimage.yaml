@@ -32,6 +32,8 @@ providers:
     subnet-id: /subscriptions/c35cf7df-ed75-4c85-be00-535409a85120/resourceGroups/nodepool/providers/Microsoft.Network/virtualNetworks/NodePool/subnets/default
     diskimages:
       - name: fake-image
+        tags:
+          provider_metadata: provider
     pools:
       - name: main
         max-servers: 10
@@ -60,3 +62,5 @@ diskimages:
       DIB_IMAGE_CACHE: /opt/dib_cache
       DIB_CLOUD_IMAGES: http://download.fedoraproject.org/pub/fedora/linux/releases/test/21-Beta/Cloud/Images/x86_64/
       BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
+    metadata:
+      diskimage_metadata: diskimage

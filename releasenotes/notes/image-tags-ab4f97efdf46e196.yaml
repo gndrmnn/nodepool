@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    The AWS and Azure drivers now support adding tags to images via
+    the :attr:`providers.[aws].diskimages.tags`, and
+    :attr:`providers.[azure].diskimages.tags` attributes.  The
+    OpenStack driver already supported similar behavior with its
+    `meta` attribute.
+
+    The :attr:`diskimages.metadata` attribute has been added and will
+    supply default values to the provider image tag attributes
+    mentioned above.
