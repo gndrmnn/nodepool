@@ -657,6 +657,46 @@ Selecting the OpenStack driver adds the following options to the
            ``meta-data`` on the active server (e.g. within
            ``config-drive:openstack/latest/meta_data.json``)
 
+        .. attr:: dynamic-instance-properties
+           :type: dict
+           :default: None
+
+           Similar to
+           :attr:`providers.[openstack].pools.labels.instance-properties`,
+           but is interpreted as a format string with the following
+           values available:
+
+           * request: Information about the request which prompted the
+             creation of this node (note that the node may ultimately
+             be used for a different request and in that case this
+             information will not be updated).
+
+             * id: The request ID.
+
+             * labels: The list of labels in the request.
+
+             * requestor: The name of the requestor.
+
+             * requestor_data: Key/value information from the requestor.
+
+             * relative_priority: The relative priority of the request.
+
+             * event_id: The external event ID of the request.
+
+             * created_time: The creation time of the request.
+
+             * tenant_name: The name of the tenant associated with the
+               request.
+
+           For example:
+
+           .. code-block:: yaml
+
+              labels:
+                - name: precise
+                  dynamic-instance-properties:
+                    request_info: "Created for request {request.id}"
+
         .. attr:: userdata
            :type: str
            :default: None
