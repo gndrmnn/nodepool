@@ -535,6 +535,13 @@ class TestDriverAws(tests.DBTestCase):
         image = self.waitForImage('ec2-us-west-2', 'fake-image')
         self.assertEqual(image.username, 'zuul')
 
+        ec2_image = self.ec2.Image(image.external_id)
+        self.assertEqual(ec2_image.state, 'available')
+        self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
+                        in ec2_image.tags)
+        self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
+                        in ec2_image.tags)
+
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
         self.patchProvider(pool)

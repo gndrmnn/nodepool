@@ -49,6 +49,7 @@ class ConfigValidator:
             'username': str,
             'python-path': str,
             'build-timeout': int,
+            'metadata': dict,
         }
 
         webapp = {

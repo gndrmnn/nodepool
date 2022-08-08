@@ -302,6 +302,7 @@ class DiskImage(ConfigValue):
         self.rebuild_age = self.REBUILD_AGE
         self.release = ''
         self.username = 'zuul'
+        self.meta = {}
 
     def setFromConfig(self, config):
         '''Merge values from configuration file
@@ -350,6 +351,7 @@ class DiskImage(ConfigValue):
         username = config.get('username', None)
         if username:
             self.username = username
+        self.meta = config.get('metadata', {})
 
     def __eq__(self, other):
         if isinstance(other, DiskImage):
@@ -364,7 +366,8 @@ class DiskImage(ConfigValue):
                     other.shell_type == self.shell_type and
                     other.rebuild_age == self.rebuild_age and
                     other.release == self.release and
-                    other.username == self.username)
+                    other.username == self.username and
+                    other.meta == self.meta)
         return False
 
     def __repr__(self):
