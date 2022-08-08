@@ -76,6 +76,8 @@ QUOTA_CODES = {
     'x': 'L-7295265B',
 }
 
+CACHE_TTL = 10
+
 
 class AwsInstance(statemachine.Instance):
     def __init__(self, instance, quota):
@@ -139,7 +141,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, log):
+                 metadata, retries, request, log):
         self.log = log
         super().__init__()
         self.adapter = adapter
@@ -148,6 +150,11 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         self.image_external_id = image_external_id
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
+        for k, v in label.dynamic_tags.items():
+            try:
+                self.tags[k] = v.format(request=request.getSafeAttributes())
+            except Exception:
+                self.log.exception("Error formatting tag %s", k)
         self.tags.update(metadata)
         self.tags['Name'] = hostname
         self.hostname = hostname
@@ -268,10 +275,10 @@ class AwsAdapter(statemachine.Adapter):
         self.create_executor.shutdown()
         self._running = False
 
-    def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries, log):
-        return AwsCreateStateMachine(self, hostname, label,
-                                     image_external_id, metadata, retries, log)
+    def getCreateStateMachine(self, hostname, label, image_external_id,
+                              metadata, retries, request, log):
+        return AwsCreateStateMachine(self, hostname, label, image_external_id,
+                                     metadata, retries, request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return AwsDeleteStateMachine(self, external_id, log)
@@ -549,30 +556,30 @@ class AwsAdapter(statemachine.Adapter):
                 return instance
         return None
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listInstances(self):
         with self.non_mutating_rate_limiter(
                 self.log.debug, "Listed instances"):
             return list(self.ec2.instances.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         with self.non_mutating_rate_limiter:
             return list(self.ec2.volumes.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.images.filter(Owners=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.snapshots.filter(OwnerIds=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listObjects(self):
         bucket_name = self.provider.object_storage.get('bucket-name')
         if not bucket_name:
