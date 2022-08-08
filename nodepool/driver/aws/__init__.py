@@ -16,13 +16,15 @@
 # limitations under the License.
 
 from nodepool.driver.statemachine import StateMachineDriver
-from nodepool.driver.aws.config import AwsProviderConfig
-from nodepool.driver.aws.adapter import AwsAdapter
+# Import the modules rather than the class so that the unit tests can
+# override the classes to add some test-specific methods/data.
+import nodepool.driver.aws.config as driver_config
+import nodepool.driver.aws.adapter as driver_adapter
 
 
 class AwsDriver(StateMachineDriver):
     def getProviderConfig(self, provider):
-        return AwsProviderConfig(self, provider)
+        return driver_config.AwsProviderConfig(self, provider)
 
     def getAdapter(self, provider_config):
-        return AwsAdapter(provider_config)
+        return driver_adapter.AwsAdapter(provider_config)

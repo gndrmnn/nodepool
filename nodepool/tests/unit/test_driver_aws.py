@@ -30,6 +30,7 @@ from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 import nodepool.driver.statemachine
 from nodepool.driver.statemachine import StateMachineProvider
+import nodepool.driver.aws.adapter
 from nodepool.driver.aws.adapter import AwsInstance, AwsAdapter
 
 from nodepool.tests.unit.fake_aws import FakeAws
@@ -43,6 +44,44 @@ class Dummy:
     pass
 
 
+class FakeAwsAdapter(AwsAdapter):
+    # Patch/override adapter methods to aid unit tests
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+
+        # Note: boto3 doesn't handle ipv6 addresses correctly
+        # when in fake mode so we need to intercept the
+        # create_instances call and validate the args we supply.
+        def _fake_create_instances(*args, **kwargs):
+            self.__testcase.create_instance_calls.append(kwargs)
+            return self.ec2.create_instances_orig(*args, **kwargs)
+
+        self.ec2.create_instances_orig = self.ec2.create_instances
+        self.ec2.create_instances = _fake_create_instances
+
+        # moto does not mock service-quotas, so we do it ourselves:
+        def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
+            # This is a simple fake that only returns the number
+            # of cores.
+            if self.__quotas is None:
+                return {'Quota': {'Value': 100}}
+            else:
+                return {'Quota': {'Value': self.__quotas.get(QuotaCode)}}
+        self.aws_quotas.get_service_quota = _fake_get_service_quota
+
+
+def aws_quotas(quotas):
+    """Specify a set of AWS quota values for use by a test method.
+
+    :arg dict quotas: The quota dictionary.
+    """
+
+    def decorator(test):
+        test.__aws_quotas__ = quotas
+        return test
+    return decorator
+
+
 class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
     mock_ec2 = mock_ec2()
@@ -54,6 +93,7 @@ class TestDriverAws(tests.DBTestCase):
         StateMachineProvider.MINIMUM_SLEEP = 0.1
         StateMachineProvider.MAXIMUM_SLEEP = 1
         AwsAdapter.IMAGE_UPLOAD_SLEEP = 1
+
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -103,9 +143,13 @@ class TestDriverAws(tests.DBTestCase):
             Description='Zuul Nodes')
         self.security_group_id = self.security_group['GroupId']
         self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
-        self.patch(AwsAdapter, '_import_snapshot',
-                   self.fake_aws.import_snapshot)
-        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
+        test_name = self.id().split('.')[-1]
+        test = getattr(self, test_name)
+        if hasattr(test, '__aws_quotas__'):
+            quotas = getattr(test, '__aws_quotas__')
+        else:
+            quotas = None
+        self.patchAdapter(quotas=quotas)
 
     def tearDown(self):
         self.mock_ec2.stop()
@@ -117,47 +161,18 @@ class TestDriverAws(tests.DBTestCase):
         kw['security_group_id'] = self.security_group_id
         return super().setup_config(*args, **kw)
 
-    def patchProvider(self, nodepool, provider_name='ec2-us-west-2',
-                      quotas=None):
-        for _ in iterate_timeout(
-                30, Exception, 'wait for provider'):
-            try:
-                provider_manager = nodepool.getProviderManager(provider_name)
-                if provider_manager.adapter.ec2 is not None:
-                    break
-            except Exception:
-                pass
-
-        # Note: boto3 doesn't handle ipv6 addresses correctly
-        # when in fake mode so we need to intercept the
-        # create_instances call and validate the args we supply.
-        def _fake_create_instances(*args, **kwargs):
-            self.create_instance_calls.append(kwargs)
-            return provider_manager.adapter.ec2.create_instances_orig(
-                *args, **kwargs)
-
-        provider_manager.adapter.ec2.create_instances_orig =\
-            provider_manager.adapter.ec2.create_instances
-        provider_manager.adapter.ec2.create_instances =\
-            _fake_create_instances
-
-        # moto does not mock service-quotas, so we do it ourselves:
-        def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
-            # This is a simple fake that only returns the number
-            # of cores.
-            if quotas is None:
-                return {'Quota': {'Value': 100}}
-            else:
-                return {'Quota': {'Value': quotas.get(QuotaCode)}}
-        provider_manager.adapter.aws_quotas.get_service_quota =\
-            _fake_get_service_quota
+    def patchAdapter(self, quotas=None):
+        self.patch(nodepool.driver.aws.adapter, 'AwsAdapter', FakeAwsAdapter)
+        self.patch(nodepool.driver.aws.adapter.AwsAdapter,
+                   '_FakeAwsAdapter__testcase', self)
+        self.patch(nodepool.driver.aws.adapter.AwsAdapter,
+                   '_FakeAwsAdapter__quotas', quotas)
 
     def requestNode(self, config_path, label):
         # A helper method to perform a single node request
         configfile = self.setup_config(config_path)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -190,7 +205,6 @@ class TestDriverAws(tests.DBTestCase):
         configfile = self.setup_config('aws/aws-multiple.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool)
 
         reqs = []
         for x in range(4):
@@ -211,15 +225,15 @@ class TestDriverAws(tests.DBTestCase):
         for node in nodes:
             self.waitForNodeDeletion(node)
 
+    @aws_quotas({
+        'L-1216C47A': 1,
+        'L-43DA4232': 224,
+    })
     def test_aws_multi_quota(self):
         # Test multiple instance type quotas (standard and high-mem)
         configfile = self.setup_config('aws/aws-quota.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool, quotas={
-            'L-1216C47A': 1,
-            'L-43DA4232': 224,
-        })
 
         # Create a high-memory node request.
         req1 = zk.NodeRequest()
@@ -265,16 +279,16 @@ class TestDriverAws(tests.DBTestCase):
         req3 = self.waitForNodeRequest(req3)
         self.assertSuccess(req3)
 
+    @aws_quotas({
+        'L-1216C47A': 1000,
+        'L-43DA4232': 1000,
+    })
     def test_aws_multi_pool_limits(self):
         # Test multiple instance type quotas (standard and high-mem)
         # with pool resource limits
         configfile = self.setup_config('aws/aws-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool, quotas={
-            'L-1216C47A': 1000,
-            'L-43DA4232': 1000,
-        })
 
         # Create a standard node request.
         req1 = zk.NodeRequest()
@@ -310,16 +324,16 @@ class TestDriverAws(tests.DBTestCase):
         req2 = self.waitForNodeRequest(req2)
         self.assertSuccess(req2)
 
+    @aws_quotas({
+        'L-1216C47A': 1000,
+        'L-43DA4232': 1000,
+    })
     def test_aws_multi_tenant_limits(self):
         # Test multiple instance type quotas (standard and high-mem)
         # with tenant resource limits
         configfile = self.setup_config('aws/aws-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool, quotas={
-            'L-1216C47A': 1000,
-            'L-43DA4232': 1000,
-        })
 
         # Create a high node request.
         req1 = zk.NodeRequest()
@@ -501,6 +515,26 @@ class TestDriverAws(tests.DBTestCase):
         self.assertIn({"Key": "has-tags", "Value": "true"}, tag_list)
         self.assertIn({"Key": "Name", "Value": "np0000000000"}, tag_list)
         self.assertNotIn({"Key": "Name", "Value": "ignored-name"}, tag_list)
+        self.assertIn(
+            {"Key": "dynamic-tenant", "Value": "Tenant is tenant-1"}, tag_list)
+
+    def test_aws_min_ready(self):
+        # Test dynamic tag formatting without a real node request
+        configfile = self.setup_config('aws/aws-min-ready.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        node = self.waitForNodes('ubuntu1404-with-tags')[0]
+
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        instance = self.ec2.Instance(node.external_id)
+        tag_list = instance.tags
+        self.assertIn({"Key": "has-tags", "Value": "true"}, tag_list)
+        self.assertIn({"Key": "Name", "Value": "np0000000000"}, tag_list)
+        self.assertNotIn({"Key": "Name", "Value": "ignored-name"}, tag_list)
+        self.assertIn(
+            {"Key": "dynamic-tenant", "Value": "Tenant is None"}, tag_list)
 
     def test_aws_shell_type(self):
         req = self.requestNode('aws/shell-type.yaml',
@@ -545,7 +579,6 @@ class TestDriverAws(tests.DBTestCase):
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -682,7 +715,6 @@ class TestDriverAws(tests.DBTestCase):
         configfile = self.setup_config('aws/diskimage.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        self.patchProvider(pool)
 
         for _ in iterate_timeout(30, Exception, 'instance deletion'):
             instance = self.ec2.Instance(instance_id)
