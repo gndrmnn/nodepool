@@ -225,7 +225,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
                 if label.cpu:
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
-                    rbody['memory'] = '%dMi' % int(label.memory)
+                    rbody['memory'] = '%dM' % int(label.memory)
                 container_body['resources'][rtype] = rbody
 
         spec_body = {
