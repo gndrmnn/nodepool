@@ -159,7 +159,9 @@ class AwsLabel(ConfigValue):
             self.diskimage = None
 
         self.ebs_optimized = bool(label.get('ebs-optimized', False))
-        self.instance_type = label['instance-type']
+        self.instance_types = label['instance-type']
+        if not isinstance(self.instance_types, list):
+            self.instance_types = [self.instance_types]
         self.key_name = label.get('key-name')
         self.volume_type = label.get('volume-type')
         self.volume_size = label.get('volume-size')
@@ -174,7 +176,7 @@ class AwsLabel(ConfigValue):
             v.Required('name'): str,
             v.Exclusive('cloud-image', 'image'): str,
             v.Exclusive('diskimage', 'image'): str,
-            v.Required('instance-type'): str,
+            v.Required('instance-type'): v.Any(str, [str]),
             v.Required('key-name'): str,
             'ebs-optimized': bool,
             'volume-type': str,

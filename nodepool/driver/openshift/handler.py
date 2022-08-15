@@ -44,6 +44,8 @@ class OpenshiftLauncher(NodeLauncher):
             self.node.interface_ip = self.label.name
         else:
             self.node.connection_type = "project"
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], self.handler.pool).get_resources()
 
         self.node.state = zk.READY
         self.node.python_path = self.label.python_path
