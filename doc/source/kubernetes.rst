@@ -216,7 +216,7 @@ Selecting the kubernetes driver adds the following options to the
 
             Only used by the
             :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-            specifies the amount of memory in MB to request for the pod.
+            specifies the amount of memory in MiB to request for the pod.
 
          .. attr:: env
             :type: list
