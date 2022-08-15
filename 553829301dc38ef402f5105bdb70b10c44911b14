@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "553829301dc38ef402f5105bdb70b10c44911b14",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f19b1c25_e0603e4f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-08-15T12:58:53Z",
+      "side": 1,
+      "message": "Is it possible to write a test for the resource cleanup?",
+      "revId": "553829301dc38ef402f5105bdb70b10c44911b14",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
