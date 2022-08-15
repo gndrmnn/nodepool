@@ -162,6 +162,15 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.az = instance.az
         node.driver_data = instance.driver_data
 
+        # In case we ended up using different resources (ie, via a
+        # different node type) than originally expected.
+        try:
+            qi = instance.getQuotaInformation()
+            if qi:
+                self.node.resources = qi.get_resources()
+        except NotImplementedError:
+            pass
+
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
         for attr in ('username', 'python_path', 'shell_type',
