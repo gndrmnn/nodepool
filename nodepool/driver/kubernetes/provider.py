@@ -276,6 +276,8 @@ class KubernetesProvider(Provider, QuotaSupport):
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
                     rbody['memory'] = '%dMi' % int(label.memory)
+                if label.storage:
+                    rbody['ephemeral-storage'] = '%dM' % int(label.storage)
                 container_body['resources'][rtype] = rbody
 
         spec_body = {

@@ -135,6 +135,15 @@ Selecting the kubernetes driver adds the following options to the
          :attr:`providers.[kubernetes].pools.labels.memory` for all labels of
          this pool that do not set their own value.
 
+      .. attr:: default-label-storage
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies a default value in MB for
+         :attr:`providers.[kubernetes].pools.labels.storage` for all labels of
+         this pool that do not set their own value.
+
       .. attr:: labels
          :type: list
 
@@ -217,6 +226,13 @@ Selecting the kubernetes driver adds the following options to the
             Only used by the
             :value:`providers.[kubernetes].pools.labels.type.pod` label type;
             specifies the amount of memory in MB to request for the pod.
+
+         .. attr:: storage
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            specifies the amount of ephemeral-storage in MB to request for the pod.
 
          .. attr:: env
             :type: list
