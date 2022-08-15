@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The AWS driver now suppports specifying a list of instance types
+    for a label.  This is intended to allow operators to configure
+    fallback instance types when AWS is out of capacity for
+    specialized instance types.  See
+    :attr:`providers.[aws].pools.labels.instance-type` for details.
