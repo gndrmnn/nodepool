@@ -180,10 +180,12 @@ class StaticNodeProvider(Provider, QuotaSupport):
             nodeutils.set_node_ip(node)
             node.host_keys = host_keys
             node.attributes = pool.node_attributes
+            node.resources = self.quotaNeededByLabel(
+                node.type[0], pool).get_resources()
             self.zk.storeNode(node)
             self.log.debug("Registered static node %s", node_tuple)
 
-    def updateNodeFromConfig(self, static_node):
+    def updateNodeFromConfig(self, static_node, pool):
         '''
         Update a static node in ZooKeeper according to config.
 
@@ -224,6 +226,8 @@ class StaticNodeProvider(Provider, QuotaSupport):
                 node.python_path = static_node["python-path"]
                 nodeutils.set_node_ip(node)
                 node.host_keys = host_keys
+                node.resources = self.quotaNeededByLabel(
+                    node.type[0], pool).get_resources()
             except exceptions.ZKLockException:
                 self.log.warning("Unable to lock node %s for update", node.id)
                 continue
@@ -323,7 +327,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
                         continue
 
                     try:
-                        self.updateNodeFromConfig(node)
+                        self.updateNodeFromConfig(node, pool)
                     except StaticNodeError as exc:
                         self.log.warning(
                             "Couldn't update static node: %s", exc)

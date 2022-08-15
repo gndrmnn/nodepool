@@ -155,6 +155,9 @@ class SimpleTaskManagerLauncher(NodeLauncher):
         self.node.username = self.label.cloud_image.username
         self.node.python_path = self.label.cloud_image.python_path
         self.node.shell_type = self.label.cloud_image.shell_type
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], self.pool).get_resources()
+
         self.zk.storeNode(self.node)
         self.log.info("Instance %s is ready", hostname)
 

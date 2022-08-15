@@ -560,10 +560,25 @@ Selecting the ``aws`` driver adds the following options to the
               has been enabled for the instance.
 
            .. attr:: instance-type
-              :type: str
+              :type: str or list of str
               :required:
 
-              Name of the flavor to use.
+              Name of the EC2 instance type to use.  This is typically
+              a string to indicate a single instance type, but it may
+              be supplied as a list.  In this case, if AWS lacks
+              capacity for the first instance type, Nodepool will
+              retry instance creation with the second (and then
+              subsequent) instance types.  This may be useful in the
+              case that a specialized instance type is preferable but
+              less specialized types are also acceptable.
+
+              Note that Nodepool only performs its quota calculations
+              before starting the request process and only using the
+              first instance type.  It is recommended to list instance
+              types with higher available quota values after types
+              with less availability in order to minimize the chances
+              of encountering a quota error when attempting a launch
+              with a fallback instance type.
 
            .. attr:: iam-instance-profile
               :type: dict

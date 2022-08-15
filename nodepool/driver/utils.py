@@ -377,8 +377,11 @@ class QuotaSupport:
                         # may have changed under it.  It should settle out
                         # eventually when it's deleted.
                         continue
-                    node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
+                    # We use the actual resources consumed by the node
+                    # since drivers may perform substitutions when
+                    # launching a node which don't match the label
+                    # requirements.
+                    node_resources = QuotaInformation(**node.resources)
                     used_quota.add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
