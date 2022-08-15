@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ae838af_a223ff8e",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-08-15T13:04:27Z",
+      "side": 1,
+      "message": "I think we should also mention here that the unit is MB.",
+      "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acfedc99_9673c198",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-08-15T13:04:27Z",
+      "side": 1,
+      "message": "I think we should be consistent here and also use MiB as we do for the memory limits.",
+      "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
