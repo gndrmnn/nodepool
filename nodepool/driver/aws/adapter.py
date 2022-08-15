@@ -164,17 +164,44 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         self.public_ipv6 = None
         self.nic = None
         self.instance = None
+        self.instance_types_to_try = self.label.instance_types.copy()
+        self.instance_type = self.instance_types_to_try.pop(0)
 
     def advance(self):
         if self.state == self.START:
             self.external_id = self.hostname
             self.create_future = self.adapter._submitCreateInstance(
                 self.label, self.image_external_id,
-                self.tags, self.hostname, self.log)
+                self.tags, self.hostname, self.instance_type,
+                self.log)
             self.state = self.INSTANCE_CREATING_SUBMIT
 
         if self.state == self.INSTANCE_CREATING_SUBMIT:
-            instance = self.adapter._completeCreateInstance(self.create_future)
+            try:
+                instance = self.adapter._completeCreateInstance(
+                    self.create_future)
+            except botocore.exceptions.ClientError as error:
+                if (error.response['Error']['Code'] ==
+                    'InsufficientInstanceCapacity'):
+                    if self.instance_types_to_try:
+                        new_instance_type = self.instance_types_to_try.pop(0)
+                        self.log.warning(
+                            "Insufficient capacity for instance type "
+                            f"{self.instance_type} will retry with "
+                            f"{new_instance_type}. {error}")
+                        self.instance_type = new_instance_type
+                        self.state = self.START
+                        return
+                    self.log.warning(
+                        "Insufficient capacity for instance type "
+                        f"{self.instance_type} and no other "
+                        f"instance types to try. {error}")
+                    if self.attempts >= self.retries:
+                        raise Exception("Too many retries")
+                    self.attempts += 1
+                    self.state = self.INSTANCE_RETRY
+                    return
+                raise
             if instance is None:
                 return
             self.instance = instance
@@ -200,6 +227,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         if self.state == self.INSTANCE_RETRY:
             self.instance = self.adapter._refreshDelete(self.instance)
             if self.instance is None:
+                self.instance_types_to_try = self.label.instance_types.copy()
                 self.state = self.START
                 return
 
@@ -355,7 +383,8 @@ class AwsAdapter(statemachine.Adapter):
         instance_types = set()
         for pool in self.provider.pools.values():
             for label in pool.labels.values():
-                instance_types.add(label.instance_type)
+                for instance_type in label.instance_types:
+                    instance_types.add(instance_type)
         args = dict(default=math.inf)
         for instance_type in instance_types:
             code = self._getQuotaCodeForInstanceType(instance_type)
@@ -375,7 +404,11 @@ class AwsAdapter(statemachine.Adapter):
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
-        return self._getQuotaForInstanceType(label.instance_type)
+        # We assume the first instance type is what we'll use, so just
+        # check that.  If we end up using another one we may end up
+        # hitting a quota error, but that's okay since we're already
+        # trying to recover from an error.
+        return self._getQuotaForInstanceType(label.instance_types[0])
 
     def uploadImage(self, provider_image, image_name, filename,
                     image_format, metadata, md5, sha256):
@@ -724,11 +757,11 @@ class AwsAdapter(statemachine.Adapter):
             return self.ec2.Image(image_id)
 
     def _submitCreateInstance(self, label, image_external_id,
-                              tags, hostname, log):
+                              tags, hostname, instance_type, log):
         return self.create_executor.submit(
             self._createInstance,
             label, image_external_id,
-            tags, hostname, log)
+            tags, hostname, instance_type, log)
 
     def _completeCreateInstance(self, future):
         if not future.done():
@@ -736,7 +769,7 @@ class AwsAdapter(statemachine.Adapter):
         return future.result()
 
     def _createInstance(self, label, image_external_id,
-                        tags, hostname, log):
+                        tags, hostname, instance_type, log):
         if image_external_id:
             image_id = image_external_id
         else:
@@ -748,7 +781,7 @@ class AwsAdapter(statemachine.Adapter):
             MaxCount=1,
             KeyName=label.key_name,
             EbsOptimized=label.ebs_optimized,
-            InstanceType=label.instance_type,
+            InstanceType=instance_type,
             NetworkInterfaces=[{
                 'AssociatePublicIpAddress': label.pool.public_ipv4,
                 'DeviceIndex': 0}],

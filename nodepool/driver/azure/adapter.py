@@ -52,7 +52,7 @@ def generate_password():
         if ((set(string.ascii_lowercase) & set(chars)) and
             (set(string.ascii_uppercase) & set(chars)) and
             (set(string.digits) & set(chars))):
-            return(''.join(chars))
+            return ''.join(chars)
 
 
 class AzureInstance(statemachine.Instance):

@@ -54,6 +54,8 @@ class FakeAwsAdapter(AwsAdapter):
         # create_instances call and validate the args we supply.
         def _fake_create_instances(*args, **kwargs):
             self.__testcase.create_instance_calls.append(kwargs)
+            if self.__create_instances_hook:
+                self.__create_instances_hook(*args, **kwargs)
             return self.ec2.create_instances_orig(*args, **kwargs)
 
         self.ec2.create_instances_orig = self.ec2.create_instances
@@ -84,6 +86,39 @@ def aws_quotas(quotas):
         test.__aws_quotas__ = quotas
         return test
     return decorator
+
+
+def aws_create_instances_hook(hook):
+    """Specify a method to be called before create instances."""
+
+    def decorator(test):
+        test.__aws_create_instances_hook__ = hook
+        return test
+    return decorator
+
+
+def only_create_medium(*args, **kw):
+    instance_type = kw['InstanceType']
+    if instance_type != 't3.medium':
+        response = {
+            'ResponseMetadata': {
+                'MaxAttemptsReached': True,
+                'RetryAttempts': 4,
+            },
+            'Error': {
+                'Code': 'InsufficientInstanceCapacity',
+                'Message': ('We currently do not have sufficient '
+                            f'{instance_type} capacity in the Availability '
+                            'Zone you requested (us-west-2). Our '
+                            'system will be working on provisioning '
+                            'additional capacity. You can currently '
+                            'get m5a.4xlarge capacity by not specifying '
+                            'an Availability Zone in your request or '
+                            'choosing us-west-1.'),
+            }
+        }
+        operation = 'RunInstances'
+        raise botocore.exceptions.ClientError(response, operation)
 
 
 class TestDriverAws(tests.DBTestCase):
@@ -149,11 +184,9 @@ class TestDriverAws(tests.DBTestCase):
         self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
         test_name = self.id().split('.')[-1]
         test = getattr(self, test_name)
-        if hasattr(test, '__aws_quotas__'):
-            quotas = getattr(test, '__aws_quotas__')
-        else:
-            quotas = None
-        self.patchAdapter(quotas=quotas)
+        quotas = getattr(test, '__aws_quotas__', None)
+        hook = getattr(test, '__aws_create_instances_hook__', None)
+        self.patchAdapter(quotas=quotas, hook=hook)
 
     def tearDown(self):
         self.mock_ec2.stop()
@@ -165,12 +198,14 @@ class TestDriverAws(tests.DBTestCase):
         kw['security_group_id'] = self.security_group_id
         return super().setup_config(*args, **kw)
 
-    def patchAdapter(self, quotas=None):
+    def patchAdapter(self, quotas=None, hook=None):
         self.patch(nodepool.driver.aws.adapter, 'AwsAdapter', FakeAwsAdapter)
         self.patch(nodepool.driver.aws.adapter.AwsAdapter,
                    '_FakeAwsAdapter__testcase', self)
         self.patch(nodepool.driver.aws.adapter.AwsAdapter,
                    '_FakeAwsAdapter__quotas', quotas)
+        self.patch(nodepool.driver.aws.adapter.AwsAdapter,
+                   '_FakeAwsAdapter__create_instances_hook', hook)
 
     def requestNode(self, config_path, label):
         # A helper method to perform a single node request
@@ -467,6 +502,36 @@ class TestDriverAws(tests.DBTestCase):
         self.assertIsNotNone(node.interface_ip)
         self.assertEqual(node.private_ipv4, node.interface_ip)
         self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
+
+    @aws_create_instances_hook(only_create_medium)
+    def test_aws_instance_types_fallback(self):
+        req = self.requestNode('aws/aws-instance-types.yaml', 'ubuntu1404')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        self.assertIsNotNone(node.public_ipv4)
+        self.assertIsNotNone(node.private_ipv4)
+        self.assertIsNone(node.public_ipv6)
+        self.assertIsNotNone(node.interface_ip)
+        self.assertEqual(node.public_ipv4, node.interface_ip)
+        self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
+        self.assertFalse(node.public_ipv4.startswith('203.0.113.'))
+        self.assertEqual(node.python_path, 'auto')
+
+        instance = self.ec2.Instance(node.external_id)
+        response = instance.describe_attribute(Attribute='ebsOptimized')
+        self.assertFalse(response['EbsOptimized']['Value'])
+        self.assertEqual(instance.instance_type, 't3.medium')
+
+        node.state = zk.USED
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
+    @aws_create_instances_hook(only_create_medium)
+    def test_aws_instance_type_at_capacity(self):
+        req = self.requestNode('aws/aws-instance-capacity.yaml', 'ubuntu1404')
+        self.assertEqual(req.state, zk.FAILED)
 
     def test_aws_ipv6(self):
         req = self.requestNode('aws/ipv6.yaml', 'ubuntu1404-ipv6')
