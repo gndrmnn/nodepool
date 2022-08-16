@@ -17,7 +17,7 @@ import logging
 from kazoo import exceptions as kze
 
 from nodepool.zk import zookeeper as zk
-from nodepool.driver.simple import SimpleTaskManagerHandler
+from nodepool.driver import NodeRequestHandler
 from nodepool.driver.utils import NodeLauncher
 
 
@@ -80,7 +80,126 @@ class K8SLauncher(NodeLauncher):
                 attempts += 1
 
 
-class KubernetesNodeRequestHandler(SimpleTaskManagerHandler):
+class KubernetesNodeRequestHandler(NodeRequestHandler):
     log = logging.getLogger("nodepool.driver.kubernetes."
                             "KubernetesNodeRequestHandler")
     launcher = K8SLauncher
+
+    def __init__(self, pw, request):
+        super().__init__(pw, request)
+        self._threads = []
+
+    @property
+    def alive_thread_count(self):
+        count = 0
+        for t in self._threads:
+            if t.is_alive():
+                count += 1
+        return count
+
+    def imagesAvailable(self):
+        '''
+        Determines if the requested images are available for this provider.
+
+        :returns: True if it is available, False otherwise.
+        '''
+        return True
+
+    def hasProviderQuota(self, node_types):
+        '''
+        Checks if a provider has enough quota to handle a list of nodes.
+        This does not take our currently existing nodes into account.
+
+        :param node_types: list of node types to check
+        :return: True if the node list fits into the provider, False otherwise
+        '''
+        needed_quota = QuotaInformation()
+
+        for ntype in node_types:
+            needed_quota.add(
+                self.manager.quotaNeededByLabel(ntype, self.pool))
+
+        if hasattr(self.pool, 'ignore_provider_quota'):
+            if not self.pool.ignore_provider_quota:
+                cloud_quota = self.manager.estimatedNodepoolQuota()
+                cloud_quota.subtract(needed_quota)
+
+                if not cloud_quota.non_negative():
+                    return False
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        pool_quota = QuotaInformation(
+            cores=getattr(self.pool, 'max_cores', None),
+            instances=self.pool.max_servers,
+            ram=getattr(self.pool, 'max_ram', None),
+            default=math.inf)
+        pool_quota.subtract(needed_quota)
+        return pool_quota.non_negative()
+
+    def hasRemainingQuota(self, ntype):
+        '''
+        Checks if the predicted quota is enough for an additional node of type
+        ntype.
+
+        :param ntype: node type for the quota check
+        :return: True if there is enough quota, False otherwise
+        '''
+        needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
+
+        # Calculate remaining quota which is calculated as:
+        # quota = <total nodepool quota> - <used quota> - <quota for node>
+        cloud_quota = self.manager.estimatedNodepoolQuota()
+        cloud_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed())
+        cloud_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining provider quota: %s",
+                       cloud_quota)
+
+        if not cloud_quota.non_negative():
+            return False
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        pool_quota = QuotaInformation(
+            cores=getattr(self.pool, 'max_cores', None),
+            instances=self.pool.max_servers,
+            ram=getattr(self.pool, 'max_ram', None),
+            default=math.inf)
+        pool_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+        self.log.debug("Current pool quota: %s" % pool_quota)
+        pool_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining pool quota: %s", pool_quota)
+
+        return pool_quota.non_negative()
+
+    def launchesComplete(self):
+        '''
+        Check if all launch requests have completed.
+
+        When all of the Node objects have reached a final state (READY, FAILED
+        or ABORTED), we'll know all threads have finished the launch process.
+        '''
+        if not self._threads:
+            return True
+
+        # Give the NodeLaunch threads time to finish.
+        if self.alive_thread_count:
+            return False
+
+        node_states = [node.state for node in self.nodeset]
+
+        # NOTE: It is very important that NodeLauncher always sets one
+        # of these states, no matter what.
+        if not all(s in (zk.READY, zk.FAILED, zk.ABORTED)
+                   for s in node_states):
+            return False
+
+        return True
+
+    def launch(self, node):
+        label = self.pool.labels[node.type[0]]
+        thd = self.launcher(self, node, self.provider, label)
+        thd.start()
+        self._threads.append(thd)

@@ -355,8 +355,7 @@ class StateMachineNodeDeleter:
 
 
 class StateMachineHandler(NodeRequestHandler):
-    log = logging.getLogger("nodepool.driver.simple."
-                            "StateMachineHandler")
+    log = logging.getLogger("nodepool.StateMachineHandler")
 
     def __init__(self, pw, request):
         super().__init__(pw, request)
@@ -719,7 +718,7 @@ class StateMachineDriver(Driver):
 
         :param ProviderConfig provider_config: An instance of
             ProviderConfig previously returned by :py:meth:`getProviderConfig`.
-        :returns: An instance of :py:class:`SimpleTaskManagerAdapter`
+        :returns: An instance of :py:class:`Adapter`
         """
         raise NotImplementedError()
 
@@ -729,7 +728,7 @@ class StateMachineDriver(Driver):
 class Instance:
     """Represents a cloud instance
 
-    This class is used by the Simple Task Manager Driver classes to
+    This class is used by the State Machine Driver classes to
     represent a standardized version of a remote cloud instance.
     Implement this class in your driver, override the :py:meth:`load`
     method, and supply as many of the fields as possible.

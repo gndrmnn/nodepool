@@ -21,7 +21,7 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ProviderConfig
 
 
-class ProviderCloudImage(ConfigValue):
+class GceProviderCloudImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.image_id = None
@@ -32,119 +32,60 @@ class ProviderCloudImage(ConfigValue):
         self.connection_port = None
         self.shell_type = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderCloudImage):
-            return (self.name == other.name
-                    and self.image_id == other.image_id
-                    and self.username == other.username
-                    and self.key == other.key
-                    and self.python_path == other.python_path
-                    and self.connection_type == other.connection_type
-                    and self.connection_port == other.connection_port
-                    and self.shell_type == other.shell_type)
-        return False
-
-    def __repr__(self):
-        return "<ProviderCloudImage %s>" % self.name
-
     @property
     def external_name(self):
         '''Human readable version of external.'''
         return self.image_id or self.name
 
 
-class ProviderLabel(ConfigValue):
+class GceLabel(ConfigValue):
     ignore_equality = ['pool']
 
-    def __init__(self):
-        self.name = None
-        self.cloud_image = None
-        self.instance_type = None
-        self.volume_size = None
-        self.volume_type = None
-        # The ProviderPool object that owns this label.
-        self.pool = None
+    def __init__(self, label, provider_config, provider_pool):
+        self.name = label['name']
+        self.pool = provider_pool
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderLabel):
-            # NOTE(Shrews): We intentionally do not compare 'pool' here
-            # since this causes recursive checks with ProviderPool.
-            return (other.name == self.name
-                    and other.cloud_image == self.cloud_image
-                    and other.instance_type == self.instance_type
-                    and other.volume_size == self.volume_size
-                    and other.volume_type == self.volume_type)
-        return False
-
-    def __repr__(self):
-        return "<ProviderLabel %s>" % self.name
+        cloud_image_name = label.get('cloud-image', None)
+        if cloud_image_name:
+            cloud_image = provider_config.cloud_images.get(
+                cloud_image_name, None)
+            if not cloud_image:
+                raise ValueError(
+                    "cloud-image %s does not exist in provider %s"
+                    " but is referenced in label %s" %
+                    (cloud_image_name, provider_config.name, self.name))
+            self.cloud_image = cloud_image
+        else:
+            self.cloud_image = None
+        self.instance_type = label['instance-type']
+        self.volume_type = label.get('volume-type', 'pd-standard')
+        self.volume_size = label.get('volume-size', '10')
+        self.diskimage = None
 
 
-class ProviderPool(ConfigPool):
+class GcePool(ConfigPool):
     ignore_equality = ['provider']
 
-    def __init__(self):
-        self.name = None
-        self.host_key_checking = True
-        self.use_internal_ip = False
-        self.labels = None
-        # The ProviderConfig object that owns this pool.
-        self.provider = None
-
-        # Initialize base class attributes
+    def __init__(self, provider_config, pool_config):
         super().__init__()
+        self.provider = provider_config
+        self.load(pool_config)
 
-    def load(self, pool_config, full_config, provider):
+    def load(self, pool_config):
         super().load(pool_config)
         self.name = pool_config['name']
-        self.provider = provider
 
         self.host_key_checking = bool(
             pool_config.get('host-key-checking', True))
         self.use_internal_ip = bool(
             pool_config.get('use-internal-ip', False))
 
-        for label in pool_config.get('labels', []):
-            pl = ProviderLabel()
-            pl.name = label['name']
-            pl.pool = self
-            self.labels[pl.name] = pl
-            cloud_image_name = label.get('cloud-image', None)
-            if cloud_image_name:
-                cloud_image = self.provider.cloud_images.get(
-                    cloud_image_name, None)
-                if not cloud_image:
-                    raise ValueError(
-                        "cloud-image %s does not exist in provider %s"
-                        " but is referenced in label %s" %
-                        (cloud_image_name, self.name, pl.name))
-            else:
-                cloud_image = None
-            pl.cloud_image = cloud_image
-            pl.instance_type = label['instance-type']
-            pl.volume_type = label.get('volume-type', 'pd-standard')
-            pl.volume_size = label.get('volume-size', '10')
-            full_config.labels[label['name']].pools.append(self)
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderPool):
-            # NOTE(Shrews): We intentionally do not compare 'provider' here
-            # since this causes recursive checks with OpenStackProviderConfig.
-            return (super().__eq__(other)
-                    and other.name == self.name
-                    and other.host_key_checking == self.host_key_checking
-                    and other.use_internal_ip == self.use_internal_ip
-                    and other.labels == self.labels)
-        return False
-
-    def __repr__(self):
-        return "<ProviderPool %s>" % self.name
-
-
-class GCEProviderConfig(ProviderConfig):
+class GceProviderConfig(ProviderConfig):
     def __init__(self, driver, provider):
-        self.driver_object = driver
-        self.__pools = {}
+        super().__init__(provider)
+        self._pools = {}
+        self.rate = None
         self.region = None
         self.boot_timeout = None
         self.launch_retries = None
@@ -152,24 +93,10 @@ class GCEProviderConfig(ProviderConfig):
         self.zone = None
         self.cloud_images = {}
         self.rate_limit = None
-        super().__init__(provider)
-
-    def __eq__(self, other):
-        if isinstance(other, GCEProviderConfig):
-            return (super().__eq__(other)
-                    and other.region == self.region
-                    and other.pools == self.pools
-                    and other.boot_timeout == self.boot_timeout
-                    and other.launch_retries == self.launch_retries
-                    and other.cloud_images == self.cloud_images
-                    and other.project == self.project
-                    and other.rate_limit == self.rate_limit
-                    and other.zone == self.zone)
-        return False
 
     @property
     def pools(self):
-        return self.__pools
+        return self._pools
 
     @property
     def manage_images(self):
@@ -182,9 +109,11 @@ class GCEProviderConfig(ProviderConfig):
         pass
 
     def load(self, config):
+        self.rate = self.provider.get('rate', 2)
         self.region = self.provider.get('region')
         self.boot_timeout = self.provider.get('boot-timeout', 60)
         self.launch_retries = self.provider.get('launch-retries', 3)
+        self.launch_timeout = self.provider.get('launch-timeout', 3600)
         self.project = self.provider.get('project')
         self.zone = self.provider.get('zone')
         self.rate_limit = self.provider.get('rate-limit', 1)
@@ -196,7 +125,7 @@ class GCEProviderConfig(ProviderConfig):
         # TODO: diskimages
 
         for image in self.provider.get('cloud-images', []):
-            i = ProviderCloudImage()
+            i = GceProviderCloudImage()
             i.name = image['name']
             i.image_id = image.get('image-id', None)
             i.image_project = image.get('image-project', None)
@@ -212,9 +141,13 @@ class GCEProviderConfig(ProviderConfig):
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
-            pp = ProviderPool()
-            pp.load(pool, config, self)
-            self.pools[pp.name] = pp
+            pp = GcePool(self, pool)
+            self._pools[pp.name] = pp
+
+            for label in pool.get('labels', []):
+                pl = GceLabel(label, self, pp)
+                pp.labels[pl.name] = pl
+                config.labels[pl.name].pools.append(pp)
 
     def getSchema(self):
         pool_label = {
