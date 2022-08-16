@@ -1,4 +1,5 @@
 # Copyright 2019 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from nodepool.driver.simple import SimpleTaskManagerDriver
-from nodepool.driver.gce.config import GCEProviderConfig
-from nodepool.driver.gce.adapter import GCEAdapter
+from nodepool.driver.statemachine import StateMachineDriver
+from nodepool.driver.gce.config import GceProviderConfig
+from nodepool.driver.gce.adapter import GceAdapter
 
 
-class GCEDriver(SimpleTaskManagerDriver):
+class GceDriver(StateMachineDriver):
     def getProviderConfig(self, provider):
-        return GCEProviderConfig(self, provider)
+        return GceProviderConfig(self, provider)
 
     def getAdapter(self, provider_config):
-        return GCEAdapter(provider_config)
+        return GceAdapter(provider_config)

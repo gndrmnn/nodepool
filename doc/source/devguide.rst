@@ -150,65 +150,9 @@ The launch procedure usually consists of the following operations:
 - Once the resource is created, READY should be stored to the node.state.
   Otherwise raise an exception to restart the launch attempt.
 
-TaskManager
------------
-
-If you need to use a thread-unsafe client library, or you need to
-manage rate limiting in your driver, you may want to use the
-:py:class:`~nodepool.driver.taskmanager.TaskManager` class.  Implement
-any remote API calls as tasks and invoke them by submitting the tasks
-to the TaskManager.  It will run them sequentially from a single
-thread, and assist in rate limiting.
-
-The :py:class:`~nodepool.driver.taskmanager.BaseTaskManagerProvider`
-class is a subclass of :py:class:`~nodepool.driver.Provider` which
-starts and stops a TaskManager automatically.  Inherit from it to
-build a Provider as described above with a TaskManager.
-
-.. autoclass:: nodepool.driver.taskmanager.Task
-   :members:
-.. autoclass:: nodepool.driver.taskmanager.TaskManager
-   :members:
-.. autoclass:: nodepool.driver.taskmanager.BaseTaskManagerProvider
-
-
-Simple Drivers
---------------
-
-If your system is simple enough, you may be able to use the
-SimpleTaskManagerDriver class to implement support with just a few
-methods.  In order to use this class, your system must create and
-delete instances as a unit (without requiring multiple resource
-creation calls such as volumes or floating IPs).
-
-.. note:: This system is still in development and lacks robust support
-          for quotas or image building.
-
-To use this system, you will need to implement a few subclasses.
-First, create a :ref:`provider_config` subclass as you would for any
-driver.  Then, subclass
-:py:class:`~nodepool.driver.simple.SimpleTaskManagerInstance` to map
-remote instance data into a format the simple driver can understand.
-Next, subclass
-:py:class:`~nodepool.driver.simple.SimpleTaskManagerAdapter` to
-implement the main API methods of your provider.  Finally, subclass
-:py:class:`~nodepool.driver.simple.SimpleTaskManagerDriver` to tie them
-all together.
-
-See the ``gce`` provider for an example.
-
-.. autoclass:: nodepool.driver.simple.SimpleTaskManagerInstance
-   :members:
-.. autoclass:: nodepool.driver.simple.SimpleTaskManagerAdapter
-   :members:
-.. autoclass:: nodepool.driver.simple.SimpleTaskManagerDriver
-   :members:
 
 State Machine Drivers
 ---------------------
-
-.. note:: This system is still in development and lacks robust support
-          for quotas or image building.
 
 To use this system, you will need to implement a few subclasses.
 First, create a :ref:`provider_config` subclass as you would for any
