@@ -1,4 +1,5 @@
 # Copyright 2019 Red Hat
+# Copyright 2022 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -12,22 +13,35 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import cachetools.func
 import logging
 import math
 
-from nodepool.driver.simple import SimpleTaskManagerAdapter
-from nodepool.driver.simple import SimpleTaskManagerInstance
-from nodepool.driver.utils import QuotaInformation
+from nodepool.driver import statemachine
+from nodepool.driver.utils import QuotaInformation, RateLimiter
 
 import googleapiclient.discovery
 
 
-class GCEInstance(SimpleTaskManagerInstance):
-    def load(self, data):
-        if data['status'] == 'TERMINATED':
-            self.deleted = True
-        elif data['status'] == 'RUNNING':
-            self.ready = True
+CACHE_TTL = 10
+
+
+def gce_metadata_to_dict(metadata):
+    if metadata is None:
+        return {}
+    return {item['key']: item['value'] for item in metadata.get('items', [])}
+
+
+def dict_to_gce_metadata(metadata):
+    metadata_items = []
+    for (k, v) in metadata.items():
+        metadata_items.append(dict(key=k, value=v))
+    return dict(items=metadata_items)
+
+
+class GceInstance(statemachine.Instance):
+    def __init__(self, data, quota):
+        super().__init__()
         self.external_id = data['name']
         self.az = data['zone']
 
@@ -38,115 +52,136 @@ class GCEInstance(SimpleTaskManagerInstance):
             if len(access):
                 self.public_ipv4 = access[0].get('natIP')
         self.interface_ip = self.public_ipv4 or self.private_ipv4
-        self._machine_type = data.get('_nodepool_gce_machine_type')
-
-        if data.get('metadata'):
-            for item in data['metadata'].get('items', []):
-                self.metadata[item['key']] = item['value']
+        self.metadata = gce_metadata_to_dict(data.get('metadata'))
+        self.quota = quota
 
     def getQuotaInformation(self):
-        return QuotaInformation(
-            cores=self._machine_type['guestCpus'],
-            instances=1,
-            ram=self._machine_type['memoryMb'])
+        return self.quota
 
 
-class GCEAdapter(SimpleTaskManagerAdapter):
-    log = logging.getLogger("nodepool.driver.gce.GCEAdapter")
+class GceResource(statemachine.Resource):
+    def __init__(self, metadata, type, id):
+        super().__init__(metadata)
+        self.type = type
+        self.id = id
 
-    def __init__(self, provider):
-        self.provider = provider
+
+class GceDeleteStateMachine(statemachine.StateMachine):
+    INSTANCE_DELETING = 'deleting instance'
+    COMPLETE = 'complete'
+
+    def __init__(self, adapter, external_id, log):
+        self.log = log
+        super().__init__()
+        self.adapter = adapter
+        self.external_id = external_id
+
+    def advance(self):
+        if self.state == self.START:
+            self.adapter._deleteInstance(self.external_id)
+            self.state = self.INSTANCE_DELETING
+
+        if self.state == self.INSTANCE_DELETING:
+            data = self.adapter._getInstance(self.external_id)
+            if data is None or data['status'] == 'TERMINATED':
+                self.state = self.COMPLETE
+
+        if self.state == self.COMPLETE:
+            self.complete = True
+
+
+class GceCreateStateMachine(statemachine.StateMachine):
+    INSTANCE_CREATING = 'creating instance'
+    INSTANCE_RETRY = 'retrying instance creation'
+    COMPLETE = 'complete'
+
+    def __init__(self, adapter, hostname, label, image_external_id,
+                 metadata, retries, request, log):
+        self.log = log
+        super().__init__()
+        self.adapter = adapter
+        self.retries = retries
+        self.attempts = 0
+        self.image_external_id = image_external_id
+        self.metadata = metadata
+        self.hostname = hostname
+        self.label = label
+        self.instance = None
+        self.quota = None
+
+    def advance(self):
+        if self.state == self.START:
+            self.external_id = self.hostname
+            self.adapter._createInstance(
+                self.hostname, self.metadata, self.label)
+            self.state = self.INSTANCE_CREATING
+
+        if self.state == self.INSTANCE_CREATING:
+            data = self.adapter._getInstance(self.hostname)
+            if data is None:
+                return
+            if self.quota is None:
+                machine_type = data['machineType'].split('/')[-1]
+                self.quota = self.adapter._getQuotaForMachineType(machine_type)
+            if data['status'] == 'RUNNING':
+                self.instance = data
+                self.state = self.COMPLETE
+            elif data['status'] == 'TERMINATED':
+                if self.attempts >= self.retries:
+                    raise Exception("Too many retries")
+                self.attempts += 1
+                self.state = self.START
+                return
+            else:
+                return
+
+        if self.state == self.COMPLETE:
+            self.complete = True
+            return GceInstance(self.instance, self.quota)
+
+
+class GceAdapter(statemachine.Adapter):
+    log = logging.getLogger("nodepool.GceAdapter")
+
+    def __init__(self, provider_config):
+        self.provider = provider_config
         self.compute = googleapiclient.discovery.build('compute', 'v1')
-        self._machine_types = {}
+        self.rate_limiter = RateLimiter(self.provider.name,
+                                        self.provider.rate)
 
-    def listInstances(self, task_manager):
-        servers = []
+    def getCreateStateMachine(self, hostname, label, image_external_id,
+                              metadata, retries, request, log):
+        return GceCreateStateMachine(self, hostname, label, image_external_id,
+                                     metadata, retries, request, log)
 
-        q = self.compute.instances().list(project=self.provider.project,
-                                          zone=self.provider.zone)
-        with task_manager.rateLimit():
-            result = q.execute()
+    def getDeleteStateMachine(self, external_id, log):
+        return GceDeleteStateMachine(self, external_id, log)
 
-        for instance in result.get('items', []):
-            instance_type = instance['machineType'].split('/')[-1]
-            mtype = self._getMachineType(task_manager, instance_type)
-            instance['_nodepool_gce_machine_type'] = mtype
-            servers.append(GCEInstance(instance))
-        return servers
+    def listInstances(self):
+        instances = []
 
-    def deleteInstance(self, task_manager, server_id):
-        q = self.compute.instances().delete(project=self.provider.project,
-                                            zone=self.provider.zone,
-                                            instance=server_id)
-        with task_manager.rateLimit():
-            q.execute()
+        for instance in self._listInstances():
+            machine_type = instance['machineType'].split('/')[-1]
+            quota = self._getQuotaForMachineType(machine_type)
+            instances.append(GceInstance(instance, quota))
+        return instances
 
-    def _getImageId(self, task_manager, cloud_image):
-        image_id = cloud_image.image_id
+    def listResources(self):
+        for instance in self._listInstances():
+            if instance['status'] == 'TERMINATED':
+                continue
+            metadata = gce_metadata_to_dict(instance.get('metadata'))
+            yield GceResource(metadata, 'instance', instance['name'])
 
-        if image_id:
-            return image_id
+    def deleteResource(self, resource):
+        self.log.info(f"Deleting leaked {resource.type}: {resource.id}")
+        if resource.type == 'instance':
+            self._deleteInstance(resource.id)
 
-        if cloud_image.image_family:
-            q = self.compute.images().getFromFamily(
-                project=cloud_image.image_project,
-                family=cloud_image.image_family)
-            with task_manager.rateLimit():
-                result = q.execute()
-            image_id = result['selfLink']
-
-        return image_id
-
-    def _getMachineType(self, task_manager, machine_type):
-        if machine_type in self._machine_types:
-            return self._machine_types[machine_type]
-        q = self.compute.machineTypes().get(
-            project=self.provider.project,
-            zone=self.provider.zone,
-            machineType=machine_type)
-        with task_manager.rateLimit():
-            result = q.execute()
-        self._machine_types[machine_type] = result
-        return result
-
-    def createInstance(self, task_manager, hostname, metadata, label):
-        image_id = self._getImageId(task_manager, label.cloud_image)
-        disk_init = dict(sourceImage=image_id,
-                         diskType='zones/{}/diskTypes/{}'.format(
-                             self.provider.zone, label.volume_type),
-                         diskSizeGb=str(label.volume_size))
-        disk = dict(boot=True,
-                    autoDelete=True,
-                    initializeParams=disk_init)
-        mtype = self._getMachineType(task_manager, label.instance_type)
-        machine_type = mtype['selfLink']
-        network = dict(network='global/networks/default',
-                       accessConfigs=[dict(
-                           type='ONE_TO_ONE_NAT',
-                           name='External NAT')])
-        metadata_items = []
-        for (k, v) in metadata.items():
-            metadata_items.append(dict(key=k, value=v))
-        meta = dict(items=metadata_items)
-        args = dict(
-            name=hostname,
-            machineType=machine_type,
-            disks=[disk],
-            networkInterfaces=[network],
-            serviceAccounts=[],
-            metadata=meta)
-        q = self.compute.instances().insert(
-            project=self.provider.project,
-            zone=self.provider.zone,
-            body=args)
-        with task_manager.rateLimit():
-            q.execute()
-        return hostname
-
-    def getQuotaLimits(self, task_manager):
+    def getQuotaLimits(self):
         q = self.compute.regions().get(project=self.provider.project,
                                        region=self.provider.region)
-        with task_manager.rateLimit():
+        with self.rate_limiter:
             ret = q.execute()
 
         cores = None
@@ -163,9 +198,95 @@ class GCEAdapter(SimpleTaskManagerAdapter):
             instances=instances,
             default=math.inf)
 
-    def getQuotaForLabel(self, task_manager, label):
-        mtype = self._getMachineType(task_manager, label.instance_type)
+    def getQuotaForLabel(self, label):
+        return self._getQuotaForMachineType(label.instance_type)
+
+    # Local implementation below
+
+    def _createInstance(self, hostname, metadata, label):
+        metadata = metadata.copy()
+        image_id = self._getImageId(label.cloud_image)
+        disk_init = dict(sourceImage=image_id,
+                         diskType='zones/{}/diskTypes/{}'.format(
+                             self.provider.zone, label.volume_type),
+                         diskSizeGb=str(label.volume_size))
+        disk = dict(boot=True,
+                    autoDelete=True,
+                    initializeParams=disk_init)
+        mtype = self._getMachineType(label.instance_type)
+        machine_type = mtype['selfLink']
+        network = dict(network='global/networks/default',
+                       accessConfigs=[dict(
+                           type='ONE_TO_ONE_NAT',
+                           name='External NAT')])
+        if label.cloud_image.key:
+            metadata['ssh-keys'] = '{}:{}'.format(
+                label.cloud_image.username,
+                label.cloud_image.key)
+        args = dict(
+            name=hostname,
+            machineType=machine_type,
+            disks=[disk],
+            networkInterfaces=[network],
+            serviceAccounts=[],
+            metadata=dict_to_gce_metadata(metadata))
+        q = self.compute.instances().insert(
+            project=self.provider.project,
+            zone=self.provider.zone,
+            body=args)
+        with self.rate_limiter:
+            q.execute()
+
+    def _deleteInstance(self, server_id):
+        q = self.compute.instances().delete(project=self.provider.project,
+                                            zone=self.provider.zone,
+                                            instance=server_id)
+        with self.rate_limiter:
+            q.execute()
+
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
+    def _listInstances(self):
+        q = self.compute.instances().list(project=self.provider.project,
+                                          zone=self.provider.zone)
+        with self.rate_limiter:
+            result = q.execute()
+        return result.get('items', [])
+
+    @cachetools.func.lru_cache(maxsize=None)
+    def _getImageId(self, cloud_image):
+        image_id = cloud_image.image_id
+
+        if image_id:
+            return image_id
+
+        if cloud_image.image_family:
+            q = self.compute.images().getFromFamily(
+                project=cloud_image.image_project,
+                family=cloud_image.image_family)
+            with self.rate_limiter:
+                result = q.execute()
+            image_id = result['selfLink']
+
+        return image_id
+
+    @cachetools.func.lru_cache(maxsize=None)
+    def _getMachineType(self, machine_type):
+        q = self.compute.machineTypes().get(
+            project=self.provider.project,
+            zone=self.provider.zone,
+            machineType=machine_type)
+        with self.rate_limiter:
+            return q.execute()
+
+    def _getQuotaForMachineType(self, machine_type):
+        mtype = self._getMachineType(machine_type)
         return QuotaInformation(
             cores=mtype['guestCpus'],
             instances=1,
             ram=mtype['memoryMb'])
+
+    def _getInstance(self, hostname):
+        for instance in self._listInstances():
+            if instance['name'] == hostname:
+                return instance
+        return None
