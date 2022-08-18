@@ -53,7 +53,7 @@ To run the test suite in just one of the environments in envlist execute::
   tox -e <env>
 so for example, *run the test suite in py35*::
 
-  tox -e py35
+  tox -e py3
 
 Run One Test
 ------------
@@ -64,12 +64,12 @@ To run individual tests with tox::
 
 For example, to *run a single Nodepool test*::
 
-  tox -e py35 -- nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
+  tox -e py3 -- nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
 
 To *run one test in the foreground* (after previously having run tox
 to set up the virtualenv)::
 
-  .tox/py35/bin/stestr run nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
+  .tox/py3/bin/stestr run nodepool.tests.unit.test_launcher.TestLauncher.test_node_assignment
 
 List Failing Tests
 ------------------
