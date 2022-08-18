@@ -69,6 +69,22 @@ diskimages:
     release: '{{ nodepool_diskimage.release }}'
     env-vars:
       TMPDIR: '{{ NODEPOOL_DIB_BASE_PATH }}/tmp'
+      # We have seen multiple instances of dib's bootloader not
+      # setting the LABEL= command correctly for the installed kernel.
+      # If the command line from current kernel on the the builder
+      # system leaks into the test build we can hide the problem --
+      # when on a gate node (built by dib) the running kernel has in
+      # it's command-line LABEL=cloudimg-rootfs.  The test image
+      # copies this and boots correctly in the gate; but when it hits
+      # the production builders, which don't boot like this, we are
+      # left with an unbootable image that can't find it's root
+      # partition.
+      #
+      # Thus we override the default root label during tests.  This
+      # should ensure the root disk gets made with a different label,
+      # and if the bootloader doesn't correctly direct the kernel to
+      # this, we should get gate failures.
+      ROOT_LABEL: 'gate-rootfs'
       DIB_CHECKSUM: '1'
       DIB_SHOW_IMAGE_USAGE: '1'
       DIB_IMAGE_CACHE: '{{ NODEPOOL_DIB_BASE_PATH }}/cache'
