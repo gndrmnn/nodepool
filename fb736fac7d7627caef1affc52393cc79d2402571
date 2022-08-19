@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "fb736fac7d7627caef1affc52393cc79d2402571",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b053759f_a8248d65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-19T17:55:23Z",
+      "side": 1,
+      "message": "The depends on has merged.",
+      "revId": "fb736fac7d7627caef1affc52393cc79d2402571",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
