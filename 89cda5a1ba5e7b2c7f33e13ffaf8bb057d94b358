@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bae4e09a_a61acd8d",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-22T16:31:00Z",
+      "side": 1,
+      "message": "As best as I can tell, this is used as a sort of \"default\", and then when users launch an instance, they can specify a larger disk and growroot as you describe.  Nodepool lets us set that for labels: https://zuul-ci.org/docs/nodepool/latest/aws.html#attr-providers.[aws].pools.labels.volume-size\n\nSo given all that, I think a typical user would want to just ignore this value (and so nodepool will just use the image size) and then specify a value for the label.  But maybe if they always want to use a 200G disk with a given image, maybe they set it here and ignore the label attribute.",
+      "parentUuid": "954ab2cb_73427fe0",
+      "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29756354_9767eec0",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-08-22T16:18:57Z",
       "side": 1,
       "message": "I think AWS has kvm virt flavors now too. I wonder if hardcoding this means the image can\u0027t be used with kvm? Maybe we need to make this configurable like the volume size and type?",
+      "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ba4bacd_27546e35",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-22T16:31:00Z",
+      "side": 1,
+      "message": "I think that is just hvm/pv: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/virtualization_types.html",
+      "parentUuid": "29756354_9767eec0",
       "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
