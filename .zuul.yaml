@@ -21,10 +21,10 @@
       nodes:
         # Runs openshift
         - name: cluster
-          label: centos-7
+          label: centos-9-stream
         # Runs nodepool
         - name: launcher
-          label: fedora-35
+          label: fedora-36
     required-projects:
       - zuul/nodepool
 
