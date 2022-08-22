@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "954ab2cb_73427fe0",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-22T16:18:57Z",
+      "side": 1,
+      "message": "In openstack land this is typically an attribute of the instance flavor then the image will growroot into the resulting disk. As a user that makes more sense to me since you might boot an image with different sizes of disk for different needs.\n\nIs it possible to express it that way in AWS too? Otherwise AWS users might need to upload the same image multiple times to get different sizes of disks.",
+      "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29756354_9767eec0",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-22T16:18:57Z",
+      "side": 1,
+      "message": "I think AWS has kvm virt flavors now too. I wonder if hardcoding this means the image can\u0027t be used with kvm? Maybe we need to make this configurable like the volume size and type?",
+      "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
