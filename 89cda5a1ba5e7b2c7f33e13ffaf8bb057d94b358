@@ -69,6 +69,24 @@
       "parentUuid": "29756354_9767eec0",
       "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "748787c7_0d935c3f",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-22T16:35:28Z",
+      "side": 1,
+      "message": "This link doesn\u0027t seem to be loading for me. I wonder how they annotate things for kvm? That said it is easy to make this configurable later if that becomes necessary for their non xen images.",
+      "parentUuid": "0ba4bacd_27546e35",
+      "revId": "89cda5a1ba5e7b2c7f33e13ffaf8bb057d94b358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
