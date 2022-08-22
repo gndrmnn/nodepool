@@ -24,7 +24,7 @@
           label: centos-7
         # Runs nodepool
         - name: launcher
-          label: fedora-35
+          label: fedora-36
     required-projects:
       - zuul/nodepool
 
