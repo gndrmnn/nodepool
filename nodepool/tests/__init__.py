@@ -618,13 +618,13 @@ class DBTestCase(BaseTestCase):
                 if node.state == state:
                     return node
 
-    def waitForNodeRequest(self, req, states=None):
+    def waitForNodeRequest(self, req, states=None, max_time=ONE_MINUTE):
         '''
         Wait for a node request to transition to a final state.
         '''
         if states is None:
             states = (zk.FULFILLED, zk.FAILED)
-        for _ in iterate_timeout(ONE_MINUTE, Exception,
+        for _ in iterate_timeout(max_time, Exception,
                                  "Node request state transition",
                                  interval=1):
             req = self.zk.getNodeRequest(req.id)
