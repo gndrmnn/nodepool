@@ -186,6 +186,11 @@ delete
 .. program-output:: nodepool delete --help
    :nostderr:
 
+hold
+^^^^
+.. program-output:: nodepool hold --help
+   :nostderr:
+
 The following subcommands deal with ZooKeeper data management:
 
 info
