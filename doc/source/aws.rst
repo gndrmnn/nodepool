@@ -383,6 +383,19 @@ Selecting the ``aws`` driver adds the following options to the
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``.
 
+      .. attr:: volume-type
+         :type: str
+         :default: gp2
+
+         The root `EBS volume type`_ for the image.
+
+      .. attr:: volume-size
+         :type: int
+
+         The size of the root EBS volume, in GiB, for the image.  If
+         omitted, the volume size reported for the imported snapshot
+         will be used.
+
    .. attr:: pools
       :type: list
 

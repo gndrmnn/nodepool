@@ -103,6 +103,9 @@ class TestDriverAws(tests.DBTestCase):
             Description='Zuul Nodes')
         self.security_group_id = self.security_group['GroupId']
         self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
+        self.patch(AwsAdapter, '_import_snapshot',
+                   self.fake_aws.import_snapshot)
+        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
 
     def tearDown(self):
         self.mock_ec2.stop()
@@ -526,8 +529,6 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(response['EbsOptimized']['Value'])
 
     def test_aws_diskimage(self):
-        self.patch(AwsAdapter, '_import_image', self.fake_aws.import_image)
-        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
         configfile = self.setup_config('aws/diskimage.yaml')
 
         self.useBuilder(configfile)
@@ -558,8 +559,6 @@ class TestDriverAws(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
 
     def test_aws_diskimage_removal(self):
-        self.patch(AwsAdapter, '_import_image', self.fake_aws.import_image)
-        self.patch(AwsAdapter, '_get_paginator', self.fake_aws.get_paginator)
         configfile = self.setup_config('aws/diskimage.yaml')
         self.useBuilder(configfile)
         self.waitForImage('ec2-us-west-2', 'fake-image')
@@ -601,19 +600,42 @@ class TestDriverAws(tests.DBTestCase):
         )
         instance_id = reservation['Instances'][0]['InstanceId']
 
-        task = self.fake_aws.import_image(
-            DiskContainers=[{
+        task = self.fake_aws.import_snapshot(
+            DiskContainer={
                 'Format': 'ova',
                 'UserBucket': {
                     'S3Bucket': 'nodepool',
                     'S3Key': 'testfile',
                 }
-            }],
+            },
             TagSpecifications=[{
-                'ResourceType': 'import-image-task',
+                'ResourceType': 'import-snapshot-task',
                 'Tags': image_tags,
             }])
-        image_id, snapshot_id = self.fake_aws.finish_import_image(task)
+        snapshot_id = self.fake_aws.finish_import_snapshot(task)
+
+        register_response = self.ec2_client.register_image(
+            Architecture='amd64',
+            BlockDeviceMappings=[
+                {
+                    'DeviceName': '/dev/sda1',
+                    'Ebs': {
+                        'DeleteOnTermination': True,
+                        'SnapshotId': snapshot_id,
+                        'VolumeSize': 20,
+                        'VolumeType': 'gp2',
+                    },
+                },
+            ],
+            RootDeviceName='/dev/sda1',
+            VirtualizationType='hvm',
+            Name='testimage',
+        )
+        image_id = register_response['ImageId']
+
+        ami = self.ec2.Image(image_id)
+        new_snapshot_id = ami.block_device_mappings[0]['Ebs']['SnapshotId']
+        self.fake_aws.change_snapshot_id(task, new_snapshot_id)
 
         # Note that the resulting image and snapshot do not have tags
         # applied, so we test the automatic retagging methods in the
@@ -684,7 +706,7 @@ class TestDriverAws(tests.DBTestCase):
                 break
 
         for _ in iterate_timeout(30, Exception, 'snapshot deletion'):
-            snap = self.ec2.Snapshot(snapshot_id)
+            snap = self.ec2.Snapshot(new_snapshot_id)
             try:
                 if snap.state == 'deleted':
                     break
