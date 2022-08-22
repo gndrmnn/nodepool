@@ -88,6 +88,24 @@ class NodePoolCmd(NodepoolApp):
                                 action='store_true',
                                 help='delete the node in the foreground')
 
+        cmd_disable = subparsers.add_parser(
+            'disable',
+            help='place a node in the HOLD state e.g. for running maintenance tasks')
+        cmd_disable.set_defaults(func=self.disable)
+        cmd_disable.add_argument('id', help='node id')
+        cmd_disable.add_argument('--now',
+                                action='store_true',
+                                help='disable the node in the foreground')
+
+        cmd_enable = subparsers.add_parser(
+            'enable',
+            help='place a node back in the READY state after it was disabled or otherwise being held')
+        cmd_enable.set_defaults(func=self.enable)
+        cmd_enable.add_argument('id', help='node id')
+        cmd_enable.add_argument('--now',
+                                action='store_true',
+                                help='enable the node in the foreground')
+
         cmd_image_delete = subparsers.add_parser(
             'image-delete',
             help='delete an image')
@@ -277,13 +295,21 @@ class NodePoolCmd(NodepoolApp):
 
         print(t)
 
-    def delete(self):
+    def _get_and_lock_node(self):
+        print(f"{self.__dict__=}")
+        print(f"{self.zk=}")
         node = self.zk.getNode(self.args.id)
         if not node:
             print("Node id %s not found" % self.args.id)
-            return
+            return None
 
         self.zk.lockNode(node, blocking=True, timeout=5)
+        return node
+
+    def delete(self):
+        node = self._get_and_lock_node()
+        if node is None:
+            return
 
         if self.args.now:
             if node.provider not in self.pool.config.providers:
@@ -293,6 +319,7 @@ class NodePoolCmd(NodepoolApp):
             provider = self.pool.config.providers[node.provider]
             manager = provider_manager.get_provider(provider)
             manager.start(self.zk)
+            # TODO: Look into customizing node cleanup
             node_deleter = manager.startNodeCleanup(node)
             node_deleter.join()
             manager.stop()
@@ -302,6 +329,36 @@ class NodePoolCmd(NodepoolApp):
             self.zk.unlockNode(node)
 
         self.list(node_id=node.id)
+
+    def _change_node_state(self, new_state):
+        node = self._get_and_lock_node()
+        if node is None:
+            return
+
+        # We don't want to interfere with nodes that are in use or
+        # in a deleting state
+        # TODO: Maybe it makes sense to include zk.USED in this whitelist
+        # TODO: make sure it's not READY and assigned
+        if not node.state in (zk.READY, zk.HOLD):
+            print("Cannot change node in state %s" % self.node.state)
+            return
+
+        # Is a node provider or provider_manager or anything needed here like above?
+        node.state = new_state
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+
+        self.list(node_id=node.id)
+
+    def disable(self):
+        # TODO: This assumes that a node in the HOLD state
+        # will not have anything scheduled
+
+        # TODO: Try to attempt disabling a node after it's finished with it's current task
+        self._change_node_state(zk.HOLD)
+
+    def enable(self):
+        self._change_node_state(zk.READY)
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
@@ -434,7 +491,7 @@ class NodePoolCmd(NodepoolApp):
                                  'image-status',
                                  'image-list', 'dib-image-delete',
                                  'image-delete', 'alien-image-list',
-                                 'list', 'delete',
+                                 'list', 'delete', 'disable', 'enable',
                                  'request-list', 'info', 'erase',
                                  'image-pause', 'image-unpause',
                                  'export-image-data', 'import-image-data'):
