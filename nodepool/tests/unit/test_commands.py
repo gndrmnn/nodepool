@@ -350,6 +350,59 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Assert the node is gone
         self.assert_listed(configfile, ['list'], 0, nodes[0].id, 0)
 
+    def test_disable_and_enable(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # Disable node
+        self.patch_argv('-c', configfile, 'disable', nodes[0].id, '-t', '10')
+        nodepoolcmd.main()
+
+        # Assert the node is disabled / on HOLD
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.HOLD)
+
+        # Re-enable node
+        self.patch_argv('-c', configfile, 'enable', nodes[0].id)
+        nodepoolcmd.main()
+
+        # Assert the node is ready
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+    def test_attempt_disable_busy_node(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # TODO: write some tests
+        # # Set node as IN-USE
+
+        # # Assert the node is in use
+
+        # Attempt to disable node
+
+        # Assert the above attempt has failed
+        # and the node is still in use
+
+
     def test_image_build(self):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
