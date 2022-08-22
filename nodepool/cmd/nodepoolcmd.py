@@ -88,6 +88,36 @@ class NodePoolCmd(NodepoolApp):
                                 action='store_true',
                                 help='delete the node in the foreground')
 
+        cmd_disable = subparsers.add_parser(
+            'disable',
+            help='place a node in the HOLD state '
+                 'e.g. for running maintenance tasks')
+        cmd_disable.set_defaults(func=self.disable)
+        cmd_disable.add_argument('id', help='node id')
+        cmd_disable.add_argument('--now',
+                                 action='store_true',
+                                 help='disable the node in the foreground')
+        cmd_disable.add_argument('-t',
+                                 '--timeout',
+                                 type=int,
+                                 help='timeout in seconds',
+                                 required=False)
+
+        cmd_enable = subparsers.add_parser(
+            'enable',
+            help='place a node back in the READY state '
+                 'after it was disabled or otherwise being held')
+        cmd_enable.set_defaults(func=self.enable)
+        cmd_enable.add_argument('id', help='node id')
+        cmd_enable.add_argument('--now',
+                                action='store_true',
+                                help='enable the node in the foreground')
+        cmd_enable.add_argument('-t',
+                                '--timeout',
+                                type=int,
+                                help='timeout in seconds',
+                                required=False)
+
         cmd_image_delete = subparsers.add_parser(
             'image-delete',
             help='delete an image')
@@ -277,13 +307,23 @@ class NodePoolCmd(NodepoolApp):
 
         print(t)
 
-    def delete(self):
+    def _get_and_lock_node(self, timeout=None):
         node = self.zk.getNode(self.args.id)
         if not node:
             print("Node id %s not found" % self.args.id)
-            return
+            return None
 
-        self.zk.lockNode(node, blocking=True, timeout=5)
+        if timeout is None:
+            timeout = 5
+
+        self.zk.lockNode(node, blocking=True, timeout=timeout)
+
+        return node
+
+    def delete(self):
+        node = self._get_and_lock_node()
+        if node is None:
+            return
 
         if self.args.now:
             if node.provider not in self.pool.config.providers:
@@ -302,6 +342,25 @@ class NodePoolCmd(NodepoolApp):
             self.zk.unlockNode(node)
 
         self.list(node_id=node.id)
+
+    def _change_node_state(self, new_state, timeout=None):
+        node = self._get_and_lock_node(timeout=timeout)
+        if node is None:
+            return
+
+        node.state = new_state
+        self.zk.storeNode(node)
+        self.zk.unlockNode(node)
+
+        self.list(node_id=node.id)
+
+    def disable(self):
+        timeout = self.args.timeout
+        self._change_node_state(zk.HOLD, timeout=timeout)
+
+    def enable(self):
+        timeout = self.args.timeout
+        self._change_node_state(zk.READY, timeout=timeout)
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
@@ -434,7 +493,7 @@ class NodePoolCmd(NodepoolApp):
                                  'image-status',
                                  'image-list', 'dib-image-delete',
                                  'image-delete', 'alien-image-list',
-                                 'list', 'delete',
+                                 'list', 'delete', 'disable', 'enable',
                                  'request-list', 'info', 'erase',
                                  'image-pause', 'image-unpause',
                                  'export-image-data', 'import-image-data'):
