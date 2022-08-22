@@ -21,6 +21,7 @@ import tempfile
 import fixtures
 import mock
 import testtools
+import time
 
 from nodepool.cmd import nodepoolcmd
 from nodepool import tests
@@ -349,6 +350,163 @@ class TestNodepoolCMD(tests.DBTestCase):
 
         # Assert the node is gone
         self.assert_listed(configfile, ['list'], 0, nodes[0].id, 0)
+
+    def test_hold(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # Hold node
+        self.patch_argv('-c', configfile, 'hold', nodes[0].id)
+        nodepoolcmd.main()
+
+        # Assert the node is on hold
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.HOLD)
+
+        # Re-enable node by deleting
+        old_node_id = nodes[0].id
+        self.patch_argv('-c', configfile, 'delete', nodes[0].id)
+        nodepoolcmd.main()
+
+        # Assert that the node is ready
+        self.waitForNodeDeletion(nodes[0])
+        new_nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(new_nodes), 1)
+        self.assert_listed(configfile, ['list'], 0, new_nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+        self.assertNotEqual(old_node_id, new_nodes[0].id)
+
+        # Request a node
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.assertEqual(len(req.nodes), 0)
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req, (zk.FULFILLED,))
+        self.assertEqual(len(req.nodes), 1)
+
+    def test_attempt_hold_busy_node(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # Request a node
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1)
+
+        # Wait for node request
+        self.log.debug("Waiting for 1st request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1, (zk.FULFILLED,))
+        self.assertEqual(len(req1.nodes), 1)
+
+        # Lock node and set it as in-use
+        node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(node, blocking=False)
+        node.state = zk.IN_USE
+        self.zk.storeNode(node)
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.IN_USE)
+
+        # Attempt to hold the node, this should fail
+        # since another process holds the lock
+        # and the node should still be in use
+        self.patch_argv('-c', configfile, 'hold', nodes[0].id)
+        nodepoolcmd.main()
+        time.sleep(0.1)
+        self.assert_nodes_listed(configfile, 1, zk.IN_USE)
+
+    def test_attempt_request_held_static_node(self):
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # Hold node
+        self.patch_argv('-c', configfile, 'hold', nodes[0].id)
+        nodepoolcmd.main()
+
+        # Assert the node is on HOLD
+        self.assertEqual(len(nodes), 1)
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.HOLD)
+
+        # Prepare node request
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        # Make a node request
+        # Expect to not be fulfilled since the node is not ready
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.zk.getNodeRequest(req.id)
+
+        time.sleep(1)
+        req = self.zk.getNodeRequest(req.id)
+        self.assertEqual(req.state, zk.REQUESTED)
+        self.assertEqual(len(req.nodes), 0)
+
+    def test_attempt_request_held_node(self):
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+
+        # Assert one node exists and it is nodes[0].id in a ready state.
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
+
+        # Hold node
+        self.patch_argv('-c', configfile, 'hold', nodes[0].id)
+        nodepoolcmd.main()
+
+        # Assert the node is on HOLD
+        self.assertEqual(len(nodes), 1)
+        self.assert_listed(configfile, ['list'], 0, nodes[0].id, 1)
+        self.assert_nodes_listed(configfile, 1, zk.HOLD)
+
+        # Prepare node request
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        # Make a node request
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req, (zk.FULFILLED,))
+
+        # Make sure we did not assign the held node
+        # but another node as long as the quota is not reached
+        self.assertNotEqual(nodes[0].id, req.nodes[0])
 
     def test_image_build(self):
         configfile = self.setup_config('node.yaml')
