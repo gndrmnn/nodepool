@@ -8,7 +8,11 @@
 # environment.
 
 set -xeu
-ROOTCMD=${ROOTCMD:-}
+
+# Default ROOTCMD to the 'env' command, otherwise variable assignments will be
+# interpreted as command when no ROOTCMD is given. The reason for that is
+# Bash's simple command expansion.
+ROOTCMD=${ROOTCMD:-env}
 
 cd $(dirname $0)
 SCRIPT_DIR="$(pwd)"
