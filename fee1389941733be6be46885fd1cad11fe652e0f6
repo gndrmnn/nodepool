@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7056479b_6d40afdd",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-08-23T05:50:03Z",
+      "side": 1,
+      "message": "This should be `providers.[aws].pools.labels.tags`",
+      "revId": "fee1389941733be6be46885fd1cad11fe652e0f6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2af6069_f47fee80",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-08-23T05:50:03Z",
+      "side": 1,
+      "message": "typo: attributes",
+      "revId": "fee1389941733be6be46885fd1cad11fe652e0f6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
