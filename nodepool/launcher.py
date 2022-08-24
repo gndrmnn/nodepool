@@ -247,15 +247,20 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # Got a lock, so assign it
             log.info("Assigning node request %s" % req)
 
+            rh = pm.getRequestHandler(self, req)
+            rh.run()
+
             if has_quota_support:
                 # Adjust the label quota so we don't accept more requests
                 # than we have labels available.
-                for label in req.node_types:
-                    with contextlib.suppress(KeyError):
-                        label_quota[label] -= 1
+                # Since nodes can have multiple other labels apart from the
+                # requested type, we need to adjust the quota for all labels
+                # of nodes that are allocated to the request.
+                for node in rh.nodeset:
+                    for node_type in node.type:
+                        with contextlib.suppress(KeyError):
+                            label_quota[node_type] -= 1
 
-            rh = pm.getRequestHandler(self, req)
-            rh.run()
             if rh.paused:
                 self.paused_handler = rh
             self.request_handlers.append(rh)
