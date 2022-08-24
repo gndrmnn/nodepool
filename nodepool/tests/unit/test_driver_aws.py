@@ -421,6 +421,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
         self.assertFalse(node.public_ipv4.startswith('203.0.113.'))
         self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(node.cloud, 'AWS')
+        self.assertEqual(node.region, 'us-west-2')
+        # Like us-west-2x where x is random
+        self.assertTrue(len(node.az) == len('us-west-2x'))
 
         instance = self.ec2.Instance(node.external_id)
         response = instance.describe_attribute(Attribute='ebsOptimized')
@@ -566,7 +570,9 @@ class TestDriverAws(tests.DBTestCase):
         iface = Dummy()
         iface.ipv6_addresses = [{'Ipv6Address': 'fe80::dead:beef'}]
         instance.network_interfaces = [iface]
-        awsi = AwsInstance(instance, None)
+        provider = Dummy()
+        provider.region_name = 'us-west-2'
+        awsi = AwsInstance(provider, instance, None)
         self.assertEqual(awsi.public_ipv4, '1.2.3.4')
         self.assertEqual(awsi.private_ipv4, '10.0.0.1')
         self.assertEqual(awsi.public_ipv6, 'fe80::dead:beef')

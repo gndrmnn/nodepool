@@ -30,7 +30,7 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
         self.node.interface_ip = pod_name
         self.zk.storeNode(self.node)
 
-        self.handler.manager.waitForPod(project, pod_name)
+        pod_node_id = self.handler.manager.waitForPod(project, pod_name)
 
         self.node.state = zk.READY
         self.node.python_path = self.label.python_path
@@ -47,6 +47,8 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
             'user': 'zuul-worker',
         }
         self.node.connection_type = "kubectl"
+        self.node.cloud = self.provider_config.context
+        self.node.host_id = pod_node_id
         self.zk.storeNode(self.node)
         self.log.info("Pod %s is ready" % self.node.external_id)
 

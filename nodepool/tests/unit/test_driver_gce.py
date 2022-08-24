@@ -303,6 +303,9 @@ class TestDriverGce(tests.DBTestCase):
             self.assertEqual(node.connection_type, 'ssh')
             self.assertEqual(node.attributes,
                              {'key1': 'value1', 'key2': 'value2'})
+            self.assertEqual(node.cloud, 'Google')
+            self.assertEqual(node.region, 'us-central1')
+            self.assertEqual(node.az, 'us-central1-a')
             if host_key_checking:
                 nodescan.assert_called_with(
                     node.interface_ip,

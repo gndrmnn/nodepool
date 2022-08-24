@@ -75,6 +75,9 @@ class FakeCoreClient(object):
         class FakePod:
             class status:
                 phase = "Running"
+
+            class spec:
+                node_name = "k8s-default-pool-abcd-1234"
         return FakePod
 
 
@@ -124,6 +127,8 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'admin-cluster.local')
+        self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
@@ -150,6 +155,8 @@ class TestDriverKubernetes(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'namespace')
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertEqual(node.cloud, 'admin-cluster.local')
+        self.assertIsNone(node.host_id)
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
