@@ -132,6 +132,7 @@ class IBMVPCInstance(statemachine.Instance):
             self.public_ipv4 = fip['address']
 
         self.interface_ip = self.public_ipv4 or self.private_ipv4
+        self.cloud = 'IBM'
         self.region = provider.region
         self.az = vm['zone']['name']
 

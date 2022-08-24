@@ -114,6 +114,9 @@ class FakeCoreClient(object):
         class FakePod:
             class status:
                 phase = "Running"
+
+            class spec:
+                node_name = "k8s-default-pool-abcd-1234"
         return FakePod
 
 
@@ -157,6 +160,8 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.assertEqual(node.shell_type, 'csh')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'admin-cluster.local')
+        self.assertIsNone(node.host_id)
 
         node.state = zk.DELETING
         self.zk.storeNode(node)

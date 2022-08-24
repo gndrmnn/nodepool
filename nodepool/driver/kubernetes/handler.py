@@ -50,6 +50,7 @@ class K8SLauncher(NodeLauncher):
         pool = self.handler.provider.pools.get(self.node.pool)
         self.node.resources = self.handler.manager.quotaNeededByLabel(
             self.node.type[0], pool).get_resources()
+        self.node.cloud = self.provider_config.context
         self.zk.storeNode(self.node)
         self.log.info("Resource %s is ready" % resource['name'])
 

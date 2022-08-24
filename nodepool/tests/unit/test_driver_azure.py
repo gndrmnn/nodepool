@@ -88,6 +88,9 @@ class TestDriverAzure(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
         self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(node.cloud, 'Azure')
+        self.assertEqual(node.region, 'centralus')
+        self.assertEqual(node.az, '1')
         self.assertEqual(
             self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
             items[0]['properties']['osProfile']['customData'],
