@@ -421,6 +421,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(node.private_ipv4.startswith('203.0.113.'))
         self.assertFalse(node.public_ipv4.startswith('203.0.113.'))
         self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(node.cloud, 'AWS')
+        self.assertEqual(node.region, 'us-west-2')
+        # Like us-west-2x where x is random
+        self.assertTrue(len(node.az) == len('us-west-2x'))
 
         instance = self.ec2.Instance(node.external_id)
         response = instance.describe_attribute(Attribute='ebsOptimized')

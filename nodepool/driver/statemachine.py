@@ -157,6 +157,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.public_ipv4 = instance.public_ipv4
         node.private_ipv4 = instance.private_ipv4
         node.public_ipv6 = instance.public_ipv6
+        node.cloud = instance.cloud
         node.region = instance.region
         node.az = instance.az
         node.driver_data = instance.driver_data
@@ -746,6 +747,7 @@ class Instance:
     * public_ipv4: str
     * public_ipv6: str
     * private_ipv4: str
+    * cloud: str
     * az: str
     * region: str
     * driver_data: any
@@ -768,6 +770,7 @@ class Instance:
         self.public_ipv6 = None
         self.private_ipv4 = None
         self.interface_ip = None
+        self.cloud = None
         self.az = None
         self.region = None
         self.metadata = {}

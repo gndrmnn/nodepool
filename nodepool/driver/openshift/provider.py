@@ -257,6 +257,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             raise exceptions.LaunchNodepoolException(
                 "%s: pod failed to initialize (%s)" % (
                     project, pod.status.phase))
+        return pod.spec.nodeName
 
     def getRequestHandler(self, poolworker, request):
         return handler.OpenshiftNodeRequestHandler(poolworker, request)

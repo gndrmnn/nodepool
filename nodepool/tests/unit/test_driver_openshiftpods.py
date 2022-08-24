@@ -54,6 +54,9 @@ class FakeCoreClient(object):
         class FakePod:
             class status:
                 phase = "Running"
+
+            class spec:
+                nodeName = "k8s-default-pool-abcd-1234"
         return FakePod
 
     def delete_namespaced_pod(self, name, project):
@@ -104,6 +107,8 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         self.assertIn('ca_crt', node.connection_port)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'service-account.local')
+        self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
 
         node.state = zk.DELETING
         self.zk.storeNode(node)

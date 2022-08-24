@@ -317,6 +317,7 @@ class KubernetesProvider(Provider, QuotaSupport):
                 "%s: pod failed to initialize (%s)" % (
                     namespace, pod.status.phase))
         resource["pod"] = label.name
+        node.host_id = pod.spec.nodeName
         return resource
 
     def getRequestHandler(self, poolworker, request):
