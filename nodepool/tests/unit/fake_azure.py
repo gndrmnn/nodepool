@@ -168,6 +168,7 @@ class VirtualMachinesCRUD(CRUDManager):
             "networkProfile": data['properties']['networkProfile'],
             "provisioningState": "Creating"
         }
+        data['zones'] = ["1"]
         self.items.append(data)
         disk_data = data.copy()
         disk_data['name'] = 'bionic-azure-' + str(uuid.uuid4())
