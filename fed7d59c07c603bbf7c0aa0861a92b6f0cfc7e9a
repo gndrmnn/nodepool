@@ -50,6 +50,42 @@
       "message": "We should actually just delete the node and let the driver handle processing it.  In the case of the static driver, the node will be re-registered.\n\nThis means you can drop the \"enable\" command entirely and use \"delete\" in your workflow.",
       "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96ad37a3_da92ff47",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-08-24T08:45:16Z",
+      "side": 1,
+      "message": "Fair point. That should be enough for our use-case still",
+      "parentUuid": "ddb266c3_cdbf2bc2",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e606d8b_2e089d7d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-08-24T08:45:16Z",
+      "side": 1,
+      "message": "\u003e This may not be sufficient though as we can disable a node and set it to HOLD before a job completes as well\n\nWhen I tested it, this was not possible. I don\u0027t know the exact mechanism behind it in nodepool but it looked like a node is locked during a job execution and hence can\u0027t be disabled\n\n\n\u003e It might be a good idea to only allow a transition from the HOLD state to the READY state to avoid accidentally allowing a node to be reused while another job is still using the node.\n\nI agree that could be a good safeguard but when testing it, it was not possible to interrupt an ongoing build. I could only test it with static nodes.\n\nLooking at James\u0027 comments, I think it makes sense to drop the \u0027enable\u0027 command altogether\n\n\n\u003e It might also be a good idea to to restrict this to static nodes \n\nI like this idea but how do I get information about the node type or the corresponding driver?",
+      "parentUuid": "7c6f6671_a89a2a74",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
