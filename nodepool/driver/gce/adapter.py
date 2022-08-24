@@ -44,7 +44,10 @@ class GceInstance(statemachine.Instance):
     def __init__(self, data, quota):
         super().__init__()
         self.external_id = data['name']
-        self.az = data['zone']
+        self.cloud = 'Google'
+        zone = data['zone'].rsplit('/', 1)[1]
+        self.region = zone.rsplit('-', 1)[0]
+        self.az = zone
 
         iface = data.get('networkInterfaces', [])
         if len(iface):

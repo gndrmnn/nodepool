@@ -95,6 +95,9 @@ class TestDriverIBMVPC(tests.DBTestCase):
         self.assertEqual(node.connection_type, 'ssh')
         self.assertEqual(node.host_keys, [])
         self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(node.cloud, 'IBM')
+        self.assertEqual(node.region, 'us-south')
+        self.assertEqual(node.az, 'us-south-1')
 
         node.state = zk.USED
         self.zk.storeNode(node)

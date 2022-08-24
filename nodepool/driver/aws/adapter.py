@@ -82,7 +82,7 @@ CACHE_TTL = 10
 
 
 class AwsInstance(statemachine.Instance):
-    def __init__(self, instance, quota):
+    def __init__(self, provider, instance, quota):
         super().__init__()
         self.external_id = instance.id
         self.metadata = tag_list_to_dict(instance.tags)
@@ -90,7 +90,9 @@ class AwsInstance(statemachine.Instance):
         self.private_ipv6 = None
         self.public_ipv4 = instance.public_ip_address
         self.public_ipv6 = None
-        self.az = ''
+        self.cloud = 'AWS'
+        self.region = provider.region_name
+        self.az = instance.subnet.availability_zone
         self.quota = quota
 
         for iface in instance.network_interfaces[:1]:
@@ -206,7 +208,8 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.COMPLETE:
             self.complete = True
-            return AwsInstance(self.instance, self.quota)
+            return AwsInstance(self.adapter.provider, self.instance,
+                               self.quota)
 
 
 class AwsAdapter(statemachine.Adapter):
@@ -357,7 +360,7 @@ class AwsAdapter(statemachine.Adapter):
             if instance.state["Name"].lower() == "terminated":
                 continue
             quota = self._getQuotaForInstanceType(instance.instance_type)
-            yield AwsInstance(instance, quota)
+            yield AwsInstance(self.provider, instance, quota)
 
     def getQuotaLimits(self):
         # Get the instance types that this provider handles
