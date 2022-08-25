@@ -16,6 +16,23 @@
       "message": "I haven\u0027t been able to fully review this change yet, but this parenthetical concerns me. I think it is helpful that nodepool labels provide a consistent result (at least within a cloud provider). OpenDev for example has gone through a lot of effort to try and normalize this as much as possible and where not possible add new labels instead. The reason for this is that it is confusing to users when they ask for something and get what they perceive to be vastly different.\n\nWould it be better to address this by specifying in the job itself that the job can be run on one of multiple labels? Then you can have different labels for the different valid types? This was it is more explicit to the user that they are accepting variance.",
       "revId": "85587993bbfb8b77fb8d63c95095ce77516ef419",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a051a58_faab219b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T20:43:09Z",
+      "side": 1,
+      "message": "I agree that\u0027s worth considering.  I\u0027ve marked this change WIP and moved it to the end of the stack until we decide on that.",
+      "revId": "85587993bbfb8b77fb8d63c95095ce77516ef419",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
