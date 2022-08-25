@@ -51,6 +51,24 @@
       "message": "Yes, because the max-servers value set in node.yaml is 96. The nodes list value is initially satisfied via min ready configuration of 1 for fake-label. Then when a new request comes in nodepool cannot fulfill that request using the existing node because its state is HOLD. Nodepool proceeds by provisioning a new node instead since it has max-servers headroom to do so. If it didn\u0027t have max-servers headroom it would pause and wait for space to become available.",
       "revId": "51e57897593a2223bdc9a38353b63a06a24fb6c5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebd5f3d3_e55ecd22",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-08-25T20:56:31Z",
+      "side": 1,
+      "message": "Thanks for clarifying!",
+      "parentUuid": "1335ecaa_61a6ab6a",
+      "revId": "51e57897593a2223bdc9a38353b63a06a24fb6c5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
