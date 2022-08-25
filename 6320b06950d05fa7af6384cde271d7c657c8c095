@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "040c7969_b212718e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T20:04:25Z",
+      "side": 1,
+      "message": "I\u0027m not sure I agree that it is simpler and more readable. There is a lot of indirection between test functions and test classes and plumbing attributes through to each individual test run. In the past it was pretty straightforward monkey patching (that was a bit wordy), but now we\u0027re maintaining a lot of extra state on various objects to track what our patched state is.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b19aa7d_66914511",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T20:04:25Z",
+      "side": 1,
+      "message": "The comments in zuul indicate requestor_data is opaque to nodepool and won\u0027t be touched by nodepool. I think this change slightly modified that behavior. It is now used in a read only fashion rather than ignored.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35764d8f_be797c35",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T20:04:25Z",
+      "side": 1,
+      "message": "Minor nit. Python appears to bind names like self.ec2.create_instance_orig late which allows the above closure to function even before we\u0027ve defined what this name refers to. That said I think it aids readability if we define it first.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3bd2c88_f6294183",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T20:04:25Z",
+      "side": 1,
+      "message": "Nit the test name and comment below don\u0027t seem to agree on what is being tested.\n\nIn this case I think what we are doing is testing a min ready request to aws which happens to be a tenant less request. Could probably update the comment to be a bit more explicit about that.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
