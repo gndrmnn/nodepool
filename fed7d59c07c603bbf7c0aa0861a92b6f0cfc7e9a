@@ -86,6 +86,24 @@
       "parentUuid": "7c6f6671_a89a2a74",
       "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff1e0f0b_1e07882d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T17:00:23Z",
+      "side": 1,
+      "message": "I think it\u0027s okay to allow the \u0027hold\u0027 command for any node type.  It would let someone grab a min-ready node and use it for something.  Then they can delete it.\n\nIt\u0027s true that you can\u0027t go from in-use to hold because the client is expected to hold the lock for the entire time the node is in-use.",
+      "parentUuid": "7c6f6671_a89a2a74",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
