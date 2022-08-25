@@ -15,6 +15,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 import cachetools.func
+import functools
 import json
 import logging
 import math
@@ -212,6 +213,14 @@ class AwsAdapter(statemachine.Adapter):
     IMAGE_UPLOAD_SLEEP = 30
 
     def __init__(self, provider_config):
+        # Wrap these instance methods with a per-instance LRU cache so
+        # that we don't leak memory over time when the adapter is
+        # occasionally replaced.
+        self._getInstanceType = functools.lru_cache(maxsize=None)(
+            self._getInstanceType)
+        self._getImage = functools.lru_cache(maxsize=None)(
+            self._getImage)
+
         self.log = logging.getLogger(
             f"nodepool.AwsAdapter.{provider_config.name}")
         self.provider = provider_config
@@ -623,7 +632,7 @@ class AwsAdapter(statemachine.Adapter):
             args[code] = cores
         return QuotaInformation(**args)
 
-    @cachetools.func.lru_cache(maxsize=None)
+    # This method is wrapped with an LRU cache in the constructor.
     def _getInstanceType(self, instance_type):
         with self.non_mutating_rate_limiter:
             self.log.debug(
@@ -718,7 +727,7 @@ class AwsAdapter(statemachine.Adapter):
 
         return image_id
 
-    @cachetools.func.lru_cache(maxsize=None)
+    # This method is wrapped with an LRU cache in the constructor.
     def _getImage(self, image_id):
         with self.non_mutating_rate_limiter:
             return self.ec2.Image(image_id)
