@@ -16,6 +16,24 @@
       "message": "Isn\u0027t this leaking memory over time? AFAIK the cache is not instance scoped and since the args also include the self reference we will leak all instances that we create.",
       "revId": "803a6bc00e97a510fd06d973cd1ed31956a16eff",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91faf867_663bd944",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T14:42:45Z",
+      "side": 1,
+      "message": "Yep.  Fixed in a followup at https://review.opendev.org/854632 since it affects more than just this driver.",
+      "parentUuid": "4785a561_72ab3b1a",
+      "revId": "803a6bc00e97a510fd06d973cd1ed31956a16eff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
