@@ -14,6 +14,7 @@
 # under the License.
 
 import cachetools.func
+import functools
 import logging
 import math
 
@@ -144,6 +145,14 @@ class GceAdapter(statemachine.Adapter):
     log = logging.getLogger("nodepool.GceAdapter")
 
     def __init__(self, provider_config):
+        # Wrap these instance methods with a per-instance LRU cache so
+        # that we don't leak memory over time when the adapter is
+        # occasionally replaced.
+        self._getMachineType = functools.lru_cache(maxsize=None)(
+            _getMachineType)
+        self._getImageId = functools.lru_cache(maxsize=None)(
+            _getImageId)
+
         self.provider = provider_config
         self.compute = googleapiclient.discovery.build('compute', 'v1')
         self.rate_limiter = RateLimiter(self.provider.name,
@@ -252,7 +261,7 @@ class GceAdapter(statemachine.Adapter):
             result = q.execute()
         return result.get('items', [])
 
-    @cachetools.func.lru_cache(maxsize=None)
+    # This method is wrapped with an LRU cache in the constructor.
     def _getImageId(self, cloud_image):
         image_id = cloud_image.image_id
 
@@ -269,7 +278,7 @@ class GceAdapter(statemachine.Adapter):
 
         return image_id
 
-    @cachetools.func.lru_cache(maxsize=None)
+    # This method is wrapped with an LRU cache in the constructor.
     def _getMachineType(self, machine_type):
         q = self.compute.machineTypes().get(
             project=self.provider.project,

@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import functools
 import json
 import logging
 import math
@@ -310,6 +311,12 @@ class AzureAdapter(statemachine.Adapter):
     log = logging.getLogger("nodepool.driver.azure.AzureAdapter")
 
     def __init__(self, provider_config):
+        # Wrap these instance methods with a per-instance LRU cache so
+        # that we don't leak memory over time when the adapter is
+        # occasionally replaced.
+        self._getImage = functools.lru_cache(maxsize=None)(
+            _getImage)
+
         self.provider = provider_config
         self.resource_group = self.provider.resource_group
         self.resource_group_location = self.provider.resource_group_location
@@ -554,7 +561,7 @@ class AzureAdapter(statemachine.Adapter):
                     self.skus[key] = sku
         self.log.debug("Done querying compute SKUs")
 
-    @cachetools.func.ttl_cache(maxsize=0, ttl=(24 * 60 * 60))
+    # This method is wrapped with an LRU cache in the constructor.
     def _getImage(self, image_name):
         with self.rate_limiter:
             return self.azul.images.get(self.resource_group, image_name)
