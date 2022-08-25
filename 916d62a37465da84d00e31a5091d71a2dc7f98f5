@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3095f35_b79ed567",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T19:24:33Z",
+      "side": 1,
+      "message": "One option may be to accept both \u0027metadata\u0027 and \u0027tags\u0027 as aliases for the same thing across the board. Then users can use what is more comfortable for them.",
+      "revId": "916d62a37465da84d00e31a5091d71a2dc7f98f5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
