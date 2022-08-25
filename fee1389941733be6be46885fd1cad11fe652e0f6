@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a94b056_f88a587a",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T20:26:29Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "7056479b_6d40afdd",
+      "revId": "fee1389941733be6be46885fd1cad11fe652e0f6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2af6069_f47fee80",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-08-23T05:50:03Z",
       "side": 1,
       "message": "typo: attributes",
+      "revId": "fee1389941733be6be46885fd1cad11fe652e0f6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebcf7eb6_300bcb45",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T20:26:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2af6069_f47fee80",
       "revId": "fee1389941733be6be46885fd1cad11fe652e0f6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
