@@ -104,6 +104,24 @@
       "parentUuid": "7c6f6671_a89a2a74",
       "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60c4bb33_6b4a9c11",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-25T18:59:55Z",
+      "side": 1,
+      "message": "Making sure I understand the proposed workflow here. Users would hold a node, then when any required work is done delete the node. In the case of ephemeral cloud nodes that frees the resources to be used by a new node. In the case of a static node the static driver will recreate the static node as ready?\n\nIf I\u0027ve understood correctly then I think this will work well.",
+      "parentUuid": "ff1e0f0b_1e07882d",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
