@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f65b57c_4f257240",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T20:26:18Z",
+      "side": 1,
+      "message": "I guess I could have elaborated more on why I thought it was better.\n\nThe straightforward monkey patching doesn\u0027t work at all for some pretty important parts of moto, so we had patching happening at test setup, and patching happening after the provider was already started.  This caused race conditions where the test might actually try to talk to AWS instead of using fakes.\n\nI think the new system is helpful because it actually lets us set up fakes and mocks reliably, and we do all of it the same way so that it\u0027s consistent (no worrying about where in the startup sequence we\u0027re performing the patch).\n\nFinally, the decorator approach is consistent with some improvements we\u0027ve made in zuul (eg simple_layout) and is fairly common in testing frameworks.  I think it\u0027s good that we can set parameters for the \"outside world\" like what AWS\u0027s fake quota is for us outside the test methods.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b19aa7d_66914511",
@@ -65,6 +82,24 @@
       "writtenOn": "2022-08-25T20:04:25Z",
       "side": 1,
       "message": "Nit the test name and comment below don\u0027t seem to agree on what is being tested.\n\nIn this case I think what we are doing is testing a min ready request to aws which happens to be a tenant less request. Could probably update the comment to be a bit more explicit about that.",
+      "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58f4ce30_ad558915",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-25T20:26:18Z",
+      "side": 1,
+      "message": "I agree it could be clarified (but I don\u0027t think it\u0027s wrong).  The min-ready pseudo-request may behave much differently (potentially not just due to lack of tenant info) than a \"real\" node request.",
+      "parentUuid": "b3bd2c88_f6294183",
       "revId": "6320b06950d05fa7af6384cde271d7c657c8c095",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
