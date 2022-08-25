@@ -122,6 +122,24 @@
       "parentUuid": "ff1e0f0b_1e07882d",
       "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ab0ab6b_471ada5b",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-08-25T19:19:25Z",
+      "side": 1,
+      "message": "That sounds good to me; at least in the case of static nodes that is in line with what I had in mind for this feature.\nBut I\u0027ll let James have the final word here of course",
+      "parentUuid": "60c4bb33_6b4a9c11",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
