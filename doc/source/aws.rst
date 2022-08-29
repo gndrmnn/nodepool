@@ -383,6 +383,21 @@ Selecting the ``aws`` driver adds the following options to the
            long-standing issue with ``ansible_shell_type`` in combination
            with ``become``.
 
+      .. attr:: architecture
+         :type: str
+         :default: x86_64
+
+         The architecture of the image.  See the `AWS RegisterImage API
+         documentation`_ for valid values.
+
+      .. attr:: ena-support
+         :type: bool
+         :default: True
+
+         Whether the image has support for the AWS Enhanced Networking
+         Adapter (ENA).  Many newer operating systems include driver
+         support as standard and some AWS instance types require it.
+
       .. attr:: volume-type
          :type: str
          :default: gp2
@@ -624,3 +639,4 @@ Selecting the ``aws`` driver adds the following options to the
 .. _`Boto describe images`: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_images
 .. _`VM Import/Export service role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role
 .. _`instance quotas`: https://us-west-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas
+.. _`AWS RegisterImage API documentation`: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RegisterImage.html
