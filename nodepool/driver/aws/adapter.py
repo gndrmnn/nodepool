@@ -452,6 +452,7 @@ class AwsAdapter(statemachine.Adapter):
                 ],
                 RootDeviceName='/dev/sda1',
                 VirtualizationType='hvm',
+                EnaSupport=True,
                 Name=image_name,
             )
 
