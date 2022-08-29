@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c14cd2db_d0c98ed1",
+        "filename": "nodepool/driver/gce/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-29T20:00:01Z",
+      "side": 1,
+      "message": "There are multiple code paths that call _listInstances, not all of which return the higher level objects (to be clear, we\u0027re not modifying the result, we\u0027re augmenting it), so it\u0027s best to cache at the lowest level so they all benefit.",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "802d79e4_ba1825a3",
@@ -48,6 +65,23 @@
       "writtenOn": "2022-08-29T19:41:01Z",
       "side": 1,
       "message": "The commit message indicates that the GCE driver was the only \"simple\" one but it appears k8s was using it too. If a new patchset is needed might want to update the commit message to match.",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e2fc1a2_0e35dad4",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-29T20:00:01Z",
+      "side": 1,
+      "message": "Yes, this use of just part of the simple driver was... unexpected.",
       "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -86,6 +120,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3cb61a7_6af355b2",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-29T20:00:01Z",
+      "side": 1,
+      "message": "This is all a copy of the existing code.  I don\u0027t know off-hand the ramifications of changing that (what you say makes sense, yet it\u0027s possible the opposite could be true -- another thread may attempt to operate on a non-started thread).  I\u0027d like to declare this out of scope for this change.  :)",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b133911_be08d40f",
@@ -99,6 +150,23 @@
       "writtenOn": "2022-08-29T19:41:01Z",
       "side": 1,
       "message": "Nit should this be nodepool.driver.StateMachineHandler to match the class path?",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afbeb654_a87a8884",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-29T20:00:01Z",
+      "side": 1,
+      "message": "I think it makes a lot more sense for the logger names to be short and sensible for users.  I think we have some weird old copy-pasta in our current logger names.",
       "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
