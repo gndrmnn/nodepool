@@ -96,6 +96,39 @@ class TestDriverAzure(tests.DBTestCase):
             self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
             requests[0]['properties']['userData'],
             'VGhpcyBpcyB0aGUgdXNlciBkYXRh')  # This is the user data
+        tags = (self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+                requests[0]['tags'])
+        self.assertEqual(tags.get('team'), 'DevOps')
+        self.assertEqual(tags.get('dynamic-tenant'), 'Tenant is tenant-1')
+
+    def test_azure_min_ready(self):
+        configfile = self.setup_config(
+            'azure-min-ready.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        node = self.waitForNodes('bionic')[0]
+
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, 'sh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            items[0]['properties']['osProfile']['customData'],
+            'VGhpcyBpcyB0aGUgY3VzdG9tIGRhdGE=')  # This is the custom data
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['userData'],
+            'VGhpcyBpcyB0aGUgdXNlciBkYXRh')  # This is the user data
+        tags = (self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+                requests[0]['tags'])
+        self.assertEqual(tags.get('team'), 'DevOps')
+        self.assertEqual(tags.get('dynamic-tenant'), 'Tenant is None')
 
     def test_azure_diskimage(self):
         configfile = self.setup_config(
