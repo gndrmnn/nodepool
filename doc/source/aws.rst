@@ -342,6 +342,14 @@ Selecting the ``aws`` driver adds the following options to the
 
          The username that should be used when connecting to the node.
 
+      .. attr:: architecture
+         :type: str
+         :default: x86_64
+
+         Architecture of the diskimage. Can be one of ``i386``, ``x86_64``,
+         ``arm64``, ``x86_64_mac``. For further information see
+         https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RegisterImage.html
+
       .. attr:: connection-type
          :type: string
 

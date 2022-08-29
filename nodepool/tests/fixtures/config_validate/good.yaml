@@ -188,6 +188,9 @@ providers:
       - name: centos-ami
         image-id: ami-cfdafaaa
         username: centos
+    diskimages:
+      - name: centos-custom
+        architecture: arm64
     pools:
       - name: main
         max-servers: 42

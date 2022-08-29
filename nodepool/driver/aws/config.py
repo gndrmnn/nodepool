@@ -69,6 +69,7 @@ class AwsProviderCloudImage(ConfigValue):
             v.Required('username'): str,
             v.Exclusive('image-id', 'spec'): str,
             v.Exclusive('image-filters', 'spec'): [image_filters],
+            'architecture': str,
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
