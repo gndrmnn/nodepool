@@ -276,7 +276,7 @@ class TestDriverGce(tests.DBTestCase):
 
         self._wait_for_provider(pool, 'gcloud-provider')
 
-        with patch('nodepool.driver.simple.nodescan') as nodescan:
+        with patch('nodepool.driver.statemachine.nodescan') as nodescan:
             nodescan.return_value = 'MOCK KEY'
             req = zk.NodeRequest()
             req.state = zk.REQUESTED
@@ -307,7 +307,7 @@ class TestDriverGce(tests.DBTestCase):
                 nodescan.assert_called_with(
                     node.interface_ip,
                     port=22,
-                    timeout=180,
+                    timeout=60,
                     gather_hostkeys=True)
 
             # A new request will be paused and for lack of quota
