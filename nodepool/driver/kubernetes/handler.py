@@ -47,10 +47,10 @@ class K8SLauncher(NodeLauncher):
         else:
             self.node.connection_type = "kubectl"
             self.node.interface_ip = resource['pod']
-            pool = self.handler.provider.pools.get(self.node.pool)
-            resources = self.handler.manager.quotaNeededByLabel(
-                self.node.type[0], pool)
-            self.node.resources = resources.get_resources()
+        pool = self.handler.provider.pools.get(self.node.pool)
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], pool).get_resources()
+        self.node.cloud = self.provider_config.context
         self.zk.storeNode(self.node)
         self.log.info("Resource %s is ready" % resource['name'])
 
