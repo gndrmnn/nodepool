@@ -137,6 +137,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1dbf79e_5825f341",
+        "filename": "nodepool/driver/kubernetes/handler.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-29T20:02:07Z",
+      "side": 1,
+      "message": "Fair enough. Might be worth looking at in a followup. Though I suspect the race is very small here and unlikely to be hit in most real world situations due to how long provider api requests take.",
+      "parentUuid": "d3cb61a7_6af355b2",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b133911_be08d40f",
@@ -167,6 +185,24 @@
       "writtenOn": "2022-08-29T20:00:01Z",
       "side": 1,
       "message": "I think it makes a lot more sense for the logger names to be short and sensible for users.  I think we have some weird old copy-pasta in our current logger names.",
+      "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14dc3f0d_f7973f43",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-08-29T20:02:07Z",
+      "side": 1,
+      "message": "ACK",
+      "parentUuid": "afbeb654_a87a8884",
       "revId": "adab6eeb0daf1cdedecd241b3f0d01c3fbeac658",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
