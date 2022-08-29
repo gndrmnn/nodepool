@@ -475,6 +475,15 @@ section of the configuration.
          interpreter on Ansible >=2.8, and default to
          ``/usr/bin/python2`` for earlier versions.
 
+      .. attr:: tags
+         :type: dict
+         :default: None
+
+         A dictionary of tags to add to uploaded images.  This will be
+         merged with any existing metadata from the global `diskimage`
+         configuration for this image.  Avoid the use of `nodepool_`
+         as a key prefix since Nodepool uses this for internal values.
+
    .. attr:: pools
        :type: list
 

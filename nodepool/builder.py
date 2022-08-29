@@ -1118,7 +1118,8 @@ class UploadWorker(BaseWorker):
                 "Could not find matching provider image for %s" % image_name
             )
 
-        meta = provider_image.meta.copy()
+        meta = self._config.diskimages[image_name].meta.copy()
+        meta.update(provider_image.meta)
         meta['nodepool_build_id'] = build_id
         meta['nodepool_upload_id'] = upload_id
 

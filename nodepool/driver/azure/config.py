@@ -110,7 +110,7 @@ class AzureProviderDiskImage(ConfigValue):
         self.connection_port = image.get(
             'connection-port',
             default_port_mapping.get(self.connection_type, 22))
-        self.meta = {}
+        self.meta = image.get('tags', {})
 
     @property
     def external_name(self):
@@ -128,6 +128,7 @@ class AzureProviderDiskImage(ConfigValue):
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
+            'tags': dict,
         }
 
 
