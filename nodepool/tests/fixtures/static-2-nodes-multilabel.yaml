@@ -11,6 +11,8 @@ zookeeper-tls:
 labels:
   - name: fake-label
   - name: fake-label2
+  - name: label-host-1
+  - name: label-host-2
 
 providers:
   - name: static-provider
@@ -22,6 +24,7 @@ providers:
             labels:
               - fake-label
               - fake-label2
+              - label-host-1
             host-key: ssh-rsa FAKEKEY
             timeout: 13
             connection-port: 22022
@@ -29,6 +32,7 @@ providers:
           - name: fake-host-2
             labels:
               - fake-label2
+              - label-host-2
             host-key: ssh-rsa FAKEKEY
             timeout: 13
             connection-port: 22022

@@ -326,6 +326,47 @@ class TestDriverStatic(tests.DBTestCase):
         self.waitForNodeDeletion(node)
         self.waitForNodeRequest(req_waiting, zk.FULFILLED)
 
+    def test_label_quota(self):
+        configfile = self.setup_config('static-2-nodes-multilabel.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('label-host-1')
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('label-host-2')
+
+        # Request a label that is no longer available, but wasn't requested
+        # by any of the previous requests.
+        req_waiting = zk.NodeRequest()
+        req_waiting.state = zk.REQUESTED
+        req_waiting.node_types.append('fake-label2')
+
+        self.zk.storeNodeRequest(req1)
+        self.zk.storeNodeRequest(req2)
+        self.zk.storeNodeRequest(req_waiting)
+
+        req1 = self.waitForNodeRequest(req1, zk.FULFILLED)
+        node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        req2 = self.waitForNodeRequest(req2, zk.FULFILLED)
+
+        # Assert that the request was not accepted, which means that
+        # the label quota was correctly adjusted.
+        req_waiting = self.zk.getNodeRequest(req_waiting.id)
+        self.assertEqual(req_waiting.state, zk.REQUESTED)
+        self.assertEqual(req_waiting.declined_by, [])
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
+        self.waitForNodeRequest(req_waiting, zk.FULFILLED)
+
     def test_static_ignore_assigned_ready_nodes(self):
         """Regression test to not touch assigned READY nodes"""
         configfile = self.setup_config('static-basic.yaml')
