@@ -69,6 +69,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "974e53fc_ceaad1d2",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-08-31T17:39:20Z",
+      "side": 1,
+      "message": "I think it would actually be good if the command waited for a locked node a reasonable amount of time (for example to finish a job) and afterwards set it to hold, hence the addition of the timeout flag to this command.",
+      "parentUuid": "81cb7f64_f7957747",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8b918028_480deff0",
