@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c763ba39_f302c96c",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "This comment isn\u0027t correct?",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ea0d83a_8f8dde83",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "I suggest s/disable/hold/ so that it\u0027s more clear what this does.",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa2719d6_ac570ba2",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "Ditto?",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81cb7f64_f7957747",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "Is there something we can do for this assertion other than waiting for a test timeout?\n\nMaybe the command should return immediately (exit code 1) if it can\u0027t lock it.  That\u0027s probably better for user experience.",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b918028_480deff0",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b617b336_70272b6b",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-08-31T13:31:15Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
