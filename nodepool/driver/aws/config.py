@@ -101,6 +101,7 @@ class AwsProviderDiskImage(ConfigValue):
             default_port_mapping.get(self.connection_type, 22))
         self.meta = image.get('tags', {})
         self.architecture = image.get('architecture', 'x86_64')
+        self.ena_support = image.get('ena-support', True)
         self.volume_size = image.get('volume-size', None)
         self.volume_type = image.get('volume-type', 'gp2')
 
@@ -119,6 +120,8 @@ class AwsProviderDiskImage(ConfigValue):
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
+            'architecture': str,
+            'ena-support': bool,
             'volume-size': int,
             'volume-type': str,
             'tags': dict,
