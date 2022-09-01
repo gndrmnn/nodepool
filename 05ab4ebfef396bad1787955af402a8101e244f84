@@ -87,6 +87,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c56c8c1_efc60e8e",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-09-01T17:05:24Z",
+      "side": 1,
+      "message": "Maybe it is indeed better to have the command return w/ non-zero instead of misusing any timeout flag.\n\nBut I can\u0027t really think of a better way to test these cases than by expecting a timeout.\nThat begs the question, is it even necessary to test these cases? Are they already covered in other places? I guess the behavior of zk.HOLD and nodes that are busy are well-known",
+      "parentUuid": "974e53fc_ceaad1d2",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8b918028_480deff0",
