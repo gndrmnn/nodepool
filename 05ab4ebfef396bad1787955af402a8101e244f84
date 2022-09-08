@@ -123,6 +123,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "045300cf_11d9f7c0",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-09-08T19:07:38Z",
+      "side": 1,
+      "message": "It\u0027s timing out waiting for the lock:\n\n[...]\nFile \"nodepool/.tox/py3/lib/python3.8/site-packages/kazoo/recipe/lock.py\", line 280, in _inner_acquire\n    raise LockTimeout(\nkazoo.exceptions.LockTimeout: Failed to acquire lock on /nodepool/nodes/0000000000/lock after 5 seconds\n\nDuring handling of the above exception, another exception occurred:\n[...]\nFile \"nodepool/nodepool/zk/zookeeper.py\", line 1815, in lockNode\n    raise npe.TimeoutException(\nnodepool.exceptions.TimeoutException: Timeout trying to acquire lock /nodepool/nodes/0000000000/lock\n\nSo I assumed this is to be expected somehow",
+      "parentUuid": "a63be71f_6d89eacd",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8b918028_480deff0",
