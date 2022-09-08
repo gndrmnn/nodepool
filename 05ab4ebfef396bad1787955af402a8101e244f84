@@ -105,6 +105,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a63be71f_6d89eacd",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-08T17:11:30Z",
+      "side": 1,
+      "message": "It looks like the command should fail after 5 seconds now.  The actual code lgtm, but I\u0027m not sure why the test is passing with a timeoutexception instead of whatever exception is raised by the command failing.",
+      "parentUuid": "81cb7f64_f7957747",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8b918028_480deff0",
