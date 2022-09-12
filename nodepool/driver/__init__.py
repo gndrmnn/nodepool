@@ -379,6 +379,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         self.pool = self.pw.getPoolConfig()
         self.zk = self.pw.getZK()
         self.manager = self.pw.getProviderManager()
+        # We need the launcher_id attr
+        self.log = get_annotated_logger(logging.getLogger(
+            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id),
+            event_id=self.request.event_id, node_request_id=self.request.id)
 
     @property
     def failed_nodes(self):
@@ -489,8 +493,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                         self.log.debug(
                             "Declining node request because provider cannot"
                             " satisfy min-ready")
-                        self.decline_request()
-                        self._declinedHandlerCleanup()
+                        self.declineRequest()
                         return
 
                     self.log.info(
@@ -539,22 +542,12 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                 self._satisfied_types.add(ntype, node.id)
                 self.launch(node)
 
-    def _runHandler(self):
+    def getDeclinedReasons(self):
         '''
-        Main body for the node request handling.
+        Return a list of reasons to decline this request
         '''
-        self._setFromPoolWorker()
-
-        if self.provider is None or self.pool is None:
-            # If the config changed out from underneath us, we could now be
-            # an invalid provider and should stop handling this request.
-            raise Exception("Provider configuration missing")
-
-        # We have the launcher_id attr after _setFromPoolWorker() is called.
-        self.log = get_annotated_logger(logging.getLogger(
-            "nodepool.driver.NodeRequestHandler[%s]" % self.launcher_id),
-            event_id=self.request.event_id, node_request_id=self.request.id)
-
+        if not hasattr(self, 'provider'):
+            self._setFromPoolWorker()
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()
 
@@ -567,12 +560,24 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             declined_reasons.append('images are not available')
         elif not self.hasProviderQuota(self.request.node_types):
             declined_reasons.append('it would exceed quota')
+        return declined_reasons
 
+    def _runHandler(self):
+        '''
+        Main body for the node request handling.
+        '''
+        self._setFromPoolWorker()
+
+        if self.provider is None or self.pool is None:
+            # If the config changed out from underneath us, we could now be
+            # an invalid provider and should stop handling this request.
+            raise Exception("Provider configuration missing")
+
+        declined_reasons = self.getDeclinedReasons()
         if declined_reasons:
             self.log.info("Declining node request because %s",
                           ', '.join(declined_reasons))
-            self.decline_request()
-            self._declinedHandlerCleanup()
+            self.declineRequest()
             return
 
         if self.paused:
@@ -583,6 +588,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             self.zk.storeNodeRequest(self.request)
 
         self._waitForNodeSet()
+
+    def declineRequest(self):
+        self._declineRequest()
+        self._declinedHandlerCleanup()
 
     def _declinedHandlerCleanup(self):
         """
@@ -635,7 +644,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         self.nodeset = []
 
-    def decline_request(self):
+    def _declineRequest(self):
         # Technically, this check to see if we've already declined it should
         # not be necessary. But if there is a bug (and there has been), we
         # want to make sure we don't continuously grow this array.
@@ -664,8 +673,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             self.log.exception(
                 "Declining node request due to exception in "
                 "NodeRequestHandler:")
-            self.decline_request()
-            self._declinedHandlerCleanup()
+            self.declineRequest()
 
     def poll(self):
         if self.paused:
@@ -711,7 +719,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
         if self.failed_nodes:
             self.log.debug("Declining node request because nodes failed")
-            self.decline_request()
+            self._declineRequest()
+            # We perform our own cleanup
         elif aborted_nodes:
             # Because nodes are added to the satisfied types list before they
             # are ready we need to remove the aborted nodes again so they can
