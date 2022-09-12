@@ -48,6 +48,11 @@ class StaticNodeProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.static."
                             "StaticNodeProvider")
 
+    # Do not pause the provider when we are at quota so that requests
+    # for different labels do not interfere with each other (resources
+    # are not fungible in the static proivder).
+    PAUSE_AT_QUOTA = False
+
     def __init__(self, provider, *args):
         self.provider = provider
         # Lock to avoid data races when registering nodes from
