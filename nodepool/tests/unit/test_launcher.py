@@ -405,6 +405,54 @@ class TestLauncher(tests.DBTestCase):
                                             max_instances=math.inf,
                                             max_ram=2 * 8192)
 
+    def test_decline_at_quota(self):
+        '''test that a provider at quota continues to decline requests'''
+
+        # patch the cloud with requested quota
+        def fake_get_quota():
+            return (math.inf, 1, math.inf)
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        configfile = self.setup_config('node_quota_tenant_instances.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        nodepool.launcher.LOCK_CLEANUP = 1
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        self.wait_for_config(pool)
+
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1)
+
+        self.log.debug("Waiting for 1st request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1, (zk.FULFILLED,))
+        self.assertEqual(len(req1.nodes), 1)
+
+        # Mark the first request's nodes as in use so they won't be deleted
+        # when we pause. Locking them is enough.
+        req1_node1 = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(req1_node1, blocking=False)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for 2nd request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('invalid-label')
+        self.zk.storeNodeRequest(req3)
+        self.log.debug("Waiting for 3rd request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3, (zk.FAILED,))
+
     def test_over_quota(self, config='node_quota_cloud.yaml'):
         '''
         This tests what happens when a cloud unexpectedly returns an
