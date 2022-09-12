@@ -147,24 +147,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if not self.running:
                 return True
 
-            if self.paused_handler:
-                self.log.debug("Handler is now paused")
-                return True
-
-            # Get active threads for all pools for this provider
-            active_threads = sum([
-                w.activeThreads() for
-                w in self.nodepool.getPoolWorkers(self.provider_name)
-            ])
-
-            # Short-circuit for limited request handling
-            if (provider.max_concurrency > 0 and
-                    active_threads >= provider.max_concurrency):
-                self.log.debug("Request handling limited: %s active threads ",
-                               "with max concurrency of %s",
-                               active_threads, provider.max_concurrency)
-                return True
-
             req = self.zk.getNodeRequest(req.id)
             if not req:
                 continue
@@ -227,9 +209,37 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if check_tenant_quota and not self._hasTenantQuota(req, pm):
                 # Defer request for it to be handled and fulfilled at a later
                 # run.
-                log.debug("Deferring request %s because it would "
-                          "exceed tenant quota", req)
+                log.debug("Deferring request because it would "
+                          "exceed tenant quota")
                 continue
+
+            # Get a request handler to help decide whether we should
+            # accept the request, but we're still not sure yet.  We
+            # must lock the request before calling .run().
+            rh = pm.getRequestHandler(self, req)
+            reasons_to_decline = rh.getDeclinedReasons()
+
+            if self.paused_handler and not reasons_to_decline:
+                self.log.debug("Handler is paused, deferring request")
+                continue
+
+            # At this point, we are either unpaused, or we know we
+            # will decline the request.
+
+            if not reasons_to_decline:
+                # Get active threads for all pools for this provider
+                active_threads = sum([
+                    w.activeThreads() for
+                    w in self.nodepool.getPoolWorkers(self.provider_name)
+                ])
+                # Short-circuit for limited request handling
+                if (provider.max_concurrency > 0 and
+                        active_threads >= provider.max_concurrency):
+                    self.log.debug("Request handling limited: %s "
+                                   "active threads ",
+                                   "with max concurrency of %s",
+                                   active_threads, provider.max_concurrency)
+                    continue
 
             log.debug("Locking request")
             try:
@@ -244,11 +254,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 log.debug("Request is in state %s", req.state)
                 continue
 
-            # Got a lock, so assign it
-            log.info("Assigning node request %s" % req)
-
-            rh = pm.getRequestHandler(self, req)
-            rh.run()
+            if not reasons_to_decline:
+                # Got a lock, so assign it
+                log.info("Assigning node request %s" % req)
+                rh.run()
+            else:
+                log.info("Declining node request %s" % req)
+                rh.declineRequest()
+                continue
 
             if has_quota_support:
                 # Adjust the label quota so we don't accept more requests
@@ -424,12 +437,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
                 if not self.paused_handler:
                     self.component_info.paused = False
-                    while not self._assignHandlers():
-                        # _assignHandlers can take quite some time on a busy
-                        # system so sprinkle _removeCompletedHandlers in
-                        # between such that we have a chance to fulfill
-                        # requests that already have all nodes.
-                        self._removeCompletedHandlers()
                 else:
                     self.component_info.paused = True
                     # If we are paused, one request handler could not
@@ -438,7 +445,18 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     self.paused_handler.run()
                     if not self.paused_handler.paused:
                         self.paused_handler = None
+                        self.component_info.paused = False
 
+                # Regardless of whether we are paused, run
+                # assignHandlers.  It will only accept requests if we
+                # are unpaused, otherwise it will only touch requests
+                # we intend to decline.
+                while not self._assignHandlers():
+                    # _assignHandlers can take quite some time on a busy
+                    # system so sprinkle _removeCompletedHandlers in
+                    # between such that we have a chance to fulfill
+                    # requests that already have all nodes.
+                    self._removeCompletedHandlers()
                 self._removeCompletedHandlers()
             except Exception:
                 self.log.exception("Error in PoolWorker:")
