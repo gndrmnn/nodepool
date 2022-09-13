@@ -141,6 +141,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b320f5c_5851e259",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-09-13T09:48:35Z",
+      "side": 1,
+      "message": "When I change the hold command to not have the lockNode invocation blocking, I think I get the expected exception that you were referring to, namely npe.ZKLockException",
+      "parentUuid": "045300cf_11d9f7c0",
+      "revId": "05ab4ebfef396bad1787955af402a8101e244f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8b918028_480deff0",

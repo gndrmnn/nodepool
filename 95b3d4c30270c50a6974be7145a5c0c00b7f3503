@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2853224d_3716448b",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-09-13T09:48:35Z",
+      "side": 0,
+      "message": "Is there a reason this needs to be blocking for the delete command?\nIs it okay to not have it blocking for the hold command?",
+      "range": {
+        "startLine": 286,
+        "startChar": 31,
+        "endLine": 286,
+        "endChar": 44
+      },
+      "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
