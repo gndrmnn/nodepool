@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59f58660_9620b448",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-17T00:04:59Z",
+      "side": 1,
+      "message": "Just following the pattern of avoiding init in this class (based on comment) and trying to not have to think too much about what should go here vs there.",
+      "parentUuid": "60185b6a_8006345c",
+      "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8012711a_0a5f440d",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-09-16T16:54:46Z",
       "side": 1,
       "message": "This makes naming more consistent. Is there any concern that the old method name is in use by out of tree drivers? I think that is unlikely because the noderequest handling is fairly generic for the underlying drivers and this class farms work out to them rather than the other way around?",
+      "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14313785_b979917b",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-17T00:04:59Z",
+      "side": 1,
+      "message": "We have been 100% clear we have no interest in supporting out of tree drivers.",
+      "parentUuid": "8012711a_0a5f440d",
       "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -52,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c878558a_eb8ad827",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-17T00:04:59Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s duplicated via the annotation.",
+      "parentUuid": "ea7cee06_b5210b65",
+      "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ee8e1b_8674a630",
@@ -65,6 +119,24 @@
       "writtenOn": "2022-09-16T16:54:46Z",
       "side": 1,
       "message": "Might want to reassert that req2 is still pending here? Just to make sure it didn\u0027t somehow magically get handled allowing req3 to be declined?",
+      "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc58d4f6_6466223d",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-17T00:04:59Z",
+      "side": 1,
+      "message": "Probably good future-proofing.  Will add followup.",
+      "parentUuid": "b2ee8e1b_8674a630",
       "revId": "7aaf640d2037a15a7836fe774ccc2b0c1e336dee",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
