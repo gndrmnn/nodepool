@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb4ca701_0465c36e",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-19T23:39:47Z",
+      "side": 1,
+      "message": "In both cases where this method is called, it\u0027s shortly after getRegisteredNodes is called, so the _node_slots list will have been updated.  It should either contain the correct data, or possibly some extra slots from a max-parallel-jobs reduction which hasn\u0027t been able to be contracted yet for some reason (possibly the node was locked when the reduction happened).  If we get to this point with an extra slot, we will try to deregister the ZK node, then if that succeeds, the next time we call getRegisteredNodes the _node_slots will be updated and will no longer have the extra slots.\n\nPut another way, the sequence is this:\n1. Update node_slots to represent the union of config and zookeeper\n2. Attempt to remove extra nodes in node_slots from zookeeper\n\nAnd we always call the method that does step 1 (getRegisteredNodes) before step 2 (syncNodeCount or _start).",
+      "parentUuid": "26017d53_b3d925ba",
+      "revId": "6221ac6e572c8a65bd1000fddb00a7138d64ab54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eda2bf5d_88308d67",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-02-23T19:02:19Z",
       "side": 1,
       "message": "Similar question as above. I think this may end up retriggering over and over again since deregisterNode(node) only updates the zk record?",
+      "revId": "6221ac6e572c8a65bd1000fddb00a7138d64ab54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efebe4ee_1a6b4cb1",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-19T23:39:47Z",
+      "side": 1,
+      "message": "The same is true as above.",
+      "parentUuid": "eda2bf5d_88308d67",
       "revId": "6221ac6e572c8a65bd1000fddb00a7138d64ab54",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
