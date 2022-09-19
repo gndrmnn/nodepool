@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d671a83c_042e59a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-09-19T20:42:54Z",
+      "side": 1,
+      "message": "lgtm apart from the debug leftover",
+      "revId": "efd57a4df99afcd70eaa0fa754c5ab34ddac10e2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67d73c5e_d8e80ec0",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2022-09-19T20:42:54Z",
+      "side": 1,
+      "message": "Debugging leftover",
+      "revId": "efd57a4df99afcd70eaa0fa754c5ab34ddac10e2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
