@@ -104,6 +104,8 @@ class AwsProviderDiskImage(ConfigValue):
         self.ena_support = image.get('ena-support', True)
         self.volume_size = image.get('volume-size', None)
         self.volume_type = image.get('volume-type', 'gp2')
+        self.iops = image.get('iops', None)
+        self.throughput = image.get('throughput', None)
 
     @property
     def external_name(self):
@@ -124,6 +126,8 @@ class AwsProviderDiskImage(ConfigValue):
             'ena-support': bool,
             'volume-size': int,
             'volume-type': str,
+            'iops': int,
+            'throughput': int,
             'tags': dict,
         }
 
@@ -166,6 +170,8 @@ class AwsLabel(ConfigValue):
         self.key_name = label.get('key-name')
         self.volume_type = label.get('volume-type')
         self.volume_size = label.get('volume-size')
+        self.iops = label.get('iops', None)
+        self.throughput = label.get('throughput', None)
         self.userdata = label.get('userdata', None)
         self.iam_instance_profile = label.get('iam-instance-profile', None)
         self.tags = label.get('tags', {})
@@ -182,6 +188,8 @@ class AwsLabel(ConfigValue):
             'ebs-optimized': bool,
             'volume-type': str,
             'volume-size': int,
+            'iops': int,
+            'throughput': int,
             'userdata': str,
             'iam-instance-profile': {
                 v.Exclusive('name', 'iam_instance_profile_id'): str,

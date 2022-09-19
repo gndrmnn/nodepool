@@ -411,6 +411,20 @@ Selecting the ``aws`` driver adds the following options to the
          omitted, the volume size reported for the imported snapshot
          will be used.
 
+      .. attr:: iops
+         :type: int
+
+         The number of I/O operations per second to be provisioned for
+         the volume.  The default varies based on the volume type; see
+         the documentation under `EBS volume type`_ for the specific
+         volume type for details.
+
+      .. attr:: throughput
+         :type: int
+
+         The troughput of the volume in MiB/s.  This is only valid for
+         ``gp3`` volumes.
+
       .. attr:: tags
          :type: dict
          :default: None
@@ -625,6 +639,20 @@ Selecting the ``aws`` driver adds the following options to the
               :type: int
 
               If given, the size of the root EBS volume, in GiB.
+
+           .. attr:: iops
+              :type: int
+
+              The number of I/O operations per second to be
+              provisioned for the volume.  The default varies based on
+              the volume type; see the documentation under `EBS volume
+              type`_ for the specific volume type for details.
+
+           .. attr:: throughput
+              :type: int
+
+              The troughput of the volume in MiB/s.  This is only
+              valid for ``gp3`` volumes.
 
            .. attr:: userdata
               :type: str
