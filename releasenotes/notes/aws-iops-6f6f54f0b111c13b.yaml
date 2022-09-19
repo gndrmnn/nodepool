@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The AWS driver now support specifying volume IOPS and throughput; see:
+    :attr:`providers.[aws].pools.labels.iops`,
+    :attr:`providers.[aws].pools.labels.throughput`,
+    :attr:`providers.[aws].diskimages.iops`, and
+    :attr:`providers.[aws].diskimages.throughput`.
