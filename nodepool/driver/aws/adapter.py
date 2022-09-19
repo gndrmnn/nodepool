@@ -456,20 +456,24 @@ class AwsAdapter(statemachine.Adapter):
         volume_size = provider_image.volume_size or snap.volume_size
         # Register the snapshot as an AMI
         with self.rate_limiter:
+            bdm = {
+                'DeviceName': '/dev/sda1',
+                'Ebs': {
+                    'DeleteOnTermination': True,
+                    'SnapshotId': task[
+                        'SnapshotTaskDetail']['SnapshotId'],
+                    'VolumeSize': volume_size,
+                    'VolumeType': provider_image.volume_type,
+                },
+            }
+            if provider_image.iops:
+                bdm['Ebs']['Iops'] = provider_image.iops
+            if provider_image.throughput:
+                bdm['Ebs']['Throughput'] = provider_image.throughput
+
             register_response = self.ec2_client.register_image(
                 Architecture=provider_image.architecture,
-                BlockDeviceMappings=[
-                    {
-                        'DeviceName': '/dev/sda1',
-                        'Ebs': {
-                            'DeleteOnTermination': True,
-                            'SnapshotId': task[
-                                'SnapshotTaskDetail']['SnapshotId'],
-                            'VolumeSize': volume_size,
-                            'VolumeType': provider_image.volume_type,
-                        },
-                    },
-                ],
+                BlockDeviceMappings=[bdm],
                 RootDeviceName='/dev/sda1',
                 VirtualizationType='hvm',
                 EnaSupport=provider_image.ena_support,
@@ -817,6 +821,10 @@ class AwsAdapter(statemachine.Adapter):
                     mapping['Ebs']['VolumeSize'] = label.volume_size
                 if label.volume_type:
                     mapping['Ebs']['VolumeType'] = label.volume_type
+                if label.iops:
+                    mapping['Ebs']['Iops'] = label.iops
+                if label.throughput:
+                    mapping['Ebs']['Throughput'] = label.throughput
                 # If the AMI is a snapshot, we cannot supply an "encrypted"
                 # parameter
                 if 'Encrypted' in mapping['Ebs']:
