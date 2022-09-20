@@ -142,9 +142,16 @@ class ConfigValidator:
                 for label in pool.get('labels', []):
                     if label['name'] not in labels:
                         errors = True
-                        log.error("diskimage %s in provider %s "
+                        log.error("label %s in provider %s "
                                   "not in top-level labels" %
                                   (label['name'], provider['name']))
+                    label_di = label.get('diskimage')
+                    if label_di and label_di not in diskimages:
+                        errors = True
+                        log.error("label %s in provider %s uses diskimage %s "
+                                  "which is not defined in the main "
+                                  "diskimages list" %
+                                  (label["name"], provider["name"], label_di))
 
         diskimages = {}
         for diskimage in config.get('diskimages', []):
