@@ -47,6 +47,6 @@ $SCRIPT_DIR/zk-ca.sh $CA_DIR nodepool-test-zookeeper
 
 ${ROOTCMD} ${COMPOSE} down
 
-${ROOTCMD} ${COMPOSE} up -d
+${ROOTCMD} USER_ID=$(id -u) ${COMPOSE} up -d
 
 echo "Finished"
