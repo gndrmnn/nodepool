@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82e69b0e_3a729a5f",
+        "filename": "nodepool/cmd/config_validator.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-09-21T15:19:56Z",
+      "side": 1,
+      "message": "This should all probably be happening in the drivers themselves, but this probably works well enough.  :)",
+      "revId": "00b20b0b39bc09891d368313f97dd75518232c42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
