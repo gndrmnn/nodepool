@@ -1,0 +1,8 @@
+Code-Review+2: James E. Blair <jim@acmegating.com>
+Workflow+1: James E. Blair <jim@acmegating.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 21 Sep 2022 16:11:01 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/858662
+Project: zuul/nodepool
+Branch: refs/heads/master
