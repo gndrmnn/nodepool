@@ -16,6 +16,23 @@
       "message": "Adding a dependency to https://review.opendev.org/c/zuul/nodepool/+/858662 should get rid of the linter errors.",
       "revId": "fb25e60ddb34aa5b4967460a4a8a53d5b47fe965",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fdab830_1813b166",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-09-21T16:24:13Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "fb25e60ddb34aa5b4967460a4a8a53d5b47fe965",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
