@@ -86,7 +86,10 @@ class AzureInstance(statemachine.Instance):
                              self.private_ipv4 or self.private_ipv6)
         self.cloud = 'Azure'
         self.region = vm['location']
-        self.az = vm['zones'][0]
+        if vm.get('zones', []) > 0:
+            self.az = vm['zones'][0]
+        else:
+            self.az = ''
 
     def getQuotaInformation(self):
         return quota_info_from_sku(self.sku)
