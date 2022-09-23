@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "980839cd_c93cf5b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-09-23T18:30:41Z",
+      "side": 1,
+      "message": "recheck the python 3.8 job failed on a gce test which shouldn\u0027t be affected by an azure driver change",
+      "revId": "ee1ace24afe8c513f5476ce617f681e625ce9acf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
