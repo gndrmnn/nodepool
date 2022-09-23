@@ -265,7 +265,8 @@
             nodeset: ubuntu-jammy
         - nodepool-tox-py38
         - nodepool-tox-py310
-        - nodepool-functional-container-openstack-release
+        - nodepool-functional-container-openstack-release:
+            voting: false
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
