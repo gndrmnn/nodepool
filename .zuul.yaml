@@ -168,6 +168,7 @@
         /home/zuul/zuul-output/logs/docker: logs
         /etc/nodepool: logs
         /var/log/nodepool: logs
+        /var/log/libvirt: logs
     nodeset: ubuntu-jammy
 
 - job:
