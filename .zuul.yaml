@@ -165,6 +165,7 @@
     vars:
       zuul_copy_output:
         /var/log/nodepool: logs
+        /var/log/libvirt: logs
     nodeset: ubuntu-jammy
 
 - job:
