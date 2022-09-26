@@ -163,7 +163,11 @@
     run: playbooks/nodepool-functional-container-openstack/run.yaml
     post-run: playbooks/nodepool-functional-container-openstack/post.yaml
     vars:
+      stage_dir: "{{ ansible_user_dir }}/zuul-output"
       zuul_copy_output:
+        /var/log/syslog: logs_txt
+        /home/zuul/zuul-output/logs/docker: logs
+        /etc/nodepool: logs
         /var/log/nodepool: logs
     nodeset: ubuntu-jammy
 
