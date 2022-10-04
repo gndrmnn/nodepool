@@ -163,10 +163,32 @@ class TestDriverStatic(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req1)
+
+        req1 = self.waitForNodeRequest(req1, zk.FULFILLED)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req2)
+
+        node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
         self.log.debug("Waiting for additional node")
         self.replace_config(configfile, 'static-2-nodes.yaml')
-        nodes = self.waitForNodes('fake-label', 2)
-        self.assertEqual(len(nodes), 2)
+
+        req2 = self.waitForNodeRequest(req2, zk.FULFILLED)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
 
     def test_static_node_decrease(self):
         '''
