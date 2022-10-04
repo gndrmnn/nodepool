@@ -168,6 +168,30 @@ class TestDriverStatic(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
 
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req1)
+
+        req1 = self.waitForNodeRequest(req1, zk.FULFILLED)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req2)
+
+        node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        req2 = self.waitForNodeRequest(req2, zk.FULFILLED)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
+
     def test_static_node_decrease(self):
         '''
         Test that removing nodes from the config removes nodes.
@@ -366,6 +390,35 @@ class TestDriverStatic(tests.DBTestCase):
         self.zk.unlockNode(node)
         self.waitForNodeDeletion(node)
         self.waitForNodeRequest(req_waiting, zk.FULFILLED)
+
+    def test_label_quota2(self):
+        configfile = self.setup_config('static-2-nodes.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req1)
+
+        req1 = self.waitForNodeRequest(req1, zk.FULFILLED)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+
+        self.zk.storeNodeRequest(req2)
+
+        node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(node)
+        node.state = zk.USED
+        self.zk.storeNode(node)
+
+        req2 = self.waitForNodeRequest(req2, zk.FULFILLED)
+
+        self.zk.unlockNode(node)
+        self.waitForNodeDeletion(node)
 
     def test_static_ignore_assigned_ready_nodes(self):
         """Regression test to not touch assigned READY nodes"""
