@@ -15,6 +15,7 @@
 
 import logging
 import os.path
+import shutil
 import sys  # noqa making sure its available for monkey patching
 import tempfile
 
@@ -256,6 +257,38 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Check that fake-image-0000000001 doesn't exist
         self.assert_listed(
             configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
+
+    def test_dib_image_delete_custom_image_creation(self):
+        # Test deletion of images without a .d manifest folder
+        # e.g. When using a custom image creation
+        configfile = self.setup_config('node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        builder = self.useBuilder(configfile)
+        pool.start()
+        self.waitForImage('fake-provider', 'fake-image')
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes), 1)
+        # Check the image exists
+        self.assert_listed(configfile, ['dib-image-list'], 4, zk.READY, 1)
+        builds = self.zk.getMostRecentBuilds(1, 'fake-image', zk.READY)
+        # Delete manifest folder to simulate custom image creation
+        shutil.rmtree(os.path.join(builder._config.images_dir,
+                                   'fake-image-0000000001.d'))
+        # But ensure image is still present
+        self.assertTrue(
+            os.path.exists(os.path.join(builder._config.images_dir,
+                                        'fake-image-0000000001.qcow2')))
+        # Delete the image
+        self.patch_argv('-c', configfile, 'dib-image-delete',
+                        'fake-image-%s' % (builds[0].id))
+        nodepoolcmd.main()
+        self.waitForBuildDeletion('fake-image', '0000000001')
+        # Check that fake-image-0000000001 doesn't exist
+        self.assert_listed(
+            configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
+        self.assertFalse(
+            os.path.exists(os.path.join(builder._config.images_dir,
+                                        'fake-image-0000000001.qcow2')))
 
     def test_dib_image_delete_two_builders(self):
         # This tests deleting an image when its builder is offline
