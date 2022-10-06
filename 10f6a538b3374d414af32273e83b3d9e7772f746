@@ -16,6 +16,74 @@
       "message": "recheck",
       "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61a7b83f_aff0e152",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-06T09:17:09Z",
+      "side": 1,
+      "message": "Some kind of documentation would be nice, maybe as an example in the static driver doc. Also a release note?",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a65890f_079d7966",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-06T09:17:09Z",
+      "side": 1,
+      "message": "This seems unrelated, bad rebase?",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e806bd6_9cf94486",
+        "filename": "nodepool/tests/unit/test_driver_static.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-06T09:17:09Z",
+      "side": 1,
+      "message": "Is it really necessary to add this assert almost everywhere? We don\u0027t check most other attributes either, so I\u0027m not sure what should be so special here to warrant this.",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac97ecf5_aa35d7df",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-06T09:17:09Z",
+      "side": 1,
+      "message": "Does this need a fallback in order not to break on updates?",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
