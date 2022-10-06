@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00473f0e_f9763c32",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-10-06T05:32:14Z",
+      "side": 1,
+      "message": "I think it would make sense to add a regression test for this.",
+      "revId": "bfa3634cfb4b6d71cfc8d821a47d21469225605f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0da5e2_8ce4393e",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-10-06T05:32:14Z",
+      "side": 1,
+      "message": "You need to match on `entry.name`",
+      "revId": "bfa3634cfb4b6d71cfc8d821a47d21469225605f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
