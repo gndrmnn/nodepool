@@ -160,6 +160,12 @@ class Provider(ProviderNotifications):
     The class or instance attribute **name** must be provided as a string.
 
     """
+
+    # This is only intended for the static driver.  It indicates
+    # whether we should pause the provider when we are at quota.  This
+    # should almost always be true.
+    PAUSE_AT_QUOTA = True
+
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
 
@@ -498,12 +504,18 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
 
                     self.log.info(
                         "Not enough quota remaining to satisfy request")
-                    if not self.paused:
-                        self.log.debug(
-                            "Pausing request handling to satisfy request")
-                    self.paused = True
                     self.zk.deleteOldestUnusedNode(self.provider.name,
                                                    self.pool.name)
+                    if self.manager.PAUSE_AT_QUOTA:
+                        if not self.paused:
+                            self.log.debug(
+                                "Pausing request handling to satisfy request")
+                        self.paused = True
+                    else:
+                        # Release the request so that we or another
+                        # provider can try again when the label quota
+                        # is available.
+                        self._declinedHandlerCleanup()
                     return
 
                 if self.paused:

@@ -549,6 +549,61 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(len(req.nodes), 1)
         self.assertNotEqual(req.nodes[0], nodes[0].id)
 
+    def test_liveness_two_node(self):
+        '''
+        Test that a node going offline doesn't block a static provider
+        '''
+        configfile = self.setup_config('static-two-node.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        nodes1 = self.waitForNodes('fake-label')
+        self.assertEqual(len(nodes1), 1)
+        nodes2 = self.waitForNodes('fake-label2')
+        self.assertEqual(len(nodes2), 1)
+
+        # We will take this node offline later
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+
+        # This nod does not perform host checks so never goes offline
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label2')
+
+        # Take the first node offline then submit a node request for
+        # it (which should be accepted but then released once the
+        # driver fails the liveness check).
+        with mock.patch("nodepool.nodeutils.nodescan") as nodescan_mock:
+            nodescan_mock.side_effect = OSError
+            self.zk.storeNodeRequest(req1)
+            self.waitForNodeDeletion(nodes1[0])
+
+            # We know the first request has been accepted and
+            # processed since the node was deleted.  At this point,
+            # submit the second request.
+            self.zk.storeNodeRequest(req2)
+
+            self.log.debug("Waiting for request %s", req2.id)
+            req2 = self.waitForNodeRequest(req2)
+            # The second request is fulfilled; get the status of the
+            # first request at the same time.
+            req1 = self.zk.getNodeRequest(req1.id)
+
+        # Verify that the first request was not fulfilled at the time
+        # that the second was.
+        self.assertEqual(req1.state, zk.REQUESTED)
+        self.assertEqual(req2.state, zk.FULFILLED)
+        self.assertEqual(len(req2.nodes), 1)
+        self.assertNotEqual(req2.nodes[0], nodes2[0].id)
+
+        # Now let req1 complete with the node online.
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        self.assertEqual(req1.state, zk.FULFILLED)
+        self.assertEqual(len(req1.nodes), 1)
+        self.assertNotEqual(req1.nodes[0], nodes1[0].id)
+
     def test_host_key_checking_toggle(self):
         """Test that host key checking can be disabled"""
         configfile = self.setup_config('static-no-check.yaml')
