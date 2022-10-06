@@ -16,6 +16,7 @@ import math
 import logging
 import json
 import time
+import threading
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
@@ -263,8 +264,11 @@ class MetastaticAdapter(statemachine.Adapter):
         # The requestor id
         self.my_id = f'NodePool:metastatic:{self.provider.name}'
         # On startup we need to recover our state from the ZK db, this
-        # flag ensures we only do that once.
+        # flag ensures we only do that once.  We also can't do it here
+        # because we have to wait for ZK to be initialized which may
+        # be well after this point.
         self.performed_init = False
+        self.init_lock = threading.Lock()
 
     @property
     def zk(self):
@@ -326,8 +330,12 @@ class MetastaticAdapter(statemachine.Adapter):
     # Local implementation below
 
     def _init(self):
-        if self.performed_init:
-            return
+        with self.init_lock:
+            if self.performed_init:
+                return
+            self._init_inner()
+
+    def _init_inner(self):
         self.log.debug("Performing init")
         # Find backing nodes
         backing_node_map = {}
