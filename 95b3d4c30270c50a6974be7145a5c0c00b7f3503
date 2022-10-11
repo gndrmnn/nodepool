@@ -70,6 +70,30 @@
       },
       "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caac28fd_846f218f",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:45:34Z",
+      "side": 0,
+      "message": "I would very much prefer not having to modify the config in order to perform maintenance. Also, would removing an in-use node from the config actually be safer?",
+      "parentUuid": "2eedf460_60d32e48",
+      "range": {
+        "startLine": 286,
+        "startChar": 31,
+        "endLine": 286,
+        "endChar": 44
+      },
+      "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
