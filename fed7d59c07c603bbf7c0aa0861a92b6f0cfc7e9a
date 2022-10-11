@@ -140,6 +140,24 @@
       "parentUuid": "60c4bb33_6b4a9c11",
       "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06e4f0c6_ac94fb49",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T11:53:57Z",
+      "side": 1,
+      "message": "Having to delete a node in order to move from \"hold\" to \"ready\" sounds very counter-intuitive. At the very least that would need to be very explicitly documented as the expected workflow. For user-friendlyness I would like to see a \"unhold\" command matching the \"image-pause/-unpause\" pair, even if it is only an alias for \"delete\".",
+      "parentUuid": "2ab0ab6b_471ada5b",
+      "revId": "fed7d59c07c603bbf7c0aa0861a92b6f0cfc7e9a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }

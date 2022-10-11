@@ -22,6 +22,30 @@
       },
       "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3bdce09_2905d792",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T11:53:57Z",
+      "side": 0,
+      "message": "Overwriting the state from \"in-use\" to \"hold\" doesn\u0027t seem like a good idea. On the other hand, as an operator of a busy setup I would really like to be able to issue the hold command while the node is in use and then have nodepool wait until the node is unlocked in the background and apply the hold after that. No idea how to actually implement that, but that\u0027s the way I\u0027d like to see this work.",
+      "parentUuid": "2853224d_3716448b",
+      "range": {
+        "startLine": 286,
+        "startChar": 31,
+        "endLine": 286,
+        "endChar": 44
+      },
+      "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
