@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02cca7da_6b87c288",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-11T17:58:52Z",
+      "side": 1,
+      "message": "PS15 is the same as PS13, skipping all attempted modifications from PS14",
+      "revId": "95e9b407a187e23cfcd3525dd83f70649e23cb7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
