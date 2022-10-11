@@ -91,6 +91,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fdb75664_41bb4764",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-11T18:32:21Z",
+      "side": 1,
+      "message": "However, delete() and hold() behave slightly differently when locking a node: delete() will be blocking, leading to a TimeoutException while hold() is non-blocking and will cause a ZKLockException. Not sure what is the best behavior here but maybe it is okay like this?",
+      "parentUuid": "2ba062ca_6a87d189",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "01b52bec_2e696b64",
         "filename": "nodepool/tests/unit/test_commands.py",
         "patchSetId": 14
