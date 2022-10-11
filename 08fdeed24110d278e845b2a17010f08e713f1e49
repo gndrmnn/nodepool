@@ -16,6 +16,40 @@
       "message": "PS 13 is PS8 again, but rebased on current master (to fix a conflict).\n\nThis is the version of the change I\u0027m comfortable proposing.\n",
       "revId": "08fdeed24110d278e845b2a17010f08e713f1e49",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42e1eb79_be56695f",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-11T22:09:23Z",
+      "side": 1,
+      "message": "Do we need to set node.slot to idx here? In particular entries to unslotted_nodes may have node.slot set to None accordingto the else at line 179. Additionally, if a slot shifts somehow we\u0027d need to reconcile that?",
+      "revId": "08fdeed24110d278e845b2a17010f08e713f1e49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc91ed39_369410c6",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-11T22:09:23Z",
+      "side": 1,
+      "message": "See above though I think it would be node.slot \u003d len(node_slots[nodeTuple(node)]) - 1",
+      "revId": "08fdeed24110d278e845b2a17010f08e713f1e49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
