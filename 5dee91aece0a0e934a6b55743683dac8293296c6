@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "404d2dc7_abdebc89",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "s/nodes/jobs/ ? The fact that internally multiple node objects are registered for this should be opaque to the user. Otherwise you shouldn\u0027t talk about jobs here in the first place and maybe even rename the attribute.",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "953a50cf_9700e752",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "Maybe these full references are too much, the rendered doc doesn\u0027t look very readable to me, consider replacing with just ``username`` etc.?",
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3edb3f03_5ba01f27",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "I would rephrase this as\n\n``slot`` numbers\n\nto visualize how the node attribute will be named.",
+      "range": {
+        "startLine": 188,
+        "startChar": 30,
+        "endLine": 188,
+        "endChar": 46
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2edda001_b103ef3a",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "The extra space breaks formatting.",
+      "range": {
+        "startLine": 189,
+        "startChar": 53,
+        "endLine": 189,
+        "endChar": 54
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afb7452c_9211e937",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "Renaming the argument seems unrelated and makes it more difficult to see what this patch is actually doing. If you think that the rename is necessary, I would prefer to see it split out into a dedicated patch.",
+      "range": {
+        "startLine": 61,
+        "startChar": 24,
+        "endLine": 61,
+        "endChar": 35
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}

@@ -123,6 +123,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6620f4a9_facbe64d",
+        "filename": "nodepool/tests/unit/test_driver_static.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "71564d86_fac4ddb6",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac97ecf5_aa35d7df",
@@ -154,6 +172,24 @@
       "side": 1,
       "message": "I have added a fallback to slot 0 to prevent returning none during upgrades",
       "parentUuid": "ac97ecf5_aa35d7df",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f0f52b9_44e8d03d",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2022-10-11T12:38:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "797b9bc8_8c909a12",
       "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
