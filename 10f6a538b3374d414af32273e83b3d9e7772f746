@@ -53,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b58212b_ee033bd2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T14:15:27Z",
+      "side": 1,
+      "message": "Both of these are for Zuul to do.",
+      "parentUuid": "d839741f_250c1c4f",
+      "revId": "10f6a538b3374d414af32273e83b3d9e7772f746",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a65890f_079d7966",

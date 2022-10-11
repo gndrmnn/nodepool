@@ -48,6 +48,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "430c275e_09838675",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T14:15:27Z",
+      "side": 1,
+      "message": "Actually nodepool generally doesn\u0027t mention anything about jobs, so we don\u0027t need to mention this at all.  That\u0027s for the Zuul docs.",
+      "parentUuid": "b5403b75_a8891dd0",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "953a50cf_9700e752",
@@ -96,6 +120,30 @@
       "writtenOn": "2022-10-11T12:38:27Z",
       "side": 1,
       "message": "I would rephrase this as\n\n``slot`` numbers\n\nto visualize how the node attribute will be named.",
+      "range": {
+        "startLine": 188,
+        "startChar": 30,
+        "endLine": 188,
+        "endChar": 46
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c29b152_9dc7fce7",
+        "filename": "doc/source/static.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T14:15:27Z",
+      "side": 1,
+      "message": "Again, this is for zuul docs.",
+      "parentUuid": "3edb3f03_5ba01f27",
       "range": {
         "startLine": 188,
         "startChar": 30,
@@ -190,6 +238,30 @@
       "side": 1,
       "message": "static_node seems to be a common name throughout nodepool/driver/static/provider.py, because of this i believe it makes sense to rename it here as well. However, I can agree that it is not directly related to this change\u0027s topic.",
       "parentUuid": "afb7452c_9211e937",
+      "range": {
+        "startLine": 61,
+        "startChar": 24,
+        "endLine": 61,
+        "endChar": 35
+      },
+      "revId": "5dee91aece0a0e934a6b55743683dac8293296c6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12e87772_c644a5aa",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T14:15:27Z",
+      "side": 1,
+      "message": "The name \"static_node\" and \"node\" have important distinctions.  This helps the developer understand that we\u0027re dealing with a config object and not a zk object.  This should stay in the change.",
+      "parentUuid": "4a3be32d_88a63b41",
       "range": {
         "startLine": 61,
         "startChar": 24,

@@ -34,6 +34,24 @@
       "parentUuid": "2bde1d34_8b858cf3",
       "revId": "19d7c65b0e57a9a95177ef16db3125036540089d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca08f677_00b1bee7",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T14:15:27Z",
+      "side": 0,
+      "message": "We generally try to separate imports as described, but we also try to avoid changing things that don\u0027t need changing, and we try to avoid commenting on whitespace changes in reviews.  They should almost never be considered a -1.\n\nAt any rate, collections is in the standard library, so this change is fine.",
+      "parentUuid": "6f911249_2fa63fa9",
+      "revId": "19d7c65b0e57a9a95177ef16db3125036540089d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
