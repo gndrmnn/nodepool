@@ -46,6 +46,30 @@
       },
       "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eedf460_60d32e48",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-11T12:25:10Z",
+      "side": 0,
+      "message": "\u003e Overwriting the state from \"in-use\" to \"hold\" doesn\u0027t seem like a good idea. \n\nAs far as I can see, this is not possible as the node will be locked when it\u0027s in use.\n\n\u003e I would really like to be able to issue the hold command while the node is in use and then have nodepool wait until the node is unlocked in the background and apply the hold after that.\n\nThis was part of my first idea/draft as well but it was deemed unsafe as it would possibly introduce a race condition with other node requests.\nQuoting James: \n\u003e i would not recommend that workflow. you will be racing nodepool itself. in that case i would recommend removing the node from the config file.",
+      "parentUuid": "f3bdce09_2905d792",
+      "range": {
+        "startLine": 286,
+        "startChar": 31,
+        "endLine": 286,
+        "endChar": 44
+      },
+      "revId": "95b3d4c30270c50a6974be7145a5c0c00b7f3503",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
