@@ -37,6 +37,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2e4edfa1_f6e9a642",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-11T17:28:29Z",
+      "side": 1,
+      "message": "Not sure if I understand. I don\u0027t see the delete function or any other command return non-zero anywhere.",
+      "parentUuid": "b1457123_7c42ad8e",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "01b52bec_2e696b64",
         "filename": "nodepool/tests/unit/test_commands.py",
         "patchSetId": 14
