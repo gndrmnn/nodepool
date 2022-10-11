@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "73b05efa_0f53ab3a",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T22:20:07Z",
+      "side": 1,
+      "message": "That is an option, but I don\u0027t think we need to do that.  Node.slot\u003d\u003dNone should only happen in the case where we upgrade, so the actual slot number of the node isn\u0027t that important.  The next time the node is (re)created, it will get a slot number assigned to it, and things will be good from there.  Actually assigning the slot here would be fairly complex because we would need to lock the node, and it may already be locked.  Instead, the approach is to just have it occupy any slot in memory until it\u0027s gone.  From the consumer\u0027s (zuul\u0027s) pov, it wasn\u0027t created with a slot, so it will just be None.",
+      "parentUuid": "42e1eb79_be56695f",
+      "revId": "08fdeed24110d278e845b2a17010f08e713f1e49",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bc91ed39_369410c6",
         "filename": "nodepool/driver/static/provider.py",
         "patchSetId": 13
