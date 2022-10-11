@@ -55,6 +55,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "efd7aafd_e1d98d21",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T18:18:31Z",
+      "side": 1,
+      "message": "My understanding (and I haven\u0027t run this locally to double check, so correct me if I\u0027m wrong) is that the current code will raise an exception if we run \"nodepool delete\" on a locked node.  Raising the exception will cause the CLI to exit rc\u003d1.  And some versions of this patch do the same for the \"hold\" command, which I think is the best behavior, but my concern with this version is that it would only print a statement that the node was locked and then exit rc\u003d0 because the exception was suppressed (and the same applied to delete).\n\nAnyway, to be clear, I think the best behavior for both delete and hold is to try to lock the node and exit with an error code if that fails.",
+      "parentUuid": "2e4edfa1_f6e9a642",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "01b52bec_2e696b64",
         "filename": "nodepool/tests/unit/test_commands.py",
         "patchSetId": 14
