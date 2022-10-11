@@ -73,6 +73,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2ba062ca_6a87d189",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-11T18:30:13Z",
+      "side": 1,
+      "message": "\u003e the current code will raise an exception if we run \"nodepool delete\" on a locked node.  Raising the exception will cause the CLI to exit rc\u003d1\n\nI see now, I thought you were referring to some explicit return 1 or something like that in the code.\nPS15 should behave as you describe now, exiting with an error if locking a node fails",
+      "parentUuid": "efd7aafd_e1d98d21",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "01b52bec_2e696b64",
         "filename": "nodepool/tests/unit/test_commands.py",
         "patchSetId": 14
