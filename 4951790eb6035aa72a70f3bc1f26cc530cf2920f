@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "4951790eb6035aa72a70f3bc1f26cc530cf2920f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8c02d0f_825ad171",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T17:21:00Z",
+      "side": 1,
+      "message": "This is pretty fast for a unit test when they\u0027re all running in parallel.  Since we expect this to timeout it can be less than a minute, but it should probably be at least 30 seconds.",
+      "revId": "4951790eb6035aa72a70f3bc1f26cc530cf2920f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
