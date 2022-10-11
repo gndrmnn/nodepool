@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06fb2e1d_1a00076d",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T15:41:55Z",
+      "side": 1,
+      "message": "If I\u0027m following correctly, trying to delete a locked node is now non-fatal?  Or am I missing something?  If not, then I don\u0027t think that\u0027s a change we should make.",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1457123_7c42ad8e",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T15:41:55Z",
+      "side": 1,
+      "message": "Similarly to deleting, it seems like if we are unable to lock a node, the command should exit non-zero?",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01b52bec_2e696b64",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T15:41:55Z",
+      "side": 1,
+      "message": "What is this tiny sleep for?",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "889ab349_6f769e83",
+        "filename": "nodepool/tests/unit/test_commands.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-11T15:41:55Z",
+      "side": 1,
+      "message": "As I mentioned in the previous patchset, because of the paralellism in unit tests, we need longer delays in order for the test to be valid.",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
