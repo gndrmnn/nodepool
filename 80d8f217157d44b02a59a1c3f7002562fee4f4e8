@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d7705c5_a72c1419",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:05:17Z",
+      "side": 1,
+      "message": "-1: I can\u0027t think of a compelling reason to do this at this point.  I think it would be more straightforward to just call cleanupNode(server.id) synchronously here.\n\nA benefit of that is you can drop the nodeIterator loop at the top.",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ded62f1_f4726445",
+        "filename": "nodepool/tests/unit/test_driver_kubernetes.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:05:17Z",
+      "side": 1,
+      "message": "Typically, we would expect to use a facility like \u0027annotations\u0027 rather than \u0027labels\u0027 because we don\u0027t expect\nto query or identify these namespaces, and this change does not do that.  However, by using labels instead of annotations, we retain the ability to potentially do that in the future.  Is that the reasoning for this choice?\n\n(Incidentally, I do not think that we should add any features which rely on querying labels now; this driver needs to be converted to the statemachine interface, and the simpler we keep this, the easier that will be.)",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fa95e0c_92eb46b0",
+        "filename": "nodepool/tests/unit/test_driver_kubernetes.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:05:17Z",
+      "side": 1,
+      "message": "-1: Add watermark_sleep\u003d1 to useNodepool, and then add pool.cleanup_interval \u003d 1.  Those will make this run a lot faster (a few seconds instead of a few minutes).",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26c33920_9e139959",
+        "filename": "nodepool/tests/unit/test_driver_kubernetes.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:05:17Z",
+      "side": 1,
+      "message": "nit: min-ready",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
