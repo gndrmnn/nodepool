@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00197bca_4c0b30f3",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T22:12:52Z",
+      "side": 1,
+      "message": "I agree with this.",
+      "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "acfedc99_9673c198",
@@ -31,6 +48,23 @@
       "writtenOn": "2022-08-15T13:04:27Z",
       "side": 1,
       "message": "I think we should be consistent here and also use MiB as we do for the memory limits.",
+      "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dd40bee_7be99520",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T22:12:52Z",
+      "side": 1,
+      "message": "I just left a comment on another change advocating keeping memory specified as MiB since memory is customarily measured in MiB, and by that logic, this should be MB since that\u0027s how storage is customarily measured.\n\nIn retrospect, perhaps neither of these should be integers and instead should be strings.  Maybe we should fix that when we move it to Zuul.",
       "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
