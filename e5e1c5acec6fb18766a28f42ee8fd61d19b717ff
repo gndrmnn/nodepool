@@ -16,6 +16,40 @@
       "message": "recheck",
       "revId": "e5e1c5acec6fb18766a28f42ee8fd61d19b717ff",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dec6a492_76983459",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:19:06Z",
+      "side": 1,
+      "message": "You can change the last group to \"(?:\\w+)\" which makes it a non-capturing group.  Then you can omit the _ below.",
+      "revId": "e5e1c5acec6fb18766a28f42ee8fd61d19b717ff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "600865fc_fb07ab3f",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T21:19:06Z",
+      "side": 1,
+      "message": "This is getting pretty close to a \"style nit\" which we don\u0027t normally go for in code review, but I think this can be simplified in a way that makes it much easier to maintain, so I hope you\u0027ll indulge me.  If you do this (i\u0027m abbreviating some things slightly and assuming the regex change above):\n\nseen \u003d set()\nfor entry in scandir:\n  m \u003d match(entry.name)\n  if m:\n    name_and_id \u003d m.groups()\n    if name_and_id in seen: continue\n    seen.add(name_and_id)\n    yield name_and_id",
+      "revId": "e5e1c5acec6fb18766a28f42ee8fd61d19b717ff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
