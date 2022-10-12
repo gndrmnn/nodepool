@@ -107,6 +107,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4c61753_571ce5ce",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-12T22:27:53Z",
+      "side": 1,
+      "message": "Is there any reason they should be different?  I would think that the current behavior for \"delete\" should be fine for both: blocking for 5 seconds.  That means if we can\u0027t obtain the lock within 5 seconds we give up.  The reason for that is to increase the chance that this succeeds even if one of the system components briefly locks the node for some purpose (they are permitted to do that).\n\nIn short, absent a compelling reason otherwise, I think we should just use the existing delete behavior for both commands.\n\nAlso, this is a bit of a nit, but this method isn\u0027t really necessary and it keeps tripping me up when I look for what else is using it, so if you make a new patchset to resolve the locking situation, maybe you could just move this to the hold() method.",
+      "parentUuid": "fdb75664_41bb4764",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "01b52bec_2e696b64",
