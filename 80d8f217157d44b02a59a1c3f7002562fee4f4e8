@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f77484da_97f46bf4",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-10-13T11:45:47Z",
+      "side": 1,
+      "message": "This logic was taken from the openstack provider, but I also like the simpler solution better. Updated accordingly.",
+      "parentUuid": "5d7705c5_a72c1419",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2ded62f1_f4726445",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-10-12T21:05:17Z",
       "side": 1,
       "message": "Typically, we would expect to use a facility like \u0027annotations\u0027 rather than \u0027labels\u0027 because we don\u0027t expect\nto query or identify these namespaces, and this change does not do that.  However, by using labels instead of annotations, we retain the ability to potentially do that in the future.  Is that the reasoning for this choice?\n\n(Incidentally, I do not think that we should add any features which rely on querying labels now; this driver needs to be converted to the statemachine interface, and the simpler we keep this, the easier that will be.)",
+      "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecc00e80_f2062eca",
+        "filename": "nodepool/tests/unit/test_driver_kubernetes.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-10-13T11:45:47Z",
+      "side": 1,
+      "message": "The reasoning was rather that we need to identify nodepool-managed namespaces in the cleanup process. This is done via the namespaces metadata (analogous to openstack server metadata).\nThe way this metadata is set currently [1] does not work and is simply ignored by k8s. It must be stored either as metadata.labels or metadata.annotations. So we need to add either of those anyway. Thus, I decided to go with labels as I think the values we set there (node_id, provider_name, pool_name) match the semantics of identifying attributes of a k8s object.\n\n[1] https://opendev.org/zuul/nodepool/src/commit/4dcbf41259/nodepool/driver/kubernetes/provider.py#L139",
+      "parentUuid": "2ded62f1_f4726445",
       "revId": "80d8f217157d44b02a59a1c3f7002562fee4f4e8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
