@@ -125,6 +125,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e84dcac_1da57ce9",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-10-13T10:47:55Z",
+      "side": 1,
+      "message": "Got it, I changed it now. But with blocking\u003dTrue, we are back to a TimeoutException in one of the test cases which you commented on earlier. So I don\u0027t really know how to improve this if you\u0027re not happy with the test",
+      "parentUuid": "f4c61753_571ce5ce",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "01b52bec_2e696b64",
