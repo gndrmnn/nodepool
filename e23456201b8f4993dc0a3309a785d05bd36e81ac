@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5ab7ee4_bb96f034",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2022-10-14T07:40:14Z",
+      "side": 1,
+      "message": "typo: throughput",
+      "revId": "e23456201b8f4993dc0a3309a785d05bd36e81ac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be257cb7_fc5c2f7d",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2022-10-14T07:40:14Z",
+      "side": 1,
+      "message": "typo: throughput",
+      "range": {
+        "startLine": 654,
+        "startChar": 18,
+        "endLine": 654,
+        "endChar": 27
+      },
+      "revId": "e23456201b8f4993dc0a3309a785d05bd36e81ac",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
