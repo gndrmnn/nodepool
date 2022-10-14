@@ -145,6 +145,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5ab2f8be_856020cd",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-14T14:20:26Z",
+      "side": 1,
+      "message": "I think I was confused about that earlier.  Now that I understand that this is a ZK lock timeout and not a test timeout, I think this is fine.",
+      "parentUuid": "0e84dcac_1da57ce9",
+      "revId": "b16a1d8bfe32fbe0dc21752562b5d14d889a29cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "01b52bec_2e696b64",
         "filename": "nodepool/tests/unit/test_commands.py",
         "patchSetId": 14
