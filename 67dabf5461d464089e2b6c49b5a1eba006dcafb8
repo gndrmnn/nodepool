@@ -67,6 +67,24 @@
       "message": "I just left a comment on another change advocating keeping memory specified as MiB since memory is customarily measured in MiB, and by that logic, this should be MB since that\u0027s how storage is customarily measured.\n\nIn retrospect, perhaps neither of these should be integers and instead should be strings.  Maybe we should fix that when we move it to Zuul.",
       "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b04cf6a2_3e2ecd23",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-10-14T07:41:15Z",
+      "side": 1,
+      "message": "As an intermediate step, we could also try to cast it to int, treating it as MiB (memory) or MB (storage), and as a fallback just pass it as a string, allowing the user to specify the unit of its choice. So with a deprecation notice we can eventually get rid of the (somewhat inconsistent) int interpretation and only support explicit units.",
+      "parentUuid": "1dd40bee_7be99520",
+      "revId": "67dabf5461d464089e2b6c49b5a1eba006dcafb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
