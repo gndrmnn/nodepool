@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a884586_ae067b3b",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-14T14:22:22Z",
+      "side": 1,
+      "message": "Nit: this method is not necessary, and this should just be the \"hold\" method.",
+      "revId": "1658aa9851ad67a1f966be0a5e52287d4b2a12d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
