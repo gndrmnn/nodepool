@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# DNM I just want to test the image builds
+
 FROM docker.io/opendevorg/python-builder:3.10-bullseye as builder
 # ============================================================================
 
