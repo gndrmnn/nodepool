@@ -13,14 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM docker.io/opendevorg/python-builder:3.10-bullseye as builder
+# DNM I just want to test the image builds
+
+FROM insecure-ci-registry.opendev.org:5000/opendevorg/python-builder:9aba30731c2f4a308feeedd353c6d5a2_3.10-bullseye as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
 COPY . /tmp/src
 RUN assemble
 
-FROM docker.io/opendevorg/python-base:3.10-bullseye as nodepool-base
+FROM insecure-ci-registry.opendev.org:5000/opendevorg/python-base:6990d88f86e44a719e6701ff818289df_3.10-bullseye as nodepool-base
 # ============================================================================
 
 COPY --from=builder /output/ /output
