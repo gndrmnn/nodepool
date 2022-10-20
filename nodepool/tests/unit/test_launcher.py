@@ -235,7 +235,7 @@ class TestLauncher(tests.DBTestCase):
         # Wait until there is a paused request handler and check if there
         # are exactly two servers
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertEqual(len(client._server_list), 2)
 
@@ -512,7 +512,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req2)
 
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
 
         # The handler is paused now and the request should be in state PENDING
@@ -2080,7 +2080,7 @@ class TestLauncher(tests.DBTestCase):
         # causing request handling to pause.
         self.waitForNodeRequest(req, (zk.PENDING,))
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertTrue(mock_invalidatequotacache.called)
 
@@ -2218,11 +2218,12 @@ class TestLauncher(tests.DBTestCase):
 
         # Force an exception within the run handler.
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
-        pool_worker[0].paused_handler.hasProviderQuota = mock.Mock(
-            side_effect=Exception('mock exception')
-        )
+        for rh in pool_worker[0].paused_handlers:
+            rh.hasProviderQuota = mock.Mock(
+                side_effect=Exception('mock exception')
+            )
 
         # The above exception should cause us to fail the paused request.
         req2 = self.waitForNodeRequest(req2, (zk.FAILED,))
@@ -2230,7 +2231,7 @@ class TestLauncher(tests.DBTestCase):
 
         # The exception handling should make sure that we unpause AND remove
         # the request handler.
-        while pool_worker[0].paused_handler:
+        while pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertEqual(0, len(pool_worker[0].request_handlers))
 
@@ -2321,7 +2322,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req2)
 
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
 
         # The handler is paused now and the request should be in state PENDING
