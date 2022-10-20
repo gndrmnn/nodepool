@@ -235,7 +235,7 @@ class TestLauncher(tests.DBTestCase):
         # Wait until there is a paused request handler and check if there
         # are exactly two servers
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertEqual(len(client._server_list), 2)
 
@@ -512,7 +512,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req2)
 
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
 
         # The handler is paused now and the request should be in state PENDING
@@ -2080,7 +2080,7 @@ class TestLauncher(tests.DBTestCase):
         # causing request handling to pause.
         self.waitForNodeRequest(req, (zk.PENDING,))
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertTrue(mock_invalidatequotacache.called)
 
@@ -2218,11 +2218,12 @@ class TestLauncher(tests.DBTestCase):
 
         # Force an exception within the run handler.
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
-        pool_worker[0].paused_handler.hasProviderQuota = mock.Mock(
-            side_effect=Exception('mock exception')
-        )
+        for rh in pool_worker[0].paused_handlers:
+            rh.hasProviderQuota = mock.Mock(
+                side_effect=Exception('mock exception')
+            )
 
         # The above exception should cause us to fail the paused request.
         req2 = self.waitForNodeRequest(req2, (zk.FAILED,))
@@ -2230,7 +2231,7 @@ class TestLauncher(tests.DBTestCase):
 
         # The exception handling should make sure that we unpause AND remove
         # the request handler.
-        while pool_worker[0].paused_handler:
+        while pool_worker[0].paused_handlers:
             time.sleep(0.1)
         self.assertEqual(0, len(pool_worker[0].request_handlers))
 
@@ -2321,7 +2322,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req2)
 
         pool_worker = pool.getPoolWorkers('fake-provider')
-        while not pool_worker[0].paused_handler:
+        while not pool_worker[0].paused_handlers:
             time.sleep(0.1)
 
         # The handler is paused now and the request should be in state PENDING
@@ -2412,6 +2413,60 @@ class TestLauncher(tests.DBTestCase):
         max_instances = 1
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FULFILLED)
+
+    def test_multiple_paused_requests(self):
+        """Test that multiple paused requests are fulfilled in order."""
+        max_instances = 0
+
+        def fake_get_quota():
+            nonlocal max_instances
+            return (100, max_instances, 1000000)
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req2)
+
+        configfile = self.setup_config('ignore_provider_quota_true.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        self.waitForAnyNodeInState(zk.ABORTED)
+
+        pool_worker = pool.getPoolWorkers('fake-provider')
+        while not len(pool_worker[0].paused_handlers) == 2:
+            time.sleep(0.1)
+
+        # Bump up the quota to allow the provider to allocate a node
+        max_instances = 1
+        req1 = self.waitForNodeRequest(req1)
+        self.assertEqual(req1.state, zk.FULFILLED)
+
+        req2 = self.waitForNodeRequest(req2, zk.PENDING)
+
+        # Release the node allocated to the first request
+        req1_node = self.zk.getNode(req1.nodes[0])
+        self.zk.lockNode(req1_node, blocking=False)
+
+        req1_node.state = zk.USED
+        self.zk.storeNode(req1_node)
+        self.zk.unlockNode(req1_node)
+        self.waitForNodeDeletion(req1_node)
+
+        self.waitForNodeRequest(req2, zk.FULFILLED)
 
     def test_request_order(self):
         """Test that requests are handled in sorted order"""
