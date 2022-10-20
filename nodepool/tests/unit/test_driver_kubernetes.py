@@ -263,7 +263,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         if pause:
             # The previous request should pause the handler
             pool_worker = pool.getPoolWorkers('kubespray')
-            while not pool_worker[0].paused_handler:
+            while not pool_worker[0].paused_handlers:
                 time.sleep(0.1)
         else:
             self.waitForNodeRequest(max_req, (zk.REQUESTED,))
