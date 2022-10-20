@@ -390,14 +390,18 @@ class CleanupWorker(BaseWorker):
                 self.log.exception("Exception cleaning up local build %s:",
                                    local_build)
 
-    MANIFEST_RE = re.compile(r'(.*)-(\d+)\.d')
+    LOCAL_BUILDS_RE = re.compile(r'^(.*)-(\d+)\.(?:\w+)$')
 
     def _getLocalBuilds(self):
+        seen = set()
         for entry in os.scandir(self._config.images_dir):
-            m = self.MANIFEST_RE.match(entry.name)
-            if m and entry.is_dir():
-                image_name, build_id = m.groups()
-                yield (image_name, build_id)
+            m = self.LOCAL_BUILDS_RE.match(entry.name)
+            if m:
+                name_and_id = m.groups()
+                if name_and_id in seen:
+                    continue
+                seen.add(name_and_id)
+                yield name_and_id
 
     def _emitBuildRequestStats(self):
         '''Emit general build request stats
