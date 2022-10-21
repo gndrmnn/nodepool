@@ -131,7 +131,7 @@ Selecting the kubernetes driver adds the following options to the
 
          Only used by the
          :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-         specifies a default value for
+         specifies a default value in MiB for
          :attr:`providers.[kubernetes].pools.labels.memory` for all labels of
          this pool that do not set their own value.
 
@@ -216,7 +216,7 @@ Selecting the kubernetes driver adds the following options to the
 
             Only used by the
             :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-            specifies the amount of memory in MB to request for the pod.
+            specifies the amount of memory in MiB to request for the pod.
 
          .. attr:: env
             :type: list

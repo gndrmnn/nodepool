@@ -196,7 +196,7 @@ Selecting the openshift driver adds the following options to the
 
          Only used by the
          :value:`providers.[openshift].labels.type.pod` label type;
-         specifies the amount of memory in MB to request for the pod.
+         specifies the amount of memory in MiB to request for the pod.
 
       .. attr:: env
          :type: list
