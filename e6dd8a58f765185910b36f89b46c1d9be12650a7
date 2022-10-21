@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbe62539_532c145c",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-21T22:49:10Z",
+      "side": 1,
+      "message": "I think this also wants to hold the lock. We may want to move the lock hold and getRegisteredNodes() call up to this method and out of syncNodeCount? Or maybe a new method that iterates through and adds/removes as it does one iteration over node slots or something.",
+      "revId": "e6dd8a58f765185910b36f89b46c1d9be12650a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
