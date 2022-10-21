@@ -253,25 +253,61 @@
     vars: *nodepool_tox_vars
     nodeset: ubuntu-jammy
 
+- job:
+    name: nodepool-tox-py310-1
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-2
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-3
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-4
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-5
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-6
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-7
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-8
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-9
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-10
+    parent: nodepool-tox-py310
+
 - project:
     vars:
       release_python: python3
     check:
       jobs:
-        - opendev-buildset-registry
-        - nodepool-build-image
-        - zuul-tox-docs
-        - tox-pep8:
-            nodeset: ubuntu-jammy
-        - nodepool-tox-py38
-        - nodepool-tox-py310
-        - nodepool-functional-container-openstack-release
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            requires: zuul-container-image
-            dependencies: nodepool-build-image
-        - build-python-release
+        - nodepool-tox-py310-1
+        - nodepool-tox-py310-2
+        - nodepool-tox-py310-3
+        - nodepool-tox-py310-4
+        - nodepool-tox-py310-5
+        - nodepool-tox-py310-6
+        - nodepool-tox-py310-7
+        - nodepool-tox-py310-8
+        - nodepool-tox-py310-9
+        - nodepool-tox-py310-10
     gate:
       jobs:
         - nodepool-upload-image
