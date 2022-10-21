@@ -68,7 +68,6 @@ class TestDriverStatic(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(nodes[0].python_path, 'auto')
         self.assertIsNone(nodes[0].shell_type)
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_python_path(self):
         '''
@@ -81,7 +80,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(nodes[0].python_path, "/usr/bin/python3")
-        self.assertEqual(nodes[0].slot, 0)
 
         nodes[0].state = zk.USED
         self.zk.storeNode(nodes[0])
@@ -89,7 +87,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for node to be re-available")
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(nodes[0].python_path, "/usr/bin/python3")
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_multiname(self):
         '''
@@ -104,13 +101,11 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].state, zk.READY)
         self.assertEqual(nodes[0].username, 'zuul')
-        self.assertEqual(nodes[0].slot, 0)
 
         nodes = self.waitForNodes('other-label', 1)
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].state, zk.READY)
         self.assertEqual(nodes[0].username, 'zuul-2')
-        self.assertEqual(nodes[0].slot, 0)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -155,7 +150,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].connection_port, 22022)
         self.assertEqual(nodes[0].connection_type, 'ssh')
         self.assertEqual(nodes[0].host_keys, ['ssh-rsa FAKEKEY'])
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_node_increase(self):
         '''
@@ -168,14 +162,11 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].slot, 0)
 
         self.log.debug("Waiting for additional node")
         self.replace_config(configfile, 'static-2-nodes.yaml')
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 0)
 
     def test_static_node_decrease(self):
         '''
@@ -188,15 +179,12 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 0)
 
         self.log.debug("Waiting for node decrease")
         self.replace_config(configfile, 'static-basic.yaml')
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].hostname, 'fake-host-1')
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_parallel_increase(self):
         '''
@@ -209,14 +197,11 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].slot, 0)
 
         self.log.debug("Waiting for additional node")
         self.replace_config(configfile, 'static-parallel-increase.yaml')
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 1)
 
     def test_static_parallel_decrease(self):
         '''
@@ -229,14 +214,11 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 1)
 
         self.log.debug("Waiting for node decrease")
         self.replace_config(configfile, 'static-basic.yaml')
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_node_update(self):
         '''
@@ -260,7 +242,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].connection_port, 5986)
         self.assertEqual(nodes[0].connection_type, 'winrm')
         self.assertEqual(nodes[0].host_keys, [])
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_node_update_startup(self):
         '''
@@ -285,7 +266,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(nodes[0].id, "0000000000")
         self.assertIn('fake-label', nodes[0].type)
         self.assertIn('fake-label2', nodes[0].type)
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_multilabel(self):
         configfile = self.setup_config('static-multilabel.yaml')
@@ -294,26 +274,23 @@ class TestDriverStatic(tests.DBTestCase):
         nodes = self.waitForNodes('fake-label')
         self.assertIn('fake-label', nodes[0].type)
         self.assertIn('fake-label2', nodes[0].type)
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_static_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-        nodes = self.waitForNodes('fake-label')
-        self.assertEqual(nodes[0].slot, 0)
+        node = self.waitForNodes('fake-label')
         self.waitForNodes('fake-concurrent-label', 2)
 
-        node = nodes[0]
+        node = node[0]
         self.log.debug("Marking first node as used %s", node.id)
         node.state = zk.USED
         self.zk.storeNode(node)
         self.waitForNodeDeletion(node)
 
         self.log.debug("Waiting for node to be re-available")
-        nodes = self.waitForNodes('fake-label')
-        self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].slot, 0)
+        node = self.waitForNodes('fake-label')
+        self.assertEqual(len(node), 1)
 
     def test_static_waiting_handler(self):
         configfile = self.setup_config('static-2-nodes-multilabel.yaml')
@@ -413,7 +390,6 @@ class TestDriverStatic(tests.DBTestCase):
         # Make sure the node is not reallocated
         node = self.zk.getNode(req.nodes[0])
         self.assertIsNotNone(node)
-        self.assertEqual(node.slot, 0)
 
     def test_static_waiting_handler_order(self):
         configfile = self.setup_config('static-basic.yaml')
@@ -426,7 +402,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.zk.storeNodeRequest(req)
         req = self.waitForNodeRequest(req, zk.FULFILLED)
         node = self.zk.getNode(req.nodes[0])
-        self.assertEqual(node.slot, 0)
         self.zk.lockNode(node)
         node.state = zk.USED
         self.zk.storeNode(node)
@@ -456,7 +431,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(req_waiting3.state, zk.REQUESTED)
 
         node_waiting2 = self.zk.getNode(req_waiting2.nodes[0])
-        self.assertEqual(node_waiting2.slot, 0)
         self.zk.lockNode(node_waiting2)
         node_waiting2.state = zk.USED
         self.zk.storeNode(node_waiting2)
@@ -467,7 +441,6 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertEqual(req_waiting1.state, zk.REQUESTED)
 
         node_waiting3 = self.zk.getNode(req_waiting3.nodes[0])
-        self.assertEqual(node_waiting3.slot, 0)
         self.zk.lockNode(node_waiting3)
         node_waiting3.state = zk.USED
         self.zk.storeNode(node_waiting3)
@@ -529,7 +502,6 @@ class TestDriverStatic(tests.DBTestCase):
         pool.start()
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].slot, 0)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -550,7 +522,6 @@ class TestDriverStatic(tests.DBTestCase):
         new_nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(new_nodes), 1)
         self.assertEqual(nodes[0].hostname, new_nodes[0].hostname)
-        self.assertEqual(nodes[0].slot, 0)
 
     def test_liveness_check(self):
         '''
@@ -671,13 +642,9 @@ class TestDriverStatic(tests.DBTestCase):
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 0)
 
         self.zk.deleteNode(nodes[0])
 
         self.log.debug("Waiting for node to transition to ready again")
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
-        self.assertEqual(nodes[0].slot, 0)
-        self.assertEqual(nodes[1].slot, 0)
