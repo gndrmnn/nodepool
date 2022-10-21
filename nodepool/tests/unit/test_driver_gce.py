@@ -174,7 +174,9 @@ class GCloudRegions(GCloudCollection):
                 {"metric": "IN_USE_ADDRESSES",   "limit": 8,    "usage": 0}, # noqa
                 {"metric": "SSD_TOTAL_GB",       "limit": 500,  "usage": 0}, # noqa
                 {"metric": "LOCAL_SSD_TOTAL_GB", "limit": 6000, "usage": 0}, # noqa
-                {"metric": "INSTANCES",          "limit": 24,   "usage": 0}, # noqa
+                # Set to 1 to force test_gce_machine to pause for quota
+                # between instance boots.
+                {"metric": "INSTANCES",          "limit": 1,   "usage": 0}, # noqa
                 {"metric": "PREEMPTIBLE_CPUS",   "limit": 0,    "usage": 0}, # noqa
                 {"metric": "COMMITTED_CPUS",     "limit": 0,    "usage": 0}, # noqa
                 {"metric": "INTERNAL_ADDRESSES", "limit": 200,  "usage": 0}, # noqa
