@@ -338,23 +338,29 @@ class StaticNodeProvider(Provider, QuotaSupport):
             self.zk.unlockNode(node)
 
     def syncNodeCount(self, static_node, pool):
-        for slot, node in enumerate(self._node_slots[nodeTuple(static_node)]):
-            if node is None:
-                # Register nodes to synchronize with our configuration.
-                self.registerNodeFromConfig(self.provider.name, pool,
-                                            static_node, slot)
-            elif slot >= static_node["max-parallel-jobs"]:
-                # De-register nodes to synchronize with our configuration.
-                # This case covers an existing node, but with a decreased
-                # max-parallel-jobs value.
-                try:
-                    self.deregisterNode(node)
-                except Exception:
-                    self.log.exception("Couldn't deregister static node:")
+        # Hold the lock here and get the current registered nodes to avoid
+        # racing with nodeDeletedNotification()'s addition of nodes. This
+        # ensures we've got an up to date view and prevents the other method
+        # from changing it under us.
+        with self._register_lock:
+            self.getRegisteredNodes()
+            for slot, node in \
+                    enumerate(self._node_slots[nodeTuple(static_node)]):
+                if node is None:
+                    # Register nodes to synchronize with our configuration.
+                    self.registerNodeFromConfig(self.provider.name, pool,
+                                                static_node, slot)
+                elif slot >= static_node["max-parallel-jobs"]:
+                    # De-register nodes to synchronize with our configuration.
+                    # This case covers an existing node, but with a decreased
+                    # max-parallel-jobs value.
+                    try:
+                        self.deregisterNode(node)
+                    except Exception:
+                        self.log.exception("Couldn't deregister static node:")
 
     def _start(self, zk_conn):
         self.zk = zk_conn
-        self.getRegisteredNodes()
 
         static_nodes = {}
         with ThreadPoolExecutor() as executor:
@@ -462,6 +468,10 @@ class StaticNodeProvider(Provider, QuotaSupport):
         if static_node is None:
             return
 
+        # Hold the lock here and get the current registered nodes to avoid
+        # racing with syncNodeCount()'s addition of nodes. This ensures we've
+        # got an up to date view and prevents the other method from changing
+        # it under us.
         with self._register_lock:
             try:
                 self.getRegisteredNodes()
