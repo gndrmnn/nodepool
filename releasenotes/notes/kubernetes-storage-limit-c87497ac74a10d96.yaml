@@ -1,0 +1,15 @@
+---
+features:
+  - |
+    A new configuration option for K8s Pod type labels was added to limit the
+    amount of ephemeral storage allocatable in a container (cf. `K8s Local
+    ephemeral storage resource documentation`
+    <https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#local-ephemeral-storage`__)
+    This limit can be set via the integer value of
+
+    :attr:`providers.[kubernetes].pools.labels.storage`
+
+    and is treated as Megabytes. Also, a pool-scoped default value can be
+    specified via
+
+    :attr:`providers.[kubernetes].pools.default-label-storage`

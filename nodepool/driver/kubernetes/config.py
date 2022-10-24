@@ -41,6 +41,7 @@ class KubernetesPool(ConfigPool):
         self.max_ram = pool_config.get('max-ram')
         self.default_label_cpu = pool_config.get('default-label-cpu')
         self.default_label_memory = pool_config.get('default-label-memory')
+        self.default_label_storage = pool_config.get('default-label-storage')
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = KubernetesLabel()
@@ -52,6 +53,7 @@ class KubernetesPool(ConfigPool):
             pl.shell_type = label.get('shell-type')
             pl.cpu = label.get('cpu', self.default_label_cpu)
             pl.memory = label.get('memory', self.default_label_memory)
+            pl.storage = label.get('storage', self.default_label_storage)
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.pool = self
@@ -97,6 +99,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'shell-type': str,
             'cpu': int,
             'memory': int,
+            'storage': int,
             'env': [env_var],
             'node-selector': dict,
         }
@@ -109,6 +112,7 @@ class KubernetesProviderConfig(ProviderConfig):
             v.Optional('max-ram'): int,
             v.Optional('default-label-cpu'): int,
             v.Optional('default-label-memory'): int,
+            v.Optional('default-label-storage'): int,
         })
 
         provider = {
