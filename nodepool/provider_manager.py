@@ -42,7 +42,6 @@ class ProviderManager(object):
         :param bool only_image_manager: If True, skip manager that do not
                     manage images. This is used by the builder process.
         '''
-        stop_managers = []
         for p in new_config.providers.values():
             if only_image_manager and not p.manage_images:
                 continue
@@ -50,7 +49,10 @@ class ProviderManager(object):
             if old_config:
                 oldmanager = old_config.provider_managers.get(p.name)
             if oldmanager and p != oldmanager.provider:
-                stop_managers.append(oldmanager)
+                # Stop managers before starting new ones to prevent the old
+                # threads from taking action that interferes with the new
+                # threads.
+                oldmanager.stop()
                 oldmanager = None
             if oldmanager:
                 new_config.provider_managers[p.name] = oldmanager
@@ -64,9 +66,6 @@ class ProviderManager(object):
                 except Exception:
                     ProviderManager.log.exception(
                         "Error starting provider %s", p.name)
-
-        for stop_manager in stop_managers:
-            stop_manager.stop()
 
     @staticmethod
     def stopProviders(config):
