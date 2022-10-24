@@ -1598,7 +1598,7 @@ class TestLauncher(tests.DBTestCase):
 
         pool.start()
         self.wait_for_config(pool)
-        manager = pool.getProviderManager('fake-provider')
+        manager = pool.getProviderManager('fake-provider').adapter
         manager._client.create_image(name="fake-image")
         manager._client.create_image(name="fake-image-windows")
         manager._client.create_image(name="fake-image-windows-port")

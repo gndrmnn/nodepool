@@ -17,6 +17,7 @@
 import time
 import logging
 import math
+import random
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -137,7 +138,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
             hostname, label, image_external_id, metadata, retries,
-            self.handler.request, self.log)
+            self.handler.request, self.handler.chosen_az, self.log)
 
     def updateNodeFromInstance(self, instance):
         if instance is None:
@@ -351,6 +352,7 @@ class StateMachineHandler(NodeRequestHandler):
 
     def __init__(self, pw, request):
         super().__init__(pw, request)
+        self.chosen_az = None
         self.launchers = []
 
     @property
@@ -442,6 +444,37 @@ class StateMachineHandler(NodeRequestHandler):
         self.log.debug("Predicted remaining pool quota: %s", pool_quota)
 
         return pool_quota.non_negative()
+
+    def checkReusableNode(self, node):
+        if self.chosen_az and node.az != self.chosen_az:
+            return False
+        return True
+
+    def nodeReusedNotification(self, node):
+        """
+        We attempt to group the node set within the same provider availability
+        zone.
+        For this to work properly, the provider entry in the nodepool
+        config must list the availability zones. Otherwise, new nodes will be
+        put in random AZs at nova's whim. The exception being if there is an
+        existing node in the READY state that we can select for this node set.
+        Its AZ will then be used for new nodes, as well as any other READY
+        nodes.
+        """
+        # If we haven't already chosen an AZ, select the
+        # AZ from this ready node. This will cause new nodes
+        # to share this AZ, as well.
+        if not self.chosen_az and node.az:
+            self.chosen_az = node.az
+
+    def setNodeMetadata(self, node):
+        """
+        Select grouping AZ if we didn't set AZ from a selected,
+        pre-existing node
+        """
+        if not self.chosen_az:
+            self.chosen_az = random.choice(
+                self.pool.azs or self.manager.adapter.getAZs())
 
     def launchesComplete(self):
         '''
@@ -944,6 +977,18 @@ class Adapter:
         :returns: A :py:class:`QuotaInformation` object.
         """
         return QuotaInformation(instances=1)
+
+    def getAZs(self):
+        """Return a list of availability zones for this provider
+
+        One of these will be selected at random and supplied to the
+        create state machine.  If a request handler is building a node
+        set from an existing ready node, then the AZ from that node
+        will be used instead of the results of this method.
+
+        :returns: A list of availability zone names.
+        """
+        return [None]
 
     # The following methods must be implemented only if image
     # management is supported:

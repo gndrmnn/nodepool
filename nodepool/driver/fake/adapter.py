@@ -1,29 +1,24 @@
-# Copyright (C) 2011-2013 OpenStack Foundation
+# Copyright 2022 Acme Gating, LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.
-#
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 
 import logging
 import threading
 import time
 import uuid
 
-import openstack.exceptions
+from nodepool.driver.openstack.adapter import OpenStackAdapter
 
-from nodepool import exceptions
-from nodepool.driver.openstack.provider import OpenStackProvider
-from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from openstack.cloud.exc import OpenStackCloudCreateException
 
 
@@ -112,7 +107,7 @@ class FakeOpenStackCloud(object):
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner=None),
         ]
-        self._floating_ips_list = []
+        self._floating_ip_list = []
 
     def _update_quota(self):
         self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
@@ -280,6 +275,21 @@ class FakeOpenStackCloud(object):
         server.interface_ip = server.private_v4
         return server
 
+    def list_floating_ips(self):
+        return self._floating_ip_list
+
+    def create_floating_ip(self, server):
+        fip = Dummy('floating_ips',
+                    id=uuid.uuid4().hex,
+                    floating_ip_address='fake',
+                    status='ACTIVE')
+        self._floating_ip_list.append(fip)
+        server.addresses
+        return fip
+
+    def _needs_floating_ip(self, server, nat_destination):
+        return False
+
     def wait_for_server(self, server, **kwargs):
         while server.status == 'BUILD':
             time.sleep(0.1)
@@ -405,31 +415,14 @@ class FakeDeleteImageFailCloud(FakeOpenStackCloud):
                          self).delete_image(*args, **kwargs)
 
 
-class FakeProvider(OpenStackProvider):
+class FakeAdapter(OpenStackAdapter):
     fake_cloud = FakeOpenStackCloud
 
-    def __init__(self, provider):
+    def __init__(self, provider_config):
         self.createServer_fails = 0
         self.createServer_fails_with_external_id = 0
-        self.__client = FakeProvider.fake_cloud()
-        super(FakeProvider, self).__init__(provider)
+        self.__client = FakeAdapter.fake_cloud()
+        super().__init__(provider_config)
 
     def _getClient(self):
         return self.__client
-
-    def createServer(self, *args, **kwargs):
-        while self.createServer_fails:
-            self.createServer_fails -= 1
-            raise Exception("Expected createServer exception")
-        while self.createServer_fails_with_external_id:
-            self.createServer_fails_with_external_id -= 1
-            raise OpenStackCloudCreateException('server', 'fakeid')
-        return super(FakeProvider, self).createServer(*args, **kwargs)
-
-    def getRequestHandler(self, poolworker, request):
-        return FakeNodeRequestHandler(poolworker, request)
-
-    def start(self, zk_conn):
-        if self.provider.region_name == 'broken-region':
-            raise Exception("Broken cloud config")
-        super().start(zk_conn)
