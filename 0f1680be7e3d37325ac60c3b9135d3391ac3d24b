@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "445920c0_072cfade",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27952
+      },
+      "writtenOn": "2022-10-24T12:13:26Z",
+      "side": 1,
+      "message": "LGTM, just a small question",
+      "revId": "0f1680be7e3d37325ac60c3b9135d3391ac3d24b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4f04d7e_dfeee921",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 27952
+      },
+      "writtenOn": "2022-10-24T12:13:26Z",
+      "side": 1,
+      "message": "nit: its -\u003e their",
+      "revId": "0f1680be7e3d37325ac60c3b9135d3391ac3d24b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b49c8fc_7ac40c79",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 27952
+      },
+      "writtenOn": "2022-10-24T12:13:26Z",
+      "side": 1,
+      "message": "I think the \"ourselves\" doesn\u0027t apply here anymore, as we unpause all paused handler, or?",
+      "revId": "0f1680be7e3d37325ac60c3b9135d3391ac3d24b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
