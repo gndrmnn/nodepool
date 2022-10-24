@@ -22,7 +22,7 @@ from nodepool.driver import ConfigValue
 from nodepool.driver import ConfigPool
 
 
-class ProviderDiskImage(ConfigValue):
+class OpenStackProviderDiskImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.pause = False
@@ -31,11 +31,8 @@ class ProviderDiskImage(ConfigValue):
         self.connection_port = None
         self.meta = None
 
-    def __repr__(self):
-        return "<ProviderDiskImage %s>" % self.name
 
-
-class ProviderCloudImage(ConfigValue):
+class OpenStackProviderCloudImage(ConfigValue):
     def __init__(self):
         self.name = None
         self.config_drive = None
@@ -47,16 +44,13 @@ class ProviderCloudImage(ConfigValue):
         self.connection_type = None
         self.connection_port = None
 
-    def __repr__(self):
-        return "<ProviderCloudImage %s>" % self.name
-
     @property
     def external_name(self):
         '''Human readable version of external.'''
         return self.image_id or self.image_name or self.name
 
 
-class ProviderLabel(ConfigValue):
+class OpenStackLabel(ConfigValue):
     ignore_equality = ['pool']
 
     def __init__(self):
@@ -76,30 +70,8 @@ class ProviderLabel(ConfigValue):
         # The ProviderPool object that owns this label.
         self.pool = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderLabel):
-            # NOTE(Shrews): We intentionally do not compare 'pool' here
-            # since this causes recursive checks with ProviderPool.
-            return (other.diskimage == self.diskimage and
-                    other.cloud_image == self.cloud_image and
-                    other.min_ram == self.min_ram and
-                    other.flavor_name == self.flavor_name and
-                    other.key_name == self.key_name and
-                    other.name == self.name and
-                    other.console_log == self.console_log and
-                    other.boot_from_volume == self.boot_from_volume and
-                    other.volume_size == self.volume_size and
-                    other.instance_properties == self.instance_properties and
-                    other.userdata == self.userdata and
-                    other.networks == self.networks and
-                    other.host_key_checking == self.host_key_checking)
-        return False
 
-    def __repr__(self):
-        return "<ProviderLabel %s>" % self.name
-
-
-class ProviderPool(ConfigPool):
+class OpenStackPool(ConfigPool):
     ignore_equality = ['provider']
 
     def __init__(self):
@@ -112,15 +84,13 @@ class ProviderPool(ConfigPool):
         self.security_groups = None
         self.auto_floating_ip = True
         self.host_key_checking = True
+        self.use_internal_ip = False
         self.labels = None
         # The OpenStackProviderConfig object that owns this pool.
         self.provider = None
 
         # Initialize base class attributes
         super().__init__()
-
-    def __repr__(self):
-        return "<ProviderPool %s>" % self.name
 
     def load(self, pool_config, full_config, provider):
         '''
@@ -147,7 +117,7 @@ class ProviderPool(ConfigPool):
                                                       True))
 
         for label in pool_config.get('labels', []):
-            pl = ProviderLabel()
+            pl = OpenStackLabel()
             pl.name = label['name']
             pl.pool = self
             self.labels[pl.name] = pl
@@ -252,7 +222,7 @@ class OpenStackProviderConfig(ProviderConfig):
         }
 
         for image in self.provider.get('diskimages', []):
-            i = ProviderDiskImage()
+            i = OpenStackProviderDiskImage()
             i.name = image['name']
             self.diskimages[i.name] = i
             diskimage = config.diskimages[i.name]
@@ -269,7 +239,7 @@ class OpenStackProviderConfig(ProviderConfig):
             i.meta = image.get('meta', {})
 
         for image in self.provider.get('cloud-images', []):
-            i = ProviderCloudImage()
+            i = OpenStackProviderCloudImage()
             i.name = image['name']
             i.config_drive = image.get('config-drive', None)
             i.image_id = image.get('image-id', None)
@@ -284,7 +254,7 @@ class OpenStackProviderConfig(ProviderConfig):
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
-            pp = ProviderPool()
+            pp = OpenStackPool()
             pp.load(pool, config, self)
             self.pools[pp.name] = pp
 
