@@ -20,7 +20,7 @@ import mock
 import time
 
 from nodepool import builder, tests
-from nodepool.driver.fake import provider as fakeprovider
+from nodepool.driver.fake import adapter as fakeadapter
 from nodepool.zk import zookeeper as zk
 from nodepool.config import Config
 from nodepool.nodeutils import iterate_timeout
@@ -173,13 +173,13 @@ class TestNodePoolBuilder(tests.DBTestCase):
         """Test that image upload fails are handled properly."""
 
         # Now swap out the upload fake so that the next uploads fail
-        fake_client = fakeprovider.FakeUploadFailCloud(times_to_fail=1)
+        fake_client = fakeadapter.FakeUploadFailCloud(times_to_fail=1)
 
         def get_fake_client(*args, **kwargs):
             return fake_client
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, '_getClient',
+            fakeadapter.FakeAdapter, '_getClient',
             get_fake_client))
 
         configfile = self.setup_config('node.yaml')
@@ -264,13 +264,13 @@ class TestNodePoolBuilder(tests.DBTestCase):
 
     def test_image_removal_dib_deletes_first(self):
         # Break cloud image deleting
-        fake_client = fakeprovider.FakeDeleteImageFailCloud()
+        fake_client = fakeadapter.FakeDeleteImageFailCloud()
 
         def get_fake_client(*args, **kwargs):
             return fake_client
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, '_getClient',
+            fakeadapter.FakeAdapter, '_getClient',
             get_fake_client))
 
         configfile = self.setup_config('node_two_image.yaml')
