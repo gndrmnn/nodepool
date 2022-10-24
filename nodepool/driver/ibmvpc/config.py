@@ -162,6 +162,7 @@ class IBMVPCLabel(ConfigValue):
 
         self.profile = label['profile']
         self.user_data = label.get('user-data', None)
+        self.host_key_checking = self.pool.host_key_checking
 
     @staticmethod
     def getSchema():
