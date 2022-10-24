@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3b5782d_a0b0c743",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-24T21:32:12Z",
+      "side": 1,
+      "message": "Pretty sure this is going to cause us to wait until all the handlers are idle before updating the configuration.",
+      "revId": "665c2dcd9eefafb980d3a2ca77daf5eb7564c406",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
