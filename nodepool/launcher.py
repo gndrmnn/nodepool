@@ -123,165 +123,172 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         # which express a preference for a specific provider.
         launcher_pools = self.zk.getRegisteredPools()
 
-        pm = self.getProviderManager()
-        has_quota_support = isinstance(pm, QuotaSupport)
-        if has_quota_support:
-            # The label quota limits will be used for the whole loop since we
-            # don't want to accept lower priority requests when a label becomes
-            # available after we've already deferred higher priority requests.
-            label_quota = pm.getLabelQuota()
-
-        pool = self.getPoolConfig()
-        pool_labels = set(pool.labels)
-
-        def _sort_key(request):
-            missing_labels = set(request.node_types) - pool_labels
-            # Return a tuple with the number of labels that are *not* served by
-            # this pool and the request priority. This will sort the requests
-            # that we can serve (no missing labels) before the requests that we
-            # need to decline (missing labels > 0).
-            return len(missing_labels), request.priority
-
-        requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
-        for req in requests:
-            if not self.running:
-                return True
-
-            req = self.zk.getNodeRequest(req.id)
-            if not req:
-                continue
-
-            # Only interested in unhandled requests
-            if req.state != zk.REQUESTED:
-                continue
-
-            # Skip it if we've already declined
-            if self.launcher_id in req.declined_by:
-                continue
-
-            log = get_annotated_logger(self.log, event_id=req.event_id,
-                                       node_request_id=req.id)
-            # Get the candidate launchers for these nodes
-            candidate_launcher_pools = set(
-                x for x in launcher_pools
-                if (set(x.supported_labels).issuperset(set(req.node_types)) and
-                    x.id not in req.declined_by)
-            )
-            # Skip this request if it is requesting another provider
-            # which is online
-            if req.provider and req.provider != self.provider_name:
-                # The request is asking for a specific provider
-                launcher_pool_ids_for_provider = set(
-                    x.id for x in candidate_launcher_pools
-                    if x.provider_name == req.provider
-                )
-                if launcher_pool_ids_for_provider:
-                    # There is a launcher online which can satisfy the
-                    # request that has not yet declined the request,
-                    # so yield to it.
-                    log.debug("Yielding request to provider %s %s",
-                              req.provider, launcher_pool_ids_for_provider)
-                    continue
-
-            priority = self.getPriority()
-            launcher_pool_ids_with_higher_priority = set(
-                x.id for x in candidate_launcher_pools
-                if x.priority < priority and not x.paused
-            )
-            if launcher_pool_ids_with_higher_priority:
-                log.debug("Yielding request to higher priority providers %s",
-                          launcher_pool_ids_with_higher_priority)
-                continue
-
-            if has_quota_support and not all(label_quota.get(l, math.inf) > 0
-                                             for l in req.node_types):
-                # Defer the request as we can't provide the required labels at
-                # the moment.
-                log.debug("Deferring request because labels are unavailable")
-                continue
-
-            # check tenant quota if the request has a tenant associated
-            # and there are resource limits configured for this tenant
-            check_tenant_quota = req.tenant_name and req.tenant_name \
-                in self.nodepool.config.tenant_resource_limits \
-                and has_quota_support
-
-            if check_tenant_quota and not self._hasTenantQuota(req, pm):
-                # Defer request for it to be handled and fulfilled at a later
-                # run.
-                log.debug("Deferring request because it would "
-                          "exceed tenant quota")
-                continue
-
-            # Get a request handler to help decide whether we should
-            # accept the request, but we're still not sure yet.  We
-            # must lock the request before calling .run().
-            rh = pm.getRequestHandler(self, req)
-            reasons_to_decline = rh.getDeclinedReasons()
-
-            if self.paused_handler and not reasons_to_decline:
-                self.log.debug("Handler is paused, deferring request")
-                continue
-
-            # At this point, we are either unpaused, or we know we
-            # will decline the request.
-
-            if not reasons_to_decline:
-                # Get active threads for all pools for this provider
-                active_threads = sum([
-                    w.activeThreads() for
-                    w in self.nodepool.getPoolWorkers(self.provider_name)
-                ])
-                # Short-circuit for limited request handling
-                if (provider.max_concurrency > 0 and
-                        active_threads >= provider.max_concurrency):
-                    self.log.debug("Request handling limited: %s "
-                                   "active threads ",
-                                   "with max concurrency of %s",
-                                   active_threads, provider.max_concurrency)
-                    continue
-
-            log.debug("Locking request")
-            try:
-                self.zk.lockNodeRequest(req, blocking=False)
-            except exceptions.ZKLockException:
-                log.debug("Request is locked by someone else")
-                continue
-
-            # Make sure the state didn't change on us after getting the lock
-            if req.state != zk.REQUESTED:
-                self.zk.unlockNodeRequest(req)
-                log.debug("Request is in state %s", req.state)
-                continue
-
-            if not reasons_to_decline:
-                # Got a lock, so assign it
-                log.info("Assigning node request %s" % req)
-                rh.run()
-            else:
-                log.info("Declining node request %s" % req)
-                rh.declineRequest()
-                continue
-
+        with self.nodepool.config_update_lock:
+            pm = self.getProviderManager()
+            has_quota_support = isinstance(pm, QuotaSupport)
             if has_quota_support:
-                # Adjust the label quota so we don't accept more requests
-                # than we have labels available.
-                # Since nodes can have multiple other labels apart from the
-                # requested type, we need to adjust the quota for all labels
-                # of nodes that are allocated to the request.
-                for node in rh.nodeset:
-                    for node_type in node.type:
-                        with contextlib.suppress(KeyError):
-                            label_quota[node_type] -= 1
+                # The label quota limits will be used for the whole loop since
+                # we don't want to accept lower priority requests when a label
+                # becomes available after we've already deferred higher
+                # priority requests.
+                label_quota = pm.getLabelQuota()
 
-            if rh.paused:
-                self.paused_handler = rh
-            self.request_handlers.append(rh)
+            pool = self.getPoolConfig()
+            pool_labels = set(pool.labels)
 
-            # if we exceeded the timeout stop iterating here
-            if time.monotonic() - start > timeout:
-                return False
-        return True
+            def _sort_key(request):
+                missing_labels = set(request.node_types) - pool_labels
+                # Return a tuple with the number of labels that are *not*
+                # served by this pool and the request priority. This will sort
+                # the requests that we can serve (no missing labels) before the
+                # requests that we need to decline (missing labels > 0).
+                return len(missing_labels), request.priority
+
+            requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
+            for req in requests:
+                if not self.running:
+                    return True
+
+                req = self.zk.getNodeRequest(req.id)
+                if not req:
+                    continue
+
+                # Only interested in unhandled requests
+                if req.state != zk.REQUESTED:
+                    continue
+
+                # Skip it if we've already declined
+                if self.launcher_id in req.declined_by:
+                    continue
+
+                log = get_annotated_logger(self.log, event_id=req.event_id,
+                                           node_request_id=req.id)
+                # Get the candidate launchers for these nodes
+                candidate_launcher_pools = set(
+                    x for x in launcher_pools
+                    if (set(x.supported_labels).issuperset(set(req.node_types))
+                        and x.id not in req.declined_by)
+                )
+                # Skip this request if it is requesting another provider
+                # which is online
+                if req.provider and req.provider != self.provider_name:
+                    # The request is asking for a specific provider
+                    launcher_pool_ids_for_provider = set(
+                        x.id for x in candidate_launcher_pools
+                        if x.provider_name == req.provider
+                    )
+                    if launcher_pool_ids_for_provider:
+                        # There is a launcher online which can satisfy the
+                        # request that has not yet declined the request,
+                        # so yield to it.
+                        log.debug("Yielding request to provider %s %s",
+                                  req.provider, launcher_pool_ids_for_provider)
+                        continue
+
+                priority = self.getPriority()
+                launcher_pool_ids_with_higher_priority = set(
+                    x.id for x in candidate_launcher_pools
+                    if x.priority < priority and not x.paused
+                )
+                if launcher_pool_ids_with_higher_priority:
+                    log.debug("Yielding request to higher priority "
+                              "providers %s",
+                              launcher_pool_ids_with_higher_priority)
+                    continue
+
+                if (has_quota_support and
+                    not all(label_quota.get(l, math.inf) > 0
+                            for l in req.node_types)):
+                    # Defer the request as we can't provide the required labels
+                    # at the moment.
+                    log.debug("Deferring request because labels are "
+                              "unavailable")
+                    continue
+
+                # check tenant quota if the request has a tenant associated
+                # and there are resource limits configured for this tenant
+                check_tenant_quota = req.tenant_name and req.tenant_name \
+                    in self.nodepool.config.tenant_resource_limits \
+                    and has_quota_support
+
+                if check_tenant_quota and not self._hasTenantQuota(req, pm):
+                    # Defer request for it to be handled and fulfilled at a
+                    # later run.
+                    log.debug("Deferring request because it would "
+                              "exceed tenant quota")
+                    continue
+
+                # Get a request handler to help decide whether we should
+                # accept the request, but we're still not sure yet.  We
+                # must lock the request before calling .run().
+                rh = pm.getRequestHandler(self, req)
+                reasons_to_decline = rh.getDeclinedReasons()
+
+                if self.paused_handler and not reasons_to_decline:
+                    self.log.debug("Handler is paused, deferring request")
+                    continue
+
+                # At this point, we are either unpaused, or we know we
+                # will decline the request.
+
+                if not reasons_to_decline:
+                    # Get active threads for all pools for this provider
+                    active_threads = sum([
+                        w.activeThreads() for
+                        w in self.nodepool.getPoolWorkers(self.provider_name)
+                    ])
+                    # Short-circuit for limited request handling
+                    if (provider.max_concurrency > 0 and
+                            active_threads >= provider.max_concurrency):
+                        self.log.debug("Request handling limited: %s "
+                                       "active threads ",
+                                       "with max concurrency of %s",
+                                       active_threads,
+                                       provider.max_concurrency)
+                        continue
+
+                log.debug("Locking request")
+                try:
+                    self.zk.lockNodeRequest(req, blocking=False)
+                except exceptions.ZKLockException:
+                    log.debug("Request is locked by someone else")
+                    continue
+
+                # Make sure the state didn't change on us after getting the
+                # lock.
+                if req.state != zk.REQUESTED:
+                    self.zk.unlockNodeRequest(req)
+                    log.debug("Request is in state %s", req.state)
+                    continue
+
+                if not reasons_to_decline:
+                    # Got a lock, so assign it
+                    log.info("Assigning node request %s" % req)
+                    rh.run()
+                else:
+                    log.info("Declining node request %s" % req)
+                    rh.declineRequest()
+                    continue
+
+                if has_quota_support:
+                    # Adjust the label quota so we don't accept more requests
+                    # than we have labels available.
+                    # Since nodes can have multiple other labels apart from the
+                    # requested type, we need to adjust the quota for all
+                    # labels of nodes that are allocated to the request.
+                    for node in rh.nodeset:
+                        for node_type in node.type:
+                            with contextlib.suppress(KeyError):
+                                label_quota[node_type] -= 1
+
+                if rh.paused:
+                    self.paused_handler = rh
+                self.request_handlers.append(rh)
+
+                # if we exceeded the timeout stop iterating here
+                if time.monotonic() - start > timeout:
+                    return False
+            return True
 
     def _removeCompletedHandlers(self):
         '''
@@ -632,14 +639,15 @@ class CleanupWorker(BaseCleanupWorker):
         Allow each provider manager a chance to cleanup resources.
         '''
         for provider in self._nodepool.config.providers.values():
-            manager = self._nodepool.getProviderManager(provider.name)
-            if manager:
-                try:
-                    manager.cleanupLeakedResources()
-                except Exception:
-                    self.log.exception(
-                        "Failure during resource cleanup for provider %s",
-                        provider.name)
+            with self._nodepool.config_update_lock:
+                manager = self._nodepool.getProviderManager(provider.name)
+                if manager:
+                    try:
+                        manager.cleanupLeakedResources()
+                    except Exception:
+                        self.log.exception(
+                            "Failure during resource cleanup for provider %s",
+                            provider.name)
 
     def _cleanupMaxReadyAge(self):
         '''
@@ -801,12 +809,14 @@ class DeletedNodeWorker(BaseCleanupWorker):
         '''
         self.log.info("Deleting %s instance %s from %s",
                       node.state, node.external_id, node.provider)
-        try:
-            pm = self._nodepool.getProviderManager(node.provider)
-            pm.startNodeCleanup(node)
-        except Exception:
-            self.log.exception("Could not delete instance %s on provider %s",
-                               node.external_id, node.provider)
+        with self._nodepool.config_update_lock:
+            try:
+                pm = self._nodepool.getProviderManager(node.provider)
+                pm.startNodeCleanup(node)
+            except Exception:
+                self.log.exception("Could not delete instance %s on "
+                                   "provider %s",
+                                   node.external_id, node.provider)
 
     def _cleanupNodes(self):
         '''
@@ -979,6 +989,9 @@ class NodePool(threading.Thread):
         self._stopped = False
         self._stop_event = threading.Event()
         self.config = None
+        # Lock held when updating our configs during reconfiguration.
+        # Ensures that users of the config don't use old configuration.
+        self.config_update_lock = threading.Lock()
         self.zk = None
         self.statsd = stats.get_client()
         self._pool_threads = {}
@@ -1076,14 +1089,15 @@ class NodePool(threading.Thread):
                 t.provider_name == provider_name]
 
     def updateConfig(self):
-        config = self.loadConfig()
-        self.reconfigureZooKeeper(config)
-        provider_manager.ProviderManager.reconfigure(self.config, config,
-                                                     self.getZK())
-        for provider_name in list(config.providers.keys()):
-            if provider_name not in config.provider_managers:
-                del config.providers[provider_name]
-        self.setConfig(config)
+        with self.config_update_lock:
+            config = self.loadConfig()
+            self.reconfigureZooKeeper(config)
+            provider_manager.ProviderManager.reconfigure(self.config, config,
+                                                         self.getZK())
+            for provider_name in list(config.providers.keys()):
+                if provider_name not in config.provider_managers:
+                    del config.providers[provider_name]
+            self.setConfig(config)
 
     def removeCompletedRequests(self):
         '''
@@ -1152,9 +1166,10 @@ class NodePool(threading.Thread):
                             pool_label.diskimage.name, pool.provider.name):
                         return True
                 else:
-                    manager = self.getProviderManager(pool.provider.name)
-                    if manager.labelReady(pool_label):
-                        return True
+                    with self.config_update_lock:
+                        manager = self.getProviderManager(pool.provider.name)
+                        if manager.labelReady(pool_label):
+                            return True
         return False
 
     def createMinReady(self):
