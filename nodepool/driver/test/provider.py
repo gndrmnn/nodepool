@@ -29,6 +29,9 @@ class TestProvider(Provider):
     def stop(self):
         pass
 
+    def idle(self):
+        pass
+
     def join(self):
         pass
 

@@ -52,6 +52,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
     def stop(self):
         self.log.debug("Stopping")
 
+    def idle(self):
+        pass
+
     def listNodes(self):
         servers = []
 
