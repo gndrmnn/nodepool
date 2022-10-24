@@ -347,7 +347,7 @@ class AzureAdapter(statemachine.Adapter):
 
     def getCreateStateMachine(self, hostname, label,
                               image_external_id, metadata, retries,
-                              request, log):
+                              request, az, log):
         return AzureCreateStateMachine(self, hostname, label,
                                        image_external_id, metadata,
                                        retries, request, log)
