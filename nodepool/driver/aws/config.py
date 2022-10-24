@@ -176,6 +176,7 @@ class AwsLabel(ConfigValue):
         self.iam_instance_profile = label.get('iam-instance-profile', None)
         self.tags = label.get('tags', {})
         self.dynamic_tags = label.get('dynamic-tags', {})
+        self.host_key_checking = self.pool.host_key_checking
 
     @staticmethod
     def getSchema():

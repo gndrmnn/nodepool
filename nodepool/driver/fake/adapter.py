@@ -1,18 +1,17 @@
 # Copyright (C) 2011-2013 OpenStack Foundation
+# Copyright 2022 Acme Gating, LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-# implied.
-#
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 
 import logging
 import threading
@@ -20,11 +19,10 @@ import time
 import uuid
 
 import openstack.exceptions
-
-from nodepool import exceptions
-from nodepool.driver.openstack.provider import OpenStackProvider
-from nodepool.driver.fake.handler import FakeNodeRequestHandler
 from openstack.cloud.exc import OpenStackCloudCreateException
+
+from nodepool.driver.openstack.adapter import OpenStackAdapter
+from nodepool import exceptions
 
 
 class Dummy(object):
@@ -55,6 +53,9 @@ class Dummy(object):
             args.append('%s=%s' % (k, getattr(self, k)))
         args = ' '.join(args)
         return '<%s %s %s>' % (self.__kind, id(self), args)
+
+    def __contains__(self, key):
+        return key in self.__dict__
 
     def __getitem__(self, key, default=None):
         return getattr(self, key, default)
@@ -90,10 +91,13 @@ class FakeOpenStackCloud(object):
             ]
         if networks is None:
             self.ipv6_network_uuid = uuid.uuid4().hex
+            self.no_auto_ip_network_uuid = uuid.uuid4().hex
             networks = [dict(id=uuid.uuid4().hex,
                              name='fake-public-network-name'),
                         dict(id=uuid.uuid4().hex,
                              name='fake-private-network-name'),
+                        dict(id=self.no_auto_ip_network_uuid,
+                             name='no-auto-ip-network-name'),
                         dict(id=self.ipv6_network_uuid,
                              name='fake-ipv6-network-name')]
         self.networks = networks
@@ -112,6 +116,7 @@ class FakeOpenStackCloud(object):
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
                   device_owner=None),
         ]
+        self._floating_ip_list = []
 
     def _update_quota(self):
         self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
@@ -141,7 +146,10 @@ class FakeOpenStackCloud(object):
         addresses = None
         # if keyword 'ipv6-uuid' is found in provider config,
         # ipv6 address will be available in public addr dict.
+        auto_ip = True
         for nic in nics:
+            if nic['net-id'] == self.no_auto_ip_network_uuid:
+                auto_ip = False
             if nic['net-id'] != self.ipv6_network_uuid:
                 continue
             addresses = dict(
@@ -156,15 +164,20 @@ class FakeOpenStackCloud(object):
             interface_ip = 'fake_v6'
             break
         if not addresses:
-            addresses = dict(
-                public=[dict(version=4, addr='fake')],
-                private=[dict(version=4, addr='fake')]
-            )
-            public_v6 = ''
-            public_v4 = 'fake'
-            private_v4 = 'fake'
             host_id = 'fake'
-            interface_ip = 'fake'
+            private_v4 = 'fake'
+            if auto_ip:
+                addresses = dict(
+                    public=[dict(version=4, addr='fake')],
+                    private=[dict(version=4, addr='fake')]
+                )
+                public_v6 = ''
+                public_v4 = 'fake'
+                interface_ip = 'fake'
+            else:
+                public_v4 = ''
+                public_v6 = ''
+            interface_ip = private_v4
         self._update_quota()
         over_quota = False
         if (instance_type == Dummy.INSTANCE and
@@ -190,12 +203,13 @@ class FakeOpenStackCloud(object):
                   host_id=host_id,
                   interface_ip=interface_ip,
                   security_groups=security_groups,
-                  location=Dummy(Dummy.LOCATION, zone=kw.get('az')),
+                  location=Dummy(Dummy.LOCATION, zone=az),
                   metadata=kw.get('meta', {}),
                   manager=self,
                   key_name=kw.get('key_name', None),
                   should_fail=should_fail,
                   over_quota=over_quota,
+                  flavor=kw.get('flavor'),
                   event=threading.Event(),
                   _kw=kw)
         instance_list.append(s)
@@ -273,19 +287,22 @@ class FakeOpenStackCloud(object):
     def get_server_by_id(self, server_id):
         return self.get_server(server_id)
 
-    def _clean_floating_ip(self, server):
-        server.public_v4 = ''
-        server.public_v6 = ''
-        server.interface_ip = server.private_v4
-        return server
+    def list_floating_ips(self):
+        return self._floating_ip_list
 
-    def wait_for_server(self, server, **kwargs):
-        while server.status == 'BUILD':
-            time.sleep(0.1)
-        auto_ip = kwargs.get('auto_ip')
-        if not auto_ip:
-            server = self._clean_floating_ip(server)
-        return server
+    def create_floating_ip(self, server):
+        fip = Dummy('floating_ips',
+                    id=uuid.uuid4().hex,
+                    floating_ip_address='fake',
+                    status='ACTIVE')
+        self._floating_ip_list.append(fip)
+        return fip
+
+    def _needs_floating_ip(self, server, nat_destination):
+        return False
+
+    def _has_floating_ips(self):
+        return False
 
     def list_servers(self, bare=False):
         return self._server_list
@@ -326,8 +343,8 @@ class FakeOpenStackCloud(object):
 class FakeUploadFailCloud(FakeOpenStackCloud):
     log = logging.getLogger("nodepool.FakeUploadFailCloud")
 
-    def __init__(self, times_to_fail=None):
-        super(FakeUploadFailCloud, self).__init__()
+    def __init__(self, *args, times_to_fail=None, **kw):
+        super(FakeUploadFailCloud, self).__init__(*args, **kw)
         self.times_to_fail = times_to_fail
         self.times_failed = 0
 
@@ -344,14 +361,16 @@ class FakeUploadFailCloud(FakeOpenStackCloud):
 class FakeLaunchAndGetFaultCloud(FakeOpenStackCloud):
     log = logging.getLogger("nodepool.FakeLaunchAndGetFaultCloud")
 
-    def __init__(self):
-        super().__init__()
-
-    def wait_for_server(self, server, **kwargs):
+    def create_server(self, *args, **kwargs):
         # OpenStack provider launch code specifically looks for 'quota' in
         # the failure message.
+        server = super().create_server(
+            *args, **kwargs,
+            done_status='ERROR')
+        # Don't wait for the async update
+        server.status = 'ERROR'
         server.fault = {'message': 'quota server fault'}
-        raise Exception("wait_for_server failure")
+        raise OpenStackCloudCreateException('server', server.id)
 
 
 class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
@@ -366,16 +385,18 @@ class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
         self.launch_success = False
         self.delete_success = False
 
-    def wait_for_server(self, **kwargs):
+    def create_server(self, *args, **kwargs):
         if self.times_to_fail_launch is None:
             raise Exception("Test fail server launch.")
         if self.times_failed_launch < self.times_to_fail_launch:
             self.times_failed_launch += 1
-            raise exceptions.ServerDeleteException("Test fail server launch.")
+            # Simulate a failure after the server record is created
+            ret = super().create_server(*args, **kwargs, done_status='ERROR')
+            ret.fault = {'message': 'expected error'}
+            return ret
         else:
             self.launch_success = True
-            return super(FakeLaunchAndDeleteFailCloud,
-                         self).wait_for_server(**kwargs)
+            return super().create_server(*args, **kwargs)
 
     def delete_server(self, *args, **kwargs):
         if self.times_to_fail_delete is None:
@@ -385,8 +406,7 @@ class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
             raise exceptions.ServerDeleteException("Test fail server delete.")
         else:
             self.delete_success = True
-            return super(FakeLaunchAndDeleteFailCloud,
-                         self).delete_server(*args, **kwargs)
+            return super().delete_server(*args, **kwargs)
 
 
 class FakeDeleteImageFailCloud(FakeOpenStackCloud):
@@ -404,31 +424,23 @@ class FakeDeleteImageFailCloud(FakeOpenStackCloud):
                          self).delete_image(*args, **kwargs)
 
 
-class FakeProvider(OpenStackProvider):
+class FakeAdapter(OpenStackAdapter):
     fake_cloud = FakeOpenStackCloud
 
-    def __init__(self, provider):
+    def __init__(self, provider_config):
         self.createServer_fails = 0
         self.createServer_fails_with_external_id = 0
-        self.__client = FakeProvider.fake_cloud()
-        super(FakeProvider, self).__init__(provider)
+        self.__client = FakeAdapter.fake_cloud()
+        super().__init__(provider_config)
 
     def _getClient(self):
         return self.__client
 
-    def createServer(self, *args, **kwargs):
+    def _createServer(self, *args, **kwargs):
         while self.createServer_fails:
             self.createServer_fails -= 1
             raise Exception("Expected createServer exception")
         while self.createServer_fails_with_external_id:
             self.createServer_fails_with_external_id -= 1
             raise OpenStackCloudCreateException('server', 'fakeid')
-        return super(FakeProvider, self).createServer(*args, **kwargs)
-
-    def getRequestHandler(self, poolworker, request):
-        return FakeNodeRequestHandler(poolworker, request)
-
-    def start(self, zk_conn):
-        if self.provider.region_name == 'broken-region':
-            raise Exception("Broken cloud config")
-        super().start(zk_conn)
+        return super()._createServer(*args, **kwargs)

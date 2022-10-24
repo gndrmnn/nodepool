@@ -289,7 +289,7 @@ class AwsAdapter(statemachine.Adapter):
         self._running = False
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
-                              metadata, retries, request, log):
+                              metadata, retries, request, az, log):
         return AwsCreateStateMachine(self, hostname, label, image_external_id,
                                      metadata, retries, request, log)
 
