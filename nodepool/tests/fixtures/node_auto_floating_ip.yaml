@@ -34,7 +34,7 @@ providers:
       - name: main
         max-servers: 96
         networks:
-          - 'some-name'
+          - 'no-auto-ip-network-name'
         auto-floating-ip: False
         labels:
           - name: fake-label1

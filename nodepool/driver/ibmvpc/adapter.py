@@ -381,7 +381,7 @@ class IBMVPCAdapter(statemachine.Adapter):
 
     def getCreateStateMachine(self, hostname, label,
                               image_external_id, metadata, retries,
-                              request, log):
+                              request, az, log):
         return IBMVPCCreateStateMachine(self, hostname, label,
                                         image_external_id, metadata,
                                         retries)

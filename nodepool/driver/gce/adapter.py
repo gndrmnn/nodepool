@@ -162,7 +162,7 @@ class GceAdapter(statemachine.Adapter):
                                         self.provider.rate)
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
-                              metadata, retries, request, log):
+                              metadata, retries, request, az, log):
         return GceCreateStateMachine(self, hostname, label, image_external_id,
                                      metadata, retries, request, log)
 
