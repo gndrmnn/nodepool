@@ -86,7 +86,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
 
         # Request a node, verify that there is a backing node, and it
         # has the same connection info
@@ -151,7 +151,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
 
         # Request a node, verify that there is a backing node, and it
         # has the same connection info
@@ -166,7 +166,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
 
         # Allocate a second node, should have same backing node
         node2 = self._requestNode()
@@ -188,7 +188,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
 
         # Request a node, verify that there is a backing node, and it
         # has the same connection info
@@ -209,7 +209,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
 
         # Delete the metastatic node and verify that backing is deleted
         node1.state = zk.DELETING

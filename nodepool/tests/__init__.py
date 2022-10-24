@@ -584,7 +584,7 @@ class DBTestCase(BaseTestCase):
         for _ in iterate_timeout(ONE_MINUTE, Exception,
                                  "Cloud instance deletion",
                                  interval=1):
-            servers = manager.listNodes()
+            servers = manager.adapter._listServers()
             if not (instance_id in [s.id for s in servers]):
                 break
 
