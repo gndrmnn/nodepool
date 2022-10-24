@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfc60f03_c6677ae8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-24T15:42:07Z",
+      "side": 1,
+      "message": "WIP until better logging from https://review.opendev.org/c/zuul/nodepool/+/862500 helps us root cause this.",
+      "revId": "e6dd8a58f765185910b36f89b46c1d9be12650a7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cbe62539_532c145c",
