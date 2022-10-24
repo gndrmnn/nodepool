@@ -287,6 +287,10 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("ThreadPoolExecutor"):
                     continue
+                if t.name.startswith("openstack-api"):
+                    continue
+                if t.name.startswith("keyscan"):
+                    continue
                 if t.name not in whitelist:
                     done = False
             if done:
@@ -584,7 +588,11 @@ class DBTestCase(BaseTestCase):
         for _ in iterate_timeout(ONE_MINUTE, Exception,
                                  "Cloud instance deletion",
                                  interval=1):
-            servers = manager.listNodes()
+            if hasattr(manager, 'adapter'):
+                servers = manager.adapter._listServers()
+            else:
+                # TODO: remove once all drivers use statemachine
+                servers = manager.listNodes()
             if not (instance_id in [s.id for s in servers]):
                 break
 
