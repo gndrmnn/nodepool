@@ -510,6 +510,9 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.adapter.stop()
         self.log.debug("Stopped")
 
+    def idle(self):
+        pass
+
     def join(self):
         self.log.debug("Joining")
         if self.state_machine_thread:

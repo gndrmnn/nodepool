@@ -50,6 +50,9 @@ class ProviderManager(object):
             if old_config:
                 oldmanager = old_config.provider_managers.get(p.name)
             if oldmanager and p != oldmanager.provider:
+                # Signal that actions not safe to run on both the old and
+                # new providers while we synchronize should cease to run.
+                oldmanager.idle()
                 stop_managers.append(oldmanager)
                 oldmanager = None
             if oldmanager:

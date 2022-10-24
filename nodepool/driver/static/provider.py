@@ -59,6 +59,9 @@ class StaticNodeProvider(Provider, QuotaSupport):
         # multiple threads (e.g. cleanup and deleted node worker).
         self._register_lock = threading.Lock()
         self._node_slots = {}  # nodeTuple -> [node]
+        # Flag to indicates we need to stop processing state that could
+        # interfere with a newer versions of ourselves running.
+        self.idle = False
 
     def _getSlot(self, node):
         return self._node_slots[nodeTuple(node)].index(node)
@@ -412,6 +415,9 @@ class StaticNodeProvider(Provider, QuotaSupport):
     def stop(self):
         self.log.debug("Stopping")
 
+    def idle(self):
+        self.idle = True
+
     def poolNodes(self):
         return {
             nodeTuple(n): n
@@ -437,6 +443,8 @@ class StaticNodeProvider(Provider, QuotaSupport):
         return True
 
     def cleanupLeakedResources(self):
+        if self.idle:
+            return
         with self._register_lock:
             self.getRegisteredNodes()
             for pool in self.provider.pools.values():
@@ -458,6 +466,9 @@ class StaticNodeProvider(Provider, QuotaSupport):
         '''
         Re-register the deleted node.
         '''
+        if self.idle:
+            return
+
         # It's possible a deleted node no longer exists in our config, so
         # don't bother to reregister.
         node_tuple = nodeTuple(node)

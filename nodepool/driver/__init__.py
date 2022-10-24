@@ -196,6 +196,17 @@ class Provider(ProviderNotifications):
         pass
 
     @abc.abstractmethod
+    def idle(self):
+        """Idle the provider
+
+        This is called before stop(). Providers should use this as a signal
+        to idle themselves and stop performing any actions that may interfere
+        with a new version of this provider starting up.
+
+        """
+        pass
+
+    @abc.abstractmethod
     def join(self):
         """Wait for provider to finish
 

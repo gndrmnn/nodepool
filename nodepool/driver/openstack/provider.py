@@ -69,6 +69,9 @@ class OpenStackProvider(Provider, QuotaSupport):
         self.running = False
         self._server_list_watcher_stop_event.set()
 
+    def idle(self):
+        pass
+
     def join(self):
         self._server_list_watcher.join()
 

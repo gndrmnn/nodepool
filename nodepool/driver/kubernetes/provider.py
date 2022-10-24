@@ -56,6 +56,9 @@ class KubernetesProvider(Provider, QuotaSupport):
         self.log.debug("Stopping")
         self.ready = False
 
+    def idle(self):
+        pass
+
     def listNodes(self):
         servers = []
 
