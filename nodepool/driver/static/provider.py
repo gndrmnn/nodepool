@@ -338,6 +338,8 @@ class StaticNodeProvider(Provider, QuotaSupport):
             self.zk.unlockNode(node)
 
     def syncNodeCount(self, static_node, pool):
+        self.log.debug("Provider %s syncing nodes with config",
+                       self.provider.name)
         for slot, node in enumerate(self._node_slots[nodeTuple(static_node)]):
             if node is None:
                 # Register nodes to synchronize with our configuration.
@@ -402,6 +404,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
 
     def start(self, zk_conn):
         try:
+            self.log.debug("Starting static provider %s", self.provider.name)
             self._start(zk_conn)
         except Exception:
             self.log.exception("Cannot start static provider:")
@@ -480,6 +483,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
             if slot >= static_node["max-parallel-jobs"]:
                 return
 
+            self.log.debug("Re-registering deleted node: %s", node_tuple)
             try:
                 pool = self.provider.pools[node.pool]
                 self.registerNodeFromConfig(
