@@ -249,7 +249,7 @@ class NodePoolCmd(NodepoolApp):
                 # up in alien list since we can't do anything about them
                 # anyway.
                 provider_images = [
-                    image for image in manager.listImages()
+                    image for image in manager.adapter._listImages()
                     if 'nodepool_build_id' in image['properties']]
             except Exception as e:
                 log.warning("Exception listing alien images for %s: %s"

@@ -17,6 +17,7 @@
 import time
 import logging
 import math
+import random
 import threading
 from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -137,7 +138,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
             hostname, label, image_external_id, metadata, retries,
-            self.handler.request, self.log)
+            self.handler.request, self.handler.chosen_az, self.log)
 
     def updateNodeFromInstance(self, instance):
         if instance is None:
@@ -157,6 +158,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.public_ipv4 = instance.public_ipv4
         node.private_ipv4 = instance.private_ipv4
         node.public_ipv6 = instance.public_ipv6
+        node.host_id = instance.host_id
         node.cloud = instance.cloud
         node.region = instance.region
         node.az = instance.az
@@ -205,20 +207,17 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             instance = state_machine.advance()
             self.log.debug(f"State machine for {node.id} at "
                            f"{state_machine.state}")
-            if not node.external_id:
-                if not state_machine.external_id:
-                    raise Exception("Driver implementation error: state "
-                                    "machine must produce external ID "
-                                    "after first advancement")
+            if not node.external_id and state_machine.external_id:
                 node.external_id = state_machine.external_id
                 self.zk.storeNode(node)
             if state_machine.complete and not self.keyscan_future:
                 self.updateNodeFromInstance(instance)
                 self.log.debug("Submitting keyscan request for %s",
                                node.interface_ip)
+                label = self.handler.pool.labels[self.node.type[0]]
                 future = self.manager.keyscan_worker.submit(
                     keyscan,
-                    self.handler.pool.host_key_checking,
+                    label.host_key_checking,
                     node.id, node.interface_ip,
                     node.connection_type, node.connection_port,
                     self.manager.provider.boot_timeout)
@@ -240,6 +239,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             node.external_id = state_machine.external_id
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
+            self.manager.invalidateQuotaCache()
         except Exception as e:
             self.log.exception(
                 "Launch failed for node %s:", node.id)
@@ -352,6 +352,7 @@ class StateMachineHandler(NodeRequestHandler):
 
     def __init__(self, pw, request):
         super().__init__(pw, request)
+        self.chosen_az = None
         self.launchers = []
 
     @property
@@ -364,6 +365,15 @@ class StateMachineHandler(NodeRequestHandler):
 
         :returns: True if it is available, False otherwise.
         '''
+        for label in self.request.node_types:
+            if self.pool.labels[label].cloud_image:
+                if not self.manager.labelReady(self.pool.labels[label]):
+                    return False
+            else:
+                if not self.zk.getMostRecentImageUpload(
+                        self.pool.labels[label].diskimage.name,
+                        self.provider.name):
+                    return False
         return True
 
     def hasProviderQuota(self, node_types):
@@ -414,17 +424,18 @@ class StateMachineHandler(NodeRequestHandler):
         needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
         self.log.debug("Needed quota: %s", needed_quota)
 
-        # Calculate remaining quota which is calculated as:
-        # quota = <total nodepool quota> - <used quota> - <quota for node>
-        cloud_quota = self.manager.estimatedNodepoolQuota()
-        cloud_quota.subtract(
-            self.manager.estimatedNodepoolQuotaUsed())
-        cloud_quota.subtract(needed_quota)
-        self.log.debug("Predicted remaining provider quota: %s",
-                       cloud_quota)
+        if not self.pool.ignore_provider_quota:
+            # Calculate remaining quota which is calculated as:
+            # quota = <total nodepool quota> - <used quota> - <quota for node>
+            cloud_quota = self.manager.estimatedNodepoolQuota()
+            cloud_quota.subtract(
+                self.manager.estimatedNodepoolQuotaUsed())
+            cloud_quota.subtract(needed_quota)
+            self.log.debug("Predicted remaining provider quota: %s",
+                           cloud_quota)
 
-        if not cloud_quota.non_negative():
-            return False
+            if not cloud_quota.non_negative():
+                return False
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
@@ -443,6 +454,37 @@ class StateMachineHandler(NodeRequestHandler):
         self.log.debug("Predicted remaining pool quota: %s", pool_quota)
 
         return pool_quota.non_negative()
+
+    def checkReusableNode(self, node):
+        if self.chosen_az and node.az != self.chosen_az:
+            return False
+        return True
+
+    def nodeReusedNotification(self, node):
+        """
+        We attempt to group the node set within the same provider availability
+        zone.
+        For this to work properly, the provider entry in the nodepool
+        config must list the availability zones. Otherwise, new nodes will be
+        put in random AZs at nova's whim. The exception being if there is an
+        existing node in the READY state that we can select for this node set.
+        Its AZ will then be used for new nodes, as well as any other READY
+        nodes.
+        """
+        # If we haven't already chosen an AZ, select the
+        # AZ from this ready node. This will cause new nodes
+        # to share this AZ, as well.
+        if not self.chosen_az and node.az:
+            self.chosen_az = node.az
+
+    def setNodeMetadata(self, node):
+        """
+        Select grouping AZ if we didn't set AZ from a selected,
+        pre-existing node
+        """
+        if not self.chosen_az:
+            self.chosen_az = random.choice(
+                self.pool.azs or self.manager.adapter.getAZs())
 
     def launchesComplete(self):
         '''
@@ -497,7 +539,8 @@ class StateMachineProvider(Provider, QuotaSupport):
         self._zk = zk_conn
         self.keyscan_worker = ThreadPoolExecutor()
         self.state_machine_thread = threading.Thread(
-            target=self._runStateMachines)
+            target=self._runStateMachines,
+            daemon=True)
         self.state_machine_thread.start()
 
     def stop(self):
@@ -555,7 +598,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         return StateMachineHandler(poolworker, request)
 
     def labelReady(self, label):
-        return True
+        return self.adapter.labelReady(label)
 
     def getProviderLimits(self):
         try:
@@ -745,6 +788,7 @@ class Instance:
     * cloud: str
     * az: str
     * region: str
+    * host_id: str
     * driver_data: any
     * slot: int
 
@@ -769,6 +813,7 @@ class Instance:
         self.cloud = None
         self.az = None
         self.region = None
+        self.host_id = None
         self.metadata = {}
         self.driver_data = None
         self.slot = None
@@ -950,6 +995,36 @@ class Adapter:
         :returns: A :py:class:`QuotaInformation` object.
         """
         return QuotaInformation(instances=1)
+
+    def getAZs(self):
+        """Return a list of availability zones for this provider
+
+        One of these will be selected at random and supplied to the
+        create state machine.  If a request handler is building a node
+        set from an existing ready node, then the AZ from that node
+        will be used instead of the results of this method.
+
+        :returns: A list of availability zone names.
+        """
+        return [None]
+
+    def labelReady(self, label):
+        """Indicate whether a label is ready in the provided cloud
+
+        This is used by the launcher to determine whether it should
+        consider a label to be in-service for a provider.  If this
+        returns False, the label will be ignored for this provider.
+
+        This does not need to consider whether a diskimage is ready;
+        the launcher handles that itself.  Instead, this can be used
+        to determine whether a cloud-image is available.
+
+        :param ProviderLabel label: A config object describing a label
+            for an instance.
+
+        :returns: A bool indicating whether the label is ready.
+        """
+        return True
 
     # The following methods must be implemented only if image
     # management is supported:
