@@ -24,7 +24,8 @@ import testtools
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
 from nodepool.zk.components import PoolComponent
-from nodepool.driver.fake import provider as fakeprovider
+from nodepool.driver.statemachine import StateMachineProvider
+from nodepool.driver.fake import adapter as fakeadapter
 from nodepool.nodeutils import iterate_timeout
 import nodepool.launcher
 from nodepool.version import get_version_string
@@ -34,6 +35,12 @@ from kazoo import exceptions as kze
 
 class TestLauncher(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestLauncher")
+
+    def setUp(self):
+        super().setUp()
+
+        StateMachineProvider.MINIMUM_SLEEP = 0.1
+        StateMachineProvider.MAXIMUM_SLEEP = 1
 
     def test_node_assignment(self):
         '''
@@ -89,7 +96,7 @@ class TestLauncher(tests.DBTestCase):
 
             # We check the "cloud" side attributes are set from nodepool side
             provider = pool.getProviderManager('fake-provider')
-            cloud_node = provider.getServer(node.hostname)
+            cloud_node = provider.adapter._getServer(node.external_id)
             self.assertEqual(
                 cloud_node.metadata['nodepool_provider_name'],
                 'fake-provider')
@@ -183,7 +190,7 @@ class TestLauncher(tests.DBTestCase):
         def fake_get_quota():
             return (max_cores, max_instances, max_ram)
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -196,7 +203,7 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
 
-        client = pool.getProviderManager('fake-provider')._getClient()
+        client = pool.getProviderManager('fake-provider').adapter._getClient()
 
         req1 = zk.NodeRequest()
         req1.state = zk.REQUESTED
@@ -412,7 +419,7 @@ class TestLauncher(tests.DBTestCase):
         def fake_get_quota():
             return (math.inf, 1, math.inf)
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -472,7 +479,7 @@ class TestLauncher(tests.DBTestCase):
             nonlocal max_cores, max_instances, max_ram
             return (max_cores, max_instances, max_ram)
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -485,7 +492,7 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
 
-        client = pool.getProviderManager('fake-provider')._getClient()
+        client = pool.getProviderManager('fake-provider').adapter._getClient()
 
         # Wait for a single node to be created
         req1 = zk.NodeRequest()
@@ -545,7 +552,7 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager.createServer_fails = 2
+        manager.adapter.createServer_fails = 2
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -553,7 +560,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req)
 
         req = self.waitForNodeRequest(req)
-        self.assertEqual(0, manager.createServer_fails)
+        self.assertEqual(0, manager.adapter.createServer_fails)
         self.assertEqual(req.state, zk.FAILED)
         self.assertNotEqual(req.declined_by, [])
 
@@ -578,7 +585,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req.state, zk.FULFILLED)
 
         # now change the azs in the cloud
-        cloud = pool.getProviderManager('fake-provider')._getClient()
+        cloud = pool.getProviderManager('fake-provider').adapter._getClient()
         cloud._azs = ['new-az1', 'new-az2']
 
         # Do a second request. This will fail because the cached azs are not
@@ -661,7 +668,7 @@ class TestLauncher(tests.DBTestCase):
 
         provider = (builder._upload_workers[0]._config.
                     provider_managers['fake-provider'])
-        cloud_image = provider.getImage(image.external_id)
+        cloud_image = provider.adapter._findImage(image.external_id)
         self.assertEqual(
             cloud_image._kw.get('diskimage_metadata'), 'diskimage')
         self.assertEqual(
@@ -690,7 +697,7 @@ class TestLauncher(tests.DBTestCase):
 
         # We check the "cloud" side attributes are set from nodepool side
         provider = pool.getProviderManager('fake-provider')
-        cloud_node = provider.getServer(nodes[0].hostname)
+        cloud_node = provider.adapter._getServer(nodes[0].external_id)
         self.assertEqual(
             cloud_node.metadata['nodepool_provider_name'],
             'fake-provider')
@@ -927,7 +934,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(nodes[0].provider, 'fake-provider')
         self.assertEqual(len(nodes_def_sg), 1)
         self.assertEqual(nodes_def_sg[0].provider, 'fake-provider')
-        client = pool.getProviderManager('fake-provider')._getClient()
+        client = pool.getProviderManager('fake-provider').adapter._getClient()
         for server in client._server_list:
             if server.id == nodes[0].external_id:
                 self.assertEqual(server.security_groups, ['fake-sg'])
@@ -1066,7 +1073,7 @@ class TestLauncher(tests.DBTestCase):
 
         # Get fake cloud record and set status to DELETING
         manager = pool.getProviderManager('fake-provider')
-        for instance in manager.listNodes():
+        for instance in manager.adapter._listServers():
             if instance.id == nodes[0].external_id:
                 instance.status = 'DELETED'
                 break
@@ -1078,7 +1085,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForNodeDeletion(nodes[0])
 
         api_record_remains = False
-        for instance in manager.listNodes():
+        for instance in manager.adapter._listServers():
             if instance.id == nodes[0].external_id:
                 api_record_remains = True
                 break
@@ -1098,7 +1105,7 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager.createServer_fails = 2
+        manager.adapter.createServer_fails = 2
         self.waitForImage('fake-provider', 'fake-image')
 
         req = zk.NodeRequest()
@@ -1110,7 +1117,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req.state, zk.FAILED)
 
         # retries in config is set to 2, so 2 attempts to create a server
-        self.assertEqual(0, manager.createServer_fails)
+        self.assertEqual(0, manager.adapter.createServer_fails)
 
     def test_node_launch_with_broken_znodes(self):
         """Test that node launch still works if there are broken znodes"""
@@ -1152,7 +1159,7 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager.createServer_fails_with_external_id = 2
+        manager.adapter.createServer_fails_with_external_id = 2
         self.waitForImage('fake-provider', 'fake-image')
 
         # Stop the DeletedNodeWorker so we can make sure the fake znode that
@@ -1170,7 +1177,8 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req.state, zk.FAILED)
 
         # retries in config is set to 2, so 2 attempts to create a server
-        self.assertEqual(0, manager.createServer_fails_with_external_id)
+        self.assertEqual(
+            0, manager.adapter.createServer_fails_with_external_id)
 
         # Request another node to check if nothing is wedged
         req = zk.NodeRequest()
@@ -1186,7 +1194,7 @@ class TestLauncher(tests.DBTestCase):
             raise RuntimeError('Fake Error')
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, 'deleteServer', fail_delete))
+            fakeadapter.FakeAdapter, '_deleteServer', fail_delete))
 
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -1215,10 +1223,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_delete_error(self):
         def error_delete(self, name):
             # Set ERROR status instead of deleting the node
-            self._getClient()._server_list[0].status = 'ERROR'
+            self._client._server_list[0].status = 'ERROR'
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, 'deleteServer', error_delete))
+            fakeadapter.FakeAdapter, '_deleteServer', error_delete))
 
         configfile = self.setup_config('node_delete_error.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -1244,14 +1252,10 @@ class TestLauncher(tests.DBTestCase):
 
         # wait the cleanup thread to kick in
         time.sleep(5)
-        zk_nodes = self.zk.getNodes()
-        self.assertEqual(len(zk_nodes), 1)
-        node = self.zk.getNode(zk_nodes[0])
-        self.assertEqual(node.state, zk.DELETING)
-
-        # remove error nodes
-        pool.getProviderManager(
-            'fake-provider')._getClient()._server_list.clear()
+        # Make sure it shows up as leaked
+        manager = pool.getProviderManager('fake-provider')
+        instances = list(manager.adapter.listInstances())
+        self.assertEqual(1, len(instances))
 
     def test_leaked_node(self):
         """Test that a leaked node is deleted"""
@@ -1267,7 +1271,7 @@ class TestLauncher(tests.DBTestCase):
         # Make sure we have a node built and ready
         self.assertEqual(len(nodes), 1)
         manager = pool.getProviderManager('fake-provider')
-        servers = manager.listNodes()
+        servers = manager.adapter._listServers()
         self.assertEqual(len(servers), 1)
 
         # Delete the node from ZooKeeper, but leave the instance
@@ -1286,7 +1290,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForInstanceDeletion(manager, nodes[0].external_id)
 
         # Make sure we end up with only one server (the replacement)
-        servers = manager.listNodes()
+        servers = manager.adapter._listServers()
         self.assertEqual(len(servers), 1)
 
     def test_max_ready_age(self):
@@ -1599,9 +1603,10 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="fake-image")
-        manager._client.create_image(name="fake-image-windows")
-        manager._client.create_image(name="fake-image-windows-port")
+        manager.adapter.IMAGE_CHECK_TIMEOUT = 1
+        manager.adapter._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image-windows")
+        manager.adapter._client.create_image(name="fake-image-windows-port")
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
@@ -1638,7 +1643,8 @@ class TestLauncher(tests.DBTestCase):
         pool.start()
         self.wait_for_config(pool)
         manager = pool.getProviderManager('fake-provider')
-        manager._client.create_image(name="provider-named-image")
+        manager.adapter.IMAGE_CHECK_TIMEOUT = 1
+        manager.adapter._client.create_image(name="provider-named-image")
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
@@ -1936,7 +1942,7 @@ class TestLauncher(tests.DBTestCase):
         self.wait_for_config(pool)
 
         manager = pool.getProviderManager('good-provider')
-        manager._client.create_image(name="good-image")
+        manager.adapter._client.create_image(name="good-image")
 
         good_req = zk.NodeRequest()
         good_req.state = zk.REQUESTED
@@ -2013,11 +2019,11 @@ class TestLauncher(tests.DBTestCase):
             time.sleep(1)
             launcher_pools = self.zk.getRegisteredPools()
 
-    @mock.patch('nodepool.driver.openstack.handler.'
-                'OpenStackNodeLauncher._launchNode')
+    @mock.patch('nodepool.driver.statemachine.'
+                'StateMachineNodeLauncher.launch')
     def test_launchNode_session_expired(self, mock_launch):
         '''
-        Test ZK session lost during _launchNode().
+        Test ZK session lost during launch().
         '''
         mock_launch.side_effect = kze.SessionExpiredError()
 
@@ -2044,19 +2050,19 @@ class TestLauncher(tests.DBTestCase):
         while self.zk.countPoolNodes('fake-provider', 'main'):
             time.sleep(0)
 
-    @mock.patch('nodepool.driver.openstack.provider.'
-                'OpenStackProvider.invalidateQuotaCache')
+    @mock.patch('nodepool.driver.statemachine.'
+                'StateMachineProvider.invalidateQuotaCache')
     def test_launchNode_node_fault_message(self, mock_invalidatequotacache):
         '''
         Test failed launch can get detailed node fault info if available.
         '''
-        fake_client = fakeprovider.FakeLaunchAndGetFaultCloud()
+        fake_client = fakeadapter.FakeLaunchAndGetFaultCloud()
 
         def get_fake_client(*args, **kwargs):
             return fake_client
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, '_getClient',
+            fakeadapter.FakeAdapter, '_getClient',
             get_fake_client))
 
         configfile = self.setup_config('node_launch_retry.yaml')
@@ -2089,20 +2095,19 @@ class TestLauncher(tests.DBTestCase):
         Test that the launcher keeps trying to spawn a node in case of a
         delete error
         '''
-        fake_client = fakeprovider.FakeLaunchAndDeleteFailCloud(
+        fake_client = fakeadapter.FakeLaunchAndDeleteFailCloud(
             times_to_fail=1)
 
         def get_fake_client(*args, **kwargs):
             return fake_client
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider, '_getClient',
+            fakeadapter.FakeAdapter, '_getClient',
             get_fake_client))
 
         configfile = self.setup_config('node_launch_retry.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.cleanup_interval = 60
         pool.start()
         self.waitForImage('fake-provider', 'fake-image')
 
@@ -2248,7 +2253,7 @@ class TestLauncher(tests.DBTestCase):
         def fake_get_quota():
             return (0, 20, 1000000)
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -2283,7 +2288,7 @@ class TestLauncher(tests.DBTestCase):
         def fake_get_quota():
             return (0, 20, 1000000)
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -2380,7 +2385,7 @@ class TestLauncher(tests.DBTestCase):
             return (100, max_instances, 1000000)
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -2423,7 +2428,7 @@ class TestLauncher(tests.DBTestCase):
             return (100, max_instances, 1000000)
 
         self.useFixture(fixtures.MockPatchObject(
-            fakeprovider.FakeProvider.fake_cloud, '_get_quota',
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
         ))
 
@@ -2565,7 +2570,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForNodes('fake-label')
 
         manager = pool.getProviderManager('fake-provider')
-        down_ports = manager.listPorts(status='DOWN')
+        down_ports = manager.adapter._listPorts(status='DOWN')
         self.assertEqual(2, len(down_ports))
         self.log.debug("Down ports: %s", down_ports)
 
@@ -2580,13 +2585,10 @@ class TestLauncher(tests.DBTestCase):
             except AssertionError:
                 # config still hasn't updated, retry
                 manager = pool.getProviderManager('fake-provider')
-        # Reset the client as a new fake client will have been
-        # created.
-        manager.resetClient()
 
         for _ in iterate_timeout(4, Exception, 'assert ports are cleaned'):
             try:
-                down_ports = manager.listPorts(status='DOWN')
+                down_ports = manager.adapter._listPorts(status='DOWN')
                 self.assertEqual(0, len(down_ports))
                 break
             except AssertionError:

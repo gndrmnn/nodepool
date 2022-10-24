@@ -54,6 +54,7 @@ class ProviderLabel(ConfigValue):
         self.instance_type = None
         # The ProviderPool object that owns this label.
         self.pool = None
+        self.host_key_checking = self.pool.host_key_checking
 
     def __eq__(self, other):
         if isinstance(other, ProviderLabel):

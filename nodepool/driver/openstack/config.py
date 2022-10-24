@@ -29,10 +29,10 @@ class ProviderDiskImage(ConfigValue):
         self.config_drive = None
         self.connection_type = None
         self.connection_port = None
+        self.username = None
+        self.python_path = None
+        self.shell_type = None
         self.meta = None
-
-    def __repr__(self):
-        return "<ProviderDiskImage %s>" % self.name
 
 
 class ProviderCloudImage(ConfigValue):
@@ -46,9 +46,6 @@ class ProviderCloudImage(ConfigValue):
         self.shell_type = None
         self.connection_type = None
         self.connection_port = None
-
-    def __repr__(self):
-        return "<ProviderCloudImage %s>" % self.name
 
     @property
     def external_name(self):
@@ -76,28 +73,6 @@ class ProviderLabel(ConfigValue):
         # The ProviderPool object that owns this label.
         self.pool = None
 
-    def __eq__(self, other):
-        if isinstance(other, ProviderLabel):
-            # NOTE(Shrews): We intentionally do not compare 'pool' here
-            # since this causes recursive checks with ProviderPool.
-            return (other.diskimage == self.diskimage and
-                    other.cloud_image == self.cloud_image and
-                    other.min_ram == self.min_ram and
-                    other.flavor_name == self.flavor_name and
-                    other.key_name == self.key_name and
-                    other.name == self.name and
-                    other.console_log == self.console_log and
-                    other.boot_from_volume == self.boot_from_volume and
-                    other.volume_size == self.volume_size and
-                    other.instance_properties == self.instance_properties and
-                    other.userdata == self.userdata and
-                    other.networks == self.networks and
-                    other.host_key_checking == self.host_key_checking)
-        return False
-
-    def __repr__(self):
-        return "<ProviderLabel %s>" % self.name
-
 
 class ProviderPool(ConfigPool):
     ignore_equality = ['provider']
@@ -112,15 +87,13 @@ class ProviderPool(ConfigPool):
         self.security_groups = None
         self.auto_floating_ip = True
         self.host_key_checking = True
+        self.use_internal_ip = False
         self.labels = None
         # The OpenStackProviderConfig object that owns this pool.
         self.provider = None
 
         # Initialize base class attributes
         super().__init__()
-
-    def __repr__(self):
-        return "<ProviderPool %s>" % self.name
 
     def load(self, pool_config, full_config, provider):
         '''
@@ -259,6 +232,9 @@ class OpenStackProviderConfig(ProviderConfig):
             diskimage.image_types.add(self.image_type)
             i.pause = bool(image.get('pause', False))
             i.config_drive = image.get('config-drive', None)
+            i.username = diskimage.username
+            i.python_path = diskimage.python_path
+            i.shell_type = diskimage.shell_type
             i.connection_type = image.get('connection-type', 'ssh')
             i.connection_port = image.get(
                 'connection-port',
