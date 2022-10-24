@@ -172,6 +172,7 @@ class AzureLabel(ConfigValue):
         self.dynamic_tags = label.get('dynamic-tags', {})
         self.user_data = self._encodeData(label.get('user-data', None))
         self.custom_data = self._encodeData(label.get('custom-data', None))
+        self.host_key_checking = self.pool.host_key_checking
 
     def _encodeData(self, s):
         if not s:

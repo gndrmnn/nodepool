@@ -63,7 +63,7 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         # thread that causes wait_for_threads in subsequent tests to fail.
         self.addCleanup(pm.stop)
         pm.start(None)
-        self.assertEqual(pm._client.auth, auth_data)
+        self.assertEqual(pm.adapter._client.auth, auth_data)
 
     def test_nodepool_occ_config_reload(self):
         configfile = self.setup_config('integration_occ.yaml')
@@ -76,8 +76,8 @@ class TestShadeIntegration(tests.IntegrationTestCase):
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
-        self.assertEqual(provider_manager._client.auth, auth_data)
+        pm = pool.config.provider_managers['real-provider']
+        self.assertEqual(pm.adapter._client.auth, auth_data)
 
         # update the config
         auth_data['password'] = 'os_new_real'
@@ -86,5 +86,5 @@ class TestShadeIntegration(tests.IntegrationTestCase):
             yaml.safe_dump(occ_config, h)
 
         pool.updateConfig()
-        provider_manager = pool.config.provider_managers['real-provider']
-        self.assertEqual(provider_manager._client.auth, auth_data)
+        pm = pool.config.provider_managers['real-provider']
+        self.assertEqual(pm.adapter._client.auth, auth_data)

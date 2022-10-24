@@ -498,7 +498,8 @@ class TestDriverStatic(tests.DBTestCase):
 
         self.wait_for_config(pool)
         manager = pool.getProviderManager('openstack-provider')
-        manager._client.create_image(name="fake-image")
+        manager.adapter._client.create_image(name="fake-image")
+        manager.adapter.IMAGE_CHECK_TIMEOUT = 0
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
