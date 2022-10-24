@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "daa1a4cc_785d55fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-24T17:16:12Z",
+      "side": 1,
+      "message": "recheck pypi upstream problems caused the failure which upstream says are now fixed",
+      "revId": "6dd5e6ff060ffc3c4490e17ac7ab4b83e1a29717",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
