@@ -16,6 +16,23 @@
       "message": "recheck the image build failure appears to be an issue finding a layer. The unittest failure seems to be another static driver failure. rerun to gather more info.",
       "revId": "9fcf9d05ff46f901488524633f5f31a3fb62fa2e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec992542_1d93822e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-25T16:12:34Z",
+      "side": 1,
+      "message": "recheck there is something odd about the image build job finding 0 byte layers. Looking for more data.",
+      "revId": "9fcf9d05ff46f901488524633f5f31a3fb62fa2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
