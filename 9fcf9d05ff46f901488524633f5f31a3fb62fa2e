@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40e38b66_357d36c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-25T15:47:41Z",
+      "side": 1,
+      "message": "recheck the image build failure appears to be an issue finding a layer. The unittest failure seems to be another static driver failure. rerun to gather more info.",
+      "revId": "9fcf9d05ff46f901488524633f5f31a3fb62fa2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
