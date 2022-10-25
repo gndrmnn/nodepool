@@ -253,6 +253,15 @@
     vars: *nodepool_tox_vars
     nodeset: ubuntu-jammy
 
+- job:
+    name: nodepool-tox-py311
+    description: |
+      Nodepool unit tests with ZooKeeper running
+    parent: tox-py311
+    pre-run: playbooks/nodepool-tox/pre.yaml
+    vars: *nodepool_tox_vars
+    nodeset: ubuntu-jammy
+
 - project:
     vars:
       release_python: python3
@@ -265,6 +274,7 @@
             nodeset: ubuntu-jammy
         - nodepool-tox-py38
         - nodepool-tox-py310
+        - nodepool-tox-py311
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - nodepool-functional-openshift
@@ -280,6 +290,7 @@
             nodeset: ubuntu-jammy
         - nodepool-tox-py38
         - nodepool-tox-py310
+        - nodepool-tox-py311
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
