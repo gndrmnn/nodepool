@@ -609,6 +609,12 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.shell_type, None)
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(
+            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Iops'], 2000)
+        self.assertEqual(
+            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Throughput'], 200)
 
     def test_aws_diskimage_removal(self):
         configfile = self.setup_config('aws/diskimage.yaml')
