@@ -261,9 +261,9 @@
         - opendev-buildset-registry
         - nodepool-build-image
         - zuul-tox-docs
-        - tox-pep8:
-            nodeset: ubuntu-jammy
-        - nodepool-tox-py38
+        - tox-pep8
+        - nodepool-tox-py38:
+            nodeset: ubuntu-focal
         - nodepool-tox-py310
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
@@ -276,9 +276,9 @@
       jobs:
         - nodepool-upload-image
         - zuul-tox-docs
-        - tox-pep8:
-            nodeset: ubuntu-jammy
-        - nodepool-tox-py38
+        - tox-pep8
+        - nodepool-tox-py38:
+            nodeset: ubuntu-focal
         - nodepool-tox-py310
         - nodepool-functional-k8s
         - nodepool-functional-openshift
