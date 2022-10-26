@@ -16,6 +16,24 @@
       "message": "Should the pool label entry ensure its iops and throughput values are greater than or equal to the disk image specifications? I can go either way on this as it may be valid to intentionally reduce the resources on a specific label but reuse the same image otherwise.",
       "revId": "4ea824cfa96eb50d96e23241673785c46d870f61",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c515414_bc1f0c4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-26T20:23:57Z",
+      "side": 1,
+      "message": "That\u0027s a good question, and I don\u0027t know AWS\u0027s behavior right now (I don\u0027t see it documented).  If AWS permits it, we certainly should, so I think it\u0027s reasonable to leave this as permissive now and make it more restrictive later if we find we\u0027re able.",
+      "parentUuid": "7d76d037_fc7859c6",
+      "revId": "4ea824cfa96eb50d96e23241673785c46d870f61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
