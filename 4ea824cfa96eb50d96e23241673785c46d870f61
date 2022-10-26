@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d76d037_fc7859c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-26T20:06:43Z",
+      "side": 1,
+      "message": "Should the pool label entry ensure its iops and throughput values are greater than or equal to the disk image specifications? I can go either way on this as it may be valid to intentionally reduce the resources on a specific label but reuse the same image otherwise.",
+      "revId": "4ea824cfa96eb50d96e23241673785c46d870f61",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
