@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a17e5274_732616c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-26T17:26:26Z",
+      "side": 1,
+      "message": "WIP until we can update the docker images which will allow us to run functional tests under python3.11 as well.",
+      "revId": "50d2870dea8706857ae75dbd8955918212eafb4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
