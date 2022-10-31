@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e830512_1afcd661",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-10-31T18:13:16Z",
+      "side": 1,
+      "message": "I should note that opendev will deploy this fairly quickly after it lands. It might be a good idea to land this after a nodepool 8.0.0 release is tagged to make for an easy rollback. Otherwise we may wedge things being unable to boot new test instances but needing to boot them to test a fix/revert.",
+      "revId": "54ae81aa43612af23c558aac1bf902ba0d8bd6f6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
