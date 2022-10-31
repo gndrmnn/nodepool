@@ -50,6 +50,24 @@
       "message": "I think the \"ourselves\" doesn\u0027t apply here anymore, as we unpause all paused handler, or?",
       "revId": "0f1680be7e3d37325ac60c3b9135d3391ac3d24b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "879dfac9_a53baf70",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-10-31T22:26:51Z",
+      "side": 1,
+      "message": "\"Ourselves\" is the provider (not the set of handlers), so this still applies.",
+      "parentUuid": "8b49c8fc_7ac40c79",
+      "revId": "0f1680be7e3d37325ac60c3b9135d3391ac3d24b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
