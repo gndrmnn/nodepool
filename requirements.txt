@@ -10,7 +10,9 @@ PrettyTable>=0.6,<0.8
 # 0.28.0-0.31.0 fail to upload images with glance tasks.
 # 0.31.1 and 0.31.2 have a bug with image deletion in tasks API
 # 0.99.0 leads to BadRequestException: Client Error [...] Bad networks format
-openstacksdk>=0.27.0,!=0.28.0,!=0.29.0,!=0.30.0,!=0.31.0,!=0.31.1,!=0.31.2,<0.99
+# 0.100 and 0.101 are effectively beta releases for openstacksdk updates. We
+# exclude them to use the latest in that series (0.102).
+openstacksdk>=0.27.0,!=0.28.0,!=0.29.0,!=0.30.0,!=0.31.0,!=0.31.1,!=0.31.2,!=0.99,!=0.100,!=0.101
 diskimage-builder>=3.23.1
 voluptuous
 kazoo>=2.8.0
