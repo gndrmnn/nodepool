@@ -198,7 +198,7 @@ class NodePoolCmd(NodepoolApp):
                   'public_ipv4', 'ipv6', 'state', 'age', 'locked']
         if detail:
             fields.extend(['pool', 'hostname', 'private_ipv4', 'AZ',
-                           'connection_port', 'launcher',
+                           'username', 'connection_port', 'launcher',
                            'allocated_to', 'hold_job',
                            'comment', 'user_data', 'driver_data'])
         results = status.node_list(self.zk, node_id)
