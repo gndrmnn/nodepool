@@ -93,7 +93,7 @@ providers:
             instance-type: t3.medium
             key-name: zuul
             iam-instance-profile:
-              arn: arn:aws:iam::123456789012:instance-profile/not-a-real-profile
+              arn: {instance_profile_arn}
           - name: ubuntu1404-with-tags
             cloud-image: ubuntu1404
             instance-type: t3.medium

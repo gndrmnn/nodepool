@@ -21,7 +21,7 @@ import urllib.parse
 
 import boto3
 import botocore.exceptions
-from moto import mock_ec2, mock_s3
+from moto import mock_ec2, mock_s3, mock_iam
 import testtools
 
 from nodepool import config as nodepool_config
@@ -90,6 +90,7 @@ class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
     mock_ec2 = mock_ec2()
     mock_s3 = mock_s3()
+    mock_iam = mock_iam()
 
     def setUp(self):
         super().setUp()
@@ -108,11 +109,13 @@ class TestDriverAws(tests.DBTestCase):
         self.fake_aws = FakeAws()
         self.mock_ec2.start()
         self.mock_s3.start()
+        self.mock_iam.start()
 
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
         self.s3 = boto3.resource('s3', region_name='us-west-2')
         self.s3_client = boto3.client('s3', region_name='us-west-2')
+        self.iam = boto3.resource('iam', region_name='us-west-2')
         self.s3.create_bucket(
             Bucket='nodepool',
             CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
@@ -142,6 +145,11 @@ class TestDriverAws(tests.DBTestCase):
                 CidrBlock='203.0.113.128/25', VpcId=self.vpc['Vpc']['VpcId'])
             self.subnet_id = self.subnet['Subnet']['SubnetId']
 
+        profile = self.iam.create_instance_profile(
+            InstanceProfileName='not-a-real-profile')
+        self.instance_profile_name = profile.name
+        self.instance_profile_arn = profile.arn
+
         self.security_group = self.ec2_client.create_security_group(
             GroupName='zuul-nodes', VpcId=self.vpc['Vpc']['VpcId'],
             Description='Zuul Nodes')
@@ -163,6 +171,8 @@ class TestDriverAws(tests.DBTestCase):
     def setup_config(self, *args, **kw):
         kw['subnet_id'] = self.subnet_id
         kw['security_group_id'] = self.security_group_id
+        kw['instance_profile_name'] = self.instance_profile_name
+        kw['instance_profile_arn'] = self.instance_profile_arn
         return super().setup_config(*args, **kw)
 
     def patchAdapter(self, quotas=None):
@@ -443,14 +453,18 @@ class TestDriverAws(tests.DBTestCase):
             response['UserData']['Value']).decode()
         self.assertEqual('fake-user-data', userdata)
 
-    # Note(avass): moto does not yet support attaching an instance profile
-    # but these two at least tests to make sure that the instances 'starts'
     def test_aws_iam_instance_profile_name(self):
         req = self.requestNode('aws/aws.yaml',
                                'ubuntu1404-iam-instance-profile-name')
         node = self.assertSuccess(req)
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
         self.assertEqual(node.image_id, 'ubuntu1404')
+        associations = self.ec2_client.\
+            describe_iam_instance_profile_associations()[
+                "IamInstanceProfileAssociations"]
+        self.assertEqual(node.external_id, associations[0]['InstanceId'])
+        self.assertEqual(self.instance_profile_arn,
+                         associations[0]['IamInstanceProfile']['Arn'])
 
     def test_aws_iam_instance_profile_arn(self):
         req = self.requestNode('aws/aws.yaml',
@@ -458,6 +472,12 @@ class TestDriverAws(tests.DBTestCase):
         node = self.assertSuccess(req)
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
         self.assertEqual(node.image_id, 'ubuntu1404')
+        associations = self.ec2_client.\
+            describe_iam_instance_profile_associations()[
+                "IamInstanceProfileAssociations"]
+        self.assertEqual(node.external_id, associations[0]['InstanceId'])
+        self.assertEqual(self.instance_profile_arn,
+                         associations[0]['IamInstanceProfile']['Arn'])
 
     def test_aws_private_ip(self):
         req = self.requestNode('aws/private-ip.yaml', 'ubuntu1404-private-ip')
