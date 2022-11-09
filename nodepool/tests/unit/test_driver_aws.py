@@ -271,7 +271,7 @@ class TestDriverAws(tests.DBTestCase):
         # second request.
         pool_worker = pool.getPoolWorkers('ec2-us-west-2')
         for _ in iterate_timeout(30, Exception, 'paused handler'):
-            if pool_worker[0].paused_handler:
+            if pool_worker[0].paused_handlers:
                 break
 
         # Release the first node so that the second can be fulfilled.
@@ -326,7 +326,7 @@ class TestDriverAws(tests.DBTestCase):
         # second request.
         pool_worker = pool.getPoolWorkers('ec2-us-west-2')
         for _ in iterate_timeout(30, Exception, 'paused handler'):
-            if pool_worker[0].paused_handler:
+            if pool_worker[0].paused_handlers:
                 break
 
         # Release the first node so that the second can be fulfilled.

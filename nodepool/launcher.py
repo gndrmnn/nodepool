@@ -72,7 +72,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.pool_name = pool_name
         self.running = False
         self.stop_event = threading.Event()
-        self.paused_handler = None
+        self.paused_handlers = set()
         self.request_handlers = []
         self.watermark_sleep = nodepool.watermark_sleep
         self.zk = self.getZK()
@@ -219,7 +219,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             rh = pm.getRequestHandler(self, req)
             reasons_to_decline = rh.getDeclinedReasons()
 
-            if self.paused_handler and not reasons_to_decline:
+            if self.paused_handlers and not reasons_to_decline:
                 self.log.debug("Handler is paused, deferring request")
                 continue
 
@@ -275,7 +275,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                             label_quota[node_type] -= 1
 
             if rh.paused:
-                self.paused_handler = rh
+                self.paused_handlers.add(rh)
             self.request_handlers.append(rh)
 
             # if we exceeded the timeout stop iterating here
@@ -295,7 +295,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 if not r.poll():
                     active_handlers.append(r)
                     if r.paused:
-                        self.paused_handler = r
+                        self.paused_handlers.add(r)
                 else:
                     log.debug("Removing request handler")
             except kze.SessionExpiredError:
@@ -435,17 +435,19 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 self.updateTenantLimits(
                     self.nodepool.config.tenant_resource_limits)
 
-                if not self.paused_handler:
-                    self.component_info.paused = False
-                else:
+                if self.paused_handlers:
                     self.component_info.paused = True
-                    # If we are paused, one request handler could not
+                    # If we are paused, some request handlers could not
                     # satisfy its assigned request, so give it
-                    # another shot. Unpause ourselves if it completed.
-                    self.paused_handler.run()
-                    if not self.paused_handler.paused:
-                        self.paused_handler = None
-                        self.component_info.paused = False
+                    # another shot. Unpause ourselves if all are completed.
+                    for rh in sorted(self.paused_handlers,
+                                     key=lambda h: h.request.priority):
+                        rh.run()
+                        if not rh.paused:
+                            self.paused_handlers.remove(rh)
+
+                if not self.paused_handlers:
+                    self.component_info.paused = False
 
                 # Regardless of whether we are paused, run
                 # assignHandlers.  It will only accept requests if we
@@ -463,8 +465,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             self.stop_event.wait(self.watermark_sleep)
 
         # Cleanup on exit
-        if self.paused_handler:
-            self.paused_handler.unlockNodeSet(clear_allocation=True)
+        if self.paused_handlers:
+            for rh in self.paused_handlers:
+                rh.unlockNodeSet(clear_allocation=True)
 
     def stop(self):
         '''
