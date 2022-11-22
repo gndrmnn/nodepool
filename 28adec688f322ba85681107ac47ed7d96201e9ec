@@ -310,6 +310,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "607e4c0e_519be161",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-11-22T00:31:04Z",
+      "side": 1,
+      "message": "Ya I was mostly thinking from an accounting/stats standpoint ensuring this number is accurate may be useful. But I don\u0027t think it is critical because we are going to fail either way.",
+      "parentUuid": "93cdaaf0_b68c31b6",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ae47ac25_fd896905",
