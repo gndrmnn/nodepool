@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54cef6f0_cac536d3",
+        "filename": "nodepool/driver/example/config.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81d2f81f_01356327",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4546e16_b535deb5",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "I\u0027m not sure we should wholesale replace the previous (C) line? Seems like a fair bit of this file remains which would continue to make that valid?",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed984ffc_174e936a",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "You\u0027re right.  This error occurred because I initially started with an empty file before realizing it made more sense for existing code to come over here.  Sorry!",
+      "parentUuid": "e4546e16_b535deb5",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -52,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5faf927e_251fdd89",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "I think it\u0027s nothing.  Weird.  Seems like something pyflakes would have caught.",
+      "parentUuid": "286ba92a_ac1608bd",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef9b66bd_345179f7",
@@ -65,6 +119,41 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "Both type and id are python reserved words. I half wonder if we should take this opportunity to use different names here to avoid unexpected collisions? This isn\u0027t a regression though, the old code used the same names and hadn\u0027t collided (yet) so is probably fine.",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d15939d_61de1f94",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "I agree they are generally worth avoiding.  I think in simple data class constructors like this it\u0027s okay.",
+      "parentUuid": "ef9b66bd_345179f7",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f0d66a9_24009127",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Oops.",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -92,6 +181,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6dca7ccc_4678970a",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Yep -- there\u0027s nothing else we can do with it at this point.",
+      "parentUuid": "dd0b54a9_3721f0a8",
+      "range": {
+        "startLine": 93,
+        "startChar": 30,
+        "endLine": 93,
+        "endChar": 53
+      },
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c9a9db6f_83b66038",
@@ -109,6 +222,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "557303dd_15955cfd",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Will do.  These 2 variables are:\n* props: user-supplied instance properties from the config file\n* metadata: nodepool-supplied internal data (like node id)",
+      "parentUuid": "c9a9db6f_83b66038",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f6d2552_f0739a76",
@@ -122,6 +253,24 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "Do we need to check for quota messages here as we do above? I think openstack may actually check these things upfront so we don\u0027t need to.",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed533a69_3b554896",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "I believe that is correct.  If we don\u0027t have quota, we shouldn\u0027t have gotten this far.  These errors are more likely to be that openstack can\u0027t find an adequate compute host.",
+      "parentUuid": "5f6d2552_f0739a76",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -145,6 +294,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93cdaaf0_b68c31b6",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "At this point we\u0027re going to exit the state machine altogether so the number of attempts doesn\u0027t matter.  We could move it anyway in order to future-proof it in case something changes, but I\u0027d rather keep the sequence around the retry count as-is and don\u0027t think it\u0027s worth the complexity to work around that.",
+      "parentUuid": "e0fac7b3_b9e7e4a0",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ae47ac25_fd896905",
         "filename": "nodepool/driver/openstack/adapter.py",
         "patchSetId": 7
@@ -156,6 +323,24 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "In this case we don\u0027t need an explicit attach because it is already associated with a port?",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "417c1945_f0104897",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "ae47ac25_fd896905",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -177,6 +362,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4ee2077_ac92cbcb",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Yes that\u0027s the issue -- openstack doesn\u0027t store metadata on those objects, so cleanupLeakedResources (which is basically a method that deletes resources if their metadata doesn\u0027t match nodepool\u0027s state) can\u0027t perform its delta calculation on them.  I\u0027ll change the wording on the method to make it more clear.",
+      "parentUuid": "ad4195ce_b104db73",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "710e19c4_d0e71f1b",
@@ -190,6 +393,24 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "Note that this method\u0027s doc string says it should be called to delete the resources not necessarily due to leakage. However, we seem to only call this method from cleanupLeakedResources().",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02d70fb7_470395e6",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "The doc string in statemachine.py does actually mention that it\u0027s for a leaked resource.",
+      "parentUuid": "710e19c4_d0e71f1b",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -217,6 +438,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cc8311f_fd0f2e94",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "2940728a_84ea3555",
+      "range": {
+        "startLine": 469,
+        "startChar": 15,
+        "endLine": 469,
+        "endChar": 41
+      },
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2fbc38e_b3676fc6",
@@ -234,6 +479,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4914453d_96257316",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "That sounds right (but my memory is a little fuzzy).",
+      "parentUuid": "d2fbc38e_b3676fc6",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfa148ea_ac893e0c",
@@ -247,6 +510,24 @@
       "writtenOn": "2022-11-21T23:39:23Z",
       "side": 1,
       "message": "In most places we seem to use the adapter private methods like _listServers(). Here we use listInstances(). Is there a reason to prefer one over the other? Maybe we should be using public interfaces which call into private methods for maximum coverage?\n\nReading more it appears the listInstances gives us an incomplete view so may not be appropriate for all test needs.",
+      "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d45ec034_7bcaa189",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2022-11-22T00:24:38Z",
+      "side": 1,
+      "message": "I tried to keep the tests as equivalent as possible.  In this case, this seemed to be the best way to determine that we still had a non-deleting instance.  In other words, in this case we can use the higher-level API.\n\nWe probably could have used the lower-level API here, but it wasn\u0027t necessary.  I think in other places we may need to use the low-level API in order to see deleting servers.",
+      "parentUuid": "bfa148ea_ac893e0c",
       "revId": "28adec688f322ba85681107ac47ed7d96201e9ec",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
