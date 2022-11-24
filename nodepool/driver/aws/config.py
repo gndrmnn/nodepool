@@ -176,6 +176,7 @@ class AwsLabel(ConfigValue):
         self.iam_instance_profile = label.get('iam-instance-profile', None)
         self.tags = label.get('tags', {})
         self.dynamic_tags = label.get('dynamic-tags', {})
+        self.use_spot = bool(label.get('use-spot', False))
 
     @staticmethod
     def getSchema():
@@ -197,6 +198,7 @@ class AwsLabel(ConfigValue):
             },
             'tags': dict,
             'dynamic-tags': dict,
+            'use-spot': bool
         }
 
 

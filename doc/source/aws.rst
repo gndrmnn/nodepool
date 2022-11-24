@@ -66,6 +66,7 @@ Selecting the ``aws`` driver adds the following options to the
                  cloud-image: debian9
                  instance-type: t3.large
                  key-name: zuul
+                 use-spot: True
                  tags:
                    key1: value1
                    key2: value2
@@ -717,3 +718,10 @@ Selecting the ``aws`` driver adds the following options to the
 .. _`VM Import/Export service role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role
 .. _`instance quotas`: https://us-west-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas
 .. _`AWS RegisterImage API documentation`: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RegisterImage.html
+
+           .. attr:: use-spot
+              :type: bool
+              :default: False
+
+              When set to True, nodepool will try to launch an EC2 Spot 
+              instance, instead of an On-Demand instance.
