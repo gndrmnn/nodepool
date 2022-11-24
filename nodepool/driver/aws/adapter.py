@@ -59,26 +59,31 @@ def tag_list_to_dict(taglist):
 # https://aws.amazon.com/ec2/instance-types/high-memory/
 
 QUOTA_CODES = {
-    'a': 'L-1216C47A',
-    'c': 'L-1216C47A',
-    'd': 'L-1216C47A',
-    'h': 'L-1216C47A',
-    'i': 'L-1216C47A',
-    'm': 'L-1216C47A',
-    'r': 'L-1216C47A',
-    't': 'L-1216C47A',
-    'z': 'L-1216C47A',
-    'dl': 'L-6E869C2A',
-    'f': 'L-74FC7D96',
-    'g': 'L-DB2E81BA',
-    'vt': 'L-DB2E81BA',
-    'u-': 'L-43DA4232',  # 'high memory'
-    'inf': 'L-1945791B',
-    'p': 'L-417A185B',
-    'x': 'L-7295265B',
+    # INSTANCE FAMILY: [ON-DEMAND, SPOT]
+    'a':   ['L-1216C47A', 'L-34B43A08'],
+    'c':   ['L-1216C47A', 'L-34B43A08'],
+    'd':   ['L-1216C47A', 'L-34B43A08'],
+    'h':   ['L-1216C47A', 'L-34B43A08'],
+    'i':   ['L-1216C47A', 'L-34B43A08'],
+    'm':   ['L-1216C47A', 'L-34B43A08'],
+    'r':   ['L-1216C47A', 'L-34B43A08'],
+    't':   ['L-1216C47A', 'L-34B43A08'],
+    'z':   ['L-1216C47A', 'L-34B43A08'],
+    'dl':  ['L-6E869C2A', 'L-85EED4F7'],
+    'f':   ['L-74FC7D96', 'L-88CF9481'],
+    'g':   ['L-DB2E81BA', 'L-3819A6DF'],
+    'vt':  ['L-DB2E81BA', 'L-3819A6DF'],
+    'u-':  ['L-43DA4232', ''],          # 'high memory'
+    'inf': ['L-1945791B', 'L-B5D1601B'],
+    'p':   ['L-417A185B', 'L-7212CCBC'],
+    'x':   ['L-7295265B', 'L-E3A00192'],
+    'trn': ['L-2C3B7624', 'L-6B0D517C'],
+    'hpc': ['L-F7808C92', '']
 }
 
 CACHE_TTL = 10
+ON_DEMAND = 0
+SPOT = 1
 
 
 class AwsInstance(statemachine.Instance):
@@ -182,7 +187,8 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                 return
             self.instance = instance
             self.quota = self.adapter._getQuotaForInstanceType(
-                self.instance.instance_type)
+                self.instance.instance_type,
+                SPOT if self.label.use_spot else ON_DEMAND)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -359,35 +365,44 @@ class AwsAdapter(statemachine.Adapter):
         for instance in self._listInstances():
             if instance.state["Name"].lower() == "terminated":
                 continue
-            quota = self._getQuotaForInstanceType(instance.instance_type)
+            quota = self._getQuotaForInstanceType(instance.instance_type,
+                                                  instance.market_type_option)
             yield AwsInstance(self.provider, instance, quota)
 
     def getQuotaLimits(self):
         # Get the instance types that this provider handles
-        instance_types = set()
+        instance_types = {}
         for pool in self.provider.pools.values():
             for label in pool.labels.values():
-                instance_types.add(label.instance_type)
+                if label.instance_type not in instance_types:
+                    instance_types[label.instance_type] = set()
+                instance_types[label.instance_type].add(
+                    SPOT if label.use_spot else ON_DEMAND)
         args = dict(default=math.inf)
         for instance_type in instance_types:
-            code = self._getQuotaCodeForInstanceType(instance_type)
-            if code in args:
-                continue
-            if not code:
-                self.log.warning("Unknown quota code for instance type: %s",
-                                 instance_type)
-                continue
-            with self.non_mutating_rate_limiter:
-                self.log.debug("Getting quota limits for %s", code)
-                response = self.aws_quotas.get_service_quota(
-                    ServiceCode='ec2',
-                    QuotaCode=code,
-                )
-                args[code] = response['Quota']['Value']
+            for market_type_option in instance_types[instance_type]:
+                code = self._getQuotaCodeForInstanceType(instance_type,
+                                                         market_type_option)
+                if code in args:
+                    continue
+                if not code:
+                    self.log.warning(
+                        "Unknown quota code for instance type: %s",
+                        instance_type)
+                    continue
+                with self.non_mutating_rate_limiter:
+                    self.log.debug("Getting quota limits for %s", code)
+                    response = self.aws_quotas.get_service_quota(
+                        ServiceCode='ec2',
+                        QuotaCode=code,
+                    )
+                    args[code] = response['Quota']['Value']
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
-        return self._getQuotaForInstanceType(label.instance_type)
+        return self._getQuotaForInstanceType(
+            label.instance_type,
+            SPOT if label.use_spot else ON_DEMAND)
 
     def uploadImage(self, provider_image, image_name, filename,
                     image_format, metadata, md5, sha256):
@@ -620,18 +635,19 @@ class AwsAdapter(statemachine.Adapter):
 
     instance_key_re = re.compile(r'([a-z\-]+)\d.*')
 
-    def _getQuotaCodeForInstanceType(self, instance_type):
+    def _getQuotaCodeForInstanceType(self, instance_type, market_type_option):
         m = self.instance_key_re.match(instance_type)
         if m:
             key = m.group(1)
-            return QUOTA_CODES.get(key)
+            return QUOTA_CODES.get(key)[market_type_option]
 
-    def _getQuotaForInstanceType(self, instance_type):
+    def _getQuotaForInstanceType(self, instance_type, market_type_option):
         itype = self._getInstanceType(instance_type)
         cores = itype['InstanceTypes'][0]['VCpuInfo']['DefaultCores']
         vcpus = itype['InstanceTypes'][0]['VCpuInfo']['DefaultVCpus']
         ram = itype['InstanceTypes'][0]['MemoryInfo']['SizeInMiB']
-        code = self._getQuotaCodeForInstanceType(instance_type)
+        code = self._getQuotaCodeForInstanceType(instance_type,
+                                                 market_type_option)
         # We include cores to match the overall cores quota (which may
         # be set as a tenant resource limit), and include vCPUs for the
         # specific AWS quota code which in for a specific instance
@@ -833,6 +849,16 @@ class AwsAdapter(statemachine.Adapter):
                 if 'Encrypted' in mapping['Ebs']:
                     del mapping['Ebs']['Encrypted']
                 args['BlockDeviceMappings'] = [mapping]
+
+        # enable EC2 Spot
+        if label.use_spot:
+            args['InstanceMarketOptions'] = {
+                'MarketType': 'spot',
+                'SpotOptions': {
+                    'SpotInstanceType': 'one-time',
+                    'InstanceInterruptionBehavior': 'terminate'
+                }
+            }
 
         with self.rate_limiter(log.debug, "Created instance"):
             log.debug(f"Creating VM {hostname}")
