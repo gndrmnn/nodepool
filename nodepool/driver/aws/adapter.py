@@ -834,6 +834,16 @@ class AwsAdapter(statemachine.Adapter):
                     del mapping['Ebs']['Encrypted']
                 args['BlockDeviceMappings'] = [mapping]
 
+        # enable EC2 Spot
+        if label.use_spot:
+            args['InstanceMarketOptions'] = {
+                'MarketType': 'spot',
+                'SpotOptions': {
+                    'SpotInstanceType': 'one-time',
+                    'InstanceInterruptionBehavior': 'terminate'
+                }
+            }
+
         with self.rate_limiter(log.debug, "Created instance"):
             log.debug(f"Creating VM {hostname}")
             instances = self.ec2.create_instances(**args)
