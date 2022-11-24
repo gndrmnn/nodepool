@@ -796,3 +796,12 @@ class TestDriverAws(tests.DBTestCase):
                     Bucket=obj.bucket_name, Key=obj.key)
             except self.s3_client.exceptions.NoSuchKey:
                 break
+
+    def test_aws_provisioning_spot_instances(self):
+        # Test creating a spot instances instead of an on-demand on.
+        req = self.requestNode('aws/aws-spot.yaml', 'ubuntu1404-spot')
+        node = self.assertSuccess(req)
+        instance = self.ec2.Instance(node.external_id)
+        self.assertEqual(instance.instance_lifecycle, 'spot')
+        # moto doesn't provide the spot_instance_request_id
+        # self.assertIsNotNone(instance.spot_instance_request_id)
