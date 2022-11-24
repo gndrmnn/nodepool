@@ -179,6 +179,7 @@ class AwsLabel(ConfigValue):
         self.tags = label.get('tags', {})
         self.dynamic_tags = label.get('dynamic-tags', {})
         self.host_key_checking = self.pool.host_key_checking
+        self.use_spot = bool(label.get('use-spot', False))
 
     @staticmethod
     def getSchema():
@@ -200,6 +201,7 @@ class AwsLabel(ConfigValue):
             },
             'tags': dict,
             'dynamic-tags': dict,
+            'use-spot': bool,
         }
 
 
