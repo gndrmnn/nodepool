@@ -310,7 +310,7 @@ class NodePoolCmd(NodepoolApp):
 
         self.list(node_id=node.id)
 
-    def _change_node_state(self, new_state):
+    def hold(self):
         node = self.zk.getNode(self.args.id)
         if not node:
             print("Node id %s not found" % self.args.id)
@@ -318,14 +318,11 @@ class NodePoolCmd(NodepoolApp):
 
         self.zk.lockNode(node, blocking=True, timeout=5)
 
-        node.state = new_state
+        node.state = HOLD
         self.zk.storeNode(node)
         self.zk.unlockNode(node)
 
         self.list(node_id=node.id)
-
-    def hold(self):
-        self._change_node_state(zk.HOLD)
 
     def dib_image_delete(self):
         (image, build_num) = self.args.id.rsplit('-', 1)
