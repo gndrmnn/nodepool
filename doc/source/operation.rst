@@ -485,7 +485,7 @@ The following metrics are produced by a ``nodepool-builder`` process:
    :type: counter, timer
 
    Number of image uploads to a specific provider in the cloud plus the time in
-   seconds spent to upload the image.
+   ms spent to upload the image.
 
 .. zuul:stat:: nodepool.image_build_requests
    :type: gauge
