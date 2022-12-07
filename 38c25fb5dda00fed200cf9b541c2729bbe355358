@@ -50,6 +50,23 @@
       "message": "recheck not python3.11 specific since the 3.8 job failed on the latest retry. I\u0027ve got meetings so can\u0027t debug further.",
       "revId": "38c25fb5dda00fed200cf9b541c2729bbe355358",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60aeedab_b4e6b98b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2022-12-07T08:54:58Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "38c25fb5dda00fed200cf9b541c2729bbe355358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
