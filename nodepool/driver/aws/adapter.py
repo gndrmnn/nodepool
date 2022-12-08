@@ -15,6 +15,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 import cachetools.func
+import copy
 import functools
 import json
 import logging
@@ -814,7 +815,7 @@ class AwsAdapter(statemachine.Adapter):
         # However, leaked volume detection may mitigate this.
         if hasattr(image, 'block_device_mappings'):
             bdm = image.block_device_mappings
-            mapping = bdm[0]
+            mapping = copy.deepcopy(bdm[0])
             if 'Ebs' in mapping:
                 mapping['Ebs']['DeleteOnTermination'] = True
                 if label.volume_size:
