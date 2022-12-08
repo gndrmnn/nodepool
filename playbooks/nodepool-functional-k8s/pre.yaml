@@ -5,4 +5,4 @@
       zookeeper_use_tls: true
     - role: ensure-tox
     - role: ensure-kubernetes
-      docker_version: 18.06.1~ce~3-0~ubuntu
+      ensure_kubernetes_type: microk8s
