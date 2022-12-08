@@ -238,11 +238,32 @@
       Nodepool unit tests with ZooKeeper running
     parent: tox-py38
     pre-run: playbooks/nodepool-tox/pre.yaml
+    nodeset: ubuntu-focal
     vars: &nodepool_tox_vars
       tox_environment:
         NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
         NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
         NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
+
+- job:
+    name: nodepool-tox-py38-A
+    parent: nodepool-tox-py38
+
+- job:
+    name: nodepool-tox-py38-B
+    parent: nodepool-tox-py38
+
+- job:
+    name: nodepool-tox-py38-C
+    parent: nodepool-tox-py38
+
+- job:
+    name: nodepool-tox-py38-D
+    parent: nodepool-tox-py38
+
+- job:
+    name: nodepool-tox-py38-E
+    parent: nodepool-tox-py38
 
 - job:
     name: nodepool-tox-py310
@@ -253,25 +274,42 @@
     vars: *nodepool_tox_vars
     nodeset: ubuntu-jammy
 
+- job:
+    name: nodepool-tox-py310-A
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-B
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-C
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-D
+    parent: nodepool-tox-py310
+
+- job:
+    name: nodepool-tox-py310-E
+    parent: nodepool-tox-py310
+
 - project:
     vars:
       release_python: python3
     check:
       jobs:
-        - opendev-buildset-registry
-        - nodepool-build-image
-        - zuul-tox-docs
         - tox-pep8
-        - nodepool-tox-py38:
-            nodeset: ubuntu-focal
-        - nodepool-tox-py310
-        - nodepool-functional-container-openstack-release
-        - nodepool-functional-k8s
-        - nodepool-functional-openshift
-        - zuul-quick-start:
-            requires: zuul-container-image
-            dependencies: nodepool-build-image
-        - build-python-release
+        - nodepool-tox-py38-A
+        - nodepool-tox-py38-B
+        - nodepool-tox-py38-C
+        - nodepool-tox-py38-D
+        - nodepool-tox-py38-E
+        - nodepool-tox-py310-A
+        - nodepool-tox-py310-B
+        - nodepool-tox-py310-C
+        - nodepool-tox-py310-D
+        - nodepool-tox-py310-E
     gate:
       jobs:
         - nodepool-upload-image
