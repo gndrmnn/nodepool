@@ -17,7 +17,7 @@ labels:
 providers:
   - name: minikube
     driver: kubernetes
-    context: minikube
+    context: microk8s
     pools:
       - name: main
         max-servers: 2
@@ -26,4 +26,4 @@ providers:
             type: namespace
           - name: pod-fedora
             type: pod
-            image: quay.io/fedora/fedora:34-x86_64
+            image: quay.io/fedora/fedora:37-x86_64
