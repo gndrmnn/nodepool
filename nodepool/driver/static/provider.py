@@ -484,14 +484,26 @@ class StaticNodeProvider(Provider, QuotaSupport):
                     "Cannot get registered nodes for re-registration:"
                 )
                 return
-            slot = node.slot
 
+            slot = node.slot
             if slot is None:
                 return
             # It's possible we were not able to de-register nodes due to a
             # config change (because they were in use). In that case, don't
             # bother to reregister.
             if slot >= static_node["max-parallel-jobs"]:
+                return
+
+            # The periodic cleanup process may have just reregistered
+            # this node. When that happens the node in the node slot is
+            # different than the one we are processing and we can short
+            # circuit.
+            try:
+                existing_node_slot = self._getSlot(node)
+            except Exception:
+                # We'll let config synchronization correct any slots changes
+                return
+            if node != self._node_slots[node_tuple][existing_node_slot]:
                 return
 
             self.log.debug("Re-registering deleted node: %s", node_tuple)
