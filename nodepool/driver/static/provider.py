@@ -356,6 +356,8 @@ class StaticNodeProvider(Provider, QuotaSupport):
                     self.deregisterNode(node)
                 except Exception:
                     self.log.exception("Couldn't deregister static node:")
+        self.log.debug("Provider %s pool %s syncing nodes with config "
+                       "complete", self.provider.name, pool.name)
 
     def _start(self, zk_conn):
         self.zk = zk_conn
@@ -443,9 +445,12 @@ class StaticNodeProvider(Provider, QuotaSupport):
         return True
 
     def cleanupLeakedResources(self):
+        self.log.debug("Static driver cleanup leaked resources beginning")
         if self._idle:
             return
         with self._register_lock:
+            self.log.debug("Static driver cleanup leaked resources "
+                           "lock acquired")
             self.getRegisteredNodes()
             for pool in self.provider.pools.values():
                 for static_node in pool.nodes:
@@ -458,6 +463,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
                         self.log.exception("Couldn't sync node %s:",
                                            nodeTuple(static_node))
                         continue
+        self.log.debug("Static driver cleanup leaked resources complete")
 
     def getRequestHandler(self, poolworker, request):
         return StaticNodeRequestHandler(poolworker, request)
@@ -466,6 +472,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
         '''
         Re-register the deleted node.
         '''
+        self.log.debug("Static node deletion handler beginning")
         if self._idle:
             return
 
@@ -477,6 +484,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
             return
 
         with self._register_lock:
+            self.log.debug("Static node deletion handler lock acquired")
             try:
                 self.getRegisteredNodes()
             except Exception:
@@ -516,6 +524,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
             except Exception:
                 self.log.exception("Cannot re-register deleted node %s:",
                                    node_tuple)
+        self.log.debug("Static node deletion handler complete")
 
     def getProviderLimits(self):
         return QuotaInformation(
