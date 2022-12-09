@@ -67,6 +67,23 @@
       "message": "recheck",
       "revId": "38c25fb5dda00fed200cf9b541c2729bbe355358",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4aecc509_271049a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-12-09T16:25:24Z",
+      "side": 1,
+      "message": "recheck nodepool testing should be good now",
+      "revId": "38c25fb5dda00fed200cf9b541c2729bbe355358",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
