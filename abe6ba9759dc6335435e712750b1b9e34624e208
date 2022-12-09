@@ -16,6 +16,23 @@
       "message": "maybe approve when unit test races are fixed",
       "revId": "abe6ba9759dc6335435e712750b1b9e34624e208",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83a9c16b_f3c3c232",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-12-09T19:33:33Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "abe6ba9759dc6335435e712750b1b9e34624e208",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
