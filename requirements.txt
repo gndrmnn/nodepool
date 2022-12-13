@@ -6,13 +6,10 @@ python-daemon>=2.0.4
 extras
 statsd>=3.0
 PrettyTable>=0.6,<0.8
-# openstacksdk before 0.27.0 is TaskManager based
-# 0.28.0-0.31.0 fail to upload images with glance tasks.
-# 0.31.1 and 0.31.2 have a bug with image deletion in tasks API
 # 0.99.0 - 0.102 lead to BadRequestException: Client Error [...] Bad networks format
 # This was due to not properly handling nova api microversions properly. 0.103
 # fixes this.
-openstacksdk>=0.27.0,!=0.28.0,!=0.29.0,!=0.30.0,!=0.31.0,!=0.31.1,!=0.31.2,!=0.99,!=0.100,!=0.101,!=0.102
+openstacksdk>=0.103.0
 diskimage-builder>=3.23.1
 voluptuous
 kazoo>=2.8.0

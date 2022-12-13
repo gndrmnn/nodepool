@@ -220,7 +220,7 @@ class OpenStackProvider(Provider, QuotaSupport):
         if name in self._images:
             del self._images[name]
 
-        return self._client.delete_image(dict(id=id))
+        return self._client.delete_image(id)
 
     def createServer(self, name, image,
                      flavor_name=None, min_ram=None,
