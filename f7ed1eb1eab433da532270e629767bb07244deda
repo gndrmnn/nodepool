@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f0cb55e_507bc0b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2022-12-13T23:52:30Z",
+      "side": 1,
+      "message": "have tested this with a manually patched version on nb02 and it\u0027s working",
+      "revId": "f7ed1eb1eab433da532270e629767bb07244deda",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
