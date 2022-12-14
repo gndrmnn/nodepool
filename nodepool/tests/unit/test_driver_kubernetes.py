@@ -64,6 +64,9 @@ class FakeCoreClient(object):
         FakeSA.secrets = [FakeSA.secret]
         return FakeSA
 
+    def create_namespaced_secret(self, ns, secret_body):
+        return
+
     def read_namespaced_secret(self, name, ns):
         class FakeSecret:
             data = {'ca.crt': 'ZmFrZS1jYQ==', 'token': 'ZmFrZS10b2tlbg=='}
