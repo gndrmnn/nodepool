@@ -240,7 +240,7 @@ class TestDriverAws(tests.DBTestCase):
             self.waitForNodeDeletion(node)
 
     @aws_quotas({
-        'L-1216C47A': 1,
+        'L-1216C47A': 2,
         'L-43DA4232': 224,
     })
     def test_aws_multi_quota(self):
