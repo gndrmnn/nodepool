@@ -104,11 +104,6 @@ RUN \
 #  https://bugs.debian.org/995777
 # We install podman from unstable until these fixes make it into bullseye
 #
-# For some reason, the unstable podman only suggests iptables (not
-# recommends) so we need to pull that explicitly too.  Unclear if
-# this is a feature or a bug; see:
-#  https://bugs.debian.org/997976
-#
 # We are getting errors like
 #  level=warning msg="\"/\" is not a shared mount, this could cause issues or missing mounts with rootless containers"
 #  Error: command required for rootless mode with multiple IDs: exec: "newuidmap": executable file not found in $PATH
@@ -119,7 +114,7 @@ RUN \
 # and so unless we have the unstable version of libsemanage-common, it won't
 # install.
 
-RUN apt-get install -y --install-recommends podman/unstable iptables uidmap/unstable libsemanage-common/unstable \
+RUN apt-get install -y --install-recommends podman/unstable containernetworking-plugins/unstable uidmap/unstable libsemanage-common/unstable \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
