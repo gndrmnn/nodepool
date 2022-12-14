@@ -11,7 +11,7 @@ zookeeper-tls:
 tenant-resource-limits:
   - tenant-name: tenant-1
     max-cores: 1024
-    'L-43DA4232': 224  # high mem cores
+    'L-43DA4232': 448  # high mem vCPUs
 
 labels:
   - name: standard
@@ -34,7 +34,7 @@ providers:
           key1: value1
           key2: value2
         max-resources:
-          'L-1216C47A': 1  # standard cores
+          'L-1216C47A': 2  # standard vCPUs
         labels:
           - name: standard
             cloud-image: ubuntu1404

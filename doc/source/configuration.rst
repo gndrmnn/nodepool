@@ -557,7 +557,7 @@ Options
           max-servers: 10
           max-cores: 200
           max-ram: 16565
-          'L-43DA4232': 224
+          'L-43DA4232': 448
 
    Each entry is a dictionary with the following keys.  Any other keys
    are interpreted as driver-specific resource limits (otherwise

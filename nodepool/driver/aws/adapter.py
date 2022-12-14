@@ -629,15 +629,18 @@ class AwsAdapter(statemachine.Adapter):
     def _getQuotaForInstanceType(self, instance_type):
         itype = self._getInstanceType(instance_type)
         cores = itype['InstanceTypes'][0]['VCpuInfo']['DefaultCores']
+        vcpus = itype['InstanceTypes'][0]['VCpuInfo']['DefaultVCpus']
         ram = itype['InstanceTypes'][0]['MemoryInfo']['SizeInMiB']
         code = self._getQuotaCodeForInstanceType(instance_type)
-        # We include cores twice: one to match the overall cores quota
-        # (which may be set as a tenant resource limit), and a second
-        # time as the specific AWS quota code which in for a specific
-        # instance type.
+        # We include cores to match the overall cores quota (which may
+        # be set as a tenant resource limit), and include vCPUs for the
+        # specific AWS quota code which in for a specific instance
+        # type. With two threads per core, the vCPU number is
+        # typically twice the number of cores. AWS service quotas are
+        # implemented in terms of vCPUs.
         args = dict(cores=cores, ram=ram, instances=1)
         if code:
-            args[code] = cores
+            args[code] = vcpus
         return QuotaInformation(**args)
 
     # This method is wrapped with an LRU cache in the constructor.
