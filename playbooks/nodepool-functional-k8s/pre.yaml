@@ -6,7 +6,3 @@
     - role: ensure-tox
     - role: ensure-kubernetes
       ensure_kubernetes_type: microk8s
-      # k8s > 1.23 changed the way the service account tokens
-      # are auto-generated; see
-      #  https://storyboard.openstack.org/#!/story/2010224
-      ensure_kubernetes_microk8s_channel: '1.23/stable'
