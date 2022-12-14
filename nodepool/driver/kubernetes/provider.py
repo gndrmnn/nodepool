@@ -185,29 +185,37 @@ class KubernetesProvider(Provider, QuotaSupport):
         }
         self.k8s_client.create_namespaced_service_account(namespace, sa_body)
 
+        secret_body = {
+            'apiVersion': 'v1',
+            'kind': 'Secret',
+            'type': 'kubernetes.io/service-account-token',
+            'metadata': {
+                'name': user,
+                'annotations': {
+                    'kubernetes.io/service-account.name': user
+                }
+            }
+        }
+        self.k8s_client.create_namespaced_secret(namespace, secret_body)
+
         # Wait for the token to be created
         for retry in range(30):
-            sa = self.k8s_client.read_namespaced_service_account(
-                user, namespace)
+            secret = self.k8s_client.read_namespaced_secret(user, namespace)
             ca_crt = None
             token = None
-            if sa.secrets:
-                for secret_obj in sa.secrets:
-                    secret = self.k8s_client.read_namespaced_secret(
-                        secret_obj.name, namespace)
-                    token = secret.data.get('token')
-                    ca_crt = secret.data.get('ca.crt')
-                    if token and ca_crt:
-                        token = base64.b64decode(
-                            token.encode('utf-8')).decode('utf-8')
-                        break
+            if secret:
+                token = secret.data.get('token')
+                ca_crt = secret.data.get('ca.crt')
+                if token and ca_crt:
+                    token = base64.b64decode(
+                        token.encode('utf-8')).decode('utf-8')
             if token and ca_crt:
                 break
             time.sleep(1)
         if not token or not ca_crt:
             raise exceptions.LaunchNodepoolException(
-                "%s: couldn't find token for service account %s" %
-                (namespace, sa))
+                "%s: couldn't find token for secret %s" %
+                (namespace, secret))
 
         # Create service account role
         all_verbs = ["create", "delete", "get", "list", "patch",
