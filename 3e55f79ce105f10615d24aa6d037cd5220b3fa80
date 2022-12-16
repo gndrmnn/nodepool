@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1177444c_24d4c2a5",
+        "filename": "nodepool/driver/openshift/provider.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2022-12-16T15:15:29Z",
+      "side": 1,
+      "message": "Note: This is supposed to support fractional GPUs, for example when using the runAI scheduler to deploy GPU workloads",
+      "range": {
+        "startLine": 233,
+        "startChar": 35,
+        "endLine": 233,
+        "endChar": 44
+      },
+      "revId": "3e55f79ce105f10615d24aa6d037cd5220b3fa80",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
