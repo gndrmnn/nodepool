@@ -52,6 +52,8 @@ class OpenshiftPool(ConfigPool):
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.volumes = label.get('volumes')
+            pl.volume_mounts = label.get('volume-mounts')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -99,6 +101,8 @@ class OpenshiftProviderConfig(ProviderConfig):
             'shell-type': str,
             'env': [env_var],
             'node-selector': dict,
+            'volumes': dict,
+            'volume-mounts': dict
         }
 
         pool = ConfigPool.getCommonSchemaDict()
