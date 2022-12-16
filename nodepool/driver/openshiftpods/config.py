@@ -56,10 +56,12 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'image-pull-secrets': list,
             'cpu': int,
             'memory': int,
+            'gpu': str,
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
-            'node-selector': dict
+            'node-selector': dict,
+            'scheduler-name': str
         }
 
         pool = ConfigPool.getCommonSchemaDict()

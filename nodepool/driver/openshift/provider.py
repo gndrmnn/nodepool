@@ -221,7 +221,11 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'args': ["while true; do sleep 30; done;"],
             'env': label.env,
         }
-        if label.cpu or label.memory:
+
+        if label.volume_mounts:
+            container_body['volumeMounts'] = label.volume_mounts
+
+        if label.cpu or label.memory or label.gpu:
             container_body['resources'] = {}
             for rtype in ('requests', 'limits'):
                 rbody = {}
@@ -229,6 +233,8 @@ class OpenshiftProvider(Provider, QuotaSupport):
                     rbody['cpu'] = int(label.cpu)
                 if label.memory:
                     rbody['memory'] = '%dMi' % int(label.memory)
+                if label.gpu:
+                    rbody[label.gpu['resource-name']] = label.gpu['value']
                 container_body['resources'][rtype] = rbody
 
         spec_body = {
@@ -239,6 +245,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
 
+        if label.volumes:
+            spec_body['volumes'] = label.volumes
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
@@ -246,6 +255,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'spec': spec_body,
             'restartPolicy': 'Never',
         }
+
+        if label.scheduler_name:
+            pod_body["schedulerName"] = label.scheduler_name
 
         self.k8s_client.create_namespaced_pod(project, pod_body)
 
