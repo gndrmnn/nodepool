@@ -48,10 +48,14 @@ class OpenshiftPool(ConfigPool):
             pl.image_pull_secrets = label.get('image-pull-secrets', [])
             pl.cpu = label.get('cpu')
             pl.memory = label.get('memory')
+            pl.gpu = label.get('gpu')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.scheduler_name = label.get('scheduler-name')
+            pl.volumes = label.get('volumes')
+            pl.volume_mounts = label.get('volume-mounts')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -95,10 +99,14 @@ class OpenshiftProviderConfig(ProviderConfig):
             'image-pull-secrets': list,
             'cpu': int,
             'memory': int,
+            'gpu': dict,
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
             'node-selector': dict,
+            'scheduler-name': str,
+            'volumes': dict,
+            'volume-mounts': dict
         }
 
         pool = ConfigPool.getCommonSchemaDict()
