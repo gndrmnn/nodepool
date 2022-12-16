@@ -181,6 +181,7 @@ providers:
             node-selector:
               storageType: ssd
             privileged: true
+            scheduler-name: default-scheduler
 
   - name: ec2-us-east-2
     driver: aws
