@@ -221,6 +221,10 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'args': ["while true; do sleep 30; done;"],
             'env': label.env,
         }
+
+        if label.volume_mounts:
+            container_body['volumeMounts'] = label.volume_mounts
+
         if label.cpu or label.memory:
             container_body['resources'] = {}
             for rtype in ('requests', 'limits'):
@@ -243,6 +247,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
             container_body['securityContext'] = {
                 'privileged': label.privileged,
             }
+
+        if label.volumes:
+            spec_body['volumes'] = label.volumes
 
         pod_body = {
             'apiVersion': 'v1',

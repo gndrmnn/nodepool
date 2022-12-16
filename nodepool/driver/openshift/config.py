@@ -53,6 +53,8 @@ class OpenshiftPool(ConfigPool):
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.privileged = label.get('privileged')
+            pl.volumes = label.get('volumes')
+            pl.volume_mounts = label.get('volume-mounts')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -101,6 +103,8 @@ class OpenshiftProviderConfig(ProviderConfig):
             'env': [env_var],
             'node-selector': dict,
             'privileged': bool,
+            'volumes': dict,
+            'volume-mounts': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

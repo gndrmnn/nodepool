@@ -61,6 +61,8 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'env': [env_var],
             'node-selector': dict,
             'privileged': bool,
+            'volumes': dict,
+            'volume-mounts': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()
