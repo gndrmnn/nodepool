@@ -231,24 +231,24 @@
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
 - job:
-    name: nodepool-tox-py38
+    name: nodepool-nox-py38
     description: |
       Nodepool unit tests with ZooKeeper running
-    parent: tox-py38
-    pre-run: playbooks/nodepool-tox/pre.yaml
-    vars: &nodepool_tox_vars
-      tox_environment:
+    parent: nox-py38
+    pre-run: playbooks/nodepool-nox/pre.yaml
+    vars: &nodepool_nox_vars
+      nox_environment:
         NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
         NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
         NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
 
 - job:
-    name: nodepool-tox-py311
+    name: nodepool-nox-py311
     description: |
       Nodepool unit tests with ZooKeeper running
-    parent: tox-py311
-    pre-run: playbooks/nodepool-tox/pre.yaml
-    vars: *nodepool_tox_vars
+    parent: nox-py311
+    pre-run: playbooks/nodepool-nox/pre.yaml
+    vars: *nodepool_nox_vars
     nodeset: ubuntu-jammy
 
 - project:
@@ -258,11 +258,11 @@
       jobs:
         - opendev-buildset-registry
         - nodepool-build-image
-        - zuul-tox-docs
-        - tox-pep8
-        - nodepool-tox-py38:
+        - zuul-nox-docs
+        - nox-linters
+        - nodepool-nox-py38:
             nodeset: ubuntu-focal
-        - nodepool-tox-py311
+        - nodepool-nox-py311
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - nodepool-functional-openshift
@@ -273,11 +273,11 @@
     gate:
       jobs:
         - nodepool-upload-image
-        - zuul-tox-docs
-        - tox-pep8
-        - nodepool-tox-py38:
+        - zuul-nox-docs
+        - nox-linters
+        - nodepool-nox-py38:
             nodeset: ubuntu-focal
-        - nodepool-tox-py311
+        - nodepool-nox-py311
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
@@ -292,7 +292,7 @@
     release:
       jobs:
         - opendev-release-python
-        - zuul-publish-tox-docs
+        - zuul-publish-nox-docs
         - upload-docker-image:
             timeout: *image_build_timeout
             secrets:
