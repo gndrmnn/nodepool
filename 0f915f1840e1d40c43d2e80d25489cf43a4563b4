@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62401f83_d17ac45d",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-12-22T14:23:45Z",
+      "side": 1,
+      "message": "remove trailing whitespace",
+      "revId": "0f915f1840e1d40c43d2e80d25489cf43a4563b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adb511b6_8d9404c8",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2022-12-22T14:23:45Z",
+      "side": 1,
+      "message": "I think this must be `label.use_spot` instead",
+      "revId": "0f915f1840e1d40c43d2e80d25489cf43a4563b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
