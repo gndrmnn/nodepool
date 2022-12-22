@@ -14,7 +14,7 @@
     - role: bindep
     - role: ensure-zookeeper
       zookeeper_use_tls: true
-    - role: ensure-tox
+    - role: ensure-nox
   tasks:
     # NOTE(ianw) 2022-09-07 :
     # Shipped packages do not work and we need to use this statically

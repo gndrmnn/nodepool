@@ -3,6 +3,6 @@
     - role: bindep
     - role: ensure-zookeeper
       zookeeper_use_tls: true
-    - role: ensure-tox
+    - role: ensure-nox
     - role: ensure-kubernetes
       ensure_kubernetes_type: microk8s
