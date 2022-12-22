@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cedc0a3_ebe188a3",
+        "filename": "playbooks/nodepool-functional-k8s/run.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-12-22T21:43:45Z",
+      "side": 1,
+      "message": "You might want to add CI: 1 here too. I ended up not trying to always set that in case some people don\u0027t want to set it.",
+      "revId": "ac22d350670228c33c59f93faa2e1fac28841001",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c088423_543f9d58",
+        "filename": "playbooks/nodepool-functional-openshift/run.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2022-12-22T21:43:45Z",
+      "side": 1,
+      "message": "See comment on the functional k8s job.",
+      "revId": "ac22d350670228c33c59f93faa2e1fac28841001",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
