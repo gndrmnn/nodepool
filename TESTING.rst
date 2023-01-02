@@ -1,35 +1,41 @@
 ================
 Testing Nodepool
 ================
-------------
-A Quickstart
-------------
 
-This is designed to be enough information for you to run your first tests on
-an Ubuntu 16.04 (or later) host.
+Below you can find the instructions, how to run the tests for Nodepool in Ubuntu 22.04 and Python 3.10.
 
-*Install pip*::
 
-  sudo apt-get install python3-pip
+-------------
+Prerequisites
+-------------
 
-More information on pip here: http://www.pip-installer.org/en/latest/
+We assume you have the following tools installed::  
+- [Docker](https://docs.docker.com/engine/install/)  
+- [Docker Compose](https://docs.docker.com/compose/install/)  
 
-*Use pip to install tox*::
 
-  sudo pip3 install tox
+-----------------
+Setup environment
+-----------------
 
-A running zookeeper is required to execute tests, but it also needs to be
-configured for TLS and a certificate authority set up to handle socket
-authentication. Because of these complexities, it's recommended to use a
-helper script to set up these dependencies::
+Navigate to the project's root directory and execute the following command to build the testing container locally::
 
-  sudo apt-get install docker-compose  # or podman-compose if preferred
+  docker build . -f tools/Dockerfile_Testing -t nodepool-testing-container
+
+To run the Nodepool tests, a running Zookeeper is required. Zookeeper also needs to be configured for TLS and a certificate authority set up to handle socket authentication. Because of these complexities, it's recommended to use the helper script to set up these dependencies and configure the Noodepool environment::
+
   ROOTCMD=sudo tools/test-setup-docker.sh
 
+Now access the bash in `nodepool-testing-container` by executing::
+
+  docker-compose -f tools/docker-compose.yaml exec nodepool-testing-container bash
+
+
+-------------
 Run The Tests
 -------------
 
-*Navigate to the project's root directory and execute*::
+In the project's root directory, execute::
 
   tox
 
@@ -89,6 +95,20 @@ test as it is run::
 You can compare the output of that to::
 
   python -m testtools.run discover --list
+
+
+--------------------
+Teardown environment
+--------------------
+
+To exit the container, run::
+
+  exit
+
+To stop the Zookeeper and Testing container, run::
+
+  docker-compose -f tools/docker-compose.yaml down
+
 
 Need More Info?
 ---------------
