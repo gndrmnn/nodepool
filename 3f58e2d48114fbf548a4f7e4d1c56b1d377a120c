@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb3289f9_2149c6c7",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 35619
+      },
+      "writtenOn": "2023-01-03T07:45:25Z",
+      "side": 1,
+      "message": "I think spot instances use different quota codes.",
+      "revId": "3f58e2d48114fbf548a4f7e4d1c56b1d377a120c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
