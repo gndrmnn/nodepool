@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1475d528_367f81f7",
+        "filename": "tools/Dockerfile_Testing",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-01-05T23:45:00Z",
+      "side": 1,
+      "message": "Why not use the same base platform used to build the produciton images? Those are based on Debian Bullseye and give better control over the python versions.",
+      "revId": "6386e9820eab607fecb8e66a8c94e8842ac2ca52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a36e23af_20f9ea2b",
+        "filename": "tools/Dockerfile_Testing",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-01-05T23:45:00Z",
+      "side": 1,
+      "message": "We are currently moving zuul repos from tox to nox due to the incompatibilities the tox v4 release exposed.",
+      "revId": "6386e9820eab607fecb8e66a8c94e8842ac2ca52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
