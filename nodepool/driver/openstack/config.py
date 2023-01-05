@@ -351,7 +351,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'max-cores': int,
             'max-ram': int,
             'labels': [pool_label],
-            'availability-zones': [str],
+            'availability-zones': [v.Optional(str)],
             'security-groups': [str]
         })
 
