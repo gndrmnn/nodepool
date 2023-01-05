@@ -484,6 +484,11 @@ Selecting the OpenStack driver adds the following options to the
         when creating nodes but ensures that all nodes for a given
         request are placed in the same availability zone.
 
+        You can pass a list with a single none element ``[None]`` to let
+        OpenStack choose the availability zone. By doing so, nodepool can not
+        make sure that all nodes from a request are placed in the same
+        availability zone.
+
      .. attr:: networks
         :type: list
 
