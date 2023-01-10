@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    The Kubernetes driver now supports version 1.24+
+features:
+  - |
+    The nodepool command now includes a "hold" subcommand.
