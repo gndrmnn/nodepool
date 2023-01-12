@@ -45,6 +45,7 @@ class MetastaticLabel(ConfigValue):
         self.cloud_image = MetastaticCloudImage()
         self.max_parallel_jobs = label.get('max-parallel-jobs', 1)
         self.grace_time = label.get('grace-time', 60)
+        self.host_key_checking = self.pool.host_key_checking
 
     @staticmethod
     def getSchema():
