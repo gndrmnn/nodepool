@@ -1,0 +1,10 @@
+Code-Review+2: Clark Boylan <cboylan@sapwetik.org>
+Code-Review+2: Jeremy Stanley <fungi@yuggoth.org>
+Workflow+1: Jeremy Stanley <fungi@yuggoth.org>
+Code-Review+2: James E. Blair <jim@acmegating.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Fri, 13 Jan 2023 23:27:35 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/870036
+Project: zuul/nodepool
+Branch: refs/heads/master
