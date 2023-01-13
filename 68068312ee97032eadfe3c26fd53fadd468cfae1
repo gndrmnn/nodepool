@@ -33,6 +33,23 @@
       "message": "recheck",
       "revId": "68068312ee97032eadfe3c26fd53fadd468cfae1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20c487c0_455db0b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-01-13T18:07:06Z",
+      "side": 1,
+      "message": "recheck the private ip issue should be addressed which should make this mergeable.",
+      "revId": "68068312ee97032eadfe3c26fd53fadd468cfae1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
