@@ -68,8 +68,7 @@ COPY tools/openstack-ci-core-ppa.asc /etc/apt/trusted.gpg.d/
 
 RUN \
   echo "deb http://ppa.launchpad.net/openstack-ci-core/vhd-util/ubuntu focal main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
-  && echo "APT::Default-Release: 'stable';" >> /etc/apt/apt.conf.d/default-release \
+  && echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list \
   && apt-get update \
   && apt-get install -y \
       binutils \
@@ -86,7 +85,7 @@ RUN \
       xz-utils \
       zypper \
       zstd \
-      debootstrap/unstable
+      debootstrap/bullseye-backports
 
 # Podman install mainly for the "containerfile" elements of dib that
 # build images from extracts of upstream containers.
@@ -99,22 +98,7 @@ RUN \
 # hand-wavy motion) but it's not in the container; override to use
 # cgroupfs manager.  Also disable trying to send logs to the journal.
 #
-# The glibc in Fedora >35 uses clone3() which causes seccomp issues.
-# For details see:
-#  https://bugs.debian.org/995777
-# We install podman from unstable until these fixes make it into bullseye
-#
-# We are getting errors like
-#  level=warning msg="\"/\" is not a shared mount, this could cause issues or missing mounts with rootless containers"
-#  Error: command required for rootless mode with multiple IDs: exec: "newuidmap": executable file not found in $PATH
-# on the production hosts (but not in the gate?).  uidmap is a
-# recommended package, but we need to explicitly pull in its
-# unstable requirements or it seems like apt decides just not install it.
-# The problem is uidmap -> libsubid4 -> libsemanage2 -> libsemanage-common
-# and so unless we have the unstable version of libsemanage-common, it won't
-# install.
-
-RUN apt-get install -y --install-recommends podman/unstable containernetworking-plugins/unstable uidmap/unstable libsemanage-common/unstable \
+RUN apt-get install -y --install-recommends podman containernetworking-plugins uidmap libsemanage-common \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
