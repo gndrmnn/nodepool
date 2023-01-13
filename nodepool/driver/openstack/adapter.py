@@ -49,6 +49,10 @@ class OpenStackInstance(statemachine.Instance):
         self.az = server.location.zone
 
         self.interface_ip = server.interface_ip
+        # TODO: this doesn't match the behavior of other drivers
+        # but is here for backwards compatibility.
+        self.private_ipv4 = self.private_ipv4 or self.public_ipv4
+
         self.quota = quota
 
     def getQuotaInformation(self):
