@@ -715,7 +715,7 @@ class BuildWorker(BaseWorker):
         :returns: The updated ImageBuild data structure.
         '''
         self._lost_zk_connection = False
-        data = zk.ImageBuild()
+        data = zk.ImageBuild(diskimage.name)
         data.state = zk.BUILDING
         data.builder_id = self._builder_id
         data.builder = self._hostname
@@ -959,7 +959,7 @@ class BuildWorker(BaseWorker):
 
         build_time = time.monotonic() - start_time
 
-        build_data = zk.ImageBuild()
+        build_data = zk.ImageBuild(diskimage.name)
         build_data.builder_id = self._builder_id
         build_data.builder = self._hostname
         build_data.username = diskimage.username

@@ -194,19 +194,30 @@ def dib_image_list(zk):
         ("state", "State"),
         ("age", "Age")])
     objs = []
-    for image_name in zk.getImageNames():
-        paused = zk.getImagePaused(image_name)
-        for build_no in zk.getBuildNumbers(image_name):
-            build = zk.getBuild(image_name, build_no)
-            if build:
-                state = paused and 'paused' or build.state
-                objs.append({'id': '-'.join([image_name, build_no]),
-                             'image': image_name,
-                             'builder': build.builder,
-                             'formats': build.formats,
-                             'state': state,
-                             'age': int(build.state_time)
-                            })
+    builds = []
+    image_paused = {}
+    if zk.enable_cache:
+        builds = zk.getCachedBuilds()
+        for image in zk.getCachedImages():
+            image_paused[image.image_name] = image.paused
+    else:
+        for image_name in zk.getImageNames():
+            image_paused[image_name] = \
+                zk.getImagePaused(image_name)
+            for build_no in zk.getBuildNumbers(image_name):
+                build = zk.getBuild(image_name, build_no)
+                if build:
+                    builds.append(build)
+    for build in builds:
+        paused = image_paused.get(build._image_name, False)
+        state = paused and 'paused' or build.state
+        objs.append({'id': '-'.join([build._image_name, build.id]),
+                     'image': build._image_name,
+                     'builder': build.builder,
+                     'formats': build.formats,
+                     'state': state,
+                     'age': int(build.state_time)
+                     })
     return (objs, headers_table)
 
 
@@ -247,22 +258,31 @@ def image_list(zk):
         ("state", "State"),
         ("age", "Age")])
     objs = []
-    for image_name in zk.getImageNames():
-        for build_no in zk.getBuildNumbers(image_name):
-            for provider in zk.getBuildProviders(image_name, build_no):
-                for upload_no in zk.getImageUploadNumbers(
-                        image_name, build_no, provider):
-                    upload = zk.getImageUpload(image_name, build_no,
-                                               provider, upload_no)
-                    if not upload:
-                        continue
-                    values = [build_no, upload_no, provider, image_name,
-                              upload.external_name,
-                              upload.external_id,
-                              upload.state,
-                              int(upload.state_time)]
-                    objs.append(dict(zip(headers_table.keys(),
-                                         values)))
+    uploads = []
+    if zk.enable_cache:
+        uploads = zk.getCachedImageUploads()
+    else:
+        for image_name in zk.getImageNames():
+            for build_no in zk.getBuildNumbers(image_name):
+                for provider in zk.getBuildProviders(image_name, build_no):
+                    for upload_no in zk.getImageUploadNumbers(
+                            image_name, build_no, provider):
+                        upload = zk.getImageUpload(image_name, build_no,
+                                                   provider, upload_no)
+                        if upload:
+                            uploads.append(upload)
+
+    for upload in uploads:
+        values = [upload.build_id,
+                  upload.id,
+                  upload.provider_name,
+                  upload.image_name,
+                  upload.external_name,
+                  upload.external_id,
+                  upload.state,
+                  int(upload.state_time)]
+        objs.append(dict(zip(headers_table.keys(),
+                             values)))
     return (objs, headers_table)
 
 
@@ -278,7 +298,8 @@ def request_list(zk):
         ("event_id", "Event ID"),
     ])
     objs = []
-    for req in zk.nodeRequestIterator():
+    cached_ids = zk.enable_cache
+    for req in zk.nodeRequestIterator(cached_ids=cached_ids):
         values = [req.id, req.relative_priority,
                   req.state, req.requestor,
                   req.node_types,

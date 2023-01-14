@@ -933,7 +933,7 @@ class TestZKModel(tests.BaseTestCase):
             'state_time': now
         }
 
-        o = zk.ImageBuild.fromDict(d, d_id)
+        o = zk.ImageBuild.fromDict(d, 'image_name', d_id)
         self.assertEqual(o.id, d_id)
         self.assertEqual(o.state, d['state'])
         self.assertEqual(o.state_time, d['state_time'])
