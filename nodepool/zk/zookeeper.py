@@ -334,13 +334,17 @@ class ImageUpload(BaseModel):
         '''
         o = ImageUpload(build_id, provider_name, image_name, upload_id)
         super(ImageUpload, o).fromDict(d)
-        o.external_id = d.get('external_id')
-        o.external_name = d.get('external_name')
-        o.format = d.get('format')
-        o.username = d.get('username', 'zuul')
-        o.python_path = d.get('python_path', '/usr/bin/python2')
-        o.shell_type = d.get('shell_type')
+        o.updateFromDict(d)
         return o
+
+    def updateFromDict(self, d):
+        super().fromDict(d)
+        self.external_id = d.get('external_id')
+        self.external_name = d.get('external_name')
+        self.format = d.get('format')
+        self.username = d.get('username', 'zuul')
+        self.python_path = d.get('python_path', '/usr/bin/python2')
+        self.shell_type = d.get('shell_type')
 
 
 class NodeRequestLockStats(object):
@@ -734,8 +738,10 @@ class ZooKeeper(ZooKeeperBase):
         self._last_retry_log = 0
         self._node_cache = None
         self._request_cache = None
+        self._image_cache = None
         self._cached_nodes = {}
         self._cached_node_requests = {}
+        self._cached_image_uploads = {}
         self.enable_cache = enable_cache
         self.node_stats_event = None
 
@@ -760,6 +766,12 @@ class ZooKeeper(ZooKeeperBase):
             self._request_cache.listen(self.requestCacheListener)
             self._request_cache.start()
 
+            self._image_cache = TreeCache(self.kazoo_client,
+                                          self.IMAGE_ROOT)
+            self._image_cache.listen_fault(self.cacheFaultListener)
+            self._image_cache.listen(self.imageCacheListener)
+            self._image_cache.start()
+
     def _onDisconnect(self):
         if self._node_cache is not None:
             self._node_cache.close()
@@ -768,6 +780,10 @@ class ZooKeeper(ZooKeeperBase):
         if self._request_cache is not None:
             self._request_cache.close()
             self._request_cache = None
+
+        if self._image_cache is not None:
+            self._image_cache.close()
+            self._image_cache = None
 
     def _electionPath(self, election):
         return "%s/%s" % (self.ELECTION_ROOT, election)
@@ -801,6 +817,19 @@ class ZooKeeper(ZooKeeperBase):
         return "%s/%s/providers/%s/images" % (self._imageBuildsPath(image),
                                               build_number,
                                               provider)
+
+    def _parseImageUploadPath(self, path):
+        if not path.startswith(self.IMAGE_ROOT):
+            return None
+        path = path[len(self.IMAGE_ROOT):]
+        parts = path.split('/')
+        if len(parts) != 8:
+            return None
+        image = parts[1]
+        build = parts[3]
+        provider = parts[5]
+        upload = parts[7]
+        return image, build, provider, upload
 
     def _imageUploadLockPath(self, image, build_number, provider):
         return "%s/lock" % self._imageUploadPath(image, build_number,
@@ -1421,6 +1450,18 @@ class ZooKeeper(ZooKeeperBase):
                     recent_data = data
 
         return recent_data
+
+    def getCachedImageUploads(self):
+        '''
+        Retrieve all image upload data from the cache
+
+        :returns: A list of ImageUpload objects.
+        '''
+        if not self.enable_cache:
+            raise RuntimeError("Caching not enabled")
+        items = self._cached_image_uploads.items()
+        items = sorted(items, key=lambda x: x[0])
+        return list([x[1] for x in items])
 
     def storeImageUpload(self, image, build_number, provider, image_data,
                          upload_number=None):
@@ -2392,6 +2433,69 @@ class ZooKeeper(ZooKeeperBase):
         elif event.event_type == TreeEvent.NODE_REMOVED:
             try:
                 del self._cached_node_requests[request_id]
+            except KeyError:
+                # If it's already gone, don't care
+                pass
+
+    def imageCacheListener(self, event):
+        try:
+            self._imageCacheListener(event)
+        except Exception:
+            self.log.exception(
+                "Exception in image cache update for event: %s",
+                event)
+
+    def _imageCacheListener(self, event):
+        if hasattr(event.event_data, 'path'):
+            # Ignore root node
+            path = event.event_data.path
+            if path == self.IMAGE_ROOT:
+                return
+
+            # Ignore lock nodes
+            if '/lock' in path:
+                return
+
+        # Ignore any non-node related events such as connection events here
+        if event.event_type not in (TreeEvent.NODE_ADDED,
+                                    TreeEvent.NODE_UPDATED,
+                                    TreeEvent.NODE_REMOVED):
+            return
+
+        path = event.event_data.path
+        key = self._parseImageUploadPath(path)
+        if key is None:
+            return
+        image, build_number, provider, upload_number = key
+
+        if event.event_type in (TreeEvent.NODE_ADDED, TreeEvent.NODE_UPDATED):
+            # Images with empty data are invalid so skip add or update these.
+            if not event.event_data.data:
+                return
+
+            # Perform an in-place update of the cached image if possible
+            d = self._bytesToDict(event.event_data.data)
+            old_upload = self._cached_image_uploads.get(key)
+            if old_upload:
+                if event.event_data.stat.version <= old_upload.stat.version:
+                    # Don't update to older data
+                    return
+                # NOTE: this is where lock handling should occur, but
+                # we don't currently lock image upload objects.
+                old_upload.updateFromDict(d)
+                old_upload.stat = event.event_data.stat
+            else:
+                upload = ImageUpload.fromDict(d,
+                                              build_number,
+                                              provider,
+                                              image,
+                                              upload_number)
+                upload.stat = event.event_data.stat
+                self._cached_image_uploads[key] = upload
+
+        elif event.event_type == TreeEvent.NODE_REMOVED:
+            try:
+                del self._cached_image_uploads[key]
             except KeyError:
                 # If it's already gone, don't care
                 pass

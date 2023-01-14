@@ -247,22 +247,31 @@ def image_list(zk):
         ("state", "State"),
         ("age", "Age")])
     objs = []
-    for image_name in zk.getImageNames():
-        for build_no in zk.getBuildNumbers(image_name):
-            for provider in zk.getBuildProviders(image_name, build_no):
-                for upload_no in zk.getImageUploadNumbers(
-                        image_name, build_no, provider):
-                    upload = zk.getImageUpload(image_name, build_no,
-                                               provider, upload_no)
-                    if not upload:
-                        continue
-                    values = [build_no, upload_no, provider, image_name,
-                              upload.external_name,
-                              upload.external_id,
-                              upload.state,
-                              int(upload.state_time)]
-                    objs.append(dict(zip(headers_table.keys(),
-                                         values)))
+    uploads = []
+    if zk.enable_cache:
+        uploads = zk.getCachedImageUploads()
+    else:
+        for image_name in zk.getImageNames():
+            for build_no in zk.getBuildNumbers(image_name):
+                for provider in zk.getBuildProviders(image_name, build_no):
+                    for upload_no in zk.getImageUploadNumbers(
+                            image_name, build_no, provider):
+                        upload = zk.getImageUpload(image_name, build_no,
+                                                   provider, upload_no)
+                        if upload:
+                            uploads.append(upload)
+
+    for upload in uploads:
+        values = [upload.build_id,
+                  upload.id,
+                  upload.provider_name,
+                  upload.image_name,
+                  upload.external_name,
+                  upload.external_id,
+                  upload.state,
+                  int(upload.state_time)]
+        objs.append(dict(zip(headers_table.keys(),
+                             values)))
     return (objs, headers_table)
 
 
