@@ -269,6 +269,12 @@ class TestWebApp(tests.DBTestCase):
         req.requestor = 'test_request_list'
         self.zk.storeNodeRequest(req)
 
+        webzk = webapp.nodepool.getZK()
+        for _ in iterate_timeout(30, Exception, 'cache update'):
+            reqs = webzk._request_cache.getNodeRequestIds()
+            if req.id in reqs:
+                break
+
         http_req = request.Request(
             "http://localhost:%s/request-list" % port)
         http_req.add_header('Accept', 'application/json')
