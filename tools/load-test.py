@@ -2,8 +2,10 @@
 import logging
 import time
 
-from nodepool import launcher, zk
+from nodepool import launcher
 from nodepool.cmd import NodepoolApp
+from nodepool.zk import ZooKeeperClient
+import nodepool.zk.zookeeper as zk
 
 
 class LoadTest(NodepoolApp):
@@ -47,12 +49,14 @@ class LoadTest(NodepoolApp):
         self.pool = launcher.NodePool(self.args.secure, self.args.config)
         config = self.pool.loadConfig()
 
-        self.zk = zk.ZooKeeper(enable_cache=False)
-        self.zk.connect(
-            list(config.zookeeper_servers.values()),
+        self.zk_client = ZooKeeperClient(
+            config.zookeeper_servers,
             tls_cert=config.zookeeper_tls_cert,
             tls_key=config.zookeeper_tls_key,
-            tls_ca=config.zookeeper_tls_ca)
+            tls_ca=config.zookeeper_tls_ca
+        )
+        self.zk_client.connect()
+        self.zk = zk.ZooKeeper(self.zk_client, enable_cache=False)
 
         label = self.args.label
         max_queue = int(self.args.max_queue)
@@ -100,13 +104,12 @@ class LoadTest(NodepoolApp):
             for request in failed_requests:
                 self.zk.deleteNodeRequest(request)
 
-        self.log.info('Handling %s fulfilled requests', len(fulfilled_requests))
+        self.log.info(
+            'Handling %s fulfilled requests', len(fulfilled_requests))
         for request in fulfilled_requests:
             # TODO: handle nodes
             self.zk.deleteNodeRequest(request)
 
 
-
 if __name__ == "__main__":
     LoadTest.main()
-
