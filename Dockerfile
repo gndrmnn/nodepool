@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# NOTE(ianw) 2023-01-16 this is a noop stamp to pick up
+#  https://review.opendev.org/c/opendev/system-config/+/870478
+
 FROM docker.io/opendevorg/python-builder:3.11-bullseye as builder
 # ============================================================================
 
