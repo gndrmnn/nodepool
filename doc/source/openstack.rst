@@ -575,11 +575,16 @@ Selecting the OpenStack driver adds the following options to the
 
            Name or id of the flavor to use. If
            :attr:`providers.[openstack].pools.labels.min-ram` is
-           omitted, it must be an exact match. If
-           :attr:`providers.[openstack].pools.labels.min-ram` is given,
-           ``flavor-name`` will be used to find flavor names that meet
+           omitted, it must be an exact match.
+
+           If :attr:`providers.[openstack].pools.labels.min-ram` is
+           given, ``flavor-name`` will be used to find flavor names
+           that meet
            :attr:`providers.[openstack].pools.labels.min-ram` and also
-           contain ``flavor-name``.
+           contain ``flavor-name``.  Flavors that match the RAM
+           requirements will be examined in standard alphabetical
+           order; the first to contain the ``flavor-name`` string will
+           be chosen.
 
            One of :attr:`providers.[openstack].pools.labels.min-ram` or
            :attr:`providers.[openstack].pools.labels.flavor-name` must

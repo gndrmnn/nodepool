@@ -589,7 +589,7 @@ class OpenStackAdapter(statemachine.Adapter):
 
     def _getFlavors(self):
         flavors = self._listFlavors()
-        flavors.sort(key=operator.itemgetter('ram'))
+        flavors.sort(key=operator.itemgetter('ram', 'name'))
         return flavors
 
     def _findFlavorByName(self, flavor_name):

@@ -1,0 +1,10 @@
+---
+upgrade:
+  - |
+    In the OpenStack driver, when using ```min-ram``` in combination
+    with a ```flavor-name```, the first flavor to be found that
+    satisfied the ```min-ram``` requirements and contained the
+    substring ``flavor-name``` would be used.  The order of the
+    flavors to be searched was dependent on what the cloud returned.
+    From this release, the available flavors are now alphabetically
+    sorted before matching ```flavor-name```.
