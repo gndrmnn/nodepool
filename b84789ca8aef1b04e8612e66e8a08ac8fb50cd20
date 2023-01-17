@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccfd10d9_4c64b8eb",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1464,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-01-17T13:42:21Z",
+      "side": 1,
+      "message": "nit: `list()` is redundant here",
+      "revId": "b84789ca8aef1b04e8612e66e8a08ac8fb50cd20",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
