@@ -286,7 +286,7 @@
     promote:
       jobs:
         - nodepool-promote-image
-        - zuul-promote-docs
+        - zuul-promote-nox-docs
         - opendev-promote-python
     release:
       jobs:
