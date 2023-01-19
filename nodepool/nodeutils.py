@@ -168,3 +168,16 @@ class Attributes(object):
 
     def __init__(self, **kw):
         setattr(self, '__dict__', kw)
+
+
+class Timer:
+    def __init__(self, log, msg):
+        self.log = log
+        self.msg = msg
+
+    def __enter__(self):
+        self.start = time.monotonic()
+
+    def __exit__(self, type, value, traceback):
+        delta = time.monotonic() - self.start
+        self.log.debug(f'{self.msg} in {delta}')
