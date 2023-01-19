@@ -141,7 +141,7 @@ Selecting the ``aws`` driver adds the following options to the
       .. code-block:: yaml
 
          max-resources:
-           'L-43DA4232': 224
+           'L-43DA4232': 448
 
       See `instance quotas`_ for more information.
 
@@ -498,7 +498,7 @@ Selecting the ``aws`` driver adds the following options to the
          .. code-block:: yaml
 
             max-resources:
-              'L-43DA4232': 224
+              'L-43DA4232': 448
 
          See `instance quotas`_ for more information.
 
