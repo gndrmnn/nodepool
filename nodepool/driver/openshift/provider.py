@@ -254,6 +254,48 @@ class OpenshiftProvider(Provider, QuotaSupport):
 
         self.k8s_client.create_namespaced_pod(project, pod_body)
 
+    def createVm(self, project, vm_name, label):
+        self.log.debug("%s: creating vm in project %s" % (vm_name, project))
+        body = label.manifest[0].copy()
+        body['metadata']['name'] = vm_name
+        if 'metadata' in body['spec']['template']:
+            if 'labels' in body['spec']['template']['metadata']:
+                body['spec']['template']['metadata']['labels']['vm'] = vm_name
+            else:
+                body['spec']['template']['metadata']['labels'] = dict()
+                body['spec']['template']['metadata']['labels']['vm'] = vm_name
+        else:
+            body['spec']['template']['metadata'] = dict()
+            body['spec']['template']['metadata']['labels'] = dict()
+            body['spec']['template']['metadata']['labels']['vm'] = vm_name
+        self.custom_client.create_namespaced_custom_object(group='kubevirt.io', plural='virtualmachines', version='v1', namespace=project, body=body)
+
+    def createService(self, project, vm_name, label):
+        body = label.manifest[1].copy()
+        body['spec']['selector']['vm'] = vm_name
+        reset_name = body['metadata']['name']
+        service_name = "%s-%s" % (vm_name, body['metadata']['name'])
+        body['metadata']['name'] = service_name
+        if 'labels' in body['metadata']:
+            body['metadata']['labels']['vm'] = vm_name
+        else:
+            body['metadata']['labels'] = dict()
+            body['metadata']['labels']['vm'] = vm_name
+        self.k8s_client.create_namespaced_service(project, body)
+        body['metadata']['name'] = reset_name
+        for retry in range(300):
+            service = self.k8s_client.read_namespaced_service(service_name, project)
+            try:
+                ssh_endpoint = service.status.load_balancer.ingress[0].ip
+                if ssh_endpoint:
+                    ssh_port = service.spec.ports[0].port
+                    self.log.debug("loadbalancer ingress IP is %s", ssh_endpoint)
+                    return ssh_port, ssh_endpoint
+                self.log.debug("loadbalancer ingress IP not found. Retrying.")
+            except TypeError:
+                self.log.debug("Failure reading status from service. Retrying.")
+            time.sleep(1)
+
     def waitForPod(self, project, pod_name):
         for retry in range(300):
             pod = self.k8s_client.read_namespaced_pod(pod_name, project)
@@ -261,11 +303,27 @@ class OpenshiftProvider(Provider, QuotaSupport):
                 break
             self.log.debug("%s: pod status is %s", project, pod.status.phase)
             time.sleep(1)
-        if retry == 299:
+        else:
             raise exceptions.LaunchNodepoolException(
                 "%s: pod failed to initialize (%s)" % (
                     project, pod.status.phase))
         return pod.spec.node_name
+
+    def waitForVm(self, project, vm_name):
+        for retry in range(300):
+            vm = self.custom_client.get_namespaced_custom_object(group='kubevirt.io', plural='virtualmachines', version='v1', namespace=project, name=vm_name)
+            try:
+                if vm['status']['printableStatus'] == "Running":
+                    break
+                self.log.debug("%s: vm status is %s", project, vm['status']['printableStatus'])
+            except KeyError:
+                self.log.debug("Retrying after failure reading printableStatus from vm: %s", vm['metadata']['name'])
+            time.sleep(1)
+        else:
+            raise exceptions.LaunchNodepoolException(
+                "%s: vm failed to initialize (%s)" % (
+                    project, vm['status']['printableStatus']))
+        return vm['metadata']['name']
 
     def getRequestHandler(self, poolworker, request):
         return handler.OpenshiftNodeRequestHandler(poolworker, request)
