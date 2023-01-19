@@ -168,3 +168,16 @@ class Attributes(object):
 
     def __init__(self, **kw):
         setattr(self, '__dict__', kw)
+
+
+class Timer:
+    def __init__(self, log, msg):
+        self.log = log
+        self.msg = msg
+
+    def __enter__(self):
+        self.start = time.perf_counter()
+
+    def __exit__(self, type, value, traceback):
+        delta = time.perf_counter() - self.start
+        self.log.debug(f'{self.msg} in {delta}')
