@@ -16,6 +16,7 @@
 
 import math
 import voluptuous as v
+import yaml
 
 from nodepool.driver import ConfigPool
 from nodepool.driver import ConfigValue
@@ -43,15 +44,22 @@ class OpenshiftPool(ConfigPool):
             pl = OpenshiftLabel()
             pl.name = label['name']
             pl.type = label['type']
-            pl.image = label.get('image')
-            pl.image_pull = label.get('image-pull', 'IfNotPresent')
-            pl.image_pull_secrets = label.get('image-pull-secrets', [])
-            pl.cpu = label.get('cpu')
-            pl.memory = label.get('memory')
+            pl.username = label.get('username')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
-            pl.env = label.get('env', [])
-            pl.node_selector = label.get('node-selector')
+            if pl.type == 'vm':
+                manifest_file = label.get('manifest_from_file', '')
+                with open(manifest_file) as f:
+                    manifest = list(yaml.safe_load_all(f.read()))
+                pl.manifest = manifest
+            else:
+                pl.image = label.get('image')
+                pl.image_pull = label.get('image-pull', 'IfNotPresent')
+                pl.image_pull_secrets = label.get('image-pull-secrets', [])
+                pl.cpu = label.get('cpu')
+                pl.memory = label.get('memory')
+                pl.env = label.get('env', [])
+                pl.node_selector = label.get('node-selector')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
