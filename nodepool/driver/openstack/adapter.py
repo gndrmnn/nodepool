@@ -30,6 +30,7 @@ from nodepool.driver import statemachine
 from nodepool import exceptions
 from nodepool import stats
 from nodepool import version
+from nodepool.nodeutils import Timer
 
 CACHE_TTL = 10
 
@@ -414,7 +415,8 @@ class OpenStackAdapter(statemachine.Adapter):
             yield OpenStackInstance(self.provider, server, quota)
 
     def getQuotaLimits(self):
-        limits = self._client.get_compute_limits()
+        with Timer(self.log, 'API call get_compute_limits'):
+            limits = self._client.get_compute_limits()
         return QuotaInformation.construct_from_limits(limits)
 
     def getQuotaForLabel(self, label):
@@ -476,19 +478,21 @@ class OpenStackAdapter(statemachine.Adapter):
             metadata = {}
         if image_format:
             metadata['disk_format'] = image_format
-        image = self._client.create_image(
-            name=image_name,
-            filename=filename,
-            is_public=False,
-            wait=True,
-            md5=md5,
-            sha256=sha256,
-            **metadata)
+        with Timer(self.log, 'API call create_image'):
+            image = self._client.create_image(
+                name=image_name,
+                filename=filename,
+                is_public=False,
+                wait=True,
+                md5=md5,
+                sha256=sha256,
+                **metadata)
         return image.id
 
     def deleteImage(self, external_id):
         self.log.debug(f"Deleting image {external_id}")
-        return self._client.delete_image(external_id)
+        with Timer(self.log, 'API call delete_image'):
+            return self._client.delete_image(external_id)
 
     # Local implementation
 
@@ -554,7 +558,8 @@ class OpenStackAdapter(statemachine.Adapter):
             create_args['meta'] = instance_properties
 
         try:
-            return self._client.create_server(wait=False, **create_args)
+            with Timer(self.log, 'API call create_server'):
+                return self._client.create_server(wait=False, **create_args)
         except openstack.exceptions.BadRequestException:
             # We've gotten a 400 error from nova - which means the request
             # was malformed. The most likely cause of that, unless something
@@ -572,20 +577,24 @@ class OpenStackAdapter(statemachine.Adapter):
 
     # This method is wrapped with an LRU cache in the constructor.
     def _listAZs(self):
-        return self._client.list_availability_zone_names()
+        with Timer(self.log, 'API call list_availability_zone_names'):
+            return self._client.list_availability_zone_names()
 
     # This method is wrapped with an LRU cache in the constructor.
     def _findImage(self, name):
-        return self._client.get_image(name, filters={'status': 'active'})
+        with Timer(self.log, 'API call get_image'):
+            return self._client.get_image(name, filters={'status': 'active'})
 
     # This method is wrapped with an LRU cache in the constructor.
     def _listFlavors(self):
-        return self._client.list_flavors(get_extra=False)
+        with Timer(self.log, 'API call list_flavors'):
+            return self._client.list_flavors(get_extra=False)
 
     # This method is only used by the nodepool alien-image-list
     # command and only works with the openstack driver.
     def _listImages(self):
-        return self._client.list_images()
+        with Timer(self.log, 'API call list_images'):
+            return self._client.list_images()
 
     def _getFlavors(self):
         flavors = self._listFlavors()
@@ -619,7 +628,8 @@ class OpenStackAdapter(statemachine.Adapter):
 
     # This method is wrapped with an LRU cache in the constructor.
     def _findNetwork(self, name):
-        network = self._client.get_network(name)
+        with Timer(self.log, 'API call get_network'):
+            network = self._client.get_network(name)
         if not network:
             raise Exception("Unable to find network %s in provider %s" % (
                 name, self.provider.name))
@@ -627,11 +637,13 @@ class OpenStackAdapter(statemachine.Adapter):
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listServers(self):
-        return self._client.list_servers(bare=True)
+        with Timer(self.log, 'API call list_servers'):
+            return self._client.list_servers()
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listFloatingIps(self):
-        return self._client.list_floating_ips()
+        with Timer(self.log, 'API call list_floating_ips'):
+            return self._client.list_floating_ips()
 
     def _refreshServer(self, obj):
         ret = self._getServer(obj.id)
@@ -654,7 +666,8 @@ class OpenStackAdapter(statemachine.Adapter):
     def _getServerByIdNow(self, server_id):
         # A synchronous get server by id.  Only to be used in error
         # handling where we can't wait for the list to update.
-        return self._client.get_server_by_id(server_id)
+        with Timer(self.log, 'API call get_server_by_id'):
+            return self._client.get_server_by_id(server_id)
 
     def _refreshServerDelete(self, obj):
         if obj is None:
@@ -683,35 +696,43 @@ class OpenStackAdapter(statemachine.Adapter):
         return obj
 
     def _needsFloatingIp(self, server):
-        return self._client._needs_floating_ip(
-            server=server, nat_destination=None)
+        with Timer(self.log, 'API call _needs_floating_ip'):
+            return self._client._needs_floating_ip(
+                server=server, nat_destination=None)
 
     def _createFloatingIp(self, server):
-        return self._client.create_floating_ip(server=server, wait=True)
+        with Timer(self.log, 'API call create_floating_ip'):
+            return self._client.create_floating_ip(server=server, wait=True)
 
     def _attachIpToServer(self, server, fip):
         # skip_attach is ignored for nova, which is the only time we
         # should actually call this method.
-        return self._client._attach_ip_to_server(
-            server=server, floating_ip=fip,
-            skip_attach=True)
+        with Timer(self.log, 'API call _attach_ip_to_server'):
+            return self._client._attach_ip_to_server(
+                server=server, floating_ip=fip,
+                skip_attach=True)
 
     def _hasFloatingIps(self):
+        # Not a network call
         return self._client._has_floating_ips()
 
     def _getFloatingIps(self, server):
         fips = openstack.cloud.meta.find_nova_interfaces(
             server['addresses'], ext_tag='floating')
-        fips = [self._client.get_floating_ip(
-            id=None, filters={'floating_ip_address': fip['addr']})
-            for fip in fips]
-        return fips
+        ret = []
+        for fip in fips:
+            with Timer(self.log, 'API call get_floating_ip'):
+                ret.append(self._client.get_floating_ip(
+                    id=None, filters={'floating_ip_address': fip['addr']}))
+        return ret
 
     def _deleteFloatingIp(self, fip):
-        self._client.delete_floating_ip(fip['id'], retry=0)
+        with Timer(self.log, 'API call delete_floating_ip'):
+            self._client.delete_floating_ip(fip['id'], retry=0)
 
     def _deleteServer(self, external_id):
-        self._client.delete_server(external_id)
+        with Timer(self.log, 'API call delete_server'):
+            self._client.delete_server(external_id)
 
     def _getFlavorFromServer(self, server):
         # In earlier versions of nova or the sdk, flavor has just an id.
