@@ -16,6 +16,24 @@
       "message": "Is this different to statsd stats.timers.nodepool.task.\u003cprovider\u003e.compute.limits.200?  I did think the idea was that we setup the statsd prefixes in the clouds.yaml sufficiently that the client code could log all this.",
       "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4c66915_20a52e5d",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-01-20T02:14:29Z",
+      "side": 1,
+      "message": "I need to see this in log files (as in, in sequence with other actions) to debug the performance of the new statemachine driver (I\u0027m looking for procedural bottlenecks in the code).  I looked for it, but I don\u0027t see this info currently being logged; can the sdk be convinced to log it?\n\nIf that\u0027s the case, I think it would be sufficient for most of these.",
+      "parentUuid": "533a92af_62d0fbce",
+      "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
