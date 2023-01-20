@@ -34,6 +34,24 @@
       "parentUuid": "533a92af_62d0fbce",
       "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08ee87f6_6c113cf1",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2023-01-20T02:56:08Z",
+      "side": 1,
+      "message": "ahh, yes it won\u0027t be in sequence, more a general idea of the actions\n\n\u003e can the sdk be convinced to log it?\n\nI guess this is done at\n\nhttps://opendev.org/openstack/openstacksdk/src/branch/master/openstack/proxy.py#L307\n\nwhere the proxy chooses between statsd, influxdb and prometheus.  It does feel like a \"log\" option there to also output timing data via self.log might be possible, but I can\u0027t see it there...",
+      "parentUuid": "f4c66915_20a52e5d",
+      "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
