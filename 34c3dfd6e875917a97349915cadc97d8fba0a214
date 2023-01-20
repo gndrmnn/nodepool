@@ -52,6 +52,42 @@
       "parentUuid": "f4c66915_20a52e5d",
       "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bea1ffcb_1e16be1c",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-01-20T15:19:18Z",
+      "side": 1,
+      "message": "Cool thanks for double checking.  I thought maybe at some point there was a logging option, but I couldn\u0027t find it.  So much has changed around that over time.",
+      "parentUuid": "533a92af_62d0fbce",
+      "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20236314_83e1a1be",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-01-20T15:19:18Z",
+      "side": 1,
+      "message": "Cool thanks for double checking.  I thought maybe at some point there was a logging option, but I couldn\u0027t find it.  So much has changed around that over time.",
+      "parentUuid": "533a92af_62d0fbce",
+      "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
