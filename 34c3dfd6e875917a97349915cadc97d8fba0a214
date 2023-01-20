@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "533a92af_62d0fbce",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2023-01-20T02:04:17Z",
+      "side": 1,
+      "message": "Is this different to statsd stats.timers.nodepool.task.\u003cprovider\u003e.compute.limits.200?  I did think the idea was that we setup the statsd prefixes in the clouds.yaml sufficiently that the client code could log all this.",
+      "revId": "34c3dfd6e875917a97349915cadc97d8fba0a214",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
