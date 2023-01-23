@@ -33,6 +33,8 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
     def load(self, config):
         self.launch_retries = int(self.provider.get('launch-retries', 3))
         self.context = self.provider['context']
+        self.max_cores = self.provider.get('max-cores', math.inf)
+        self.max_ram = self.provider.get('max-ram', math.inf)
         self.max_pods = self.provider.get('max-pods', math.inf)
         for pool in self.provider.get('pools', []):
             # Force label type to be pod
@@ -41,6 +43,8 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             pp = OpenshiftPool()
             pp.load(pool, config)
             pp.provider = self
+            pp.max_pods = self.provider.get('max-pods', math.inf)
+
             self.pools[pp.name] = pp
 
     def getSchema(self):
@@ -75,5 +79,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             v.Required('context'): str,
             'launch-retries': int,
             'max-pods': int,
+            'max-cores': int,
+            'max-ram': int,
         })
         return v.Schema(schema)
