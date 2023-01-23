@@ -1,0 +1,43 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+tenant-resource-limits:
+  - tenant-name: tenant-1
+    max-cores: 1024
+
+labels:
+  - name: pod-fedora
+  - name: openshift-project
+  - name: pod-fedora-secret
+
+providers:
+  - name: openshift
+    driver: openshift
+    context: admin-cluster.local
+    pools:
+      - name: main
+        max-ram: 4096
+        node-attributes:
+          key1: value1
+          key2: value2
+        labels:
+          - name: openshift-project
+            type: project
+          - name: pod-fedora
+            type: pod
+            image: docker.io/fedora:28
+            python-path: '/usr/bin/python3'
+            shell-type: csh
+            memory: 1024
+          - name: pod-fedora-secret
+            type: pod
+            image: docker.io/fedora:28
+            image-pull-secrets:
+              - name: registry-secret

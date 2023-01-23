@@ -18,17 +18,19 @@ import time
 
 from nodepool.driver.utils_k8s import get_client
 from nodepool.driver.utils import NodeDeleter
+from nodepool.driver.utils import QuotaSupport
 from nodepool.driver.openshift.provider import OpenshiftProvider
 from nodepool.driver.openshiftpods import handler
 
 urllib3.disable_warnings()
 
 
-class OpenshiftPodsProvider(OpenshiftProvider):
+class OpenshiftPodsProvider(OpenshiftProvider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.openshiftpods."
                             "OpenshiftPodsProvider")
 
     def __init__(self, provider, *args):
+        super().__init__(provider, *args)
         self.provider = provider
         self.ready = False
         self.token, self.ca_crt, self.k8s_client, _ = get_client(

@@ -34,6 +34,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.openshift.OpenshiftProvider")
 
     def __init__(self, provider, *args):
+        super().__init__()
         self.provider = provider
         self.ready = False
         _, _, self.k8s_client, self.os_client = get_client(
@@ -278,9 +279,15 @@ class OpenshiftProvider(Provider, QuotaSupport):
             ram=math.inf,
             default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
-        # TODO: return real quota information about a label
-        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+    def quotaNeededByLabel(self, node_type, pool):
+        provider_label = pool.labels[node_type]
+        resources = {}
+        if provider_label.cpu:
+            resources["cores"] = provider_label.cpu
+        if provider_label.memory:
+            resources["ram"] = provider_label.memory
+        self.log.debug("Quota needed by label: %s", QuotaInformation(instances=1, default=1, **resources).__dict__)
+        return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota
