@@ -13,12 +13,13 @@
 # under the License.
 
 import logging
+import math
 
 from kazoo import exceptions as kze
 
 from nodepool import exceptions
 from nodepool.zk import zookeeper as zk
-from nodepool.driver.utils import NodeLauncher
+from nodepool.driver.utils import NodeLauncher, QuotaInformation
 from nodepool.driver import NodeRequestHandler
 
 
@@ -46,6 +47,9 @@ class OpenshiftLauncher(NodeLauncher):
             self.node.connection_type = "project"
 
         self.node.state = zk.READY
+        pool = self.handler.provider.pools.get(self.node.pool)
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], pool).get_resources()
         self.node.python_path = self.label.python_path
         self.node.shell_type = self.label.shell_type
         # NOTE: resource access token may be encrypted here
@@ -128,10 +132,74 @@ class OpenshiftNodeRequestHandler(NodeRequestHandler):
 
         return True
 
+    def hasProviderQuota(self, node_types):
+        '''
+        Checks if a provider has enough quota to handle a list of nodes.
+        This does not take our currently existing nodes into account.
+
+        :param node_types: list of node types to check
+        :return: True if the node list fits into the provider, False otherwise
+        '''
+        needed_quota = QuotaInformation()
+
+        for ntype in node_types:
+            needed_quota.add(
+                self.manager.quotaNeededByLabel(ntype, self.pool))
+
+        if hasattr(self.pool, 'ignore_provider_quota'):
+            if not self.pool.ignore_provider_quota:
+                cloud_quota = self.manager.estimatedNodepoolQuota()
+                cloud_quota.subtract(needed_quota)
+
+                if not cloud_quota.non_negative():
+                    return False
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        pool_quota = QuotaInformation(
+            cores=getattr(self.pool, 'max_cores', None),
+            instances=self.pool.max_projects,
+            ram=getattr(self.pool, 'max_ram', None),
+            default=math.inf)
+        pool_quota.subtract(needed_quota)
+        return pool_quota.non_negative()
+
     def hasRemainingQuota(self, node_types):
-        if len(self.manager.listNodes()) + 1 > self.provider.max_projects:
+        '''
+        Checks if the predicted quota is enough for an additional node of type
+        node_type.
+
+        :param node_type: node type for the quota check
+        :return: True if there is enough quota, False otherwise
+        '''
+        needed_quota = self.manager.quotaNeededByLabel(node_types, self.pool)
+
+        # Calculate remaining quota which is calculated as:
+        # quota = <total nodepool quota> - <used quota> - <quota for node>
+        cloud_quota = self.manager.estimatedNodepoolQuota()
+        cloud_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed())
+        cloud_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining provider quota: %s",
+                       cloud_quota)
+
+        if not cloud_quota.non_negative():
             return False
-        return True
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        pool_quota = QuotaInformation(
+            cores=getattr(self.pool, 'max_cores', None),
+            instances=self.pool.max_projects,
+            ram=getattr(self.pool, 'max_ram', None),
+            default=math.inf)
+        pool_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+        self.log.debug("Current pool quota: %s" % pool_quota)
+        pool_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining pool quota: %s", pool_quota)
+
+        return pool_quota.non_negative()
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]

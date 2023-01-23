@@ -38,6 +38,9 @@ class OpenshiftPool(ConfigPool):
     def load(self, pool_config, full_config):
         super().load(pool_config)
         self.name = pool_config['name']
+        self.max_projects = self.provider.get('max-projects', math.inf)
+        self.max_cores = pool_config.get('max-cores', math.inf)
+        self.max_ram = pool_config.get('max-ram', math.inf)
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = OpenshiftLabel()
@@ -115,6 +118,8 @@ class OpenshiftProviderConfig(ProviderConfig):
             v.Required('context'): str,
             'launch-retries': int,
             'max-projects': int,
+            'max-cores': int,
+            'max-ram': int,
         })
         return v.Schema(schema)
 
