@@ -627,21 +627,27 @@ class OpenStackAdapter(statemachine.Adapter):
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listServers(self):
-        return self._client.list_servers()
+        return self._client.list_servers(bare=True)
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listFloatingIps(self):
         return self._client.list_floating_ips()
 
     def _refreshServer(self, obj):
-        for server in self._listServers():
-            if server.id == obj.id:
-                return server
+        ret = self._getServer(obj.id)
+        if ret:
+            return ret
         return obj
+
+    def _expandServer(self, server):
+        return openstack.cloud.meta.add_server_interfaces(
+            self._client, server)
 
     def _getServer(self, external_id):
         for server in self._listServers():
             if server.id == external_id:
+                if server.status in ['ACTIVE', 'ERROR']:
+                    return self._expandServer(server)
                 return server
         return None
 

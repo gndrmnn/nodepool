@@ -444,3 +444,6 @@ class FakeAdapter(OpenStackAdapter):
             self.createServer_fails_with_external_id -= 1
             raise OpenStackCloudCreateException('server', 'fakeid')
         return super()._createServer(*args, **kwargs)
+
+    def _expandServer(self, server):
+        return server
