@@ -52,6 +52,7 @@ class OpenshiftPool(ConfigPool):
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.privileged = label.get('privileged')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -99,6 +100,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'shell-type': str,
             'env': [env_var],
             'node-selector': dict,
+            'privileged': bool,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added support for privileged pods in Kubernetes and OpenShift drivers via :attr:`providers.[kubernetes].pools.labels.privileged`, :attr:`providers.[openshift].pools.labels.privileged`, and :attr:`providers.[openshiftpods].pools.labels.privileged`.

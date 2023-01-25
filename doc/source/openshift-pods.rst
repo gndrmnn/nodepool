@@ -181,3 +181,9 @@ Selecting the openshift pods driver adds the following options to the
 
             A map of key-value pairs to ensure the OpenShift scheduler
             places the Pod on a node with specific node labels.
+
+         .. attr:: privileged
+            :type: bool
+
+            Sets the `securityContext.privileged` flag on the
+            container.  Normally left unset for the OpenShift default.
