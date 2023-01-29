@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60d3f411_175f450d",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2023-01-29T21:18:35Z",
+      "side": 1,
+      "message": "perhaps perf_counter() is a better fit for this call?",
+      "revId": "80d83da73fb3d7980445edb8e187800fb3bd719b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaeba982_b0d7bf14",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2023-01-29T21:18:35Z",
+      "side": 1,
+      "message": "I do get that the point is to specifically see the cost of a given call in context, but I wonder if this would be useful to have a key and send this into statsd for aggregate data too?",
+      "revId": "80d83da73fb3d7980445edb8e187800fb3bd719b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
