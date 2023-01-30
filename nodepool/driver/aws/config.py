@@ -104,6 +104,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.ena_support = image.get('ena-support', True)
         self.volume_size = image.get('volume-size', None)
         self.volume_type = image.get('volume-type', 'gp2')
+        self.import_method = image.get('import-method', 'snapshot')
         self.iops = image.get('iops', None)
         self.throughput = image.get('throughput', None)
 
@@ -126,6 +127,7 @@ class AwsProviderDiskImage(ConfigValue):
             'ena-support': bool,
             'volume-size': int,
             'volume-type': str,
+            'import-method': v.Any('snapshot', 'image'),
             'iops': int,
             'throughput': int,
             'tags': dict,
