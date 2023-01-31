@@ -64,6 +64,8 @@ class LoadTest(NodepoolApp):
         self.log.info('Starting load test:')
         self.log.info('  label: %s', label)
         self.log.info('  max_queue: %s', max_queue)
+        self.start = time.time()
+        self.finished = 0
         while True:
             self._handle_finished_requests()
             self._create_requests(label, max_queue)
@@ -104,8 +106,12 @@ class LoadTest(NodepoolApp):
             for request in failed_requests:
                 self.zk.deleteNodeRequest(request)
 
+        self.finished += len(finished_requests)
+        delta = time.time() - self.start
         self.log.info(
             'Handling %s fulfilled requests', len(fulfilled_requests))
+        self.log.info(
+            'Request rate %s', self.finished/delta)
         for request in fulfilled_requests:
             # TODO: handle nodes
             self.zk.deleteNodeRequest(request)
