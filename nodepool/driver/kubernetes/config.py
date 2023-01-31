@@ -56,6 +56,7 @@ class KubernetesPool(ConfigPool):
             pl.storage = label.get('storage', self.default_label_storage)
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.privileged = label.get('privileged')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -102,6 +103,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'storage': int,
             'env': [env_var],
             'node-selector': dict,
+            'privileged': bool,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

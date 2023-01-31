@@ -239,6 +239,11 @@ class OpenshiftProvider(Provider, QuotaSupport):
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
 
+        if label.privileged is not None:
+            container_body['securityContext'] = {
+                'privileged': label.privileged,
+            }
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',

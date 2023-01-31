@@ -157,6 +157,7 @@ providers:
                 value: world
             node-selector:
               storageType: ssd
+            privileged: true
 
   - name: openshift
     driver: openshift
@@ -179,6 +180,7 @@ providers:
                 value: world
             node-selector:
               storageType: ssd
+            privileged: true
 
   - name: ec2-us-east-2
     driver: aws

@@ -262,3 +262,10 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: privileged
+            :type: bool
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type.  Sets the `securityContext.privileged` flag on
+            the container.  Normally left unset for the Kubernetes default.

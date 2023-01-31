@@ -59,7 +59,8 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
-            'node-selector': dict
+            'node-selector': dict,
+            'privileged': bool,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

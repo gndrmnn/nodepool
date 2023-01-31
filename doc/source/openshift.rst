@@ -225,3 +225,11 @@ Selecting the openshift driver adds the following options to the
             :value:`providers.[openshift].pools.labels.type.pod` label type;
             A map of key-value pairs to ensure the OpenShift scheduler
             places the Pod on a node with specific node labels.
+
+         .. attr:: privileged
+            :type: bool
+
+            Only used by the
+            :value:`providers.[openshift].pools.labels.type.pod`
+            label type.  Sets the `securityContext.privileged` flag on
+            the container.  Normally left unset for the OpenShift default.
