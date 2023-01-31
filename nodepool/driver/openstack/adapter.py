@@ -69,6 +69,7 @@ class OpenStackResource(statemachine.Resource):
 
 class OpenStackDeleteStateMachine(statemachine.StateMachine):
     FLOATING_IP_DELETING = 'deleting floating ip'
+    SERVER_DELETE_SUBMIT = 'submit delete server'
     SERVER_DELETE = 'delete server'
     SERVER_DELETING = 'deleting server'
     COMPLETE = 'complete'
@@ -91,7 +92,7 @@ class OpenStackDeleteStateMachine(statemachine.StateMachine):
                     self.adapter._deleteFloatingIp(fip)
                     self.state = self.FLOATING_IP_DELETING
             if not self.floating_ips:
-                self.state = self.SERVER_DELETE
+                self.state = self.SERVER_DELETE_SUBMIT
 
         if self.state == self.FLOATING_IP_DELETING:
             fips = []
@@ -105,11 +106,17 @@ class OpenStackDeleteStateMachine(statemachine.StateMachine):
             if self.floating_ips:
                 return
             else:
-                self.state = self.SERVER_DELETE
+                self.state = self.SERVER_DELETE_SUBMIT
+
+        if self.state == self.SERVER_DELETE_SUBMIT:
+            self.delete_future = self.adapter._submitApi(
+                self.adapter._deleteServer,
+                self.external_id)
+            self.state = self.SERVER_DELETE
 
         if self.state == self.SERVER_DELETE:
-            self.adapter._deleteServer(self.external_id)
-            self.state = self.SERVER_DELETING
+            if self.adapter._completeApi(self.delete_future):
+                self.state = self.SERVER_DELETING
 
         if self.state == self.SERVER_DELETING:
             self.server = self.adapter._refreshServerDelete(self.server)
@@ -363,7 +370,9 @@ class OpenStackAdapter(statemachine.Adapter):
             f"nodepool.OpenStackAdapter.{provider_config.name}")
         self.provider = provider_config
 
-        workers = 8
+        # The default http connection pool size is 10; match it for
+        # efficiency.
+        workers = 10
         self.log.info("Create executor with max workers=%s", workers)
         self.api_executor = ThreadPoolExecutor(
             thread_name_prefix=f'openstack-api-{provider_config.name}',
@@ -733,6 +742,7 @@ class OpenStackAdapter(statemachine.Adapter):
     def _deleteServer(self, external_id):
         with Timer(self.log, 'API call delete_server'):
             self._client.delete_server(external_id)
+            return True
 
     def _getFlavorFromServer(self, server):
         # In earlier versions of nova or the sdk, flavor has just an id.
