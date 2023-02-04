@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a288a859_20031c08",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-02-04T15:32:01Z",
+      "side": 1,
+      "message": "Yep",
+      "parentUuid": "60d3f411_175f450d",
+      "revId": "80d83da73fb3d7980445edb8e187800fb3bd719b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aaeba982_b0d7bf14",
