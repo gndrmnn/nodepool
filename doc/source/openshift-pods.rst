@@ -123,6 +123,15 @@ Selecting the openshift pods driver adds the following options to the
                    image-pull-secrets:
                      - name: registry-secret
 
+         .. attr:: labels
+            :type: dict
+
+            A dictionary of additional values to be added to the
+            namespace or pod metadata.  The value of this field is
+            added to the `metadata.labels` field in OpenShift.  Note
+            that this field contains arbitrary key/value pairs and is
+            unrelated to the concept of labels in Nodepool.
+
          .. attr:: cpu
             :type: int
 
@@ -182,8 +191,27 @@ Selecting the openshift pods driver adds the following options to the
             A map of key-value pairs to ensure the OpenShift scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: scheduler-name
+            :type: str
+
+            Sets the `schedulerName` field on the container.  Normally
+            left unset for the OpenShift default.
+
          .. attr:: privileged
             :type: bool
 
             Sets the `securityContext.privileged` flag on the
             container.  Normally left unset for the OpenShift default.
+
+         .. attr:: volumes
+            :type: list
+
+            Sets the `volumes` field on the pod.  If supplied, this
+            should be a list of OpenShift Pod Volume definitions.
+
+         .. attr:: volume-mounts
+            :type: list
+
+            Sets the `volumeMounts` flag on the container.  If
+            supplied, this should be a list of OpenShift Container
+            VolumeMount definitions.

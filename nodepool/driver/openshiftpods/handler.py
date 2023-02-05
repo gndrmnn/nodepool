@@ -25,7 +25,8 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
         self.log.debug("Creating resource")
         pod_name = "%s-%s" % (self.label.name, self.node.id)
         project = self.handler.pool.name
-        self.handler.manager.createPod(project, pod_name, self.label)
+        self.handler.manager.createPod(self.node, self.handler.pool.name,
+                                       project, pod_name, self.label)
         self.node.external_id = "%s-%s" % (project, pod_name)
         self.node.interface_ip = pod_name
         self.zk.storeNode(self.node)
