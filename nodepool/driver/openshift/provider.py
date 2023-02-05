@@ -125,14 +125,26 @@ class OpenshiftProvider(Provider, QuotaSupport):
                 break
             time.sleep(1)
 
-    def createProject(self, project):
+    def createProject(self, node, pool, project, label):
         self.log.debug("%s: creating project" % project)
         # Create the project
+
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
+
         proj_body = {
             'apiVersion': 'project.openshift.io/v1',
             'kind': 'ProjectRequest',
             'metadata': {
                 'name': project,
+                'labels': k8s_labels,
             }
         }
         projects = self.os_client.resources.get(
@@ -211,7 +223,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
         self.log.info("%s: project created" % project)
         return resource
 
-    def createPod(self, project, pod_name, label):
+    def createPod(self, node, pool, project, pod_name, label):
         self.log.debug("%s: creating pod in project %s" % (pod_name, project))
         container_body = {
             'name': label.name,
@@ -239,15 +251,37 @@ class OpenshiftProvider(Provider, QuotaSupport):
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
 
+        if label.scheduler_name:
+            spec_body['schedulerName'] = label.scheduler_name
+
+        if label.volumes:
+            spec_body['volumes'] = label.volumes
+
+        if label.volume_mounts:
+            container_body['volumeMounts'] = label.volume_mounts
+
         if label.privileged is not None:
             container_body['securityContext'] = {
                 'privileged': label.privileged,
             }
 
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
-            'metadata': {'name': pod_name},
+            'metadata': {
+                'name': label.name,
+                'labels': k8s_labels,
+            },
             'spec': spec_body,
             'restartPolicy': 'Never',
         }
