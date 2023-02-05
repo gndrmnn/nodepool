@@ -155,23 +155,30 @@ class KubernetesProvider(Provider, QuotaSupport):
                 break
             time.sleep(1)
 
-    def createNamespace(self, node, pool, restricted_access=False):
+    def createNamespace(self, node, pool, label, restricted_access=False):
         name = node.id
         namespace = "%s-%s" % (pool, name)
         user = "zuul-worker"
 
         self.log.debug("%s: creating namespace" % namespace)
+
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
+
         # Create the namespace
         ns_body = {
             'apiVersion': 'v1',
             'kind': 'Namespace',
             'metadata': {
                 'name': namespace,
-                'labels': {
-                    'nodepool_node_id': node.id,
-                    'nodepool_provider_name': self.provider.name,
-                    'nodepool_pool_name': pool,
-                }
+                'labels': k8s_labels,
             }
         }
         proj = self.k8s_client.create_namespace(ns_body)
@@ -330,28 +337,42 @@ class KubernetesProvider(Provider, QuotaSupport):
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
 
+        if label.scheduler_name:
+            spec_body['schedulerName'] = label.scheduler_name
+
+        if label.volumes:
+            spec_body['volumes'] = label.volumes
+
+        if label.volume_mounts:
+            container_body['volumeMounts'] = label.volume_mounts
+
         if label.privileged is not None:
             container_body['securityContext'] = {
                 'privileged': label.privileged,
             }
+
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
 
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
             'metadata': {
                 'name': label.name,
-                'labels': {
-                    'nodepool_node_id': node.id,
-                    'nodepool_provider_name': self.provider.name,
-                    'nodepool_pool_name': pool,
-                    'nodepool_node_label': label.name,
-                }
+                'labels': k8s_labels,
             },
             'spec': spec_body,
             'restartPolicy': 'Never',
         }
 
-        resource = self.createNamespace(node, pool, restricted_access=True)
+        resource = self.createNamespace(node, pool, label, restricted_access=True)
         namespace = resource['namespace']
 
         self.k8s_client.create_namespaced_pod(namespace, pod_body)
