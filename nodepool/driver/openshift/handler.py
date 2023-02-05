@@ -31,12 +31,14 @@ class OpenshiftLauncher(NodeLauncher):
     def _launchLabel(self):
         self.log.debug("Creating resource")
         project = "%s-%s" % (self.handler.pool.name, self.node.id)
-        self.node.external_id = self.handler.manager.createProject(project)
+        self.node.external_id = self.handler.manager.createProject(
+            self.node, self.handler.pool.name, project, self.label)
         self.zk.storeNode(self.node)
 
         resource = self.handler.manager.prepareProject(project)
         if self.label.type == "pod":
             self.handler.manager.createPod(
+                self.node, self.handler.pool.name,
                 project, self.label.name, self.label)
             self.handler.manager.waitForPod(project, self.label.name)
             resource['pod'] = self.label.name

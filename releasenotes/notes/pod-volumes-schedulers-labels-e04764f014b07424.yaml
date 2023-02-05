@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added support for specifying the scheduler name, additional metadata, and volume mounts in Kubernetes and OpenShift drivers.

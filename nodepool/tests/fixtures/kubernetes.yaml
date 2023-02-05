@@ -14,6 +14,7 @@ tenant-resource-limits:
 
 labels:
   - name: pod-fedora
+  - name: pod-extra
   - name: kubernetes-namespace
 
 providers:
@@ -31,3 +32,19 @@ providers:
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28
+          - name: pod-extra
+            type: pod
+            image: docker.io/fedora:28
+            labels:
+              environment: qa
+            privileged: true
+            node-selector:
+              storageType: ssd
+            scheduler-name: myscheduler
+            volumes:
+              - name: my-csi-inline-vol
+                csi:
+                  driver: inline.storage.kubernetes.io
+            volume-mounts:
+              - name: my-csi-inline-vol
+                mountPath: /data

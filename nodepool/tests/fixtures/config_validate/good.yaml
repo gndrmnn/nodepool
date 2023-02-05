@@ -158,6 +158,16 @@ providers:
             node-selector:
               storageType: ssd
             privileged: true
+            volumes:
+              - name: my-csi-inline-vol
+                csi:
+                  driver: inline.storage.kubernetes.io
+            volume-mounts:
+              - mountPath: "/data"
+                name: my-csi-inline-vol
+            scheduler-name: niftyScheduler
+            labels:
+              environment: qa
 
   - name: openshift
     driver: openshift
@@ -181,6 +191,16 @@ providers:
             node-selector:
               storageType: ssd
             privileged: true
+            volumes:
+              - name: my-csi-inline-vol
+                csi:
+                  driver: inline.storage.kubernetes.io
+            volume-mounts:
+              - mountPath: "/data"
+                name: my-csi-inline-vol
+            scheduler-name: niftyScheduler
+            labels:
+              environment: qa
 
   - name: ec2-us-east-2
     driver: aws
