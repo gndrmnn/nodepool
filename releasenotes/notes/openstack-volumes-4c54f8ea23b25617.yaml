@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The OpenStack driver now supports volume quota.  It will
+    automatically register the limits from the cloud and ensure that
+    labels that utilize boot-from-volume stay under the limit.  Limits
+    can also be specified at the pool and tenant level in Nodepool's
+    configuration.

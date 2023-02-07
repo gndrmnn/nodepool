@@ -460,6 +460,22 @@ Selecting the OpenStack driver adds the following options to the
         the amount of ram allocated by nodepool. If not defined
         nodepool can use as much ram as the tenant allows.
 
+     .. attr:: max-volumes
+        :type: int
+
+        Maximum number of volumes usable from this pool. This can be
+        used to limit the number of volumes allocated by nodepool.  If
+        not defined, nodepool can use as many volumes as the tenant
+        allows.
+
+     .. attr:: max-volume-gb
+        :type: int
+
+        Maximum total size in gigabytes of volumes usable from this
+        pool. This can be used to limit the volume storage allocated
+        by nodepool.  If not defined, nodepool can use as much space
+        as the tenant allows.
+
      .. attr:: ignore-provider-quota
         :type: bool
         :default: False
