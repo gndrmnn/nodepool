@@ -588,4 +588,18 @@ Options
       :default: infinity
       :type: int
 
-      The maximum number of main memory (RAM) a tenant can allocate.
+      The maximum amount of main memory (RAM) a tenant can allocate.
+
+   .. attr:: max-volumes
+      :default: infinity
+      :type: int
+
+      The maximum number of volumes a tenant can allocate.  Currently
+      only used by the OpenStack driver.
+
+   .. attr:: max-volume-gb
+      :default: infinity
+      :type: int
+
+      The maximum total size in gigabytes of volumes a tenant can
+      allocate.  Currently only used by the OpenStack driver.

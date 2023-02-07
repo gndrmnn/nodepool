@@ -179,7 +179,9 @@ class TestLauncher(tests.DBTestCase):
                                        config,
                                        max_cores=100,
                                        max_instances=20,
-                                       max_ram=1000000):
+                                       max_ram=1000000,
+                                       max_volumes=100,
+                                       max_volume_gb=1000000):
         '''
         Successful node launch should have unlocked nodes in READY state
         and assigned to the request. This should be run with a quota that
@@ -189,9 +191,17 @@ class TestLauncher(tests.DBTestCase):
         # patch the cloud with requested quota
         def fake_get_quota():
             return (max_cores, max_instances, max_ram)
+
+        def fake_get_volume_quota():
+            return (max_volumes, max_volume_gb)
+
         self.useFixture(fixtures.MockPatchObject(
             fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
             fake_get_quota
+        ))
+        self.useFixture(fixtures.MockPatchObject(
+            fakeadapter.FakeAdapter.fake_cloud, '_get_volume_quota',
+            fake_get_volume_quota
         ))
 
         configfile = self.setup_config(config)
@@ -290,6 +300,14 @@ class TestLauncher(tests.DBTestCase):
         self._test_node_assignment_at_quota(
             config='node_quota_pool_ram.yaml')
 
+    def test_node_assignment_at_pool_quota_volumes(self):
+        self._test_node_assignment_at_quota(
+            config='node_quota_pool_volumes.yaml')
+
+    def test_node_assignment_at_pool_quota_volume_gb(self):
+        self._test_node_assignment_at_quota(
+            config='node_quota_pool_volume_gb.yaml')
+
     def _test_node_assignment_at_tenant_quota(self, config):
         configfile = self.setup_config(config)
         self.useBuilder(configfile)
@@ -386,6 +404,18 @@ class TestLauncher(tests.DBTestCase):
         self.assertReportedStat('nodepool.tenant_limits.tenant-1.ram',
                                 value='16384', kind='g')
 
+    def test_node_assignment_at_tenant_quota_volumes(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_volumes.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.volumes',
+                                value='2', kind='g')
+
+    def test_node_assignment_at_tenant_quota_volume_gb(self):
+        self._test_node_assignment_at_tenant_quota(
+            'node_quota_tenant_volume_gb.yaml')
+        self.assertReportedStat('nodepool.tenant_limits.tenant-1.volume-gb',
+                                value='20', kind='g')
+
     def test_node_assignment_at_tenant_quota_min_ready(self):
         self._test_node_assignment_at_tenant_quota(
             'node_quota_tenant_min_ready.yaml')
@@ -411,6 +441,16 @@ class TestLauncher(tests.DBTestCase):
                                             max_cores=math.inf,
                                             max_instances=math.inf,
                                             max_ram=2 * 8192)
+
+    def test_node_assignment_at_cloud_volumes_quota(self):
+        self._test_node_assignment_at_quota(
+            config='node_quota_cloud_volumes.yaml',
+            max_volumes=2)
+
+    def test_node_assignment_at_cloud_volume_gb_quota(self):
+        self._test_node_assignment_at_quota(
+            config='node_quota_cloud_volumes.yaml',
+            max_volume_gb=20)
 
     def test_decline_at_quota(self):
         '''test that a provider at quota continues to decline requests'''

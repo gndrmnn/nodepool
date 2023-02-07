@@ -207,24 +207,6 @@ class QuotaInformation:
             self.quota['compute'][k] = v
         self.default = default
 
-    @staticmethod
-    def construct_from_flavor(flavor):
-        return QuotaInformation(instances=1,
-                                cores=flavor.vcpus,
-                                ram=flavor.ram)
-
-    @staticmethod
-    def construct_from_limits(limits):
-        def bound_value(value):
-            if value == -1:
-                return math.inf
-            return value
-
-        return QuotaInformation(
-            instances=bound_value(limits.max_total_instances),
-            cores=bound_value(limits.max_total_cores),
-            ram=bound_value(limits.max_total_ram_size))
-
     def _get_default(self, value, default):
         return value if value is not None else default
 
