@@ -408,6 +408,10 @@ class StateMachineHandler(NodeRequestHandler):
             ram=getattr(self.pool, 'max_ram', None),
             default=math.inf,
         )
+        if getattr(self.pool, 'max_volumes', None):
+            args['volumes'] = self.pool.max_volumes
+        if getattr(self.pool, 'max_volume_gb', None):
+            args['volume_gb'] = self.pool.max_volume_gb
         args.update(getattr(self.pool, 'max_resources', {}))
         pool_quota = QuotaInformation(**args)
         pool_quota.subtract(needed_quota)
@@ -445,6 +449,10 @@ class StateMachineHandler(NodeRequestHandler):
             ram=getattr(self.pool, 'max_ram', None),
             default=math.inf,
         )
+        if getattr(self.pool, 'max_volumes', None):
+            args['volumes'] = self.pool.max_volumes
+        if getattr(self.pool, 'max_volume_gb', None):
+            args['volume-gb'] = self.pool.max_volume_gb
         args.update(getattr(self.pool, 'max_resources', {}))
         pool_quota = QuotaInformation(**args)
         pool_quota.subtract(
