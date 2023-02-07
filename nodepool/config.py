@@ -261,6 +261,10 @@ class Config(ConfigValue):
             limits['cores'] = resource_limit.pop('max-cores', math.inf)
             limits['instances'] = resource_limit.pop('max-servers', math.inf)
             limits['ram'] = resource_limit.pop('max-ram', math.inf)
+            if 'max-volumes' in resource_limit:
+                limits['volumes'] = resource_limit.pop('max-volumes', math.inf)
+            if 'max-volume-gb' in resource_limit:
+                limits['volume-gb'] = resource_limit.pop('max-volume-gb', math.inf)
             for k, v in resource_limit.items():
                 limits[k] = v
             self.tenant_resource_limits[tenant_name] = limits
