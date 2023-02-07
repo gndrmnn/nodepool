@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "643fa146_4341807c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2023-02-07T13:59:13Z",
+      "side": 1,
+      "message": "Is there any plan to include support for GPU resources in pods as well, similar to this patch here: https://review.opendev.org/c/zuul/nodepool/+/867971",
+      "revId": "877f939769eb0076360cffb22122651fdf58d220",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
