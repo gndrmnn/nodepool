@@ -108,8 +108,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         in order to give us time to call _removeCompletedHandlers. Otherwise
         it returns True to signal that it is finished for now.
         '''
-        self.log.debug("Starting handler assignment")
         start = time.monotonic()
+        self.log.debug("Starting handler assignment at %s epoch %s monotonic",
+                       time.time(), start)
         provider = self.getProviderConfig()
         if not provider:
             self.log.info("Missing config. Deleted provider?")
@@ -145,6 +146,13 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
         requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
         for req_count, req in enumerate(requests):
+            now = time.monotonic()
+            elapsed = now - start
+            self.log.debug("Handler assignment processing request %s/%s at "
+                           "%s epoch %s monotonic %s elapsed",
+                           req_count + 1, len(requests),
+                           time.time(), now, elapsed)
+
             if not self.running:
                 return True
 
