@@ -15,26 +15,23 @@ labels:
   - name: pod-custom-storage
 
 providers:
-  - name: kubespray
-    driver: kubernetes
+  - name: openshift
+    driver: openshift
     context: admin-cluster.local
     pools:
       - name: main
         default-label-cpu: 2
         default-label-memory: 1024
         default-label-storage: 10
-        default-label-cpu-limit: 8
-        default-label-memory-limit: 4196
-        default-label-storage-limit: 40
         labels:
           - name: pod-default
             type: pod
           - name: pod-custom-cpu
             type: pod
-            cpu-limit: 4
+            cpu: 4
           - name: pod-custom-mem
             type: pod
-            memory-limit: 2048
+            memory: 2048
           - name: pod-custom-storage
             type: pod
-            storage-limit: 20
+            storage: 20

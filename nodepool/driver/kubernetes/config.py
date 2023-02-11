@@ -54,6 +54,18 @@ class KubernetesPool(ConfigPool):
             pl.cpu = label.get('cpu', self.default_label_cpu)
             pl.memory = label.get('memory', self.default_label_memory)
             pl.storage = label.get('storage', self.default_label_storage)
+            # The limits are the first of:
+            # 1) label specific configured limit
+            # 2) default label configured limit
+            # 3) label specific configured request
+            # 4) default label configured default
+            # 5) None
+            default_cpu_limit = pool_config.get('default-label-cpu-limit', pl.cpu)
+            default_memory_limit = pool_config.get('default-label-memory-limit', pl.memory)
+            default_storage_limit = pool_config.get('default-label-storage-limit', pl.storage)
+            pl.cpu_limit = label.get('cpu-limit', default_cpu_limit)
+            pl.memory_limit = label.get('memory-limit', default_memory_limit)
+            pl.storage_limit = label.get('storage-limit', default_storage_limit)
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.privileged = label.get('privileged')
@@ -105,6 +117,9 @@ class KubernetesProviderConfig(ProviderConfig):
             'cpu': int,
             'memory': int,
             'storage': int,
+            'cpu-limit': int,
+            'memory-limit': int,
+            'storage-limit': int,
             'env': [env_var],
             'node-selector': dict,
             'privileged': bool,
@@ -123,6 +138,9 @@ class KubernetesProviderConfig(ProviderConfig):
             v.Optional('default-label-cpu'): int,
             v.Optional('default-label-memory'): int,
             v.Optional('default-label-storage'): int,
+            v.Optional('default-label-cpu-limit'): int,
+            v.Optional('default-label-memory-limit'): int,
+            v.Optional('default-label-storage-limit'): int,
         })
 
         provider = {
