@@ -38,6 +38,9 @@ class OpenshiftPool(ConfigPool):
     def load(self, pool_config, full_config):
         super().load(pool_config)
         self.name = pool_config['name']
+        self.default_label_cpu = pool_config.get('default-label-cpu')
+        self.default_label_memory = pool_config.get('default-label-memory')
+        self.default_label_storage = pool_config.get('default-label-storage')
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = OpenshiftLabel()
@@ -46,8 +49,27 @@ class OpenshiftPool(ConfigPool):
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.image_pull_secrets = label.get('image-pull-secrets', [])
-            pl.cpu = label.get('cpu')
-            pl.memory = label.get('memory')
+            pl.cpu = label.get('cpu', self.default_label_cpu)
+            pl.memory = label.get('memory', self.default_label_memory)
+            pl.storage = label.get('storage', self.default_label_storage)
+            # The limits are the first of:
+            # 1) label specific configured limit
+            # 2) default label configured limit
+            # 3) label specific configured request
+            # 4) default label configured default
+            # 5) None
+            default_cpu_limit = pool_config.get(
+                'default-label-cpu-limit', pl.cpu)
+            default_memory_limit = pool_config.get(
+                'default-label-memory-limit', pl.memory)
+            default_storage_limit = pool_config.get(
+                'default-label-storage-limit', pl.storage)
+            pl.cpu_limit = label.get(
+                'cpu-limit', default_cpu_limit)
+            pl.memory_limit = label.get(
+                'memory-limit', default_memory_limit)
+            pl.storage_limit = label.get(
+                'storage-limit', default_storage_limit)
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
@@ -100,6 +122,10 @@ class OpenshiftProviderConfig(ProviderConfig):
             'image-pull-secrets': list,
             'cpu': int,
             'memory': int,
+            'storage': int,
+            'cpu-limit': int,
+            'memory-limit': int,
+            'storage-limit': int,
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
@@ -115,6 +141,12 @@ class OpenshiftProviderConfig(ProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
+            v.Optional('default-label-cpu'): int,
+            v.Optional('default-label-memory'): int,
+            v.Optional('default-label-storage'): int,
+            v.Optional('default-label-cpu-limit'): int,
+            v.Optional('default-label-memory-limit'): int,
+            v.Optional('default-label-storage-limit'): int,
         })
 
         schema = ProviderConfig.getCommonSchemaDict()

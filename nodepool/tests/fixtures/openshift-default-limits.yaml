@@ -15,8 +15,8 @@ labels:
   - name: pod-custom-storage
 
 providers:
-  - name: kubespray
-    driver: kubernetes
+  - name: openshift
+    driver: openshift
     context: admin-cluster.local
     pools:
       - name: main

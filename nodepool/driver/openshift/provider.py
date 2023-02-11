@@ -233,15 +233,28 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'args': ["while true; do sleep 30; done;"],
             'env': label.env,
         }
-        if label.cpu or label.memory:
-            container_body['resources'] = {}
-            for rtype in ('requests', 'limits'):
-                rbody = {}
-                if label.cpu:
-                    rbody['cpu'] = int(label.cpu)
-                if label.memory:
-                    rbody['memory'] = '%dMi' % int(label.memory)
-                container_body['resources'][rtype] = rbody
+
+        requests = {}
+        limits = {}
+        if label.cpu:
+            requests['cpu'] = int(label.cpu)
+        if label.memory:
+            requests['memory'] = '%dMi' % int(label.memory)
+        if label.storage:
+            requests['ephemeral-storage'] = '%dM' % int(label.storage)
+        if label.cpu_limit:
+            limits['cpu'] = int(label.cpu_limit)
+        if label.memory_limit:
+            limits['memory'] = '%dMi' % int(label.memory_limit)
+        if label.storage_limit:
+            limits['ephemeral-storage'] = '%dM' % int(label.storage_limit)
+        resources = {}
+        if requests:
+            resources['requests'] = requests
+        if limits:
+            resources['limits'] = limits
+        if resources:
+            container_body['resources'] = resources
 
         spec_body = {
             'containers': [container_body],
@@ -313,8 +326,15 @@ class OpenshiftProvider(Provider, QuotaSupport):
             default=math.inf)
 
     def quotaNeededByLabel(self, ntype, pool):
-        # TODO: return real quota information about a label
-        return QuotaInformation(cores=1, instances=1, ram=1, default=1)
+        provider_label = pool.labels[ntype]
+        resources = {}
+        if provider_label.cpu:
+            resources["cores"] = provider_label.cpu
+        if provider_label.memory:
+            resources["ram"] = provider_label.memory
+        if provider_label.storage:
+            resources["ephemeral-storage"] = provider_label.storage
+        return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota

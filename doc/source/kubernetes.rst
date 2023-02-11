@@ -144,6 +144,33 @@ Selecting the kubernetes driver adds the following options to the
          :attr:`providers.[kubernetes].pools.labels.storage` for all labels of
          this pool that do not set their own value.
 
+      .. attr:: default-label-cpu-limit
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies specifies a default value for
+         :attr:`providers.[kubernetes].pools.labels.cpu-limit` for all labels of
+         this pool that do not set their own value.
+
+      .. attr:: default-label-memory-limit
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies a default value in MiB for
+         :attr:`providers.[kubernetes].pools.labels.memory-limit` for all labels of
+         this pool that do not set their own value.
+
+      .. attr:: default-label-storage-limit
+         :type: int
+
+         Only used by the
+         :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+         specifies a default value in MB for
+         :attr:`providers.[kubernetes].pools.labels.storage-limit` for all labels of
+         this pool that do not set their own value.
+
       .. attr:: labels
          :type: list
 
@@ -226,22 +253,50 @@ Selecting the kubernetes driver adds the following options to the
             :type: int
 
             Only used by the
-            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-            specifies the number of cpu to request for the pod.
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the number of cpu to request for the
+            pod.  If no limit is specified, this will also be used as
+            the limit.
 
          .. attr:: memory
             :type: int
 
             Only used by the
-            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-            specifies the amount of memory in MiB to request for the pod.
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the amount of memory in MiB to
+            request for the pod.  If no limit is specified, this will
+            also be used as the limit.
 
          .. attr:: storage
             :type: int
 
             Only used by the
-            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
-            specifies the amount of ephemeral-storage in MB to request for the pod.
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the amount of ephemeral-storage in
+            MB to request for the pod.  If no limit is specified, this
+            will also be used as the limit.
+
+         .. attr:: cpu-limit
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the cpu limit for the pod.
+
+         .. attr:: memory-limit
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the memory limit in MiB for the pod.
+
+         .. attr:: storage-limit
+            :type: int
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type; specifies the ephemeral-storage limit in
+            MB for the pod.
 
          .. attr:: env
             :type: list

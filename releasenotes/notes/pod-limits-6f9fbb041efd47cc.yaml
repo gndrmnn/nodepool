@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added support for specifying Kubernetes and OpenShift pod resource
+    limits separately from requests.
