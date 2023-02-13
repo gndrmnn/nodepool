@@ -17,6 +17,7 @@ FROM docker.io/opendevorg/python-builder:3.11-bullseye as builder
 # ============================================================================
 
 ARG ZUUL_SIBLINGS=""
+ARG PBR_VERSION=
 COPY . /tmp/src
 RUN assemble
 
