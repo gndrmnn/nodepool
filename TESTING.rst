@@ -2,7 +2,7 @@
 Testing Nodepool
 ================
 
-Below you can find the instructions, how to run the tests for Nodepool in Ubuntu 22.04 and Python 3.10.
+Below you can find the instructions, how to run the tests for Nodepool in Debian Bullseye.
 
 
 -------------
@@ -22,7 +22,7 @@ Navigate to the project's root directory and execute the following command to bu
 
   docker build . -f tools/Dockerfile_Testing -t nodepool-testing-container
 
-To run the Nodepool tests, a running Zookeeper is required. Zookeeper also needs to be configured for TLS and a certificate authority set up to handle socket authentication. Because of these complexities, it's recommended to use the helper script to set up these dependencies and configure the Noodepool environment::
+To run the Nodepool tests, a running Zookeeper is required. Zookeeper also needs to be configured for TLS and a certificate authority set up to handle socket authentication. Because of these complexities, it's recommended to use the helper script to set up these dependencies and to configure and run the Noodepool environment::
 
   ROOTCMD=sudo tools/test-setup-docker.sh
 
@@ -30,25 +30,25 @@ Now access the bash in `nodepool-testing-container` by executing::
 
   docker-compose -f tools/docker-compose.yaml exec nodepool-testing-container bash
 
-
+q
 -------------
 Run The Tests
 -------------
 
-In the project's root directory, execute::
+As the project's root directory is mounted as `WORKDIR` in the `nodepool-testing-container`, we can simply execute the below command to run all the tests::
 
-  tox
+  nox
 
 Note: completing this command may take a long time (depends on system resources)
 also, you might not see any output until tox is complete.
 
-Information about tox can be found here: http://testrun.org/tox/latest/
+Information about nox can be found here: https://nox.thea.codes/en/stable/
 
 
 Run The Tests in One Environment
 --------------------------------
 
-Tox will run your entire test suite in the environments specified in the project tox.ini::
+Nox will run your entire test suite in the environments specified in the project tox.ini::
 
   [tox]
 
@@ -57,7 +57,7 @@ Tox will run your entire test suite in the environments specified in the project
 To run the test suite in just one of the environments in envlist execute::
 
   tox -e <env>
-so for example, *run the test suite in py35*::
+so for example, *run the test suite in Python 3.5*::
 
   tox -e py35
 
