@@ -14,11 +14,10 @@
 
 import json
 
-import pbr.version
+from importlib import metadata as importlib_metadata
 import pkg_resources
 
-version_info = pbr.version.VersionInfo('nodepool')
-release_string = version_info.release_string()
+release_string = importlib_metadata.distribution('nodepool').version
 
 is_release = None
 git_version = None

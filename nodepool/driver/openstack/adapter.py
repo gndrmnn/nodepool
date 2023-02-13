@@ -504,7 +504,7 @@ class OpenStackAdapter(statemachine.Adapter):
             use_direct_get=False,
             rate_limit=rate_limit,
             app_name='nodepool',
-            app_version=version.version_info.version_string()
+            app_version=version.release_string
         )
 
     def _submitApi(self, api, *args, **kw):

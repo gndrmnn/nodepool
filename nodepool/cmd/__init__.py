@@ -26,7 +26,7 @@ import sys
 import threading
 import traceback
 
-from nodepool.version import version_info as npd_version_info
+from nodepool.version import release_string
 from nodepool import logconfig
 
 yappi = extras.try_import('yappi')
@@ -130,7 +130,7 @@ class NodepoolApp(object):
         return os.path.abspath(os.path.expanduser(path))
 
     def _get_version(self):
-        return "Nodepool version: %s" % npd_version_info.release_string()
+        return "Nodepool version: %s" % release_string
 
     def create_parser(self):
         parser = argparse.ArgumentParser(
