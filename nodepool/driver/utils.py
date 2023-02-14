@@ -237,6 +237,8 @@ class QuotaInformation:
             for resource in self.quota[category].keys():
                 second_value = other.quota.get(category, {}).get(
                     resource, other.default)
+                print(f"({type(self.quota[category][resource])}){self.quota[category][resource]=}")
+                print(f"({type(second_value)}) {second_value=}")
                 if add:
                     self.quota[category][resource] += second_value
                 else:
