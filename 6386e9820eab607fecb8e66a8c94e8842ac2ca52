@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eecc9d8c_e9245097",
+        "filename": "tools/Dockerfile_Testing",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-02-14T13:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1475d528_367f81f7",
+      "revId": "6386e9820eab607fecb8e66a8c94e8842ac2ca52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a36e23af_20f9ea2b",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-01-05T23:45:00Z",
       "side": 1,
       "message": "We are currently moving zuul repos from tox to nox due to the incompatibilities the tox v4 release exposed.",
+      "revId": "6386e9820eab607fecb8e66a8c94e8842ac2ca52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4046cbd_8560319a",
+        "filename": "tools/Dockerfile_Testing",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-02-14T13:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a36e23af_20f9ea2b",
       "revId": "6386e9820eab607fecb8e66a8c94e8842ac2ca52",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
