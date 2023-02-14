@@ -248,6 +248,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
             limits['memory'] = '%dMi' % int(label.memory_limit)
         if label.storage_limit:
             limits['ephemeral-storage'] = '%dM' % int(label.storage_limit)
+        if label.gpu_resource and label.gpu:
+            requests[label.gpu_resource] = label.gpu
+            limits[label.gpu_resource] = label.gpu
         resources = {}
         if requests:
             resources['requests'] = requests
