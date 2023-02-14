@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add support for requesting gpu resources
+    in kubernetes and openshift drivers.

@@ -259,6 +259,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         req.node_types.append('pod-custom-cpu')
         req.node_types.append('pod-custom-mem')
         req.node_types.append('pod-custom-storage')
+        req.node_types.append('pod-custom-gpu')
         self.zk.storeNodeRequest(req)
 
         self.log.debug("Waiting for request %s", req.id)
@@ -270,6 +271,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         node_cust_cpu = self.zk.getNode(req.nodes[1])
         node_cust_mem = self.zk.getNode(req.nodes[2])
         node_cust_storage = self.zk.getNode(req.nodes[3])
+        node_cust_gpu = self.zk.getNode(req.nodes[4])
 
         resources_default = {
             'instances': 1,
@@ -295,12 +297,20 @@ class TestDriverKubernetes(tests.DBTestCase):
             'ram': 1024,
             'ephemeral-storage': 20,
         }
+        resources_cust_gpu = {
+            'instances': 1,
+            'cores': 2,
+            'ram': 1024,
+            'ephemeral-storage': 10,
+            'gpu': 1
+        }
 
         self.assertDictEqual(resources_default, node_default.resources)
         self.assertDictEqual(resources_cust_cpu, node_cust_cpu.resources)
         self.assertDictEqual(resources_cust_mem, node_cust_mem.resources)
         self.assertDictEqual(resources_cust_storage,
                              node_cust_storage.resources)
+        self.assertDictEqual(resources_cust_gpu, node_cust_gpu.resources)
 
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['spec']['containers'][0]['resources'], {
@@ -355,6 +365,22 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'cpu': 2,
                 'ephemeral-storage': '20M',
                 'memory': '1024Mi'
+            },
+        })
+
+        ns, pod = self.fake_k8s_client._pod_requests[3]
+        self.assertEqual(pod['spec']['containers'][0]['resources'], {
+            'limits': {
+                'cpu': 2,
+                'ephemeral-storage': '10M',
+                'memory': '1024Mi',
+                'gpu-vendor.example/example-gpu': 1
+            },
+            'requests': {
+                'cpu': 2,
+                'ephemeral-storage': '10M',
+                'memory': '1024Mi',
+                'gpu-vendor.example/example-gpu': 1
             },
         })
 
