@@ -248,6 +248,9 @@ class OpenshiftProvider(Provider, QuotaSupport):
             limits['memory'] = '%dMi' % int(label.memory_limit)
         if label.storage_limit:
             limits['ephemeral-storage'] = '%dM' % int(label.storage_limit)
+        if label.gpu_resource and label.gpu:
+            requests[label.gpu_resource] = '%.2f' % label.gpu
+            limits[label.gpu_resource] = '%.2f' % label.gpu
         resources = {}
         if requests:
             resources['requests'] = requests
@@ -334,6 +337,8 @@ class OpenshiftProvider(Provider, QuotaSupport):
             resources["ram"] = provider_label.memory
         if provider_label.storage:
             resources["ephemeral-storage"] = provider_label.storage
+        if provider_label.gpu and provider_label.gpu_resource:
+            resources[provider_label.gpu_resource] = provider_label.gpu
         return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):
