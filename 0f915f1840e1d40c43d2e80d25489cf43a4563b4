@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec2e56bf_1c5a6f66",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-02-14T14:14:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "62401f83_d17ac45d",
+      "revId": "0f915f1840e1d40c43d2e80d25489cf43a4563b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "adb511b6_8d9404c8",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-12-22T14:23:45Z",
       "side": 1,
       "message": "I think this must be `label.use_spot` instead",
+      "revId": "0f915f1840e1d40c43d2e80d25489cf43a4563b4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd5d23f3_77e5d98d",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-02-14T14:14:51Z",
+      "side": 1,
+      "message": "I think it makes more sense on the pool level, which would allow you to use Spot and On-Demand instances side-by-side. You could \"encode\" Spot usage into the pool name and let the user decide, whether they want to use Spot or On-Demand. I hope this make sense.",
+      "parentUuid": "adb511b6_8d9404c8",
       "revId": "0f915f1840e1d40c43d2e80d25489cf43a4563b4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
