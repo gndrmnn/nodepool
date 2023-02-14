@@ -292,6 +292,21 @@ Selecting the openshift pods driver adds the following options to the
 
             Specifies the ephemeral-storage limit in MB for the pod.
 
+         .. attr:: gpu
+            :type: float
+
+            Specifies the amount of gpu allocated to the pod.
+            This will be used to set both requests and limits to the same
+            value, based on how kubernetes assigns gpu resources:
+            https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/.
+
+         .. attr:: gpu-resource
+            :type: str
+
+            Specifies the custom schedulable resource
+            associated with the installed gpu that is available
+            in the cluster.
+
          .. attr:: python-path
             :type: str
             :default: auto
