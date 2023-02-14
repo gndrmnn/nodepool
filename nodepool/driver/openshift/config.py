@@ -83,6 +83,8 @@ class OpenshiftPool(ConfigPool):
                 'memory-limit', default_memory_limit)
             pl.storage_limit = label.get(
                 'storage-limit', default_storage_limit)
+            pl.gpu = label.get('gpu')
+            pl.gpu_resource = label.get('gpu-resource')
             pl.python_path = label.get('python-path', 'auto')
             pl.shell_type = label.get('shell-type')
             pl.env = label.get('env', [])
@@ -149,6 +151,8 @@ class OpenshiftProviderConfig(ProviderConfig):
             'cpu-limit': int,
             'memory-limit': int,
             'storage-limit': int,
+            'gpu': float,
+            'gpu-resource': str,
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
