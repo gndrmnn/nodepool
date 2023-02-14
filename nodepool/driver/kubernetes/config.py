@@ -72,6 +72,8 @@ class KubernetesPool(ConfigPool):
                 'memory-limit', default_memory_limit)
             pl.storage_limit = label.get(
                 'storage-limit', default_storage_limit)
+            pl.gpu = label.get('gpu')
+            pl.gpu_resource = label.get('gpu-resource')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.privileged = label.get('privileged')
@@ -126,6 +128,8 @@ class KubernetesProviderConfig(ProviderConfig):
             'cpu-limit': int,
             'memory-limit': int,
             'storage-limit': int,
+            'gpu': str,
+            'gpu-resource': str,
             'env': [env_var],
             'node-selector': dict,
             'privileged': bool,

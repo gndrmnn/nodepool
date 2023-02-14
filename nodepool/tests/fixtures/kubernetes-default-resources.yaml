@@ -35,3 +35,7 @@ providers:
           - name: pod-custom-storage
             type: pod
             storage: 20
+          - name: pod-custom-gpu
+            type: pod
+            gpu-resource: gpu-vendor.example/example-gpu
+            gpu: '1'
