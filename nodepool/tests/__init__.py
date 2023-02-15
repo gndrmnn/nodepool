@@ -289,7 +289,9 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("openstack-api"):
                     continue
-                if t.name.startswith("keyscan"):
+                if t.name.startswith("keyscan-"):
+                    continue
+                if t.name.startswith("start-"):
                     continue
                 if t.name not in whitelist:
                     done = False
