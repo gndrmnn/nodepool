@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b9caeca_86023a71",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2023-02-15T15:25:29Z",
+      "side": 1,
+      "message": "Wouldn’t be `_importImageAsSnapshot` a better name? The upload to S3 is already done before calling this method.",
+      "range": {
+        "startLine": 418,
+        "startChar": 8,
+        "endLine": 418,
+        "endChar": 28
+      },
+      "revId": "fdc093a8de3cc6deb051be6a7aa3eede28eff80a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93ce8792_b8fca914",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2023-02-15T15:25:29Z",
+      "side": 1,
+      "message": "Wouldn’t be `_importImageAsImage` a better name? The upload to S3 is already done before calling this method.",
+      "range": {
+        "startLine": 511,
+        "startChar": 8,
+        "endLine": 511,
+        "endChar": 25
+      },
+      "revId": "fdc093a8de3cc6deb051be6a7aa3eede28eff80a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
