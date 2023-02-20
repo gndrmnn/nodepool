@@ -24,6 +24,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e23fd6af_48bd8ef6",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-02-20T22:33:36Z",
+      "side": 1,
+      "message": "They\u0027re named this way because they are essentially alternate implementations of the main body of the uploadImage method.  So read it as \"uploadImage: snapshot implementation\" or \"uploadImage: image implementation\".",
+      "parentUuid": "9b9caeca_86023a71",
+      "revId": "fdc093a8de3cc6deb051be6a7aa3eede28eff80a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93ce8792_b8fca914",
@@ -43,6 +61,24 @@
         "endLine": 511,
         "endChar": 25
       },
+      "revId": "fdc093a8de3cc6deb051be6a7aa3eede28eff80a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e468ca4_981a7d41",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-02-20T22:33:36Z",
+      "side": 1,
+      "message": "See other comment.",
+      "parentUuid": "93ce8792_b8fca914",
       "revId": "fdc093a8de3cc6deb051be6a7aa3eede28eff80a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
