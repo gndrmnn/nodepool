@@ -60,6 +60,8 @@ class FakeAwsAdapter(AwsAdapter):
         self.ec2.create_instances = _fake_create_instances
         self.ec2_client.import_snapshot = \
             self.__testcase.fake_aws.import_snapshot
+        self.ec2_client.import_image = \
+            self.__testcase.fake_aws.import_image
         self.ec2_client.get_paginator = \
             self.__testcase.fake_aws.get_paginator
 
@@ -594,8 +596,50 @@ class TestDriverAws(tests.DBTestCase):
         response = instance.describe_attribute(Attribute='ebsOptimized')
         self.assertTrue(response['EbsOptimized']['Value'])
 
-    def test_aws_diskimage(self):
+    def test_aws_diskimage_snapshot(self):
         configfile = self.setup_config('aws/diskimage.yaml')
+
+        self.useBuilder(configfile)
+
+        image = self.waitForImage('ec2-us-west-2', 'fake-image')
+        self.assertEqual(image.username, 'zuul')
+
+        ec2_image = self.ec2.Image(image.external_id)
+        self.assertEqual(ec2_image.state, 'available')
+        self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
+                        in ec2_image.tags)
+        self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
+                        in ec2_image.tags)
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('diskimage')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(
+            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Iops'], 2000)
+        self.assertEqual(
+            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Throughput'], 200)
+
+    def test_aws_diskimage_image(self):
+        configfile = self.setup_config('aws/diskimage-import-image.yaml')
 
         self.useBuilder(configfile)
 
@@ -645,17 +689,19 @@ class TestDriverAws(tests.DBTestCase):
         self.waitForBuildDeletion('fake-image', '0000000001')
 
     def test_aws_resource_cleanup(self):
+        # This tests everything except the image imports
         # Start by setting up leaked resources
         instance_tags = [
             {'Key': 'nodepool_node_id', 'Value': '0000000042'},
             {'Key': 'nodepool_pool_name', 'Value': 'main'},
             {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
         ]
-        image_tags = [
-            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
-            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
-            {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
-        ]
+
+        s3_tags = {
+            'nodepool_build_id': '0000000042',
+            'nodepool_upload_id': '0000000042',
+            'nodepool_provider_name': 'ec2-us-west-2',
+        }
 
         reservation = self.ec2_client.run_instances(
             ImageId="ami-12c6146b", MinCount=1, MaxCount=1,
@@ -675,6 +721,60 @@ class TestDriverAws(tests.DBTestCase):
             }]
         )
         instance_id = reservation['Instances'][0]['InstanceId']
+
+        bucket = self.s3.Bucket('nodepool')
+        bucket.put_object(Body=b'hi',
+                          Key='testimage',
+                          Tagging=urllib.parse.urlencode(s3_tags))
+        obj = self.s3.Object('nodepool', 'testimage')
+        # This effectively asserts the object exists
+        self.s3_client.get_object_tagging(
+            Bucket=obj.bucket_name, Key=obj.key)
+
+        instance = self.ec2.Instance(instance_id)
+        self.assertEqual(instance.state['Name'], 'running')
+
+        volume_id = list(instance.volumes.all())[0].id
+        volume = self.ec2.Volume(volume_id)
+        self.assertEqual(volume.state, 'in-use')
+
+        # Now that the leaked resources exist, start the provider and
+        # wait for it to clean them.
+
+        configfile = self.setup_config('aws/diskimage.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        for _ in iterate_timeout(30, Exception, 'instance deletion'):
+            instance = self.ec2.Instance(instance_id)
+            if instance.state['Name'] == 'terminated':
+                break
+
+        for _ in iterate_timeout(30, Exception, 'volume deletion'):
+            volume = self.ec2.Volume(volume_id)
+            try:
+                if volume.state == 'deleted':
+                    break
+            except botocore.exceptions.ClientError:
+                # Probably not found
+                break
+
+        for _ in iterate_timeout(30, Exception, 'object deletion'):
+            obj = self.s3.Object('nodepool', 'testimage')
+            try:
+                self.s3_client.get_object_tagging(
+                    Bucket=obj.bucket_name, Key=obj.key)
+            except self.s3_client.exceptions.NoSuchKey:
+                break
+
+    def test_aws_resource_cleanup_import_snapshot(self):
+        # This tests the import_snapshot path
+        # Start by setting up leaked resources
+        image_tags = [
+            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
+        ]
 
         task = self.fake_aws.import_snapshot(
             DiskContainer={
@@ -717,28 +817,6 @@ class TestDriverAws(tests.DBTestCase):
         # applied, so we test the automatic retagging methods in the
         # adapter.
 
-        s3_tags = {
-            'nodepool_build_id': '0000000042',
-            'nodepool_upload_id': '0000000042',
-            'nodepool_provider_name': 'ec2-us-west-2',
-        }
-
-        bucket = self.s3.Bucket('nodepool')
-        bucket.put_object(Body=b'hi',
-                          Key='testimage',
-                          Tagging=urllib.parse.urlencode(s3_tags))
-        obj = self.s3.Object('nodepool', 'testimage')
-        # This effectively asserts the object exists
-        self.s3_client.get_object_tagging(
-            Bucket=obj.bucket_name, Key=obj.key)
-
-        instance = self.ec2.Instance(instance_id)
-        self.assertEqual(instance.state['Name'], 'running')
-
-        volume_id = list(instance.volumes.all())[0].id
-        volume = self.ec2.Volume(volume_id)
-        self.assertEqual(volume.state, 'in-use')
-
         image = self.ec2.Image(image_id)
         self.assertEqual(image.state, 'available')
 
@@ -751,20 +829,6 @@ class TestDriverAws(tests.DBTestCase):
         configfile = self.setup_config('aws/diskimage.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
-
-        for _ in iterate_timeout(30, Exception, 'instance deletion'):
-            instance = self.ec2.Instance(instance_id)
-            if instance.state['Name'] == 'terminated':
-                break
-
-        for _ in iterate_timeout(30, Exception, 'volume deletion'):
-            volume = self.ec2.Volume(volume_id)
-            try:
-                if volume.state == 'deleted':
-                    break
-            except botocore.exceptions.ClientError:
-                # Probably not found
-                break
 
         for _ in iterate_timeout(30, Exception, 'ami deletion'):
             image = self.ec2.Image(image_id)
@@ -789,10 +853,66 @@ class TestDriverAws(tests.DBTestCase):
                 # Probably not found
                 break
 
-        for _ in iterate_timeout(30, Exception, 'object deletion'):
-            obj = self.s3.Object('nodepool', 'testimage')
+    def test_aws_resource_cleanup_import_image(self):
+        # This tests the import_image path
+        # Start by setting up leaked resources
+        image_tags = [
+            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
+        ]
+
+        # The image import path:
+        task = self.fake_aws.import_image(
+            DiskContainers=[{
+                'Format': 'ova',
+                'UserBucket': {
+                    'S3Bucket': 'nodepool',
+                    'S3Key': 'testfile',
+                }
+            }],
+            TagSpecifications=[{
+                'ResourceType': 'import-image-task',
+                'Tags': image_tags,
+            }])
+        image_id, snapshot_id = self.fake_aws.finish_import_image(task)
+
+        # Note that the resulting image and snapshot do not have tags
+        # applied, so we test the automatic retagging methods in the
+        # adapter.
+
+        image = self.ec2.Image(image_id)
+        self.assertEqual(image.state, 'available')
+
+        snap = self.ec2.Snapshot(snapshot_id)
+        self.assertEqual(snap.state, 'completed')
+
+        # Now that the leaked resources exist, start the provider and
+        # wait for it to clean them.
+
+        configfile = self.setup_config('aws/diskimage.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        for _ in iterate_timeout(30, Exception, 'ami deletion'):
+            image = self.ec2.Image(image_id)
             try:
-                self.s3_client.get_object_tagging(
-                    Bucket=obj.bucket_name, Key=obj.key)
-            except self.s3_client.exceptions.NoSuchKey:
+                # If this has a value the image was not deleted
+                if image.state == 'available':
+                    # Definitely not deleted yet
+                    continue
+            except AttributeError:
+                # Per AWS API, a recently deleted image is empty and
+                # looking at the state raises an AttributeFailure; see
+                # https://github.com/boto/boto3/issues/2531.  The image
+                # was deleted, so we continue on here
+                break
+
+        for _ in iterate_timeout(30, Exception, 'snapshot deletion'):
+            snap = self.ec2.Snapshot(snapshot_id)
+            try:
+                if snap.state == 'deleted':
+                    break
+            except botocore.exceptions.ClientError:
+                # Probably not found
                 break

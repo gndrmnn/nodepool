@@ -403,13 +403,44 @@ Selecting the ``aws`` driver adds the following options to the
          :default: gp2
 
          The root `EBS volume type`_ for the image.
+         Only used with the
+         :value:`providers.[aws].diskimages.import-method.snapshot`
+         import method.
 
       .. attr:: volume-size
          :type: int
 
          The size of the root EBS volume, in GiB, for the image.  If
          omitted, the volume size reported for the imported snapshot
-         will be used.
+         will be used.  Only used with the
+         :value:`providers.[aws].diskimages.import-method.snapshot`
+         import method.
+
+      .. attr:: import-method
+         :default: snapshot
+
+         The method to use when importing the image.
+
+         .. value:: snapshot
+
+            This method uploads the image file to AWS as a snapshot
+            and then registers an AMI directly from the snapshot.
+            This is faster compared to the `image` method and may be
+            used with operating systems and versions that AWS does not
+            otherwise support.  However, it is incompatible with some
+            operating systems which require special licensing or other
+            metadata in AWS.
+
+         .. value:: image
+
+            This method uploads the image file to AWS and performs an
+            "image import" on the file.  This causes AWS to boot the
+            image in a temporary VM and then take a snapshot of that
+            VM which is then used as the basis of the AMI.  This is
+            slower compared to the `snapshot` method and may only be
+            used with operating systems and versions which AWS already
+            supports.  This may be necessary in order to use Windows
+            images.
 
       .. attr:: iops
          :type: int

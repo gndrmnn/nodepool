@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The AWS driver now supports importing images using either the
+    "image" or "snapshot" import methods.  The "snapshot" method is
+    the current behavior and remains the default and is the fastest
+    and most efficient in most circumstances.  The "image" method is
+    available for images which require certain AWS licensing metadata
+    that can only be added via that method.
