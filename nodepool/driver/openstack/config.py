@@ -110,6 +110,8 @@ class ProviderPool(ConfigPool):
         self.name = pool_config['name']
         self.max_cores = pool_config.get('max-cores', math.inf)
         self.max_ram = pool_config.get('max-ram', math.inf)
+        self.max_volumes = pool_config.get('max-volumes', math.inf)
+        self.max_volume_gb = pool_config.get('max-volume-gb', math.inf)
         self.ignore_provider_quota = pool_config.get('ignore-provider-quota',
                                                      False)
         self.azs = pool_config.get('availability-zones')
@@ -326,6 +328,8 @@ class OpenStackProviderConfig(ProviderConfig):
             'ignore-provider-quota': bool,
             'max-cores': int,
             'max-ram': int,
+            'max-volumes': int,
+            'max-volume-gb': int,
             'labels': [pool_label],
             'availability-zones': [str],
             'security-groups': [str]

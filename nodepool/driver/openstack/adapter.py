@@ -19,11 +19,13 @@
 from concurrent.futures import ThreadPoolExecutor
 import functools
 import logging
+import math
 import time
 import operator
 
 import cachetools.func
 import openstack
+from keystoneauth1.exceptions.catalog import EndpointNotFound
 
 from nodepool.driver.utils import QuotaInformation
 from nodepool.driver import statemachine
@@ -32,6 +34,36 @@ from nodepool import stats
 from nodepool import version
 
 CACHE_TTL = 10
+
+
+def quota_from_flavor(flavor, label=None, volumes=None):
+    args = dict(instances=1,
+                cores=flavor.vcpus,
+                ram=flavor.ram)
+    if label and label.boot_from_volume:
+        args['volumes'] = 1
+        args['volume-gb'] = label.volume_size
+    elif volumes:
+        args['volumes'] = len(volumes)
+        args['volume-gb'] = sum([v.size for v in volumes])
+    return QuotaInformation(**args)
+
+
+def quota_from_limits(compute, volume):
+    def bound_value(value):
+        if value == -1:
+            return math.inf
+        return value
+
+    args = dict(
+        instances=bound_value(compute.max_total_instances),
+        cores=bound_value(compute.max_total_cores),
+        ram=bound_value(compute.max_total_ram_size))
+    if volume is not None:
+        args['volumes'] = bound_value(volume['absolute']['maxTotalVolumes'])
+        args['volume-gb'] = bound_value(
+            volume['absolute']['maxTotalVolumeGigabytes'])
+    return QuotaInformation(**args)
 
 
 class OpenStackInstance(statemachine.Instance):
@@ -192,7 +224,7 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
         self.flavor = self.adapter._findFlavor(
             flavor_name=self.label.flavor_name,
             min_ram=self.label.min_ram)
-        self.quota = QuotaInformation.construct_from_flavor(self.flavor)
+        self.quota = quota_from_flavor(self.flavor, label=self.label)
         self.external_id = None
 
     def _handleServerFault(self):
@@ -406,20 +438,32 @@ class OpenStackAdapter(statemachine.Adapter):
             self._deleteServer(resource.id)
 
     def listInstances(self):
+        volumes = {}
+        for volume in self._listVolumes():
+            volumes[volume.id] = volume
         for server in self._listServers():
             if server.status.lower() == 'deleted':
                 continue
             flavor = self._getFlavorFromServer(server)
-            quota = QuotaInformation.construct_from_flavor(flavor)
+            server_volumes = []
+            for vattach in server.volumes:
+                volume = volumes.get(vattach.id)
+                if volume:
+                    server_volumes.append(volume)
+            quota = quota_from_flavor(flavor, volumes=server_volumes)
             yield OpenStackInstance(self.provider, server, quota)
 
     def getQuotaLimits(self):
-        limits = self._client.get_compute_limits()
-        return QuotaInformation.construct_from_limits(limits)
+        compute = self._client.get_compute_limits()
+        try:
+            volume = self._client.get_volume_limits()
+        except EndpointNotFound:
+            volume = None
+        return quota_from_limits(compute, volume)
 
     def getQuotaForLabel(self, label):
         flavor = self._findFlavor(label.flavor_name, label.min_ram)
-        return QuotaInformation.construct_from_flavor(flavor)
+        return quota_from_flavor(flavor, label=label)
 
     def getAZs(self):
         azs = self._listAZs()
@@ -628,6 +672,13 @@ class OpenStackAdapter(statemachine.Adapter):
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listServers(self):
         return self._client.list_servers(bare=True)
+
+    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
+    def _listVolumes(self):
+        try:
+            return self._client.list_volumes()
+        except EndpointNotFound:
+            return []
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listFloatingIps(self):

@@ -77,6 +77,10 @@ class FakeOpenStackCloud(object):
     def _get_quota():
         return 100, 20, 1000000
 
+    @staticmethod
+    def _get_volume_quota():
+        return 100, 1000000
+
     def __init__(self, images=None, networks=None):
         self.pause_creates = False
         self._image_list = images
@@ -117,10 +121,13 @@ class FakeOpenStackCloud(object):
                   device_owner=None),
         ]
         self._floating_ip_list = []
+        self._volume_list = []
 
     def _update_quota(self):
         self.max_cores, self.max_instances, self.max_ram = FakeOpenStackCloud.\
             _get_quota()
+        self.max_volumes, self.max_volume_gb = FakeOpenStackCloud.\
+            _get_volume_quota()
 
     def _get(self, name_or_id, instance_list):
         self.log.debug("Get %s in %s" % (name_or_id, repr(instance_list)))
@@ -211,6 +218,7 @@ class FakeOpenStackCloud(object):
                   over_quota=over_quota,
                   flavor=kw.get('flavor'),
                   event=threading.Event(),
+                  volumes=[],
                   _kw=kw)
         instance_list.append(s)
         t = threading.Thread(target=self._finish,
@@ -324,6 +332,18 @@ class FakeOpenStackCloud(object):
             total_instances_used=len(self._server_list),
             total_ram_used=8192 * len(self._server_list)
         )
+
+    def get_volume_limits(self):
+        self._update_quota()
+        return Dummy(
+            'limits',
+            absolute={
+                'maxTotalVolumes': self.max_volumes,
+                'maxTotalVolumeGigabytes': self.max_volume_gb,
+            })
+
+    def list_volumes(self):
+        return self._volume_list
 
     def list_ports(self, filters=None):
         if filters and filters.get('status') == 'DOWN':
