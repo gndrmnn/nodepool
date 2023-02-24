@@ -92,8 +92,11 @@ class AwsInstance(statemachine.Instance):
         self.public_ipv6 = None
         self.cloud = 'AWS'
         self.region = provider.region_name
-        self.az = instance.subnet.availability_zone
+        self.az = None
         self.quota = quota
+
+        if instance.subnet:
+            self.az = instance.subnet.availability_zone
 
         for iface in instance.network_interfaces[:1]:
             if iface.ipv6_addresses:
