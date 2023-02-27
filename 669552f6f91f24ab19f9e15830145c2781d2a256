@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9deba37f_2d7a4047",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-02-27T09:44:40Z",
+      "side": 1,
+      "message": "duplicate \"specifies\"",
+      "revId": "669552f6f91f24ab19f9e15830145c2781d2a256",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8636aeaf_d6db6353",
+        "filename": "doc/source/openshift.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-02-27T09:44:40Z",
+      "side": 1,
+      "message": "duplicate \"specifies\"",
+      "revId": "669552f6f91f24ab19f9e15830145c2781d2a256",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
