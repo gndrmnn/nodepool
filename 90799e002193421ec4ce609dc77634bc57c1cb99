@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9be52416_fdb0af97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-02-28T10:41:40Z",
+      "side": 1,
+      "message": "LGTM. But quite a lengthy commit message header. Ideally, summarize your change in a commit header with \u003c\u003d 50 chars and explain in more detail in the message body (separated by a blank line).",
+      "revId": "90799e002193421ec4ce609dc77634bc57c1cb99",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
