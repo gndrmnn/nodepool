@@ -224,6 +224,23 @@ Selecting the kubernetes driver adds the following options to the
             that this field contains arbitrary key/value pairs and is
             unrelated to the concept of labels in Nodepool.
 
+         .. attr:: image-pull-secrets
+            :default: []
+            :type: list
+
+            The imagePullSecrets needed to pull container images from a private
+            registry.
+
+            Example:
+
+            .. code-block:: yaml
+
+               labels:
+                 - name: pod-fedora
+                   image: docker.io/fedora:28
+                   image-pull-secrets:
+                     - name: registry-secret
+
          .. attr:: python-path
             :type: str
             :default: auto
