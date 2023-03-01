@@ -154,6 +154,7 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'args': ['while true; do sleep 30; done;'],
                 'env': []
             }],
+            'imagePullSecrets': [],
         })
 
         node.state = zk.DELETING

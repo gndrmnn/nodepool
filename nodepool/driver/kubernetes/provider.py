@@ -341,7 +341,8 @@ class KubernetesProvider(Provider, QuotaSupport):
             container_body['resources'] = resources
 
         spec_body = {
-            'containers': [container_body]
+            'containers': [container_body],
+            'imagePullSecrets': label.image_pull_secrets,
         }
 
         if label.node_selector:
