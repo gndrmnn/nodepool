@@ -23,7 +23,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 from nodepool.driver import Driver, NodeRequestHandler, Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
-from nodepool.nodeutils import nodescan
+from nodepool.nodeutils import nodescan, Timer
 from nodepool.logconfig import get_annotated_logger
 from nodepool import stats
 from nodepool import exceptions
@@ -35,7 +35,7 @@ import cachetools
 
 def keyscan(host_key_checking, node_id, interface_ip,
             connection_type, connection_port,
-            timeout):
+            timeout, log):
     """A standalone function for scanning keys to pass to a thread/process
     pool executor
     """
@@ -49,8 +49,9 @@ def keyscan(host_key_checking, node_id, interface_ip,
             gather_hostkeys = True
         else:
             gather_hostkeys = False
-        keys = nodescan(interface_ip, port=connection_port,
-                        timeout=timeout, gather_hostkeys=gather_hostkeys)
+        with Timer(log, 'Keyscan'):
+            keys = nodescan(interface_ip, port=connection_port,
+                            timeout=timeout, gather_hostkeys=gather_hostkeys)
     except Exception:
         raise exceptions.LaunchKeyscanException(
             "Can't scan instance %s key" % node_id)
@@ -220,7 +221,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     label.host_key_checking,
                     node.id, node.interface_ip,
                     node.connection_type, node.connection_port,
-                    self.manager.provider.boot_timeout)
+                    self.manager.provider.boot_timeout,
+                    self.log)
                 self.keyscan_future = future
         except kze.SessionExpiredError:
             # Our node lock is gone, leaving the node state as BUILDING.
