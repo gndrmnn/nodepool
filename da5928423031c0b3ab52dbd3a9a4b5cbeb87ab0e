@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86a3dad7_6ce4a3f6",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-03-07T18:18:50Z",
+      "side": 1,
+      "message": "The order of joins here appears to be correct since _stop() sets self.running to False which will cause _runStateMachine() to eventually exit. We wait for it to exit first. Then wait for the _stop() thread to exit which has processing after the self.running flag is set to False.",
+      "revId": "da5928423031c0b3ab52dbd3a9a4b5cbeb87ab0e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
