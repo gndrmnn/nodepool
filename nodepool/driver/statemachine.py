@@ -542,6 +542,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.label_quota_cache = cachetools.LRUCache(num_labels)
         self.possibly_leaked_nodes = {}
         self.possibly_leaked_uploads = {}
+        self.stop_thread = None
 
     def start(self, zk_conn):
         super().start(zk_conn)
@@ -556,6 +557,12 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     def stop(self):
         self.log.debug("Stopping")
+        self.stop_thread = threading.Thread(
+            target=self._stop,
+            daemon=True)
+        self.stop_thread.start()
+
+    def _stop(self):
         if self.state_machine_thread:
             while self.launchers or self.deleters:
                 time.sleep(1)
@@ -572,6 +579,8 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.log.debug("Joining")
         if self.state_machine_thread:
             self.state_machine_thread.join()
+        if self.stop_thread:
+            self.stop_thread.join()
         self.log.debug("Joined")
 
     def _runStateMachines(self):
