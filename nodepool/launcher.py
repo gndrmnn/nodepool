@@ -23,6 +23,7 @@ import socket
 import threading
 import time
 import uuid
+from itertools import chain
 
 from kazoo import exceptions as kze
 
@@ -142,8 +143,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             # need to decline (missing labels > 0).
             return len(missing_labels), request.priority
 
+        paused_requests = [h.request for h in self.paused_handlers]
         requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
-        for req in requests:
+        for req in chain(paused_requests, requests):
             if not self.running:
                 return True
 
