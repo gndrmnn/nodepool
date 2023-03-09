@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55d785c5_6df7bb91",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-03-09T22:38:54Z",
+      "side": 1,
+      "message": "This is where cleanupLeakedResources() ultimately grabs the lock (that is what the comment just above refers to).",
+      "revId": "33e99a0eee927b44997a4547ee8bc63b61851927",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
