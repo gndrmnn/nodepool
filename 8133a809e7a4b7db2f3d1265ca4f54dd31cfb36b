@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd2cbeb4_b526d879",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-03-09T09:42:03Z",
+      "side": 1,
+      "message": "this is problematic since _deleteServer now returns a boolean which is then assigned to `server`.",
+      "revId": "8133a809e7a4b7db2f3d1265ca4f54dd31cfb36b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60559ad4_6b1b45e9",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-03-09T09:42:03Z",
+      "side": 1,
+      "message": "same as above \n\u003e this is problematic since _deleteServer now returns a boolean which is then assigned to `server`.",
+      "revId": "8133a809e7a4b7db2f3d1265ca4f54dd31cfb36b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
