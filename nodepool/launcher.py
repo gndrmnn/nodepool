@@ -148,6 +148,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if not self.running:
                 return True
 
+            # if we exceeded the timeout stop iterating here
+            elapsed = time.monotonic() - start
+            if elapsed > timeout:
+                self.log.debug("Early exit from handler assignment on timeout "
+                               "after %s/%s requests in %s",
+                               req_count + 1, len(requests), elapsed)
+                return False
+
             req = self.zk.getNodeRequest(req.id)
             if not req:
                 continue
@@ -279,13 +287,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 self.paused_handlers.add(rh)
             self.request_handlers.append(rh)
 
-            # if we exceeded the timeout stop iterating here
-            elapsed = time.monotonic() - start
-            if elapsed > timeout:
-                self.log.debug("Early exit from handler assignment on timeout "
-                               "after %s/%s requests in %s",
-                               req_count + 1, len(requests), elapsed)
-                return False
         elapsed = time.monotonic() - start
         self.log.debug("Finished handler assignment %s requests in %s",
                        len(requests), elapsed)
