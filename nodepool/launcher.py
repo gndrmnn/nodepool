@@ -156,10 +156,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                                req_count + 1, len(requests), elapsed)
                 return False
 
-            req = self.zk.getNodeRequest(req.id)
-            if not req:
-                continue
-
             # Only interested in unhandled requests
             if req.state != zk.REQUESTED:
                 continue
@@ -261,6 +257,11 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if req.state != zk.REQUESTED:
                 self.zk.unlockNodeRequest(req)
                 log.debug("Request is in state %s", req.state)
+                continue
+
+            # Skip it if we've already declined
+            if self.launcher_id in req.declined_by:
+                log.debug("Request is already declined")
                 continue
 
             if not reasons_to_decline:
