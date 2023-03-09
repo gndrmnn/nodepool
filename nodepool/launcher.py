@@ -147,6 +147,10 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             if not self.running:
                 return True
 
+            # if we exceeded the timeout stop iterating here
+            if time.monotonic() - start > timeout:
+                return False
+
             req = self.zk.getNodeRequest(req.id)
             if not req:
                 continue
@@ -278,9 +282,6 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 self.paused_handlers.add(rh)
             self.request_handlers.append(rh)
 
-            # if we exceeded the timeout stop iterating here
-            if time.monotonic() - start > timeout:
-                return False
         return True
 
     def _removeCompletedHandlers(self):
