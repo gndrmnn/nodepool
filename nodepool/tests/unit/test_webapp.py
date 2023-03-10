@@ -34,11 +34,14 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
+
+        # Start the builder after the pool + webapp so they see the
+        # cache update
+        self.useBuilder(configfile)
 
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
@@ -68,11 +71,14 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list_filtered(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
+
+        # Start the builder after the pool + webapp so they see the
+        # cache update
+        self.useBuilder(configfile)
 
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
@@ -90,11 +96,14 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
+
+        # Start the builder after the pool + webapp so they see the
+        # cache update
+        self.useBuilder(configfile)
 
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
@@ -115,11 +124,14 @@ class TestWebApp(tests.DBTestCase):
     def test_dib_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.useBuilder(configfile)
         pool.start()
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
+
+        # Start the builder after the pool + webapp so they see the
+        # cache update
+        self.useBuilder(configfile)
 
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
