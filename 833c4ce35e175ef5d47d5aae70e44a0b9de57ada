@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a68cca34_cfdcf613",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-03-10T12:17:33Z",
+      "side": 1,
+      "message": "Looks generally good to me but I think some more words in the git commit message and maybe even a release note would be good",
+      "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
