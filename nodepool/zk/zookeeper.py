@@ -159,12 +159,9 @@ class BaseModel(Serializable):
         d['state_time'] = self.state_time
         return d
 
-    def fromDict(self, d):
+    def updateFromDict(self, d):
         '''
         Set base attributes based on the given dict.
-
-        Unlike the derived classes, this should NOT return an object as it
-        assumes self has already been instantiated.
         '''
         if 'state' in d:
             self.state = d['state']
@@ -241,16 +238,19 @@ class ImageBuild(BaseModel):
         :returns: An initialized ImageBuild object.
         '''
         o = ImageBuild(image_name, o_id)
-        super(ImageBuild, o).fromDict(d)
-        o.builder = d.get('builder')
-        o.builder_id = d.get('builder_id')
-        o.username = d.get('username', 'zuul')
-        o.python_path = d.get('python_path', '/usr/bin/python2')
-        o.shell_type = d.get('shell_type')
+        o.updateFromDict(d)
+        return o
+
+    def updateFromDict(self, d):
+        super().updateFromDict(d)
+        self.builder = d.get('builder')
+        self.builder_id = d.get('builder_id')
+        self.username = d.get('username', 'zuul')
+        self.python_path = d.get('python_path', '/usr/bin/python2')
+        self.shell_type = d.get('shell_type')
         # Only attempt the split on non-empty string
         if d.get('formats', ''):
-            o.formats = d.get('formats', '').split(',')
-        return o
+            self.formats = d.get('formats', '').split(',')
 
 
 class ImageBuildRequest(object):
@@ -351,12 +351,11 @@ class ImageUpload(BaseModel):
         :returns: An initialized ImageUpload object.
         '''
         o = ImageUpload(build_id, provider_name, image_name, upload_id)
-        super(ImageUpload, o).fromDict(d)
         o.updateFromDict(d)
         return o
 
     def updateFromDict(self, d):
-        super().fromDict(d)
+        super().updateFromDict(d)
         self.external_id = d.get('external_id')
         self.external_name = d.get('external_name')
         self.format = d.get('format')
@@ -468,12 +467,11 @@ class NodeRequest(BaseModel):
         :returns: An initialized NodeRequest object.
         '''
         o = NodeRequest(o_id)
-        super(NodeRequest, o).fromDict(d)
         o.updateFromDict(d)
         return o
 
     def updateFromDict(self, d):
-        super().fromDict(d)
+        super().updateFromDict(d)
         self.declined_by = d.get('declined_by', [])
         self.node_types = d.get('node_types', [])
         self.nodes = d.get('nodes', [])
@@ -661,8 +659,6 @@ class Node(BaseModel):
         :returns: An initialized Node object.
         '''
         o = Node(o_id)
-        super(Node, o).fromDict(d)
-
         o.updateFromDict(d)
         return o
 
@@ -672,7 +668,7 @@ class Node(BaseModel):
 
         :param dict d: The dictionary
         '''
-        super().fromDict(d)
+        super().updateFromDict(d)
         self.cloud = d.get('cloud')
         self.provider = d.get('provider')
         self.pool = d.get('pool')
