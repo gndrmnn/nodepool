@@ -34,6 +34,24 @@
       "parentUuid": "36ffeacd_9a60960c",
       "revId": "d7b5161ae675ad0e8ec117e5e889213fc257ca90",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "988447a7_92d22f1c",
+        "filename": "nodepool/tests/unit/test_webapp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-03-10T22:24:37Z",
+      "side": 1,
+      "message": "I misunderstood this change when I wrote the prior comment. I had thought the bug was in the test service startup ordering. There was an issue there, but that issue prevented coverage of an issue in the actual application. THis allowed broken application code to land as it was not tripped due to the race in the tests above.\n\nTo address this the buggy application is fixed (that is the update to the other file) and the tests above are updated to cover that code properly. We don\u0027t need to update this test because ~4 tests above is sufficient to cover the case we are concerned about.",
+      "parentUuid": "36ffeacd_9a60960c",
+      "revId": "d7b5161ae675ad0e8ec117e5e889213fc257ca90",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
