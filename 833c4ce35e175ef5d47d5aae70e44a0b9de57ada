@@ -16,6 +16,24 @@
       "message": "Looks generally good to me but I think some more words in the git commit message and maybe even a release note would be good",
       "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35593de8_326f8b41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-03-12T11:58:35Z",
+      "side": 1,
+      "message": "Hi Benjamin,\nwill do. Can you please tell me, where the random suffix in the release notes file are coming from? Like the \u0027fbddefb56d0694a4\u0027 in \u0027releasenotes/notes/aws-multi-quota-fbddefb56d0694a4.yaml\u0027.",
+      "parentUuid": "a68cca34_cfdcf613",
+      "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
