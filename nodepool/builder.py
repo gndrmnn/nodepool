@@ -610,6 +610,7 @@ class BuildWorker(BaseWorker):
         self.log = logging.getLogger("nodepool.builder.BuildWorker.%s" % name)
         self.name = 'BuildWorker.%s' % name
         self._lost_zk_connection = False
+        self._last_config_check = None
         zk.client.on_connection_lost_listeners.append(self._onConnectionLost)
 
     def _onConnectionLost(self):
@@ -640,20 +641,33 @@ class BuildWorker(BaseWorker):
         log_dir = self._getBuildLogRoot(name)
         return os.path.join(log_dir, '%s-%s.log' % (name, build_id))
 
+    def _checkConfigRecent(self):
+        if self._last_config_check:
+            # Assume config is recent enough if we've checked it in the last 60 seconds
+            if time.monotonic() - self._last_config_check < 60:
+                return True
+        self._last_config_check = time.monotonic()
+        start = time.perf_counter()
+        new_config = self._readConfig()
+        end = time.perf_counter()
+        self.log.debug('Read config in %s seconds', end - start)
+        return new_config == self._config
+
     def _checkForScheduledImageUpdates(self):
         '''
         Check every DIB image to see if it has aged out and needs rebuilt.
         '''
+        self.log.debug('Checking for scheduled image updates')
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
-                new_config = self._readConfig()
-                if new_config != self._config:
+                if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
+                    self.log.debug('Config changed, skipping _checkForScheduledImageUpdates')
                     return
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
@@ -757,16 +771,17 @@ class BuildWorker(BaseWorker):
         '''
         Query ZooKeeper for any manual image build requests.
         '''
+        self.log.debug('Checking for manual image build requests')
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
-                new_config = self._readConfig()
-                if new_config != self._config:
+                if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
+                    self.log.debug('Config changed, skipping _checkForManualBuildRequest')
                     return
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
