@@ -56,6 +56,10 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'image-pull-secrets': list,
             'cpu': int,
             'memory': int,
+            'storage': int,
+            'cpu-limit': int,
+            'memory-limit': int,
+            'storage-limit': int,
             'python-path': str,
             'shell-type': str,
             'env': [env_var],
@@ -71,6 +75,12 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
+            v.Optional('default-label-cpu'): int,
+            v.Optional('default-label-memory'): int,
+            v.Optional('default-label-storage'): int,
+            v.Optional('default-label-cpu-limit'): int,
+            v.Optional('default-label-memory-limit'): int,
+            v.Optional('default-label-storage-limit'): int,
         })
 
         schema = OpenshiftProviderConfig.getCommonSchemaDict()

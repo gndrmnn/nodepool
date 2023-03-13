@@ -81,6 +81,48 @@ Selecting the openshift pods driver adds the following options to the
          A dictionary of key-value pairs that will be stored with the node data
          in ZooKeeper. The keys and values can be any arbitrary string.
 
+      .. attr:: default-label-cpu
+         :type: int
+
+         Specifies specifies a default value for
+         :attr:`providers.[openshiftpods].pools.labels.cpu` for all
+         labels of this pool that do not set their own value.
+
+      .. attr:: default-label-memory
+         :type: int
+
+         Specifies a default value in MiB for
+         :attr:`providers.[openshiftpods].pools.labels.memory` for all
+         labels of this pool that do not set their own value.
+
+      .. attr:: default-label-storage
+         :type: int
+
+         Specifies a default value in MB for
+         :attr:`providers.[openshiftpods].pools.labels.storage` for all
+         labels of this pool that do not set their own value.
+
+      .. attr:: default-label-cpu-limit
+         :type: int
+
+         Specifies specifies a default value for
+         :attr:`providers.[openshiftpods].pools.labels.cpu-limit` for all
+         labels of this pool that do not set their own value.
+
+      .. attr:: default-label-memory-limit
+         :type: int
+
+         Specifies a default value in MiB for
+         :attr:`providers.[openshiftpods].pools.labels.memory-limit` for
+         all labels of this pool that do not set their own value.
+
+      .. attr:: default-label-storage-limit
+         :type: int
+
+         Specifies a default value in MB for
+         :attr:`providers.[openshiftpods].pools.labels.storage-limit` for
+         all labels of this pool that do not set their own value.
+
       .. attr:: labels
          :type: list
 
@@ -135,12 +177,37 @@ Selecting the openshift pods driver adds the following options to the
          .. attr:: cpu
             :type: int
 
-            The number of cpu to request for the pod.
+            Specifies the number of cpu to request for the pod.  If no
+            limit is specified, this will also be used as the limit.
 
          .. attr:: memory
             :type: int
 
-            The amount of memory in MB to request for the pod.
+            Specifies the amount of memory in MiB to request for the
+            pod.  If no limit is specified, this will also be used as
+            the limit.
+
+         .. attr:: storage
+            :type: int
+
+            Specifies the amount of ephemeral-storage in MB to request
+            for the pod.  If no limit is specified, this will also be
+            used as the limit.
+
+         .. attr:: cpu-limit
+            :type: int
+
+            Specifies the cpu limit for the pod.
+
+         .. attr:: memory-limit
+            :type: int
+
+            Specifies the memory limit in MiB for the pod.
+
+         .. attr:: storage-limit
+            :type: int
+
+            Specifies the ephemeral-storage limit in MB for the pod.
 
          .. attr:: python-path
             :type: str

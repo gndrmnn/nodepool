@@ -52,6 +52,9 @@ class OpenshiftLauncher(NodeLauncher):
         self.node.shell_type = self.label.shell_type
         # NOTE: resource access token may be encrypted here
         self.node.connection_port = resource
+        pool = self.handler.provider.pools.get(self.node.pool)
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], pool).get_resources()
         self.node.cloud = self.provider_config.context
         self.zk.storeNode(self.node)
         self.log.info("Resource %s is ready", project)
