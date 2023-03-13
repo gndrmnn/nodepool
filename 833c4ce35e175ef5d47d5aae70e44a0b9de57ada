@@ -34,6 +34,24 @@
       "parentUuid": "a68cca34_cfdcf613",
       "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15556d26_570e4f16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-03-13T08:35:32Z",
+      "side": 1,
+      "message": "Hi Christian,\nsure, this is generated from \"reno\" [1].\nreno is installed in the docs venv, or you can install it yourself again (`pip install reno`).\nTo generate a new release note\n- `reno new my-cool-feature`\n- edit `releasenotes/notes/my-cool-feature...yaml`, (remove everything you don\u0027t need)\n\n[1] https://pypi.org/project/reno/",
+      "parentUuid": "35593de8_326f8b41",
+      "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
