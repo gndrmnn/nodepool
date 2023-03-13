@@ -270,6 +270,10 @@ class MetastaticAdapter(statemachine.Adapter):
         # be well after this point.
         self.performed_init = False
         self.init_lock = threading.Lock()
+        # Allocation of new nodes to backing nodes happens in one
+        # thread while cleanup of unused backing nodes happens in
+        # another.  Use a lock to serialize updates between the two.
+        self.allocation_lock = threading.Lock()
 
     @property
     def zk(self):
@@ -290,26 +294,27 @@ class MetastaticAdapter(statemachine.Adapter):
         # Since this is called periodically, this is a good place to
         # see about deleting unused backing nodes.
         now = time.time()
-        for label_name, backing_node_records in \
-            self.backing_node_records.items():
-            for bnr in backing_node_records[:]:
-                label_config = self.provider._getLabel(bnr.label_name)
-                if label_config:
-                    grace_time = label_config.grace_time
-                else:
-                    # The label doesn't exist in our config any more,
-                    # it must have been removed.
-                    grace_time = 0
-                if (bnr.isEmpty() and
-                    now - bnr.last_used > grace_time):
-                    self.log.info("Backing node %s has been idle for "
-                                  "%s seconds, releasing",
-                                  bnr.node_id, now - bnr.last_used)
-                    node = self._getNode(bnr.node_id)
-                    node.state = zk.USED
-                    self.zk.storeNode(node)
-                    self.zk.forceUnlockNode(node)
-                    backing_node_records.remove(bnr)
+        with self.allocation_lock:
+            for label_name, backing_node_records in \
+                self.backing_node_records.items():
+                for bnr in backing_node_records[:]:
+                    label_config = self.provider._getLabel(bnr.label_name)
+                    if label_config:
+                        grace_time = label_config.grace_time
+                    else:
+                        # The label doesn't exist in our config any more,
+                        # it must have been removed.
+                        grace_time = 0
+                    if (bnr.isEmpty() and
+                        now - bnr.last_used > grace_time):
+                        self.log.info("Backing node %s has been idle for "
+                                      "%s seconds, releasing",
+                                      bnr.node_id, now - bnr.last_used)
+                        node = self._getNode(bnr.node_id)
+                        node.state = zk.USED
+                        self.zk.storeNode(node)
+                        self.zk.forceUnlockNode(node)
+                        backing_node_records.remove(bnr)
         return []
 
     def deleteResource(self, resource):
@@ -383,82 +388,88 @@ class MetastaticAdapter(statemachine.Adapter):
         self._init()
         # if we have room for the label, allocate and return existing slot
         # otherwise, make a new backing node
-        backing_node_record = None
-        for bnr in self.backing_node_records.get(label.name, []):
-            if bnr.hasAvailableSlot():
-                backing_node_record = bnr
-                break
-        if backing_node_record is None:
-            req = zk.NodeRequest()
-            req.node_types = [label.backing_label]
-            req.state = zk.REQUESTED
-            req.requestor = self.my_id
-            self.zk.storeNodeRequest(req, priority='100')
-            backing_node_record = BackingNodeRecord(
-                label.name, label.max_parallel_jobs)
-            backing_node_record.request_id = req.id
-            self._addBackingNode(label.name, backing_node_record)
-        backing_node_log = (backing_node_record.node_id or
-                            f'request {backing_node_record.request_id}')
-        slot = backing_node_record.allocateSlot(node_id)
-        self.log.info("Assigned node %s to backing node %s slot %s",
-                      node_id, backing_node_log, slot)
-        return backing_node_record, slot
+        with self.allocation_lock:
+            backing_node_record = None
+            for bnr in self.backing_node_records.get(label.name, []):
+                if bnr.hasAvailableSlot():
+                    backing_node_record = bnr
+                    break
+            if backing_node_record is None:
+                req = zk.NodeRequest()
+                req.node_types = [label.backing_label]
+                req.state = zk.REQUESTED
+                req.requestor = self.my_id
+                self.zk.storeNodeRequest(req, priority='100')
+                backing_node_record = BackingNodeRecord(
+                    label.name, label.max_parallel_jobs)
+                backing_node_record.request_id = req.id
+                self._addBackingNode(label.name, backing_node_record)
+            backing_node_log = (backing_node_record.node_id or
+                                f'request {backing_node_record.request_id}')
+            slot = backing_node_record.allocateSlot(node_id)
+            self.log.info("Assigned node %s to backing node %s slot %s",
+                          node_id, backing_node_log, slot)
+            return backing_node_record, slot
 
     def _addBackingNode(self, label_name, backing_node_record):
+        # We hold the allocation lock already
         nodelist = self.backing_node_records.setdefault(label_name, [])
         nodelist.append(backing_node_record)
 
     def _deallocateBackingNode(self, node_id):
         self._init()
-        for label_name, backing_node_records in \
-            self.backing_node_records.items():
-            for bn in backing_node_records:
-                if bn.backsNode(node_id):
-                    slot = bn.deallocateSlot(node_id)
-                    self.log.info(
-                        "Unassigned node %s from backing node %s slot %s",
-                        node_id, bn.node_id, slot)
-                    return
+        with self.allocation_lock:
+            for label_name, backing_node_records in \
+                self.backing_node_records.items():
+                for bn in backing_node_records:
+                    if bn.backsNode(node_id):
+                        slot = bn.deallocateSlot(node_id)
+                        self.log.info(
+                            "Unassigned node %s from backing node %s slot %s",
+                            node_id, bn.node_id, slot)
+                        return
 
     def _checkBackingNodeRequests(self):
         self._init()
-        waiting_requests = {}
-        for label_name, backing_node_records in \
-            self.backing_node_records.items():
-            for bnr in backing_node_records:
-                if bnr.request_id:
-                    waiting_requests[bnr.request_id] = bnr
-        if not waiting_requests:
-            return
-        for request in self.zk.nodeRequestIterator():
-            if request.id not in waiting_requests:
-                continue
-            if request.state == zk.FAILED:
-                self.log.error("Backing request %s failed", request.id)
-                for label_name, records in self.backing_node_records.items():
-                    for bnr in records[:]:
-                        if bnr.request_id == request.id:
-                            bnr.failed = True
-                            records.remove(bnr)
-            if request.state == zk.FULFILLED:
-                bnr = waiting_requests[request.id]
-                node_id = request.nodes[0]
-                self.log.info("Backing request %s fulfilled with node id %s",
-                              request.id, node_id)
-                node = self._getNode(node_id)
-                self.zk.lockNode(node, blocking=True, timeout=30,
-                                 ephemeral=False, identifier=self.my_id)
-                node.user_data = json.dumps({
-                    'owner': self.my_id,
-                    'label': bnr.label_name,
-                    'slots': bnr.slot_count,
-                })
-                node.state = zk.IN_USE
-                self.zk.storeNode(node)
-                self.zk.deleteNodeRequest(request)
-                bnr.request_id = None
-                bnr.node_id = node_id
+        with self.allocation_lock:
+            waiting_requests = {}
+            for label_name, backing_node_records in \
+                self.backing_node_records.items():
+                for bnr in backing_node_records:
+                    if bnr.request_id:
+                        waiting_requests[bnr.request_id] = bnr
+            if not waiting_requests:
+                return
+            for request in self.zk.nodeRequestIterator():
+                if request.id not in waiting_requests:
+                    continue
+                if request.state == zk.FAILED:
+                    self.log.error("Backing request %s failed", request.id)
+                    for label_name, records in \
+                        self.backing_node_records.items():
+                        for bnr in records[:]:
+                            if bnr.request_id == request.id:
+                                bnr.failed = True
+                                records.remove(bnr)
+                if request.state == zk.FULFILLED:
+                    bnr = waiting_requests[request.id]
+                    node_id = request.nodes[0]
+                    self.log.info(
+                        "Backing request %s fulfilled with node id %s",
+                        request.id, node_id)
+                    node = self._getNode(node_id)
+                    self.zk.lockNode(node, blocking=True, timeout=30,
+                                     ephemeral=False, identifier=self.my_id)
+                    node.user_data = json.dumps({
+                        'owner': self.my_id,
+                        'label': bnr.label_name,
+                        'slots': bnr.slot_count,
+                    })
+                    node.state = zk.IN_USE
+                    self.zk.storeNode(node)
+                    self.zk.deleteNodeRequest(request)
+                    bnr.request_id = None
+                    bnr.node_id = node_id
 
     def _getNode(self, node_id):
         return self.zk.getNode(node_id)
