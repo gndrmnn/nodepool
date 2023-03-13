@@ -52,6 +52,24 @@
       "parentUuid": "35593de8_326f8b41",
       "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "005ccbc0_97dd7832",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-03-13T10:38:04Z",
+      "side": 1,
+      "message": "Thanks, run that command and added the release note as well.",
+      "parentUuid": "15556d26_570e4f16",
+      "revId": "833c4ce35e175ef5d47d5aae70e44a0b9de57ada",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
