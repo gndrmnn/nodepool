@@ -92,6 +92,9 @@ class FakeOpenshiftClient(object):
 
 
 class FakeCoreClient(object):
+    def __init__(self):
+        self._pod_requests = []
+
     def create_namespaced_service_account(self, ns, sa_body):
         return
 
@@ -108,7 +111,7 @@ class FakeCoreClient(object):
         return FakeSecret
 
     def create_namespaced_pod(self, ns, pod_body):
-        return
+        self._pod_requests.append((ns, pod_body))
 
     def read_namespaced_pod(self, name, ns):
         class FakePod:
@@ -136,6 +139,7 @@ class TestDriverOpenshift(tests.DBTestCase):
             fake_get_client))
 
     def test_openshift_machine(self):
+        # Test a pod with default values
         configfile = self.setup_config('openshift.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.start()
@@ -156,12 +160,100 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'kubectl')
         self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertEqual(node.python_path, 'auto')
+        self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'admin-cluster.local')
+        self.assertIsNone(node.host_id)
+        ns, pod = self.fake_k8s_client._pod_requests[0]
+        self.assertEqual(pod['metadata'], {
+            'name': 'pod-fedora',
+            'labels': {
+                'nodepool_node_id': '0000000000',
+                'nodepool_provider_name': 'openshift',
+                'nodepool_pool_name': 'main',
+                'nodepool_node_label': 'pod-fedora'
+            },
+        })
+        self.assertEqual(pod['spec'], {
+            'containers': [{
+                'name': 'pod-fedora',
+                'image': 'docker.io/fedora:28',
+                'imagePullPolicy': 'IfNotPresent',
+                'command': ['/bin/sh', '-c'],
+                'args': ['while true; do sleep 30; done;'],
+                'env': []
+            }],
+            'imagePullSecrets': [],
+        })
+
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+
+        self.waitForNodeDeletion(node)
+
+    def test_openshift_machine_extra(self):
+        # Test a pod with lots of extra settings
+        configfile = self.setup_config('openshift.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
+        req.node_types.append('pod-extra')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'kubectl')
+        self.assertEqual(node.connection_port.get('token'), 'fake-token')
         self.assertEqual(node.python_path, '/usr/bin/python3')
         self.assertEqual(node.shell_type, 'csh')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.cloud, 'admin-cluster.local')
         self.assertIsNone(node.host_id)
+        ns, pod = self.fake_k8s_client._pod_requests[0]
+        self.assertEqual(pod['metadata'], {
+            'name': 'pod-extra',
+            'labels': {
+                'environment': 'qa',
+                'nodepool_node_id': '0000000000',
+                'nodepool_provider_name': 'openshift',
+                'nodepool_pool_name': 'main',
+                'nodepool_node_label': 'pod-extra'
+            },
+        })
+        self.assertEqual(pod['spec'], {
+            'containers': [{
+                'args': ['while true; do sleep 30; done;'],
+                'command': ['/bin/sh', '-c'],
+                'env': [],
+                'image': 'docker.io/fedora:28',
+                'imagePullPolicy': 'IfNotPresent',
+                'name': 'pod-extra',
+                'securityContext': {'privileged': True},
+                'volumeMounts': [{
+                    'mountPath': '/data',
+                    'name': 'my-csi-inline-vol'
+                }],
+            }],
+            'nodeSelector': {'storageType': 'ssd'},
+            'schedulerName': 'myscheduler',
+            'imagePullSecrets': [],
+            'volumes': [{
+                'csi': {'driver': 'inline.storage.kubernetes.io'},
+                'name': 'my-csi-inline-vol'
+            }],
+        })
 
         node.state = zk.DELETING
         self.zk.storeNode(node)

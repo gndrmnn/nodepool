@@ -188,6 +188,15 @@ Selecting the kubernetes driver adds the following options to the
 
             The ImagePullPolicy, can be IfNotPresent, Always or Never.
 
+         .. attr:: labels
+            :type: dict
+
+            A dictionary of additional values to be added to the
+            namespace or pod metadata.  The value of this field is
+            added to the `metadata.labels` field in Kubernetes.  Note
+            that this field contains arbitrary key/value pairs and is
+            unrelated to the concept of labels in Nodepool.
+
          .. attr:: python-path
             :type: str
             :default: auto
@@ -262,6 +271,15 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: scheduler-name
+            :type: str
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type.  Sets the `schedulerName` field on the
+            container.  Normally left unset for the Kubernetes
+            default.
+
          .. attr:: privileged
             :type: bool
 
@@ -269,3 +287,21 @@ Selecting the kubernetes driver adds the following options to the
             :value:`providers.[kubernetes].pools.labels.type.pod`
             label type.  Sets the `securityContext.privileged` flag on
             the container.  Normally left unset for the Kubernetes default.
+
+         .. attr:: volumes
+            :type: list
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type.  Sets the `volumes` field on the pod.  If
+            supplied, this should be a list of Kubernetes Pod Volume
+            definitions.
+
+         .. attr:: volume-mounts
+            :type: list
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod`
+            label type.  Sets the `volumeMounts` flag on the
+            container.  If supplied, this should be a list of
+            Kubernetes Container VolumeMount definitions.

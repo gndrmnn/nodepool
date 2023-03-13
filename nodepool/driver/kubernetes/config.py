@@ -57,6 +57,10 @@ class KubernetesPool(ConfigPool):
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
             pl.privileged = label.get('privileged')
+            pl.scheduler_name = label.get('scheduler-name')
+            pl.volumes = label.get('volumes')
+            pl.volume_mounts = label.get('volume-mounts')
+            pl.labels = label.get('labels')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -104,6 +108,10 @@ class KubernetesProviderConfig(ProviderConfig):
             'env': [env_var],
             'node-selector': dict,
             'privileged': bool,
+            'scheduler-name': str,
+            'volumes': list,
+            'volume-mounts': list,
+            'labels': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()
