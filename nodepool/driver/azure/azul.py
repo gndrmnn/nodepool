@@ -40,8 +40,15 @@ class AzureAuth(requests.auth.AuthBase):
             }
             r = requests.post(url, data)
             ret = r.json()
-            self.token = ret['access_token']
-            self.expiration = float(ret['expires_on'])
+            if 'access_token' in ret:
+                self.token = ret['access_token']
+                self.expiration = float(ret['expires_on'])
+            elif ('error_codes' in ret and 'error_description' in ret):
+                raise AzureError(r.status_code,
+                                 ret['error_codes'][0],
+                                 ret['error_description'])
+            else:
+                raise Exception("Unknown error when authenticating to Azure")
 
     def __call__(self, r):
         self.refresh()
