@@ -99,7 +99,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             diskimage = self.provider_config.diskimages[
                 label.diskimage.name]
             cloud_image = self.zk.getMostRecentImageUpload(
-                diskimage.name, self.provider_config.name)
+                diskimage.name, self.provider_config.name, cached=True)
 
             if not cloud_image:
                 raise exceptions.LaunchNodepoolException(
@@ -374,7 +374,7 @@ class StateMachineHandler(NodeRequestHandler):
             else:
                 if not self.zk.getMostRecentImageUpload(
                         self.pool.labels[label].diskimage.name,
-                        self.provider.name):
+                        self.provider.name, cached=True):
                     return False
         return True
 

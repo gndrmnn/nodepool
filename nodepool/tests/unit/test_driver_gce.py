@@ -274,7 +274,7 @@ class TestDriverGce(tests.DBTestCase):
     def _test_gce_machine(self, pool, label,
                           is_valid_config=True,
                           host_key_checking=True):
-        pool.start()
+        self.startPool(pool)
 
         self._wait_for_provider(pool, 'gcloud-provider')
 
