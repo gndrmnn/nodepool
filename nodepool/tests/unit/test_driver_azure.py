@@ -67,7 +67,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -109,7 +109,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-min-ready.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         node = self.waitForNodes('bionic')[0]
 
         self.assertEqual(node.state, zk.READY)
@@ -152,7 +152,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-diskimage.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('bionic')
@@ -177,7 +177,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-external-image.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('bionic')
@@ -225,7 +225,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('image-by-name')
@@ -260,7 +260,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('image-by-tag')
@@ -288,7 +288,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('windows-password')
@@ -320,7 +320,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('windows-generate')
