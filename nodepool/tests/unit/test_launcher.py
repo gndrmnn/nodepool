@@ -54,7 +54,7 @@ class TestLauncher(tests.DBTestCase):
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -148,7 +148,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.waitForNodes('fake-label1')
         self.waitForNodes('fake-label2')
@@ -210,8 +210,7 @@ class TestLauncher(tests.DBTestCase):
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         client = pool.getProviderManager('fake-provider').adapter._getClient()
 
@@ -315,8 +314,7 @@ class TestLauncher(tests.DBTestCase):
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         # wait for min-ready nodes if configured
         # node requests must be deferred when at tenant quota even if there
@@ -469,8 +467,7 @@ class TestLauncher(tests.DBTestCase):
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         req1 = zk.NodeRequest()
         req1.state = zk.REQUESTED
@@ -529,8 +526,7 @@ class TestLauncher(tests.DBTestCase):
 
         nodepool.launcher.LOCK_CLEANUP = 1
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         client = pool.getProviderManager('fake-provider').adapter._getClient()
 
@@ -589,8 +585,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter.createServer_fails = 2
 
@@ -613,8 +608,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -660,7 +654,7 @@ class TestLauncher(tests.DBTestCase):
         self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Get an initial node ready
         req = zk.NodeRequest()
@@ -686,7 +680,7 @@ class TestLauncher(tests.DBTestCase):
         '''
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -700,12 +694,12 @@ class TestLauncher(tests.DBTestCase):
     def test_node(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         builder = self.useBuilder(configfile)
-        pool.start()
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
 
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         provider = (builder._upload_workers[0]._config.
                     provider_managers['fake-provider'])
         cloud_image = provider.adapter._findImage(image.external_id)
@@ -726,11 +720,12 @@ class TestLauncher(tests.DBTestCase):
     def test_node_metadata(self):
         """Test that node metadata is set"""
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
 
         self.assertEqual(len(nodes), 1)
@@ -749,11 +744,11 @@ class TestLauncher(tests.DBTestCase):
     def test_node_network_cli(self):
         """Same as test_node but using connection-type network_cli"""
         configfile = self.setup_config('node-network_cli.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
 
         self.assertEqual(len(nodes), 1)
@@ -767,11 +762,11 @@ class TestLauncher(tests.DBTestCase):
     def test_node_host_key_checking_false(self):
         """Test that images and nodes are created"""
         configfile = self.setup_config('node-host-key-checking.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         label1_nodes = self.waitForNodes('fake-label')
         label2_nodes = self.waitForNodes('fake-label2')
 
@@ -794,6 +789,11 @@ class TestLauncher(tests.DBTestCase):
         # nodepool-builder needs access to both providers to upload images
         configfile = self.setup_config('node_two_provider.yaml')
         self.useBuilder(configfile)
+        # Validate we have images in both providers
+        image1 = self.waitForImage('fake-provider', 'fake-image')
+        self.assertEqual(image1.username, 'zuul')
+        image2 = self.waitForImage('fake-provider2', 'fake-image')
+        self.assertEqual(image2.username, 'zuul')
         # Start up first launcher
         configfile1 = self.setup_config('node.yaml')
         pool1 = self.useNodepool(configfile1, watermark_sleep=1)
@@ -802,11 +802,6 @@ class TestLauncher(tests.DBTestCase):
         configfile2 = self.setup_config('node_second_provider.yaml')
         pool2 = self.useNodepool(configfile2, watermark_sleep=1)
         pool2.start()
-        # Validate we have images in both providers
-        image1 = self.waitForImage('fake-provider', 'fake-image')
-        self.assertEqual(image1.username, 'zuul')
-        image2 = self.waitForImage('fake-provider2', 'fake-image')
-        self.assertEqual(image2.username, 'zuul')
 
         # We don't need to check which provider launched the min-ready, just
         # that one was launched.
@@ -820,11 +815,11 @@ class TestLauncher(tests.DBTestCase):
         """Test that a node request for a specific provider is honored"""
         configfile = self.setup_config('node_two_provider.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         # Validate we have images in both providers
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label', 1)
 
         req1 = zk.NodeRequest()
@@ -855,11 +850,11 @@ class TestLauncher(tests.DBTestCase):
         """Test that a node request for a missing provider is handled"""
         configfile = self.setup_config('node_two_provider.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         # Validate we have images in both providers
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label', 1)
 
         req1 = zk.NodeRequest()
@@ -878,9 +873,9 @@ class TestLauncher(tests.DBTestCase):
         when the requested labels are supported."""
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label', 1)
 
         # Create a dummy launcher with a different set of supported labels
@@ -914,10 +909,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_boot_from_volume(self):
         """Test that an image and node are created from a volume"""
         configfile = self.setup_config('node_boot_from_volume.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
 
         self.assertEqual(len(nodes), 1)
@@ -927,20 +922,20 @@ class TestLauncher(tests.DBTestCase):
     def test_disabled_label(self):
         """Test that a node is not created with min-ready=0"""
         configfile = self.setup_config('node_disabled_label.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.assertEqual([], self.zk.getNodeRequests())
         self.assertEqual([], self.zk.getNodes())
 
     def test_node_net_name(self):
         """Test that a node is created with proper net name"""
         configfile = self.setup_config('node_net_name.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         label1_nodes = self.waitForNodes('fake-label1')
         label2_nodes = self.waitForNodes('fake-label2')
 
@@ -964,10 +959,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_security_group(self):
         """Test that an image and node are created with sec_group specified"""
         configfile = self.setup_config('node_security_group.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         nodes_def_sg = self.waitForNodes('fake-label2')
         self.assertEqual(len(nodes), 1)
@@ -984,10 +979,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_flavor_name(self):
         """Test that a node is created with a flavor name"""
         configfile = self.setup_config('node_flavor_name.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider')
@@ -996,10 +991,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_vhd_image(self):
         """Test that a image and node are created vhd image"""
         configfile = self.setup_config('node_vhd.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider')
@@ -1021,10 +1016,10 @@ class TestLauncher(tests.DBTestCase):
     def test_dib_upload_fail(self):
         """Test that an image upload failure is contained."""
         configfile = self.setup_config('node_upload_fail.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile, num_uploaders=2)
-        pool.start()
         self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label', 2)
         self.assertEqual(len(nodes), 2)
         total_nodes = sum(1 for _ in self.zk.nodeIterator())
@@ -1039,10 +1034,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_az(self):
         """Test that an image and node are created with az specified"""
         configfile = self.setup_config('node_az.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider')
@@ -1051,11 +1046,11 @@ class TestLauncher(tests.DBTestCase):
     def test_node_ipv6(self):
         """Test that ipv6 existence either way works fine."""
         configfile = self.setup_config('node_ipv6.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider1', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         label1_nodes = self.waitForNodes('fake-label1')
         label2_nodes = self.waitForNodes('fake-label2')
 
@@ -1078,10 +1073,10 @@ class TestLauncher(tests.DBTestCase):
 
     def test_node_delete_success(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(zk.READY, nodes[0].state)
@@ -1102,10 +1097,10 @@ class TestLauncher(tests.DBTestCase):
     def test_node_delete_DELETED_success(self):
         """Test we treat a node in DELETING state as deleted"""
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(zk.READY, nodes[0].state)
@@ -1140,13 +1135,12 @@ class TestLauncher(tests.DBTestCase):
 
     def test_node_launch_retries(self):
         configfile = self.setup_config('node_launch_retry.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
-        self.wait_for_config(pool)
+        self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter.createServer_fails = 2
-        self.waitForImage('fake-provider', 'fake-image')
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -1178,11 +1172,10 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNode(znode)
 
         configfile = self.setup_config('node_launch_retry.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
-        self.wait_for_config(pool)
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -1194,13 +1187,12 @@ class TestLauncher(tests.DBTestCase):
 
     def test_node_launch_retries_with_external_id(self):
         configfile = self.setup_config('node_launch_retry.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
-        self.wait_for_config(pool)
+        self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter.createServer_fails_with_external_id = 2
-        self.waitForImage('fake-provider', 'fake-image')
 
         # Stop the DeletedNodeWorker so we can make sure the fake znode that
         # is used to delete the failed servers is still around when requesting.
@@ -1237,10 +1229,10 @@ class TestLauncher(tests.DBTestCase):
             fakeadapter.FakeAdapter, '_deleteServer', fail_delete))
 
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -1269,10 +1261,10 @@ class TestLauncher(tests.DBTestCase):
             fakeadapter.FakeAdapter, '_deleteServer', error_delete))
 
         configfile = self.setup_config('node_delete_error.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
 
         # request a node
         req = zk.NodeRequest()
@@ -1300,10 +1292,10 @@ class TestLauncher(tests.DBTestCase):
     def test_leaked_node(self):
         """Test that a leaked node is deleted"""
         configfile = self.setup_config('leaked_node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1336,10 +1328,10 @@ class TestLauncher(tests.DBTestCase):
     def test_max_ready_age(self):
         """Test a node with exceeded max-ready-age is deleted"""
         configfile = self.setup_config('node_max_ready_age.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1351,10 +1343,10 @@ class TestLauncher(tests.DBTestCase):
     def test_max_hold_age(self):
         """Test a held node with exceeded max-hold-age is deleted"""
         configfile = self.setup_config('node_max_hold_age.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1376,10 +1368,10 @@ class TestLauncher(tests.DBTestCase):
         """Test a held node is deleted when past its operator-specified TTL,
         no max-hold-age set"""
         configfile = self.setup_config('node_max_hold_age_no_default.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1402,10 +1394,10 @@ class TestLauncher(tests.DBTestCase):
         """Test a held node is deleted when past its operator-specified TTL,
         even when the type is bad"""
         configfile = self.setup_config('node_max_hold_age_no_default.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1427,10 +1419,10 @@ class TestLauncher(tests.DBTestCase):
     def test_hold_expiration_bad_type_coercion(self):
         """Test a held node uses default expiration value when type is bad"""
         configfile = self.setup_config('node_max_hold_age_no_default.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label')
         self.log.debug("...done waiting for initial pool.")
@@ -1451,10 +1443,10 @@ class TestLauncher(tests.DBTestCase):
         """Test a held node is deleted when past its operator-specified TTL,
         with max-hold-age set in the configuration"""
         configfile = self.setup_config('node_max_hold_age_2.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label', 2)
         self.log.debug("...done waiting for initial pool.")
@@ -1496,10 +1488,10 @@ class TestLauncher(tests.DBTestCase):
         """Test a held node is deleted after max-hold-age seconds if the
         operator specifies a larger TTL"""
         configfile = self.setup_config('node_max_hold_age_2.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.log.debug("Waiting for initial pool...")
         nodes = self.waitForNodes('fake-label', 2)
         self.log.debug("...done waiting for initial pool.")
@@ -1549,11 +1541,11 @@ class TestLauncher(tests.DBTestCase):
     def test_label_provider(self):
         """Test that only providers listed in the label satisfy the request"""
         configfile = self.setup_config('node_label_provider.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].provider, 'fake-provider2')
@@ -1583,10 +1575,10 @@ class TestLauncher(tests.DBTestCase):
         (req, node) = self._create_pending_request()
 
         configfile = self.setup_config('node_lost_requests.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
-        pool.start()
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         req = self.waitForNodeRequest(req, (zk.FULFILLED,))
         # Since our config file has min-ready=0, we should be able to re-use
         # the previously assigned node, thus making sure that the cleanup
@@ -1606,7 +1598,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('node_lost_requests.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
+        self.startPool(pool)
 
         while True:
             node = self.zk.getNode(node.id)
@@ -1616,10 +1608,10 @@ class TestLauncher(tests.DBTestCase):
     def test_multiple_pools(self):
         """Test that an image and node are created"""
         configfile = self.setup_config('multiple_pools.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         lab1 = self.waitForNodes('fake-label1')
         lab2 = self.waitForNodes('fake-label2')
 
@@ -1640,8 +1632,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('node_unmanaged_image.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
 
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter.IMAGE_CHECK_TIMEOUT = 1
         manager.adapter._client.create_image(name="fake-image")
@@ -1680,8 +1671,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('unmanaged_image_provider_name.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
 
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter.IMAGE_CHECK_TIMEOUT = 1
         manager.adapter._client.create_image(name="provider-named-image")
@@ -1696,7 +1686,7 @@ class TestLauncher(tests.DBTestCase):
         """
         configfile = self.setup_config('unmanaged_image_provider_id.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         self.log.debug("Waiting for node")
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
@@ -1709,7 +1699,7 @@ class TestLauncher(tests.DBTestCase):
         self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a request that uses all capacity (2 servers)
         req = zk.NodeRequest()
@@ -1741,12 +1731,12 @@ class TestLauncher(tests.DBTestCase):
     def test_node_auto_floating_ip(self):
         """Test that auto-floating-ip option works fine."""
         configfile = self.setup_config('node_auto_floating_ip.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider1', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
         self.waitForImage('fake-provider3', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         label1_nodes = self.waitForNodes('fake-label1')
         label2_nodes = self.waitForNodes('fake-label2')
         label3_nodes = self.waitForNodes('fake-label3')
@@ -1777,13 +1767,13 @@ class TestLauncher(tests.DBTestCase):
         """Test using secure.conf file"""
         configfile = self.setup_config('secure_file_config.yaml')
         securefile = self.setup_secure('secure_file_secure.yaml')
+        self.useBuilder(configfile, securefile=securefile)
+        image = self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(
             configfile,
             secure_conf=securefile,
             watermark_sleep=1)
-        self.useBuilder(configfile, securefile=securefile)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         fake_image = pool.config.diskimages['fake-image']
         self.assertIn('REG_PASSWORD', fake_image.env_vars)
@@ -1794,7 +1784,6 @@ class TestLauncher(tests.DBTestCase):
                     f'{self.zookeeper_chroot}')
         self.assertEqual(expected, zk_servers)
 
-        image = self.waitForImage('fake-provider', 'fake-image')
         self.assertEqual(image.username, 'zuul')
         nodes = self.waitForNodes('fake-label')
 
@@ -1809,7 +1798,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('launcher_two_provider.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=.5)
-        pool.start()
+        self.startPool(pool)
         self.waitForNodes('fake-label')
         self.assertEqual(2, len(pool._pool_threads))
 
@@ -1834,13 +1823,13 @@ class TestLauncher(tests.DBTestCase):
         """Test that broken provider doesn't fail node requests."""
         configfile = self.setup_config('launcher_two_provider_max_1.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=.5)
-        pool.start()
-        self.wait_for_config(pool)
-
         # Steady state at images available.
         self.waitForImage('fake-provider', 'fake-image')
         self.waitForImage('fake-provider2', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=.5)
+        self.startPool(pool)
+
         # We have now reached steady state and can manipulate the system to
         # test failing cloud behavior.
 
@@ -1959,7 +1948,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('disabled_provider.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -1978,8 +1967,7 @@ class TestLauncher(tests.DBTestCase):
         '''
         configfile = self.setup_config('broken_provider_config.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         manager = pool.getProviderManager('good-provider')
         manager.adapter._client.create_image(name="good-image")
@@ -2011,7 +1999,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('wedge_test.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Wait for fake-label1 min-ready request to be fulfilled, which will
         # put us at maximum capacity with max-servers of 1.
@@ -2041,7 +2029,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('launcher_reg1.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.waitForNodes('fake-label')
         launcher_pools = self.zk.getRegisteredPools()
@@ -2070,10 +2058,10 @@ class TestLauncher(tests.DBTestCase):
         # use a config with min-ready of 0
         configfile = self.setup_config('node_launch_retry.yaml')
         self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = 60
-        pool.start()
-        self.waitForImage('fake-provider', 'fake-image')
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -2107,10 +2095,10 @@ class TestLauncher(tests.DBTestCase):
 
         configfile = self.setup_config('node_launch_retry.yaml')
         self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = 60
-        pool.start()
-        self.waitForImage('fake-provider', 'fake-image')
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -2147,9 +2135,9 @@ class TestLauncher(tests.DBTestCase):
 
         configfile = self.setup_config('node_launch_retry.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -2203,7 +2191,7 @@ class TestLauncher(tests.DBTestCase):
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = 60
-        pool.start()
+        self.startPool(pool)
 
         # Wait for request handling to occur
         while not mock_poll.call_count:
@@ -2240,7 +2228,7 @@ class TestLauncher(tests.DBTestCase):
         self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a request that uses all capacity (2 servers)
         req = zk.NodeRequest()
@@ -2302,7 +2290,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a request with ignore-provider-quota set to false that should
         # fail because it will decline the request because "it would exceed
@@ -2337,7 +2325,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a request with ignore-provider-quota set to true that should
         # pass regardless of the lack of cloud/provider quota.
@@ -2434,7 +2422,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a request with ignore-provider-quota set to true that should
         # pass regardless of the lack of cloud/provider quota.
@@ -2487,7 +2475,7 @@ class TestLauncher(tests.DBTestCase):
         self.waitForImage('fake-provider', 'fake-image')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.waitForAnyNodeInState(zk.ABORTED)
 
@@ -2533,7 +2521,7 @@ class TestLauncher(tests.DBTestCase):
         self.zk.storeNodeRequest(req2)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req2 = self.waitForNodeRequest(req2)
         self.assertEqual(req2.state, zk.FULFILLED)
@@ -2553,8 +2541,7 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(image.username, 'fake-username')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
 
         # Request with a higher relative priority coming in first, but
         # requesting a label that is not available.
@@ -2596,7 +2583,7 @@ class TestLauncher(tests.DBTestCase):
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = .1
-        pool.start()
+        self.startPool(pool)
 
         while self.zk.kazoo_client.exists(path):
             time.sleep(.1)
@@ -2606,7 +2593,7 @@ class TestLauncher(tests.DBTestCase):
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
         pool.cleanup_interval = 1
-        pool.start()
+        self.startPool(pool)
         self.waitForNodes('fake-label')
 
         manager = pool.getProviderManager('fake-provider')
@@ -2643,7 +2630,7 @@ class TestLauncher(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(1, len(nodes))
@@ -2670,10 +2657,10 @@ class TestLauncher(tests.DBTestCase):
         """Test provider priorities"""
         configfile = self.setup_config('priority.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('low-provider', 'fake-image')
         self.waitForImage('high-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
 
         # The first request should be handled by the highest priority
         # provider (high-provider; priority 1)

@@ -1775,39 +1775,52 @@ class ZooKeeper(ZooKeeperBase):
         return uploads[:count]
 
     def getMostRecentImageUpload(self, image, provider,
-                                 state=READY):
+                                 state=READY, cached=False):
         '''
         Retrieve the most recent image upload data with the given state.
 
         :param str image: The image name.
         :param str provider: The provider name owning the image.
         :param str state: The image upload state to match on.
+        :param bool cached: Whether to use cached data.
 
         :returns: An ImageUpload object matching the given state, or
             None if there is no recent upload.
         '''
+        uploads = []
 
-        recent_data = None
-        for build_number in self.getBuildNumbers(image):
-            path = self._imageUploadPath(image, build_number, provider)
+        if cached:
+            uploads = self.getCachedImageUploads()
+        else:
+            for build_number in self.getBuildNumbers(image):
+                path = self._imageUploadPath(image, build_number, provider)
+                try:
+                    upload_numbers = self.kazoo_client.get_children(path)
+                except kze.NoNodeError:
+                    upload_numbers = []
 
-            try:
-                uploads = self.kazoo_client.get_children(path)
-            except kze.NoNodeError:
-                uploads = []
+                for upload_number in upload_numbers:
+                    if upload_number == 'lock':   # skip the upload lock node
+                        continue
+                    data = self.getImageUpload(
+                        image, build_number, provider, upload_number)
+                    if not data or data.state != state:
+                        continue
+                    uploads.append(data)
 
-            for upload in uploads:
-                if upload == 'lock':   # skip the upload lock node
-                    continue
-                data = self.getImageUpload(
-                    image, build_number, provider, upload)
-                if not data or data.state != state:
-                    continue
-                elif (recent_data is None or
-                      recent_data.state_time < data.state_time):
-                    recent_data = data
+        recent_upload = None
+        for upload in uploads:
+            if upload.image_name != image:
+                continue
+            if upload.provider_name != provider:
+                continue
+            if upload.state != state:
+                continue
+            if (recent_upload is None or
+                recent_upload.state_time < upload.state_time):
+                recent_upload = upload
 
-        return recent_data
+        return recent_upload
 
     def getCachedImageUploads(self):
         '''
