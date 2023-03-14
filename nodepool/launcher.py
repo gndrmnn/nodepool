@@ -1176,7 +1176,8 @@ class NodePool(threading.Thread):
             for pool_label in pool.labels.values():
                 if pool_label.diskimage:
                     if self.zk.getMostRecentImageUpload(
-                            pool_label.diskimage.name, pool.provider.name):
+                            pool_label.diskimage.name, pool.provider.name,
+                            cached=True):
                         return True
                 else:
                     manager = self.getProviderManager(pool.provider.name)
