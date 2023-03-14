@@ -113,7 +113,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         # Test a pod with default values
         configfile = self.setup_config('kubernetes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -165,7 +165,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         # Test a pod with lots of extra settings
         configfile = self.setup_config('kubernetes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -223,7 +223,7 @@ class TestDriverKubernetes(tests.DBTestCase):
     def test_kubernetes_native(self):
         configfile = self.setup_config('kubernetes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('kubernetes-namespace')
@@ -251,7 +251,7 @@ class TestDriverKubernetes(tests.DBTestCase):
     def test_kubernetes_default_label_resources(self):
         configfile = self.setup_config('kubernetes-default-resources.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -366,7 +366,7 @@ class TestDriverKubernetes(tests.DBTestCase):
     def test_kubernetes_default_label_limits(self):
         configfile = self.setup_config('kubernetes-default-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -462,7 +462,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         conf = self.setup_config('kubernetes-leaked-node.yaml')
         pool = self.useNodepool(conf, watermark_sleep=1)
         pool.cleanup_interval = 1
-        pool.start()
+        self.startPool(pool)
 
         # wait for min-ready node to be available
         nodes = self.waitForNodes('pod-fedora')
@@ -487,7 +487,7 @@ class TestDriverKubernetes(tests.DBTestCase):
     def _test_kubernetes_quota(self, config, pause=True):
         configfile = self.setup_config(config)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         # Start two pods to hit max-server limit
         reqs = []
         for _ in [1, 2]:

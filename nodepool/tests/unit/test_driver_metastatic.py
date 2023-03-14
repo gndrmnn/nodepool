@@ -83,8 +83,7 @@ class TestDriverMetastatic(tests.DBTestCase):
     def test_metastatic(self):
         configfile = self.setup_config('metastatic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter._client.create_image(name="fake-image")
 
@@ -148,8 +147,7 @@ class TestDriverMetastatic(tests.DBTestCase):
     def test_metastatic_startup(self):
         configfile = self.setup_config('metastatic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter._client.create_image(name="fake-image")
 
@@ -163,8 +161,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         # Restart the provider and make sure we load data correctly
         pool.stop()
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter._client.create_image(name="fake-image")
 
@@ -185,8 +182,7 @@ class TestDriverMetastatic(tests.DBTestCase):
     def test_metastatic_config_change(self):
         configfile = self.setup_config('metastatic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter._client.create_image(name="fake-image")
 
@@ -206,8 +202,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         # Restart the provider and make sure we load data correctly
         pool.stop()
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
-        self.wait_for_config(pool)
+        self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
         manager.adapter._client.create_image(name="fake-image")
 
