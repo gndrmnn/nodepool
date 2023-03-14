@@ -142,7 +142,7 @@ class TestDriverOpenshift(tests.DBTestCase):
         # Test a pod with default values
         configfile = self.setup_config('openshift.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -197,7 +197,7 @@ class TestDriverOpenshift(tests.DBTestCase):
         # Test a pod with lots of extra settings
         configfile = self.setup_config('openshift.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -263,7 +263,7 @@ class TestDriverOpenshift(tests.DBTestCase):
     def test_openshift_default_label_resources(self):
         configfile = self.setup_config('openshift-default-resources.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -378,7 +378,7 @@ class TestDriverOpenshift(tests.DBTestCase):
     def test_openshift_default_label_limits(self):
         configfile = self.setup_config('openshift-default-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -452,7 +452,7 @@ class TestDriverOpenshift(tests.DBTestCase):
     def test_openshift_pull_secret(self):
         configfile = self.setup_config('openshift.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('pod-fedora-secret')
@@ -477,7 +477,7 @@ class TestDriverOpenshift(tests.DBTestCase):
     def test_openshift_native(self):
         configfile = self.setup_config('openshift.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('openshift-project')
