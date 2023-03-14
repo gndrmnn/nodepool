@@ -599,7 +599,7 @@ class TestDriverAws(tests.DBTestCase):
     def test_aws_diskimage_snapshot(self):
         configfile = self.setup_config('aws/diskimage.yaml')
 
-        self.useBuilder(configfile)
+        builder = self.useBuilder(configfile)
 
         image = self.waitForImage('ec2-us-west-2', 'fake-image')
         self.assertEqual(image.username, 'zuul')
