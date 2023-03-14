@@ -843,7 +843,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
                           zk.DELETING, zk.DELETED, zk.ABORTED)
 
         zk_conn = self._nodepool.getZK()
-        for node in zk_conn.nodeIterator():
+        for node in zk_conn.nodeIterator(cached=True, cached_ids=True):
             # If a ready node has been allocated to a request, but that
             # request is now missing, deallocate it.
             if (node.state == zk.READY and node.allocated_to
@@ -870,6 +870,10 @@ class DeletedNodeWorker(BaseCleanupWorker):
 
             # Can't do anything if we aren't configured for this provider.
             if node.provider not in self._nodepool.config.providers:
+                continue
+
+            # This node is *probably* locked, so skip it.
+            if node.lock_contenders:
                 continue
 
             # Any nodes in these states that are unlocked can be deleted.
