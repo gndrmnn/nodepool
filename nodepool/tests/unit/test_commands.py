@@ -131,9 +131,9 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_list_nodes(self):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label')
 
         for _ in iterate_timeout(10, Exception, "assert nodes are listed"):
@@ -148,9 +148,9 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_list_nodes_detail(self):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label')
         for _ in iterate_timeout(10, Exception, "assert nodes are listed"):
             try:
@@ -219,7 +219,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         configfile = self.setup_config('node_diskimage_pause.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label2')
         self.assertEqual(len(nodes), 1)
         self.assert_listed(configfile, ['dib-image-list'], 1, 'fake-image', 0)
@@ -229,7 +229,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         configfile = self.setup_config('node_image_upload_pause.yaml')
         self.useBuilder(configfile)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label2')
         self.assertEqual(len(nodes), 1)
         # Make sure diskimages were built.
@@ -241,10 +241,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_dib_image_delete(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         # Check the image exists
@@ -263,10 +263,10 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Test deletion of images without a .d manifest folder
         # e.g. When using a custom image creation
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         builder = self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         # Check the image exists
@@ -333,10 +333,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_delete(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -356,6 +356,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
 
         # (Shrews): This is a hack to avoid a race with the DeletedNodeWorker
         # thread where it may see that our direct call to NodeDeleter.delete()
@@ -367,8 +368,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         # preventing the node znode from being deleted.
         pool.delete_interval = 5
 
-        pool.start()
-        self.waitForImage('fake-provider', 'fake-image')
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -386,10 +386,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_hold(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -431,10 +431,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_attempt_hold_busy_node(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -470,7 +470,7 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_attempt_request_held_static_node(self):
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -505,10 +505,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_attempt_request_held_node(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -557,10 +557,10 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_request_list(self):
         configfile = self.setup_config('node.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -580,11 +580,11 @@ class TestNodepoolCMD(tests.DBTestCase):
 
     def test_info_and_erase(self):
         configfile = self.setup_config('info_cmd_two_provider.yaml')
-        pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
         p1_image = self.waitForImage('fake-provider', 'fake-image')
         p2_image = self.waitForImage('fake-provider2', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         p1_nodes = self.waitForNodes('fake-label')
         p2_nodes = self.waitForNodes('fake-label2')
 
@@ -645,9 +645,9 @@ class TestNodepoolCMD(tests.DBTestCase):
     def test_export_image_data(self):
         configfile = self.setup_config('node.yaml')
         builder = self.useBuilder(configfile)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
         self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
         self.waitForNodes('fake-label')
 
         build = self.waitForBuild('fake-image', '0000000001')
