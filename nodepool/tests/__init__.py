@@ -460,7 +460,7 @@ class DBTestCase(BaseTestCase):
         os.close(fd)
         return path
 
-    def wait_for_config(self, pool):
+    def waitForConfig(self, pool):
         for x in range(300):
             if pool.config is not None:
                 return
@@ -652,6 +652,35 @@ class DBTestCase(BaseTestCase):
         pool.delete_interval = .5
         self.addCleanup(pool.stop)
         return pool
+
+    def startPool(self, pool):
+        pool.start()
+        self.waitForConfig(pool)
+        actual_uploads = set()
+        for image_name in self.zk.getImageNames():
+            for build_no in self.zk.getBuildNumbers(image_name):
+                for provider in self.zk.getBuildProviders(
+                        image_name, build_no):
+                    for upload_no in self.zk.getImageUploadNumbers(
+                            image_name, build_no, provider):
+                        upload = self.zk.getImageUpload(image_name, build_no,
+                                                        provider, upload_no)
+                        if upload:
+                            actual_uploads.add(
+                                (upload.image_name, upload.build_id,
+                                 upload.provider_name, upload.id))
+        for _ in iterate_timeout(ONE_MINUTE, Exception,
+                                 "Cache sync",
+                                 interval=1):
+            cached_uploads = set()
+            for upload in pool.zk.getCachedImageUploads():
+                cached_uploads.add((upload.image_name, upload.build_id,
+                                    upload.provider_name, upload.id))
+            # In case a new image is built while we were waiting,
+            # just check that the cache shows at least what we saw
+            # at the start of the method.
+            if actual_uploads.issubset(cached_uploads):
+                break
 
     def useWebApp(self, *args, **kwargs):
         app = webapp.WebApp(*args, **kwargs)

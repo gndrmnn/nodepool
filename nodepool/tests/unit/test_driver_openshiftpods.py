@@ -87,7 +87,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
     def test_openshift_pod(self):
         configfile = self.setup_config('openshiftpods.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('pod-fedora')
@@ -118,7 +118,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
     def test_openshift_pod_secrets(self):
         configfile = self.setup_config('openshiftpods.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('pod-fedora-secret')
