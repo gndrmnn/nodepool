@@ -78,7 +78,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
     def test_ibmvpc_cloud_image_private(self):
         configfile = self.setup_config('ibmvpc.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('debian-private')
@@ -108,7 +108,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
     def test_ibmvpc_cloud_image_public(self):
         configfile = self.setup_config('ibmvpc.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('debian-public')
@@ -135,7 +135,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
     def test_ibmvpc_cloud_image_filter(self):
         configfile = self.setup_config('ibmvpc.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('debian-filter')
@@ -170,7 +170,7 @@ class TestDriverIBMVPC(tests.DBTestCase):
         self.assertEqual(image.username, 'zuul')
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('fake-image')

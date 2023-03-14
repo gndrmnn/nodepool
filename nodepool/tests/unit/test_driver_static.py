@@ -47,7 +47,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label')
@@ -76,7 +76,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-python-path.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label')
@@ -97,7 +97,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-multiname.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label', 1)
@@ -138,7 +138,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-unresolvable.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label')
@@ -163,7 +163,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
@@ -183,7 +183,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-2-nodes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)
@@ -204,7 +204,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
@@ -224,7 +224,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-parallel-increase.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)
@@ -244,7 +244,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
@@ -268,7 +268,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial node")
         nodes = self.waitForNodes('fake-label')
@@ -276,7 +276,7 @@ class TestDriverStatic(tests.DBTestCase):
         pool.stop()
         configfile = self.setup_config('static-multilabel.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for new label")
         nodes = self.waitForNodes('fake-label2')
@@ -290,7 +290,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_multilabel(self):
         configfile = self.setup_config('static-multilabel.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertIn('fake-label', nodes[0].type)
         self.assertIn('fake-label2', nodes[0].type)
@@ -299,7 +299,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(nodes[0].slot, 0)
         self.waitForNodes('fake-concurrent-label', 2)
@@ -318,7 +318,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_waiting_handler(self):
         configfile = self.setup_config('static-2-nodes-multilabel.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -352,7 +352,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_label_quota(self):
         configfile = self.setup_config('static-2-nodes-multilabel.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req1 = zk.NodeRequest()
         req1.state = zk.REQUESTED
@@ -396,7 +396,7 @@ class TestDriverStatic(tests.DBTestCase):
         pool = self.useNodepool(configfile, watermark_sleep=1)
         # Make sure the cleanup worker is called that reallocated the node
         pool.cleanup_interval = .1
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -418,7 +418,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_waiting_handler_order(self):
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -478,7 +478,7 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_multinode_handler(self):
         configfile = self.setup_config('static.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -494,9 +494,8 @@ class TestDriverStatic(tests.DBTestCase):
     def test_static_multiprovider_handler(self):
         configfile = self.setup_config('multiproviders.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
-        self.wait_for_config(pool)
         manager = pool.getProviderManager('openstack-provider')
         manager.adapter._client.create_image(name="fake-image")
         manager.adapter.IMAGE_CHECK_TIMEOUT = 0
@@ -527,7 +526,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
         self.assertEqual(nodes[0].slot, 0)
@@ -559,7 +558,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-basic.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes), 1)
 
@@ -585,7 +584,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-two-node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes1 = self.waitForNodes('fake-label')
         self.assertEqual(len(nodes1), 1)
         nodes2 = self.waitForNodes('fake-label2')
@@ -639,7 +638,7 @@ class TestDriverStatic(tests.DBTestCase):
         configfile = self.setup_config('static-no-check.yaml')
         with mock.patch("nodepool.nodeutils.nodescan") as nodescan_mock:
             pool = self.useNodepool(configfile, watermark_sleep=1)
-            pool.start()
+            self.startPool(pool)
             nodes = self.waitForNodes('fake-label')
             self.assertEqual(len(nodes), 1)
             nodescan_mock.assert_not_called()
@@ -650,7 +649,7 @@ class TestDriverStatic(tests.DBTestCase):
         '''
         configfile = self.setup_config('static-shell-type.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for node pre-registration")
         nodes = self.waitForNodes('fake-label')
@@ -667,7 +666,7 @@ class TestDriverStatic(tests.DBTestCase):
         """Test that a missing static node is added"""
         configfile = self.setup_config('static-2-nodes.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         self.log.debug("Waiting for initial nodes")
         nodes = self.waitForNodes('fake-label', 2)

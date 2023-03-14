@@ -188,7 +188,7 @@ class TestDriverAws(tests.DBTestCase):
         # A helper method to perform a single node request
         configfile = self.setup_config(config_path)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -220,7 +220,7 @@ class TestDriverAws(tests.DBTestCase):
         # behavior.
         configfile = self.setup_config('aws/aws-multiple.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         reqs = []
         for x in range(4):
@@ -249,7 +249,7 @@ class TestDriverAws(tests.DBTestCase):
         # Test multiple instance type quotas (standard and high-mem)
         configfile = self.setup_config('aws/aws-quota.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a high-memory node request.
         req1 = zk.NodeRequest()
@@ -304,7 +304,7 @@ class TestDriverAws(tests.DBTestCase):
         # with pool resource limits
         configfile = self.setup_config('aws/aws-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a standard node request.
         req1 = zk.NodeRequest()
@@ -349,7 +349,7 @@ class TestDriverAws(tests.DBTestCase):
         # with tenant resource limits
         configfile = self.setup_config('aws/aws-limits.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         # Create a high node request.
         req1 = zk.NodeRequest()
@@ -556,7 +556,7 @@ class TestDriverAws(tests.DBTestCase):
         # Test dynamic tag formatting without a real node request
         configfile = self.setup_config('aws/aws-min-ready.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         node = self.waitForNodes('ubuntu1404-with-tags')[0]
 
         self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
@@ -612,7 +612,7 @@ class TestDriverAws(tests.DBTestCase):
                         in ec2_image.tags)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -654,7 +654,7 @@ class TestDriverAws(tests.DBTestCase):
                         in ec2_image.tags)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -743,7 +743,7 @@ class TestDriverAws(tests.DBTestCase):
 
         configfile = self.setup_config('aws/diskimage.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         for _ in iterate_timeout(30, Exception, 'instance deletion'):
             instance = self.ec2.Instance(instance_id)
@@ -828,7 +828,7 @@ class TestDriverAws(tests.DBTestCase):
 
         configfile = self.setup_config('aws/diskimage.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         for _ in iterate_timeout(30, Exception, 'ami deletion'):
             image = self.ec2.Image(image_id)
@@ -892,7 +892,7 @@ class TestDriverAws(tests.DBTestCase):
 
         configfile = self.setup_config('aws/diskimage.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
 
         for _ in iterate_timeout(30, Exception, 'ami deletion'):
             image = self.ec2.Image(image_id)

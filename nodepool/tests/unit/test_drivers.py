@@ -29,7 +29,7 @@ class TestDrivers(tests.DBTestCase):
     def test_external_driver_handler(self):
         configfile = self.setup_config('external_driver.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         nodes = self.waitForNodes('test-label')
         self.assertEqual(len(nodes), 1)
 
