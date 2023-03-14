@@ -34,7 +34,7 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -71,7 +71,7 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list_filtered(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -96,7 +96,7 @@ class TestWebApp(tests.DBTestCase):
     def test_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -124,7 +124,7 @@ class TestWebApp(tests.DBTestCase):
     def test_dib_image_list_json(self):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -154,7 +154,7 @@ class TestWebApp(tests.DBTestCase):
         configfile = self.setup_config("node.yaml")
         pool = self.useNodepool(configfile, watermark_sleep=1)
 
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -209,7 +209,7 @@ class TestWebApp(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -269,7 +269,7 @@ class TestWebApp(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -305,7 +305,7 @@ class TestWebApp(tests.DBTestCase):
         configfile = self.setup_config('node.yaml')
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.useBuilder(configfile)
-        pool.start()
+        self.startPool(pool)
         webapp = self.useWebApp(pool, port=0)
         webapp.start()
         port = webapp.server.socket.getsockname()[1]
@@ -343,7 +343,7 @@ class TestWebApp(tests.DBTestCase):
         with self.assertRaises(HTTPError, request.urlopen, req):
             pass
 
-        pool.start()
+        self.startPool(pool)
 
         # Now wait until we get a valid response.
         for _ in iterate_timeout(30, Exception, 'ready succeeds'):
