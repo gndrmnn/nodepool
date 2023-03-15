@@ -23,11 +23,10 @@ import math
 import time
 import operator
 
-import cachetools.func
 import openstack
 from keystoneauth1.exceptions.catalog import EndpointNotFound
 
-from nodepool.driver.utils import QuotaInformation
+from nodepool.driver.utils import QuotaInformation, LazyExecutorTTLCache
 from nodepool.driver import statemachine
 from nodepool import exceptions
 from nodepool import stats
@@ -409,6 +408,20 @@ class OpenStackAdapter(statemachine.Adapter):
             thread_name_prefix=f'openstack-api-{provider_config.name}',
             max_workers=workers)
 
+        # Use a lazy TTL cache for these.  This uses the TPE to
+        # asynchronously update the cached values, meanwhile returning
+        # the previous cached data if available.  This means every
+        # call after the first one is instantaneous.
+        self._listServers = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listServers)
+        self._listVolumes = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listVolumes)
+        self._listFloatingIps = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listFloatingIps)
+
         self._last_image_check_failure = time.time()
         self._last_port_cleanup = None
         self._statsd = stats.get_client()
@@ -688,12 +701,10 @@ class OpenStackAdapter(statemachine.Adapter):
                 name, self.provider.name))
         return network
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listServers(self):
         with Timer(self.log, 'API call list_servers'):
             return self._client.list_servers(bare=True)
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         try:
             with Timer(self.log, 'API call list_volumes'):
@@ -701,7 +712,6 @@ class OpenStackAdapter(statemachine.Adapter):
         except EndpointNotFound:
             return []
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listFloatingIps(self):
         with Timer(self.log, 'API call list_floating_ips'):
             return self._client.list_floating_ips()

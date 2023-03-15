@@ -12,11 +12,14 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from concurrent.futures import ThreadPoolExecutor
 import copy
 import math
+import time
 
 from nodepool import tests
-from nodepool.driver.utils import QuotaInformation
+from nodepool.driver.utils import QuotaInformation, LazyExecutorTTLCache
+from nodepool.nodeutils import iterate_timeout
 
 
 class TestQutoInformation(tests.BaseTestCase):
@@ -66,3 +69,41 @@ class TestQutoInformation(tests.BaseTestCase):
         remain.subtract(needed)
 
         self.assertEqual(expected.quota, remain.quota)
+
+
+class FakeAdapter:
+    CACHE_TTL = 0.5
+
+    def __init__(self):
+        self.api_executor = ThreadPoolExecutor(max_workers=4)
+        self.get_time = LazyExecutorTTLCache(
+            self.CACHE_TTL, self.api_executor)(
+                self.get_time)
+
+    def get_time(self):
+        return time.monotonic()
+
+
+class TestLazyExecutorTTLCache(tests.BaseTestCase):
+    def test_lazy_cache(self):
+        adapter = FakeAdapter()
+        t0 = time.monotonic()
+        ret1 = adapter.get_time()
+        t1 = time.monotonic()
+        self.assertTrue(t0 < ret1 < t1)
+        # Assuming the computer isn't completely overloaded, this
+        # should happen instantly and be a cache hit.
+        ret2 = adapter.get_time()
+        self.assertEqual(ret1, ret2)
+        # Sleep longer than the ttl
+        time.sleep(adapter.CACHE_TTL + 0.1)
+        # This should be a cache miss that triggers an update and
+        # returns the old value.
+        ret3 = adapter.get_time()
+        self.assertEqual(ret1, ret3)
+        # Eventually the async update should return and we should get
+        # a newer value.
+        for _ in iterate_timeout(30, Exception, 'cache update'):
+            ret4 = adapter.get_time()
+            if ret4 > ret3:
+                break
