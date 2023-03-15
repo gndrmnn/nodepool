@@ -270,10 +270,11 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             if not reasons_to_decline:
                 # Got a lock, so assign it
-                log.info("Assigning node request %s" % req)
+                log.info("Assigning node request %s", req)
                 rh.run()
             else:
-                log.info("Declining node request %s" % req)
+                log.info("Declining node request %s due to %s",
+                         req, reasons_to_decline)
                 rh.declineRequest()
                 continue
 
