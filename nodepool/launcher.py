@@ -108,6 +108,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         in order to give us time to call _removeCompletedHandlers. Otherwise
         it returns True to signal that it is finished for now.
         '''
+        self.log.debug("Starting handler assignment")
         start = time.monotonic()
         provider = self.getProviderConfig()
         if not provider:
@@ -143,7 +144,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             return len(missing_labels), request.priority
 
         requests = sorted(self.zk.nodeRequestIterator(), key=_sort_key)
-        for req in requests:
+        for req_count, req in enumerate(requests):
             if not self.running:
                 return True
 
@@ -279,8 +280,15 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             self.request_handlers.append(rh)
 
             # if we exceeded the timeout stop iterating here
-            if time.monotonic() - start > timeout:
+            elapsed = time.monotonic() - start
+            if elapsed > timeout:
+                self.log.debug("Early exit from handler assignment on timeout "
+                               "after %s/%s requests in %s",
+                               req_count + 1, len(requests), elapsed)
                 return False
+        elapsed = time.monotonic() - start
+        self.log.debug("Finished handler assignment %s requests in %s",
+                       len(requests), elapsed)
         return True
 
     def _removeCompletedHandlers(self):
@@ -288,6 +296,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         Poll handlers to see which have completed.
         '''
         active_handlers = []
+        self.log.debug("Starting handler removal with %s handlers",
+                       len(self.request_handlers))
         for r in self.request_handlers:
             log = get_annotated_logger(self.log, event_id=r.request.event_id,
                                        node_request_id=r.request.id)
@@ -311,6 +321,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 active_handlers.append(r)
         self.request_handlers = active_handlers
         active_reqs = [r.request.id for r in self.request_handlers]
+        self.log.debug("Finished handler removal with %s handlers",
+                       len(self.request_handlers))
         self.log.debug("Active requests: %s", active_reqs)
 
     def _hasTenantQuota(self, request, provider_manager):
