@@ -548,8 +548,14 @@ class StateMachineProvider(Provider, QuotaSupport):
         super().start(zk_conn)
         self.running = True
         self._zk = zk_conn
+
+        # Matching the workers in openstack/adapter.py
+        # TODO: unify thread pool handling across drivers
+        workers = 10
+        self.log.info("Create keyscan executor with max workers=%s", workers)
         self.keyscan_worker = ThreadPoolExecutor(
-            thread_name_prefix=f'keyscan-{self.provider.name}')
+            thread_name_prefix=f'keyscan-{self.provider.name}',
+            max_workers=workers)
         self.state_machine_thread = threading.Thread(
             target=self._runStateMachines,
             daemon=True)
