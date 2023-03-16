@@ -768,10 +768,9 @@ class NodepoolTreeCache(abc.ABC):
 
         if event.event_type in (TreeEvent.NODE_ADDED, TreeEvent.NODE_UPDATED):
             # Images with empty data are invalid so skip add or update these.
-            if event.event_data.data:
-                data = self.zk._bytesToDict(event.event_data.data)
-            else:
-                data = None
+            if not event.event_data.data:
+                return
+            data = self.zk._bytesToDict(event.event_data.data)
 
             # Perform an in-place update of the cached image if possible
             old_obj = self._cached_objects.get(key)
