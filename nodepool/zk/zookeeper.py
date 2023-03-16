@@ -894,6 +894,7 @@ class NodeCache(NodepoolTreeCache):
         return self.zk._parseNodePath(path)
 
     def preCacheHook(self, event):
+        self.log.debug("NodeCache preCacheHook event %s", event)
         key = self.zk._parseNodeLockPath(event.event_data.path)
         if key is None:
             return
@@ -902,6 +903,8 @@ class NodeCache(NodepoolTreeCache):
         # Construct a key for the node object
         obj_key = (node_id,)
         node = self._cached_objects.get(obj_key)
+        self.log.debug("NodeCache preCacheHook contender %s %s",
+                       node, contender)
         if not node:
             return
         if event.event_type in (TreeEvent.NODE_ADDED,
@@ -2229,6 +2232,7 @@ class ZooKeeper(ZooKeeperBase):
             raise npe.ZKLockException("Did not get lock on %s" % path)
 
         node.lock = lock
+        self.log.debug("Locked: %s", node)
 
         # Do an in-place update of the node so we have the latest data.
         self.updateNode(node)
@@ -2246,6 +2250,7 @@ class ZooKeeper(ZooKeeperBase):
         if node.lock is None:
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
         node.lock.release()
+        self.log.debug("Unlocked: %s", node)
         node.lock = None
 
     def forceUnlockNode(self, node):
@@ -2259,6 +2264,7 @@ class ZooKeeper(ZooKeeperBase):
             self.kazoo_client.delete(path, recursive=True)
         except kze.NoNodeError:
             pass
+        self.log.debug("Force unlocked: %s", node)
 
     def getNodeLockContenders(self, node):
         '''
