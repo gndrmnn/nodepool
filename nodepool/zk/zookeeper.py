@@ -894,6 +894,7 @@ class NodeCache(NodepoolTreeCache):
         return self.zk._parseNodePath(path)
 
     def preCacheHook(self, event):
+        self.log.debug("NodeCache preCacheHook event %s", event)
         key = self.zk._parseNodeLockPath(event.event_data.path)
         if key is None:
             return
@@ -902,6 +903,8 @@ class NodeCache(NodepoolTreeCache):
         # Construct a key for the node object
         obj_key = (node_id,)
         node = self._cached_objects.get(obj_key)
+        self.log.debug("NodeCache preCacheHook contender %s %s",
+                       node, contender)
         if not node:
             return
         if event.event_type in (TreeEvent.NODE_ADDED,
