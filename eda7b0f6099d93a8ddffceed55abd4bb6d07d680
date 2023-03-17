@@ -16,6 +16,24 @@
       "message": "Since thread locking can also be expensive when done frequently without the need, I think we should move the cache hit path out of the lock.",
       "revId": "eda7b0f6099d93a8ddffceed55abd4bb6d07d680",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7f2117b_b350e753",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-17T14:34:52Z",
+      "side": 1,
+      "message": "Two things:\n1) timeit says the thread lock and unlock takes something like 0.00000014045762305613 seconds.  We will be calling this once or twice for every state machine advance, so we do want it to be fast, but we also really want to avoid errors, deadlocks, and extra API calls.  It\u0027s fast enough that I think we should set a high bar for redesign.\n2) The section above this needs to be in the lock because of the future check, so I don\u0027t see how to remove this section from the lock without adding more complexit.",
+      "parentUuid": "64f865cc_97bce30a",
+      "revId": "eda7b0f6099d93a8ddffceed55abd4bb6d07d680",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
