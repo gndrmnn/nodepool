@@ -34,6 +34,24 @@
       "parentUuid": "64f865cc_97bce30a",
       "revId": "eda7b0f6099d93a8ddffceed55abd4bb6d07d680",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1ed8b75_23a40f42",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-17T14:48:10Z",
+      "side": 1,
+      "message": "Okay, with a little duplication I think we can do what you ask:\nif cached data present and not expired and no pending future:\n  return cached data\nelse:\n  lines 502-532 exactly as written now.\n\nIt\u0027s a little duplicative, but efficient without added complexity.  I can do that if you want.",
+      "parentUuid": "64f865cc_97bce30a",
+      "revId": "eda7b0f6099d93a8ddffceed55abd4bb6d07d680",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
