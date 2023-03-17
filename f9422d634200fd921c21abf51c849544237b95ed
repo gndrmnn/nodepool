@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97361d7d_b585efa4",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-03-17T09:56:35Z",
+      "side": 1,
+      "message": "nit: logs should use %-formatting to allow deferred evaluation",
+      "revId": "f9422d634200fd921c21abf51c849544237b95ed",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
