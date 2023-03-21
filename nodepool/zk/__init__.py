@@ -9,17 +9,23 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+
 import logging
 import time
 from abc import ABCMeta
 from threading import Thread
 
-from kazoo.client import KazooClient
+import kazoo.client
+from nodepool.zk.vendor.client import ZuulKazooClient
+from nodepool.zk.vendor.connection import ZuulConnectionHandler
 from kazoo.handlers.threading import KazooTimeoutError
 from kazoo.protocol.states import KazooState
 
 from nodepool.zk.exceptions import NoClientException
 from nodepool.zk.handler import PoolSequentialThreadingHandler
+
+
+kazoo.client.ConnectionHandler = ZuulConnectionHandler
 
 
 class ZooKeeperClient(object):
@@ -135,7 +141,7 @@ class ZooKeeperClient(object):
                 args['keyfile'] = self.tls_key
                 args['certfile'] = self.tls_cert
                 args['ca'] = self.tls_ca
-            self.client = KazooClient(**args)
+            self.client = ZuulKazooClient(**args)
             self.client.add_listener(self._connectionListener)
             # Manually retry initial connection attempt
             while True:
