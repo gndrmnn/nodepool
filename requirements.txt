@@ -10,7 +10,7 @@ PrettyTable>=0.6,<0.8
 # This was due to not properly handling nova api microversions properly. 0.103
 # fixes this.
 openstacksdk>=0.103.0
-diskimage-builder>=3.23.1
+diskimage-builder>=3.27.0
 voluptuous
 kazoo>=2.8.0
 Paste
