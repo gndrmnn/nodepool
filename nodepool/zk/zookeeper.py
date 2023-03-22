@@ -20,13 +20,18 @@ import uuid
 
 from kazoo import exceptions as kze
 from kazoo.recipe.lock import Lock
-from kazoo.recipe.cache import TreeCache, TreeEvent
 from kazoo.recipe.election import Election
+from kazoo.protocol.states import (
+    EventType,
+    WatchedEvent,
+    KazooState,
+)
 
 from nodepool import exceptions as npe
 from nodepool.logconfig import get_annotated_logger
 from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.zk import ZooKeeperBase
+from nodepool.zk.vendor.states import AddWatchMode
 from nodepool.nodeutils import Attributes
 
 # States:
@@ -718,7 +723,7 @@ class Node(BaseModel):
 
 class NodepoolTreeCache(abc.ABC):
     '''
-    Use a ZK TreeCache to keep a cache of local Nodepool objects up to date.
+    Use watchers to keep a cache of local Nodepool objects up to date.
     '''
 
     log = logging.getLogger("nodepool.zk.ZooKeeper")
@@ -727,77 +732,114 @@ class NodepoolTreeCache(abc.ABC):
         self.zk = zk
         self.root = root
         self._cached_objects = {}
-        self._tree_cache = TreeCache(zk.kazoo_client,
-                                     self.root)
-        self._tree_cache.listen_fault(self.cacheFaultListener)
-        self._tree_cache.listen(self.cacheListener)
-        self._tree_cache.start()
+        self._cached_paths = set()
+        self._started = False
+        self._stopped = False
+        zk.kazoo_client.add_listener(self._sessionListener)
+        self._start()
 
-    def cacheFaultListener(self, e):
-        self.log.exception(e)
+    def _sessionListener(self, state):
+        if state in (KazooState.LOST, KazooState.SUSPENDED):
+            self._started = False
+        elif (state == KazooState.CONNECTED and
+              not self._started and not self._stopped):
+            self.zk.kazoo_client.handler.short_spawn(self._start)
 
-    def cacheListener(self, event):
-        try:
+    def _start(self):
+        self.log.debug("Initialize cache")
+        self.zk.kazoo_client.add_watch(self.root, self._cacheListener,
+                                       AddWatchMode.PERSISTENT_RECURSIVE)
+        self._walkTree()
+
+    def stop(self):
+        self._stopped = True
+
+    def _walkTree(self, root=None, seen_paths=None):
+        # Recursively walk the tree and emit fake changed events for
+        # every item in zk and fake deleted events for every item in
+        # the cache that is not in zk
+        exists = True
+        if root is None:
+            root = self.root
+            seen_paths = set()
+            if not self.zk.kazoo_client.exists(root):
+                exists = False
+        if exists:
+            seen_paths.add(root)
+            event = WatchedEvent(EventType.CHANGED,
+                                 self.zk.kazoo_client._state,
+                                 root)
             self._cacheListener(event)
-        except Exception:
-            self.log.exception(
-                "Exception in cache update for event: %s",
-                event)
+            for child in self.zk.kazoo_client.get_children(root):
+                self._walkTree('/'.join([root, child]), seen_paths)
+        if root is None:
+            for path in self.cached_paths:
+                if path not in seen_paths:
+                    # Double check it's still gone in case of a race
+                    if not self.zk.kazoo_client.exists(path):
+                        event = WatchedEvent(
+                            EventType.DELETED,
+                            self.zk.kazoo_client._state,
+                            root)
 
     def _cacheListener(self, event):
-        if hasattr(event.event_data, 'path'):
-            # Ignore root node
-            path = event.event_data.path
-            if path == self.root:
-                return
+        self.log.debug("Cache event %s", event)
 
-        # Ignore any non-node related events such as connection events here
-        if event.event_type not in (TreeEvent.NODE_ADDED,
-                                    TreeEvent.NODE_UPDATED,
-                                    TreeEvent.NODE_REMOVED):
+        # The cache is being (re-)initialized
+        if event.type == EventType.NONE:
+            return
+
+        if (event.type in (EventType.CREATED, EventType.CHANGED)):
+            self._cached_paths.add(event.path)
+            exists = True
+        elif (event.type == EventType.DELETED):
+            self._cached_paths.remove(event.path)
+            exists = False
+
+        # Ignore root node
+        if event.path == self.root:
             return
 
         # Some caches have special handling for certain sub-objects
         if self.preCacheHook(event):
             return
 
-        path = event.event_data.path
-        key = self.parsePath(path)
+        key = self.parsePath(event.path)
         if key is None:
             return
 
-        if event.event_type in (TreeEvent.NODE_ADDED, TreeEvent.NODE_UPDATED):
-            # Images with empty data are invalid so skip add or update these.
-            if not event.event_data.data:
-                return
-            data = self.zk._bytesToDict(event.event_data.data)
+        data, stat = None, None
+        if exists:
+            try:
+                data, stat = self.zk.kazoo_client.get(event.path)
+            except kze.NoNodeError:
+                pass
 
-            # Perform an in-place update of the cached image if possible
+        if data:
+            data = self.zk._bytesToDict(data)
+
+            # Perform an in-place update of the cached object if possible
             old_obj = self._cached_objects.get(key)
             if old_obj:
-                if event.event_data.stat.version <= old_obj.stat.version:
+                if stat.version <= old_obj.stat.version:
                     # Don't update to older data
                     return
                 if getattr(old_obj, 'lock', None):
                     # Don't update a locked object
                     return
                 old_obj.updateFromDict(data)
-                old_obj.stat = event.event_data.stat
+                old_obj.stat = stat
             else:
                 obj = self.objectFromDict(data, key)
-                obj.stat = event.event_data.stat
+                obj.stat = stat
                 self._cached_objects[key] = obj
-            self.postCacheHook(event)
-        elif event.event_type == TreeEvent.NODE_REMOVED:
+        else:
             try:
                 del self._cached_objects[key]
             except KeyError:
                 # If it's already gone, don't care
                 pass
-            self.postCacheHook(event)
-
-    def close(self):
-        self._tree_cache.close()
+        self.postCacheHook(event, data, stat)
 
     # Methods for subclasses:
     def preCacheHook(self, event):
@@ -812,7 +854,7 @@ class NodepoolTreeCache(abc.ABC):
         """
         return None
 
-    def postCacheHook(self, event):
+    def postCacheHook(self, event, data, stat):
         """Called after the cache has been updated"""
         return None
 
@@ -854,7 +896,7 @@ class ImageCache(NodepoolTreeCache):
         return r
 
     def preCacheHook(self, event):
-        key = self.zk._parseImagePausePath(event.event_data.path)
+        key = self.zk._parseImagePausePath(event.path)
         if key is None:
             return
         # A pause flag is being added or removed
@@ -862,10 +904,9 @@ class ImageCache(NodepoolTreeCache):
         image = self._cached_objects.get(key)
         if not image:
             return
-        if event.event_type in (TreeEvent.NODE_ADDED,
-                                TreeEvent.NODE_UPDATED):
+        if (not event or event.type == EventType.CHANGED):
             image.paused = True
-        elif event.event_type == TreeEvent.NODE_REMOVED:
+        elif event.type == EventType.DELETED:
             image.paused = False
         # This event was for a paused path; no further handling necessary
         return True
@@ -893,7 +934,7 @@ class NodeCache(NodepoolTreeCache):
         return self.zk._parseNodePath(path)
 
     def preCacheHook(self, event):
-        key = self.zk._parseNodeLockPath(event.event_data.path)
+        key = self.zk._parseNodeLockPath(event.path)
         if key is None:
             return
         # A lock contender is being added or removed
@@ -903,15 +944,14 @@ class NodeCache(NodepoolTreeCache):
         node = self._cached_objects.get(obj_key)
         if not node:
             return
-        if event.event_type in (TreeEvent.NODE_ADDED,
-                                TreeEvent.NODE_UPDATED):
+        if (not event or event.type == EventType.CHANGED):
             node.lock_contenders.add(contender)
-        elif event.event_type == TreeEvent.NODE_REMOVED:
+        elif event.type == EventType.DELETED:
             node.lock_contenders.discard(contender)
         # This event was for a lock path; no further handling necessary
         return True
 
-    def postCacheHook(self, event):
+    def postCacheHook(self, event, data, stat):
         # set the stats event so the stats reporting thread can act upon it
         if self.zk.node_stats_event is not None:
             self.zk.node_stats_event.set()
@@ -995,23 +1035,10 @@ class ZooKeeper(ZooKeeperBase):
     # Private Methods
     # =======================================================================
     def _onConnect(self):
-        if self.enable_cache:
+        if self.enable_cache and self._node_cache is None:
             self._node_cache = NodeCache(self, self.NODE_ROOT)
             self._request_cache = RequestCache(self, self.REQUEST_ROOT)
             self._image_cache = ImageCache(self, self.IMAGE_ROOT)
-
-    def _onDisconnect(self):
-        if self._node_cache is not None:
-            self._node_cache.close()
-            self._node_cache = None
-
-        if self._request_cache is not None:
-            self._request_cache.close()
-            self._request_cache = None
-
-        if self._image_cache is not None:
-            self._image_cache.close()
-            self._image_cache = None
 
     def _electionPath(self, election):
         return "%s/%s" % (self.ELECTION_ROOT, election)
