@@ -256,6 +256,9 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
             except exceptions.ZKLockException:
                 log.debug("Request is locked by someone else")
                 continue
+            except kze.NoNodeError:
+                log.debug("Request has been removed")
+                continue
 
             # Make sure the state didn't change on us after getting the lock
             if req.state != zk.REQUESTED:
