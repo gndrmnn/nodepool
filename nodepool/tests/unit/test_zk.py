@@ -16,6 +16,8 @@ import time
 import uuid
 import socket
 
+from kazoo.protocol.states import KazooState
+
 from nodepool import exceptions as npe
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
@@ -1141,3 +1143,86 @@ class TestZKModel(tests.BaseTestCase):
         d = n.toDict()
         self.assertEqual(d["connection_port"], 22022,
                          "Custom ssh port not set")
+
+
+class SimpleTreeCacheObject:
+    def __init__(self, key, data):
+        self.key = key
+        self.data = data
+        self.path = '/'.join(key)
+
+    def updateFromDict(self, data):
+        self.data = data
+
+
+class SimpleTreeCache(zk.NodepoolTreeCache):
+    def objectFromDict(self, d, key):
+        return SimpleTreeCacheObject(key, d)
+
+    def parsePath(self, path):
+        return tuple(path.split('/'))
+
+
+class TestTreeCache(tests.DBTestCase):
+    # A very simple smoke test of the tree cache
+
+    def waitForCache(self, cache, contents):
+        paths = set(contents.keys())
+        for _ in iterate_timeout(10, Exception, 'cache to sync', interval=0.1):
+            cached_paths = cache._cached_paths.copy()
+            cached_paths.discard(cache.root)
+            object_paths = set(
+                [x.path for x in cache._cached_objects.values()])
+            if paths == cached_paths == object_paths:
+                found = True
+                for obj in cache._cached_objects.values():
+                    if contents[obj.path] != obj.data:
+                        found = False
+                if found:
+                    return
+
+    def test_tree_cache(self):
+        client = self.zk.kazoo_client
+        data = b'{}'
+        client.create('/test', data)
+        client.create('/test/foo', data)
+        cache = SimpleTreeCache(self.zk, "/test")
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+        client.create('/test/bar', data)
+        self.waitForCache(cache, {
+            '/test/foo': {},
+            '/test/bar': {},
+        })
+        client.set('/test/bar', b'{"value":1}')
+        self.waitForCache(cache, {
+            '/test/foo': {},
+            '/test/bar': {'value': 1},
+        })
+        client.delete('/test/bar')
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+
+        # Simulate a change happening while the state was lost
+        cache._cached_paths.add('/test/bar')
+        cache._sessionListener(KazooState.LOST)
+        cache._sessionListener(KazooState.CONNECTED)
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+
+    def test_tree_cache_root(self):
+        client = self.zk.kazoo_client
+        data = b'{}'
+        client.create('/foo', data)
+        cache = SimpleTreeCache(self.zk, "")
+        for _ in iterate_timeout(10, Exception, 'cache to sync', interval=0.1):
+            cached_paths = cache._cached_paths.copy()
+            cached_paths.discard(cache.root)
+            object_paths = set(
+                [x.path for x in cache._cached_objects.values()])
+            if ('/foo' in cached_paths and
+                '/foo' in object_paths):
+                break
