@@ -358,7 +358,7 @@ class AwsAdapter(statemachine.Adapter):
 
     def listInstances(self):
         for instance in self._listInstances():
-            if instance.state["Name"].lower() == "terminated":
+            if instance.state['Name'].lower() in ('terminated', 'shutting-down'):
                 continue
             quota = self._getQuotaForInstanceType(instance.instance_type)
             yield AwsInstance(self.provider, instance, quota)
