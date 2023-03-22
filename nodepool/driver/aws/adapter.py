@@ -93,7 +93,9 @@ class AwsInstance(statemachine.Instance):
         self.public_ipv6 = None
         self.cloud = 'AWS'
         self.region = provider.region_name
-        self.az = instance.subnet.availability_zone
+        # When instance in shutting-down state, subnet could be None
+        self.az = (instance.subnet.availability_zone if instance.subnet
+                   else None)
         self.quota = quota
 
         for iface in instance.network_interfaces[:1]:
