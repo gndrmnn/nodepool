@@ -16,6 +16,23 @@
       "message": "recheck need to rerun to actually run with multiarch support in the container roleset.",
       "revId": "1281a14b0a223be8769e277af52d4aeea680b9ae",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4622199_ab712375",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7118
+      },
+      "writtenOn": "2023-03-24T02:32:26Z",
+      "side": 1,
+      "message": "recheck",
+      "revId": "1281a14b0a223be8769e277af52d4aeea680b9ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
