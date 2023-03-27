@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b40f095_34db19bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T15:33:45Z",
+      "side": 1,
+      "message": "Thank you for the contribution!  I think this is useful and something we can accept.  I have some thoughts below, some of them somewhat skeptical, related to the additional challenges that the reclaiming behavior brings with it.\n\nSince we have no way to notify Zuul that the instance was (or will be) deleted, it will only discover this as it tries to execute operations on it.  If the user is lucky, the job will be active and the network will start to send TCP rejects and the ssh connection will terminate quickly and Ansible will exit with an error.  If the user is unlucky, the job might be at a point where it wouldn\u0027t notice the disappearance for quite a long time.  Either way, if the job is past the pre-run playbook (which is likely), it will be considered a failure.\n\nI could see users attempting to do even more work in a pre-run playbook on jobs that run on spot instances in order to try to get some kind of a retry mechanism.  But that\u0027s not what that is intended for, and it would retry all kinds of failures which should be reported as failures.  Put another way, using spot instances will increase false negatives.  Abusing pre-run to compensate will decrease true negatives.  (Of course, if, in practice, spot instances are rarely reclaimed, this is less of a problem.)\n\nIt is conceivable that users of this feature may save on EC2 costs while increasing human developer costs as they try to deal with the limitations.  I think if we really want to make the use of spot instances attractive and safe, we have more work to do to make Zuul handle them gracefully.\n\nThe above are just my general thoughts.  I have some specific suggestions in in-line comments.",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5119d72_86326b60",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T15:33:45Z",
+      "side": 1,
+      "message": "The last part of the sentence reads a little bit like an advertisement, could change at any time, and isn\u0027t really that relevant to configuration.  Perhays just say \"...unused EC2 capacity at a discount\".",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49bbe889_2254da56",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T15:33:45Z",
+      "side": 1,
+      "message": "I think we should mention the caveat about the instance being deleted here as well.",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51ee0f9b_1fd22403",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T15:33:45Z",
+      "side": 1,
+      "message": "Nit (this is not relatide to the -1 I\u0027m leaving, it\u0027s just informative; you don\u0027t need to change it, but you are welcome to if you update to a new patchset anyway): it\u0027s customary to add an extra \",\" to the end of lines like this so that if someone adds another item later, they don\u0027t have to update this one.  Just like how you didn\u0027t have to update the \"dynamic-tags\" line.  :)",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
