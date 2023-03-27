@@ -696,7 +696,8 @@ class OpenStackAdapter(statemachine.Adapter):
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         try:
-            return self._client.list_volumes()
+            with Timer(self.log, 'API call list_volumes'):
+                return self._client.list_volumes()
         except EndpointNotFound:
             return []
 
