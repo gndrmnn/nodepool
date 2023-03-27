@@ -457,3 +457,77 @@ class RateLimiter:
 
     def _exit(self, etype, value, tb):
         pass
+
+
+class LazyExecutorTTLCache:
+    """This is a lazy executor TTL cache.
+
+    It's lazy because if it has cached data, it will always return it
+    instantly.
+
+    It's executor based, which means that if a cache miss occurs, it
+    will submit a task to an executor to fetch new data.
+
+    Finally, it's a TTL cache, which means it automatically expires data.
+
+    Since it is only expected to be used when caching provider
+    resource listing methods, it assumes there will only be one entry
+    and ignores arguments -- it will return the same cached data no
+    matter what arguments are supplied; but it will pass on those
+    arguments to the underlying method in a cache miss.
+
+    :param numeric ttl: The cache timeout in seconds.
+    :param concurrent.futures.Executor executor: An executor to use to
+        update data asynchronously in case of a cache miss.
+    """
+
+    def __init__(self, ttl, executor):
+        self.ttl = ttl
+        self.executor = executor
+        # If we have an outstanding update being run by the executor,
+        # this is the future.
+        self.future = None
+        # The last time the underlying method completed.
+        self.last_time = None
+        # The last value from the underlying method.
+        self.last_value = None
+        # A lock to make all of this thread safe (especially to ensure
+        # we don't fire off multiple updates).
+        self.lock = threading.Lock()
+
+    def __call__(self, func):
+        def decorator(*args, **kw):
+            with self.lock:
+                now = time.monotonic()
+                if self.future and self.future.done():
+                    # If a previous call spawned an update, resolve
+                    # that now so we can use the data.
+                    try:
+                        self.last_time, self.last_value = self.future.result()
+                    finally:
+                        # Clear the future regardless so we don't loop.
+                        self.future = None
+                if (self.last_time is not None and
+                    now - self.last_time < self.ttl):
+                    # A cache hit.
+                    return self.last_value
+                # The rest of the method is a cache miss.
+                if self.last_time is not None:
+                    if not self.future:
+                        # Fire off an asynchronous update request.
+                        # This second wrapper ensures that we record
+                        # the time that the update is complete along
+                        # with the value.
+                        def func_with_time():
+                            ret = func(*args, **kw)
+                            now = time.monotonic()
+                            return (now, ret)
+                        self.future = self.executor.submit(func_with_time)
+                else:
+                    # This is the first time this method has been
+                    # called; since we don't have any cached data, we
+                    # will synchronously update the data.
+                    self.last_value = func(*args, **kw)
+                    self.last_time = time.monotonic()
+                return self.last_value
+        return decorator
