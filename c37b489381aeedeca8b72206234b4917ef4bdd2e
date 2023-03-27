@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcd0651f_d367fdc4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T16:04:55Z",
+      "side": 1,
+      "message": "Tobias reminded me that Zuul does attempt to retry jobs if nodes become unreachable, so a lot of this depends on whether the spot instance reclamation happens in a way that facilitates that happening, and also the particulars of the job in whether the condition is detected quickly.  I think that may reduce my concern about people \"stuffing\" pre-run playbooks to try to get retry behaviors, but it\u0027s not clear how smoothly the reclamation process will be.  I am in favor of experimenting, observing, and improving.  Just want to set expectations appropriately.  :)",
+      "parentUuid": "8b40f095_34db19bd",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5119d72_86326b60",
