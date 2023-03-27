@@ -36,6 +36,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc5bf248_650cba1a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-27T16:05:46Z",
+      "side": 1,
+      "message": "Oops didn\u0027t mean to resolve comment; unresolving to make sure it\u0027s seen.",
+      "parentUuid": "8b40f095_34db19bd",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5119d72_86326b60",
