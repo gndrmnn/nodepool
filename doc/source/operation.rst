@@ -547,27 +547,90 @@ Provider Metrics
    Number of nodes per provider that are in one specific state. See
    :ref:`nodepool.nodes <nodepool_nodes>` for a list of possible states.
 
-.. zuul:stat:: nodepool.provider.<provider>.leaked.ports
+.. zuul:stat:: nodepool.provider.<provider>.leaked
+
+   This hierarchy supplies driver-dependent information about leaked
+   resource cleanup.  Non-zero values indicate an error situation as
+   resources should be cleaned up automatically.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.amis
    :type: counter
 
-   Number of ports in the DOWN state that have been removed
-   automatically in the cleanup resources phase of the OpenStack
-   driver.  Non-zero values indicate an error situation as ports
-   should be cleaned up automatically.
+   Drivers: AWS
 
-.. zuul:stat:: nodepool.provider.<provider>.leaked.instances
+   Number of leaked AMIs removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.disks
    :type: counter
 
-   Number of nodes not correctly recorded in Zookeeper that nodepool
-   has cleaned up automatically.  Non-zero values indicate an error
-   situation as instances should be cleaned automatically.
+   Drivers: Azure
+
+   Number of leaked disks removed automatically by Nodepool.
 
 .. zuul:stat:: nodepool.provider.<provider>.leaked.floatingips
    :type: counter
 
-   Records the number of unattached floating IPs removed automatically
-   by nodepool.  Elevated rates indicate an error situation as
-   floating IPs should be managed automatically.
+   Drivers: OpenStack, IBMVPC
+
+   Number of unattached floating IPs removed automatically by
+   Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.images
+   :type: counter
+
+   Drivers: Azure, IBMVPC
+
+   Number of leaked images removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.instances
+   :type: counter
+
+   Drivers: AWS, Azure, GCE, IBMVPC, OpenStack
+
+   Number of nodes not correctly recorded in Zookeeper that Nodepool
+   has cleaned up automatically.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.nics
+   :type: counter
+
+   Drivers: Azure
+
+   Number of leaked NICs removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.objects
+   :type: counter
+
+   Drivers: AWS, IBMVPC
+
+   Number of leaked storage objects removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.pips
+   :type: counter
+
+   Drivers: Azure
+
+   Number of leaked public IPs removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.ports
+   :type: counter
+
+   Drivers: OpenStack
+
+   Number of ports in the DOWN state that have been removed.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.snapshots
+   :type: counter
+
+   Drivers: AWS
+
+   Number of leaked snapshots removed automatically by Nodepool.
+
+.. zuul:stat:: nodepool.provider.<provider>.leaked.volumes
+   :type: counter
+
+   Drivers: AWS
+
+   Number of leaked volumes removed automatically by Nodepool.
 
 
 Launch metrics

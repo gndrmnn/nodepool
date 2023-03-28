@@ -141,10 +141,14 @@ class IBMVPCInstance(statemachine.Instance):
 
 
 class IBMVPCResource(statemachine.Resource):
+    TYPE_INSTANCE = 'instance'
+    TYPE_FIP = 'floatingip'
+    TYPE_IMAGE = 'image'
+    TYPE_OBJECT = 'object'
+
     def __init__(self, type, obj, resource_group):
         metadata = get_metadata_from_resource_group_object(resource_group, obj)
-        super().__init__(metadata)
-        self.type = type
+        super().__init__(metadata, type)
         self.name = obj['name']
         self.id = obj['id']
 
@@ -392,15 +396,15 @@ class IBMVPCAdapter(statemachine.Adapter):
     def listResources(self):
         for vm in self._listInstances():
             rg = self._getResourceGroupByReference(vm['resource_group'])
-            yield IBMVPCResource('instance', vm, rg)
+            yield IBMVPCResource(IBMVPCResource.TYPE_INSTANCE, vm, rg)
         for fip in self._listFloatingIPs():
             rg = self._getResourceGroupByReference(fip['resource_group'])
-            yield IBMVPCResource('fip', fip, rg)
+            yield IBMVPCResource(IBMVPCResource.TYPE_FIP, fip, rg)
         for image in self._listImages():
             if image['owner_type'] != 'user':
                 continue
             rg = self._getResourceGroupByReference(image['resource_group'])
-            yield IBMVPCResource('image', image, rg)
+            yield IBMVPCResource(IBMVPCResource.TYPE_IMAGE, image, rg)
         rgname = make_image_resource_group_name(self.provider.name)
         if self.storage_instance and rgname in self.resource_groups:
             rg = self.resource_groups[rgname]
@@ -418,18 +422,19 @@ class IBMVPCAdapter(statemachine.Adapter):
                     'name': obj['Key'],
                     'id': obj['Key'],
                 }
-                yield IBMVPCResource('object', storage_object, rg)
+                yield IBMVPCResource(IBMVPCResource.TYPE_OBJECT,
+                                     storage_object, rg)
 
     def deleteResource(self, resource):
         self.log.info(f"Deleting leaked {resource.type}: {resource.name}")
         with self.rate_limiter:
-            if resource.type == 'instance':
+            if resource.type == IBMVPCResource.TYPE_INSTANCE:
                 self.cloud_vpc.delete_instance(resource.id)
-            elif resource.type == 'fip':
+            elif resource.type == IBMVPCResource.TYPE_FIP:
                 self.cloud_vpc.delete_floating_ip(resource.id)
-            elif resource.type == 'image':
+            elif resource.type == IBMVPCResource.TYPE_IMAGE:
                 self.cloud_vpc.delete_image(resource.id)
-            elif resource.type == 'object':
+            elif resource.type == IBMVPCResource.TYPE_OBJECT:
                 self.cloud_storage.delete_object(
                     Bucket=self.provider.object_storage['bucket-name'],
                     Key=resource.id)
