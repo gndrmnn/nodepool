@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "266a3da5_3b744ad5",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-03-28T12:33:34Z",
+      "side": 1,
+      "message": "In contrast to the cache listener for the tree cache, the callbacks will be processed in the Kazoo callback worker (single threaded IIRC).\n\n\u003e Watch and completion callbacks should avoid blocking behavior as the next callback of that type won’t be run until it completes. If you need to block, spawn a new thread and return immediately so callbacks can proceed.\nhttps://kazoo.readthedocs.io/en/latest/api/handlers/threading.html#kazoo.handlers.threading.SequentialThreadingHandler\n\nThe cache listener is doing quite a lot, including ZK requests. I\u0027m wondering if we should instead mimic the Kazoo tree cache impl. to have the watch listener dispatch the event to a separate thread that\u0027s only processing events for the nodepool tree cache.",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc0514f6_9a46fa00",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-03-28T12:33:34Z",
+      "side": 1,
+      "message": "I think we need to call `self._cacheListener(event)` here",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "363722cd_c4070748",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-03-28T12:33:34Z",
+      "side": 1,
+      "message": "Just a note as it\u0027s been like this before: when the znode is deleted and re-created the version will start again from 0, so it might go backward.\n\nComparing the mzxids is IMHO the safer choice here.",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
