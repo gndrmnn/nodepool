@@ -329,6 +329,8 @@ class BaseTestCase(testtools.TestCase):
             stats = itertools.chain.from_iterable(
                 [s.decode('utf-8').split('\n') for s in self.statsd.stats])
             for stat in stats:
+                if 'leaked' in stat:
+                    print(stat)
                 k, v = stat.split(':')
                 if key == k:
                     if kind is None:

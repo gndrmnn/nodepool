@@ -64,9 +64,10 @@ class GceInstance(statemachine.Instance):
 
 
 class GceResource(statemachine.Resource):
+    TYPE_INSTANCE = 'instance'
+
     def __init__(self, metadata, type, id):
-        super().__init__(metadata)
-        self.type = type
+        super().__init__(metadata, type)
         self.id = id
 
 
@@ -183,11 +184,12 @@ class GceAdapter(statemachine.Adapter):
             if instance['status'] == 'TERMINATED':
                 continue
             metadata = gce_metadata_to_dict(instance.get('metadata'))
-            yield GceResource(metadata, 'instance', instance['name'])
+            yield GceResource(metadata,
+                              GceResource.TYPE_INSTANCE, instance['name'])
 
     def deleteResource(self, resource):
         self.log.info(f"Deleting leaked {resource.type}: {resource.id}")
-        if resource.type == 'instance':
+        if resource.type == GceResource.TYPE_INSTANCE:
             self._deleteInstance(resource.id)
 
     def getQuotaLimits(self):
