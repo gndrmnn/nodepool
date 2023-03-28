@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2214f8a4_5f117d75",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-28T21:15:02Z",
+      "side": 1,
+      "message": "We can move all the callback handling into a background queue processing thread.",
+      "parentUuid": "266a3da5_3b744ad5",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dc0514f6_9a46fa00",
@@ -35,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "289de98d_a04d0db2",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-28T21:15:02Z",
+      "side": 1,
+      "message": "Yep; I\u0027ve added a smoke test to catch this and other errors.",
+      "parentUuid": "dc0514f6_9a46fa00",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "363722cd_c4070748",
@@ -48,6 +84,24 @@
       "writtenOn": "2023-03-28T12:33:34Z",
       "side": 1,
       "message": "Just a note as it\u0027s been like this before: when the znode is deleted and re-created the version will start again from 0, so it might go backward.\n\nComparing the mzxids is IMHO the safer choice here.",
+      "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "274dc107_35fef837",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-03-28T21:15:02Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "363722cd_c4070748",
       "revId": "fd5fc17735a4864e5d68b2da69eb3fc4713f2a08",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
