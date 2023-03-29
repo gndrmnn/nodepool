@@ -50,6 +50,24 @@
       "message": "I\u0027m wondering if instead of filtering out all \"shutting-down\" instances we might want to catch exceptions when creating the `AwsInstance` here. This way the calculated quota might not get skewed too much. E.g. like\n\n    try:\n        yield AwsInstance(self.proivider, instance, quota)\n    except Exception:\n        self.log.exception(\"...\")\n        \nI guess the main question here is if shutting down instances should still be counted for the quota or not. Don\u0027t have a strong opinion on that.",
       "revId": "f5aee06ff203143510be4a0099b1e494cd2af0aa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c0389dc_a37621f2",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2023-03-29T11:00:21Z",
+      "side": 1,
+      "message": "I updated a new patch to avoid the exception in AwsInstance\u0027s constructor instead.",
+      "parentUuid": "de5491aa_b2507be3",
+      "revId": "f5aee06ff203143510be4a0099b1e494cd2af0aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
