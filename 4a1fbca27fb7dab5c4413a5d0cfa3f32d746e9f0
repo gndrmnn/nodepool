@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ae52850_d89fdf0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35619
+      },
+      "writtenOn": "2023-03-29T12:33:17Z",
+      "side": 1,
+      "message": "I have a similar patch at https://review.opendev.org/c/zuul/nodepool/+/875050",
+      "revId": "4a1fbca27fb7dab5c4413a5d0cfa3f32d746e9f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
