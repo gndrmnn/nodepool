@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66cd1614_2f43e442",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-03-30T12:43:43Z",
+      "side": 1,
+      "message": "A few things:\n1. I\u0027d not include the exception type and the term `DeletedNodeWorker` in the log message. Both sound a bit too \"technical\" to me.\n2. I think we could also up the log level to \"warning\"\n3. (nit) Logs should use %-formatting (`log.info(\"...%s ...\", variable`) instead of f-strings\n\nMore generally I\u0027m wondering if we can always be sure that the `NotEmptyError` is the result of a race between the SM and the worker trying to delete the same node. Another question would be if we want to execute `self.manager.nodeDeletedNotification(node)` in this case.",
+      "revId": "5df4ea718f127188c3476f6af3627e07ba2419ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
