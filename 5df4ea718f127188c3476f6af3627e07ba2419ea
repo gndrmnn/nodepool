@@ -16,6 +16,24 @@
       "message": "A few things:\n1. I\u0027d not include the exception type and the term `DeletedNodeWorker` in the log message. Both sound a bit too \"technical\" to me.\n2. I think we could also up the log level to \"warning\"\n3. (nit) Logs should use %-formatting (`log.info(\"...%s ...\", variable`) instead of f-strings\n\nMore generally I\u0027m wondering if we can always be sure that the `NotEmptyError` is the result of a race between the SM and the worker trying to delete the same node. Another question would be if we want to execute `self.manager.nodeDeletedNotification(node)` in this case.",
       "revId": "5df4ea718f127188c3476f6af3627e07ba2419ea",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5ed6518_c996aa2d",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2023-03-30T12:52:38Z",
+      "side": 1,
+      "message": "1. To be honest, I have a difficult time in thinking of a proper log message here, anyone has a better idea is welcome.\n2. \"warning\" sounds reasonable.\n3. I actually checked the log around that place, I see both formats are in use, so I just selected one.\n\nI checked the code, it seems at this place, the `NotEmptyError` should be only caused by the `DeleteNodeWorker`. And about the `elf.manager.nodeDeletedNotification(node)` I was also struggling a bit if it should be called when this exception happens. Any suggestion is welcome.",
+      "parentUuid": "66cd1614_2f43e442",
+      "revId": "5df4ea718f127188c3476f6af3627e07ba2419ea",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
