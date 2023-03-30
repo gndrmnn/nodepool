@@ -338,8 +338,13 @@ class StateMachineNodeDeleter:
             self.log.info(
                 "Deleting ZK node id=%s, state=%s, external_id=%s",
                 node.id, node.state, node.external_id)
-            # This also effectively releases the lock
-            self.zk.deleteNode(node)
+            try:
+                # This also effectively releases the lock
+                self.zk.deleteNode(node)
+            except kze.NotEmptyError:
+                self.log.info("NotEmptyError in deleting Zk node "
+                              f"id={node.external_id}, it seems the node "
+                              "is being deleted by DeletedNodeWorker")
             self.manager.nodeDeletedNotification(node)
         return True
 
