@@ -71,6 +71,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7b9b691_53a6567b",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-04-07T14:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5119d72_86326b60",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49bbe889_2254da56",
@@ -88,6 +106,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "184827cb_1f596469",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-04-07T14:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49bbe889_2254da56",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51ee0f9b_1fd22403",
@@ -101,6 +137,24 @@
       "writtenOn": "2023-03-27T15:33:45Z",
       "side": 1,
       "message": "Nit (this is not relatide to the -1 I\u0027m leaving, it\u0027s just informative; you don\u0027t need to change it, but you are welcome to if you update to a new patchset anyway): it\u0027s customary to add an extra \",\" to the end of lines like this so that if someone adds another item later, they don\u0027t have to update this one.  Just like how you didn\u0027t have to update the \"dynamic-tags\" line.  :)",
+      "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "512a27ec_caa070b3",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-04-07T14:55:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51ee0f9b_1fd22403",
       "revId": "c37b489381aeedeca8b72206234b4917ef4bdd2e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
