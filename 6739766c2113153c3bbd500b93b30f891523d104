@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c9a7a9f_05a0eb4e",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1173,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:57:49Z",
+      "side": 1,
+      "message": "Yes this is duplicative.",
+      "parentUuid": "21feddce_4e49c996",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc0eb0d6_d1d0435e",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-04-10T21:41:58Z",
       "side": 1,
       "message": "I don\u0027t see anything that flips self._started to True. Should that be set in _start()?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f22c6eaf_b0aee6cb",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:57:49Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "cc0eb0d6_d1d0435e",
       "revId": "6739766c2113153c3bbd500b93b30f891523d104",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -69,6 +105,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42b79aa7_8bcbdd6e",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:57:49Z",
+      "side": 1,
+      "message": "Order doesn\u0027t matter here.  This is not a delete or create event or any other kind of event that is inherently sequenced, this is a \"check\" event that just notifies recipients they should update the state of the path.",
+      "parentUuid": "e6a891aa_d4c07771",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "86262358_a90e76bc",
@@ -82,6 +136,24 @@
       "writtenOn": "2023-04-10T21:41:58Z",
       "side": 1,
       "message": "Might be worth noting why we ignore the root node? I think because nodepool (and zuul) don\u0027t write operational data to the root its all organizational at that level?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5e226e6_3a1c55ce",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:57:49Z",
+      "side": 1,
+      "message": "Sure that would be better.  I don\u0027t recall writing this comment, and it\u0027s several years old.",
+      "parentUuid": "86262358_a90e76bc",
       "revId": "6739766c2113153c3bbd500b93b30f891523d104",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
