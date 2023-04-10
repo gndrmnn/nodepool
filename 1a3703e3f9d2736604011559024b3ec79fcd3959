@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5692a3c_0e69e872",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:40:56Z",
+      "side": 1,
+      "message": "Correct.  For reviewability, this change is ~\u003d to the upstream change.",
+      "parentUuid": "d11f5d9c_34f13f84",
+      "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f63e42b_144c15cc",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-04-10T21:11:08Z",
       "side": 1,
       "message": "I think this manipulation of paths means that you won\u0027t see a persistent recursive watch set on /:\n\n```\n\u003e\u003e\u003e path \u003d \u0027/foo/bar\u0027\n\u003e\u003e\u003e path.split(\u0027/\u0027)\n[\u0027\u0027, \u0027foo\u0027, \u0027bar\u0027]\n\u003e\u003e\u003e \u0027/\u0027.join(path.split(\u0027/\u0027)[:1])\n\u0027\u0027\n```",
+      "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60abf4a5_e6d5cf1f",
+        "filename": "nodepool/zk/vendor/connection.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:40:56Z",
+      "side": 1,
+      "message": "Will fix in a followup.",
+      "parentUuid": "0f63e42b_144c15cc",
       "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -52,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c04a34fa_5421e3a0",
+        "filename": "nodepool/zk/vendor/connection.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:40:56Z",
+      "side": 1,
+      "message": "Can switch to constants.  I\u0027ll do that in a followup.\n\nAs for the additional types -- that\u0027s not really our call.  This is the ZooKeeper design, and we just get to match server behavior.",
+      "parentUuid": "5291cc5c_22288520",
+      "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47e7cf34_4e0b2615",
@@ -65,6 +119,24 @@
       "writtenOn": "2023-04-10T21:11:08Z",
       "side": 1,
       "message": "Should zero be the default which is non persistent non recursive? Then 1 for persistent and 3 (or 2 depending on whether not this is bitwise) for persistent recursive?",
+      "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a9e70ae_9b5a5c00",
+        "filename": "nodepool/zk/vendor/states.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T21:40:56Z",
+      "side": 1,
+      "message": "This is set by the ZK protocol, so not our choice.",
+      "parentUuid": "47e7cf34_4e0b2615",
       "revId": "1a3703e3f9d2736604011559024b3ec79fcd3959",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
