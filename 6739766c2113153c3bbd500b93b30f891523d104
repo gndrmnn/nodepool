@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "867b65c8_b8b70f9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "Should the documentation be updated as well to indicate zookeeper 3.6 or newer is now required? Or maybe an upgrade release note?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21feddce_4e49c996",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1173,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "I don\u0027t think accessing cache._cached_objects.values() side effects loading the cache._cached_paths values. Is this set comprehension redundant with the one on line 1176 - 1177?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc0eb0d6_d1d0435e",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "I don\u0027t see anything that flips self._started to True. Should that be set in _start()?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6a891aa_d4c07771",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "Does order matter? Currently _cached_paths is a set which is unordered which means we may get a delete event for /foo before /foo/bar. I think for the cache consistency itself this isn\u0027t a big deal because we simply manipulate the contents of this set, but if other operations operating on the cache don\u0027t expect this possibly inconsistent state we may have problems.",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86262358_a90e76bc",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "Might be worth noting why we ignore the root node? I think because nodepool (and zuul) don\u0027t write operational data to the root its all organizational at that level?",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20429a89_18b266ad",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T21:41:58Z",
+      "side": 1,
+      "message": "I guess the idea with the new check here is to check for initial startup. Otherwise all three caches will exist until the process dies as we don\u0027t replace them on reconnection.",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
