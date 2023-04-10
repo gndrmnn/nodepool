@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8c1cb32_34bcb349",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 800,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T22:11:56Z",
+      "side": 1,
+      "message": "I think we can.",
+      "parentUuid": "66840c23_3b52e542",
+      "revId": "9ec93e8fd0e58d7a4c4f39cd78cf3b17fb6c2b54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2fb0d78d_9b5f7eda",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-04-10T22:02:57Z",
       "side": 1,
       "message": "See above.",
+      "revId": "9ec93e8fd0e58d7a4c4f39cd78cf3b17fb6c2b54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61531488_bc3331bf",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T22:11:56Z",
+      "side": 1,
+      "message": "Ditto.",
+      "parentUuid": "2fb0d78d_9b5f7eda",
       "revId": "9ec93e8fd0e58d7a4c4f39cd78cf3b17fb6c2b54",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
