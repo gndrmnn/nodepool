@@ -173,6 +173,24 @@
       "message": "I guess the idea with the new check here is to check for initial startup. Otherwise all three caches will exist until the process dies as we don\u0027t replace them on reconnection.",
       "revId": "6739766c2113153c3bbd500b93b30f891523d104",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47e83503_33801be7",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1091,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-10T22:04:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20429a89_18b266ad",
+      "revId": "6739766c2113153c3bbd500b93b30f891523d104",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
