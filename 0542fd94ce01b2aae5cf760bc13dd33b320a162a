@@ -16,6 +16,24 @@
       "message": "Candidate would be just \"\" if it was the root. Do we need a check like:\n\n```\nif not candidate:\n    candidate \u003d \u0027/\u0027\n```",
       "revId": "0542fd94ce01b2aae5cf760bc13dd33b320a162a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1eb04f4_6ba058dc",
+        "filename": "nodepool/zk/vendor/connection.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-10T22:56:04Z",
+      "side": 1,
+      "message": "That probably makes the most sense.",
+      "parentUuid": "f0d5b74c_73f78d23",
+      "revId": "0542fd94ce01b2aae5cf760bc13dd33b320a162a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
