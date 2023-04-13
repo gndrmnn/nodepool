@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61d7554f_d3ce9c31",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2376,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-04-13T19:21:21Z",
+      "side": 1,
+      "message": "This can raise if we try to release an unlocked thread lock. Should we update the raises listing in the docstring or catch that situation for non ephemeral locks which will have already been unlocked?",
+      "revId": "3e3b51ec16498b7f500830a22af6a99962832912",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
