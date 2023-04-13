@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e05f348_907aaffb",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2350,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2023-04-13T18:33:33Z",
+      "side": 1,
+      "message": "should this be \"non ephemeral\" ?",
+      "range": {
+        "startLine": 2350,
+        "startChar": 58,
+        "endLine": 2350,
+        "endChar": 68
+      },
+      "revId": "62ebdccb919ed80156db9ec78b758b7d976f8b5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
