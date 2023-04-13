@@ -22,6 +22,24 @@
       },
       "revId": "62ebdccb919ed80156db9ec78b758b7d976f8b5a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1acee498_78b78d73",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2350,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-13T19:47:57Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "2e05f348_907aaffb",
+      "revId": "62ebdccb919ed80156db9ec78b758b7d976f8b5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
