@@ -16,6 +16,24 @@
       "message": "Hi James,\nthanks for taking the time and providing your feedback. I have implemneted your suggestions. Let me know if there is something else I can/should do.\nBest,\nChristian",
       "revId": "df24655fbadc9ac9bf734998ebacc136ad28e066",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0256ebdc_c9ed917f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-13T21:09:09Z",
+      "side": 1,
+      "message": "Hi, it looks like something went wrong on the most recent patchset.  PS13 appears to be a rebase of PS12 with no changes.  So not only do we need to get a new PS from you with the changes, we also should undo the rebase.  Adding in unecessary rebases makes it harder for reviewers to see changes between patchsets.\n\nAt this point, I recommend that you download patchset 12, make your changes, amend the commit, then run \"git review\".  Git-review will check to see if the change requires a rebase, and if so, let you know.  If it doesn\u0027t, then it will upload it as-is.",
+      "parentUuid": "da4bf43e_156dc346",
+      "revId": "df24655fbadc9ac9bf734998ebacc136ad28e066",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
