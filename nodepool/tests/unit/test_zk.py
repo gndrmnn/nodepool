@@ -668,9 +668,15 @@ class TestZooKeeper(tests.DBTestCase):
         node = zk.Node('100')
         self.zk.lockNode(node)
         with testtools.ExpectedException(
-            npe.ZKLockException, "Did not get lock on .*"
+            npe.ZKLockException, "Did not get thread lock on .*"
         ):
             self.zk.lockNode(node, blocking=False)
+
+        node2 = zk.Node('100')
+        with testtools.ExpectedException(
+            npe.ZKLockException, "Did not get lock on .*"
+        ):
+            self.zk.lockNode(node2, blocking=False)
 
     def test_lockNode_unlockNode(self):
         node = zk.Node('100')

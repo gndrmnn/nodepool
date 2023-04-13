@@ -2238,7 +2238,16 @@ class ZooKeeper(ZooKeeperBase):
         log = get_annotated_logger(self.log, event_id=request.event_id,
                                    node_request_id=request.id)
         path = self._requestLockPath(request.id)
-        with request._thread_lock:
+        thread_timeout = -1 if timeout is None else timeout
+        have_thread_lock = request._thread_lock.acquire(
+            blocking=blocking,
+            timeout=thread_timeout)
+        if not have_thread_lock:
+            if blocking:
+                raise npe.TimeoutException(
+                    "Timeout trying to acquire thread lock for %s" % path)
+            raise npe.ZKLockException("Did not get thread lock on %s" % path)
+        try:
             try:
                 lock = Lock(self.kazoo_client, path)
                 have_lock = lock.acquire(blocking, timeout)
@@ -2255,6 +2264,12 @@ class ZooKeeper(ZooKeeperBase):
                 raise npe.ZKLockException("Did not get lock on %s" % path)
 
             request.lock = lock
+        except Exception:
+            try:
+                request._thread_lock.release()
+            except Exception:
+                log.exception("Unable to release thread lock for: %s", request)
+            raise
 
         # Do an in-place update of the node request so we have the latest data
         self.updateNodeRequest(request)
@@ -2272,9 +2287,9 @@ class ZooKeeper(ZooKeeperBase):
         if request.lock is None:
             raise npe.ZKLockException(
                 "Request %s does not hold a lock" % request)
-        with request._thread_lock:
-            request.lock.release()
-            request.lock = None
+        request.lock.release()
+        request.lock = None
+        request._thread_lock.release()
 
     def lockNode(self, node, blocking=True, timeout=None,
                  ephemeral=True, identifier=None):
@@ -2301,7 +2316,16 @@ class ZooKeeper(ZooKeeperBase):
             and could not get the lock, or a lock is already held.
         '''
         path = self._nodeLockPath(node.id)
-        with node._thread_lock:
+        thread_timeout = -1 if timeout is None else timeout
+        have_thread_lock = node._thread_lock.acquire(
+            blocking=blocking,
+            timeout=thread_timeout)
+        if not have_thread_lock:
+            if blocking:
+                raise npe.TimeoutException(
+                    "Timeout trying to acquire thread lock for %s" % path)
+            raise npe.ZKLockException("Did not get thread lock on %s" % path)
+        try:
             try:
                 lock = Lock(self.kazoo_client, path, identifier)
                 have_lock = lock.acquire(blocking, timeout, ephemeral)
@@ -2319,6 +2343,19 @@ class ZooKeeper(ZooKeeperBase):
 
             node.lock = lock
 
+            if not ephemeral:
+                try:
+                    node._thread_lock.release()
+                except Exception:
+                    log.exception("Unable to release emphemeral thread "
+                                  "lock for: %s", node)
+        except Exception:
+            try:
+                node._thread_lock.release()
+            except Exception:
+                log.exception("Unable to release thread lock for: %s", node)
+            raise
+
         # Do an in-place update of the node so we have the latest data.
         self.updateNode(node)
 
@@ -2334,9 +2371,9 @@ class ZooKeeper(ZooKeeperBase):
         '''
         if node.lock is None:
             raise npe.ZKLockException("Node %s does not hold a lock" % node)
-        with node._thread_lock:
-            node.lock.release()
-            node.lock = None
+        node.lock.release()
+        node.lock = None
+        node._thread_lock.release()
 
     def forceUnlockNode(self, node):
         '''
