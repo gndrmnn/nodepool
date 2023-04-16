@@ -34,6 +34,24 @@
       "parentUuid": "da4bf43e_156dc346",
       "revId": "df24655fbadc9ac9bf734998ebacc136ad28e066",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c35ce213_d714a974",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35571
+      },
+      "writtenOn": "2023-04-16T19:16:44Z",
+      "side": 1,
+      "message": "Done.\nThanks for the guidance James, and sorry for the confusion.",
+      "parentUuid": "0256ebdc_c9ed917f",
+      "revId": "df24655fbadc9ac9bf734998ebacc136ad28e066",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
