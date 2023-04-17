@@ -521,8 +521,10 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     """The Provider implementation for the StateMachineManager driver
        framework"""
+    # Loop interval with no state machines
     MINIMUM_SLEEP = 1
-    MAXIMUM_SLEEP = 10
+    # Max loop interval when state machines are running
+    MAXIMUM_SLEEP = 1
 
     def __init__(self, adapter, provider):
         self.log = logging.getLogger(

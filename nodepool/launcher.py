@@ -42,7 +42,7 @@ MINS = 60
 HOURS = 60 * MINS
 
 # Interval between checking if new servers needed
-WATERMARK_SLEEP = 10
+WATERMARK_SLEEP = 1
 
 # When to delete node request lock znodes
 LOCK_CLEANUP = 8 * HOURS
