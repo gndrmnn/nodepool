@@ -26,25 +26,37 @@
       - zuul/nodepool
 
 - secret:
-    name: nodepool-dockerhub
+    name: nodepool-registry-credentials
     data:
-      username: zuulzuul
-      password: !encrypted/pkcs1-oaep
-        - VV5m4XbsYvAz0/7T+WoIypvD3ijRsPYrGo4O5JuOHt6TX14s9B1KddeMwnabEEKapPdbb
-          cwqbzFKoHRMi8DdXiDKxrgbTSC1jb3BvKq7XE0/xF4Bq2dM+r3yDnXS6a7BuijSqFSiMG
-          /9bf0jqEAWXWCvbYUAxKOklJIRLjcKywCP5CulmW6EV8f1Iya8Y7UGpjGyL34FVQuc52Y
-          5MLp+Dra95pvBJMgikbu7LtMPCXOMctUFBpwNArCjWKGhz00UZwyAmsbPPHwQWb+884ZP
-          v9zi2FuRAL+rn4DRVwyIw28ZdCEr5F5EkZon3lSIhikhdQIyHPtW8VwMJTL4RxBdmgcEt
-          +zZBbLlOU+0AHPGLlO/yQNvHeSzwY9pe2oIGuqSu3h6zp6Y0NIE/Q0VpiIXWpOAnLOmno
-          uOd3j9tZ1beol2mg4Yk7rOaXu1Fvtfhd1K3LpLzEbiGzCMIEZuFHU2ZInAbUmtm0BtbDa
-          /bYvI9dB/uqA2xgse5rVMa++v3AfWJTJhFY/wBU4fHOWlFBUZKFuSoijUcWMfnfMMyU2B
-          A5CQKhv4Wmtzbvo/oneYkwFOTYaPNj2DS0BcFJFkR8FZDYmTBPnKoBH5wpwwnrzPOpCMa
-          L21z+Vp1Vce1XCsaOduMrmZDvuQcK1YOKIIUeElAQw8GuwTfcXqekoPvp54SeE=
+      quay.io:
+        username: zuul-ci+opendevzuul
+        password: !encrypted/pkcs1-oaep
+          - UzvPj5Dpro6eKDiAjCehYrm25f0auDdSh4UqDbcoVaqhGDXOFh3p1UCE46NxgE5Cuy210
+            uOUXhvPL14s4BwwfQT8JMYFLnnJapEJTETBNIz9WQx/7AsKWiCiArovRwXKoZ3984Akk3
+            CppNtnxrhxA+Cd9gdYUiAme6tr686UfN2MLvZOlfhCZ2roWfKY1qu/Ceo8CTmiYmuegFH
+            iaWbgg/g4/8IZ+r9+xecBhSyTYj0C/jKUU6dvXDr2Q5tAfqEJN2pAetO6ElMW88gPCHyo
+            BoYV0iBNVRBcfGVrzRRPD7Tyy6wrdQnpIGulUCn3s4v4Ds636a7JwCWn/g7gWxbi3tnxh
+            vi1qKtzJ/f1NDCuGdy3wbfqo0emBzb6a155WytGxBRUXP4fpPTaGTKwKtJ1wIJ+fPrIc8
+            E8Z3xJS8M4FC+VaJL+g7/JxIYJAuYwa0W8fKLo9WBKWnRfOmikwSwqe3Yr85ZR5yrpSBy
+            ish0WSbIXLG3X9jgTWCAPDNrH/icwwBfEdfjHC2TnOVQmuP7qbzS3p5EQohArKmRCEitb
+            oavnn7EDev0uyibyD9FQRhCdVzlfO+bA5fq7MaDaqs33J/oEcvvhKN93kKV01khBZFIpg
+            5EXi9mbFMKiNBAx4wzxvSBIOQmZwrNsxCBZ1RLTqmX5mSmAngEvwOUWacA8r/4=
+        api_token: !encrypted/pkcs1-oaep
+          - nx/eF0tDwNN4Hhm38HIXhaHHO/IM6KoaHtUIgQOdlQvE2RwixAcSG8b4OCJe5zVVrGtjj
+            MGsRC0qR8tNifsM6Lp005B+cYq7zgWFdeTtlFzYcZZkPZkIIlycfwKBAEJJ8gPwEOkh6D
+            +D7MbC0+KhHnPMLh1jGng1tF6ekpWMsZ0qPIseYGoPe4RiM68kFBEI6rw1yZr43Q7aW40
+            iWPK4ve2P8ACZX0vvCsiJdhjv3TIJNqY9B85oiwKBLjDxeHsAFiCfjQ126WuHw5qrY19+
+            q64X3X7LSb284Tgb5zd7lm2lxPkNDY1eiLD0FN1ehnKRA3x7NCn4MeZUftVpC5hYMpBDJ
+            2eJbuYhlvoBx7Dfb9ytV0b9rb6iuWd9W75ebSyLMiznur0e1nk8QVRWqwEBUpwCXm89W6
+            pq1mBdi071Iqti3gQP/toSwgzzkqFZr3EGZPnD/dhHxfWNsGV7mAYGVlp09eet20EJ6Gw
+            iCmxoFA7SZgj598MURNL7nbKGE2R4giDaBD1fEIrONVuk71u3AGDR2FKkKnRyjMNcPa86
+            8CzjqGaMBmK394Jh5EklN2hI2J2FiGAq+cGvuXT3mIcG/DtpDKreRIdnPgBRG/ih7EJac
+            of0pW1Z02wJQifV6bI2ONe9E7W6wmhRQhfXq3iJcWWLb42OI8ZWQQx4qdy6LN4=
 
 - job:
     name: nodepool-build-image
-    parent: opendev-build-docker-image
-    description: Build Docker images.
+    parent: opendev-build-container-image
+    description: Build container images.
     timeout: &image_build_timeout 4800
     dependencies:
       - opendev-buildset-registry
@@ -53,9 +65,13 @@
       - python-base-3.11-bullseye-container-image
     provides: nodepool-container-image
     vars: &nodepool_image_vars
-      docker_images:
+      promote_container_image_method: intermediate-registry
+      promote_container_image_job: nodepool-upload-image
+      container_command: docker
+      container_images:
         - context: .
-          repository: zuul/nodepool
+          registry: quay.io
+          repository: quay.io/zuul-ci/nodepool
           target: nodepool
           tags:
             # If zuul.tag is defined: [ '3', '3.19', '3.19.0' ].  Only works for 3-component tags.
@@ -65,14 +81,16 @@
             - linux/amd64
             - linux/arm64
         - context: .
-          repository: zuul/nodepool-launcher
+          registry: quay.io
+          repository: quay.io/zuul-ci/nodepool-launcher
           target: nodepool-launcher
           tags: *imagetag
           arch:
             - linux/amd64
             - linux/arm64
         - context: .
-          repository: zuul/nodepool-builder
+          registry: quay.io
+          repository: quay.io/zuul-ci/nodepool-builder
           target: nodepool-builder
           tags: *imagetag
           arch:
@@ -81,8 +99,8 @@
 
 - job:
     name: nodepool-upload-image
-    parent: opendev-upload-docker-image
-    description: Build Docker images and upload to Docker Hub.
+    parent: opendev-upload-container-image
+    description: Build container images and upload.
     timeout: *image_build_timeout
     requires:
       - python-builder-3.11-bullseye-container-image
@@ -90,18 +108,18 @@
     provides: nodepool-container-image
     vars: *nodepool_image_vars
     secrets:
-      - name: docker_credentials
-        secret: nodepool-dockerhub
+      - name: container_registry_credentials
+        secret: nodepool-registry-credentials
         pass-to-parent: true
 
 - job:
     name: nodepool-promote-image
-    parent: opendev-promote-docker-image
-    description: Promote previously uploaded Docker images.
+    parent: opendev-promote-container-image
+    description: Promote previously uploaded container images.
     vars: *nodepool_image_vars
     secrets:
-      - name: docker_credentials
-        secret: nodepool-dockerhub
+      - name: container_registry_credentials
+        secret: nodepool-registry-credentials
         pass-to-parent: true
 
 # NOTE(ianw) : kept separate as these aren't intended to be released
@@ -109,7 +127,7 @@
     name: nodepool-build-image-siblings
     dependencies:
       - opendev-buildset-registry
-    parent: opendev-build-docker-image
+    parent: opendev-build-container-image
     description: Build container images, with required projects as sibling from source
     required-projects:
       - zuul/nodepool
@@ -120,14 +138,16 @@
     provides: nodepool-siblings-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
-      docker_images:
+      container_images:
         - context: .
-          repository: zuul/nodepool-launcher
+          registry: quay.io
+          repository: quay.io/zuul-ci/nodepool-launcher
           target: nodepool-launcher
           tags:
             - siblings
         - context: .
-          repository: zuul/nodepool-builder
+          registry: quay.io
+          repository: quay.io/zuul-ci/nodepool-builder
           target: nodepool-builder
           tags:
             - siblings
@@ -292,12 +312,12 @@
       jobs:
         - opendev-release-python
         - zuul-publish-nox-docs
-        - upload-docker-image:
+        - upload-container-image:
             timeout: *image_build_timeout
             secrets:
-              name: docker_credentials
-              secret: nodepool-dockerhub
+              name: container_registry_credentials
+              secret: nodepool-registry-credentials
               pass-to-parent: true
             vars:
               <<: *nodepool_image_vars
-              upload_docker_image_promote: false
+              upload_container_image_promote: false
