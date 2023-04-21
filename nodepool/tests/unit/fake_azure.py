@@ -325,7 +325,7 @@ class FakeAzureFixture(fixtures.Fixture):
         self._setup_crud(ResourceGroupsCRUD, '2020-06-01',
                          resource_grouped=False)
 
-        self._setup_crud(VirtualMachinesCRUD, '2020-12-01')
+        self._setup_crud(VirtualMachinesCRUD, '2022-11-01')
         self._setup_crud(NetworkInterfacesCRUD, '2020-07-01')
         self._setup_crud(PublicIPAddressesCRUD, '2020-07-01')
         self._setup_crud(DisksCRUD, '2020-06-30')

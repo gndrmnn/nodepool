@@ -240,7 +240,7 @@ class AzureCloud:
             self,
             providerId='Microsoft.Compute',
             resource='virtualMachines',
-            apiVersion='2020-12-01')
+            apiVersion='2022-11-01')
         self.disks = AzureResourceProviderCRUD(
             self,
             providerId='Microsoft.Compute',

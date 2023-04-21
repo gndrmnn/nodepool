@@ -39,6 +39,10 @@ class AzureProviderCloudImage(ConfigValue):
         self.image_reference = image.get('image-reference')
         self.image_filter = image.get('image-filter')
         self.image_id = image.get('image-id')
+        self.shared_gallery_image = image.get(
+            'shared-gallery-image')
+        self.community_gallery_image = image.get(
+            'community-gallery-image')
         self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
         self.connection_type = image.get('connection-type', 'ssh')
@@ -67,6 +71,12 @@ class AzureProviderCloudImage(ConfigValue):
             'tags': dict,
         }
 
+        azure_gallery_image = {
+            v.Required('gallery-name'): str,
+            v.Required('name'): str,
+            'version': str,
+        }
+
         return v.All({
             v.Required('name'): str,
             v.Required('username'): str,
@@ -77,15 +87,24 @@ class AzureProviderCloudImage(ConfigValue):
             v.Exclusive('image-reference', 'spec'): azure_image_reference,
             v.Exclusive('image-id', 'spec'): str,
             v.Exclusive('image-filter', 'spec'): azure_image_filter,
+            v.Exclusive('community-gallery-image', 'spec'):
+            azure_gallery_image,
+            v.Exclusive('shared-gallery-image', 'spec'):
+            azure_gallery_image,
             'connection-type': str,
             'connection-port': int,
             'python-path': str,
             'shell-type': str,
         }, {
             v.Required(
-                v.Any('image-reference', 'image-id', 'image-filter'),
-                msg=('Provide either "image-reference", '
-                     '"image-filter", or "image-id" keys')
+                v.Any('image-reference', 'image-id', 'image-filter',
+                      'community-gallery-image',
+                      'shared-gallery-image',
+                      ),
+                msg=('Provide one of "image-reference", '
+                     '"image-filter", "image-id", '
+                     '"community-gallery-image", or '
+                     '"shared-gallery-image" keys')
             ): object,
             object: object,
         })
