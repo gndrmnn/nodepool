@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The Azure driver now support specifying community and shared
+    gallery images.
