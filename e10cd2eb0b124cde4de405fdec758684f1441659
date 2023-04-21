@@ -16,6 +16,24 @@
       "message": "Do we care about breaking convention accessing the private attribute on node from zookeeper methods?",
       "revId": "e10cd2eb0b124cde4de405fdec758684f1441659",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0987e17d_42bf7295",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2546,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-04-21T15:39:43Z",
+      "side": 1,
+      "message": "This class is the only class that accesses this attribute, so it\u0027s in convention.\n\nThe Node class is defined in this file and is very closely tied with the ZooKeeper class; if this were java, this would be a protected attribute in the same package.",
+      "parentUuid": "3e71869c_3143c758",
+      "revId": "e10cd2eb0b124cde4de405fdec758684f1441659",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
