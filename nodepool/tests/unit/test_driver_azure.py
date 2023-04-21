@@ -67,7 +67,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
@@ -109,7 +109,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-min-ready.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         node = self.waitForNodes('bionic')[0]
 
         self.assertEqual(node.state, zk.READY)
@@ -152,7 +152,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-diskimage.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('bionic')
@@ -177,7 +177,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure-external-image.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('bionic')
@@ -213,6 +213,72 @@ class TestDriverAzure(tests.DBTestCase):
             "/resourceGroups/nodepool/providers/Microsoft.Compute"
             "/images/test-image-1234")
 
+    def test_azure_community_gallery_image(self):
+        configfile = self.setup_config(
+            'azure-gallery-image.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('community-bionic')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, 'sh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['storageProfile']
+            ['imageReference']['communityGalleryImageId'],
+            "/CommunityGalleries/community-gallery"
+            "/Images/community-image"
+            "/Versions/latest")
+
+    def test_azure_shared_gallery_image(self):
+        configfile = self.setup_config(
+            'azure-gallery-image.yaml',
+            auth_path=self.fake_azure.auth_file.name)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('shared-bionic')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, 'sh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['properties']['storageProfile']
+            ['imageReference']['sharedGalleryImageId'],
+            "/SharedGalleries/shared-gallery"
+            "/Images/shared-image"
+            "/Versions/latest")
+
     def test_azure_image_filter_name(self):
         self.fake_azure.crud['Microsoft.Compute/images'].items.append(
             make_image('test1', {'foo': 'bar'}))
@@ -225,7 +291,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('image-by-name')
@@ -260,7 +326,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('image-by-tag')
@@ -288,7 +354,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('windows-password')
@@ -320,7 +386,7 @@ class TestDriverAzure(tests.DBTestCase):
             'azure.yaml',
             auth_path=self.fake_azure.auth_file.name)
         pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        pool.start()
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.node_types.append('windows-generate')
