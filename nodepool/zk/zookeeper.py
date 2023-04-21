@@ -2542,6 +2542,8 @@ class ZooKeeper(ZooKeeperBase):
         node.state = DELETED
         self.kazoo_client.set(path, node.serialize())
         self.deleteRawNode(node.id)
+        if node._thread_lock.locked():
+            node._thread_lock.release()
 
     def getReadyNodesOfTypes(self, labels, cached=True):
         '''
