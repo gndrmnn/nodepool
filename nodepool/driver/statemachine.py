@@ -205,9 +205,11 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if (now - state_machine.start_time >
                 self.manager.provider.launch_timeout):
                 raise Exception("Timeout waiting for instance creation")
+            old_state = state_machine.state
             instance = state_machine.advance()
-            self.log.debug(f"State machine for {node.id} at "
-                           f"{state_machine.state}")
+            if state_machine.state != old_state:
+                self.log.debug("State machine for %s advanced from %s to %s",
+                               node.id, old_state, state_machine.state)
             if not node.external_id and state_machine.external_id:
                 node.external_id = state_machine.external_id
                 self.zk.storeNode(node)
@@ -313,9 +315,12 @@ class StateMachineNodeDeleter:
                 self.zk.storeNode(node)
 
             if node.external_id:
+                old_state = state_machine.state
                 state_machine.advance()
-                self.log.debug(f"State machine for {node.id} at "
-                               f"{state_machine.state}")
+                if state_machine.state != old_state:
+                    self.log.debug("State machine for %s advanced "
+                                   "from %s to %s",
+                                   node.id, old_state, state_machine.state)
             else:
                 self.state_machine.complete = True
 
