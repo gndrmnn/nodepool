@@ -66,6 +66,7 @@ Selecting the ``aws`` driver adds the following options to the
                  cloud-image: debian9
                  instance-type: t3.large
                  key-name: zuul
+                 use-spot: True
                  tags:
                    key1: value1
                    key2: value2
@@ -740,6 +741,30 @@ Selecting the ``aws`` driver adds the following options to the
                    - name: precise
                      dynamic-tags:
                        request_info: "Created for request {request.id}"
+
+           .. attr:: use-spot
+              :type: bool
+              :default: False
+
+              When set to True, Nodepool will try to launch an Amazon EC2 Spot
+              instance, instead of an On-Demand instance. Spot instances let
+              you take advantage of unused EC2 capacity at a discount.
+
+              For example:
+
+              .. code-block:: yaml
+
+                 labels:
+                   - name: frugal
+                     use-spot: True
+
+              .. note:: As Amazon EC2 Spot instances take advantage of unused
+                        EC2 capacity, you may not get an instance, if demand
+                        is high. In addition, Amazon EC2 may interrupt your
+                        Spot instance and reclaim it with a two minutes warning
+                        upfront. Therefore, you might want to setup alternative
+                        nodesets as fallback.
+
 
 .. _`EBS volume type`: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSVolumeTypes.html
 .. _`AWS region`: https://docs.aws.amazon.com/general/latest/gr/rande.html

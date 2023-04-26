@@ -244,6 +244,7 @@ class TestDriverAws(tests.DBTestCase):
     @aws_quotas({
         'L-1216C47A': 2,
         'L-43DA4232': 448,
+        'L-34B43A08': 2
     })
     def test_aws_multi_quota(self):
         # Test multiple instance type quotas (standard and high-mem)
@@ -292,6 +293,59 @@ class TestDriverAws(tests.DBTestCase):
         req3.node_types.append('standard')
         self.zk.storeNodeRequest(req3)
         self.log.debug("Waiting for request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3)
+        self.assertSuccess(req3)
+
+    @aws_quotas({
+        'L-43DA4232': 448,
+        'L-1216C47A': 200,
+        'L-34B43A08': 200
+    })
+    def test_aws_multi_quota_spot(self):
+        # Test multiple instance type quotas (standard, high-mem and spot)
+        configfile = self.setup_config('aws/aws-quota.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # Create a spot node request which should succeed.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('spot')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
+        # Create an on-demand node request which should succeed.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('on-demand')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2)
+        self.assertSuccess(req2)
+
+        # Create another spot node request which should be paused.
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('spot')
+        self.zk.storeNodeRequest(req3)
+        self.log.debug("Waiting for request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3, (zk.PENDING,))
+
+        # Make sure we're paused while we attempt to fulfill the
+        # third request.
+        pool_worker = pool.getPoolWorkers('ec2-us-west-2')
+        for _ in iterate_timeout(30, Exception, 'paused handler'):
+            if pool_worker[0].paused_handlers:
+                break
+
+        # Release the first spot node so that the third can be fulfilled.
+        node1.state = zk.USED
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # Make sure the fourth spot node exists now.
         req3 = self.waitForNodeRequest(req3)
         self.assertSuccess(req3)
 
@@ -916,3 +970,12 @@ class TestDriverAws(tests.DBTestCase):
             except botocore.exceptions.ClientError:
                 # Probably not found
                 break
+
+    def test_aws_provisioning_spot_instances(self):
+        # Test creating a spot instances instead of an on-demand on.
+        req = self.requestNode('aws/aws-spot.yaml', 'ubuntu1404-spot')
+        node = self.assertSuccess(req)
+        instance = self.ec2.Instance(node.external_id)
+        self.assertEqual(instance.instance_lifecycle, 'spot')
+        # moto doesn't provide the spot_instance_request_id
+        # self.assertIsNotNone(instance.spot_instance_request_id)
