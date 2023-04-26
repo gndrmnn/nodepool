@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e111e3d9_ec72f5e6",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-04-26T09:42:53Z",
+      "side": 1,
+      "message": "Debug leftover?",
+      "revId": "32564ceb876ad8d3b3a522a0f15228c4b871072d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
