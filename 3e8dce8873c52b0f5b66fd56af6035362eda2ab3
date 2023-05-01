@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bb60e41_26f52d93",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-05-01T17:40:09Z",
+      "side": 1,
+      "message": "Single core approving this as this is an issue observed in production for OpenDev and the fix follows the format of the block immediately prior to this block.",
+      "revId": "3e8dce8873c52b0f5b66fd56af6035362eda2ab3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
