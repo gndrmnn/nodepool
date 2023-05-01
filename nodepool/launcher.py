@@ -268,6 +268,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             # Skip it if we've already declined
             if self.launcher_id in req.declined_by:
+                self.zk.unlockNodeRequest(req)
                 log.debug("Request is already declined")
                 continue
 
