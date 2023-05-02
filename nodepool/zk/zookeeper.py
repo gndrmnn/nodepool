@@ -741,7 +741,7 @@ class NodepoolTreeCache(abc.ABC):
         self.root = root
         self._cached_objects = {}
         self._cached_paths = set()
-        self._started = False
+        self._ready = False
         self._stopped = False
         self._queue = queue.Queue()
         self._background_thread = threading.Thread(
@@ -763,9 +763,8 @@ class NodepoolTreeCache(abc.ABC):
 
     def _sessionListener(self, state):
         if state == KazooState.LOST:
-            self._started = False
-        elif (state == KazooState.CONNECTED and
-              not self._started and not self._stopped):
+            self._ready = False
+        elif (state == KazooState.CONNECTED and not self._stopped):
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
@@ -776,7 +775,7 @@ class NodepoolTreeCache(abc.ABC):
         self.zk.kazoo_client.add_watch(self.root, self._cacheListener,
                                        AddWatchMode.PERSISTENT_RECURSIVE)
         self._walkTree()
-        self._started = True
+        self._ready = True
 
     def stop(self):
         self._stopped = True
@@ -827,6 +826,9 @@ class NodepoolTreeCache(abc.ABC):
         # as a delete which may be followed by a normal delete event.
         # That case, and any other variations should be anticipated.
         if event.type == EventType.NONE:
+            if event.path is None:
+                # We're probably being told of a connection change; ignore.
+                return
             try:
                 data, stat = self.zk.kazoo_client.get(event.path)
                 exists = True

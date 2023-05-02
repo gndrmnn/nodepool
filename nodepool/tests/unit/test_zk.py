@@ -1219,6 +1219,14 @@ class TestTreeCache(tests.DBTestCase):
             '/test/foo': {},
         })
 
+        # Simulate a change happening while the state was suspendede
+        cache._cached_paths.add('/test/bar')
+        cache._sessionListener(KazooState.SUSPENDED)
+        cache._sessionListener(KazooState.CONNECTED)
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+
     def test_tree_cache_root(self):
         client = self.zk.kazoo_client
         data = b'{}'
