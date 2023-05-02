@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eb44aff_08db1310",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2023-05-02T22:03:58Z",
+      "side": 1,
+      "message": "Would it be possible to use a status enum in order to prevent _ready and _stopped to be True at the same time?",
+      "revId": "0cab9ea5fb88ec234231f337e8b1455093b449f2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
