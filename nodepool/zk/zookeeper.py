@@ -800,12 +800,15 @@ class NodepoolTreeCache(abc.ABC):
                                  self.zk.kazoo_client._state,
                                  root)
             self._cacheListener(event)
-            for child in self.zk.kazoo_client.get_children(root):
-                safe_root = root
-                if safe_root == '/':
-                    safe_root = ''
-                new_path = '/'.join([safe_root, child])
-                self._walkTree(new_path, seen_paths)
+            try:
+                for child in self.zk.kazoo_client.get_children(root):
+                    safe_root = root
+                    if safe_root == '/':
+                        safe_root = ''
+                    new_path = '/'.join([safe_root, child])
+                    self._walkTree(new_path, seen_paths)
+            except kze.NoNodeError:
+                self.log.debug("Can't sync non-existent node %s", root)
         if am_root:
             for path in self._cached_paths:
                 if path not in seen_paths:
