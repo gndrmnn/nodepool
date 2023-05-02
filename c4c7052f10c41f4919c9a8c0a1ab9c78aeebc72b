@@ -16,6 +16,24 @@
       "message": "To make this simpler, the LOST check can be removed and _ready could be set to False when entering _sessionListener?",
       "revId": "c4c7052f10c41f4919c9a8c0a1ab9c78aeebc72b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7eacff04_8dc9d991",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-05-02T22:13:21Z",
+      "side": 1,
+      "message": "That\u0027s an option.  The current code would consider the cache to continue to be ready during the \"suspended\" time period, and only transition to \"not ready\" after the timeout.\n\nI don\u0027t have a strong opinion on which we should use.  I think either is appropriate for a \"cache\".",
+      "parentUuid": "278a9fa8_a5d5b080",
+      "revId": "c4c7052f10c41f4919c9a8c0a1ab9c78aeebc72b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
