@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "278a9fa8_a5d5b080",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2023-05-02T22:08:24Z",
+      "side": 1,
+      "message": "To make this simpler, the LOST check can be removed and _ready could be set to False when entering _sessionListener?",
+      "revId": "c4c7052f10c41f4919c9a8c0a1ab9c78aeebc72b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
