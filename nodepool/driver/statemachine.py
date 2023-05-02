@@ -535,6 +535,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.log = logging.getLogger(
             f"nodepool.StateMachineProvider.{provider.name}")
         super().__init__()
+        self._statsd = stats.get_client()
         self.provider = provider
         self.adapter = adapter
         # State machines
@@ -749,6 +750,11 @@ class StateMachineProvider(Provider, QuotaSupport):
                     # condition.
                     try:
                         self.adapter.deleteResource(resource)
+                        if self._statsd:
+                            key = ('nodepool.provider.%s.leaked.%s'
+                                   % (self.provider.name,
+                                      resource.plural_metric_name))
+                            self._statsd.incr(key, 1)
                     except Exception:
                         self.log.exception("Unable to delete leaked "
                                            f"resource for node {node_id}")
@@ -759,6 +765,11 @@ class StateMachineProvider(Provider, QuotaSupport):
                     # condition.
                     try:
                         self.adapter.deleteResource(resource)
+                        if self._statsd:
+                            key = ('nodepool.provider.%s.leaked.%s'
+                                   % (self.provider.name,
+                                      resource.plural_metric_name))
+                            self._statsd.incr(key, 1)
                     except Exception:
                         self.log.exception("Unable to delete leaked "
                                            f"resource for upload {upload_id}")
@@ -894,20 +905,28 @@ class Resource:
 
     This could be an instance, a disk, a floating IP, or anything
     else.  It is used by the driver to detect leaked resources so the
-    adapter can clean them up.  There is one required attribute,
-    `metadata`.
+    adapter can clean them up.
 
-    This is a dictionary of key/value pairs initially supplied by the
-    driver to the adapter when an instance or image was created.  This
-    is used by the driver to detect leaked resources.  The adapter may
-    add any other information to this instance for its own bookeeping
-    (resource type, id, etc).
+    The `type` attribute should be an alphanumeric string suitable for
+    inclusion in a statsd metric name.
 
+    The `metadata` attribute is a dictionary of key/value pairs
+    initially supplied by the driver to the adapter when an instance
+    or image was created.  This is used by the driver to detect leaked
+    resources.  The adapter may add any other information to this
+    instance for its own bookeeping (resource type, id, etc).
+
+    The 'plural_metric_name' attribute is set in the constructor
+    automatically; override this value if necessary.
+
+    :param str type: The type of resource.
     :param dict metadata: A dictionary of metadata for the resource.
 
     """
 
-    def __init__(self, metadata):
+    def __init__(self, metadata, type):
+        self.type = type
+        self.plural_metric_name = type + 's'
         self.metadata = metadata
 
 

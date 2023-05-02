@@ -116,9 +116,14 @@ class AwsInstance(statemachine.Instance):
 
 
 class AwsResource(statemachine.Resource):
+    TYPE_INSTANCE = 'instance'
+    TYPE_AMI = 'ami'
+    TYPE_SNAPSHOT = 'snapshot'
+    TYPE_VOLUME = 'volume'
+    TYPE_OBJECT = 'object'
+
     def __init__(self, metadata, type, id):
-        super().__init__(metadata)
-        self.type = type
+        super().__init__(metadata, type)
         self.id = id
 
 
@@ -316,7 +321,7 @@ class AwsAdapter(statemachine.Adapter):
             except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(instance.tags),
-                              'instance', instance.id)
+                              AwsResource.TYPE_INSTANCE, instance.id)
         for volume in self._listVolumes():
             try:
                 if volume.state.lower() == "deleted":
@@ -324,7 +329,7 @@ class AwsAdapter(statemachine.Adapter):
             except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(volume.tags),
-                              'volume', volume.id)
+                              AwsResource.TYPE_VOLUME, volume.id)
         for ami in self._listAmis():
             try:
                 if ami.state.lower() == "deleted":
@@ -332,7 +337,7 @@ class AwsAdapter(statemachine.Adapter):
             except (botocore.exceptions.ClientError, AttributeError):
                 continue
             yield AwsResource(tag_list_to_dict(ami.tags),
-                              'ami', ami.id)
+                              AwsResource.TYPE_AMI, ami.id)
         for snap in self._listSnapshots():
             try:
                 if snap.state.lower() == "deleted":
@@ -340,7 +345,7 @@ class AwsAdapter(statemachine.Adapter):
             except botocore.exceptions.ClientError:
                 continue
             yield AwsResource(tag_list_to_dict(snap.tags),
-                              'snapshot', snap.id)
+                              AwsResource.TYPE_SNAPSHOT, snap.id)
         if self.provider.object_storage:
             for obj in self._listObjects():
                 with self.non_mutating_rate_limiter:
@@ -350,19 +355,19 @@ class AwsAdapter(statemachine.Adapter):
                     except botocore.exceptions.ClientError:
                         continue
                 yield AwsResource(tag_list_to_dict(tags['TagSet']),
-                                  'object', obj.key)
+                                  AwsResource.TYPE_OBJECT, obj.key)
 
     def deleteResource(self, resource):
         self.log.info(f"Deleting leaked {resource.type}: {resource.id}")
-        if resource.type == 'instance':
+        if resource.type == AwsResource.TYPE_INSTANCE:
             self._deleteInstance(resource.id, immediate=True)
-        if resource.type == 'volume':
+        if resource.type == AwsResource.TYPE_VOLUME:
             self._deleteVolume(resource.id)
-        if resource.type == 'ami':
+        if resource.type == AwsResource.TYPE_AMI:
             self._deleteAmi(resource.id)
-        if resource.type == 'snapshot':
+        if resource.type == AwsResource.TYPE_SNAPSHOT:
             self._deleteSnapshot(resource.id)
-        if resource.type == 'object':
+        if resource.type == AwsResource.TYPE_OBJECT:
             self._deleteObject(resource.id)
 
     def listInstances(self):

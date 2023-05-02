@@ -820,6 +820,15 @@ class TestDriverAws(tests.DBTestCase):
                     Bucket=obj.bucket_name, Key=obj.key)
             except self.s3_client.exceptions.NoSuchKey:
                 break
+        self.assertReportedStat(
+            'nodepool.provider.ec2-us-west-2.leaked.instances',
+            value='1', kind='c')
+        self.assertReportedStat(
+            'nodepool.provider.ec2-us-west-2.leaked.volumes',
+            value='1', kind='c')
+        self.assertReportedStat(
+            'nodepool.provider.ec2-us-west-2.leaked.objects',
+            value='1', kind='c')
 
     def test_aws_resource_cleanup_import_snapshot(self):
         # This tests the import_snapshot path

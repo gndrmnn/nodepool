@@ -96,9 +96,14 @@ class AzureInstance(statemachine.Instance):
 
 
 class AzureResource(statemachine.Resource):
+    TYPE_INSTANCE = 'INSTANCE'
+    TYPE_NIC = 'nic'
+    TYPE_PIP = 'pip'
+    TYPE_DISK = 'disk'
+    TYPE_IMAGE = 'image'
+
     def __init__(self, metadata, type, name):
-        super().__init__(metadata)
-        self.type = type
+        super().__init__(metadata, type)
         self.name = name
 
 
@@ -357,27 +362,32 @@ class AzureAdapter(statemachine.Adapter):
 
     def listResources(self):
         for vm in self._listVirtualMachines():
-            yield AzureResource(vm.get('tags', {}), 'vm', vm['name'])
+            yield AzureResource(vm.get('tags', {}),
+                                AzureResource.TYPE_INSTANCE, vm['name'])
         for nic in self._listNetworkInterfaces():
-            yield AzureResource(nic.get('tags', {}), 'nic', nic['name'])
+            yield AzureResource(nic.get('tags', {}),
+                                AzureResource.TYPE_NIC, nic['name'])
         for pip in self._listPublicIPAddresses():
-            yield AzureResource(pip.get('tags', {}), 'pip', pip['name'])
+            yield AzureResource(pip.get('tags', {}),
+                                AzureResource.TYPE_PIP, pip['name'])
         for disk in self._listDisks():
-            yield AzureResource(disk.get('tags', {}), 'disk', disk['name'])
+            yield AzureResource(disk.get('tags', {}),
+                                AzureResource.TYPE_DISK, disk['name'])
         for image in self._listImages():
-            yield AzureResource(image.get('tags', {}), 'image', image['name'])
+            yield AzureResource(image.get('tags', {}),
+                                AzureResource.TYPE_IMAGE, image['name'])
 
     def deleteResource(self, resource):
         self.log.info(f"Deleting leaked {resource.type}: {resource.name}")
-        if resource.type == 'vm':
+        if resource.type == AzureResource.TYPE_INSTANCE:
             crud = self.azul.virtual_machines
-        elif resource.type == 'nic':
+        elif resource.type == AzureResource.TYPE_NIC:
             crud = self.azul.network_interfaces
-        elif resource.type == 'pip':
+        elif resource.type == AzureResource.TYPE_PIP:
             crud = self.azul.public_ip_addresses
-        elif resource.type == 'disk':
+        elif resource.type == AzureResource.TYPE_DISK:
             crud = self.azul.disks
-        elif resource.type == 'image':
+        elif resource.type == AzureResource.TYPE_IMAGE:
             crud = self.azul.images
         with self.rate_limiter:
             crud.delete(self.resource_group, resource.name)

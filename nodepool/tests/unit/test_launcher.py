@@ -1324,6 +1324,9 @@ class TestLauncher(tests.DBTestCase):
         # Make sure we end up with only one server (the replacement)
         servers = manager.adapter._listServers()
         self.assertEqual(len(servers), 1)
+        self.assertReportedStat(
+            'nodepool.provider.fake-provider.leaked.instances',
+            value='1', kind='c')
 
     def test_max_ready_age(self):
         """Test a node with exceeded max-ready-age is deleted"""

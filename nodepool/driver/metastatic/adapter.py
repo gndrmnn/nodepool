@@ -140,13 +140,6 @@ class MetastaticInstance(statemachine.Instance):
         return QuotaInformation(instances=1)
 
 
-class MetastaticResource(statemachine.Resource):
-    def __init__(self, metadata, type, name):
-        super().__init__(metadata)
-        self.type = type
-        self.name = name
-
-
 class MetastaticDeleteStateMachine(statemachine.StateMachine):
     DEALLOCATING = 'deallocating node'
     COMPLETE = 'complete'

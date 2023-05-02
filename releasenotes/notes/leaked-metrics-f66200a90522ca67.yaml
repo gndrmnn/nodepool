@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Many more drivers now report metrics for leaked resources.

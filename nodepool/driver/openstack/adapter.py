@@ -92,9 +92,10 @@ class OpenStackInstance(statemachine.Instance):
 
 
 class OpenStackResource(statemachine.Resource):
+    TYPE_INSTANCE = 'instance'
+
     def __init__(self, metadata, type, id):
-        super().__init__(metadata)
-        self.type = type
+        super().__init__(metadata, type)
         self.id = id
 
 
@@ -444,7 +445,7 @@ class OpenStackAdapter(statemachine.Adapter):
             if server.status.lower() == 'deleted':
                 continue
             yield OpenStackResource(server.metadata,
-                                    'server', server.id)
+                                    OpenStackResource.TYPE_INSTANCE, server.id)
         # Floating IP and port leakage can't be handled by the
         # automatic resource cleanup in cleanupLeakedResources because
         # openstack doesn't store metadata on those objects, so we
@@ -456,7 +457,7 @@ class OpenStackAdapter(statemachine.Adapter):
 
     def deleteResource(self, resource):
         self.log.info(f"Deleting leaked {resource.type}: {resource.id}")
-        if resource.type == 'server':
+        if resource.type == OpenStackResource.TYPE_INSTANCE:
             self._deleteServer(resource.id)
 
     def listInstances(self):
