@@ -425,7 +425,7 @@ class OpenStackAdapter(statemachine.Adapter):
 
         self._last_image_check_failure = time.time()
         self._last_port_cleanup = None
-        self._statsd = stats.get_client()
+        self._statsd = stats.StatsReporter()
         self._client = self._getClient()
 
     def stop(self):
@@ -876,7 +876,7 @@ class OpenStackAdapter(statemachine.Adapter):
                 self.log.debug("Removed DOWN port %s in %s",
                                port_id, self.provider.name)
 
-        if self._statsd and removed_count:
+        if removed_count:
             key = 'nodepool.provider.%s.leaked.ports' % (self.provider.name)
             self._statsd.incr(key, removed_count)
 
@@ -899,7 +899,6 @@ class OpenStackAdapter(statemachine.Adapter):
             # indicate something happened.
             if type(did_clean) == bool:
                 did_clean = 1
-            if self._statsd:
-                key = ('nodepool.provider.%s.leaked.floatingips'
-                       % self.provider.name)
-                self._statsd.incr(key, did_clean)
+            key = ('nodepool.provider.%s.leaked.floatingips'
+                   % self.provider.name)
+            self._statsd.incr(key, did_clean)

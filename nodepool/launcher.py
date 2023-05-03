@@ -937,6 +937,7 @@ class DeletedNodeWorker(BaseCleanupWorker):
             self.log.exception("Exception in DeletedNodeWorker:")
 
 
+# TODO is the StatsReporter subclass appropriate after stats client refactor?
 class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
 
     def __init__(self, nodepool, interval):

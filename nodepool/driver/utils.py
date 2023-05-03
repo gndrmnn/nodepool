@@ -34,6 +34,7 @@ from nodepool.logconfig import get_annotated_logger
 MAX_QUOTA_AGE = 5 * 60  # How long to keep the quota information cached
 
 
+# TODO is StatsReporter subclass appropriate after stats client refactor?
 class NodeLauncher(threading.Thread,
                    stats.StatsReporter,
                    metaclass=abc.ABCMeta):

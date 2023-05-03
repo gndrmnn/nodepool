@@ -17,29 +17,12 @@ Helper to create a statsd client from environment variables
 import os
 import logging
 import statsd
+import unittest.mock
 
 from nodepool.zk import zookeeper as zk
 
 
 log = logging.getLogger("nodepool.stats")
-
-
-def get_client():
-    """Return a statsd client object setup from environment variables; or
-    None if they are not set
-    """
-
-    # note we're just being careful to let the default values fall
-    # through to StatsClient()
-    statsd_args = {}
-    if os.getenv('STATSD_HOST', None):
-        statsd_args['host'] = os.environ['STATSD_HOST']
-    if os.getenv('STATSD_PORT', None):
-        statsd_args['port'] = os.environ['STATSD_PORT']
-    if statsd_args:
-        return statsd.StatsClient(**statsd_args)
-    else:
-        return None
 
 
 def normalize_statsd_name(name):
@@ -52,7 +35,39 @@ class StatsReporter(object):
     '''
     def __init__(self):
         super(StatsReporter, self).__init__()
-        self._statsd = get_client()
+        self._statsd = self._get_client()
+
+    def _get_client():
+        """Return a statsd client object setup from environment variables; or
+        None if they are not set
+        """
+
+        # note we're just being careful to let the default values fall
+        # through to StatsClient()
+        statsd_args = {}
+        if os.getenv('STATSD_HOST', None):
+            statsd_args['host'] = os.environ['STATSD_HOST']
+        if os.getenv('STATSD_PORT', None):
+            statsd_args['port'] = os.environ['STATSD_PORT']
+        if statsd_args:
+            return statsd.StatsClient(**statsd_args)
+        else:
+            return None
+
+    def __getattr__(self, name):
+        # Proxy statsd client methods if we have a client. This allows us
+        # to keep all the logic about whether or not statsd info is present
+        # within this reporter class.
+        if self._statsd:
+            return getattr(self._statsd, name)
+        elif name == 'pipeline':
+            # TODO is there a better more efficient way to do this?
+            return unittest.mock.MagicMock()
+        else:
+            return self.noop
+
+    def noop(self, *args, **kwargs):
+        pass
 
     def recordLaunchStats(self, subkey, dt):
         '''
@@ -179,4 +194,19 @@ class StatsReporter(object):
                 k = normalize_statsd_name(k)
                 key = key_template % (tenant, k)
                 pipeline.gauge(key, lim)
+        pipeline.send()
+
+    def emitBuildRequestStats(self, zk_conn):
+        '''Emit general build request stats'''
+        if not self._statsd:
+            return
+
+        count = 0
+        for image_name in zk_conn.getImageNames():
+            request = zk_conn.getBuildRequest(image_name)
+            if request and request.pending:
+                count += 1
+        pipeline = self._statsd.pipeline()
+        key = 'nodepool.image_build_requests'
+        pipeline.gauge(key, count)
         pipeline.send()

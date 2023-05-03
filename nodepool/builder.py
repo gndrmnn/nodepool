@@ -120,7 +120,7 @@ class BaseWorker(threading.Thread):
         self._secure_path = secure_path
         self._zk = zk
         self._hostname = socket.getfqdn()
-        self._statsd = stats.get_client()
+        self._statsd = stats.StatsReporter()
         self._interval = interval
         self._builder_id = builder_id
 
@@ -403,23 +403,6 @@ class CleanupWorker(BaseWorker):
                 seen.add(name_and_id)
                 yield name_and_id
 
-    def _emitBuildRequestStats(self):
-        '''Emit general build request stats
-
-        This runs in the cleanup worker because it's the least likely
-        thread to be stopped for hours on end.
-        '''
-        if not self._statsd:
-            return
-        count = 0
-        for image_name in self._zk.getImageNames():
-            request = self._zk.getBuildRequest(image_name)
-            if request and request.pending:
-                count += 1
-        pipeline = self._statsd.pipeline()
-        key = 'nodepool.image_build_requests'
-        pipeline.gauge(key, count)
-        pipeline.send()
 
     def _cleanupCurrentProviderUploads(self, provider, image, build_id):
         '''
@@ -599,7 +582,9 @@ class CleanupWorker(BaseWorker):
         self._config = new_config
 
         self._cleanup()
-        self._emitBuildRequestStats()
+        #Emit build request stats in the cleanup worker because it's the
+        # least likely thread to be stopped for hours on end.
+        self._statsd.emitBuildRequestStats(self._zk)
 
 
 class BuildWorker(BaseWorker):
@@ -966,8 +951,7 @@ class BuildWorker(BaseWorker):
         build_data.python_path = diskimage.python_path
         build_data.shell_type = diskimage.shell_type
 
-        if self._statsd:
-            pipeline = self._statsd.pipeline()
+        pipeline = self._statsd.pipeline()
 
         if self._lost_zk_connection:
             self.log.info("ZooKeeper lost while building %s" % diskimage.name)
@@ -982,32 +966,30 @@ class BuildWorker(BaseWorker):
             build_data.state = zk.READY
             build_data.formats = list(diskimage.image_types)
 
-            if self._statsd:
-                # record stats on the size of each image we create
-                for ext in img_types.split(','):
-                    key = 'nodepool.dib_image_build.%s.%s.size' % (
-                        diskimage.name, ext)
-                    # A bit tricky because these image files may be sparse
-                    # files; we only want the true size of the file for
-                    # purposes of watching if we've added too much stuff
-                    # into the image.  Note that st_blocks is defined as
-                    # 512-byte blocks by stat(2)
-                    size = os.stat("%s.%s" %
-                                   (image_filename, ext)).st_blocks * 512
-                    self.log.debug("%s created image %s.%s (size: %d) " %
-                                   (diskimage.name, image_filename, ext, size))
-                    pipeline.gauge(key, size)
+            # record stats on the size of each image we create
+            for ext in img_types.split(','):
+                key = 'nodepool.dib_image_build.%s.%s.size' % (
+                    diskimage.name, ext)
+                # A bit tricky because these image files may be sparse
+                # files; we only want the true size of the file for
+                # purposes of watching if we've added too much stuff
+                # into the image.  Note that st_blocks is defined as
+                # 512-byte blocks by stat(2)
+                size = os.stat("%s.%s" %
+                               (image_filename, ext)).st_blocks * 512
+                self.log.debug("%s created image %s.%s (size: %d) " %
+                               (diskimage.name, image_filename, ext, size))
+                pipeline.gauge(key, size)
 
-        if self._statsd:
-            # report result to statsd
-            key_base = 'nodepool.dib_image_build.%s.status' % (
-                diskimage.name)
-            pipeline.timing(key_base + '.duration',
-                            int(build_time * 1000))
-            pipeline.gauge(key_base + '.rc', rc)
-            pipeline.gauge(key_base + '.last_build',
-                           int(time.time()))
-            pipeline.send()
+        # report result to statsd
+        key_base = 'nodepool.dib_image_build.%s.status' % (
+            diskimage.name)
+        pipeline.timing(key_base + '.duration',
+                        int(build_time * 1000))
+        pipeline.gauge(key_base + '.rc', rc)
+        pipeline.gauge(key_base + '.last_build',
+                       int(time.time()))
+        pipeline.send()
 
         return build_data
 
@@ -1180,12 +1162,11 @@ class UploadWorker(BaseWorker):
                 'stdout:\n%s\nstderr:\n%s',
                 p.returncode, p.stdout.decode(), p.stderr.decode())
 
-        if self._statsd:
-            dt = int((time.time() - start_time) * 1000)
-            key = 'nodepool.image_update.%s.%s' % (image_name,
-                                                   provider.name)
-            self._statsd.timing(key, dt)
-            self._statsd.incr(key)
+        dt = int((time.time() - start_time) * 1000)
+        key = 'nodepool.image_update.%s.%s' % (image_name,
+                                               provider.name)
+        self._statsd.timing(key, dt)
+        self._statsd.incr(key)
 
         base = "-".join([image_name, build_id])
         self.log.info("Image build %s (external_id %s) in %s is ready" %

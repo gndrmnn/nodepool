@@ -58,6 +58,7 @@ def keyscan(host_key_checking, node_id, interface_ip,
     return keys
 
 
+# TODO is StatsReporter subclass appropriate now after stats client refactor?
 class StateMachineNodeLauncher(stats.StatsReporter):
     """The state of the state machine.
 
@@ -535,7 +536,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.log = logging.getLogger(
             f"nodepool.StateMachineProvider.{provider.name}")
         super().__init__()
-        self._statsd = stats.get_client()
+        self._statsd = stats.StatsReporter()
         self.provider = provider
         self.adapter = adapter
         # State machines
@@ -750,11 +751,10 @@ class StateMachineProvider(Provider, QuotaSupport):
                     # condition.
                     try:
                         self.adapter.deleteResource(resource)
-                        if self._statsd:
-                            key = ('nodepool.provider.%s.leaked.%s'
-                                   % (self.provider.name,
-                                      resource.plural_metric_name))
-                            self._statsd.incr(key, 1)
+                        key = ('nodepool.provider.%s.leaked.%s'
+                               % (self.provider.name,
+                                  resource.plural_metric_name))
+                        self._statsd.incr(key, 1)
                     except Exception:
                         self.log.exception("Unable to delete leaked "
                                            f"resource for node {node_id}")
@@ -765,11 +765,10 @@ class StateMachineProvider(Provider, QuotaSupport):
                     # condition.
                     try:
                         self.adapter.deleteResource(resource)
-                        if self._statsd:
-                            key = ('nodepool.provider.%s.leaked.%s'
-                                   % (self.provider.name,
-                                      resource.plural_metric_name))
-                            self._statsd.incr(key, 1)
+                        key = ('nodepool.provider.%s.leaked.%s'
+                               % (self.provider.name,
+                                  resource.plural_metric_name))
+                        self._statsd.incr(key, 1)
                     except Exception:
                         self.log.exception("Unable to delete leaked "
                                            f"resource for upload {upload_id}")

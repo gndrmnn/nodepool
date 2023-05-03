@@ -37,7 +37,7 @@ class KubernetesProvider(Provider, QuotaSupport):
         super().__init__()
         self.provider = provider
         self._zk = None
-        self._statsd = stats.get_client()
+        self._statsd = stats.StatsReporter()
         self.ready = False
         _, _, self.k8s_client, self.rbac_client = get_client(
             self.log, provider.context, k8s_client.RbacAuthorizationV1Api)
@@ -121,10 +121,9 @@ class KubernetesProvider(Provider, QuotaSupport):
                     meta['nodepool_node_id']
                 )
                 self.cleanupNode(server.id)
-                if self._statsd:
-                    key = ('nodepool.provider.%s.leaked.nodes'
-                           % self.provider.name)
-                    self._statsd.incr(key)
+                key = ('nodepool.provider.%s.leaked.nodes'
+                       % self.provider.name)
+                self._statsd.incr(key)
 
     def startNodeCleanup(self, node):
         t = NodeDeleter(self._zk, self, node)
