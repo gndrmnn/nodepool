@@ -16,6 +16,24 @@
       "message": "I think this change is mixing two ideas; the original StatsReporter was basically a mix-in that added functionality (specifically it added an implementation to report launch stats), and the new StatsReporter is a proxy that masks the presence or absence of a statsd object.\n\nTBH, as we move everything to the statemachine driver, I think the original mix-in class will become less valuable.  But perhaps for now, it would be easiest to keep them separate and make the nex proxy object a new class and leave StatsReporter alone?",
       "revId": "bd2fb9ec1a006a698410ee08f190a61a396f69c8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "631cc341_6237d79b",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-05-03T16:51:58Z",
+      "side": 1,
+      "message": "s/nex/new/",
+      "parentUuid": "4afa7401_d94eeec4",
+      "revId": "bd2fb9ec1a006a698410ee08f190a61a396f69c8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
