@@ -164,10 +164,9 @@ class MetastaticCreateStateMachine(statemachine.StateMachine):
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries):
+                 metadata):
         super().__init__()
         self.adapter = adapter
-        self.retries = retries
         self.attempts = 0
         self.image_external_id = image_external_id
         self.metadata = metadata
@@ -273,11 +272,10 @@ class MetastaticAdapter(statemachine.Adapter):
         return self._provider._zk
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries,
+                              image_external_id, metadata,
                               request, az, log):
         return MetastaticCreateStateMachine(self, hostname, label,
-                                            image_external_id, metadata,
-                                            retries)
+                                            image_external_id, metadata)
 
     def getDeleteStateMachine(self, external_id, log):
         return MetastaticDeleteStateMachine(self, external_id)

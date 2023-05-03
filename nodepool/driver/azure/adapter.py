@@ -24,6 +24,7 @@ import cachetools.func
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
+from nodepool import exceptions
 from . import azul
 
 
@@ -173,17 +174,15 @@ class AzureCreateStateMachine(statemachine.StateMachine):
     PIP_CREATING = 'creating pip'
     NIC_CREATING = 'creating nic'
     VM_CREATING = 'creating vm'
-    VM_RETRY = 'retrying vm creation'
     NIC_QUERY = 'querying nic'
     PIP_QUERY = 'querying pip'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, request, log):
+                 metadata, request, log):
         super().__init__()
         self.log = log
         self.adapter = adapter
-        self.retries = retries
         self.attempts = 0
         self.image_external_id = image_external_id
         self.image_reference = None
@@ -270,19 +269,8 @@ class AzureCreateStateMachine(statemachine.StateMachine):
             if self.adapter._succeeded(self.vm):
                 self.state = self.NIC_QUERY
             elif self.adapter._failed(self.vm):
-                if self.attempts >= self.retries:
-                    raise Exception("Too many retries")
-                self.attempts += 1
-                self.vm = self.adapter._deleteVirtualMachine(
-                    self.external_id)
-                self.state = self.VM_RETRY
+                raise exceptions.LaunchStatusException("VM in failed state")
             else:
-                return
-
-        if self.state == self.VM_RETRY:
-            self.vm = self.adapter._refresh_delete(self.vm)
-            if self.vm is None:
-                self.state = self.NIC_CREATING
                 return
 
         if self.state == self.NIC_QUERY:
@@ -351,11 +339,11 @@ class AzureAdapter(statemachine.Adapter):
         self._getSKUs()
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries,
+                              image_external_id, metadata,
                               request, az, log):
         return AzureCreateStateMachine(self, hostname, label,
                                        image_external_id, metadata,
-                                       retries, request, log)
+                                       request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return AzureDeleteStateMachine(self, external_id)

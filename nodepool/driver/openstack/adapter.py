@@ -164,19 +164,16 @@ class OpenStackDeleteStateMachine(statemachine.StateMachine):
 class OpenStackCreateStateMachine(statemachine.StateMachine):
     SERVER_CREATING_SUBMIT = 'submit creating server'
     SERVER_CREATING = 'creating server'
-    SERVER_RETRY = 'retrying server creation'
-    SERVER_RETRY_DELETING = 'deleting server for retry'
     FLOATING_IP_CREATING = 'creating floating ip'
     FLOATING_IP_ATTACHING = 'attaching floating ip'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, request, az, log):
+                 metadata, request, az, log):
         self.log = log
         super().__init__()
         self.adapter = adapter
         self.provider = adapter.provider
-        self.retries = retries
         self.attempts = 0
         self.label = label
         self.server = None
@@ -236,6 +233,7 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
         self.external_id = None
 
     def _handleServerFault(self):
+        # Return True if this is a quota fault
         if not self.external_id:
             return
         try:
@@ -246,7 +244,7 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
             if fault:
                 self.log.error('Detailed node error: %s', fault)
                 if 'quota' in fault:
-                    self.quota_exceeded = True
+                    return True
         except Exception:
             self.log.exception(
                 'Failed to retrieve node error information:')
@@ -254,7 +252,6 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
     def advance(self):
         if self.state == self.START:
             self.external_id = None
-            self.quota_exceeded = False
             self.create_future = self.adapter._submitApi(
                 self.adapter._createServer,
                 self.hostname,
@@ -282,16 +279,18 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
                 except openstack.cloud.exc.OpenStackCloudCreateException as e:
                     if e.resource_id:
                         self.external_id = e.resource_id
-                        self._handleServerFault()
+                        if self._handleServerFault():
+                            self.log.exception("Launch attempt failed:")
+                            raise exceptions.QuotaException("Quota exceeded")
                         raise
             except Exception as e:
-                self.log.exception("Launch attempt %d/%d failed:",
-                                   self.attempts, self.retries)
                 if 'quota exceeded' in str(e).lower():
-                    self.quota_exceeded = True
+                    self.log.exception("Launch attempt failed:")
+                    raise exceptions.QuotaException("Quota exceeded")
                 if 'number of ports exceeded' in str(e).lower():
-                    self.quota_exceeded = True
-                self.state = self.SERVER_RETRY
+                    self.log.exception("Launch attempt failed:")
+                    raise exceptions.QuotaException("Quota exceeded")
+                raise
 
         if self.state == self.SERVER_CREATING:
             self.server = self.adapter._refreshServer(self.server)
@@ -311,46 +310,9 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
                         "Error in creating the server."
                         " Compute service reports fault: {reason}".format(
                             reason=self.server['fault']['message']))
-                if self.external_id:
-                    try:
-                        self.adapter._deleteServer(self.external_id)
-                    except Exception:
-                        self.log.exception("Error deleting server:")
-                        self.server = None
-                else:
-                    self.server = None
-                self.state = self.SERVER_RETRY
+                raise exceptions.LaunchStatusException("Server in error state")
             else:
                 return
-
-        if self.state == self.SERVER_RETRY:
-            if self.external_id:
-                try:
-                    self.adapter._deleteServer(self.external_id)
-                except Exception:
-                    self.log.exception("Error deleting server:")
-                    # We must keep trying the delete until timeout in
-                    # order to avoid having two servers for the same
-                    # node id.
-                    return
-            else:
-                self.server = None
-            self.state = self.SERVER_RETRY_DELETING
-
-        if self.state == self.SERVER_RETRY_DELETING:
-            self.server = self.adapter._refreshServerDelete(self.server)
-            if self.server:
-                return
-            self.attempts += 1
-            if self.attempts >= self.retries:
-                raise Exception("Too many retries")
-            if self.quota_exceeded:
-                # A quota exception is not directly recoverable so bail
-                # out immediately with a specific exception.
-                self.log.info("Quota exceeded, invalidating quota cache")
-                raise exceptions.QuotaException("Quota exceeded")
-            self.state = self.START
-            return
 
         if self.state == self.FLOATING_IP_CREATING:
             self.floating_ip = self.adapter._refreshFloatingIp(
@@ -432,10 +394,10 @@ class OpenStackAdapter(statemachine.Adapter):
         self.api_executor.shutdown()
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
-                              metadata, retries, request, az, log):
+                              metadata, request, az, log):
         return OpenStackCreateStateMachine(
             self, hostname, label, image_external_id,
-            metadata, retries, request, az, log)
+            metadata, request, az, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return OpenStackDeleteStateMachine(self, external_id, log)

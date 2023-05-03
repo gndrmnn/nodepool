@@ -23,6 +23,7 @@ import cachetools.func
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
+from nodepool import exceptions
 
 from ibm_vpc import VpcV1
 from ibm_cloud_sdk_core import get_query_param, ApiException
@@ -187,15 +188,13 @@ class IBMVPCDeleteStateMachine(statemachine.StateMachine):
 class IBMVPCCreateStateMachine(statemachine.StateMachine):
     FIP_CREATING = 'creating fip'
     VM_CREATING = 'creating vm'
-    VM_RETRY = 'retrying vm creation'
     FIP_ATTACHING = 'attaching fip'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries):
+                 metadata):
         super().__init__()
         self.adapter = adapter
-        self.retries = retries
         self.attempts = 0
         if image_external_id:
             self.image_id = {'id': image_external_id}
@@ -258,19 +257,9 @@ class IBMVPCCreateStateMachine(statemachine.StateMachine):
                     self.adapter._attachFloatingIP(self.vm, self.fip)
                 self.state = self.FIP_ATTACHING
             elif self.vm['status'] == 'failed':
-                if self.attempts >= self.retries:
-                    raise Exception("Too many retries")
-                self.attempts += 1
-                self.vm = self.adapter._deleteInstance(
-                    self.external_id)
-                self.state = self.VM_RETRY
+                raise exceptions.LaunchStatusException(
+                    "Server in failed state")
             else:
-                return
-
-        if self.state == self.VM_RETRY:
-            self.vm = self.adapter._refreshInstance(self.vm, delete=True)
-            if self.vm is None:
-                self.state = self.FIP_CREATING
                 return
 
         if self.state == self.FIP_ATTACHING:
@@ -384,11 +373,10 @@ class IBMVPCAdapter(statemachine.Adapter):
         return authenticator
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries,
+                              image_external_id, metadata,
                               request, az, log):
         return IBMVPCCreateStateMachine(self, hostname, label,
-                                        image_external_id, metadata,
-                                        retries)
+                                        image_external_id, metadata)
 
     def getDeleteStateMachine(self, external_id, log):
         return IBMVPCDeleteStateMachine(self, external_id)

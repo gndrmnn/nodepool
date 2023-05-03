@@ -61,10 +61,9 @@ class CreateStateMachine(statemachine.StateMachine):
     VM_CREATING = 'creating vm'
     COMPLETE = 'complete'
 
-    def __init__(self, adapter, hostname, label, metadata, retries):
+    def __init__(self, adapter, hostname, label, metadata):
         super().__init__()
         self.adapter = adapter
-        self.retries = retries
         self.metadata = metadata
         self.hostname = hostname
         self.label = label
@@ -93,8 +92,8 @@ class Adapter(statemachine.Adapter):
                                         provider_config.rate_limit)
         self.cloud = object()
 
-    def getCreateStateMachine(self, hostname, label, metadata, retries, log):
-        return CreateStateMachine(self, hostname, label, metadata, retries)
+    def getCreateStateMachine(self, hostname, label, metadata, log):
+        return CreateStateMachine(self, hostname, label, metadata)
 
     def getDeleteStateMachine(self, external_id, log):
         return DeleteStateMachine(self, external_id)

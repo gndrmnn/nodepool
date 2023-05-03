@@ -28,6 +28,7 @@ import urllib.parse
 
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
+from nodepool import exceptions
 
 import boto3
 import botocore.exceptions
@@ -155,15 +156,13 @@ class AwsDeleteStateMachine(statemachine.StateMachine):
 class AwsCreateStateMachine(statemachine.StateMachine):
     INSTANCE_CREATING_SUBMIT = 'submit creating instance'
     INSTANCE_CREATING = 'creating instance'
-    INSTANCE_RETRY = 'retrying instance creation'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, request, log):
+                 metadata, request, log):
         self.log = log
         super().__init__()
         self.adapter = adapter
-        self.retries = retries
         self.attempts = 0
         self.image_external_id = image_external_id
         self.metadata = metadata
@@ -206,19 +205,9 @@ class AwsCreateStateMachine(statemachine.StateMachine):
             if self.instance.state["Name"].lower() == "running":
                 self.state = self.COMPLETE
             elif self.instance.state["Name"].lower() == "terminated":
-                if self.attempts >= self.retries:
-                    raise Exception("Too many retries")
-                self.attempts += 1
-                self.instance = self.adapter._deleteInstance(
-                    self.external_id, self.log, immediate=True)
-                self.state = self.INSTANCE_RETRY
+                raise exceptions.LaunchStatusException(
+                    "Instance in terminated state")
             else:
-                return
-
-        if self.state == self.INSTANCE_RETRY:
-            self.instance = self.adapter._refreshDelete(self.instance)
-            if self.instance is None:
-                self.state = self.START
                 return
 
         if self.state == self.COMPLETE:
@@ -304,9 +293,9 @@ class AwsAdapter(statemachine.Adapter):
         self._running = False
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
-                              metadata, retries, request, az, log):
+                              metadata, request, az, log):
         return AwsCreateStateMachine(self, hostname, label, image_external_id,
-                                     metadata, retries, request, log)
+                                     metadata, request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return AwsDeleteStateMachine(self, external_id, log)

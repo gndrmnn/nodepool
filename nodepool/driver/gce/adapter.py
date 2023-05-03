@@ -20,6 +20,7 @@ import math
 
 from nodepool.driver import statemachine
 from nodepool.driver.utils import QuotaInformation, RateLimiter
+from nodepool import exceptions
 
 import googleapiclient.discovery
 
@@ -97,15 +98,13 @@ class GceDeleteStateMachine(statemachine.StateMachine):
 
 class GceCreateStateMachine(statemachine.StateMachine):
     INSTANCE_CREATING = 'creating instance'
-    INSTANCE_RETRY = 'retrying instance creation'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, hostname, label, image_external_id,
-                 metadata, retries, request, log):
+                 metadata, request, log):
         self.log = log
         super().__init__()
         self.adapter = adapter
-        self.retries = retries
         self.attempts = 0
         self.image_external_id = image_external_id
         self.metadata = metadata
@@ -132,11 +131,8 @@ class GceCreateStateMachine(statemachine.StateMachine):
                 self.instance = data
                 self.state = self.COMPLETE
             elif data['status'] == 'TERMINATED':
-                if self.attempts >= self.retries:
-                    raise Exception("Too many retries")
-                self.attempts += 1
-                self.state = self.START
-                return
+                raise exceptions.LaunchStatusException(
+                    "Instance in terminated state")
             else:
                 return
 
@@ -163,9 +159,9 @@ class GceAdapter(statemachine.Adapter):
                                         self.provider.rate)
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
-                              metadata, retries, request, az, log):
+                              metadata, request, az, log):
         return GceCreateStateMachine(self, hostname, label, image_external_id,
-                                     metadata, retries, request, log)
+                                     metadata, request, log)
 
     def getDeleteStateMachine(self, external_id, log):
         return GceDeleteStateMachine(self, external_id, log)

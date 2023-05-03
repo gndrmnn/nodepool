@@ -83,10 +83,12 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.node = node
         self.provider_config = provider_config
         # Local additions:
-        self.state_machine = None
-        self.keyscan_future = None
         self.manager = handler.manager
         self.start_time = None
+        self.attempts = 0
+        self.state_machine = None
+        # To handle deletions:
+        self.delete_state_machine = None
 
     @property
     def complete(self):
@@ -94,6 +96,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             return True
 
     def launch(self):
+        # This is called when we initially start building the node,
+        # but it can also be called multiple times in case we retry
+        # the launch.
+        self.attempts += 1
         label = self.handler.pool.labels[self.node.type[0]]
         if label.diskimage:
             diskimage = self.provider_config.diskimages[
@@ -131,14 +137,15 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
         self.zk.storeNode(self.node)
 
+        self.keyscan_future = None
         # Windows computer names can be no more than 15 chars long.
         hostname = 'np' + self.node.id
-        retries = self.manager.provider.launch_retries
+        self.retries = self.manager.provider.launch_retries
         metadata = {'nodepool_node_id': self.node.id,
                     'nodepool_pool_name': self.handler.pool.name,
                     'nodepool_provider_name': self.manager.provider.name}
         self.state_machine = self.manager.adapter.getCreateStateMachine(
-            hostname, label, image_external_id, metadata, retries,
+            hostname, label, image_external_id, metadata,
             self.handler.request, self.handler.chosen_az, self.log)
 
     def updateNodeFromInstance(self, instance):
@@ -176,6 +183,53 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
         self.zk.storeNode(node)
 
+    def runDeleteStateMachine(self):
+        # This is similar to StateMachineNodeDeleter.runStateMachine,
+        # but the error handling and cleanup are different.
+        # Return True if there is no delete work to do
+
+        if self.delete_state_machine is None:
+            return True
+
+        state_machine = self.delete_state_machine
+        node = self.node
+
+        if state_machine.complete:
+            self.delete_state_machine = None
+            return True
+
+        try:
+            if state_machine.external_id:
+                old_state = state_machine.state
+                state_machine.advance()
+                if state_machine.state != old_state:
+                    self.log.debug(
+                        "Launch-delete state machine for %s advanced "
+                        "from %s to %s",
+                        node.id, old_state, state_machine.state)
+            else:
+                state_machine.complete = True
+                self.delete_state_machine = None
+                return True
+
+            if not state_machine.complete:
+                return
+
+        except exceptions.NotFound:
+            self.log.info("Instance %s not found in provider %s",
+                          state_machine.external_id, node.provider)
+            state_machine.complete = True
+            self.delete_state_machine = None
+            return True
+        except Exception:
+            self.log.exception("Error in launch-delete state machine:")
+            # We must keep trying the delete until timeout in
+            # order to avoid having two servers for the same
+            # node id.
+            self.delete_state_machine = \
+                self.manager.adapter.getDeleteStateMachine(
+                    state_machine.external_id, self.log)
+
     def runStateMachine(self):
         instance = None
         state_machine = self.state_machine
@@ -186,7 +240,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.start_time = time.monotonic()
 
         try:
-            if (self.state_machine.complete and self.keyscan_future
+            if (state_machine.complete and self.keyscan_future
                 and self.keyscan_future.done()):
                 keys = self.keyscan_future.result()
                 if keys:
@@ -205,6 +259,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if (now - state_machine.start_time >
                 self.manager.provider.launch_timeout):
                 raise Exception("Timeout waiting for instance creation")
+
+            if not self.runDeleteStateMachine():
+                return
+
             old_state = state_machine.state
             instance = state_machine.advance()
             if state_machine.state != old_state:
@@ -238,23 +296,48 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             node.external_id = state_machine.external_id
             statsd_key = 'error.zksession'
         except exceptions.QuotaException:
-            self.log.info("Aborting node %s due to quota failure" % node.id)
+            self.log.info("Aborting node %s due to quota failure", node.id)
             node.state = zk.ABORTED
             node.external_id = state_machine.external_id
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
             self.manager.invalidateQuotaCache()
         except Exception as e:
-            self.log.exception(
-                "Launch failed for node %s:", node.id)
-            node.state = zk.FAILED
-            node.external_id = state_machine.external_id
-            self.zk.storeNode(node)
+            self.log.exception("Launch attempt %d/%d for node %s, failed:",
+                               self.attempts, self.retries, node.id)
+            if state_machine.external_id:
+                # If we're deleting, don't overwrite the node external
+                # id, because we may make another delete state machine
+                # below.
+                node.external_id = state_machine.external_id
+                self.zk.storeNode(node)
 
             if hasattr(e, 'statsd_key'):
                 statsd_key = e.statsd_key
             else:
                 statsd_key = 'error.unknown'
+            try:
+                dt = int((time.monotonic() - self.start_time) * 1000)
+                self.recordLaunchStats(statsd_key, dt)
+            except Exception:
+                self.log.exception("Exception while reporting stats:")
+
+            if self.attempts >= self.retries:
+                node.state = zk.FAILED
+                return True
+            else:
+                # Before retrying the launch, delete what we have done
+                # so far.  This is accomplished using a delete state
+                # machine which we run inside this method to unwind
+                # the launch.  Once that is finished, we will restart
+                # the launch as normal.  The launch method below
+                # prepares everything for the next launch (and
+                # increments the count of attempts).
+                self.delete_state_machine = \
+                    self.manager.adapter.getDeleteStateMachine(
+                        node.external_id, self.log)
+                self.launch()
+                return
 
         if node.state != zk.BUILDING:
             try:
@@ -302,7 +385,7 @@ class StateMachineNodeDeleter:
         node = self.node
         node_exists = (node.id is not None)
 
-        if self.state_machine.complete:
+        if state_machine.complete:
             return True
 
         try:
@@ -322,21 +405,21 @@ class StateMachineNodeDeleter:
                                    "from %s to %s",
                                    node.id, old_state, state_machine.state)
             else:
-                self.state_machine.complete = True
+                state_machine.complete = True
 
-            if not self.state_machine.complete:
+            if not state_machine.complete:
                 return
 
         except exceptions.NotFound:
-            self.log.info(f"Instance {node.external_id} not found in "
-                          f"provider {node.provider}")
+            self.log.info("Instance %s not found in provider %s",
+                          node.external_id, node.provider)
         except Exception:
-            self.log.exception("Exception deleting instance "
-                               f"{node.external_id} from {node.provider}:")
+            self.log.exception("Exception deleting instance %s from %s:",
+                               node.external_id, node.provider)
             # Don't delete the ZK node in this case, but do unlock it
             if node_exists:
                 self.zk.unlockNode(node)
-            self.state_machine.complete = True
+            state_machine.complete = True
             return
 
         if node_exists:
@@ -964,7 +1047,7 @@ class Adapter:
         pass
 
     def getCreateStateMachine(self, hostname, label,
-                              image_external_id, metadata, retries,
+                              image_external_id, metadata,
                               log):
         """Return a state machine suitable for creating an instance
 
@@ -981,8 +1064,6 @@ class Adapter:
             stored on the instance in the cloud.  The same data must be
             able to be returned later on :py:class:`Instance` objects
             returned from `listInstances`.
-        :param retries int: The number of attempts which should be
-            made to launch the node.
         :param log Logger: A logger instance for emitting annotated
             logs related to the request.
 
