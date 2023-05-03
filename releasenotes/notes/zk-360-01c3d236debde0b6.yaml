@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    Nodepool now requires ZooKeeper version 3.6.0 or later (note that
+    at the time of this writing, the oldest supported ZooKeeper
+    version is later than that).
