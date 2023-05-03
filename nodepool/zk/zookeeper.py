@@ -741,7 +741,8 @@ class NodepoolTreeCache(abc.ABC):
         self.root = root
         self._cached_objects = {}
         self._cached_paths = set()
-        self._ready = False
+        self._ready = threading.Event()
+        self._init_lock = threading.Lock()
         self._stopped = False
         self._queue = queue.Queue()
         self._background_thread = threading.Thread(
@@ -763,20 +764,32 @@ class NodepoolTreeCache(abc.ABC):
 
     def _sessionListener(self, state):
         if state == KazooState.LOST:
-            self._ready = False
+            self._ready.clear()
         elif state == KazooState.CONNECTED and not self._stopped:
-            self._ready = False
+            self._ready.clear()
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
         self._queue.put(event)
 
     def _start(self):
-        self.log.debug("Initialize cache")
-        self.zk.kazoo_client.add_watch(self.root, self._cacheListener,
-                                       AddWatchMode.PERSISTENT_RECURSIVE)
-        self._walkTree()
-        self._ready = True
+        locked = self._init_lock.acquire(blocking=False)
+        if locked:
+            self.log.debug("Initialize cache at %s", self.root)
+            try:
+                self.zk.kazoo_client.add_watch(
+                    self.root, self._cacheListener,
+                    AddWatchMode.PERSISTENT_RECURSIVE)
+                self._walkTree()
+                self._ready.set()
+                self.log.debug("Cache at %s is ready", self.root)
+            except Exception:
+                self.log.error("Error initializing cache at %s", self.root)
+            finally:
+                self._init_lock.release()
+        else:
+            self.log.debug("Skipping locked cache initialization at %s",
+                           self.root)
 
     def stop(self):
         self._stopped = True
@@ -897,6 +910,9 @@ class NodepoolTreeCache(abc.ABC):
                 pass
         self.postCacheHook(event, data, stat)
 
+    def ensureReady(self):
+        self._ready.wait()
+
     # Methods for subclasses:
     def preCacheHook(self, event, exists):
         """Called before the cache is updated
@@ -994,6 +1010,27 @@ class ImageCache(NodepoolTreeCache):
             image = key[0]
             return Image(image)
 
+    def getImages(self):
+        self.ensureReady()
+        items = self._cached_objects.items()
+        items = sorted(items, key=lambda x: x[0])
+        return [x[1] for x in items
+                if isinstance(x[1], Image)]
+
+    def getBuilds(self):
+        self.ensureReady()
+        items = self._cached_objects.items()
+        items = sorted(items, key=lambda x: x[0])
+        return [x[1] for x in items
+                if isinstance(x[1], ImageBuild)]
+
+    def getUploads(self):
+        self.ensureReady()
+        items = self._cached_objects.items()
+        items = sorted(items, key=lambda x: x[0])
+        return [x[1] for x in items
+                if isinstance(x[1], ImageUpload)]
+
 
 class NodeCache(NodepoolTreeCache):
     def parsePath(self, path):
@@ -1027,11 +1064,13 @@ class NodeCache(NodepoolTreeCache):
         return Node.fromDict(d, node_id)
 
     def getNode(self, node_id):
+        self.ensureReady()
         return self._cached_objects.get((node_id,))
 
     def getNodeIds(self):
         # get a copy of the values view to avoid runtime errors in the event
         # the _cached_nodes dict gets updated while iterating
+        self.ensureReady()
         return [x.id for x in list(self._cached_objects.values())]
 
 
@@ -1044,11 +1083,13 @@ class RequestCache(NodepoolTreeCache):
         return NodeRequest.fromDict(d, request_id)
 
     def getNodeRequest(self, request_id):
+        self.ensureReady()
         return self._cached_objects.get((request_id,))
 
     def getNodeRequestIds(self):
         # get a copy of the values view to avoid runtime errors in the event
         # the _cached_nodes dict gets updated while iterating
+        self.ensureReady()
         return [x.id for x in list(self._cached_objects.values())]
 
 
@@ -1519,10 +1560,7 @@ class ZooKeeper(ZooKeeperBase):
         '''
         if not self.enable_cache:
             raise RuntimeError("Caching not enabled")
-        items = self._image_cache._cached_objects.items()
-        items = sorted(items, key=lambda x: x[0])
-        return [x[1] for x in items
-                if isinstance(x[1], Image)]
+        return self._image_cache.getImages()
 
     def getImagePaused(self, image):
         '''
@@ -1676,10 +1714,7 @@ class ZooKeeper(ZooKeeperBase):
         '''
         if not self.enable_cache:
             raise RuntimeError("Caching not enabled")
-        items = self._image_cache._cached_objects.items()
-        items = sorted(items, key=lambda x: x[0])
-        return [x[1] for x in items
-                if isinstance(x[1], ImageBuild)]
+        return self._image_cache.getBuilds()
 
     def getMostRecentBuilds(self, count, image, state=None):
         '''
@@ -1896,10 +1931,7 @@ class ZooKeeper(ZooKeeperBase):
         '''
         if not self.enable_cache:
             raise RuntimeError("Caching not enabled")
-        items = self._image_cache._cached_objects.items()
-        items = sorted(items, key=lambda x: x[0])
-        return [x[1] for x in items
-                if isinstance(x[1], ImageUpload)]
+        return self._image_cache.getUploads()
 
     def storeImageUpload(self, image, build_number, provider, image_data,
                          upload_number=None):
