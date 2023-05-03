@@ -58,6 +58,10 @@ def keyscan(host_key_checking, node_id, interface_ip,
     return keys
 
 
+class NodeScanException(Exception):
+    pass
+
+
 class StateMachineNodeLauncher(stats.StatsReporter):
     """The state of the state machine.
 
@@ -188,7 +192,11 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         try:
             if (self.state_machine.complete and self.keyscan_future
                 and self.keyscan_future.done()):
-                keys = self.keyscan_future.result()
+                try:
+                    keys = self.keyscan_future.result()
+                except Exception:
+                    self.log.exception("Error in host key scanning:")
+                    raise NodeScanException()
                 if keys:
                     node.host_keys = keys
                 self.log.debug(f"Node {node.id} is ready")
@@ -238,12 +246,19 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             node.external_id = state_machine.external_id
             statsd_key = 'error.zksession'
         except exceptions.QuotaException:
-            self.log.info("Aborting node %s due to quota failure" % node.id)
+            self.log.info("Aborting node %s due to quota failure", node.id)
             node.state = zk.ABORTED
             node.external_id = state_machine.external_id
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
             self.manager.invalidateQuotaCache()
+        except NodeScanException:
+            self.log.info("Aborting node %s due to node scan failure",
+                          node.id)
+            node.state = zk.ABORTED
+            node.external_id = state_machine.external_id
+            self.zk.storeNode(node)
+            statsd_key = 'error.unknown'
         except Exception as e:
             self.log.exception(
                 "Launch failed for node %s:", node.id)

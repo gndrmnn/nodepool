@@ -20,8 +20,10 @@ import fixtures
 import mock
 import socket
 import testtools
+from unittest.mock import patch
 
 from nodepool import tests
+import nodepool.exceptions
 from nodepool.zk import zookeeper as zk
 from nodepool.zk.components import PoolComponent
 from nodepool.driver.statemachine import StateMachineProvider
@@ -1152,6 +1154,35 @@ class TestLauncher(tests.DBTestCase):
 
         # retries in config is set to 2, so 2 attempts to create a server
         self.assertEqual(0, manager.adapter.createServer_fails)
+
+    def test_node_launch_keyscan_failure(self):
+        # Test that a keyscan failure causes a retry
+
+        counter = 0
+
+        def handler(*args, **kw):
+            nonlocal counter
+            counter += 1
+            if counter <= 1:
+                raise nodepool.exceptions.ConnectionTimeoutException()
+
+        with patch('nodepool.driver.statemachine.nodescan') as nodescan:
+            nodescan.side_effect = handler
+            configfile = self.setup_config('node_no_min_ready.yaml')
+
+            self.useBuilder(configfile)
+            self.waitForImage('fake-provider', 'fake-image')
+
+            req1 = zk.NodeRequest()
+            req1.state = zk.REQUESTED
+            req1.node_types.append('fake-label')
+            self.zk.storeNodeRequest(req1)
+
+            pool = self.useNodepool(configfile, watermark_sleep=1)
+            self.startPool(pool)
+
+            req1 = self.waitForNodeRequest(req1)
+            self.assertEqual(req1.state, zk.FULFILLED)
 
     def test_node_launch_with_broken_znodes(self):
         """Test that node launch still works if there are broken znodes"""
