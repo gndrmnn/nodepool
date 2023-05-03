@@ -16,6 +16,24 @@
       "message": "Should this be debug level?  It seems expected.",
       "revId": "53180f5ef5e2a0f34631e9841467132529afc9cc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5b9ff29_85034464",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-05-03T13:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "989d9350_74dcb0c4",
+      "revId": "53180f5ef5e2a0f34631e9841467132529afc9cc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
