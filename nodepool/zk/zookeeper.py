@@ -735,6 +735,7 @@ class NodepoolTreeCache(abc.ABC):
     '''
 
     log = logging.getLogger("nodepool.zk.ZooKeeper")
+    event_log = logging.getLogger("nodepool.zk.cache.event")
 
     def __init__(self, zk, root):
         self.zk = zk
@@ -832,7 +833,7 @@ class NodepoolTreeCache(abc.ABC):
                     self._cacheListener(event)
 
     def _handleCacheEvent(self, event):
-        self.log.debug("Cache event %s", event)
+        self.event_log.debug("Cache event %s", event)
 
         data, stat = None, None
         # The cache is being (re-)initialized.  Since this happens out
