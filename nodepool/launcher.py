@@ -202,6 +202,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                           launcher_pool_ids_with_higher_priority)
                 continue
 
+            if not pool_labels.issuperset(set(req.node_types)) and candidate_launcher_pools:
+                # We don't have the labels for this request, but there are
+                # launchers online which could satisfy it, so defer to them.
+                # If there are no more candicate launchers we will decline the
+                # request later.
+                log.debug("Deferring request because this pool doesn't offer the labels")
+                continue
+
             if has_quota_support and not all(label_quota.get(l, math.inf) > 0
                                              for l in req.node_types):
                 # Defer the request as we can't provide the required labels at
