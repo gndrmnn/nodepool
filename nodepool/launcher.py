@@ -438,16 +438,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.component_info = PoolComponent(
             self.zk.client, hostname,
             version=get_version_string())
-        labels = set()
-        for prov_cfg in self.nodepool.config.providers.values():
-            labels.update(prov_cfg.getSupportedLabels())
-            self.component_info.content.update({
-                'id': self.launcher_id,
-                'provider_name': self.provider_name,
-                'supported_labels': list(labels),
-                'state': self.component_info.RUNNING,
-                'priority': self.getPriority(),
-            })
+        pool_config = self.getPoolConfig()
+        self.component_info.content.update({
+            'id': self.launcher_id,
+            'provider_name': self.provider_name,
+            'supported_labels': list(pool_config.labels),
+            'state': self.component_info.RUNNING,
+            'priority': self.getPriority(),
+        })
         self.component_info.register()
 
         while self.running:
@@ -461,10 +459,8 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 if did_suspend:
                     self.log.info("ZooKeeper available. Resuming")
 
-                labels = set()
-                for prov_cfg in self.nodepool.config.providers.values():
-                    labels.update(prov_cfg.getSupportedLabels())
-                self.component_info.supported_labels = list(labels)
+                pool_config = self.getPoolConfig()
+                self.component_info.supported_labels = list(pool_config.labels)
                 self.component_info.priority = self.getPriority()
 
                 self.updateProviderLimits(
