@@ -477,6 +477,10 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                         if node.state != zk.READY:
                             self.zk.unlockNode(node)
                             continue
+                        # Double check that the node is still reusable
+                        if not self.checkReusableNode(node):
+                            self.zk.unlockNode(node)
+                            continue
                         if self.paused:
                             self.log.debug("Unpaused request %s", self.request)
                             self.paused = False
