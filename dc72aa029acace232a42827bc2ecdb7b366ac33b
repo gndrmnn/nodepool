@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b60ba791_7e937159",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-05-17T22:50:10Z",
+      "side": 1,
+      "message": "This doesn\u0027t match the docs.  And the other drivers have the same mismatch.\n\nI think the docs are wrong and this is right.",
+      "revId": "dc72aa029acace232a42827bc2ecdb7b366ac33b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
