@@ -245,12 +245,12 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                 keys = self.keyscan_future.result()
                 if keys:
                     node.host_keys = keys
-                self.log.debug(f"Node {node.id} is ready")
+                dt_seconds = int(time.monotonic() - self.start_time)
+                self.log.debug(f"Node {node.id} is ready in %s seconds", dt_seconds)
                 node.state = zk.READY
                 self.zk.storeNode(node)
                 try:
-                    dt = int((time.monotonic() - self.start_time) * 1000)
-                    self.recordLaunchStats(statsd_key, dt)
+                    self.recordLaunchStats(statsd_key, int(dt_seconds * 1000))
                 except Exception:
                     self.log.exception("Exception while reporting stats:")
                 return True
