@@ -535,6 +535,8 @@ class AwsAdapter(statemachine.Adapter):
     def _uploadImageSnapshot(self, provider_image, image_name, filename,
                              image_format, metadata, md5, sha256,
                              bucket_name, object_filename):
+        import_start_time = time.monotonic()
+
         # Import snapshot
         self.log.debug(f"Importing {image_name} as snapshot")
         timeout = time.time()
@@ -558,6 +560,7 @@ class AwsAdapter(statemachine.Adapter):
                             },
                         ]
                     )
+                    import_task_start_time = time.monotonic()
                     break
             except botocore.exceptions.ClientError as error:
                 if (error.response['Error']['Code'] ==
@@ -642,13 +645,18 @@ class AwsAdapter(statemachine.Adapter):
         except Exception:
             self.log.exception("Error tagging AMI:")
 
+        dt_import_time = int(time.monotonic() - import_start_time)
+        dt_task_time = int(time.monotonic() - import_task_start_time)
         self.log.debug(f"Upload of {image_name} complete as "
-                       f"{register_response['ImageId']}")
+                       f"{register_response['ImageId']} in {dt_import_time} s "
+                       f"import task took {dt_task_time} s")
         return register_response['ImageId']
 
     def _uploadImageImage(self, provider_image, image_name, filename,
                           image_format, metadata, md5, sha256,
                           bucket_name, object_filename):
+        import_start_time = time.monotonic()
+
         # Import image as AMI
         self.log.debug(f"Importing {image_name} as AMI")
         timeout = time.time()
@@ -673,6 +681,7 @@ class AwsAdapter(statemachine.Adapter):
                             },
                         ]
                     )
+                    import_task_start_time = time.monotonic()
                     break
             except botocore.exceptions.ClientError as error:
                 if (error.response['Error']['Code'] ==
@@ -722,7 +731,11 @@ class AwsAdapter(statemachine.Adapter):
         except Exception:
             self.log.exception("Error tagging snapshot:")
 
-        self.log.debug(f"Upload of {image_name} complete as {task['ImageId']}")
+        dt_import_time = int(time.monotonic() - import_start_time)
+        dt_task_time = int(time.monotonic() - import_task_start_time)
+        self.log.debug(f"Upload of {image_name} complete as "
+                       f"{task['ImageId']} in {dt_import_time} s "
+                       f"import task took {dt_task_time} s")
         # Last task returned from paginator above
         return task['ImageId']
 
