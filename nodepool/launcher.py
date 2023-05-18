@@ -742,7 +742,8 @@ class CleanupWorker(BaseCleanupWorker):
         self.log.debug('Cleaning up held nodes...')
 
         zk_conn = self._nodepool.getZK()
-        held_nodes = [n for n in zk_conn.nodeIterator() if n.state == zk.HOLD]
+        held_nodes = [n for n in zk_conn.nodeIterator(cached_ids=True)
+                      if n.state == zk.HOLD]
         for node in held_nodes:
             # Can't do anything if we aren't configured for this provider.
             if node.provider not in self._nodepool.config.providers:
