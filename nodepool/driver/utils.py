@@ -339,7 +339,7 @@ class QuotaSupport:
         '''
         used_quota = QuotaInformation()
 
-        for node in self._zk.nodeIterator():
+        for node in self._zk.nodeIterator(cached_ids=True):
             if node.provider == self.provider.name:
                 try:
                     if pool and not node.pool == pool.name:
