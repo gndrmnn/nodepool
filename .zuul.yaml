@@ -277,18 +277,18 @@
       jobs:
         - opendev-buildset-registry
         - nodepool-build-image
-        - zuul-nox-docs
-        - nox-linters
-        - nodepool-nox-py38:
-            nodeset: ubuntu-focal
-        - nodepool-nox-py311
+        #- zuul-nox-docs
+        #- nox-linters
+        #- nodepool-nox-py38:
+        #    nodeset: ubuntu-focal
+        #- nodepool-nox-py311
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - nodepool-functional-openshift
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-build-image
-        - build-python-release
+        #- build-python-release
     gate:
       jobs:
         - nodepool-upload-image

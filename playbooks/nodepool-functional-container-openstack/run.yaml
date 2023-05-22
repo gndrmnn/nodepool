@@ -86,25 +86,34 @@
       loop:
         - '{{ nodepool_log_dir }}'
 
-    - name: Write docker-compose
+    - name: Write docker-compose.yaml
       template:
         src: docker-compose.yaml.j2
         dest: /etc/nodepool/docker-compose.yaml
         mode: 0600
 
-    - name: Run docker compose pull
+    - name: Run podman compose pull
       shell:
-        cmd: docker-compose pull
+        cmd: podman-compose pull
         chdir: /etc/nodepool
+      # We run privileged containers so all container commands need to be
+      # run as root.
+      become: yes
 
-    - name: Run docker compose up
+    - name: Run podman compose up
       shell:
-        cmd: docker-compose up -d --timeout 60
+        cmd: podman-compose up -d --timeout 60
         chdir: /etc/nodepool
+      # We run privileged containers so all container commands need to be
+      # run as root.
+      become: yes
 
     - name: Cleanup unused images
       shell:
-        cmd: docker image prune -f
+        cmd: podman image prune -f
+      # We run privileged containers so all container commands need to be
+      # run as root.
+      become: yes
 
     - name: Check nodepool functionality
       command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/tools/functional-test-check.sh"
