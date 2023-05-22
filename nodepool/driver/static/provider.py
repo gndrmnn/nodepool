@@ -343,6 +343,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
     def syncNodeCount(self, static_node, pool):
         self.log.debug("Provider %s pool %s syncing nodes with config",
                        self.provider.name, pool.name)
+        need_to_update = False
         for slot, node in enumerate(self._node_slots[nodeTuple(static_node)]):
             if node is None:
                 # Register nodes to synchronize with our configuration.
@@ -356,6 +357,16 @@ class StaticNodeProvider(Provider, QuotaSupport):
                     self.deregisterNode(node)
                 except Exception:
                     self.log.exception("Couldn't deregister static node:")
+            else:
+                # Node record exists already; if we're starting up, we
+                # just need to check its values.
+                need_to_update = True
+        return need_to_update
+
+    def syncAndUpdateNode(self, static_node, pool):
+        update = self.syncNodeCount(static_node, pool)
+        if update:
+            self.updateNodeFromConfig(static_node)
 
     def _start(self, zk_conn):
         self.zk = zk_conn
@@ -367,27 +378,17 @@ class StaticNodeProvider(Provider, QuotaSupport):
                 synced_nodes = []
                 for static_node in pool.nodes:
                     synced_nodes.append((static_node, executor.submit(
-                        self.syncNodeCount, static_node, pool)))
+                        self.syncAndUpdateNode, static_node, pool)))
 
                 for static_node, result in synced_nodes:
                     try:
                         result.result()
                     except StaticNodeError as exc:
-                        self.log.warning("Couldn't sync node: %s", exc)
-                        continue
-                    except Exception:
-                        self.log.exception("Couldn't sync node %s:",
-                                           nodeTuple(static_node))
-                        continue
-
-                    try:
-                        self.updateNodeFromConfig(static_node)
-                    except StaticNodeError as exc:
                         self.log.warning(
-                            "Couldn't update static node: %s", exc)
+                            "Couldn't sync static node: %s", exc)
                         continue
                     except Exception:
-                        self.log.exception("Couldn't update static node %s:",
+                        self.log.exception("Couldn't sync static node %s:",
                                            nodeTuple(static_node))
                         continue
 
