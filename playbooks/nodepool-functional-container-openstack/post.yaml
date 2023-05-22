@@ -32,9 +32,9 @@
             dest: '{{ zuul.executor.log_root }}'
             mode: pull
 
-        - name: Copy docker logs
+        - name: Copy podman logs
           become: True
           synchronize:
-            src: '{{ ansible_user_dir }}/zuul-output/logs/docker'
+            src: '{{ ansible_user_dir }}/zuul-output/logs/podman'
             dest: '{{ zuul.executor.log_root }}'
             mode: pull
