@@ -79,6 +79,7 @@ class KubernetesPool(ConfigPool):
             pl.volumes = label.get('volumes')
             pl.volume_mounts = label.get('volume-mounts')
             pl.labels = label.get('labels')
+            pl.annotations = label.get('annotations')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -133,6 +134,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'volumes': list,
             'volume-mounts': list,
             'labels': dict,
+            'annotations': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()
