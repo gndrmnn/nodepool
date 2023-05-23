@@ -138,6 +138,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['metadata'], {
             'name': 'pod-fedora',
+            'annotations': {},
             'labels': {
                 'nodepool_node_id': '0000000000',
                 'nodepool_provider_name': 'kubespray',
@@ -190,6 +191,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['metadata'], {
             'name': 'pod-extra',
+            'annotations': {},
             'labels': {
                 'environment': 'qa',
                 'nodepool_node_id': '0000000000',
