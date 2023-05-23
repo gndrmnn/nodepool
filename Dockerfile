@@ -101,6 +101,12 @@ RUN \
 RUN apt-get install -y --install-recommends podman containernetworking-plugins uidmap libsemanage-common \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
 
+# Ridiculous upgrade of podman for testing; don't do this for real.
+RUN \
+  echo "deb http://deb.debian.org/debian bookworm main" >> /etc/apt/sources.list \
+  && apt-get update \
+  && apt-get install -y podman libsemanage-common
+
 # There is a Debian package in the NEW queue currently for dnf-plugins-core
 #  https://ftp-master.debian.org/new/dnf-plugins-core_4.0.21-1~exp1.html
 # Until this is generally available; manually install "dnf download"
@@ -117,13 +123,6 @@ RUN \
   apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-# NOTE(ianw) 2022-08-02 : move this into its own cgroup on cgroupsv2
-# hosts for nested podman calls to work; see comments in
-#  https://github.com/containers/podman/issues/14884
 CMD _DAEMON_FLAG=${DEBUG:+-d} && \
     _DAEMON_FLAG=${_DAEMON_FLAG:--f} && \
-    if [ -e /sys/fs/cgroup/cgroup.controllers ]; then \
-      sudo mkdir /sys/fs/cgroup/nodepool && \
-      for p in `cat /sys/fs/cgroup/cgroup.procs`; do echo $p | sudo tee /sys/fs/cgroup/nodepool/cgroup.procs || true; done \
-    fi; \
     /usr/local/bin/nodepool-builder ${_DAEMON_FLAG}
