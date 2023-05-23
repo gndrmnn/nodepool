@@ -6,6 +6,7 @@ volumes:
 services:
   nodepool-builder:
     image: quay.io/zuul-ci/nodepool-builder{{ nodepool_container_tag|default('') }}
+    user: nodepool
     network_mode: host
     restart: always
 
