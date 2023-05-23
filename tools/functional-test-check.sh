@@ -11,7 +11,7 @@ if [[ ${NODEPOOL_FUNCTIONAL_CHECK:-} == "installed" ]]; then
     NODEPOOL_CONFIG=${NODEPOOL_CONFIG:-/etc/nodepool/nodepool.yaml}
     NODEPOOL="$NODEPOOL_INSTALL/bin/nodepool -c $NODEPOOL_CONFIG"
 elif [[ ${NODEPOOL_FUNCTIONAL_CHECK:-} == "containers" ]]; then
-    NODEPOOL="sudo podman exec nodepool_nodepool-launcher_1 nodepool"
+    NODEPOOL="podman exec nodepool_nodepool-launcher_1 nodepool"
 else
     echo "Running in unknown environment!"
     exit 1
