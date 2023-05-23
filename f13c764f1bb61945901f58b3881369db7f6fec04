@@ -33,6 +33,24 @@
       "message": "This log line killed our central aggregation.",
       "revId": "f13c764f1bb61945901f58b3881369db7f6fec04",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "983a218b_f1e4c215",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-05-23T13:52:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab6a41ae_819188ff",
+      "revId": "f13c764f1bb61945901f58b3881369db7f6fec04",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
