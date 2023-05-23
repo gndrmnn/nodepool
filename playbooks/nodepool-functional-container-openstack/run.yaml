@@ -96,24 +96,15 @@
       shell:
         cmd: podman-compose pull
         chdir: /etc/nodepool
-      # We run as root to allow us to move nodepool processes into a new
-      # process cgroup which enables podman to run nested in docker.
-      become: yes
 
     - name: Run podman compose up
       shell:
         cmd: podman-compose up -d --timeout 60
         chdir: /etc/nodepool
-      # We run as root to allow us to move nodepool processes into a new
-      # process cgroup which enables podman to run nested in docker.
-      become: yes
 
     - name: Cleanup unused images
       shell:
         cmd: podman image prune -f
-      # We run as root to allow us to move nodepool processes into a new
-      # process cgroup which enables podman to run nested in docker.
-      become: yes
 
     - name: Check nodepool functionality
       command: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}/tools/functional-test-check.sh"
