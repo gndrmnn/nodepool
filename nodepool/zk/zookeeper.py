@@ -2650,7 +2650,7 @@ class ZooKeeper(ZooKeeperBase):
                 continue
 
             # Make sure the state didn't change on us
-            if node.state != READY:
+            if node.state != READY or node.allocated_to:
                 self.unlockNode(node)
                 continue
 

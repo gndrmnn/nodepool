@@ -589,6 +589,11 @@ class CleanupWorker(BaseCleanupWorker):
                         "request", node.id)
                     return
 
+                # Make sure the state didn't change on us
+                if node.allocated_to != req.id:
+                    zk_conn.unlockNode(node)
+                    continue
+
                 # If the node is in state init then the launcher that worked
                 # on the lost request has been interrupted between creating
                 # the znode and locking/setting to building. In this case the
