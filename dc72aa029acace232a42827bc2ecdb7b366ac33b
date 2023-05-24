@@ -16,6 +16,24 @@
       "message": "This doesn\u0027t match the docs.  And the other drivers have the same mismatch.\n\nI think the docs are wrong and this is right.",
       "revId": "dc72aa029acace232a42827bc2ecdb7b366ac33b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a00f0a48_1e5a8416",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2023-05-24T07:12:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b60ba791_7e937159",
+      "revId": "dc72aa029acace232a42827bc2ecdb7b366ac33b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
