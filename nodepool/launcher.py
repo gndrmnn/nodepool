@@ -851,15 +851,18 @@ class DeletedNodeWorker(BaseCleanupWorker):
         for node in zk_conn.nodeIterator(cached=True, cached_ids=True):
             # If a ready node has been allocated to a request, but that
             # request is now missing, deallocate it.
-            if (node.state == zk.READY and node.allocated_to
-                    and not zk_conn.getNodeRequest(node.allocated_to)):
+            if (node.state == zk.READY
+                    and node.allocated_to
+                    and not zk_conn.getNodeRequest(
+                        node.allocated_to, cached=True)):
                 try:
                     zk_conn.lockNode(node, blocking=False)
                 except exceptions.ZKLockException:
                     pass
                 else:
                     # Double check node conditions after lock
-                    if node.state == zk.READY and node.allocated_to:
+                    if (node.state == zk.READY
+                            and not zk_conn.getNodeRequest(node.allocated_to)):
                         node.allocated_to = None
                         try:
                             zk_conn.storeNode(node)
