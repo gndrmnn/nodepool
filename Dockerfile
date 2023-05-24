@@ -82,6 +82,7 @@ RUN \
       qemu-utils \
       vhd-util \
       procps \
+      squashfs-tools \
       xz-utils \
       zypper \
       zstd \
