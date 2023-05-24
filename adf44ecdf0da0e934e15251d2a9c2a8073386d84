@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8785fcb4_4eea0718",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-05-24T17:21:58Z",
+      "side": 1,
+      "message": "I\u0027m tempted to say we could use cached data here, but I think the failure scenario being contemplated might occur with this request being very new.  It seems vanishingly unlikely, but it\u0027s possible that a new request could appear and another provider allocate this node to it all before this provider updates its cache.  Moreover, we might improve the providers more in the future to respond to cache update watches (instead of using periodic delays) which would increase their responsiveness and therefore make it more likely that using cached data here could be wrong.\n\nIn short, I think the compromise of using the cached data above and live data here is reasonable.",
+      "revId": "adf44ecdf0da0e934e15251d2a9c2a8073386d84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
