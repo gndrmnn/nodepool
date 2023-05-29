@@ -138,6 +138,7 @@
     provides: nodepool-siblings-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+      container_command: docker --debug
       container_images:
         - context: .
           registry: quay.io
@@ -231,6 +232,7 @@
       - name: opendev/glean # note, installed by dib
       - name: zuul/nodepool
     vars:
+      nodepool_buildset_registry: 'zuul-jobs.buildset-registry:5000/quay.io/zuul-ci'
       nodepool_container_tag: ':siblings'
 
 - job:

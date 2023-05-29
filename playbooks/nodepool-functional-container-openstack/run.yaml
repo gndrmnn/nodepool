@@ -92,9 +92,13 @@
         dest: /etc/nodepool/docker-compose.yaml
         mode: 0600
 
+    - name: Dump zuul details
+      debug:
+        msg: '{{ zuul }}'
+
     - name: Run docker compose pull
       shell:
-        cmd: docker-compose pull
+        cmd: docker-compose --verbose pull
         chdir: /etc/nodepool
 
     - name: Run docker compose up
