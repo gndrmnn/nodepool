@@ -94,7 +94,9 @@
 
     - name: Run docker compose pull
       shell:
-        cmd: docker-compose pull
+        cmd: |-
+          docker image ls
+          docker-compose --verbose pull
         chdir: /etc/nodepool
 
     - name: Run docker compose up
