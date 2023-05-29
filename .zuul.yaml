@@ -138,6 +138,7 @@
     provides: nodepool-siblings-container-image
     vars:
       zuul_work_dir: "{{ zuul.projects['opendev.org/zuul/nodepool'].src_dir }}"
+      container_command: docker --debug
       container_images:
         - context: .
           registry: quay.io

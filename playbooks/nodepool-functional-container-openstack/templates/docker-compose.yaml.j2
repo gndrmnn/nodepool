@@ -5,7 +5,7 @@ volumes:
 
 services:
   nodepool-builder:
-    image: zuul/nodepool-builder{{ nodepool_container_tag|default('') }}
+    image: zuul-jobs.buildset-registry:5000/quay.io/zuul-ci/nodepool-builder{{ nodepool_container_tag|default('') }}
     network_mode: host
     restart: always
 
@@ -33,7 +33,7 @@ services:
       - /opt/zookeeper/ca:/opt/zookeeper/ca:ro
 
   nodepool-launcher:
-    image: zuul/nodepool-launcher{{ nodepool_container_tag|default('') }}
+    image: zuul-jobs.buildset-registry:5000/quay.io/zuul-ci/nodepool-launcher{{ nodepool_container_tag|default('') }}
     network_mode: host
     restart: always
 
