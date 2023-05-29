@@ -231,6 +231,7 @@
       - name: opendev/glean # note, installed by dib
       - name: zuul/nodepool
     vars:
+      nodepool_buildset_registry: 'zuul-jobs.buildset-registry:5000/quay.io/zuul-ci'
       nodepool_container_tag: ':siblings'
 
 - job:
