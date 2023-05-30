@@ -33,6 +33,24 @@
       "message": "Would it be possible to reach consensus on this, or not? It would be nice to un-wedge CI for DIB.",
       "revId": "993fe8745c286f0594f8468ce91589ddeb861f85",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f62ceea5_fb4ea31b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-05-30T18:24:59Z",
+      "side": 1,
+      "message": "For clarification https://review.opendev.org/c/zuul/nodepool/+/883864 is the change needed for DIB CI not this one.",
+      "parentUuid": "2cd00e91_19f16338",
+      "revId": "993fe8745c286f0594f8468ce91589ddeb861f85",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
