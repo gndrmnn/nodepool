@@ -22,6 +22,24 @@
       },
       "revId": "d0aa815db4e54ff19231e0d76fa7fdde9413e90d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c5f20ae_70092866",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-05-30T22:34:58Z",
+      "side": 1,
+      "message": "The record so shows that this is indeed lame.  :)",
+      "parentUuid": "67f53435_c09c734c",
+      "revId": "d0aa815db4e54ff19231e0d76fa7fdde9413e90d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
