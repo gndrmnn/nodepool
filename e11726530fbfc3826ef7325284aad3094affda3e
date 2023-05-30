@@ -16,6 +16,24 @@
       "message": "both changes not related each other. this one is only to solve nodepool-func tests",
       "revId": "e11726530fbfc3826ef7325284aad3094affda3e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aec42c6_f0b23aa3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-05-30T18:53:35Z",
+      "side": 1,
+      "message": "The change that fixes this for nodepool is https://review.opendev.org/c/zuul/nodepool/+/883864. I don\u0027t think we should land this one as it does not solve things generically or transparently which was the whole concern about workarounds like this.",
+      "parentUuid": "30b528f5_de0ac129",
+      "revId": "e11726530fbfc3826ef7325284aad3094affda3e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
