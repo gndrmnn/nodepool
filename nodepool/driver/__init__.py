@@ -463,6 +463,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                         continue
                     if node.pool != self.pool.name:
                         continue
+                    # Skip if the node is *probably* locked.
+                    if node.lock_contenders:
+                        continue
                     # Check this driver reuse requirements
                     if not self.checkReusableNode(node):
                         continue

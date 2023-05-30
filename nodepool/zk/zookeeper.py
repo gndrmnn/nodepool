@@ -1111,6 +1111,7 @@ class ZooKeeper(ZooKeeperBase):
     '''
 
     log = logging.getLogger("nodepool.zk.ZooKeeper")
+    event_log = logging.getLogger("nodepool.zk.cache.event")
 
     IMAGE_ROOT = "/nodepool/images"
     LAUNCHER_ROOT = "/nodepool/launchers"
@@ -2446,19 +2447,23 @@ class ZooKeeper(ZooKeeperBase):
         except kze.NoNodeError:
             return []
 
-    def getNode(self, node, cached=False):
+    def getNode(self, node, cached=False, only_cached=False):
         '''
         Get the data for a specific node.
 
         :param str node: The node ID.
         :param bool cached: True if the data should be taken from the cache.
-
+        :param bool only_cached: True if we should ignore nodes not
+                                 fully in the cache.
         :returns: The node data, or None if the node was not found.
         '''
         if cached and self._node_cache:
             d = self._node_cache.getNode(node)
             if d:
                 return d
+            if only_cached:
+                self.event_log.debug("Cache miss for node %s", node)
+                return None
 
         # We got here we either didn't use the cache or the cache didn't
         # have the node (yet). Note that even if we use caching we need to
@@ -2596,7 +2601,7 @@ class ZooKeeper(ZooKeeperBase):
             those labels.
         '''
         ret = {}
-        for node in self.nodeIterator(cached=cached):
+        for node in self.nodeIterator(cached=cached, cached_ids=cached):
             if node.state != READY or node.allocated_to:
                 continue
             for label in labels:
@@ -2673,21 +2678,21 @@ class ZooKeeper(ZooKeeperBase):
         return False
 
     def nodeIterator(self, cached=True, cached_ids=False):
-        '''
-        Utility generator method for iterating through all nodes.
+        '''Utility generator method for iterating through all nodes.
 
         :param bool cached: True if the data should be taken from the cache.
         :param bool cached_ids: True if the node IDs should be taken from the
-                                cache.
+                                cache; this will also avoid hitting ZK
+                                if the node data is missing from the cache.
         '''
 
-        if cached_ids:
+        if cached_ids and self._node_cache:
             node_ids = self._node_cache.getNodeIds()
         else:
             node_ids = self.getNodes()
 
         for node_id in node_ids:
-            node = self.getNode(node_id, cached=cached)
+            node = self.getNode(node_id, cached=cached, only_cached=cached_ids)
             if node:
                 yield node
 
