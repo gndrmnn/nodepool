@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85d42b5f_d80d2222",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-01T14:51:00Z",
+      "side": 1,
+      "message": "recheck the zuul dep has merged.",
+      "revId": "5702331087f7a5f7560159e131361ecd8ce2b164",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
