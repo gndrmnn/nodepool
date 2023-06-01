@@ -1261,3 +1261,138 @@ class TestTreeCache(tests.DBTestCase):
                 if 'Queue size for cache' in str(line):
                     found = True
             self.assertTrue(found)
+
+    def test_tree_cache_parsing(self):
+        my_zk = zk.ZooKeeper(self.zk.client, enable_cache=True)
+        # Node paths
+        self.assertEqual(my_zk._node_cache.parsePath(
+            '/nodepool/nodes/0000000001'),
+            ('0000000001',))
+        self.assertIsNone(my_zk._node_cache.parsePath(
+            '/nodepool/nodes/0000000001/lock'))
+        self.assertIsNone(my_zk._node_cache.parsePath(
+            '/nodepool/nodes/0000000001/lock/foo'))
+
+        self.assertEqual(my_zk._parseNodePath(
+            '/nodepool/nodes/0000000001'),
+            ('0000000001',))
+        self.assertIsNone(my_zk._parseNodePath(
+            '/nodepool/nodes/0000000001/lock'))
+        self.assertIsNone(my_zk._parseNodePath(
+            '/nodepool/nodes/0000000001/lock/foo'))
+
+        self.assertIsNone(my_zk._parseNodeLockPath(
+            '/nodepool/nodes/0000000001'))
+        self.assertIsNone(my_zk._parseNodeLockPath(
+            '/nodepool/nodes/0000000001/lock'))
+        self.assertEqual(my_zk._parseNodeLockPath(
+            '/nodepool/nodes/0000000001/lock/foo'),
+            ('0000000001', 'foo'))
+
+        # Request paths
+        self.assertEqual(my_zk._request_cache.parsePath(
+            '/nodepool/requests/0000000001'),
+            ('0000000001',))
+        self.assertIsNone(my_zk._request_cache.parsePath(
+            '/nodepool/requests/0000000001/lock'))
+        self.assertIsNone(my_zk._request_cache.parsePath(
+            '/nodepool/requests/0000000001/lock/foo'))
+
+        self.assertEqual(my_zk._parseRequestPath(
+            '/nodepool/requests/0000000001'),
+            ('0000000001',))
+        self.assertIsNone(my_zk._parseRequestPath(
+            '/nodepool/requests/0000000001/lock'))
+        self.assertIsNone(my_zk._parseRequestPath(
+            '/nodepool/requests/0000000001/lock/foo'))
+
+        # Request cache doesn't cache lock contenders, so no lock path
+        # parsing test
+
+        # Image paths
+
+        test_paths = [
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers/PROVIDER/images/0000000002',
+                 result=('NAME', '0000000001', 'PROVIDER', '0000000002'),
+                 kind='upload'),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers/PROVIDER/images/0000000002/lock',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers/PROVIDER/images/0000000002/lock/foo',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers/PROVIDER/images',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers/PROVIDER',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/providers',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001',
+                 result=('NAME', '0000000001'),
+                 kind='build'),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/lock',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds/0000000001'
+                 '/lock/foo',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/builds',
+                 result=None,
+                 kind=None),
+            dict(path='/nodepool/images/NAME/pause',
+                 result=('NAME',),
+                 kind='image pause'),
+            dict(path='/nodepool/images/NAME',
+                 result=('NAME',),
+                 kind='image'),
+        ]
+
+        for test in test_paths:
+            res = my_zk._image_cache.parsePath(test['path'])
+            if test['result'] and test['kind'] != 'image pause':
+                self.assertEqual(test['result'], res)
+            else:
+                self.assertIsNone(res)
+
+            checked = False
+            res = my_zk._parseImageUploadPath(test['path'])
+            if test['kind'] == 'upload':
+                checked = True
+                self.assertEqual(test['result'], res)
+            else:
+                self.assertIsNone(res)
+
+            res = my_zk._parseImageBuildPath(test['path'])
+            if test['kind'] == 'build':
+                checked = True
+                self.assertEqual(test['result'], res)
+            else:
+                self.assertIsNone(res)
+
+            res = my_zk._parseImagePausePath(test['path'])
+            if test['kind'] == 'image pause':
+                checked = True
+                self.assertEqual(test['result'], res)
+            else:
+                self.assertIsNone(res)
+
+            res = my_zk._parseImagePath(test['path'])
+            if test['kind'] == 'image':
+                checked = True
+                self.assertEqual(test['result'], res)
+            else:
+                self.assertIsNone(res)
+
+            if not checked and test['kind']:
+                raise Exception("Unhandled kind %s" % (test['kind']))
