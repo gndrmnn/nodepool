@@ -63,9 +63,6 @@ class StaticNodeProvider(Provider, QuotaSupport):
         # interfere with a newer versions of ourselves running.
         self._idle = False
 
-    def _getSlot(self, node):
-        return self._node_slots[nodeTuple(node)].index(node)
-
     def checkHost(self, static_node):
         '''Check node is reachable'''
         # only gather host keys if the connection type is ssh or network_cli
@@ -498,12 +495,31 @@ class StaticNodeProvider(Provider, QuotaSupport):
             # this node. When that happens the node in the node slot is
             # different than the one we are processing and we can short
             # circuit.
-            try:
-                existing_node_slot = self._getSlot(node)
-            except Exception:
+            existing_node_slots = self._node_slots.get(node_tuple)
+            if existing_node_slots is None:
                 # We'll let config synchronization correct any slots changes
                 return
-            if node != self._node_slots[node_tuple][existing_node_slot]:
+            try:
+                i = existing_node_slots.index(node)
+                # If we found an existing node slot, that's
+                # unexpected, we should let resync fix anything.
+                self.log.debug("Found unexpected existing slot %s "
+                               "for: %s slot %s", i, node, slot)
+                return
+            except ValueError:
+                # The expected case is that the slot is occupied by
+                # None rather than a node object, so this is the
+                # normal case.
+                pass
+            try:
+                existing_node = existing_node_slots[node.slot]
+                if existing_node is not None:
+                    # The current slot entry should be None.
+                    self.log.debug("Found unexpected existing node %s "
+                                   "for: %s slot %s",
+                                   existing_node, node, slot)
+                    return
+            except IndexError:
                 return
 
             self.log.debug("Re-registering deleted node: %s", node_tuple)

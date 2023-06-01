@@ -70,6 +70,28 @@ class TestDriverStatic(tests.DBTestCase):
         self.assertIsNone(nodes[0].shell_type)
         self.assertEqual(nodes[0].slot, 0)
 
+    def test_static_reuse(self):
+        '''
+        Test that static nodes are reused without benefit of the
+        cleanup worker
+        '''
+        configfile = self.setup_config('static-basic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        # Make sure the cleanup worker doesn't run.
+        pool.cleanup_interval = 600
+        self.startPool(pool)
+
+        self.log.debug("Waiting for node pre-registration")
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(nodes[0].slot, 0)
+
+        nodes[0].state = zk.USED
+        self.zk.storeNode(nodes[0])
+
+        self.log.debug("Waiting for node to be re-available")
+        nodes = self.waitForNodes('fake-label')
+        self.assertEqual(nodes[0].slot, 0)
+
     def test_static_python_path(self):
         '''
         Test that static python-path works.
