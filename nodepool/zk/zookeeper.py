@@ -741,29 +741,25 @@ class NodepoolTreeCache(abc.ABC):
     def __init__(self, zk, root):
         self.zk = zk
         self.root = root
-        self._last_qsize_warning = time.monotonic()
+        self._last_event_warning = time.monotonic()
+        self._last_playblack_warning = time.monotonic()
         self._cached_objects = {}
         self._cached_paths = set()
         self._ready = threading.Event()
         self._init_lock = threading.Lock()
         self._stopped = False
-        self._queue = queue.Queue()
-        self._background_thread = threading.Thread(
-            target=self._backgroundWorker)
-        self._background_thread.daemon = True
-        self._background_thread.start()
+        self._event_queue = queue.Queue()
+        self._playback_queue = queue.Queue()
+        self._event_worker = threading.Thread(
+            target=self._eventWorker)
+        self._event_worker.daemon = True
+        self._event_worker.start()
+        self._playback_worker = threading.Thread(
+            target=self._playbackWorker)
+        self._playback_worker.daemon = True
+        self._playback_worker.start()
         zk.kazoo_client.add_listener(self._sessionListener)
         self._start()
-
-    def _backgroundWorker(self):
-        while not self._stopped:
-            event = self._queue.get()
-            if event is None:
-                continue
-            try:
-                self._handleCacheEvent(event)
-            except Exception:
-                self.log.exception("Error handling event %s:", event)
 
     def _sessionListener(self, state):
         if state == KazooState.LOST:
@@ -773,14 +769,7 @@ class NodepoolTreeCache(abc.ABC):
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
-        self._queue.put(event)
-        qsize = self._queue.qsize()
-        if qsize > self.qsize_warning_threshold:
-            now = time.monotonic()
-            if now - self._last_qsize_warning > 60:
-                self.log.warning("Queue size for cache at %s is %s",
-                                 self.root, qsize)
-                self._last_qsize_warning = now
+        self._event_queue.put(event)
 
     def _start(self):
         locked = self._init_lock.acquire(blocking=False)
@@ -803,7 +792,8 @@ class NodepoolTreeCache(abc.ABC):
 
     def stop(self):
         self._stopped = True
-        self._queue.put(None)
+        self._event_queue.put(None)
+        self._playback_queue.put(None)
 
     def _walkTree(self, root=None, seen_paths=None):
         # Recursively walk the tree and emit fake changed events for
@@ -841,27 +831,100 @@ class NodepoolTreeCache(abc.ABC):
                         path)
                     self._cacheListener(event)
 
-    def _handleCacheEvent(self, event):
-        self.event_log.debug("Cache event %s", event)
+    def _eventWorker(self):
+        while not self._stopped:
+            event = self._event_queue.get()
+            if event is None:
+                continue
 
-        data, stat = None, None
-        # The cache is being (re-)initialized.  Since this happens out
-        # of sequence with the normal watch events, we can't be sure
-        # whether the node still exists or not by the time we process
-        # it.  Later cache watch events may supercede this (for
-        # example, we may process a NONE event here which we interpret
-        # as a delete which may be followed by a normal delete event.
-        # That case, and any other variations should be anticipated.
+            qsize = self._event_queue.qsize()
+            if qsize > self.qsize_warning_threshold:
+                now = time.monotonic()
+                if now - self._last_event_warning > 60:
+                    self.log.warning("Event queue size for cache at %s is %s",
+                                     self.root, qsize)
+                    self._last_event_warning = now
+
+            try:
+                self._handleCacheEvent(event)
+            except Exception:
+                self.log.exception("Error handling event %s:", event)
+
+    def _handleCacheEvent(self, event):
+        # Ignore root node since we don't maintain a cached object for
+        # it (all cached objects are under the root in our tree
+        # caches).
+        if event.path == self.root:
+            return
+
+        # Start by assuming we need to fetch data for the event.
+        fetch = True
         if event.type == EventType.NONE:
             if event.path is None:
                 # We're probably being told of a connection change; ignore.
                 return
+        elif (event.type == EventType.DELETED):
+            # If this is a normal deleted event, we don't need to
+            # fetch anything.
+            fetch = False
+
+        key = self.parsePath(event.path)
+        if key is None:
+            # The cache doesn't care about this path, so we don't need
+            # to fetch.
+            fetch = False
+
+        if fetch:
+            future = self.zk.kazoo_client.get_async(event.path)
+        else:
+            future = None
+        self._playback_queue.put((event, future, key))
+
+    def _playbackWorker(self):
+        while not self._stopped:
+            item = self._playback_queue.get()
+            if item is None:
+                continue
+
+            qsize = self._playback_queue.qsize()
+            if qsize > self.qsize_warning_threshold:
+                now = time.monotonic()
+                if now - self._last_playback_warning > 60:
+                    self.log.warning(
+                        "Playback queue size for cache at %s is %s",
+                        self.root, qsize)
+                    self._last_playback_warning = now
+
+            event, future, key = item
             try:
-                data, stat = self.zk.kazoo_client.get(event.path)
+                self._handlePlayback(event, future, key)
+            except Exception:
+                self.log.exception("Error playing back event %s:", event)
+
+    def _handlePlayback(self, event, future, key):
+        self.event_log.debug("Cache playback event %s", event)
+        exists = None
+        data, stat = None, None
+
+        if future:
+            try:
+                data, stat = future.get()
                 exists = True
             except kze.NoNodeError:
                 exists = False
-        elif (event.type in (EventType.CREATED, EventType.CHANGED)):
+
+        # We set "exists" above in case of cache re-initialization,
+        # which happens out of sequence with the normal watch events.
+        # and we can't be sure whether the node still exists or not by
+        # the time we process it.  Later cache watch events may
+        # supercede this (for example, we may process a NONE event
+        # here which we interpret as a delete which may be followed by
+        # a normal delete event.  That case, and any other variations
+        # should be anticipated.
+
+        # If the event tells us whether the node exists, prefer that
+        # value, otherwise fallback to what we determined above.
+        if (event.type in (EventType.CREATED, EventType.CHANGED)):
             exists = True
         elif (event.type == EventType.DELETED):
             exists = False
@@ -872,27 +935,9 @@ class NodepoolTreeCache(abc.ABC):
         else:
             self._cached_paths.discard(event.path)
 
-        # Ignore root node since we don't maintain a cached object for
-        # it (all cached objects are under the root in our tree
-        # caches).
-        if event.path == self.root:
-            return
-
         # Some caches have special handling for certain sub-objects
         if self.preCacheHook(event, exists):
             return
-
-        key = self.parsePath(event.path)
-        if key is None:
-            return
-
-        # If we didn't get the data above, and we expect the node to
-        # exist, fetch the data now.
-        if data is None and exists:
-            try:
-                data, stat = self.zk.kazoo_client.get(event.path)
-            except kze.NoNodeError:
-                pass
 
         if data:
             data = self.zk._bytesToDict(data)
