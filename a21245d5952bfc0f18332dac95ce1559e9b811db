@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "673acdbc_2ef46af7",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1368,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-02T18:11:46Z",
+      "side": 1,
+      "message": "The image pause case has a result of `(\u0027NAME\u0027,)` which means that we\u0027ll try to assert None below which doesn\u0027t match the result value above. To avoid confusion should we set the result to `None` instead?\n\nI guess the issue below is that we are calling two different parsing methods and expect different results. Maybe worth a comment at least?",
+      "range": {
+        "startLine": 1368,
+        "startChar": 50,
+        "endLine": 1368,
+        "endChar": 63
+      },
+      "revId": "a21245d5952bfc0f18332dac95ce1559e9b811db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "617cb488_beb9791b",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-02T18:11:46Z",
+      "side": 1,
+      "message": "Should these two thread start() calls be moved into the _start() method so that if you stop() there is a way to start again without creating a new object?",
+      "revId": "a21245d5952bfc0f18332dac95ce1559e9b811db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
