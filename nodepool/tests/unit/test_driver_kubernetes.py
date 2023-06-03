@@ -1,4 +1,5 @@
 # Copyright (C) 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -439,53 +440,6 @@ class TestDriverKubernetes(tests.DBTestCase):
             },
         })
 
-    def test_kubernetes_pool_quota_servers(self):
-        self._test_kubernetes_quota('kubernetes-pool-quota-servers.yaml')
-
-    def test_kubernetes_pool_quota_cores(self):
-        self._test_kubernetes_quota('kubernetes-pool-quota-cores.yaml')
-
-    def test_kubernetes_pool_quota_ram(self):
-        self._test_kubernetes_quota('kubernetes-pool-quota-ram.yaml')
-
-    def test_kubernetes_tenant_quota_servers(self):
-        self._test_kubernetes_quota(
-            'kubernetes-tenant-quota-servers.yaml', pause=False)
-
-    def test_kubernetes_tenant_quota_cores(self):
-        self._test_kubernetes_quota(
-            'kubernetes-tenant-quota-cores.yaml', pause=False)
-
-    def test_kubernetes_tenant_quota_ram(self):
-        self._test_kubernetes_quota(
-            'kubernetes-tenant-quota-ram.yaml', pause=False)
-
-    def test_kubernetes_leaked_node(self):
-        conf = self.setup_config('kubernetes-leaked-node.yaml')
-        pool = self.useNodepool(conf, watermark_sleep=1)
-        pool.cleanup_interval = 1
-        self.startPool(pool)
-
-        # wait for min-ready node to be available
-        nodes = self.waitForNodes('pod-fedora')
-        self.assertEqual(len(nodes), 1)
-        manager = pool.getProviderManager('kubespray')
-        servers = manager.listNodes()
-        self.assertEqual(len(servers), 1)
-
-        # delete node from zk so it becomes 'leaked'
-        self.zk.deleteNode(nodes[0])
-
-        # node gets replaced, wait for that
-        new_nodes = self.waitForNodes('pod-fedora')
-        self.assertEqual(len(new_nodes), 1)
-
-        # original node should get deleted eventually
-        self.waitForInstanceDeletion(manager, nodes[0].external_id)
-
-        servers = manager.listNodes()
-        self.assertEqual(len(servers), 1)
-
     def _test_kubernetes_quota(self, config, pause=True):
         configfile = self.setup_config(config)
         pool = self.useNodepool(configfile, watermark_sleep=1)
@@ -534,3 +488,57 @@ class TestDriverKubernetes(tests.DBTestCase):
         # We should unpause and fulfill this now
         req = self.waitForNodeRequest(max_req, (zk.FULFILLED,))
         self.assertEqual(req.state, zk.FULFILLED)
+
+    def test_kubernetes_pool_quota_servers(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-servers.yaml')
+
+    def test_kubernetes_pool_quota_cores(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-cores.yaml')
+
+    def test_kubernetes_pool_quota_ram(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-ram.yaml')
+
+    def test_kubernetes_pool_quota_extra(self):
+        self._test_kubernetes_quota('kubernetes-pool-quota-extra.yaml')
+
+    def test_kubernetes_tenant_quota_servers(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-servers.yaml', pause=False)
+
+    def test_kubernetes_tenant_quota_cores(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-cores.yaml', pause=False)
+
+    def test_kubernetes_tenant_quota_ram(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-ram.yaml', pause=False)
+
+    def test_kubernetes_tenant_quota_extra(self):
+        self._test_kubernetes_quota(
+            'kubernetes-tenant-quota-extra.yaml', pause=False)
+
+    def test_kubernetes_leaked_node(self):
+        conf = self.setup_config('kubernetes-leaked-node.yaml')
+        pool = self.useNodepool(conf, watermark_sleep=1)
+        pool.cleanup_interval = 1
+        self.startPool(pool)
+
+        # wait for min-ready node to be available
+        nodes = self.waitForNodes('pod-fedora')
+        self.assertEqual(len(nodes), 1)
+        manager = pool.getProviderManager('kubespray')
+        servers = manager.listNodes()
+        self.assertEqual(len(servers), 1)
+
+        # delete node from zk so it becomes 'leaked'
+        self.zk.deleteNode(nodes[0])
+
+        # node gets replaced, wait for that
+        new_nodes = self.waitForNodes('pod-fedora')
+        self.assertEqual(len(new_nodes), 1)
+
+        # original node should get deleted eventually
+        self.waitForInstanceDeletion(manager, nodes[0].external_id)
+
+        servers = manager.listNodes()
+        self.assertEqual(len(servers), 1)
