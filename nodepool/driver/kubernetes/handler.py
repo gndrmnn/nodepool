@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -163,11 +164,11 @@ class KubernetesNodeRequestHandler(NodeRequestHandler):
 
         # Now calculate pool specific quota. Values indicating no quota default
         # to math.inf representing infinity that can be calculated with.
-        pool_quota = QuotaInformation(
-            cores=getattr(self.pool, 'max_cores', None),
-            instances=self.pool.max_servers,
-            ram=getattr(self.pool, 'max_ram', None),
-            default=math.inf)
+        args = dict(cores=getattr(self.pool, 'max_cores', None),
+                    instances=self.pool.max_servers,
+                    ram=getattr(self.pool, 'max_ram', None))
+        args.update(self.pool.max_resources)
+        pool_quota = QuotaInformation(**args, default=math.inf)
         pool_quota.subtract(
             self.manager.estimatedNodepoolQuotaUsed(self.pool))
         self.log.debug("Current pool quota: %s" % pool_quota)
