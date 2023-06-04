@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import defaultdict
 import math
+
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
@@ -33,14 +36,23 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
     def load(self, config):
         self.launch_retries = int(self.provider.get('launch-retries', 3))
         self.context = self.provider['context']
-        self.max_pods = self.provider.get('max-pods', math.inf)
+        # We translate max-projects to max_servers to re-use quota
+        # calculation methods.
+        self.max_servers = self.provider.get(
+            'max-projects',
+            self.provider.get('max-servers', math.inf))
+        self.max_cores = self.provider.get('max-cores', math.inf)
+        self.max_ram = self.provider.get('max-ram', math.inf)
+        self.max_resources = defaultdict(lambda: math.inf)
+        for k, val in self.provider.get('max-resources', {}).items():
+            self.max_resources[k] = val
         for pool in self.provider.get('pools', []):
             # Force label type to be pod
             for label in pool.get('labels', []):
                 label['type'] = 'pod'
             pp = OpenshiftPool()
-            pp.load(pool, config)
             pp.provider = self
+            pp.load(pool, config)
             self.pools[pp.name] = pp
 
     def getSchema(self):
@@ -70,18 +82,23 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'volume-mounts': list,
             'labels': dict,
             'annotations': dict,
+            'extra-resources': {str: int},
         }
 
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
-            v.Optional('default-label-cpu'): int,
-            v.Optional('default-label-memory'): int,
-            v.Optional('default-label-storage'): int,
-            v.Optional('default-label-cpu-limit'): int,
-            v.Optional('default-label-memory-limit'): int,
-            v.Optional('default-label-storage-limit'): int,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
+            'default-label-cpu': int,
+            'default-label-memory': int,
+            'default-label-storage': int,
+            'default-label-cpu-limit': int,
+            'default-label-memory-limit': int,
+            'default-label-storage-limit': int,
+            'default-label-extra-resources': {str: int},
         })
 
         schema = OpenshiftProviderConfig.getCommonSchemaDict()
@@ -90,5 +107,8 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             v.Required('context'): str,
             'launch-retries': int,
             'max-pods': int,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
         })
         return v.Schema(schema)
