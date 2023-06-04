@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -33,14 +34,18 @@ urllib3.disable_warnings()
 class OpenshiftProvider(Provider, QuotaSupport):
     log = logging.getLogger("nodepool.driver.openshift.OpenshiftProvider")
 
-    def __init__(self, provider, *args):
+    def __init__(self, provider, *args, _skip_init=False):
+        super().__init__()
         self.provider = provider
         self.ready = False
-        _, _, self.k8s_client, self.os_client = get_client(
-            self.log, provider.context, DynamicClient)
-        self.project_names = set()
-        for pool in provider.pools.values():
-            self.project_names.add(pool.name)
+        if _skip_init:
+            # The OpenshiftPods driver subclasses this but doesn't
+            # want this initialization.  TODO: unify the two.
+            _, _, self.k8s_client, self.os_client = get_client(
+                self.log, provider.context, DynamicClient)
+            self.project_names = set()
+            for pool in provider.pools.values():
+                self.project_names.add(pool.name)
 
     def start(self, zk_conn):
         self.log.debug("Starting")
@@ -339,6 +344,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             resources["ram"] = provider_label.memory
         if provider_label.storage:
             resources["ephemeral-storage"] = provider_label.storage
+        resources.update(provider_label.extra_resources)
         return QuotaInformation(instances=1, default=1, **resources)
 
     def unmanagedQuotaUsed(self):

@@ -66,7 +66,44 @@ Selecting the openshift driver adds the following options to the
       :default: infinite
       :type: int
 
-      Maximum number of projects that can be used.
+      An alias for `max-servers`.
+
+   .. attr:: max-cores
+      :type: int
+      :default: unlimited
+
+      Maximum number of cores usable from this provider's pools by
+      default. This can be used to limit usage of the openshift
+      backend. If not defined nodepool can use all cores up to the
+      limit of the backend.
+
+   .. attr:: max-servers
+      :type: int
+      :default: unlimited
+
+      Maximum number of projects spawnable from this provider's pools by
+      default. This can be used to limit the number of projects. If not
+      defined nodepool can create as many servers the openshift
+      backend allows.
+
+   .. attr:: max-ram
+      :type: int
+      :default: unlimited
+
+      Maximum ram usable from this provider's pools by default. This
+      can be used to limit the amount of ram allocated by nodepool. If
+      not defined nodepool can use as much ram as the openshift
+      backend allows.
+
+   .. attr:: max-resources
+      :type: dict
+      :default: unlimited
+
+      A dictionary of other quota resource limits applicable to this
+      provider's pools by default.  Arbitrary limits may be supplied
+      with the
+      :attr:`providers.[openshift].pools.labels.extra-resources`
+      attribute.
 
    .. attr:: pools
       :type: list
@@ -97,6 +134,35 @@ Selecting the openshift driver adds the following options to the
 
          A dictionary of key-value pairs that will be stored with the node data
          in ZooKeeper. The keys and values can be any arbitrary string.
+
+      .. attr:: max-cores
+         :type: int
+
+         Maximum number of cores usable from this pool. This can be used
+         to limit usage of the kubernetes backend. If not defined nodepool can
+         use all cores up to the limit of the backend.
+
+      .. attr:: max-servers
+         :type: int
+
+         Maximum number of pods spawnable from this pool. This can
+         be used to limit the number of pods. If not defined
+         nodepool can create as many servers the kubernetes backend allows.
+
+      .. attr:: max-ram
+         :type: int
+
+         Maximum ram usable from this pool. This can be used to limit
+         the amount of ram allocated by nodepool. If not defined
+         nodepool can use as much ram as the kubernetes backend allows.
+
+      .. attr:: max-resources
+         :type: dict
+         :default: unlimited
+
+         A dictionary of other quota resource limits applicable to
+         this pool.  Arbitrary limits may be supplied with the
+         :attr:`providers.[openshift].pools.labels.extra-resources` attribute.
 
       .. attr:: default-label-cpu
          :type: int
@@ -283,6 +349,15 @@ Selecting the openshift driver adds the following options to the
             label type; specifies the amount of ephemeral-storage in
             MB to request for the pod.  If no limit is specified, this
             will also be used as the limit.
+
+         .. attr:: extra-resources
+            :type: dict
+
+            Only used by the
+            :value:`providers.[openshift].pools.labels.type.pod`
+            label type; specifies any extra resources that Nodepool
+            should consider in its quota calculation other than the
+            resources described above (cpu, memory, storage).
 
          .. attr:: cpu-limit
             :type: int

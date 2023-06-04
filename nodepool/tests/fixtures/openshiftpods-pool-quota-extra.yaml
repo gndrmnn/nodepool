@@ -1,0 +1,26 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+labels:
+  - name: pod-fedora
+
+providers:
+  - name: openshift
+    driver: openshiftpods
+    context: service-account.local
+    pools:
+      - name: main
+        max-resources:
+          mygpu: 2
+        labels:
+          - name: pod-fedora
+            image: docker.io/fedora:28
+            extra-resources:
+              mygpu: 1

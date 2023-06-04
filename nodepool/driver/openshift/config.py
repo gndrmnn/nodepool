@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import defaultdict
 import math
+
 import voluptuous as v
 
 from nodepool.driver import ConfigPool
@@ -38,9 +41,17 @@ class OpenshiftPool(ConfigPool):
     def load(self, pool_config, full_config):
         super().load(pool_config)
         self.name = pool_config['name']
+        self.max_servers = pool_config.get(
+            'max-servers', self.provider.max_servers)
+        self.max_cores = pool_config.get('max-cores', self.provider.max_cores)
+        self.max_ram = pool_config.get('max-ram', self.provider.max_ram)
+        self.max_resources = self.provider.max_resources.copy()
+        self.max_resources.update(pool_config.get('max-resources', {}))
         self.default_label_cpu = pool_config.get('default-label-cpu')
         self.default_label_memory = pool_config.get('default-label-memory')
         self.default_label_storage = pool_config.get('default-label-storage')
+        self.default_label_extra_resources = pool_config.get(
+            'default-label-extra_resources', {})
         self.labels = {}
         for label in pool_config.get('labels', []):
             pl = OpenshiftLabel()
@@ -52,11 +63,13 @@ class OpenshiftPool(ConfigPool):
             pl.cpu = label.get('cpu', self.default_label_cpu)
             pl.memory = label.get('memory', self.default_label_memory)
             pl.storage = label.get('storage', self.default_label_storage)
+            pl.extra_resources = self.default_label_extra_resources.copy()
+            pl.extra_resources.update(label.get('extra-resources', {}))
             # The limits are the first of:
             # 1) label specific configured limit
             # 2) default label configured limit
             # 3) label specific configured request
-            # 4) default label configured default
+            # 4) default label configured request
             # 5) None
             default_cpu_limit = pool_config.get(
                 'default-label-cpu-limit', pl.cpu)
@@ -102,11 +115,20 @@ class OpenshiftProviderConfig(ProviderConfig):
     def load(self, config):
         self.launch_retries = int(self.provider.get('launch-retries', 3))
         self.context = self.provider['context']
-        self.max_projects = self.provider.get('max-projects', math.inf)
+        # We translate max-projects to max_servers to re-use quota
+        # calculation methods.
+        self.max_servers = self.provider.get(
+            'max-projects',
+            self.provider.get('max-servers', math.inf))
+        self.max_cores = self.provider.get('max-cores', math.inf)
+        self.max_ram = self.provider.get('max-ram', math.inf)
+        self.max_resources = defaultdict(lambda: math.inf)
+        for k, val in self.provider.get('max-resources', {}).items():
+            self.max_resources[k] = val
         for pool in self.provider.get('pools', []):
             pp = OpenshiftPool()
-            pp.load(pool, config)
             pp.provider = self
+            pp.load(pool, config)
             self.pools[pp.name] = pp
 
     def getSchema(self):
@@ -137,18 +159,23 @@ class OpenshiftProviderConfig(ProviderConfig):
             'volume-mounts': list,
             'labels': dict,
             'annotations': dict,
+            'extra-resources': {str: int},
         }
 
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
             v.Required('labels'): [openshift_label],
-            v.Optional('default-label-cpu'): int,
-            v.Optional('default-label-memory'): int,
-            v.Optional('default-label-storage'): int,
-            v.Optional('default-label-cpu-limit'): int,
-            v.Optional('default-label-memory-limit'): int,
-            v.Optional('default-label-storage-limit'): int,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
+            'default-label-cpu': int,
+            'default-label-memory': int,
+            'default-label-storage': int,
+            'default-label-cpu-limit': int,
+            'default-label-memory-limit': int,
+            'default-label-storage-limit': int,
+            'default-label-extra-resources': {str: int},
         })
 
         schema = ProviderConfig.getCommonSchemaDict()
@@ -157,6 +184,9 @@ class OpenshiftProviderConfig(ProviderConfig):
             v.Required('context'): str,
             'launch-retries': int,
             'max-projects': int,
+            'max-cores': int,
+            'max-ram': int,
+            'max-resources': {str: int},
         })
         return v.Schema(schema)
 
