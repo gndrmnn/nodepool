@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -29,8 +30,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
                             "OpenshiftPodsProvider")
 
     def __init__(self, provider, *args):
-        self.provider = provider
-        self.ready = False
+        super().__init__(provider, _skip_init=True)
         self.token, self.ca_crt, self.k8s_client, _ = get_client(
             self.log, provider.context)
         self.pod_names = set()
