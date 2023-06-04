@@ -1,4 +1,5 @@
 # Copyright (C) 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 
 import fixtures
 import logging
+import time
 
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
@@ -140,3 +142,82 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
         self.zk.storeNode(node)
 
         self.waitForNodeDeletion(node)
+
+    def _test_openshift_pod_quota(self, config, pause=True):
+        configfile = self.setup_config(config)
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        # Start two pods to hit max-server limit
+        reqs = []
+        for _ in [1, 2]:
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.tenant_name = 'tenant-1'
+            req.node_types.append('pod-fedora')
+            self.zk.storeNodeRequest(req)
+            reqs.append(req)
+
+        fulfilled_reqs = []
+        for req in reqs:
+            self.log.debug("Waiting for request %s", req.id)
+            r = self.waitForNodeRequest(req)
+            self.assertEqual(r.state, zk.FULFILLED)
+            fulfilled_reqs.append(r)
+
+        # Now request a third pod that will hit the limit
+        max_req = zk.NodeRequest()
+        max_req.state = zk.REQUESTED
+        max_req.tenant_name = 'tenant-1'
+        max_req.node_types.append('pod-fedora')
+        self.zk.storeNodeRequest(max_req)
+
+        # if at pool quota, the handler will get paused
+        # but not if at tenant quota
+        if pause:
+            # The previous request should pause the handler
+            pool_worker = pool.getPoolWorkers('openshift')
+            while not pool_worker[0].paused_handlers:
+                time.sleep(0.1)
+        else:
+            self.waitForNodeRequest(max_req, (zk.REQUESTED,))
+
+        # Delete the earlier two pods freeing space for the third.
+        for req in fulfilled_reqs:
+            node = self.zk.getNode(req.nodes[0])
+            node.state = zk.DELETING
+            self.zk.storeNode(node)
+            self.waitForNodeDeletion(node)
+
+        # We should unpause and fulfill this now
+        req = self.waitForNodeRequest(max_req, (zk.FULFILLED,))
+        self.assertEqual(req.state, zk.FULFILLED)
+
+    def test_openshift_pod_pool_quota_servers(self):
+        # This is specified as max-projects, but named servers here for
+        # parity with other driver tests.
+        self._test_openshift_pod_quota('openshiftpods-pool-quota-servers.yaml')
+
+    def test_openshift_pod_pool_quota_cores(self):
+        self._test_openshift_pod_quota('openshiftpods-pool-quota-cores.yaml')
+
+    def test_openshift_pod_pool_quota_ram(self):
+        self._test_openshift_pod_quota('openshiftpods-pool-quota-ram.yaml')
+
+    def test_openshift_pod_pool_quota_extra(self):
+        self._test_openshift_pod_quota('openshiftpods-pool-quota-extra.yaml')
+
+    def test_openshift_pod_tenant_quota_servers(self):
+        self._test_openshift_pod_quota(
+            'openshiftpods-tenant-quota-servers.yaml', pause=False)
+
+    def test_openshift_pod_tenant_quota_cores(self):
+        self._test_openshift_pod_quota(
+            'openshiftpods-tenant-quota-cores.yaml', pause=False)
+
+    def test_openshift_pod_tenant_quota_ram(self):
+        self._test_openshift_pod_quota(
+            'openshiftpods-tenant-quota-ram.yaml', pause=False)
+
+    def test_openshift_pod_tenant_quota_extra(self):
+        self._test_openshift_pod_quota(
+            'openshiftpods-tenant-quota-extra.yaml', pause=False)

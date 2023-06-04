@@ -1,0 +1,27 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+tenant-resource-limits:
+  - tenant-name: tenant-1
+    max-ram: 2048
+
+labels:
+  - name: pod-fedora
+
+providers:
+  - name: openshift
+    driver: openshiftpods
+    context: service-account.local
+    pools:
+      - name: main
+        labels:
+          - name: pod-fedora
+            image: docker.io/fedora:28
+            memory: 1024
