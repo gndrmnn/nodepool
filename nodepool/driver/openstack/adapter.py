@@ -803,8 +803,9 @@ class OpenStackAdapter(statemachine.Adapter):
         '''
         ret = []
         for p in ports:
-            if (p.device_owner is None or p.device_owner == '' or
-                    p.device_owner.startswith("compute:")):
+            if ((p.device_owner is None or p.device_owner == '' or
+                    p.device_owner.startswith("compute:")) and
+                    not p.binding_vnic_type == 'baremetal'):
                 ret.append(p)
         return ret
 

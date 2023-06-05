@@ -2640,7 +2640,7 @@ class TestLauncher(tests.DBTestCase):
 
         manager = pool.getProviderManager('fake-provider')
         down_ports = manager.adapter._listPorts(status='DOWN')
-        self.assertEqual(2, len(down_ports))
+        self.assertEqual(3, len(down_ports))
         self.log.debug("Down ports: %s", down_ports)
 
         # Second config decreases cleanup interval to 2 seconds
@@ -2658,7 +2658,8 @@ class TestLauncher(tests.DBTestCase):
         for _ in iterate_timeout(4, Exception, 'assert ports are cleaned'):
             try:
                 down_ports = manager.adapter._listPorts(status='DOWN')
-                self.assertEqual(0, len(down_ports))
+                # Port with binding_vnic_type:baremetal should not be deleted
+                self.assertEqual(1, len(down_ports))
                 break
             except AssertionError:
                 # ports not cleaned up yet, retry
