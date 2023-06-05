@@ -709,6 +709,13 @@ class CleanupWorker(BaseCleanupWorker):
                 if (now - node.state_time) < label.max_ready_age:
                     continue
 
+                # We don't check the cached lock contenders here
+                # because it's unlikely a locked node will achieve
+                # max_ready_age, so the lock below will almost always
+                # succeed.  This helps protect against invalid cache
+                # data (ie, the cache saying it's locked even though
+                # it isn't).
+
                 try:
                     zk_conn.lockNode(node, blocking=False)
                 except exceptions.ZKLockException:
