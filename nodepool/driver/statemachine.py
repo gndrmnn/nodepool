@@ -767,7 +767,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         '''
         used_quota = QuotaInformation()
 
-        node_ids = set([n.id for n in self._zk.nodeIterator()])
+        node_ids = set([n.id for n in self._zk.nodeIterator(cached_ids=True)])
 
         for instance in self.adapter.listInstances():
             meta = instance.metadata
@@ -806,7 +806,7 @@ class StateMachineProvider(Provider, QuotaSupport):
     def cleanupLeakedResources(self):
         known_nodes = set()
 
-        for node in self._zk.nodeIterator():
+        for node in self._zk.nodeIterator(cached_ids=True):
             if node.provider != self.provider.name:
                 continue
             known_nodes.add(node.id)
