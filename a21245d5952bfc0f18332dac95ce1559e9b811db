@@ -24,6 +24,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8189cbd_f122ae86",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1368,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-05T16:01:01Z",
+      "side": 1,
+      "message": "Yes to the second paragraph, one indicates whether the node is an object that is carried by this cache, the other doesn\u0027t.  In retrospect, probably worth a note.",
+      "parentUuid": "673acdbc_2ef46af7",
+      "revId": "a21245d5952bfc0f18332dac95ce1559e9b811db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "617cb488_beb9791b",
@@ -37,6 +55,24 @@
       "writtenOn": "2023-06-02T18:11:46Z",
       "side": 1,
       "message": "Should these two thread start() calls be moved into the _start() method so that if you stop() there is a way to start again without creating a new object?",
+      "revId": "a21245d5952bfc0f18332dac95ce1559e9b811db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94f4b668_c0a6d2c5",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-05T16:01:01Z",
+      "side": 1,
+      "message": "That would be a good design and we should probably do that if we generalize this more.  I was trying to avoid changes to the startup/shutdown sequence in nodepool.",
+      "parentUuid": "617cb488_beb9791b",
       "revId": "a21245d5952bfc0f18332dac95ce1559e9b811db",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
