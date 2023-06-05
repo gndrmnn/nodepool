@@ -116,9 +116,11 @@ class FakeOpenStackCloud(object):
         self._update_quota()
         self._down_ports = [
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
-                  device_owner="compute:nova"),
+                  device_owner="compute:nova", binding_vnic_type='normal'),
             Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
-                  device_owner=None),
+                  device_owner=None, binding_vnic_type='normal'),
+            Dummy(Dummy.PORT, id=uuid.uuid4().hex, status='DOWN',
+                  device_owner=None, binding_vnic_type='baremetal'),
         ]
         self._floating_ip_list = []
         self._volume_list = []
