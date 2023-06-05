@@ -1240,3 +1240,24 @@ class TestTreeCache(tests.DBTestCase):
             if ('/foo' in cached_paths and
                 '/foo' in object_paths):
                 break
+
+    def test_tree_cache_qsize_warning(self):
+        with self.assertLogs('nodepool.zk.ZooKeeper', level='DEBUG') as logs:
+            client = self.zk.kazoo_client
+            data = b'{}'
+            cache = SimpleTreeCache(self.zk, "/")
+            cache._last_qsize_warning = 0
+            cache.qsize_warning_threshold = -1
+            data = b'{}'
+            client.create('/test', data)
+            client.create('/test/foo', data)
+            cache = SimpleTreeCache(self.zk, "/test")
+            self.waitForCache(cache, {
+                '/test/foo': {},
+            })
+            found = False
+            for line in logs.output:
+                self.log.debug("Received %s", str(line))
+                if 'Queue size for cache' in str(line):
+                    found = True
+            self.assertTrue(found)

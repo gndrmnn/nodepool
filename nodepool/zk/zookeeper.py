@@ -736,10 +736,12 @@ class NodepoolTreeCache(abc.ABC):
 
     log = logging.getLogger("nodepool.zk.ZooKeeper")
     event_log = logging.getLogger("nodepool.zk.cache.event")
+    qsize_warning_threshold = 1024
 
     def __init__(self, zk, root):
         self.zk = zk
         self.root = root
+        self._last_qsize_warning = time.monotonic()
         self._cached_objects = {}
         self._cached_paths = set()
         self._ready = threading.Event()
@@ -772,6 +774,13 @@ class NodepoolTreeCache(abc.ABC):
 
     def _cacheListener(self, event):
         self._queue.put(event)
+        qsize = self._queue.qsize()
+        if qsize > self.qsize_warning_threshold:
+            now = time.monotonic()
+            if now - self._last_qsize_warning > 60:
+                self.log.warning("Queue size for cache at %s is %s",
+                                 self.root, qsize)
+                self._last_qsize_warning = now
 
     def _start(self):
         locked = self._init_lock.acquire(blocking=False)
