@@ -1401,3 +1401,30 @@ class TestTreeCache(tests.DBTestCase):
 
             if not checked and test['kind']:
                 raise Exception("Unhandled kind %s" % (test['kind']))
+
+    def test_node_cache_lock_handling(self):
+        my_zk = zk.ZooKeeper(self.zk.client, enable_cache=True)
+        node = zk.Node()
+        node.state = zk.BUILDING
+        node.provider = 'rax'
+        my_zk.storeNode(node)
+        my_zk.lockNode(node)
+
+        for _ in iterate_timeout(10, Exception, 'cache to sync', interval=0.1):
+            cached_node = my_zk.getNode(node.id, cached=True, only_cached=True)
+            if len(cached_node.lock_contenders):
+                break
+        self.assertEqual(len(cached_node.lock_contenders), 1)
+
+        my_zk._node_cache._ready.clear()
+        my_zk._node_cache._start()
+        my_zk._node_cache._event_queue.join()
+        my_zk._node_cache._playback_queue.join()
+
+        self.assertEqual(len(cached_node.lock_contenders), 1)
+        my_zk.unlockNode(node)
+
+        for _ in iterate_timeout(10, Exception, 'cache to sync', interval=0.1):
+            if not len(cached_node.lock_contenders):
+                break
+        self.assertEqual(len(cached_node.lock_contenders), 0)

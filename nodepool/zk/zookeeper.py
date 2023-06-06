@@ -835,6 +835,7 @@ class NodepoolTreeCache(abc.ABC):
         while not self._stopped:
             event = self._event_queue.get()
             if event is None:
+                self._event_queue.task_done()
                 continue
 
             qsize = self._event_queue.qsize()
@@ -849,6 +850,7 @@ class NodepoolTreeCache(abc.ABC):
                 self._handleCacheEvent(event)
             except Exception:
                 self.log.exception("Error handling event %s:", event)
+            self._event_queue.task_done()
 
     def _handleCacheEvent(self, event):
         # Ignore root node since we don't maintain a cached object for
@@ -869,9 +871,11 @@ class NodepoolTreeCache(abc.ABC):
             fetch = False
 
         key = self.parsePath(event.path)
-        if key is None:
+        if key is None and event.type != EventType.NONE:
             # The cache doesn't care about this path, so we don't need
-            # to fetch.
+            # to fetch (unless the type is none (re-initialization) in
+            # which case we always need to fetch in order to determine
+            # existence).
             fetch = False
 
         if fetch:
@@ -884,6 +888,7 @@ class NodepoolTreeCache(abc.ABC):
         while not self._stopped:
             item = self._playback_queue.get()
             if item is None:
+                self._playback_queue.task_done()
                 continue
 
             qsize = self._playback_queue.qsize()
@@ -900,6 +905,7 @@ class NodepoolTreeCache(abc.ABC):
                 self._handlePlayback(event, future, key)
             except Exception:
                 self.log.exception("Error playing back event %s:", event)
+            self._playback_queue.task_done()
 
     def _handlePlayback(self, event, future, key):
         self.event_log.debug("Cache playback event %s", event)
