@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "05bfe144_1d49cbfb",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-06T23:33:06Z",
+      "side": 1,
+      "message": "No it does an in place update.",
+      "parentUuid": "8c2e684b_a0111931",
+      "revId": "173b59abbb22de9fadb9c52c4429301a65095f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "faef747f_fe9bc4a9",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-06-06T23:28:53Z",
       "side": 1,
       "message": "See above.",
+      "revId": "173b59abbb22de9fadb9c52c4429301a65095f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6adc0603_541770d8",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-06T23:33:06Z",
+      "side": 1,
+      "message": "And not getting the node here verifies the in place update.",
+      "parentUuid": "faef747f_fe9bc4a9",
       "revId": "173b59abbb22de9fadb9c52c4429301a65095f64",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
