@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c2e684b_a0111931",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-06T23:28:53Z",
+      "side": 1,
+      "message": "Do you need to getNode the node here again to refetch it out of the cache?",
+      "revId": "173b59abbb22de9fadb9c52c4429301a65095f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faef747f_fe9bc4a9",
+        "filename": "nodepool/tests/unit/test_zk.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-06T23:28:53Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "173b59abbb22de9fadb9c52c4429301a65095f64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
