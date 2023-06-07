@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f422b1d_e9f38c83",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2023-06-07T09:20:12Z",
+      "side": 1,
+      "message": "I remember seeing some problems when using 1 as the default for gpu resources. This would mean that any pod would claim 1 GPU unless otherwise specified, or 1 milli-GPU if we go that way.",
+      "range": {
+        "startLine": 432,
+        "startChar": 45,
+        "endLine": 432,
+        "endChar": 54
+      },
+      "revId": "934bc5f43254bc47cb95ca2d96228cfca99137d0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
