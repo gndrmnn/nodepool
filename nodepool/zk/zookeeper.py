@@ -748,24 +748,25 @@ class NodepoolTreeCache(abc.ABC):
         self._ready = threading.Event()
         self._init_lock = threading.Lock()
         self._stopped = False
+        self._stop_workers = False
         self._event_queue = queue.Queue()
         self._playback_queue = queue.Queue()
-        self._event_worker = threading.Thread(
-            target=self._eventWorker)
-        self._event_worker.daemon = True
-        self._event_worker.start()
-        self._playback_worker = threading.Thread(
-            target=self._playbackWorker)
-        self._playback_worker.daemon = True
-        self._playback_worker.start()
+        self._event_worker = None
+        self._playback_worker = None
         zk.kazoo_client.add_listener(self._sessionListener)
         self._start()
 
     def _sessionListener(self, state):
         if state == KazooState.LOST:
             self._ready.clear()
+            self._stop_workers = True
+            self._event_queue.put(None)
+            self._playback_queue.put(None)
         elif state == KazooState.CONNECTED and not self._stopped:
             self._ready.clear()
+            self._stop_workers = True
+            self._event_queue.put(None)
+            self._playback_queue.put(None)
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
@@ -775,6 +776,34 @@ class NodepoolTreeCache(abc.ABC):
         locked = self._init_lock.acquire(blocking=False)
         if locked:
             self.log.debug("Initialize cache at %s", self.root)
+
+            # If we have an event worker (this is a re-init), then way
+            # for it to finish stopping (the session listener should
+            # have told it to stop).
+            if self._event_worker:
+                self._event_worker.join()
+            # Replace the queue since any events from the previous
+            # session aren't valid.
+            self._event_queue = queue.Queue()
+            # Prepare (but don't start) the new worker.
+            self._event_worker = threading.Thread(
+                target=self._eventWorker)
+            self._event_worker.daemon = True
+
+            if self._playback_worker:
+                self._playback_worker.join()
+            self._playback_queue = queue.Queue()
+            self._playback_worker = threading.Thread(
+                target=self._playbackWorker)
+            self._playback_worker.daemon = True
+
+            # Clear the stop flag and start the workers now that we
+            # are sure that both have stopped and we have cleared the
+            # queues.
+            self._stop_workers = False
+            self._event_worker.start()
+            self._playback_worker.start()
+
             try:
                 self.zk.kazoo_client.add_watch(
                     self.root, self._cacheListener,
@@ -832,7 +861,7 @@ class NodepoolTreeCache(abc.ABC):
                     self._cacheListener(event)
 
     def _eventWorker(self):
-        while not self._stopped:
+        while not (self._stopped or self._stop_workers):
             event = self._event_queue.get()
             if event is None:
                 self._event_queue.task_done()
@@ -885,7 +914,7 @@ class NodepoolTreeCache(abc.ABC):
         self._playback_queue.put((event, future, key))
 
     def _playbackWorker(self):
-        while not self._stopped:
+        while not (self._stopped or self._stop_workers):
             item = self._playback_queue.get()
             if item is None:
                 self._playback_queue.task_done()
@@ -943,6 +972,10 @@ class NodepoolTreeCache(abc.ABC):
 
         # Some caches have special handling for certain sub-objects
         if self.preCacheHook(event, exists):
+            return
+
+        # If we don't actually cache this kind of object, return now
+        if key is None:
             return
 
         if data:
@@ -1046,7 +1079,7 @@ class ImageCache(NodepoolTreeCache):
         # The image key is identical to the image pause path key.
         image = self._cached_objects.get(key)
         if not image:
-            return
+            return True
         if exists:
             image.paused = True
         else:
@@ -1107,7 +1140,7 @@ class NodeCache(NodepoolTreeCache):
         obj_key = (node_id,)
         node = self._cached_objects.get(obj_key)
         if not node:
-            return
+            return True
         if exists:
             node.lock_contenders.add(contender)
         else:
