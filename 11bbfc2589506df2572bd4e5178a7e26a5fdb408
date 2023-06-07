@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f930a59_a7dc0188",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-07T15:51:32Z",
+      "side": 1,
+      "message": "You know what, I think at this point we should just remove all the short circuiting in the pre cache hook.  I think that\u0027s no longer needed since we\u0027re checking the object key in the main method.",
+      "parentUuid": "a4ff59ae_5e45e990",
+      "revId": "11bbfc2589506df2572bd4e5178a7e26a5fdb408",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b5c5374_3f3f382c",
