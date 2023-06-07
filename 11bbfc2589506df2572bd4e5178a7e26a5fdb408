@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4ff59ae_5e45e990",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-07T15:37:31Z",
+      "side": 1,
+      "message": "According to the commit message we\u0027re interested in short circuiting via preCacheHook if the key is None. However we updated below to return True not here. Was the intent to modify this check here for the key being None and returning True here instead?\n\nIt looks like image being falsey is a valid use case reading _handlePlayback as cases like that can result in entries being added to the cache so I\u0027m not sure we want to short circuit here.",
+      "revId": "11bbfc2589506df2572bd4e5178a7e26a5fdb408",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b5c5374_3f3f382c",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-07T15:37:31Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "11bbfc2589506df2572bd4e5178a7e26a5fdb408",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
