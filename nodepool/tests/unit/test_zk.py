@@ -1416,8 +1416,9 @@ class TestTreeCache(tests.DBTestCase):
                 break
         self.assertEqual(len(cached_node.lock_contenders), 1)
 
-        my_zk._node_cache._ready.clear()
-        my_zk._node_cache._start()
+        my_zk._node_cache._sessionListener(KazooState.LOST)
+        my_zk._node_cache._sessionListener(KazooState.CONNECTED)
+        my_zk._node_cache.ensureReady()
         my_zk._node_cache._event_queue.join()
         my_zk._node_cache._playback_queue.join()
 
