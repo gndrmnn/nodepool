@@ -742,7 +742,7 @@ class NodepoolTreeCache(abc.ABC):
         self.zk = zk
         self.root = root
         self._last_event_warning = time.monotonic()
-        self._last_playblack_warning = time.monotonic()
+        self._last_playback_warning = time.monotonic()
         self._cached_objects = {}
         self._cached_paths = set()
         self._ready = threading.Event()
