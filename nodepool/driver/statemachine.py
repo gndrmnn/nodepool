@@ -86,6 +86,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.manager = handler.manager
         self.start_time = None
         self.attempts = 0
+        self.retries = self.manager.provider.launch_retries
         self.state_machine = None
         # To handle deletions:
         self.delete_state_machine = None
@@ -140,7 +141,6 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.keyscan_future = None
         # Windows computer names can be no more than 15 chars long.
         hostname = 'np' + self.node.id
-        self.retries = self.manager.provider.launch_retries
         metadata = {'nodepool_node_id': self.node.id,
                     'nodepool_pool_name': self.handler.pool.name,
                     'nodepool_provider_name': self.manager.provider.name}
