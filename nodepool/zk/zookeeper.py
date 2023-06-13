@@ -812,7 +812,8 @@ class NodepoolTreeCache(abc.ABC):
                 self._ready.set()
                 self.log.debug("Cache at %s is ready", self.root)
             except Exception:
-                self.log.error("Error initializing cache at %s", self.root)
+                self.log.exception("Error initializing cache at %s", self.root)
+                raise
             finally:
                 self._init_lock.release()
         else:
