@@ -1102,21 +1102,21 @@ class ImageCache(NodepoolTreeCache):
 
     def getImages(self):
         self.ensureReady()
-        items = self._cached_objects.items()
+        items = self._cached_objects.copy().items()
         items = sorted(items, key=lambda x: x[0])
         return [x[1] for x in items
                 if isinstance(x[1], Image)]
 
     def getBuilds(self):
         self.ensureReady()
-        items = self._cached_objects.items()
+        items = self._cached_objects.copy().items()
         items = sorted(items, key=lambda x: x[0])
         return [x[1] for x in items
                 if isinstance(x[1], ImageBuild)]
 
     def getUploads(self):
         self.ensureReady()
-        items = self._cached_objects.items()
+        items = self._cached_objects.copy().items()
         items = sorted(items, key=lambda x: x[0])
         return [x[1] for x in items
                 if isinstance(x[1], ImageUpload)]
