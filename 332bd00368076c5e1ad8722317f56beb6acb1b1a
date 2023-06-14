@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4083db2_1835b590",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-14T22:43:59Z",
+      "side": 1,
+      "message": "Should we either:\n1) just drop this exception handler?  or...\n2) keep this exception handler and do a short_spawn of _start? (as above in sessionListener)?\n\nI think 2 might be a good choice...",
+      "revId": "332bd00368076c5e1ad8722317f56beb6acb1b1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
