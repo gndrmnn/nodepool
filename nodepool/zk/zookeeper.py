@@ -853,7 +853,7 @@ class NodepoolTreeCache(abc.ABC):
             except kze.NoNodeError:
                 self.log.debug("Can't sync non-existent node %s", root)
         if am_root:
-            for path in self._cached_paths:
+            for path in self._cached_paths.copy():
                 if path not in seen_paths:
                     event = WatchedEvent(
                         EventType.NONE,
