@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c22e253d_2a74a5d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-06-15T06:17:55Z",
+      "side": 1,
+      "message": "Sorry, this only happens in combination with https://review.opendev.org/c/zuul/nodepool/+/874047 where `self.retries` is initialized in `startStateMachine()`. An exception in the `startStateMachine()` method will be handled by `runStateMachine()` which uses the `retries` attribute. At that point the variable might not be initialized.",
+      "revId": "6ea5a4de9f52b2c81e5835094ded70825e8a30f0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
