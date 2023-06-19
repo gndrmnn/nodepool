@@ -143,6 +143,29 @@ class TestLauncher(tests.DBTestCase):
         self.assertReportedStat('nodepool.label.fake-label2.nodes.aborted',
                                 value='0', kind='g')
 
+        hostname = socket.gethostname()
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.client.connection_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.node_cache.event_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.node_cache.playback_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.request_cache.event_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.request_cache.playback_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.image_cache.event_queue',
+                                value='0', kind='g')
+        self.assertReportedStat(f'nodepool.launcher.{hostname}.zk'
+                                '.image_cache.playback_queue',
+                                value='0', kind='g')
+
     def test_node_assignment_order(self):
         """Test that nodes are assigned in the order requested"""
         configfile = self.setup_config('node_many_labels.yaml')

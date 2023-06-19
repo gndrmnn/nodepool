@@ -688,3 +688,45 @@ generic format ``<service-type>.<method>.<operation>``. For example, the
 Since these calls reflect the internal operations of the
 ``openstacksdk``, the exact keys logged may vary across providers and
 releases.
+
+Internal metrics
+^^^^^^^^^^^^^^^^
+
+The following metrics are low-level performance metrics of the
+launcher itself, primarily of interest to Nodepool developers, and are
+subject to change in the future as development needs change:
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.client.connection_queue
+   :type: gauge
+
+   ZooKeeper client connection queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.node_cache.event_queue
+   :type: gauge
+
+   Node cache event queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.node_cache.playback_queue
+   :type: gauge
+
+   Node cache playback queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.request_cache.event_queue
+   :type: gauge
+
+   Request cache event queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.request_cache.playback_queue
+   :type: gauge
+
+   Request cache playback queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.image_cache.event_queue
+   :type: gauge
+
+   Image cache event queue length.
+
+.. zuul:stat:: nodepool.launcher.<hostname>.zk.image_cache.playback_queue
+   :type: gauge
+
+   Image cache playback queue length.
