@@ -1043,6 +1043,7 @@ class NodePool(threading.Thread):
         self._cleanup_thread = None
         self._delete_thread = None
         self._stats_thread = None
+        self._local_stats_thread = None
         self._submittedRequests = {}
         self.ready = False
 
@@ -1065,6 +1066,9 @@ class NodePool(threading.Thread):
         if self._stats_thread:
             self._stats_thread.stop()
             self._stats_thread.join()
+
+        if self._local_stats_thread:
+            self._local_stats_thread.join()
 
         # Don't let stop() return until all pool threads have been
         # terminated.
@@ -1272,6 +1276,20 @@ class NodePool(threading.Thread):
                 for i in range(0, need):
                     createRequest(label.name)
 
+    def _localStats(self):
+        if not self.statsd:
+            self.log.info("Statsd not configured")
+            return
+        hostname = socket.gethostname()
+        key = f'nodepool.launcher.{hostname}'
+        while not self._stopped:
+            try:
+                if self.zk:
+                    self.zk.reportStats(self.statsd, key)
+            except Exception:
+                self.log.exception("Unable to run local stats reporting:")
+            self._stop_event.wait(10)
+
     def run(self):
         '''
         Start point for the NodePool thread.
@@ -1308,6 +1326,11 @@ class NodePool(threading.Thread):
                 if not self._stats_thread:
                     self._stats_thread = StatsWorker(self, self.stats_interval)
                     self._stats_thread.start()
+
+                if not self._local_stats_thread:
+                    self._local_stats_thread = threading.Thread(
+                        target=self._localStats)
+                    self._local_stats_thread.start()
 
                 # Stop any PoolWorker threads if the pool was removed
                 # from the config.
