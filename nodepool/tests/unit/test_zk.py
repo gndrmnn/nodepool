@@ -16,7 +16,7 @@ import time
 import uuid
 import socket
 
-from kazoo.protocol.states import KazooState
+from kazoo.protocol.states import KazooState, WatchedEvent
 
 from nodepool import exceptions as npe
 from nodepool import tests
@@ -1169,6 +1169,18 @@ class SimpleTreeCache(zk.NodepoolTreeCache):
         return tuple(path.split('/'))
 
 
+class QueueTestSimpleTreeCache(SimpleTreeCache):
+    playback_queue_maxsize = 1
+
+    def __init__(self, *args, **kw):
+        self._test_playback_events = []
+        super().__init__(*args, **kw)
+
+    def _handlePlayback(self, event, future, key):
+        self._test_playback_events.append(event)
+        return super()._handlePlayback(event, future, key)
+
+
 class TestTreeCache(tests.DBTestCase):
     # A very simple smoke test of the tree cache
 
@@ -1245,7 +1257,6 @@ class TestTreeCache(tests.DBTestCase):
         with self.assertLogs('nodepool.zk.ZooKeeper', level='DEBUG') as logs:
             cache = SimpleTreeCache(self.zk, "/test")
             cache._last_event_warning = 0
-            cache._last_playback_warning = 0
             cache.qsize_warning_threshold = -1
 
             data = b'{}'
@@ -1257,15 +1268,11 @@ class TestTreeCache(tests.DBTestCase):
             })
 
             found_event_warning = False
-            found_playback_warning = False
             for line in logs.output:
                 self.log.debug("Received %s", str(line))
                 if 'Event queue size for cache' in str(line):
                     found_event_warning = True
-                if 'Playback queue size for cache' in str(line):
-                    found_playback_warning = True
             self.assertTrue(found_event_warning)
-            self.assertTrue(found_playback_warning)
 
     def test_tree_cache_parsing(self):
         my_zk = zk.ZooKeeper(self.zk.client, enable_cache=True)
@@ -1429,3 +1436,102 @@ class TestTreeCache(tests.DBTestCase):
             if not len(cached_node.lock_contenders):
                 break
         self.assertEqual(len(cached_node.lock_contenders), 0)
+
+    def test_tree_cache_queue_dedup_create(self):
+        # Test deduplication of changed and create events
+        client = self.zk.kazoo_client
+        data = b'{}'
+        client.create('/test', data)
+        client.create('/test/foo', data)
+        cache = QueueTestSimpleTreeCache(self.zk, "/test")
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+        # Submit a fake event to the playback queue with an unresolved
+        # future; no cache processing will happen until it completes.
+
+        result = client.handler.async_result()
+        cache._playback_queue.put((None, result, ''))
+
+        # Submit a second fake event with the same future to occupy
+        # the single available slot in the playback queue.
+        cache._playback_queue.put((None, result, ''))
+
+        # Give the event queue worker something to block on so it will
+        # see our create later
+        client.create('/test/foo2', data)
+
+        # All of these should be deduplicated into the initial create
+        client.create('/test/bar', data)
+        client.set('/test/bar', b'{"value":1}')
+        client.set('/test/bar', b'{"value":2}')
+        client.set('/test/bar', b'{"value":3}')
+
+        # Set our result to allow processing to continue, but make it
+        # an exception so we don't actually do anything with the result.
+        result.set_exception(Exception('Expected exception'))
+
+        self.waitForCache(cache, {
+            '/test/foo': {},
+            '/test/foo2': {},
+            '/test/bar': {'value': 3},
+        })
+
+        self.assertEqual(cache._test_playback_events, [
+            WatchedEvent(type='NONE', state='CONNECTED', path='/test/foo'),
+            None,
+            None,
+            WatchedEvent(type='CREATED', state='CONNECTED', path='/test/foo2'),
+            WatchedEvent(type='CREATED', state='CONNECTED', path='/test/bar')
+        ])
+
+    def test_tree_cache_queue_dedup_changed(self):
+        # Test deduplication of changed events without deduplicating a
+        # created event.
+        client = self.zk.kazoo_client
+        data = b'{}'
+        client.create('/test', data)
+        client.create('/test/foo', data)
+        cache = QueueTestSimpleTreeCache(self.zk, "/test")
+        self.waitForCache(cache, {
+            '/test/foo': {},
+        })
+        # Submit a fake event to the playback queue with an unresolved
+        # future; no cache processing will happen until it completes.
+
+        result = client.handler.async_result()
+        cache._playback_queue.put((None, result, ''))
+
+        # Submit a second fake event with the same future to occupy
+        # the single available slot in the playback queue.
+        cache._playback_queue.put((None, result, ''))
+
+        # Wait for our initial create to be processed so it's not seen
+        # in deduplication
+        client.create('/test/bar', data)
+        for _ in iterate_timeout(10, Exception,
+                                 "cached node equals original node"):
+            if not cache._event_queue.qsize():
+                break
+
+        # These events should be deduplicated
+        client.set('/test/bar', b'{"value":1}')
+        client.set('/test/bar', b'{"value":2}')
+        client.set('/test/bar', b'{"value":3}')
+
+        # Set our result to allow processing to continue, but make it
+        # an exception so we don't actually do anything with the result.
+        result.set_exception(Exception('Expected exception'))
+
+        self.waitForCache(cache, {
+            '/test/foo': {},
+            '/test/bar': {'value': 3},
+        })
+
+        self.assertEqual(cache._test_playback_events, [
+            WatchedEvent(type='NONE', state='CONNECTED', path='/test/foo'),
+            None,
+            None,
+            WatchedEvent(type='CREATED', state='CONNECTED', path='/test/bar'),
+            WatchedEvent(type='CHANGED', state='CONNECTED', path='/test/bar')
+        ])
