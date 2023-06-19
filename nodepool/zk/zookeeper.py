@@ -737,12 +737,12 @@ class NodepoolTreeCache(abc.ABC):
     log = logging.getLogger("nodepool.zk.ZooKeeper")
     event_log = logging.getLogger("nodepool.zk.cache.event")
     qsize_warning_threshold = 1024
+    playback_queue_maxsize = 10
 
     def __init__(self, zk, root):
         self.zk = zk
         self.root = root
         self._last_event_warning = time.monotonic()
-        self._last_playback_warning = time.monotonic()
         self._cached_objects = {}
         self._cached_paths = set()
         self._ready = threading.Event()
@@ -750,7 +750,8 @@ class NodepoolTreeCache(abc.ABC):
         self._stopped = False
         self._stop_workers = False
         self._event_queue = queue.Queue()
-        self._playback_queue = queue.Queue()
+        self._playback_queue = queue.Queue(
+            maxsize=self.playback_queue_maxsize)
         self._event_worker = None
         self._playback_worker = None
         zk.kazoo_client.add_listener(self._sessionListener)
@@ -766,6 +767,14 @@ class NodepoolTreeCache(abc.ABC):
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
+        for other in list(self._event_queue.queue):
+            if event.path == other.path:
+                if (event.type == EventType.CHANGED and
+                    other.type in [EventType.CHANGED, EventType.CREATED]):
+                    # If the newer event is changed, we can skip if
+                    # the previous event was either added or changed,
+                    # since it will get the latest data.
+                    return
         self._event_queue.put(event)
 
     def _start(self):
@@ -791,7 +800,8 @@ class NodepoolTreeCache(abc.ABC):
 
             if self._playback_worker:
                 self._playback_worker.join()
-            self._playback_queue = queue.Queue()
+            self._playback_queue = queue.Queue(
+                maxsize=self.playback_queue_maxsize)
             self._playback_worker = threading.Thread(
                 target=self._playbackWorker)
             self._playback_worker.daemon = True
@@ -914,15 +924,6 @@ class NodepoolTreeCache(abc.ABC):
             if item is None:
                 self._playback_queue.task_done()
                 continue
-
-            qsize = self._playback_queue.qsize()
-            if qsize > self.qsize_warning_threshold:
-                now = time.monotonic()
-                if now - self._last_playback_warning > 60:
-                    self.log.warning(
-                        "Playback queue size for cache at %s is %s",
-                        self.root, qsize)
-                    self._last_playback_warning = now
 
             event, future, key = item
             try:
