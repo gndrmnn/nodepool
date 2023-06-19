@@ -1513,6 +1513,36 @@ class ZooKeeper(ZooKeeperBase):
         '''
         self.client.resetHosts(hosts)
 
+    def reportStats(self, statsd, root_key):
+        '''
+        Report stats using the supplied statsd object.
+
+        :param statsd statsd: A statsd instance
+        :param str root_key: The root key (eg 'nodepool.launcher.hostname')
+        '''
+
+        pipeline = statsd.pipeline()
+
+        key = f'{root_key}.zk.client.connection_queue'
+        pipeline.gauge(key, len(self.client.client._queue))
+
+        key = f'{root_key}.zk.node_cache.event_queue'
+        pipeline.gauge(key, self._node_cache._event_queue.qsize())
+        key = f'{root_key}.zk.node_cache.playback_queue'
+        pipeline.gauge(key, self._node_cache._playback_queue.qsize())
+
+        key = f'{root_key}.zk.request_cache.event_queue'
+        pipeline.gauge(key, self._request_cache._event_queue.qsize())
+        key = f'{root_key}.zk.request_cache.playback_queue'
+        pipeline.gauge(key, self._request_cache._playback_queue.qsize())
+
+        key = f'{root_key}.zk.image_cache.event_queue'
+        pipeline.gauge(key, self._image_cache._event_queue.qsize())
+        key = f'{root_key}.zk.image_cache.playback_queue'
+        pipeline.gauge(key, self._image_cache._playback_queue.qsize())
+
+        pipeline.send()
+
     @contextmanager
     def imageBuildLock(self, image, blocking=True, timeout=None):
         '''
