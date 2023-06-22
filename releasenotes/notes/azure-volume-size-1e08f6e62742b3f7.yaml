@@ -1,0 +1,28 @@
+---
+features:
+  - |
+    The Azure driver now supports specifying the size of the OS disk.
+upgrade:
+  - |
+    The Azure driver now uses the "Standard" SKU for all public IP
+    addresses.  Previously it would chose either "Standard" or "Basic"
+    depending on the selection of IPv4 or IPv6 addresses.
+
+    Pricing for public IP addresses may differ between the SKU levels.
+
+    Standard IP addresses block all incoming traffic by default,
+    therefore the use of a Network Security Group is required in order
+    to allow incoming traffic.
+
+    If you are not currently using a Network Security Group, then
+    before upgrading Nodepool it is recommended to create one, add any
+    required rules, and attach it to the subnet that Nodepool uses.
+  - |
+    The Azure driver no longer creates and deletes Disks, Network
+    Interfaces, or Public IP Addresses as separate steps.
+
+    Nodepool and user-supplied tags will no longer be applied to
+    Network Interfaces, or Public IP Addresses.  This also limits
+    Nodepool's ability to detect leaks of these resources (however
+    this is unlikely since Azure is now responsible for deleting
+    them).

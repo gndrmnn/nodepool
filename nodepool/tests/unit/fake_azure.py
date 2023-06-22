@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Acme Gating, LLC
+# Copyright (C) 2021, 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -72,8 +72,11 @@ class PublicIPAddressesCRUD(CRUDManager):
     name = "Microsoft.Network/publicIPAddresses"
 
     def put(self, request):
-        data = json.loads(request.body)
-        url = urllib.parse.urlparse(request.path_url)
+        return self._put(json.loads(request.body),
+                         request.path_url)
+
+    def _put(self, data, url):
+        url = urllib.parse.urlparse(url)
         name = url.path.split('/')[-1]
         data['id'] = url.path
         data['name'] = name
@@ -82,7 +85,7 @@ class PublicIPAddressesCRUD(CRUDManager):
             "provisioningState": "Updating",
             "resourceGuid": str(uuid.uuid4()),
             "publicIPAddressVersion": "IPv4",
-            "publicIPAllocationMethod": "Dynamic",
+            "publicIPAllocationMethod": "Static",
             "idleTimeoutInMinutes": 4,
             "ipTags": [],
         }
@@ -98,8 +101,11 @@ class NetworkInterfacesCRUD(CRUDManager):
     name = "Microsoft.Network/networkInterfaces"
 
     def put(self, request):
-        data = json.loads(request.body)
-        url = urllib.parse.urlparse(request.path_url)
+        return self._put(json.loads(request.body),
+                         request.path_url)
+
+    def _put(self, data, url):
+        url = urllib.parse.urlparse(url)
         name = url.path.split('/')[-1]
         data['id'] = url.path
         data['name'] = name
@@ -119,7 +125,7 @@ class NetworkInterfacesCRUD(CRUDManager):
                         "privateIPAddress": "10.0.0.4",
                         "privateIPAllocationMethod": "Dynamic",
                         "publicIPAddress": (ipconfig['properties']
-                                            ['publicIpAddress']),
+                                            ['publicIPAddress']),
                         "subnet": ipconfig['properties']['subnet'],
                         "primary": True,
                         "privateIPAddressVersion": "IPv4",
@@ -170,6 +176,8 @@ class VirtualMachinesCRUD(CRUDManager):
         }
         data['zones'] = ["1"]
         self.items.append(data)
+
+        # Add a disk
         disk_data = data.copy()
         disk_data['name'] = 'bionic-azure-' + str(uuid.uuid4())
         disk_data['type'] = "Microsoft.Compute/disks"
@@ -178,10 +186,81 @@ class VirtualMachinesCRUD(CRUDManager):
         disk_data['properties'] = {"provisioningState": "Succeeded"}
         self.cloud.crud["Microsoft.Compute/disks"].items.append(disk_data)
 
+        # Add a PIP
+        resource_group = self.cloud._extract_resource_group(url.path)
+        data_nic = (data['properties']['networkProfile']
+                    ['networkInterfaceConfigurations'][0])
+        data_ip = data_nic['properties']['ipConfigurations'][0]
+        data_pip = data_ip['properties']['publicIPAddressConfiguration']
+        pip_data = {
+            'location': data['location'],
+            'sku': {
+                'name': data_pip['sku'],
+            },
+            'properties': {
+                'publicIPAddressVersion': (data_ip['properties']
+                                           ['privateIPAddressVersion']),
+                'publicIPAllocationMethod': (data_pip['properties']
+                                             ['publicIPAllocationMethod']),
+            },
+        }
+        pip_url = (f'/subscriptions/{self.cloud.subscription_id}'
+                   f'/resourceGroups/{resource_group}/providers'
+                   f'/Microsoft.Network/publicIPAddresses/{name}-v4-abcd')
+        self.cloud.crud["Microsoft.Network/publicIPAddresses"]._put(
+            pip_data, pip_url)
+
+        # Add a NIC
+        nic_data = {
+            'location': data['location'],
+            'properties': {
+                'ipConfigurations': [{
+                    'name': data_ip['name'],
+                    'properties': {
+                        'privateIPAddressVersion': (
+                            data_ip['properties']
+                            ['privateIPAddressVersion']),
+                        'subnet': data_ip['properties']['subnet'],
+                    }
+                }],
+            }
+        }
+        data['properties']['networkProfile']['networkInterfaces'] =\
+            [nic_data.copy()]
+        (nic_data['properties']['ipConfigurations'][0]['properties']
+         ['publicIPAddress']) = {
+            'id': pip_url,
+            'type': 'Microsoft.Network/publicIPAddresses',
+            'properties': {
+                'publicIPAddressVersion': (data_ip['properties']
+                                           ['privateIPAddressVersion']),
+            },
+        }
+        nic_url = (f'/subscriptions/{self.cloud.subscription_id}'
+                   f'/resourceGroups/{resource_group}/providers'
+                   f'/Microsoft.Network/networkInterfaces/{name}-nic-abcd')
+        data['properties']['networkProfile']['networkInterfaces'][0]['id'] =\
+            nic_url
+        self.cloud.crud["Microsoft.Network/networkInterfaces"]._put(
+            nic_data, nic_url)
+
         ret = json.dumps(data)
         # Finish provisioning after return
         data['properties']['provisioningState'] = "Succeeded"
         return (200, {}, ret)
+
+    def delete(self, request):
+        url = urllib.parse.urlparse(request.path_url)
+        name = url.path.split('/')[-1]
+        for item in self.items:
+            if item['name'] == name:
+                self.items.remove(item)
+                return (200, {}, '')
+        return (404, {}, json.dumps({
+            'error': {
+                'message': 'Not Found',
+                'code': 'NotFound',
+            }}))
 
 
 class DisksCRUD(CRUDManager):
@@ -325,9 +404,9 @@ class FakeAzureFixture(fixtures.Fixture):
         self._setup_crud(ResourceGroupsCRUD, '2020-06-01',
                          resource_grouped=False)
 
-        self._setup_crud(VirtualMachinesCRUD, '2020-12-01')
-        self._setup_crud(NetworkInterfacesCRUD, '2020-07-01')
-        self._setup_crud(PublicIPAddressesCRUD, '2020-07-01')
+        self._setup_crud(VirtualMachinesCRUD, '2023-03-01')
+        self._setup_crud(NetworkInterfacesCRUD, '2020-11-01')
+        self._setup_crud(PublicIPAddressesCRUD, '2020-11-01')
         self._setup_crud(DisksCRUD, '2020-06-30')
         self._setup_crud(ImagesCRUD, '2020-12-01')
 
