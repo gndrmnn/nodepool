@@ -271,6 +271,7 @@
     nodeset: ubuntu-jammy
 
 - project:
+    queue: zuul
     vars:
       release_python: python3
     check:
