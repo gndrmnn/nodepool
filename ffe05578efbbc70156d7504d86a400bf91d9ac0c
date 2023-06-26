@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3153d2fc_2d1d60e0",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-26T22:32:52Z",
+      "side": 1,
+      "message": "Nope, leftover after debugging, thanks for catching that.  :)",
+      "parentUuid": "d7561adb_47912962",
+      "revId": "ffe05578efbbc70156d7504d86a400bf91d9ac0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a7750c4_92f3d3a5",
@@ -35,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc954a31_0121a104",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-26T22:32:52Z",
+      "side": 1,
+      "message": "Okay, but how about just at debug level, since we expect the resync handler to correct any inconsistencies.",
+      "parentUuid": "1a7750c4_92f3d3a5",
+      "revId": "ffe05578efbbc70156d7504d86a400bf91d9ac0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d20a33ae_8fc9dffd",
@@ -48,6 +84,24 @@
       "writtenOn": "2023-06-02T13:45:02Z",
       "side": 1,
       "message": "Should we also log something here?",
+      "revId": "ffe05578efbbc70156d7504d86a400bf91d9ac0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6da394f_f1acb816",
+        "filename": "nodepool/driver/static/provider.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-26T22:32:52Z",
+      "side": 1,
+      "message": "Ditto.",
+      "parentUuid": "d20a33ae_8fc9dffd",
       "revId": "ffe05578efbbc70156d7504d86a400bf91d9ac0c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
