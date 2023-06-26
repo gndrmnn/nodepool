@@ -16,6 +16,24 @@
       "message": "What\u0027s the reason to remove default\u003d1 here?",
       "revId": "56c3a45e48b7e4a1414660408a15c6053a59488c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2181b6c1_83c11a65",
+        "filename": "nodepool/driver/kubernetes/provider.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-26T21:49:30Z",
+      "side": 1,
+      "message": "There\u0027s more detail on the comment on the previous patchset, but in short, I think this was an error that caused us to \"over-claim\" quota resources.  We only didn\u0027t notice it because these drivers barely, if at all, actually did anything with quota.  We shouldn\u0027t claim to use one unit of quota for any unknown resource; this returns it to the default of 0.",
+      "parentUuid": "cce315c0_f5ff039c",
+      "revId": "56c3a45e48b7e4a1414660408a15c6053a59488c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
