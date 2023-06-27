@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74543b30_827e0b50",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-06-27T12:12:16Z",
+      "side": 1,
+      "message": "Closing this in favour of https://review.opendev.org/c/zuul/nodepool/+/883940",
+      "revId": "c74cde27ac776ebb778a37297ae845ad369813b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
