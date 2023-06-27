@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3741fd5d_1da12e21",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 35200
+      },
+      "writtenOn": "2023-06-27T17:21:31Z",
+      "side": 1,
+      "message": "Does this not have to unlock the node here before returning?",
+      "range": {
+        "startLine": 334,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 18
+      },
+      "revId": "21473bf031861e29adb50294f70f547aead3c3f9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
