@@ -365,6 +365,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
         with ThreadPoolExecutor() as executor:
             for pool in self.provider.pools.values():
                 synced_nodes = []
+                updated_nodes = []
                 for static_node in pool.nodes:
                     synced_nodes.append((static_node, executor.submit(
                         self.syncNodeCount, static_node, pool)))
@@ -380,8 +381,12 @@ class StaticNodeProvider(Provider, QuotaSupport):
                                            nodeTuple(static_node))
                         continue
 
+                    updated_nodes.append((static_node, executor.submit(
+                        self.updateNodeFromConfig, static_node)))
+
+                for updated_node, result in updated_nodes:
                     try:
-                        self.updateNodeFromConfig(static_node)
+                        result.result()
                     except StaticNodeError as exc:
                         self.log.warning(
                             "Couldn't update static node: %s", exc)
@@ -391,7 +396,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
                                            nodeTuple(static_node))
                         continue
 
-                    static_nodes[nodeTuple(static_node)] = static_node
+                    static_nodes[nodeTuple(static_node)] = updated_node
 
         # De-register nodes to synchronize with our configuration.
         # This case covers any registered nodes that no longer appear in
