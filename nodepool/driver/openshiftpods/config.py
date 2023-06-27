@@ -69,6 +69,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'volumes': list,
             'volume-mounts': list,
             'labels': dict,
+            'annotations': dict,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

@@ -222,6 +222,16 @@ Selecting the openshift driver adds the following options to the
             that this field contains arbitrary key/value pairs and is
             unrelated to the concept of labels in Nodepool.
 
+         .. attr:: annotations
+            :type: dict
+
+            A dictionary of additional values to be added to the
+            pod metadata.  The value of this field is
+            added to the `metadata.annotations` field in OpenShift.
+            This field contains arbitrary key/value pairs that can be accessed
+            by tools and libraries. E.g custom schedulers can make use of this
+            metadata.
+
          .. attr:: python-path
             :type: str
             :default: auto

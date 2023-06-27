@@ -371,12 +371,17 @@ class KubernetesProvider(Provider, QuotaSupport):
             'nodepool_node_label': label.name,
         })
 
+        k8s_annotations = {}
+        if label.annotations:
+            k8s_annotations.update(label.annotations)
+
         pod_body = {
             'apiVersion': 'v1',
             'kind': 'Pod',
             'metadata': {
                 'name': label.name,
                 'labels': k8s_labels,
+                'annotations': k8s_annotations,
             },
             'spec': spec_body,
             'restartPolicy': 'Never',
