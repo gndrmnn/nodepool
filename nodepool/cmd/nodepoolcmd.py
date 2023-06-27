@@ -316,7 +316,23 @@ class NodePoolCmd(NodepoolApp):
             print("Node id %s not found" % self.args.id)
             return
 
+        if node.allocated_to:
+            print("Node id %s is currently allocated to request "
+                  "%s and can not be held" % (
+                      self.args.id,
+                      node.allocated_to))
+            return
+
         self.zk.lockNode(node, blocking=True, timeout=5)
+
+        # Double check allocation after lock refresh
+        if node.allocated_to:
+            print("Node id %s is currently allocated to request "
+                  "%s and can not be held" % (
+                      self.args.id,
+                      node.allocated_to))
+            self.zk.unlockNode(node)
+            return
 
         node.state = zk.HOLD
         self.zk.storeNode(node)
