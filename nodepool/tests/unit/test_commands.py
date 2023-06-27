@@ -428,6 +428,14 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.log.debug("Waiting for request %s", req.id)
         req = self.waitForNodeRequest(req, (zk.FULFILLED,))
         self.assertEqual(len(req.nodes), 1)
+        nodes = req.nodes
+
+        # Hold node should fail since it's allocated
+        self.patch_argv('-c', configfile, 'hold', nodes[0])
+        nodepoolcmd.main()
+        # Assert the node is still ready
+        self.assert_listed(configfile, ['list'], 0, nodes[0], 1)
+        self.assert_nodes_listed(configfile, 1, zk.READY)
 
     def test_attempt_hold_busy_node(self):
         configfile = self.setup_config('node.yaml')
