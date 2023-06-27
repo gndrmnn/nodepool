@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -57,11 +58,6 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
 class OpenshiftPodRequestHandler(OpenshiftNodeRequestHandler):
     log = logging.getLogger("nodepool.driver.openshiftpods."
                             "OpenshiftPodRequestHandler")
-
-    def hasRemainingQuota(self, node_types):
-        if len(self.manager.listNodes()) + 1 > self.provider.max_pods:
-            return False
-        return True
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]

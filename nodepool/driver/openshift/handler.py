@@ -1,4 +1,5 @@
 # Copyright 2018 Red Hat
+# Copyright 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -12,14 +13,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import math
 import logging
 
 from kazoo import exceptions as kze
 
 from nodepool import exceptions
 from nodepool.zk import zookeeper as zk
-from nodepool.driver.utils import NodeLauncher
 from nodepool.driver import NodeRequestHandler
+from nodepool.driver.utils import NodeLauncher, QuotaInformation
 
 
 class OpenshiftLauncher(NodeLauncher):
@@ -133,10 +135,42 @@ class OpenshiftNodeRequestHandler(NodeRequestHandler):
 
         return True
 
-    def hasRemainingQuota(self, node_types):
-        if len(self.manager.listNodes()) + 1 > self.provider.max_projects:
+    def hasRemainingQuota(self, ntype):
+        '''
+        Checks if the predicted quota is enough for an additional node of type
+        ntype.
+
+        :param ntype: node type for the quota check
+        :return: True if there is enough quota, False otherwise
+        '''
+        needed_quota = self.manager.quotaNeededByLabel(ntype, self.pool)
+
+        # Calculate remaining quota which is calculated as:
+        # quota = <total nodepool quota> - <used quota> - <quota for node>
+        cloud_quota = self.manager.estimatedNodepoolQuota()
+        cloud_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed())
+        cloud_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining provider quota: %s",
+                       cloud_quota)
+
+        if not cloud_quota.non_negative():
             return False
-        return True
+
+        # Now calculate pool specific quota. Values indicating no quota default
+        # to math.inf representing infinity that can be calculated with.
+        args = dict(cores=getattr(self.pool, 'max_cores', None),
+                    instances=self.pool.max_servers,
+                    ram=getattr(self.pool, 'max_ram', None))
+        args.update(self.pool.max_resources)
+        pool_quota = QuotaInformation(**args, default=math.inf)
+        pool_quota.subtract(
+            self.manager.estimatedNodepoolQuotaUsed(self.pool))
+        self.log.debug("Current pool quota: %s" % pool_quota)
+        pool_quota.subtract(needed_quota)
+        self.log.debug("Predicted remaining pool quota: %s", pool_quota)
+
+        return pool_quota.non_negative()
 
     def launch(self, node):
         label = self.pool.labels[node.type[0]]
