@@ -22,6 +22,24 @@
       },
       "revId": "60195adaeaba83d3e0fc2c8171bb19674fe27b27",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3813111d_d435b771",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-27T21:06:55Z",
+      "side": 1,
+      "message": "Fixed, thanks.",
+      "parentUuid": "1fbe6e0d_21f79e59",
+      "revId": "60195adaeaba83d3e0fc2c8171bb19674fe27b27",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
