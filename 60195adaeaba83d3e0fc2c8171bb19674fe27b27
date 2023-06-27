@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fbe6e0d_21f79e59",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-06-27T20:44:41Z",
+      "side": 1,
+      "message": "Nit this should be kubernetes since this file is the kubernetes doc file.",
+      "range": {
+        "startLine": 232,
+        "startChar": 57,
+        "endLine": 232,
+        "endChar": 66
+      },
+      "revId": "60195adaeaba83d3e0fc2c8171bb19674fe27b27",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
