@@ -1278,10 +1278,10 @@ class NodePool(threading.Thread):
         '''
         self.log.info("Nodepool launcher %s starting",
                       get_version_string())
+
+        self.updateConfig()
         while not self._stopped:
             try:
-                self.updateConfig()
-
                 # Don't do work if we've lost communication with the ZK cluster
                 did_suspend = False
                 while self.zk and (self.zk.suspended or self.zk.lost):
