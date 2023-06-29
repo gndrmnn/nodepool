@@ -1037,6 +1037,7 @@ class NodePool(threading.Thread):
         self._stopped = False
         self._stop_event = threading.Event()
         self.config = None
+        self._config_mtime = 0
         self.zk = None
         self.statsd = stats.get_client()
         self._pool_threads = {}
@@ -1134,6 +1135,9 @@ class NodePool(threading.Thread):
                 t.provider_name == provider_name]
 
     def updateConfig(self):
+        config_mtime = os.stat(self.configfile).st_mtime_ns
+        if self._config_mtime == config_mtime:
+            return
         config = self.loadConfig()
         self.reconfigureZooKeeper(config)
         provider_manager.ProviderManager.reconfigure(self.config, config,
@@ -1142,6 +1146,7 @@ class NodePool(threading.Thread):
             if provider_name not in config.provider_managers:
                 del config.providers[provider_name]
         self.setConfig(config)
+        self._config_mtime = config_mtime
 
     def removeCompletedRequests(self):
         '''
