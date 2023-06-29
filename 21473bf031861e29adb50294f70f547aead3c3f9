@@ -22,6 +22,24 @@
       },
       "revId": "21473bf031861e29adb50294f70f547aead3c3f9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c047714f_bdb7c1b3",
+        "filename": "nodepool/cmd/nodepoolcmd.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-06-29T14:32:11Z",
+      "side": 1,
+      "message": "That would probably be best.  :)",
+      "parentUuid": "3741fd5d_1da12e21",
+      "revId": "21473bf031861e29adb50294f70f547aead3c3f9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
