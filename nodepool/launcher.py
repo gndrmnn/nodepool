@@ -1029,7 +1029,9 @@ class NodePool(threading.Thread):
                  watermark_sleep=WATERMARK_SLEEP):
         threading.Thread.__init__(self, name='NodePool')
         self.securefile = securefile
+        self._secure_mtime = 0
         self.configfile = configfile
+        self._config_mtime = 0
         self.watermark_sleep = watermark_sleep
         self.cleanup_interval = 60
         self.delete_interval = 5
@@ -1134,6 +1136,12 @@ class NodePool(threading.Thread):
                 t.provider_name == provider_name]
 
     def updateConfig(self):
+        config_mtime = os.stat(self.configfile).st_mtime_ns
+        secure_mtime = os.stat(self.securefile).st_mtime_ns
+        if (self._config_mtime == config_mtime
+                and self._secure_mtime == secure_mtime):
+            return
+
         config = self.loadConfig()
         self.reconfigureZooKeeper(config)
         provider_manager.ProviderManager.reconfigure(self.config, config,
@@ -1141,7 +1149,10 @@ class NodePool(threading.Thread):
         for provider_name in list(config.providers.keys()):
             if provider_name not in config.provider_managers:
                 del config.providers[provider_name]
+
         self.setConfig(config)
+        self._config_mtime = config_mtime
+        self._secure_mtime = secure_mtime
 
     def removeCompletedRequests(self):
         '''
