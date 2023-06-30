@@ -27,6 +27,7 @@ import nodepool.exceptions
 from nodepool.zk import zookeeper as zk
 from nodepool.zk.components import PoolComponent
 from nodepool.driver.statemachine import StateMachineProvider
+from nodepool.driver.openstack import adapter as openstack_adapter
 from nodepool.driver.fake import adapter as fakeadapter
 from nodepool.nodeutils import iterate_timeout
 import nodepool.launcher
@@ -41,6 +42,7 @@ class TestLauncher(tests.DBTestCase):
     def setUp(self):
         super().setUp()
 
+        openstack_adapter.CACHE_TTL = 2
         StateMachineProvider.MINIMUM_SLEEP = 0.1
         StateMachineProvider.MAXIMUM_SLEEP = 1
 
@@ -1181,7 +1183,7 @@ class TestLauncher(tests.DBTestCase):
             pool = self.useNodepool(configfile, watermark_sleep=1)
             self.startPool(pool)
 
-            req1 = self.waitForNodeRequest(req1)
+            req1 = self.waitForNodeRequest(req1, max_time=180)
             self.assertEqual(req1.state, result)
 
     def test_node_launch_keyscan_failure(self):

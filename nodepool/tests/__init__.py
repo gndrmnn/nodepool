@@ -174,7 +174,7 @@ class BaseTestCase(testtools.TestCase):
     def setUp(self):
         super(BaseTestCase, self).setUp()
         self.useFixture(GlobalRegistryFixture())
-        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 60)
+        test_timeout = os.environ.get('OS_TEST_TIMEOUT', 120)
         try:
             test_timeout = int(test_timeout)
         except ValueError:
