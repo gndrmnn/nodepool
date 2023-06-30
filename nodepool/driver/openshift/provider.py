@@ -167,24 +167,32 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'metadata': {'name': user}
         }
         self.k8s_client.create_namespaced_service_account(project, sa_body)
+        secret_body = {
+            'apiVersion': 'v1',
+            'kind': 'Secret',
+            'type': 'kubernetes.io/service-account-token',
+            'metadata': {
+                'name': user,
+                'annotations': {
+                    'kubernetes.io/service-account.name': user
+                }
+            }
+        }
+        self.k8s_client.create_namespaced_secret(project, secret_body)
 
         # Wait for the token to be created
+        ca_crt = None
+        token = None
+        sa = None
         for retry in range(30):
-            sa = self.k8s_client.read_namespaced_service_account(
-                user, project)
-            ca_crt = None
-            token = None
-            if sa.secrets:
-                for secret_obj in sa.secrets:
-                    secret = self.k8s_client.read_namespaced_secret(
-                        secret_obj.name, project)
-                    token = secret.data.get('token')
-                    ca_crt = secret.data.get('ca.crt')
-                    if token and ca_crt:
-                        token = base64.b64decode(
-                            token.encode('utf-8')).decode('utf-8')
-                        break
-            if token:
+            sa = self.k8s_client.read_namespaced_secret(user, project)
+            if sa.data:
+                token = sa.data.get('token')
+                ca_crt = sa.data.get('ca.crt')
+                if token and ca_crt:
+                    token = base64.b64decode(
+                        token.encode('utf-8')).decode('utf-8')
+            if token and ca_crt:
                 break
             time.sleep(1)
         if not token or not ca_crt:
