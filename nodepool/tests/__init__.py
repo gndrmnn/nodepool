@@ -592,10 +592,12 @@ class DBTestCase(BaseTestCase):
                                  interval=1):
             if hasattr(manager, 'adapter'):
                 servers = manager.adapter._listServers()
+                server_ids = [s['id'] for s in servers]
             else:
                 # TODO: remove once all drivers use statemachine
                 servers = manager.listNodes()
-            if not (instance_id in [s.id for s in servers]):
+                server_ids = [s.id for s in servers]
+            if not (instance_id in server_ids):
                 break
 
     def waitForNodeRequestLockDeletion(self, request_id):
