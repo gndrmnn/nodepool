@@ -47,6 +47,12 @@ class Dummy(object):
         except AttributeError:
             pass
 
+    def _get_dict(self):
+        data = {}
+        for k in self.__kw.keys():
+            data[k] = getattr(self, k)
+        return data
+
     def __repr__(self):
         args = []
         for k in self.__kw.keys():
@@ -70,6 +76,34 @@ class Dummy(object):
         setattr(self, key, value)
 
 
+class FakeResponse:
+    def __init__(self, data):
+        self._data = data
+        self.links = []
+
+    def json(self):
+        return self._data
+
+
+class FakeSession:
+    def __init__(self, cloud):
+        self.cloud = cloud
+
+    def get(self, uri, headers, params):
+        if uri == '/servers/detail':
+            server_list = []
+            for server in self.cloud._server_list:
+                data = server._get_dict()
+                data['hostId'] = data.pop('host_id')
+                data['OS-EXT-AZ:availability_zone'] = data.pop('location').zone
+                data['os-extended-volumes:volumes_attached'] =\
+                    data.pop('volumes')
+                data.pop('event')
+                data.pop('_kw')
+                server_list.append(data)
+            return FakeResponse({'servers': server_list})
+
+
 class FakeOpenStackCloud(object):
     log = logging.getLogger("nodepool.FakeOpenStackCloud")
 
@@ -82,6 +116,7 @@ class FakeOpenStackCloud(object):
         return 100, 1000000
 
     def __init__(self, images=None, networks=None):
+        self.compute = FakeSession(self)
         self.pause_creates = False
         self._image_list = images
         if self._image_list is None:
