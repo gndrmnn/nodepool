@@ -13,6 +13,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import copy
 import logging
 import threading
 import time
@@ -47,6 +48,15 @@ class Dummy(object):
         except AttributeError:
             pass
 
+    def _get_dict(self):
+        data = {}
+        for k in self.__kw.keys():
+            data[k] = getattr(self, k)
+        data.pop('event')
+        data.pop('_kw')
+        data.pop('manager')
+        return data
+
     def __repr__(self):
         args = []
         for k in self.__kw.keys():
@@ -69,6 +79,36 @@ class Dummy(object):
     def set(self, key, value):
         setattr(self, key, value)
 
+    def copy(self):
+        data = self._get_dict()
+        return Dummy(self.__kind, **data)
+
+
+class FakeResponse:
+    def __init__(self, data):
+        self._data = data
+        self.links = []
+
+    def json(self):
+        return self._data
+
+
+class FakeSession:
+    def __init__(self, cloud):
+        self.cloud = cloud
+
+    def get(self, uri, headers, params):
+        if uri == '/servers/detail':
+            server_list = []
+            for server in self.cloud._server_list:
+                data = server._get_dict()
+                data['hostId'] = data.pop('host_id')
+                data['OS-EXT-AZ:availability_zone'] = data.pop('location').zone
+                data['os-extended-volumes:volumes_attached'] =\
+                    data.pop('volumes')
+                server_list.append(data)
+            return FakeResponse({'servers': server_list})
+
 
 class FakeOpenStackCloud(object):
     log = logging.getLogger("nodepool.FakeOpenStackCloud")
@@ -82,6 +122,7 @@ class FakeOpenStackCloud(object):
         return 100, 1000000
 
     def __init__(self, images=None, networks=None):
+        self.compute = FakeSession(self)
         self.pause_creates = False
         self._image_list = images
         if self._image_list is None:
@@ -225,7 +266,7 @@ class FakeOpenStackCloud(object):
                              name='FakeProvider create',
                              args=(s, 0.1, done_status))
         t.start()
-        return s
+        return s.copy()
 
     def _delete(self, name_or_id, instance_list):
         self.log.debug("Delete from %s" % (repr(instance_list),))
@@ -388,8 +429,9 @@ class FakeLaunchAndGetFaultCloud(FakeOpenStackCloud):
             *args, **kwargs,
             done_status='ERROR')
         # Don't wait for the async update
-        server.status = 'ERROR'
-        server.fault = {'message': 'quota server fault'}
+        orig_server = self._get(server.id, self._server_list)
+        orig_server.status = 'ERROR'
+        orig_server.fault = {'message': 'quota server fault'}
         raise OpenStackCloudCreateException('server', server.id)
 
 
