@@ -2,7 +2,7 @@ elements-dir: .
 images-dir: '{images_dir}'
 build-log-dir: '{build_log_dir}'
 
-max-hold-age: 10
+max-hold-age: 20
 
 zookeeper-servers:
   - host: {zookeeper_host}

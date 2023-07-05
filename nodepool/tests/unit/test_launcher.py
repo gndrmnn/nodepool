@@ -100,11 +100,12 @@ class TestLauncher(tests.DBTestCase):
             provider = pool.getProviderManager('fake-provider')
             cloud_node = provider.adapter._getServer(node.external_id)
             self.assertEqual(
-                cloud_node.metadata['nodepool_provider_name'],
+                cloud_node['metadata']['nodepool_provider_name'],
                 'fake-provider')
-            self.assertEqual(cloud_node.metadata['nodepool_pool_name'], 'main')
-            self.assertEqual(cloud_node.metadata['prop1'], 'foo')
-            self.assertEqual(cloud_node.metadata['dynamic-tenant'],
+            self.assertEqual(cloud_node['metadata']['nodepool_pool_name'],
+                             'main')
+            self.assertEqual(cloud_node['metadata']['prop1'], 'foo')
+            self.assertEqual(cloud_node['metadata']['dynamic-tenant'],
                              'Tenant is tenant-1')
 
             self.zk.lockNode(node, blocking=False)
@@ -736,11 +737,11 @@ class TestLauncher(tests.DBTestCase):
         provider = pool.getProviderManager('fake-provider')
         cloud_node = provider.adapter._getServer(nodes[0].external_id)
         self.assertEqual(
-            cloud_node.metadata['nodepool_provider_name'],
+            cloud_node['metadata']['nodepool_provider_name'],
             'fake-provider')
-        self.assertEqual(cloud_node.metadata['nodepool_pool_name'], 'main')
-        self.assertEqual(cloud_node.metadata['prop1'], 'foo')
-        self.assertEqual(cloud_node.metadata['dynamic-tenant'],
+        self.assertEqual(cloud_node['metadata']['nodepool_pool_name'], 'main')
+        self.assertEqual(cloud_node['metadata']['prop1'], 'foo')
+        self.assertEqual(cloud_node['metadata']['dynamic-tenant'],
                          'Tenant is None')
 
     def test_node_network_cli(self):
@@ -1110,9 +1111,9 @@ class TestLauncher(tests.DBTestCase):
 
         # Get fake cloud record and set status to DELETING
         manager = pool.getProviderManager('fake-provider')
-        for instance in manager.adapter._listServers():
+        for instance in manager.adapter._client._server_list:
             if instance.id == nodes[0].external_id:
-                instance.status = 'DELETED'
+                instance['status'] = 'DELETED'
                 break
 
         nodes[0].state = zk.DELETING
@@ -1123,7 +1124,7 @@ class TestLauncher(tests.DBTestCase):
 
         api_record_remains = False
         for instance in manager.adapter._listServers():
-            if instance.id == nodes[0].external_id:
+            if instance['id'] == nodes[0].external_id:
                 api_record_remains = True
                 break
         self.assertTrue(api_record_remains)
