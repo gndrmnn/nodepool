@@ -595,7 +595,7 @@ class DBTestCase(BaseTestCase):
             else:
                 # TODO: remove once all drivers use statemachine
                 servers = manager.listNodes()
-            if not (instance_id in [s.id for s in servers]):
+            if not (instance_id in [s['id'] for s in servers]):
                 break
 
     def waitForNodeRequestLockDeletion(self, request_id):
