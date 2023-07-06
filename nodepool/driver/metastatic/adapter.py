@@ -14,7 +14,6 @@
 
 import math
 import logging
-import json
 import time
 import threading
 
@@ -337,23 +336,22 @@ class MetastaticAdapter(statemachine.Adapter):
         # Find backing nodes
         backing_node_map = {}
         for node in self.zk.nodeIterator():
-            try:
-                user_data = json.loads(node.user_data)
-            except Exception:
+            if not node.user_data:
                 continue
-            if 'owner' not in user_data:
+            if 'owner' not in node.user_data:
                 continue
-            if user_data['owner'] == self.my_id:
+            if node.user_data['owner'] == self.my_id:
                 # This may be a backing node for us, but double check
                 contenders = self.zk.getNodeLockContenders(node)
                 if contenders and contenders[0] == self.my_id:
                     # We hold the lock on this node
-                    backing_node_record = BackingNodeRecord(user_data['label'],
-                                                            user_data['slots'])
+                    backing_node_record = BackingNodeRecord(
+                        node.user_data['label'],
+                        node.user_data['slots'])
                     backing_node_record.node_id = node.id
                     self.log.info("Found backing node %s for %s",
-                                  node.id, user_data['label'])
-                    self._addBackingNode(user_data['label'],
+                                  node.id, node.user_data['label'])
+                    self._addBackingNode(node.user_data['label'],
                                          backing_node_record)
                     backing_node_map[node.id] = backing_node_record
         # Assign nodes to backing nodes
@@ -451,11 +449,11 @@ class MetastaticAdapter(statemachine.Adapter):
                     node = self._getNode(node_id)
                     self.zk.lockNode(node, blocking=True, timeout=30,
                                      ephemeral=False, identifier=self.my_id)
-                    node.user_data = json.dumps({
+                    node.user_data = {
                         'owner': self.my_id,
                         'label': bnr.label_name,
                         'slots': bnr.slot_count,
-                    })
+                    }
                     node.state = zk.IN_USE
                     self.zk.storeNode(node)
                     self.zk.deleteNodeRequest(request)

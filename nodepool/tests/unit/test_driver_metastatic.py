@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
 import logging
 import os
 
@@ -194,9 +193,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.assertEqual(nodes, [node1, bn1])
 
         # Update the node to indicate it was for a non-existent label
-        user_data = json.loads(bn1.user_data)
-        user_data['label'] = 'old-label'
-        bn1.user_data = json.dumps(user_data)
+        bn1.user_data['label'] = 'old-label'
         self.zk.storeNode(bn1)
 
         # Restart the provider and make sure we load data correctly
