@@ -649,7 +649,7 @@ class AwsAdapter(statemachine.Adapter):
         dt_task_time = int(time.monotonic() - import_task_start_time)
         self.log.debug(f"Upload of {image_name} complete as "
                        f"{register_response['ImageId']} in {dt_import_time} s "
-                       f"import task took {dt_task_time} s")
+                       f"import task {task_id} took {dt_task_time} s")
         return register_response['ImageId']
 
     def _uploadImageImage(self, provider_image, image_name, filename,
@@ -735,7 +735,7 @@ class AwsAdapter(statemachine.Adapter):
         dt_task_time = int(time.monotonic() - import_task_start_time)
         self.log.debug(f"Upload of {image_name} complete as "
                        f"{task['ImageId']} in {dt_import_time} s "
-                       f"import task took {dt_task_time} s")
+                       f"import task {task_id} took {dt_task_time} s")
         # Last task returned from paginator above
         return task['ImageId']
 
