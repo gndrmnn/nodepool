@@ -35,7 +35,7 @@ from nodepool import stats
 from nodepool import version
 from nodepool.nodeutils import Timer
 
-CACHE_TTL = 1
+CACHE_TTL = 5
 
 
 def quota_from_flavor(flavor, label=None, volumes=None):
