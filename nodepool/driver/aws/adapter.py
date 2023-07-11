@@ -575,6 +575,9 @@ class AwsAdapter(statemachine.Adapter):
         # Tag the snapshot
         try:
             with self.non_mutating_rate_limiter:
+                if 'SnapshotId' not in task['SnapshotTaskDetail']:
+                    self.log.error(f"No SnapshotId in SnapshotTaskDetail "
+                                   f"task: {task}")
                 resp = self.ec2_client.describe_snapshots(
                     SnapshotIds=[task['SnapshotTaskDetail']['SnapshotId']])
                 snap = resp['Snapshots'][0]
