@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67459be9_f962d93f",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-11T03:36:17Z",
+      "side": 1,
+      "message": "Nit this should be kubernetes.",
+      "range": {
+        "startLine": 377,
+        "startChar": 31,
+        "endLine": 377,
+        "endChar": 40
+      },
+      "revId": "fc0fea41092610dd21babe89d5a85cad53c2e53a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b100de3_4b5e7351",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-11T03:36:17Z",
+      "side": 1,
+      "message": "See above.",
+      "range": {
+        "startLine": 387,
+        "startChar": 31,
+        "endLine": 387,
+        "endChar": 40
+      },
+      "revId": "fc0fea41092610dd21babe89d5a85cad53c2e53a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
