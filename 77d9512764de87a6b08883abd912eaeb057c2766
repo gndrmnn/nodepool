@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08e8f9a2_34686a87",
+        "filename": "nodepool/driver/azure/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-12T02:59:39Z",
+      "side": 1,
+      "message": "Small nit this appears to be azure specific behavior we are manipulating by setting this value. Might be worth a comment about why.",
+      "revId": "77d9512764de87a6b08883abd912eaeb057c2766",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
