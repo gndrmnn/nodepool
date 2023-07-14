@@ -238,6 +238,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
 
             if self.paused_handlers and not reasons_to_decline:
                 self.log.debug("Handler is paused, deferring request")
+                time.sleep(0.25)
                 continue
 
             # At this point, we are either unpaused, or we know we
