@@ -83,6 +83,16 @@ QUOTA_CODES = {
     'hpc': ['L-F7808C92', '']
 }
 
+VOLUME_QUOTA_CODES = {
+    'io1': dict(iops='L-B3A130E6', storage='L-FD252861'),
+    'io2': dict(iops='L-8D977E7E', storage='L-09BD8365'),
+    'sc1': dict(storage='L-17AF77E8'),
+    'gp2': dict(storage='L-D18FCD1D'),
+    'gp3': dict(storage='L-7A658B76'),
+    'standard': dict(storage='L-9CF3C2EB'),
+    'st1': dict(storage='L-82ACEF56'),
+}
+
 CACHE_TTL = 10
 ON_DEMAND = 0
 SPOT = 1
@@ -194,9 +204,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
             if instance is None:
                 return
             self.instance = instance
-            self.quota = self.adapter._getQuotaForInstanceType(
-                self.instance.instance_type,
-                SPOT if self.label.use_spot else ON_DEMAND)
+            self.quota = self.adapter.getQuotaForLabel(self.label)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -360,23 +368,31 @@ class AwsAdapter(statemachine.Adapter):
             self._deleteObject(resource.id)
 
     def listInstances(self):
+        volumes = {}
+        for volume in self._listVolumes():
+            volumes[volume.volume_id] = volume
         for instance in self._listInstances():
             if instance.state["Name"].lower() == "terminated":
                 continue
             quota = self._getQuotaForInstanceType(
                 instance.instance_type,
                 SPOT if instance.instance_lifecycle == 'spot' else ON_DEMAND)
+            for attachment in instance.block_device_mappings:
+                volume = volumes.get(attachment['Ebs']['VolumeId'])
+                quota.add(self._getQuotaForVolume(volume))
             yield AwsInstance(self.provider, instance, quota)
 
     def getQuotaLimits(self):
-        # Get the instance types that this provider handles
+        # Get the instance and volume types that this provider handles
         instance_types = {}
+        volume_types = set()
         for pool in self.provider.pools.values():
             for label in pool.labels.values():
                 if label.instance_type not in instance_types:
                     instance_types[label.instance_type] = set()
                 instance_types[label.instance_type].add(
                     SPOT if label.use_spot else ON_DEMAND)
+                volume_types.add(label.volume_type)
         args = dict(default=math.inf)
         for instance_type in instance_types:
             for market_type_option in instance_types[instance_type]:
@@ -390,18 +406,46 @@ class AwsAdapter(statemachine.Adapter):
                         instance_type)
                     continue
                 with self.non_mutating_rate_limiter:
-                    self.log.debug("Getting quota limits for %s", code)
+                    self.log.debug("Getting EC2 quota limits for %s", code)
                     response = self.aws_quotas.get_service_quota(
                         ServiceCode='ec2',
                         QuotaCode=code,
                     )
                     args[code] = response['Quota']['Value']
+        for volume_type in volume_types:
+            vquota_codes = VOLUME_QUOTA_CODES.get(volume_type)
+            if not vquota_codes:
+                self.log.warning(
+                    "Unknown quota code for volume type: %s",
+                    volume_type)
+                continue
+            for resource, code in vquota_codes.items():
+                if code in args:
+                    continue
+                with self.non_mutating_rate_limiter:
+                    self.log.debug("Getting EBS quota limits for %s", code)
+                    response = self.aws_quotas.get_service_quota(
+                        ServiceCode='ebs',
+                        QuotaCode=code,
+                    )
+                    value = response['Quota']['Value']
+                    # Unit mismatch: storage limit is in TB, but usage
+                    # is in GB.  Translate the limit to GB.
+                    if resource == 'storage':
+                        value *= 1000
+                    args[code] = value
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
-        return self._getQuotaForInstanceType(
+        quota = self._getQuotaForInstanceType(
             label.instance_type,
             SPOT if label.use_spot else ON_DEMAND)
+        if label.volume_type:
+            quota.add(self._getQuotaForVolumeType(
+                label.volume_type,
+                storage=label.volume_size,
+                iops=label.iops))
+        return quota
 
     def uploadImage(self, provider_image, image_name, filename,
                     image_format, metadata, md5, sha256):
@@ -788,6 +832,26 @@ class AwsAdapter(statemachine.Adapter):
         args = dict(cores=cores, ram=ram, instances=1)
         if code:
             args[code] = vcpus
+
+        return QuotaInformation(**args)
+
+    def _getQuotaForVolume(self, volume):
+        volume_type = volume.volume_type
+        vquota_codes = VOLUME_QUOTA_CODES.get(volume_type, {})
+        args = {}
+        if 'iops' in vquota_codes and getattr(volume, 'iops', None):
+            args[vquota_codes['iops']] = volume.iops
+        if 'storage' in vquota_codes and getattr(volume, 'size', None):
+            args[vquota_codes['storage']] = volume.size
+        return QuotaInformation(**args)
+
+    def _getQuotaForVolumeType(self, volume_type, storage=None, iops=None):
+        vquota_codes = VOLUME_QUOTA_CODES.get(volume_type, {})
+        args = {}
+        if 'iops' in vquota_codes and iops is not None:
+            args[vquota_codes['iops']] = iops
+        if 'storage' in vquota_codes and storage is not None:
+            args[vquota_codes['storage']] = storage
         return QuotaInformation(**args)
 
     # This method is wrapped with an LRU cache in the constructor.
@@ -900,7 +964,14 @@ class AwsAdapter(statemachine.Adapter):
     def _completeCreateInstance(self, future):
         if not future.done():
             return None
-        return future.result()
+        try:
+            return future.result()
+        except botocore.exceptions.ClientError as error:
+            if error.response['Error']['Code'] == 'VolumeLimitExceeded':
+                # Re-raise as a quota exception so that the
+                # statemachine driver resets quota.
+                raise exceptions.QuotaException(str(error))
+            raise
 
     def _createInstance(self, label, image_external_id,
                         tags, hostname, log):

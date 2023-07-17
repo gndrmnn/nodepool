@@ -438,6 +438,65 @@ class TestDriverAws(tests.DBTestCase):
         # Assert that the second request is still being deferred
         req2 = self.waitForNodeRequest(req2, (zk.REQUESTED,))
 
+    @aws_quotas({
+        'L-1216C47A': 200,  # instance
+        'L-D18FCD1D': 1.0,  # gp2 storage (TB)
+        'L-7A658B76': 1.0,  # gp3 storage (TB)
+    })
+    def test_aws_volume_quota(self):
+        # Test volume quotas
+
+        # Moto doesn't correctly pass through iops when creating
+        # instances, so we can't test volume types that require iops.
+        # Therefore in this test we only cover storage quotas.
+        configfile = self.setup_config('aws/aws-volume-quota.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        # Create an gp2 request
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('volume-gp2')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
+        # Create a second gp2 node request; this should be
+        # over quota so it won't be fulfilled.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('volume-gp2')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        # Make sure we're paused while we attempt to fulfill the
+        # second request.
+        pool_worker = pool.getPoolWorkers('ec2-us-west-2')
+        for _ in iterate_timeout(30, Exception, 'paused handler'):
+            if pool_worker[0].paused_handlers:
+                break
+
+        # Release the first node so that the second can be fulfilled.
+        node1.state = zk.USED
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # Make sure the second high node exists now.
+        req2 = self.waitForNodeRequest(req2)
+        self.assertSuccess(req2)
+
+        # Create a gp3 node request which should succeed even
+        # though we're at quota for gp2 (but not gp3).
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('volume-gp3')
+        self.zk.storeNodeRequest(req3)
+        self.log.debug("Waiting for request %s", req3.id)
+        req3 = self.waitForNodeRequest(req3)
+        self.assertSuccess(req3)
+
     def test_aws_node(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404')
         node = self.assertSuccess(req)
