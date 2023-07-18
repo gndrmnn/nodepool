@@ -223,11 +223,16 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 in self.nodepool.config.tenant_resource_limits \
                 and has_quota_support
 
-            if check_tenant_quota and not self._hasTenantQuota(req, pm):
-                # Defer request for it to be handled and fulfilled at a later
-                # run.
-                log.debug("Deferring request because it would "
-                          "exceed tenant quota")
+            try:
+                if check_tenant_quota and not self._hasTenantQuota(req, pm):
+                    # Defer request for it to be handled and fulfilled
+                    # at a later run.
+                    log.debug("Deferring request because it would "
+                              "exceed tenant quota")
+                    continue
+            except Exception:
+                log.exception("Error when checking tenant quota, "
+                              "deferring request")
                 continue
 
             # Get a request handler to help decide whether we should

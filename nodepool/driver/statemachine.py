@@ -654,6 +654,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.possibly_leaked_nodes = {}
         self.possibly_leaked_uploads = {}
         self.stop_thread = None
+        self.error_labels = set()
 
     def start(self, zk_conn):
         super().start(zk_conn)
@@ -783,6 +784,16 @@ class StateMachineProvider(Provider, QuotaSupport):
             qi = self.adapter.getQuotaForLabel(provider_label)
             self.log.debug("Quota required for %s: %s",
                            provider_label.name, qi)
+        except exceptions.RuntimeConfigurationException as e:
+            # The adapter reported a permanent inability to work with
+            # this label, so we take the label offline and return an
+            # empty quota info object so that the request can proceed
+            # and then fail.
+            self.log.error("Error getting quota for %s and "
+                           "marking label permanently unavailable: %s",
+                           provider_label.name, str(e))
+            self.error_labels.add(ntype)
+            qi = QuotaInformation()
         except NotImplementedError:
             qi = QuotaInformation()
         self.label_quota_cache.setdefault(provider_label, qi)
@@ -818,6 +829,9 @@ class StateMachineProvider(Provider, QuotaSupport):
             used_quota.add(qi)
 
         return used_quota
+
+    def errorLabels(self):
+        return list(self.error_labels)
 
     def startNodeCleanup(self, node):
         nd = StateMachineNodeDeleter(self._zk, self, node)
