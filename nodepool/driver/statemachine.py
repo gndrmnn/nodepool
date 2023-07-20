@@ -887,6 +887,7 @@ class StateMachineProvider(Provider, QuotaSupport):
                                            f"resource for upload {upload_id}")
         self.possibly_leaked_nodes = newly_leaked_nodes
         self.possibly_leaked_uploads = newly_leaked_uploads
+        self.log.debug("Possibly leaked uploads: %s", newly_leaked_uploads)
 
     # Image handling
 

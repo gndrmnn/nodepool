@@ -337,12 +337,15 @@ class AwsAdapter(statemachine.Adapter):
                               AwsResource.TYPE_SNAPSHOT, snap.id)
         if self.provider.object_storage:
             for obj in self._listObjects():
+                self.log.debug("Found S3 object: %s", obj.key)
                 with self.non_mutating_rate_limiter:
                     try:
                         tags = self.s3_client.get_object_tagging(
                             Bucket=obj.bucket_name, Key=obj.key)
                     except botocore.exceptions.ClientError:
                         continue
+                self.log.debug("Found S3 object %s with tags %s",
+                               obj.key, tags['TagSet'])
                 yield AwsResource(tag_list_to_dict(tags['TagSet']),
                                   AwsResource.TYPE_OBJECT, obj.key)
 
