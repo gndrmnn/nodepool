@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "52b8bf90_d7f8c09f",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "If it isn\u0027t, nodepool will be very unhappy for other reasons, but we can be defensive here.",
+      "parentUuid": "56e278d6_a628cb1c",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c36a7a0f_1d26e971",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-07-25T02:15:10Z",
       "side": 1,
       "message": "Should IP addresses be .get() values since some clouds may be ipv4 only or ipv6 only?",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4826773b_1d1b3726",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "I\u0027m interpreting this question as \"Why did you use get here?\"  and it\u0027s actually because the ip addrs are filled in by a separate method (add_server_interfaces) and we don\u0027t call that in the cleanup leaked resources code path.  The other thing about v4 or v6 only may also be true.  :)",
+      "parentUuid": "c36a7a0f_1d26e971",
       "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -69,6 +105,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cd66548_961acc28",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c5de9326_47eef5df",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56b61b2a_7c3f1f53",
@@ -82,6 +136,24 @@
       "writtenOn": "2023-07-25T02:15:10Z",
       "side": 1,
       "message": "If you decide to .get() metadata above you should update this line too.",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6325cca_a7e5ee17",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56b61b2a_7c3f1f53",
       "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -103,6 +175,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e22143ad_a90064a1",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "Oops.  Fixed.",
+      "parentUuid": "222abb32_39bfa9ad",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10bdb520_1abc4b61",
@@ -120,6 +210,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2de3faa1_10de8830",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "Yep.  This part is copied from sdk.",
+      "parentUuid": "10bdb520_1abc4b61",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "edc54767_a61afcc7",
@@ -133,6 +241,24 @@
       "writtenOn": "2023-07-25T02:15:10Z",
       "side": 1,
       "message": "In https://review.opendev.org/c/zuul/nodepool/+/887907/6/nodepool/tests/__init__.py we continue to use manager.adapter._listServers(). Is this update necessary?",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2d6c608_753e37b8",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1114,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-07-25T18:29:37Z",
+      "side": 1,
+      "message": "Yes.  The old code was relying on the fact that the openstack server object returned by _listServers was the *actual* fake openstack server object that our fake openstack cloud kept in its server list (to put that another way, it\u0027s like the object in the client\u0027s memory was shared with the object in the server\u0027s memory).  The intent here is to manipulate the server-side view of the instance, and then verify the client-side update is correct.\n\nAnyway, since we now return something other than the actual server-side fake object: the fake json response object, this is updated to mutate the server-side data directly.",
+      "parentUuid": "edc54767_a61afcc7",
       "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
