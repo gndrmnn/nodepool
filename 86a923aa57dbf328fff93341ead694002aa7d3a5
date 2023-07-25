@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0b770fd_e058276f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "I think at least some of the inline comments will need to be addressed (particularly the need for .get() in some places and the pagination reset fix).",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56e278d6_a628cb1c",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "I think metadata isn\u0027t required by the api so this may not exist? Might be safer to use .get().",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c36a7a0f_1d26e971",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "Should IP addresses be .get() values since some clouds may be ipv4 only or ipv6 only?",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5de9326_47eef5df",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "I would use .get() here since we are testing the truthyness of this value and using element access may raise an exception if None.",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56b61b2a_7c3f1f53",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "If you decide to .get() metadata above you should update this line too.",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "222abb32_39bfa9ad",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "This overwrites the previous request\u0027s resource list rather than appending to it. I think we may end up losing resources if we end up doing paged requests.",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10bdb520_1abc4b61",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "I guess parts.path is fully rooted so it ends up replacing the old url path which included the query parameters.",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edc54767_a61afcc7",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1114,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-07-25T02:15:10Z",
+      "side": 1,
+      "message": "In https://review.opendev.org/c/zuul/nodepool/+/887907/6/nodepool/tests/__init__.py we continue to use manager.adapter._listServers(). Is this update necessary?",
+      "revId": "86a923aa57dbf328fff93341ead694002aa7d3a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
