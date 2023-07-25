@@ -168,6 +168,7 @@ class TestDriverAws(tests.DBTestCase):
     def tearDown(self):
         self.mock_ec2.stop()
         self.mock_s3.stop()
+        self.mock_iam.stop()
         super().tearDown()
 
     def setup_config(self, *args, **kw):
