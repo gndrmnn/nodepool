@@ -21,6 +21,7 @@ import signal
 import nodepool.cmd
 import nodepool.launcher
 import nodepool.webapp
+import nodepool.lib.repl
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +39,8 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
         parser.add_argument('-s', dest='secure',
                             help='path to secure file')
         parser.add_argument('--no-webapp', action='store_true')
+        parser.add_argument('--repl', action='store_true',
+                            help="Start a REPL on port 3000")
         return parser
 
     def parse_args(self):
@@ -72,6 +75,10 @@ class NodePoolLauncherApp(nodepool.cmd.NodepoolDaemonApp):
 
         if not self.args.no_webapp:
             self.webapp.start()
+
+        if self.args.repl:
+            self.repl = nodepool.lib.repl.REPLServer(self.pool)
+            self.repl.start()
 
         while True:
             signal.pause()

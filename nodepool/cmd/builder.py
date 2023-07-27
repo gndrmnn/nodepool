@@ -15,6 +15,7 @@ import sys
 
 from nodepool import builder
 import nodepool.cmd
+import nodepool.lib.repl
 
 
 class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
@@ -40,6 +41,8 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
         parser.add_argument('--upload-workers', dest='upload_workers',
                             default=4, help='number of upload workers',
                             type=int)
+        parser.add_argument('--repl', action='store_true',
+                            help="Start a REPL on port 3000")
         return parser
 
     def parse_args(self):
@@ -57,6 +60,9 @@ class NodePoolBuilderApp(nodepool.cmd.NodepoolDaemonApp):
         signal.signal(signal.SIGINT, self.sigint_handler)
 
         self.nb.start()
+        if self.args.repl:
+            self.repl = nodepool.lib.repl.REPLServer(self.nb)
+            self.repl.start()
 
         while True:
             signal.pause()
