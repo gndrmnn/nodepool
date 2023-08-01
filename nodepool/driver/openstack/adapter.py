@@ -995,7 +995,7 @@ class OpenStackAdapter(statemachine.Adapter):
             # some openstacksdk's return True if any port was
             # cleaned, rather than the count.  Just set it to 1 to
             # indicate something happened.
-            if type(did_clean) == bool:
+            if type(did_clean) is bool:
                 did_clean = 1
             if self._statsd:
                 key = ('nodepool.provider.%s.leaked.floatingips'
