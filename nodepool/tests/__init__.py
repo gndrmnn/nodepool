@@ -516,20 +516,31 @@ class DBTestCase(BaseTestCase):
                 break
         self.wait_for_threads()
 
-    def waitForBuild(self, image_name, build_id, states=None,
-                     check_files=True):
+    def waitForBuild(self, image_name, states=None, check_files=True,
+                     ignore_list=None):
         if states is None:
             states = (zk.READY,)
 
-        base = "-".join([image_name, build_id])
+        if ignore_list:
+            ignore_list = [b.id for b in ignore_list]
+        else:
+            ignore_list = []
 
         for _ in iterate_timeout(ONE_MINUTE, Exception,
                                  "Image build record to reach state",
                                  interval=1):
             self.wait_for_threads()
-            build = self.zk.getBuild(image_name, build_id)
-            if build and build.state in states:
+            build = None
+            for b in self.zk.getBuilds(image_name):
+                if b.state not in states:
+                    continue
+                if b.id in ignore_list:
+                    continue
+                build = b
+            if build:
                 break
+
+        base = "-".join([image_name, build.id])
 
         # We should only expect a dib manifest with a successful build.
         while check_files and build.state == zk.READY:

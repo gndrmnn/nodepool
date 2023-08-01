@@ -390,7 +390,7 @@ class CleanupWorker(BaseWorker):
                 self.log.exception("Exception cleaning up local build %s:",
                                    local_build)
 
-    LOCAL_BUILDS_RE = re.compile(r'^(.*)-(\d+)\.(?:\w+)$')
+    LOCAL_BUILDS_RE = re.compile(r'^(.*)-([abcdef\d]+)\.(?:\w+)$')
 
     def _getLocalBuilds(self):
         seen = set()
@@ -628,13 +628,14 @@ class BuildWorker(BaseWorker):
             return
         log_dir = self._getBuildLogRoot(name)
         keep = max(self._config.build_log_retention, 1)
-        existing = sorted(os.listdir(log_dir))
+        existing = os.listdir(log_dir)
         existing = [f for f in existing if f.startswith(name)]
+        existing = [os.path.join(log_dir, f) for f in existing]
+        existing = sorted(existing, key=os.path.getmtime)
         delete = existing[:0 - keep]
         for f in delete:
-            fp = os.path.join(log_dir, f)
-            self.log.info("Deleting old build log %s" % (fp,))
-            os.unlink(fp)
+            self.log.info("Deleting old build log %s", f)
+            os.unlink(f)
 
     def _getBuildLog(self, name, build_id):
         log_dir = self._getBuildLogRoot(name)

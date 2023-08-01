@@ -80,7 +80,7 @@ class TestWebApp(tests.DBTestCase):
         # cache update
         self.useBuilder(configfile)
 
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
 
         req = request.Request(
@@ -90,7 +90,7 @@ class TestWebApp(tests.DBTestCase):
         self.assertEqual(f.info().get('Content-Type'),
                          'text/plain; charset=UTF-8')
         data = f.read()
-        self.assertIn("| 0000000001 | fake-image | ready |",
+        self.assertIn(f"| {image.build_id} | fake-image | ready |",
                       data.decode('utf8'))
 
     def test_image_list_json(self):
@@ -105,7 +105,7 @@ class TestWebApp(tests.DBTestCase):
         # cache update
         self.useBuilder(configfile)
 
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
 
         req = request.Request(
@@ -116,7 +116,7 @@ class TestWebApp(tests.DBTestCase):
                          'application/json')
         data = f.read()
         objs = json.loads(data.decode('utf8'))
-        self.assertDictContainsSubset({'id': '0000000001',
+        self.assertDictContainsSubset({'id': image.build_id,
                                        'image': 'fake-image',
                                        'provider': 'fake-provider',
                                        'state': 'ready'}, objs[0])
@@ -133,7 +133,7 @@ class TestWebApp(tests.DBTestCase):
         # cache update
         self.useBuilder(configfile)
 
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
         self.waitForNodes('fake-label')
 
         req = request.Request(
@@ -146,7 +146,7 @@ class TestWebApp(tests.DBTestCase):
         objs = json.loads(data.decode('utf8'))
         # make sure this is valid json and has some of the
         # non-changing keys
-        self.assertDictContainsSubset({'id': 'fake-image-0000000001',
+        self.assertDictContainsSubset({'id': f'fake-image-{image.build_id}',
                                        'formats': ['qcow2'],
                                        'state': 'ready'}, objs[0])
 
