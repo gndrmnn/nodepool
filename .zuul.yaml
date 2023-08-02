@@ -21,7 +21,7 @@
           label: centos-7
         # Runs nodepool
         - name: launcher
-          label: fedora-36
+          label: debian-bookworm
     required-projects:
       - zuul/nodepool
 
@@ -285,7 +285,7 @@
         - nodepool-nox-py311
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
-        # - nodepool-functional-openshift
+        - nodepool-functional-openshift
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-build-image
@@ -299,7 +299,7 @@
             nodeset: ubuntu-focal
         - nodepool-nox-py311
         - nodepool-functional-k8s
-        # - nodepool-functional-openshift
+        - nodepool-functional-openshift
         - zuul-quick-start:
             requires: zuul-container-image
             dependencies: nodepool-upload-image
