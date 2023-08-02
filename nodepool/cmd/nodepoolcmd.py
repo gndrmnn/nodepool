@@ -266,7 +266,7 @@ class NodePoolCmd(NodepoolApp):
             uploads = []
             for image in provider.diskimages:
                 # Build list of provider images as recorded in ZK
-                for bnum in self.zk.getBuildNumbers(image):
+                for bnum in self.zk.getBuildIds(image):
                     uploads.extend(
                         self.zk.getUploads(image, bnum,
                                            provider.name,
@@ -325,8 +325,8 @@ class NodePoolCmd(NodepoolApp):
         self.list(node_id=node.id)
 
     def dib_image_delete(self):
-        (image, build_num) = self.args.id.rsplit('-', 1)
-        build = self.zk.getBuild(image, build_num)
+        (image, build_id) = self.args.id.rsplit('-', 1)
+        build = self.zk.getBuild(image, build_id)
         if not build:
             print("Build %s not found" % self.args.id)
             return

@@ -673,7 +673,7 @@ class DBTestCase(BaseTestCase):
         self.waitForConfig(pool)
         actual_uploads = set()
         for image_name in self.zk.getImageNames():
-            for build_no in self.zk.getBuildNumbers(image_name):
+            for build_no in self.zk.getBuildIds(image_name):
                 for provider in self.zk.getBuildProviders(
                         image_name, build_no):
                     for upload_no in self.zk.getImageUploadNumbers(

@@ -112,29 +112,29 @@ class TestZooKeeper(tests.DBTestCase):
                 with self.zk.imageBuildLock(image, blocking=True, timeout=1):
                     pass
 
-    def test_imageBuildNumberLock(self):
-        path = self.zk._imageBuildNumberLockPath("ubuntu-trusty", "0000")
-        with self.zk.imageBuildNumberLock(
+    def test_imageBuildIdLock(self):
+        path = self.zk._imageBuildIdLockPath("ubuntu-trusty", "0000")
+        with self.zk.imageBuildIdLock(
             "ubuntu-trusty", "0000", blocking=False
         ):
             self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
-    def test_imageBuildNumberLock_exception_nonblocking(self):
+    def test_imageBuildIdLock_exception_nonblocking(self):
         image = "ubuntu-trusty"
         bnum = "0000000000"
-        with self.zk.imageBuildNumberLock(image, bnum, blocking=False):
+        with self.zk.imageBuildIdLock(image, bnum, blocking=False):
             with testtools.ExpectedException(
                 npe.ZKLockException, "Did not get lock on .*"
             ):
-                with self.zk.imageBuildNumberLock(image, bnum, blocking=False):
+                with self.zk.imageBuildIdLock(image, bnum, blocking=False):
                     pass
 
-    def test_imageBuildNumberLock_exception_blocking(self):
+    def test_imageBuildIdLock_exception_blocking(self):
         image = "ubuntu-trusty"
         bnum = "0000000000"
-        with self.zk.imageBuildNumberLock(image, bnum, blocking=False):
+        with self.zk.imageBuildIdLock(image, bnum, blocking=False):
             with testtools.ExpectedException(npe.TimeoutException):
-                with self.zk.imageBuildNumberLock(
+                with self.zk.imageBuildIdLock(
                     image, bnum, blocking=True, timeout=1
                 ):
                     pass
@@ -271,22 +271,22 @@ class TestZooKeeper(tests.DBTestCase):
         orig_data.builder_id = 'ABC-123'
         orig_data.state = zk.READY
         with self.zk.imageBuildLock(image, blocking=True, timeout=1):
-            build_num = self.zk.storeBuild(image, orig_data)
+            build_id = self.zk.storeBuild(image, orig_data)
 
-        data = self.zk.getBuild(image, build_num)
+        data = self.zk.getBuild(image, build_id)
         self.assertEqual(orig_data.builder, data.builder)
         self.assertEqual(orig_data.builder_id, data.builder_id)
         self.assertEqual(orig_data.state, data.state)
         self.assertEqual(orig_data.state_time, data.state_time)
-        self.assertEqual(build_num, data.id)
+        self.assertEqual(build_id, data.id)
         self.assertEqual(self.zk.getImageNames(), ["ubuntu-trusty"])
-        self.assertEqual(self.zk.getBuildNumbers("ubuntu-trusty"), [build_num])
+        self.assertEqual(self.zk.getBuildIds("ubuntu-trusty"), [build_id])
 
     def test_getImageNames_not_found(self):
         self.assertEqual(self.zk.getImageNames(), [])
 
-    def test_getBuildNumbers_not_found(self):
-        self.assertEqual(self.zk.getBuildNumbers("ubuntu-trusty"), [])
+    def test_getBuildIds_not_found(self):
+        self.assertEqual(self.zk.getBuildIds("ubuntu-trusty"), [])
 
     def test_getBuildProviders_not_found(self):
         self.assertEqual(self.zk.getBuildProviders(
@@ -314,14 +314,14 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_storeImageUpload_invalid_build(self):
         image = "ubuntu-trusty"
-        build_number = "0000000001"
+        build_id = uuid.uuid4().hex
         provider = "rax"
         orig_data = zk.ImageUpload()
 
         with testtools.ExpectedException(
             npe.ZKException, "Cannot find build .*"
         ):
-            self.zk.storeImageUpload(image, build_number, provider, orig_data)
+            self.zk.storeImageUpload(image, build_id, provider, orig_data)
 
     def test_store_and_get_image_upload(self):
         image = "ubuntu-trusty"
@@ -331,10 +331,10 @@ class TestZooKeeper(tests.DBTestCase):
         orig_data.state = zk.READY
         orig_data.format = "qcow2"
 
-        build_number = self.zk.storeBuild(image, zk.ImageBuild())
-        upload_id = self.zk.storeImageUpload(image, build_number, provider,
+        build_id = self.zk.storeBuild(image, zk.ImageBuild())
+        upload_id = self.zk.storeImageUpload(image, build_id, provider,
                                              orig_data)
-        data = self.zk.getImageUpload(image, build_number, provider, upload_id)
+        data = self.zk.getImageUpload(image, build_id, provider, upload_id)
 
         self.assertEqual(upload_id, data.id)
         self.assertEqual(orig_data.external_id, data.external_id)
@@ -342,10 +342,10 @@ class TestZooKeeper(tests.DBTestCase):
         self.assertEqual(orig_data.state_time, data.state_time)
         self.assertEqual(orig_data.format, data.format)
         self.assertEqual(self.zk.getBuildProviders("ubuntu-trusty",
-                                                   build_number),
+                                                   build_id),
                          [provider])
         self.assertEqual(self.zk.getImageUploadNumbers("ubuntu-trusty",
-                                                       build_number,
+                                                       build_id,
                                                        provider),
                          [upload_id])
 
@@ -364,20 +364,20 @@ class TestZooKeeper(tests.DBTestCase):
 
     def test_buildLock_orphan(self):
         image = "ubuntu-trusty"
-        build_number = "0000000003"
+        build_id = uuid.uuid4().hex
 
-        path = self.zk._imageBuildNumberLockPath(image, build_number)
+        path = self.zk._imageBuildIdLockPath(image, build_id)
 
         # Pretend we still think the image build exists
         # (e.g. multiple cleanup workers itertating over builds)
-        with self.zk.imageBuildNumberLock(image, build_number, blocking=False):
-            # We now created an empty build number node
+        with self.zk.imageBuildIdLock(image, build_id, blocking=False):
+            # We now created an empty build id node
             pass
 
         self.assertIsNotNone(self.zk.kazoo_client.exists(path))
 
         # Should not throw an exception because of the empty upload
-        self.assertIsNone(self.zk.getBuild(image, build_number))
+        self.assertIsNone(self.zk.getBuild(image, build_id))
 
     def test_getMostRecentBuilds(self):
         image = "ubuntu-trusty"
