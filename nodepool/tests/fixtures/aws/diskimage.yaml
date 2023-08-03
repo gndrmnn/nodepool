@@ -64,3 +64,4 @@ diskimages:
       BASE_IMAGE_FILE: Fedora-Cloud-Base-20141029-21_Beta.x86_64.qcow2
     metadata:
       diskimage_metadata: diskimage
+    username: another_user
