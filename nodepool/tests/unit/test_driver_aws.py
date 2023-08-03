@@ -656,7 +656,7 @@ class TestDriverAws(tests.DBTestCase):
         self.useBuilder(configfile)
 
         image = self.waitForImage('ec2-us-west-2', 'fake-image')
-        self.assertEqual(image.username, 'zuul')
+        self.assertEqual(image.username, 'another_user')
 
         ec2_image = self.ec2.Image(image.external_id)
         self.assertEqual(ec2_image.state, 'available')
@@ -683,6 +683,7 @@ class TestDriverAws(tests.DBTestCase):
         self.assertIsNotNone(node.launcher)
         self.assertEqual(node.connection_type, 'ssh')
         self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.username, 'another_user')
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
