@@ -320,6 +320,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
             self.manager.invalidateQuotaCache()
+            if self.handler.pool.ignore_provider_quota:
+                # This doesn't count as an attempt if provider quotas are
+                # ignored
+                self.attempts = max(0, self.attempts - 1)
         except Exception as e:
             self.log.exception("Launch attempt %d/%d for node %s, failed:",
                                self.attempts, self.retries, node.id)
