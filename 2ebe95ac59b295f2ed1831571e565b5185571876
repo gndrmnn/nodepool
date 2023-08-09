@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0b6fb61_f7e1469f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-09T14:36:00Z",
+      "side": 1,
+      "message": "I\u0027m not sure the assertion here is supported by the docs (which says that we check against max-servers).  Can you elaborate on the basis for this?\n\nI think some people set very high attempts values to deal with expected-unexpected quota errors.\n\nIf we wanted to change that (and I\u0027m not sure we do), then this change would need a test to codify and verify the behavior.",
+      "revId": "2ebe95ac59b295f2ed1831571e565b5185571876",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
