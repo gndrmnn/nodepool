@@ -16,6 +16,24 @@
       "message": "I\u0027m not sure the assertion here is supported by the docs (which says that we check against max-servers).  Can you elaborate on the basis for this?\n\nI think some people set very high attempts values to deal with expected-unexpected quota errors.\n\nIf we wanted to change that (and I\u0027m not sure we do), then this change would need a test to codify and verify the behavior.",
       "revId": "2ebe95ac59b295f2ed1831571e565b5185571876",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e270c71_696c4632",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2023-08-09T14:55:25Z",
+      "side": 1,
+      "message": "In our system, quota is dynamically adjusted based on demand; as such we have to set ignore-provider-quota so that Zuul generates the requests that create the \"pressure\" needed to get more quota when necessary. In the case where there is sufficient capacity to satisfy the quota demands, this reacts quickly enough that there are no problems. However, when OpenStack is at capacity, the quota isn\u0027t going to increase, which means the jobs eventually just fails with NODE_FAILURE, which is not good. In addition, we need to keep up the \"pressure\" to prevent the quota we want from going elsewhere.\n\nSetting a very high attempts value is an option I guess, but it really doesn\u0027t seem like a great solution; If I\u0027m setting the flag that says that I want to ignore the quota, that implies (to me anyway) that quota errors are something you expect to happen at some point; unlike the case where nodepool is attempting to obey the quota and quota error is more exceptional.\n\n\nI don\u0027t think it\u0027s against the docs, according to my reading. IMHO, the docs are clarifying that even when you set ignore-provider-quota, max-server is still respected (as it always is). IOW, ingore-provider-quota doesn\u0027t mean \"ignore max-servers\". My patch doesn\u0027t change this.\n\nYa, I can write tests, just wanted to make sure the idea wasn\u0027t going to get rejected before going through that effort.",
+      "parentUuid": "d0b6fb61_f7e1469f",
+      "revId": "2ebe95ac59b295f2ed1831571e565b5185571876",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
