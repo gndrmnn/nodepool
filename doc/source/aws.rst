@@ -186,6 +186,17 @@ Selecting the ``aws`` driver adds the following options to the
       ``ova``, ``vhd``, ``vhdx``, ``vmdk``, ``raw`` (not all of which
       are supported by diskimage-builder).
 
+   .. attr:: image-import-timeout
+      :type: int
+
+      Generally there is no limit on the amount of time a successful
+      image import can take.  However, some import tasks may encounter
+      temporary resource limitations from AWS.  In these cases, if
+      this value is set, Nodepool will retry the import tasks until
+      the timeout is reached.  If this is unset (the default), then
+      the first resource limitation detected will result in an error.
+      The value is in seconds.
+
    .. attr:: cloud-images
       :type: list
 

@@ -16,6 +16,7 @@
 import logging
 import uuid
 
+import botocore
 import boto3
 
 
@@ -136,8 +137,14 @@ class FakeAws:
         self.tasks = {}
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
+        self.fail_import_count = 0
 
     def import_snapshot(self, *args, **kw):
+        while self.fail_import_count:
+            self.fail_import_count -= 1
+            raise botocore.exceptions.ClientError(
+                {'Error': {'Code': 'ResourceCountLimitExceeded'}},
+                'ImportSnapshot')
         task_id = uuid.uuid4().hex
         task = make_import_snapshot_stage_1(
             task_id,
@@ -162,6 +169,11 @@ class FakeAws:
         return snap_id
 
     def import_image(self, *args, **kw):
+        while self.fail_import_count:
+            self.fail_import_count -= 1
+            raise botocore.exceptions.ClientError(
+                {'Error': {'Code': 'ResourceCountLimitExceeded'}},
+                'ImportImage')
         task_id = uuid.uuid4().hex
         task = make_import_image_stage_1(
             task_id,

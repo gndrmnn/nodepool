@@ -27,6 +27,7 @@ providers:
     region-name: us-west-2
     object-storage:
       bucket-name: nodepool
+    image-import-timeout: 60
     diskimages:
       - name: fake-image
         tags:
