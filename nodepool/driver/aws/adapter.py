@@ -434,22 +434,36 @@ class AwsAdapter(statemachine.Adapter):
                              bucket_name, object_filename):
         # Import snapshot
         self.log.debug(f"Importing {image_name} as snapshot")
-        with self.rate_limiter:
-            import_snapshot_task = self.ec2_client.import_snapshot(
-                DiskContainer={
-                    'Format': image_format,
-                    'UserBucket': {
-                        'S3Bucket': bucket_name,
-                        'S3Key': object_filename,
-                    },
-                },
-                TagSpecifications=[
-                    {
-                        'ResourceType': 'import-snapshot-task',
-                        'Tags': tag_dict_to_list(metadata),
-                    },
-                ]
-            )
+        timeout = time.time()
+        if self.provider.image_import_timeout:
+            timeout += self.provider.image_import_timeout
+        while True:
+            try:
+                with self.rate_limiter:
+                    import_snapshot_task = self.ec2_client.import_snapshot(
+                        DiskContainer={
+                            'Format': image_format,
+                            'UserBucket': {
+                                'S3Bucket': bucket_name,
+                                'S3Key': object_filename,
+                            },
+                        },
+                        TagSpecifications=[
+                            {
+                                'ResourceType': 'import-snapshot-task',
+                                'Tags': tag_dict_to_list(metadata),
+                            },
+                        ]
+                    )
+                    break
+            except botocore.exceptions.ClientError as error:
+                if error.response['Error']['Code'] == 'ResourceCountLimitExceeded':
+                    if time.time() < timeout:
+                        self.log.warning("AWS error: '%s' will retry",
+                                         str(error))
+                        time.sleep(self.IMAGE_UPLOAD_SLEEP)
+                        continue
+                raise
         task_id = import_snapshot_task['ImportTaskId']
 
         paginator = self.ec2_client.get_paginator(
@@ -527,23 +541,37 @@ class AwsAdapter(statemachine.Adapter):
                           bucket_name, object_filename):
         # Import image as AMI
         self.log.debug(f"Importing {image_name} as AMI")
-        with self.rate_limiter:
-            import_image_task = self.ec2_client.import_image(
-                Architecture=provider_image.architecture,
-                DiskContainers=[{
-                    'Format': image_format,
-                    'UserBucket': {
-                        'S3Bucket': bucket_name,
-                        'S3Key': object_filename,
-                    },
-                }],
-                TagSpecifications=[
-                    {
-                        'ResourceType': 'import-image-task',
-                        'Tags': tag_dict_to_list(metadata),
-                    },
-                ]
-            )
+        timeout = time.time()
+        if self.provider.image_import_timeout:
+            timeout += self.provider.image_import_timeout
+        while True:
+            try:
+                with self.rate_limiter:
+                    import_image_task = self.ec2_client.import_image(
+                        Architecture=provider_image.architecture,
+                        DiskContainers=[{
+                            'Format': image_format,
+                            'UserBucket': {
+                                'S3Bucket': bucket_name,
+                                'S3Key': object_filename,
+                            },
+                        }],
+                        TagSpecifications=[
+                            {
+                                'ResourceType': 'import-image-task',
+                                'Tags': tag_dict_to_list(metadata),
+                            },
+                        ]
+                    )
+                    break
+            except botocore.exceptions.ClientError as error:
+                if error.response['Error']['Code'] == 'ResourceCountLimitExceeded':
+                    if time.time() < timeout:
+                        self.log.warning("AWS error: '%s' will retry",
+                                         str(error))
+                        time.sleep(self.IMAGE_UPLOAD_SLEEP)
+                        continue
+                raise
         task_id = import_image_task['ImportTaskId']
 
         paginator = self.ec2_client.get_paginator(

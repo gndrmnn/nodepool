@@ -298,6 +298,8 @@ class AwsProviderConfig(ProviderConfig):
         self.object_storage = self.provider.get('object-storage')
         self.image_type = self.provider.get('image-format', 'raw')
         self.image_name_format = '{image_name}-{timestamp}'
+        self.image_import_timeout = self.provider.get(
+            'image-import-timeout', None)
         self.post_upload_hook = self.provider.get('post-upload-hook')
         self.max_servers = self.provider.get('max-servers', math.inf)
         self.max_cores = self.provider.get('max-cores', math.inf)
@@ -347,6 +349,7 @@ class AwsProviderConfig(ProviderConfig):
             'launch-retries': int,
             'object-storage': object_storage,
             'image-format': v.Any('ova', 'vhd', 'vhdx', 'vmdk', 'raw'),
+            'image-import-timeout': int,
             'max-servers': int,
             'max-cores': int,
             'max-ram': int,

@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The AWS driver now supports an
+    :attr:`providers.[aws].image-import-timeout` option to control
+    automatic retries and timeouts when AWS import task resource
+    limits are reached.
