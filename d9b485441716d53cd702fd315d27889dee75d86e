@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0dd8277_f5938d3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-08-11T15:48:41Z",
+      "side": 1,
+      "message": "The current job failure is due to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug\u003d1030129 https://bugs.debian.org/cgi-bin/bugreport.cgi?bug\u003d1023748. The tl;dr is that java packaging is broken on bookworm. They have fixed testing but the fixes have not made their way back to stable/bookworm yet.",
+      "revId": "d9b485441716d53cd702fd315d27889dee75d86e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
