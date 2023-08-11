@@ -52,6 +52,24 @@
       "parentUuid": "d0b6fb61_f7e1469f",
       "revId": "2ebe95ac59b295f2ed1831571e565b5185571876",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "713ab465_38f6e9eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2023-08-11T21:20:45Z",
+      "side": 1,
+      "message": "Yep, you are correct. There is no reason for us to be setting ignore-provider-quota. I removed that and everything works fine. Sorry for the noise.",
+      "parentUuid": "5c2ac202_f6e283fc",
+      "revId": "2ebe95ac59b295f2ed1831571e565b5185571876",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
