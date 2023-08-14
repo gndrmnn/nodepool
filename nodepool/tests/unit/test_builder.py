@@ -230,10 +230,10 @@ class TestNodePoolBuilder(tests.DBTestCase):
         configfile = self.setup_config('node_two_image.yaml')
         self.useBuilder(configfile)
         self.waitForImage('fake-provider', 'fake-image')
-        self.waitForImage('fake-provider', 'fake-image2')
+        image2 = self.waitForImage('fake-provider', 'fake-image2')
         self.replace_config(configfile, 'node_two_image_remove.yaml')
         self.waitForImageDeletion('fake-provider', 'fake-image2')
-        self.waitForBuildDeletion('fake-image2', '0000000001')
+        self.waitForBuildDeletion('fake-image2', image2.build_id)
 
     def test_image_removal_two_builders(self):
         # This tests the gap between building and uploading an image.
@@ -246,7 +246,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
         configfile1 = self.setup_config('builder_image1.yaml')
         builder1 = self.useBuilder(configfile1)
         self.waitForImage('fake-provider1', 'fake-image1')
-        self.waitForBuild('fake-image1', '0000000001')
+        self.waitForBuild('fake-image1')
         for worker in builder1._upload_workers:
             worker.shutdown()
             worker.join()
@@ -260,7 +260,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
         self.waitForImage('fake-provider2', 'fake-image2')
         # Don't check files because the image path switched to the
         # second builder; we're really only interested in ZK.
-        self.waitForBuild('fake-image1', '0000000001', check_files=False)
+        self.waitForBuild('fake-image1', check_files=False)
 
     def test_image_removal_dib_deletes_first(self):
         # Break cloud image deleting
@@ -285,13 +285,13 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                  'DIB disk files did not delete first'):
             self.wait_for_threads()
             files = builder.DibImageFile.from_image_id(
-                self._config_images_dir.path, 'fake-image2-0000000001')
+                self._config_images_dir.path, f'fake-image2-{img.build_id}')
             if not files:
                 break
         # Check image is still in fake-provider cloud
         img.state = zk.DELETING
         self.assertEqual(
-            self.zk.getImageUpload('fake-image2', '0000000001',
+            self.zk.getImageUpload('fake-image2', img.build_id,
                                    'fake-provider', '0000000001'),
             img)
 
@@ -301,7 +301,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
         # Check image is removed from cloud and zk
         self.waitForImageDeletion('fake-provider', 'fake-image2', match=img)
         # Check build is removed from zk
-        self.waitForBuildDeletion('fake-image2', '0000000001')
+        self.waitForBuildDeletion('fake-image2', img.build_id)
 
     def test_image_rebuild_age(self):
         self._test_image_rebuild_age()
@@ -309,40 +309,40 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def _test_image_rebuild_age(self, expire=86400):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
-        build = self.waitForBuild('fake-image', '0000000001')
+        build1 = self.waitForBuild('fake-image')
         log_path1 = os.path.join(self._config_build_log_dir.path,
-                                 'fake-image-0000000001.log')
+                                 f'fake-image-{build1.id}.log')
         self.assertTrue(os.path.exists(log_path1))
         image = self.waitForImage('fake-provider', 'fake-image')
         # Expire rebuild-age (default: 1day) to force a new build.
-        build.state_time -= expire
+        build1.state_time -= expire
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
-            self.zk.storeBuild('fake-image', build, '0000000001')
-        self.waitForBuild('fake-image', '0000000002')
+            self.zk.storeBuild('fake-image', build1, build1.id)
+        build2 = self.waitForBuild('fake-image', ignore_list=[build1])
         log_path2 = os.path.join(self._config_build_log_dir.path,
-                                 'fake-image-0000000002.log')
+                                 f'fake-image-{build2.id}.log')
         self.assertTrue(os.path.exists(log_path2))
         self.waitForImage('fake-provider', 'fake-image', [image])
         builds = self.zk.getBuilds('fake-image', zk.READY)
         self.assertEqual(len(builds), 2)
-        return (build, image)
+        return (build1, build2, image)
 
     def test_image_rotation(self):
         # Expire rebuild-age (2days), to avoid problems when expiring 2 images.
-        self._test_image_rebuild_age(expire=172800)
-        build = self.waitForBuild('fake-image', '0000000002')
+        build1, build2, image = self._test_image_rebuild_age(expire=172800)
         # Expire rebuild-age (default: 1day) to force a new build.
-        build.state_time -= 86400
+        build2.state_time -= 86400
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
-            self.zk.storeBuild('fake-image', build, '0000000002')
-        self.waitForBuildDeletion('fake-image', '0000000001')
-        self.waitForBuild('fake-image', '0000000003')
+            self.zk.storeBuild('fake-image', build2, build2.id)
+        self.waitForBuildDeletion('fake-image', build1.id)
+        build3 = self.waitForBuild('fake-image',
+                                   ignore_list=[build1, build2])
         log_path1 = os.path.join(self._config_build_log_dir.path,
-                                 'fake-image-0000000001.log')
+                                 f'fake-image-{build1.id}.log')
         log_path2 = os.path.join(self._config_build_log_dir.path,
-                                 'fake-image-0000000002.log')
+                                 f'fake-image-{build2.id}.log')
         log_path3 = os.path.join(self._config_build_log_dir.path,
-                                 'fake-image-0000000003.log')
+                                 f'fake-image-{build3.id}.log')
         # Our log retention is set to 1, so the first log should be deleted.
         self.assertFalse(os.path.exists(log_path1))
         self.assertTrue(os.path.exists(log_path2))
@@ -361,16 +361,15 @@ class TestNodePoolBuilder(tests.DBTestCase):
         # total of 2 diskimages on disk at all times.
 
         # Expire rebuild-age (2days), to avoid problems when expiring 2 images.
-        build001, image001 = self._test_image_rebuild_age(expire=172800)
-        build002 = self.waitForBuild('fake-image', '0000000002')
+        build1, build2, image1 = self._test_image_rebuild_age(expire=172800)
 
         # Make sure 2rd diskimage build was uploaded.
-        image002 = self.waitForImage('fake-provider', 'fake-image', [image001])
-        self.assertEqual(image002.build_id, '0000000002')
+        image2 = self.waitForImage('fake-provider', 'fake-image',
+                                   ignore_list=[image1])
 
         # Delete external name / id so we can test exception handlers.
         upload = self.zk.getUploads(
-            'fake-image', '0000000001', 'fake-provider', zk.READY)[0]
+            'fake-image', build1.id, 'fake-provider', zk.READY)[0]
         upload.external_name = None
         upload.external_id = None
         with self.zk.imageUploadLock(upload.image_name, upload.build_id,
@@ -380,32 +379,33 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                      upload.provider_name, upload, upload.id)
 
         # Expire rebuild-age (default: 1day) to force a new build.
-        build002.state_time -= 86400
+        build2.state_time -= 86400
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
-            self.zk.storeBuild('fake-image', build002, '0000000002')
-        self.waitForBuildDeletion('fake-image', '0000000001')
+            self.zk.storeBuild('fake-image', build2, build2.id)
+        self.waitForBuildDeletion('fake-image', build1.id)
 
         # Make sure fake-image for fake-provider is removed from zookeeper.
         upload = self.zk.getUploads(
-            'fake-image', '0000000001', 'fake-provider')
+            'fake-image', build1.id, 'fake-provider')
         self.assertEqual(len(upload), 0)
-        self.waitForBuild('fake-image', '0000000003')
+        build3 = self.waitForBuild('fake-image',
+                                   ignore_list=[build1, build2])
 
         # Ensure we only have 2 builds on disk.
         builds = self.zk.getBuilds('fake-image', zk.READY)
         self.assertEqual(len(builds), 2)
 
         # Make sure 3rd diskimage build was uploaded.
-        image003 = self.waitForImage(
-            'fake-provider', 'fake-image', [image001, image002])
-        self.assertEqual(image003.build_id, '0000000003')
+        image3 = self.waitForImage(
+            'fake-provider', 'fake-image', ignore_list=[image1, image2])
+        self.assertEqual(image3.build_id, build3.id)
 
     def test_cleanup_hard_upload_fails(self):
         configfile = self.setup_config('node.yaml')
         self.useBuilder(configfile)
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
 
-        upload = self.zk.getUploads('fake-image', '0000000001',
+        upload = self.zk.getUploads('fake-image', image.build_id,
                                     'fake-provider', zk.READY)[0]
 
         # Store a new ZK node as UPLOADING to represent a hard fail
@@ -433,16 +433,8 @@ class TestNodePoolBuilder(tests.DBTestCase):
         found = False
         for _ in iterate_timeout(10, Exception, 'image builds to fail', 0.1):
             builds = self.zk.getBuilds('fake-image')
-            for build in builds:
-                # Lexicographical order
-                if build and build.id > '0000000001':
-                    # We know we've built more than one image and we know
-                    # they have all failed. We can't check if they have
-                    # failed directly because they may be cleaned up.
-                    found = build.id
-                    break
-                time.sleep(0.1)
-            if found:
+            if builds:
+                found = builds[0].id
                 break
 
         # Now replace the config with a valid config and check that the image
@@ -460,7 +452,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_diskimage_build_only(self):
         configfile = self.setup_config('node_diskimage_only.yaml')
         self.useBuilder(configfile)
-        build_tar = self.waitForBuild('fake-image', '0000000001')
+        build_tar = self.waitForBuild('fake-image')
 
         self.assertEqual(build_tar._formats, ['tar'])
         self.assertReportedStat('nodepool.dib_image_build.'
@@ -476,9 +468,8 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_diskimage_build_formats(self):
         configfile = self.setup_config('node_diskimage_formats.yaml')
         self.useBuilder(configfile)
-        build_default = self.waitForBuild('fake-image-default-format',
-                                          '0000000001')
-        build_vhd = self.waitForBuild('fake-image-vhd', '0000000001')
+        build_default = self.waitForBuild('fake-image-default-format')
+        build_vhd = self.waitForBuild('fake-image-vhd')
 
         self.assertEqual(build_default._formats, ['qcow2'])
         self.assertEqual(build_vhd._formats, ['vhd'])
@@ -491,15 +482,15 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_diskimage_build_parents(self):
         configfile = self.setup_config('node_diskimage_parents.yaml')
         self.useBuilder(configfile)
-        self.waitForBuild('parent-image-1', '0000000001')
-        self.waitForBuild('parent-image-2', '0000000001')
+        self.waitForBuild('parent-image-1')
+        self.waitForBuild('parent-image-2')
 
     @mock.patch('select.poll')
     def test_diskimage_build_timeout(self, mock_poll):
         configfile = self.setup_config('diskimage_build_timeout.yaml')
         builder.BUILD_PROCESS_POLL_TIMEOUT = 500
         self.useBuilder(configfile, cleanup_interval=0)
-        self.waitForBuild('fake-image', '0000000001', states=(zk.FAILED,))
+        self.waitForBuild('fake-image', states=(zk.FAILED,))
 
     def test_session_loss_during_build(self):
         configfile = self.setup_config('node.yaml')
@@ -513,7 +504,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
 
         # Disable cleanup thread to verify builder cleans up after itself
         bldr = self.useBuilder(configfile, cleanup_interval=0)
-        self.waitForBuild('fake-image', '0000000001', states=(zk.BUILDING,))
+        self.waitForBuild('fake-image', states=(zk.BUILDING,))
 
         # The build should now be paused just before writing out any DIB files.
         # Mock the next call to storeBuild() which is supposed to be the update
@@ -587,9 +578,9 @@ class TestNodePoolBuilder(tests.DBTestCase):
     def test_post_upload_hook(self):
         configfile = self.setup_config('node_upload_hook.yaml')
         bldr = self.useBuilder(configfile)
-        self.waitForImage('fake-provider', 'fake-image')
+        image = self.waitForImage('fake-provider', 'fake-image')
 
         images_dir = bldr._config.images_dir
         post_file = os.path.join(
-            images_dir, 'fake-image-0000000001.qcow2.post')
+            images_dir, f'fake-image-{image.build_id}.qcow2.post')
         self.assertTrue(os.path.exists(post_file), 'Post hook file exists')

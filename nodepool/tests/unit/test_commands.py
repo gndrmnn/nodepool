@@ -254,10 +254,10 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.patch_argv('-c', configfile, 'dib-image-delete',
                         'fake-image-%s' % (builds[0].id))
         nodepoolcmd.main()
-        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.waitForBuildDeletion('fake-image', builds[0].id)
         # Check that fake-image-0000000001 doesn't exist
         self.assert_listed(
-            configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
+            configfile, ['dib-image-list'], 0, f'fake-image-{builds[0].id}', 0)
 
     def test_dib_image_delete_custom_image_creation(self):
         # Test deletion of images without a .d manifest folder
@@ -274,22 +274,22 @@ class TestNodepoolCMD(tests.DBTestCase):
         builds = self.zk.getMostRecentBuilds(1, 'fake-image', zk.READY)
         # Delete manifest folder to simulate custom image creation
         shutil.rmtree(os.path.join(builder._config.images_dir,
-                                   'fake-image-0000000001.d'))
+                                   f'fake-image-{builds[0].id}.d'))
         # But ensure image is still present
         self.assertTrue(
             os.path.exists(os.path.join(builder._config.images_dir,
-                                        'fake-image-0000000001.qcow2')))
+                                        f'fake-image-{builds[0].id}.qcow2')))
         # Delete the image
         self.patch_argv('-c', configfile, 'dib-image-delete',
                         'fake-image-%s' % (builds[0].id))
         nodepoolcmd.main()
-        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.waitForBuildDeletion('fake-image', builds[0].id)
         # Check that fake-image-0000000001 doesn't exist
         self.assert_listed(
-            configfile, ['dib-image-list'], 0, 'fake-image-0000000001', 0)
+            configfile, ['dib-image-list'], 0, f'fake-image-{builds[0].id}', 0)
         self.assertFalse(
             os.path.exists(os.path.join(builder._config.images_dir,
-                                        'fake-image-0000000001.qcow2')))
+                                        f'fake-image-{builds[0].id}.qcow2')))
 
     def test_dib_image_delete_two_builders(self):
         # This tests deleting an image when its builder is offline
@@ -316,19 +316,20 @@ class TestNodepoolCMD(tests.DBTestCase):
         nodepoolcmd.main()
 
         # 4. Verify builder2 deleted the ZK records, but image is still on disk
-        self.waitForBuildDeletion('fake-image', '0000000001')
+        self.waitForBuildDeletion('fake-image', builds[0].id)
         self.assertTrue(
             os.path.exists(os.path.join(builder1._config.images_dir,
-                                        'fake-image-0000000001.d')))
+                                        f'fake-image-{builds[0].id}.d')))
         self.assertFalse(
             os.path.exists(os.path.join(builder2._config.images_dir,
-                                        'fake-image-0000000001.d')))
+                                        f'fake-image-{builds[0].id}.d')))
 
         # 5. Start builder1 and verify it deletes image on disk
         builder1 = self.useBuilder(configfile1)
         for _ in iterate_timeout(30, AssertionError, 'image file delete'):
-            if not os.path.exists(os.path.join(builder1._config.images_dir,
-                                               'fake-image-0000000001.d')):
+            if not os.path.exists(
+                    os.path.join(builder1._config.images_dir,
+                                 f'fake-image-{builds[0].id}.d')):
                 break
 
     def test_delete(self):
@@ -650,15 +651,15 @@ class TestNodepoolCMD(tests.DBTestCase):
         self.startPool(pool)
         self.waitForNodes('fake-label')
 
-        build = self.waitForBuild('fake-image', '0000000001')
+        build = self.waitForBuild('fake-image')
         # Delete the first build so that we have a hole in our
         # numbering.  This lets us validate that we reconstruct the
         # sequence state correctly.
         build.state = zk.DELETING
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
-            self.zk.storeBuild('fake-image', build, '0000000001')
-        self.waitForBuildDeletion('fake-image', '0000000001')
-        self.waitForBuild('fake-image', '0000000002')
+            self.zk.storeBuild('fake-image', build, build.id)
+        self.waitForBuildDeletion('fake-image', build.id)
+        build2 = self.waitForBuild('fake-image', ignore_list=[build])
 
         pool.stop()
         for worker in builder._upload_workers:
@@ -668,7 +669,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         # Save a copy of the data in ZK
         old_data = self.getZKTree('/nodepool/images')
         # We aren't backing up the lock data
-        old_data.pop('/nodepool/images/fake-image/builds/0000000002'
+        old_data.pop(f'/nodepool/images/fake-image/builds/{build2.id}'
                      '/providers/fake-provider/images/lock')
         old_data.pop('/nodepool/images/fake-image/builds/lock')
 
@@ -692,7 +693,7 @@ class TestNodepoolCMD(tests.DBTestCase):
         # First test a new upload of the existing image and make sure
         # it uses the correct sequence number.
         upload = self.waitForUpload('fake-provider', 'fake-image',
-                                    '0000000002', '0000000001')
+                                    build2.id, '0000000001')
         upload.state = zk.DELETING
         with self.zk.imageUploadLock(upload.image_name, upload.build_id,
                                      upload.provider_name, blocking=True,
@@ -702,15 +703,12 @@ class TestNodepoolCMD(tests.DBTestCase):
         # We skip at least one number because upload lock is a sequence
         # node too (this is why builds and uploads start at 1 instead of 0).
         upload = self.waitForUpload('fake-provider', 'fake-image',
-                                    '0000000002', '0000000003')
+                                    build2.id, '0000000003')
 
-        # Now build a new image and make sure it uses the correct
-        # sequence number.
-        build = self.waitForBuild('fake-image', '0000000002')
+        # Now build a new image and make sure it uses a different id.
+        build2 = self.waitForBuild('fake-image', ignore_list=[build])
         # Expire rebuild-age (default: 1day) to force a new build.
-        build.state_time -= 86400
+        build2.state_time -= 86400
         with self.zk.imageBuildLock('fake-image', blocking=True, timeout=1):
-            self.zk.storeBuild('fake-image', build, '0000000002')
-        # We skip at least one number because build lock is a sequence
-        # node too (this is why builds and uploads start at 1 instead of 0).
-        self.waitForBuild('fake-image', '0000000004')
+            self.zk.storeBuild('fake-image', build2, build2.id)
+        self.waitForBuild('fake-image', ignore_list=[build, build2])

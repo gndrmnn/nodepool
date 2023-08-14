@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    New diskimage build ids are now in UUID format instead of integer
+    sequences with leading zeroes.  This facilitates faster
+    restoration of images from backup data on systems with large
+    numbers of image builds.  Existing builds will continue to use the
+    integer format and can coexist with the new format.

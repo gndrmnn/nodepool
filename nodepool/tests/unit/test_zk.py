@@ -262,7 +262,7 @@ class TestZooKeeper(tests.DBTestCase):
         image = "ubuntu-trusty"
         b1 = self.zk.storeBuild(image, zk.ImageBuild())
         b2 = self.zk.storeBuild(image, zk.ImageBuild())
-        self.assertLess(int(b1), int(b2))
+        self.assertNotEqual(b1, b2)
 
     def test_store_and_get_build(self):
         image = "ubuntu-trusty"
