@@ -319,9 +319,9 @@ class BaseTestCase(testtools.TestCase):
         if value:
             self.assertNotEqual(kind, None)
 
-        for _ in iterate_timeout(5 * SECOND, Exception,
-                                 "Find statsd event",
-                                 interval=0.1):
+        start = time.time()
+        timeout = 5
+        while time.time() <= (start + timeout):
             # Note our fake statsd just queues up results in a queue.
             # We just keep going through them until we find one that
             # matches, or fail out.  If statsd pipelines are used,
@@ -358,6 +358,10 @@ class BaseTestCase(testtools.TestCase):
                     # this key matches
                     return True
 
+        stats = itertools.chain.from_iterable(
+            [s.decode('utf-8').split('\n') for s in self.statsd.stats])
+        for stat in stats:
+            self.log.debug("Stat: %s", stat)
         raise Exception("Key %s not found in reported stats" % key)
 
 
