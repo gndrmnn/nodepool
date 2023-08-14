@@ -69,7 +69,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
     """
 
     def __init__(self, handler, node, provider_config):
-        super().__init__()
+        launcher = handler.pw.nodepool
+        super().__init__(launcher.statsd)
         # Based on utils.NodeLauncher
         logger = logging.getLogger(
             f"nodepool.StateMachineNodeLauncher.{provider_config.name}")

@@ -79,7 +79,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         self.launcher_id = "%s-%s-%s" % (socket.getfqdn(),
                                          self.name,
                                          uuid.uuid4().hex)
-        stats.StatsReporter.__init__(self)
+        stats.StatsReporter.__init__(self, nodepool.statsd)
 
     def getPriority(self):
         pool = self.getPoolConfig()
@@ -966,6 +966,7 @@ class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
         self.log = logging.getLogger('nodepool.StatsWorker')
         self.stats_event = threading.Event()
         self.election = None
+        stats.StatsReporter.__init__(self, nodepool.statsd)
 
     def stop(self):
         self._running = False
@@ -977,8 +978,6 @@ class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
 
     def _run(self):
         try:
-            stats.StatsReporter.__init__(self)
-
             if not self._statsd:
                 return
 
