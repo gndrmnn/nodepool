@@ -250,24 +250,16 @@
           DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
 
 - job:
-    name: nodepool-nox-py38
-    description: |
-      Nodepool unit tests with ZooKeeper running
-    parent: nox-py38
-    pre-run: playbooks/nodepool-nox/pre.yaml
-    vars: &nodepool_nox_vars
-      nox_environment:
-        NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
-        NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
-        NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
-
-- job:
     name: nodepool-nox-py311
     description: |
       Nodepool unit tests with ZooKeeper running
     parent: nox-py311
     pre-run: playbooks/nodepool-nox/pre.yaml
-    vars: *nodepool_nox_vars
+    vars:
+      nox_environment:
+        NODEPOOL_ZK_CA: /opt/zookeeper/ca/certs/cacert.pem
+        NODEPOOL_ZK_CERT: /opt/zookeeper/ca/certs/client.pem
+        NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
     nodeset: ubuntu-jammy
 
 - project:
@@ -278,10 +270,11 @@
       jobs:
         - opendev-buildset-registry
         - nodepool-build-image
-        - zuul-nox-docs
+        - zuul-nox-docs:
+            vars:
+              nox_force_python: "3.11"
+              python_version: "3.11"
         - nox-linters
-        - nodepool-nox-py38:
-            nodeset: ubuntu-focal
         - nodepool-nox-py311
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
@@ -293,10 +286,11 @@
     gate:
       jobs:
         - nodepool-upload-image
-        - zuul-nox-docs
+        - zuul-nox-docs:
+            vars:
+              nox_force_python: "3.11"
+              python_version: "3.11"
         - nox-linters
-        - nodepool-nox-py38:
-            nodeset: ubuntu-focal
         - nodepool-nox-py311
         - nodepool-functional-k8s
         - nodepool-functional-openshift
