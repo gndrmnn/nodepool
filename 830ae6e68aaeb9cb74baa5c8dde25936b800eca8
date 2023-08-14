@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f454a6e_78ed2d1b",
+        "filename": ".zuul.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-08-14T16:55:52Z",
+      "side": 1,
+      "message": "Should you run the linters under python3.11 as well? I think this is less critical as it is an external tool running against the code base rather than the code base itself. But may be nice to keep in sync.",
+      "revId": "830ae6e68aaeb9cb74baa5c8dde25936b800eca8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
