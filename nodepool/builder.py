@@ -548,7 +548,7 @@ class CleanupWorker(BaseWorker):
                 # images.  We're about to start deleting files, so
                 # make sure that the dib image state reflects that.
                 if build.state != zk.DELETING:
-                    with self._zk.imageBuildNumberLock(
+                    with self._zk.imageBuildIdLock(
                         image, build.id, blocking=False
                     ):
                         build.state = zk.DELETING

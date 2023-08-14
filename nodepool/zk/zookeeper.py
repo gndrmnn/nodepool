@@ -1085,17 +1085,17 @@ class ImageCache(NodepoolTreeCache):
 
     def objectFromDict(self, d, key):
         if len(key) == 4:
-            image, build_number, provider, upload_number = key
+            image, build_id, provider, upload_number = key
             return ImageUpload.fromDict(d,
-                                        build_number,
+                                        build_id,
                                         provider,
                                         image,
                                         upload_number)
         elif len(key) == 2:
-            image, build_number = key
+            image, build_id = key
             return ImageBuild.fromDict(d,
                                        image,
-                                       build_number)
+                                       build_id)
         elif len(key) == 1:
             image = key[0]
             return Image(image)
@@ -1276,8 +1276,8 @@ class ZooKeeper(ZooKeeperBase):
         image = parts[1]
         return (image,)
 
-    def _imageBuildNumberPath(self, image, build_number):
-        return "%s/%s" % (self._imageBuildsPath(image), build_number)
+    def _imageBuildIdPath(self, image, build_id):
+        return "%s/%s" % (self._imageBuildsPath(image), build_id)
 
     def _parseImageBuildPath(self, path):
         if not path.startswith(self.IMAGE_ROOT):
@@ -1295,16 +1295,16 @@ class ZooKeeper(ZooKeeperBase):
     def _imageBuildLockPath(self, image):
         return "%s/lock" % self._imageBuildsPath(image)
 
-    def _imageBuildNumberLockPath(self, image, build_number):
-        return "%s/lock" % self._imageBuildNumberPath(image, build_number)
+    def _imageBuildIdLockPath(self, image, build_id):
+        return "%s/lock" % self._imageBuildIdPath(image, build_id)
 
-    def _imageProviderPath(self, image, build_number):
+    def _imageProviderPath(self, image, build_id):
         return "%s/%s/providers" % (self._imageBuildsPath(image),
-                                    build_number)
+                                    build_id)
 
-    def _imageUploadPath(self, image, build_number, provider):
+    def _imageUploadPath(self, image, build_id, provider):
         return "%s/%s/providers/%s/images" % (self._imageBuildsPath(image),
-                                              build_number,
+                                              build_id,
                                               provider)
 
     def _parseImageUploadPath(self, path):
@@ -1322,14 +1322,14 @@ class ZooKeeper(ZooKeeperBase):
         upload = parts[7]
         return image, build, provider, upload
 
-    def _imageUploadLockPath(self, image, build_number, provider):
-        return "%s/lock" % self._imageUploadPath(image, build_number,
+    def _imageUploadLockPath(self, image, build_id, provider):
+        return "%s/lock" % self._imageUploadPath(image, build_id,
                                                  provider)
 
-    def _imageUploadNumberLockPath(self, image, build_number, provider,
+    def _imageUploadNumberLockPath(self, image, build_id, provider,
                                    upload_number):
         return "%s/%s/lock" % (
-            self._imageUploadPath(image, build_number, provider),
+            self._imageUploadPath(image, build_id, provider),
             upload_number)
 
     def _launcherPath(self, launcher):
@@ -1406,9 +1406,9 @@ class ZooKeeper(ZooKeeperBase):
 
         return lock
 
-    def _getImageBuildNumberLock(self, image, build_number,
-                                 blocking=True, timeout=None):
-        lock_path = self._imageBuildNumberLockPath(image, build_number)
+    def _getImageBuildIdLock(self, image, build_id,
+                             blocking=True, timeout=None):
+        lock_path = self._imageBuildIdLockPath(image, build_id)
         try:
             lock = Lock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
@@ -1417,8 +1417,8 @@ class ZooKeeper(ZooKeeperBase):
                 "Timeout trying to acquire lock %s" % lock_path)
         except kze.NoNodeError:
             have_lock = False
-            self.log.error("Image build number not found for locking: %s, %s",
-                           build_number, image)
+            self.log.error("Image build id not found for locking: %s, %s",
+                           build_id, image)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
@@ -1427,9 +1427,9 @@ class ZooKeeper(ZooKeeperBase):
 
         return lock
 
-    def _getImageUploadNumberLock(self, image, build_number, provider,
+    def _getImageUploadNumberLock(self, image, build_id, provider,
                                   upload_number, blocking=True, timeout=None):
-        lock_path = self._imageUploadNumberLockPath(image, build_number,
+        lock_path = self._imageUploadNumberLockPath(image, build_id,
                                                     provider, upload_number)
         try:
             lock = Lock(self.kazoo_client, lock_path)
@@ -1441,7 +1441,7 @@ class ZooKeeper(ZooKeeperBase):
             have_lock = False
             self.log.error("Image upload number %s not found for locking: "
                            "%s, %s, %s",
-                           upload_number, build_number, provider, image)
+                           upload_number, build_id, provider, image)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
@@ -1450,9 +1450,9 @@ class ZooKeeper(ZooKeeperBase):
 
         return lock
 
-    def _getImageUploadLock(self, image, build_number, provider,
+    def _getImageUploadLock(self, image, build_id, provider,
                             blocking=True, timeout=None):
-        lock_path = self._imageUploadLockPath(image, build_number, provider)
+        lock_path = self._imageUploadLockPath(image, build_id, provider)
         try:
             lock = Lock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
@@ -1462,7 +1462,7 @@ class ZooKeeper(ZooKeeperBase):
         except kze.NoNodeError:
             have_lock = False
             self.log.error("Image upload not found for locking: %s, %s, %s",
-                           build_number, provider, image)
+                           build_id, provider, image)
 
         # If we aren't blocking, it's possible we didn't get the lock
         # because someone else has it.
@@ -1540,17 +1540,17 @@ class ZooKeeper(ZooKeeperBase):
                 lock.release()
 
     @contextmanager
-    def imageBuildNumberLock(self, image, build_number,
-                             blocking=True, timeout=None):
+    def imageBuildIdLock(self, image, build_id,
+                         blocking=True, timeout=None):
         '''
         Context manager to use for locking _specific_ image builds.
 
-        Obtains a write lock for the specified image build number. This is
-        used for locking a build number during the cleanup phase of the
+        Obtains a write lock for the specified image build id. This is
+        used for locking a build id during the cleanup phase of the
         builder.
 
         :param str image: Name of the image
-        :param str build_number: The image build number to lock.
+        :param str build_id: The image build id to lock.
         :param bool blocking: Whether or not to block on trying to
             acquire the lock
         :param int timeout: When blocking, how long to wait for the lock
@@ -1562,15 +1562,15 @@ class ZooKeeper(ZooKeeperBase):
         '''
         lock = None
         try:
-            lock = self._getImageBuildNumberLock(image, build_number,
-                                                 blocking, timeout)
+            lock = self._getImageBuildIdLock(image, build_id,
+                                             blocking, timeout)
             yield
         finally:
             if lock:
                 lock.release()
 
     @contextmanager
-    def imageUploadLock(self, image, build_number, provider,
+    def imageUploadLock(self, image, build_id, provider,
                         blocking=True, timeout=None):
         '''
         Context manager to use for locking image uploads.
@@ -1578,7 +1578,7 @@ class ZooKeeper(ZooKeeperBase):
         Obtains a write lock for the specified image upload.
 
         :param str image: Name of the image.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param bool blocking: Whether or not to block on trying to
             acquire the lock
@@ -1591,7 +1591,7 @@ class ZooKeeper(ZooKeeperBase):
         '''
         lock = None
         try:
-            lock = self._getImageUploadLock(image, build_number, provider,
+            lock = self._getImageUploadLock(image, build_id, provider,
                                             blocking, timeout)
             yield
         finally:
@@ -1683,13 +1683,13 @@ class ZooKeeper(ZooKeeperBase):
             except kze.NoNodeError:
                 pass
 
-    def getBuildNumbers(self, image):
+    def getBuildIds(self, image):
         '''
         Retrieve the builds available for an image.
 
         :param str image: The image name.
 
-        :returns: A list of image build numbers or the empty list.
+        :returns: A list of image build ids or the empty list.
         '''
         path = self._imageBuildsPath(image)
 
@@ -1700,17 +1700,17 @@ class ZooKeeper(ZooKeeperBase):
         builds = [x for x in builds if x != 'lock']
         return builds
 
-    def getBuildProviders(self, image, build_number):
+    def getBuildProviders(self, image, build_id):
         '''
         Retrieve the providers which have uploads for an image build.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
 
         :returns: A list of provider names or the empty list.
 
         '''
-        path = self._imageProviderPath(image, build_number)
+        path = self._imageProviderPath(image, build_id)
 
         try:
             providers = self.kazoo_client.get_children(path)
@@ -1719,18 +1719,18 @@ class ZooKeeper(ZooKeeperBase):
 
         return sorted(providers)
 
-    def getImageUploadNumbers(self, image, build_number, provider):
+    def getImageUploadNumbers(self, image, build_id, provider):
         '''
         Retrieve upload numbers for a provider and image build.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
 
         :returns: A list of upload numbers or the empty list.
 
         '''
-        path = self._imageUploadPath(image, build_number, provider)
+        path = self._imageUploadPath(image, build_id, provider)
 
         try:
             uploads = self.kazoo_client.get_children(path)
@@ -1740,16 +1740,16 @@ class ZooKeeper(ZooKeeperBase):
         uploads = [x for x in uploads if x != 'lock']
         return uploads
 
-    def getBuild(self, image, build_number):
+    def getBuild(self, image, build_id):
         '''
         Retrieve the image build data.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
 
         :returns: An ImageBuild object, or None if not found.
         '''
-        path = self._imageBuildsPath(image) + "/%s" % build_number
+        path = self._imageBuildsPath(image) + "/%s" % build_id
 
         try:
             data, stat = self.kazoo_client.get(path)
@@ -1758,7 +1758,7 @@ class ZooKeeper(ZooKeeperBase):
 
         try:
             d = ImageBuild.fromDict(self._bytesToDict(data),
-                                    image, build_number)
+                                    image, build_id)
         except json.decoder.JSONDecodeError:
             self.log.exception('Error loading json data from image build %s',
                                path)
@@ -1832,7 +1832,7 @@ class ZooKeeper(ZooKeeperBase):
         builds.sort(key=lambda x: x.state_time, reverse=True)
         return builds[:count]
 
-    def storeBuild(self, image, build_data, build_number=None):
+    def storeBuild(self, image, build_data, build_id=None):
         '''
         Store the image build data.
 
@@ -1841,40 +1841,40 @@ class ZooKeeper(ZooKeeperBase):
         The build data is expected to be represented as a dict. This dict may
         contain any data, as appropriate.
 
-        If a build number is not supplied, then a new build node/number is
-        created. The new build number is available in the return value.
+        If a build id is not supplied, then a new build node/id is
+        created. The new build id is available in the return value.
 
         .. important: You should have the image locked before calling this
             method.
 
         :param str image: The image name for which we have data.
         :param ImageBuild build_data: The build data.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
 
-        :returns: A string for the build number that was updated.
+        :returns: A string for the build id that was updated.
         '''
         # Append trailing / so the sequence node is created as a child node.
         build_path = self._imageBuildsPath(image) + "/"
 
-        if build_number is None:
-            build_number = uuid.uuid4().hex
-            path = build_path + build_number
+        if build_id is None:
+            build_id = uuid.uuid4().hex
+            path = build_path + build_id
             self.kazoo_client.create(
                 path,
                 value=build_data.serialize(),
                 makepath=True)
         else:
-            path = build_path + build_number
+            path = build_path + build_id
             self.kazoo_client.set(path, build_data.serialize())
 
-        return build_number
+        return build_id
 
-    def getImageUpload(self, image, build_number, provider, upload_number):
+    def getImageUpload(self, image, build_id, provider, upload_number):
         '''
         Retrieve the image upload data.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param str upload_number: The image upload number.
 
@@ -1882,7 +1882,7 @@ class ZooKeeper(ZooKeeperBase):
 
         :raises: ZKException if the image upload path is not found.
         '''
-        path = self._imageUploadPath(image, build_number, provider)
+        path = self._imageUploadPath(image, build_id, provider)
         path = path + "/%s" % upload_number
 
         try:
@@ -1892,7 +1892,7 @@ class ZooKeeper(ZooKeeperBase):
 
         try:
             d = ImageUpload.fromDict(self._bytesToDict(data),
-                                     build_number,
+                                     build_id,
                                      provider,
                                      image,
                                      upload_number)
@@ -1903,12 +1903,12 @@ class ZooKeeper(ZooKeeperBase):
         d.stat = stat
         return d
 
-    def getUploads(self, image, build_number, provider, states=None):
+    def getUploads(self, image, build_id, provider, states=None):
         '''
         Retrieve all image upload data matching any given states.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param list states: A list of upload state values to match against.
             A value of None will disable state matching and just return
@@ -1916,7 +1916,7 @@ class ZooKeeper(ZooKeeperBase):
 
         :returns: A list of ImageUpload objects.
         '''
-        path = self._imageUploadPath(image, build_number, provider)
+        path = self._imageUploadPath(image, build_id, provider)
 
         try:
             uploads = self.kazoo_client.get_children(path)
@@ -1927,7 +1927,7 @@ class ZooKeeper(ZooKeeperBase):
         for upload in uploads:
             if upload == 'lock':
                 continue
-            data = self.getImageUpload(image, build_number, provider, upload)
+            data = self.getImageUpload(image, build_id, provider, upload)
             if not data:
                 continue
             if states is None:
@@ -1937,7 +1937,7 @@ class ZooKeeper(ZooKeeperBase):
 
         return matches
 
-    def getMostRecentBuildImageUploads(self, count, image, build_number,
+    def getMostRecentBuildImageUploads(self, count, image, build_id,
                                        provider, state=None):
         '''
         Retrieve the most recent image upload data with the given state.
@@ -1945,7 +1945,7 @@ class ZooKeeper(ZooKeeperBase):
         :param int count: A count of the most recent uploads to return.
             Use None for all uploads.
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param str state: The image upload state to match on. Use None to
             ignore state.
@@ -1958,7 +1958,7 @@ class ZooKeeper(ZooKeeperBase):
         if state:
             states = [state]
 
-        uploads = self.getUploads(image, build_number, provider, states)
+        uploads = self.getUploads(image, build_id, provider, states)
         if not uploads:
             return []
 
@@ -1983,8 +1983,8 @@ class ZooKeeper(ZooKeeperBase):
         if cached:
             uploads = self.getCachedImageUploads()
         else:
-            for build_number in self.getBuildNumbers(image):
-                path = self._imageUploadPath(image, build_number, provider)
+            for build_id in self.getBuildIds(image):
+                path = self._imageUploadPath(image, build_id, provider)
                 try:
                     upload_numbers = self.kazoo_client.get_children(path)
                 except kze.NoNodeError:
@@ -1994,7 +1994,7 @@ class ZooKeeper(ZooKeeperBase):
                     if upload_number == 'lock':   # skip the upload lock node
                         continue
                     data = self.getImageUpload(
-                        image, build_number, provider, upload_number)
+                        image, build_id, provider, upload_number)
                     if not data or data.state != state:
                         continue
                     uploads.append(data)
@@ -2023,7 +2023,7 @@ class ZooKeeper(ZooKeeperBase):
             raise RuntimeError("Caching not enabled")
         return self._image_cache.getUploads()
 
-    def storeImageUpload(self, image, build_number, provider, image_data,
+    def storeImageUpload(self, image, build_id, provider, image_data,
                          upload_number=None):
         '''
         Store the built image's upload data for the given provider.
@@ -2038,7 +2038,7 @@ class ZooKeeper(ZooKeeperBase):
         return value.
 
         :param str image: The image name for which we have data.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param ImageUpload image_data: The image data we want to store.
         :param str upload_number: The image upload number to update.
@@ -2051,14 +2051,14 @@ class ZooKeeper(ZooKeeperBase):
         build_path = self._imageBuildsPath(image)
         if not self.kazoo_client.exists(build_path):
             raise npe.ZKException(
-                "Cannot find build %s of image %s" % (build_number, image)
+                "Cannot find build %s of image %s" % (build_id, image)
             )
 
         # Generate a path for the upload. This doesn't have to exist yet
         # since we'll create new provider/upload ID znodes automatically.
         # Append trailing / so the sequence node is created as a child node.
         upload_path = self._imageUploadPath(
-            image, build_number, provider) + "/"
+            image, build_id, provider) + "/"
 
         if upload_number is None:
             path = self.kazoo_client.create(
@@ -2087,12 +2087,12 @@ class ZooKeeper(ZooKeeperBase):
         return False
 
     def _latestImageBuildStat(self, image):
-        builds = self.getBuildNumbers(image)
+        builds = self.getBuildIds(image)
         if not builds:
             return
 
         latest_build, *_ = builds
-        builds_path = self._imageBuildNumberPath(image, latest_build)
+        builds_path = self._imageBuildIdPath(image, latest_build)
         return self.kazoo_client.exists(builds_path)
 
     def getBuildRequest(self, image):
@@ -2143,7 +2143,7 @@ class ZooKeeper(ZooKeeperBase):
         except kze.NoNodeError:
             pass
 
-    def deleteBuild(self, image, build_number):
+    def deleteBuild(self, image, build_id):
         '''
         Delete an image build from ZooKeeper.
 
@@ -2151,17 +2151,17 @@ class ZooKeeper(ZooKeeperBase):
         node can be deleted.
 
         :param str image: The image name.
-        :param str build_number: The image build number to delete.
+        :param str build_id: The image build id to delete.
 
         :returns: True if the build is successfully deleted or did not exist,
            False if the provider uploads still exist.
         '''
         path = self._imageBuildsPath(image)
-        path = path + "/%s" % build_number
+        path = path + "/%s" % build_id
 
         # Verify that no upload znodes exist.
-        for prov in self.getBuildProviders(image, build_number):
-            if self.getImageUploadNumbers(image, build_number, prov):
+        for prov in self.getBuildProviders(image, build_id):
+            if self.getImageUploadNumbers(image, build_id, prov):
                 return False
 
         try:
@@ -2172,16 +2172,16 @@ class ZooKeeper(ZooKeeperBase):
 
         return True
 
-    def deleteUpload(self, image, build_number, provider, upload_number):
+    def deleteUpload(self, image, build_id, provider, upload_number):
         '''
         Delete an image upload from ZooKeeper.
 
         :param str image: The image name.
-        :param str build_number: The image build number.
+        :param str build_id: The image build id.
         :param str provider: The provider name owning the image.
         :param str upload_number: The image upload number to delete.
         '''
-        path = self._imageUploadPath(image, build_number, provider)
+        path = self._imageUploadPath(image, build_id, provider)
         path = path + "/%s" % upload_number
         try:
             # NOTE: Need to do recursively to remove lock znodes
@@ -2834,8 +2834,8 @@ class ZooKeeper(ZooKeeperBase):
         provider_builds = {}
         image_names = self.getImageNames()
         for image in image_names:
-            build_numbers = self.getBuildNumbers(image)
-            for build in build_numbers:
+            build_ids = self.getBuildIds(image)
+            for build in build_ids:
                 providers = self.getBuildProviders(image, build)
                 for p in providers:
                     if p == provider_name:
@@ -2855,8 +2855,8 @@ class ZooKeeper(ZooKeeperBase):
         provider_uploads = {}
         image_names = self.getImageNames()
         for image in image_names:
-            build_numbers = self.getBuildNumbers(image)
-            for build in build_numbers:
+            build_ids = self.getBuildIds(image)
+            for build in build_ids:
                 # If this build is not valid for this provider, move along.
                 if provider_name not in self.getBuildProviders(image, build):
                     continue
@@ -2928,7 +2928,7 @@ class ZooKeeper(ZooKeeperBase):
             if paused:
                 paused_path = self._imagePausePath(image_name)
                 ret[paused_path] = ''
-            for build_no in self.getBuildNumbers(image_name):
+            for build_no in self.getBuildIds(image_name):
                 build_path = self._imageBuildsPath(image_name) + "/" + build_no
                 try:
                     build_data, stat = self.kazoo_client.get(build_path)

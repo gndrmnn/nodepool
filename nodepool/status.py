@@ -204,7 +204,7 @@ def dib_image_list(zk):
         for image_name in zk.getImageNames():
             image_paused[image_name] = \
                 zk.getImagePaused(image_name)
-            for build_no in zk.getBuildNumbers(image_name):
+            for build_no in zk.getBuildIds(image_name):
                 build = zk.getBuild(image_name, build_no)
                 if build:
                     builds.append(build)
@@ -263,7 +263,7 @@ def image_list(zk):
         uploads = zk.getCachedImageUploads()
     else:
         for image_name in zk.getImageNames():
-            for build_no in zk.getBuildNumbers(image_name):
+            for build_no in zk.getBuildIds(image_name):
                 for provider in zk.getBuildProviders(image_name, build_no):
                     for upload_no in zk.getImageUploadNumbers(
                             image_name, build_no, provider):
