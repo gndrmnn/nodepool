@@ -763,23 +763,22 @@ class NodepoolTreeCache(abc.ABC):
             self._event_queue.put(None)
             self._playback_queue.put(None)
         elif state == KazooState.CONNECTED and not self._stopped:
-            self._ready.clear()
-            self._stop_workers = True
-            self._event_queue.put(None)
-            self._playback_queue.put(None)
             self.zk.kazoo_client.handler.short_spawn(self._start)
 
     def _cacheListener(self, event):
         self._event_queue.put(event)
 
     def _start(self):
-        locked = self._init_lock.acquire(blocking=False)
-        if locked:
+        with self._init_lock:
             self.log.debug("Initialize cache at %s", self.root)
 
-            # If we have an event worker (this is a re-init), then way
-            # for it to finish stopping (the session listener should
-            # have told it to stop).
+            self._ready.clear()
+            self._stop_workers = True
+            self._event_queue.put(None)
+            self._playback_queue.put(None)
+
+            # If we have an event worker (this is a re-init), then wait
+            # for it to finish stopping.
             if self._event_worker:
                 self._event_worker.join()
             # Replace the queue since any events from the previous
@@ -814,11 +813,6 @@ class NodepoolTreeCache(abc.ABC):
             except Exception:
                 self.log.exception("Error initializing cache at %s", self.root)
                 self.zk.kazoo_client.handler.short_spawn(self._start)
-            finally:
-                self._init_lock.release()
-        else:
-            self.log.debug("Skipping locked cache initialization at %s",
-                           self.root)
 
     def stop(self):
         self._stopped = True
