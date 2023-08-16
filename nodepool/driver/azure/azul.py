@@ -1,4 +1,4 @@
-# Copyright 2021 Acme Gating, LLC
+# Copyright 2021, 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -230,17 +230,17 @@ class AzureCloud:
             self,
             providerId='Microsoft.Network',
             resource='networkInterfaces',
-            apiVersion='2020-07-01')
+            apiVersion='2020-11-01')
         self.public_ip_addresses = AzureResourceProviderCRUD(
             self,
             providerId='Microsoft.Network',
             resource='publicIPAddresses',
-            apiVersion='2020-07-01')
+            apiVersion='2020-11-01')
         self.virtual_machines = AzureResourceProviderCRUD(
             self,
             providerId='Microsoft.Compute',
             resource='virtualMachines',
-            apiVersion='2022-11-01')
+            apiVersion='2023-03-01')
         self.disks = AzureResourceProviderCRUD(
             self,
             providerId='Microsoft.Compute',

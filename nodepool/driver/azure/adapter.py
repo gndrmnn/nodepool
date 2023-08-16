@@ -1,4 +1,4 @@
-# Copyright 2021 Acme Gating, LLC
+# Copyright 2021, 2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -76,7 +76,6 @@ class AzureInstance(statemachine.Instance):
                     self.private_ipv4 = ip_config_prop['privateIPAddress']
                 if ip_config_prop['privateIPAddressVersion'] == 'IPv6':
                     self.private_ipv6 = ip_config_prop['privateIPAddress']
-        # public_ipv6
 
         if public_ipv4:
             self.public_ipv4 = public_ipv4['properties'].get('ipAddress')
@@ -110,69 +109,27 @@ class AzureResource(statemachine.Resource):
 
 class AzureDeleteStateMachine(statemachine.StateMachine):
     VM_DELETING = 'deleting vm'
-    NIC_DELETING = 'deleting nic'
-    PIP_DELETING = 'deleting pip'
-    DISK_DELETING = 'deleting disk'
     COMPLETE = 'complete'
 
     def __init__(self, adapter, external_id):
         super().__init__()
         self.adapter = adapter
         self.external_id = external_id
-        self.disk_names = []
-        self.disks = []
-        self.public_ipv4 = None
-        self.public_ipv6 = None
 
     def advance(self):
         if self.state == self.START:
             self.vm = self.adapter._deleteVirtualMachine(
                 self.external_id)
-            if self.vm:
-                self.disk_names.append(
-                    self.vm['properties']['storageProfile']['osDisk']['name'])
             self.state = self.VM_DELETING
 
         if self.state == self.VM_DELETING:
             self.vm = self.adapter._refresh_delete(self.vm)
             if self.vm is None:
-                self.nic = self.adapter._deleteNetworkInterface(
-                    self.external_id + '-nic')
-                self.state = self.NIC_DELETING
-
-        if self.state == self.NIC_DELETING:
-            self.nic = self.adapter._refresh_delete(self.nic)
-            if self.nic is None:
-                self.public_ipv4 = self.adapter._deletePublicIPAddress(
-                    self.external_id + '-pip-IPv4')
-                self.public_ipv6 = self.adapter._deletePublicIPAddress(
-                    self.external_id + '-pip-IPv6')
-                self.state = self.PIP_DELETING
-
-        if self.state == self.PIP_DELETING:
-            self.public_ipv4 = self.adapter._refresh_delete(self.public_ipv4)
-            self.public_ipv6 = self.adapter._refresh_delete(self.public_ipv6)
-            if self.public_ipv4 is None and self.public_ipv6 is None:
-                self.disks = []
-                for name in self.disk_names:
-                    disk = self.adapter._deleteDisk(name)
-                    self.disks.append(disk)
-                self.state = self.DISK_DELETING
-
-        if self.state == self.DISK_DELETING:
-            all_deleted = True
-            for disk in self.disks:
-                disk = self.adapter._refresh_delete(disk)
-                if disk:
-                    all_deleted = False
-            if all_deleted:
                 self.state = self.COMPLETE
                 self.complete = True
 
 
 class AzureCreateStateMachine(statemachine.StateMachine):
-    PIP_CREATING = 'creating pip'
-    NIC_CREATING = 'creating nic'
     VM_CREATING = 'creating vm'
     NIC_QUERY = 'querying nic'
     PIP_QUERY = 'querying pip'
@@ -200,22 +157,6 @@ class AzureCreateStateMachine(statemachine.StateMachine):
         self.public_ipv6 = None
         self.nic = None
         self.vm = None
-        # There are two parameters for IP addresses: SKU and
-        # allocation method.  SKU is "basic" or "standard".
-        # Allocation method is "static" or "dynamic".  Between IPv4
-        # and v6, SKUs cannot be mixed (the same sku must be used for
-        # both protocols).  The standard SKU only supports static
-        # allocation.  Static is cheaper than dynamic, but basic is
-        # cheaper than standard.  Also, dynamic is faster than static.
-        # Therefore, if IPv6 is used at all, standard+static for
-        # everything; otherwise basic+dynamic in an IPv4-only
-        # situation.
-        if label.pool.ipv6:
-            self.ip_sku = 'Standard'
-            self.ip_method = 'static'
-        else:
-            self.ip_sku = 'Basic'
-            self.ip_method = 'dynamic'
 
     def advance(self):
         if self.state == self.START:
@@ -226,47 +167,18 @@ class AzureCreateStateMachine(statemachine.StateMachine):
                 self.image_reference = self.adapter._getImageFromFilter(
                     self.label.cloud_image.image_filter)
 
-            if self.label.pool.public_ipv4:
-                self.public_ipv4 = self.adapter._createPublicIPAddress(
-                    self.tags, self.hostname, self.ip_sku, 'IPv4',
-                    self.ip_method)
-            if self.label.pool.public_ipv6:
-                self.public_ipv6 = self.adapter._createPublicIPAddress(
-                    self.tags, self.hostname, self.ip_sku, 'IPv6',
-                    self.ip_method)
-            self.state = self.PIP_CREATING
-
-        if self.state == self.PIP_CREATING:
-            if self.public_ipv4:
-                self.public_ipv4 = self.adapter._refresh(self.public_ipv4)
-                if not self.adapter._succeeded(self.public_ipv4):
-                    return
-            if self.public_ipv6:
-                self.public_ipv6 = self.adapter._refresh(self.public_ipv6)
-                if not self.adapter._succeeded(self.public_ipv6):
-                    return
-            # At this point, every pip we have has succeeded (we may
-            # have 0, 1, or 2).
-            self.nic = self.adapter._createNetworkInterface(
-                self.tags, self.hostname,
-                self.label.pool.ipv4, self.label.pool.ipv6,
-                self.public_ipv4, self.public_ipv6)
-            self.state = self.NIC_CREATING
-
-        if self.state == self.NIC_CREATING:
-            self.nic = self.adapter._refresh(self.nic)
-            if self.adapter._succeeded(self.nic):
-                self.vm = self.adapter._createVirtualMachine(
-                    self.label, self.image_external_id,
-                    self.image_reference, self.tags, self.hostname,
-                    self.nic)
-                self.state = self.VM_CREATING
-            else:
-                return
+            self.vm = self.adapter._createVirtualMachine(
+                self.label, self.image_external_id,
+                self.image_reference, self.tags, self.hostname,
+                self.nic)
+            self.state = self.VM_CREATING
 
         if self.state == self.VM_CREATING:
             self.vm = self.adapter._refresh(self.vm)
             if self.adapter._succeeded(self.vm):
+                self.nic = (self.vm['properties']['networkProfile']
+                            ['networkInterfaces'][0]).copy()
+                self.nic['type'] = 'Microsoft.Network/networkInterfaces'
                 self.state = self.NIC_QUERY
             elif self.adapter._failed(self.vm):
                 raise exceptions.LaunchStatusException("VM in failed state")
@@ -281,6 +193,15 @@ class AzureCreateStateMachine(statemachine.StateMachine):
                 if 'privateIPAddress' not in ip_config_prop:
                     all_found = False
             if all_found:
+                for ip_config in self.nic['properties']['ipConfigurations']:
+                    if 'publicIPAddress' in ip_config['properties']:
+                        public_ip = ip_config['properties']['publicIPAddress']
+                        ip_version = (public_ip['properties']
+                                      ['publicIPAddressVersion'])
+                        if ip_version == 'IPv4':
+                            self.public_ipv4 = public_ip
+                        if ip_version == 'IPv6':
+                            self.public_ipv6 = public_ip
                 self.state = self.PIP_QUERY
 
         if self.state == self.PIP_QUERY:
@@ -516,11 +437,11 @@ class AzureAdapter(statemachine.Adapter):
 
     @staticmethod
     def _succeeded(obj):
-        return obj['properties']['provisioningState'] == 'Succeeded'
+        return obj['properties'].get('provisioningState') == 'Succeeded'
 
     @staticmethod
     def _failed(obj):
-        return obj['properties']['provisioningState'] == 'Failed'
+        return obj['properties'].get('provisioningState') == 'Failed'
 
     def _refresh(self, obj, force=False):
         if self._succeeded(obj) and not force:
@@ -573,100 +494,10 @@ class AzureAdapter(statemachine.Adapter):
         with self.rate_limiter:
             return self.azul.public_ip_addresses.list(self.resource_group)
 
-    def _createPublicIPAddress(self, tags, hostname, sku, version,
-                               allocation_method):
-        v4_params_create = {
-            'location': self.provider.location,
-            'tags': tags,
-            'sku': {
-                'name': sku,
-            },
-            'properties': {
-                'publicIpAddressVersion': version,
-                'publicIpAllocationMethod': allocation_method,
-            },
-        }
-        name = "%s-pip-%s" % (hostname, version)
-        with self.rate_limiter:
-            self.log.debug(f"Creating external IP address {name}")
-            return self.azul.public_ip_addresses.create(
-                self.resource_group,
-                name,
-                v4_params_create,
-            )
-
-    def _deletePublicIPAddress(self, name):
-        for pip in self._listPublicIPAddresses():
-            if pip['name'] == name:
-                break
-        else:
-            return None
-        with self.rate_limiter:
-            self.log.debug(f"Deleting external IP address {name}")
-            self.azul.public_ip_addresses.delete(self.resource_group, name)
-        return pip
-
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listNetworkInterfaces(self):
         with self.rate_limiter:
             return self.azul.network_interfaces.list(self.resource_group)
-
-    def _createNetworkInterface(self, tags, hostname, ipv4, ipv6,
-                                public_ipv4, public_ipv6):
-
-        def make_ip_config(name, version, subnet_id, pip):
-            ip_config = {
-                'name': name,
-                'properties': {
-                    'privateIpAddressVersion': version,
-                    'subnet': {
-                        'id': subnet_id
-                    },
-                }
-            }
-            if pip:
-                ip_config['properties']['publicIpAddress'] = {
-                    'id': pip['id']
-                }
-            return ip_config
-
-        ip_configs = []
-
-        if ipv4:
-            ip_configs.append(make_ip_config('nodepool-v4-ip-config',
-                                             'IPv4', self.subnet_id,
-                                             public_ipv4))
-        if ipv6:
-            ip_configs.append(make_ip_config('nodepool-v6-ip-config',
-                                             'IPv6', self.subnet_id,
-                                             public_ipv6))
-
-        nic_data = {
-            'location': self.provider.location,
-            'tags': tags,
-            'properties': {
-                'ipConfigurations': ip_configs
-            }
-        }
-        name = "%s-nic" % hostname
-        with self.rate_limiter:
-            self.log.debug(f"Creating NIC {name}")
-            return self.azul.network_interfaces.create(
-                self.resource_group,
-                name,
-                nic_data
-            )
-
-    def _deleteNetworkInterface(self, name):
-        for nic in self._listNetworkInterfaces():
-            if nic['name'] == name:
-                break
-        else:
-            return None
-        with self.rate_limiter:
-            self.log.debug(f"Deleting NIC {name}")
-            self.azul.network_interfaces.delete(self.resource_group, name)
-        return nic
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listVirtualMachines(self):
@@ -736,29 +567,91 @@ class AzureAdapter(statemachine.Adapter):
         if label.custom_data:
             os_profile['customData'] = label.custom_data
 
+        # Begin disk config
+
+        os_disk = {
+            'createOption': 'FromImage',
+            'deleteOption': 'Delete',
+        }
+        if label.volume_size:
+            os_disk['diskSizeGB'] = label.volume_size
+
+        # Begin network config
+        # There are two parameters for IP addresses: SKU and
+        # allocation method.  SKU is "basic" or "standard".
+        # Allocation method is "static" or "dynamic".  Between IPv4
+        # and v6, SKUs cannot be mixed (the same sku must be used for
+        # both protocols).  The standard SKU only supports static
+        # allocation.  Static is cheaper than dynamic, but basic is
+        # cheaper than standard.  Also, dynamic is faster than static.
+        # Basic is being retired, and static allocation (contrary to
+        # what it sounds like) works for our use case.
+        # Therefore, we use Standird + static for everything.
+
+        def make_ip_config(name, version, subnet_id, pip):
+            ip_config = {
+                'name': f'{name}-config',
+                'properties': {
+                    'privateIPAddressVersion': version,
+                    'subnet': {
+                        'id': subnet_id
+                    },
+                }
+            }
+            if pip:
+                ip_config['properties']['publicIPAddressConfiguration'] = {
+                    'name': f'{name}-ip',
+                    'properties': {
+                        'deleteOption': 'Delete',
+                        'publicIPAllocationMethod': 'Static',
+                    },
+                    'sku': {
+                        'name': 'Standard',
+                    },
+                }
+            return ip_config
+
+        ip_configs = []
+
+        if label.pool.ipv4:
+            ip_configs.append(make_ip_config(f'{hostname}-v4',
+                                             'IPv4', self.subnet_id,
+                                             label.pool.public_ipv4))
+        if label.pool.ipv6:
+            ip_configs.append(make_ip_config(f'{hostname}-v6',
+                                             'IPv6', self.subnet_id,
+                                             label.pool.public_ipv6))
+
+        nic_config = {
+            'name': f'{hostname}-nic',
+            'properties': {
+                'deleteOption': 'Delete',
+                'ipConfigurations': ip_configs
+            }
+        }
+
         spec = {
             'location': self.provider.location,
             'tags': tags,
             'properties': {
                 'osProfile': os_profile,
                 'hardwareProfile': {
-                    'vmSize': label.hardware_profile["vm-size"]
+                    'vmSize': label.hardware_profile['vm-size']
                 },
                 'storageProfile': {
                     'imageReference': image_reference,
+                    'osDisk': os_disk,
                 },
                 'networkProfile': {
-                    'networkInterfaces': [{
-                        'id': nic['id'],
-                        'properties': {
-                            'primary': True,
-                        }
-                    }]
+                    'networkApiVersion': (
+                        self.azul.network_interfaces.args['apiVersion']),
+                    'networkInterfaceConfigurations': [nic_config],
                 },
             },
         }
         if label.user_data:
             spec['properties']['userData'] = label.user_data
+
         with self.rate_limiter:
             self.log.debug(f"Creating VM {hostname}")
             return self.azul.virtual_machines.create(
@@ -780,17 +673,6 @@ class AzureAdapter(statemachine.Adapter):
     def _listDisks(self):
         with self.rate_limiter:
             return self.azul.disks.list(self.resource_group)
-
-    def _deleteDisk(self, name):
-        # Because the disk listing is unreliable (there is up to a 30
-        # minute delay between disks being created and appearing in
-        # the listing) we can't use the listing to efficiently
-        # determine if the deletion is complete.  We could fall back
-        # on the asynchronous operation record, but since disks are
-        # the last thing we delete anyway, let's just fire and forget.
-        with self.rate_limiter:
-            self.azul.disks.delete(self.resource_group, name)
-        return None
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=10)
     def _listImages(self):

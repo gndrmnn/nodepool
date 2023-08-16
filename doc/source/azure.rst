@@ -14,6 +14,12 @@ the instructions at `Azure CLI`_ and use the ``--sdk-auth`` flag::
 You must also have created a network for Nodepool to use.  Be sure to
 enable IPv6 on the network if you plan to use it.
 
+The Azure driver now uses "Standard" SKU for all public IP addresses.
+Standard IP addresses block all incoming traffic by default, therefore
+the use of a Network Security Group is required in order to allow
+incoming traffic.  You will need to create one, add any required
+rules, and attach it to the subnet created above.
+
 You may also need to register the `Microsoft.Compute` resource
 provider with your subscription.
 
@@ -734,6 +740,11 @@ section of the configuration.
              :default: None
 
              The `Azure Custom Data`_ value for newly created VMs.
+
+          .. attr:: volume-size
+             :type: int
+
+             If given, the size of the operating system disk, in GiB.
 
 
 .. _`Azure CLI`: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest

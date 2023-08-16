@@ -104,6 +104,10 @@ class TestDriverAzure(tests.DBTestCase):
         self.assertEqual(tags.get('team'), 'DevOps')
         self.assertEqual(tags.get('dynamic-tenant'), 'Tenant is tenant-1')
 
+        node.state = zk.USED
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
     def test_azure_min_ready(self):
         configfile = self.setup_config(
             'azure-min-ready.yaml',
