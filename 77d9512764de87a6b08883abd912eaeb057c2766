@@ -16,6 +16,24 @@
       "message": "Small nit this appears to be azure specific behavior we are manipulating by setting this value. Might be worth a comment about why.",
       "revId": "77d9512764de87a6b08883abd912eaeb057c2766",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5830bb28_4001d514",
+        "filename": "nodepool/driver/azure/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-16T22:28:14Z",
+      "side": 1,
+      "message": "Oh this is just a shortcut -- we get a blob of data back in the vm record that is equivalent to the network interfaces record but without the type field.  This just makes it look like what we would get back from a dedicated query.",
+      "parentUuid": "08e8f9a2_34686a87",
+      "revId": "77d9512764de87a6b08883abd912eaeb057c2766",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
