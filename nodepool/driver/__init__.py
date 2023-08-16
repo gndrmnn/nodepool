@@ -588,7 +588,7 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
                                     ','.join(invalid_types))
         elif not self.imagesAvailable():
             declined_reasons.append('images are not available')
-        elif not self.hasProviderQuota(self.request.node_types):
+        elif self.decline_from_quota and not self.hasProviderQuota(self.request.node_types):
             declined_reasons.append('it would exceed quota')
         return declined_reasons
 
@@ -901,6 +901,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         self.node_attributes = None
         self.priority = None
         self.ignore_provider_quota = False
+        self.decline_from_quota = True
         self.azs = None
 
     @classmethod

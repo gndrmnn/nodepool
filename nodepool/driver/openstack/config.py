@@ -82,6 +82,7 @@ class ProviderPool(ConfigPool):
         self.max_cores = None
         self.max_ram = None
         self.ignore_provider_quota = False
+        self.decline_from_quota = True
         self.azs = None
         self.networks = None
         self.security_groups = None
@@ -114,6 +115,8 @@ class ProviderPool(ConfigPool):
         self.max_volume_gb = pool_config.get('max-volume-gb', math.inf)
         self.ignore_provider_quota = pool_config.get('ignore-provider-quota',
                                                      False)
+        self.decline_from_quota = pool_config.get('decline-from-quota',
+                                                  True)
         self.azs = pool_config.get('availability-zones')
         self.networks = pool_config.get('networks', [])
         self.security_groups = pool_config.get('security-groups', [])
@@ -326,6 +329,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'auto-floating-ip': bool,
             'host-key-checking': bool,
             'ignore-provider-quota': bool,
+            'decline-from-quota': bool,
             'max-cores': int,
             'max-ram': int,
             'max-volumes': int,
