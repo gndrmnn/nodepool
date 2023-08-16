@@ -2514,6 +2514,110 @@ class TestLauncher(tests.DBTestCase):
         req = self.waitForNodeRequest(req)
         self.assertEqual(req.state, zk.FULFILLED)
 
+    def test_decline_from_quota_true(self):
+        '''
+        Tests that a node request is declined if decline-from-quota is true and
+        there is insufficient quota
+        '''
+
+        # Set max-cores quota value to 0 to force "out of quota". Note that
+        # the fake provider checks the number of instances during server
+        # creation to decide if it should throw an over quota exception,
+        # but it doesn't check cores.
+        def fake_get_quota():
+            return (0, 20, 1000000)
+        self.useFixture(fixtures.MockPatchObject(
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        configfile = self.setup_config('decline_from_quota_true.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        # Create a request with decline-from-quota set to true that should
+        # fail because it will decline the request because "it would exceed
+        # quota".
+        self.log.debug("Submitting request with decline-from-quota True")
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FAILED)
+
+    def test_decline_from_quota_false(self):
+        '''
+        Test that a node request get fulfilled with decline-from-quota set
+        to false.
+        '''
+
+        # Set max-cores quota value to 0 to force "out of quota". Note that
+        # the fake provider checks the number of instances during server
+        # creation to decide if it should throw an over quota exception,
+        # but it doesn't check cores.
+        def fake_get_quota():
+            return (0, 20, 1000000)
+        self.useFixture(fixtures.MockPatchObject(
+            fakeadapter.FakeAdapter.fake_cloud, '_get_quota',
+            fake_get_quota
+        ))
+
+        configfile = self.setup_config('decline_from_quota_false.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        # Create a request with decline-from-quota false that will be accepted
+        # (but not fullfilled)
+        self.replace_config(configfile, 'decline_from_quota_false.yaml')
+
+        self.log.debug(
+            "Submitting an initial request with decline-from-quota False")
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req1)
+
+        # Now simulate a min-ready request. This should fail because even
+        # though it is accepted, min-ready requests can be declined later if
+        # there is insufficient quota at the time they are allocated
+        min_ready_req = zk.NodeRequest()
+        min_ready_req.state = zk.REQUESTED
+        min_ready_req.node_types.append("fake-label")
+        min_ready_req.requestor = "NodePool:min-ready"
+        self.zk.storeNodeRequest(min_ready_req)
+
+        pool_worker = pool.getPoolWorkers('fake-provider')
+        while not pool_worker[0].paused_handlers:
+            time.sleep(0.1)
+
+        req1 = self.waitForNodeRequest(req1, zk.PENDING)
+        self.assertEqual(req1.state, zk.PENDING)
+
+        min_ready_req = self.waitForNodeRequest(min_ready_req)
+        self.assertEqual(min_ready_req.state, zk.FAILED)
+
+        # Request a 2 node set; this request should fail
+        # due to the provider only being able to fulfill
+        # a single node at a time.
+        req3 = zk.NodeRequest()
+        req3.state = zk.REQUESTED
+        req3.node_types.append('fake-label')
+        req3.node_types.append('fake-label')
+        self.log.debug(
+            "Submitting a third request with decline-from-quota False"
+            "for a 2-node set which the provider cannot fulfill.")
+        self.zk.storeNodeRequest(req3)
+
+        req3 = self.waitForNodeRequest(req3)
+        self.assertEqual(req3.state, zk.FAILED)
+
     def test_multiple_paused_requests(self):
         """Test that multiple paused requests are fulfilled in order."""
         max_instances = 0

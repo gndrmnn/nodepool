@@ -486,6 +486,15 @@ Selecting the OpenStack driver adds the following options to the
         circumstances where the provider is incorrectly calculating
         quota.
 
+     .. attr:: decline-from-quota
+        :type: bool
+        :default: False
+
+        Decline a node request if there is not sufficient quota to satisfy the
+        request. If set to False, the request will be accepted, but may have to
+        wait for sufficient quota to become available before it can be
+        fulfilled.
+
      .. attr:: availability-zones
         :type: list
 
