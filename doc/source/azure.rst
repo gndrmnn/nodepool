@@ -318,6 +318,8 @@ section of the configuration.
          :type: dict
 
          Specifies a private image to use via filters.  Either this field,
+         :attr:`providers.[azure].cloud-images.shared-gallery-image`,
+         :attr:`providers.[azure].cloud-images.community-gallery-image`,
          :attr:`providers.[azure].cloud-images.image-reference`, or
          :attr:`providers.[azure].cloud-images.image-id` must be
          provided.
@@ -363,14 +365,72 @@ section of the configuration.
          :type: str
 
          Specifies a private image to use by ID.  Either this field,
+         :attr:`providers.[azure].cloud-images.shared-gallery-image`,
+         :attr:`providers.[azure].cloud-images.community-gallery-image`,
          :attr:`providers.[azure].cloud-images.image-reference`, or
          :attr:`providers.[azure].cloud-images.image-filter` must be
          provided.
+
+      .. attr:: shared-gallery-image
+         :type: dict
+
+         Specifies a shared gallery image to use by ID.  Either this field,
+         :attr:`providers.[azure].cloud-images.community-gallery-image`,
+         :attr:`providers.[azure].cloud-images.image-reference`,
+         :attr:`providers.[azure].cloud-images.image-id`, or
+         :attr:`providers.[azure].cloud-images.image-filter` must be
+         provided.
+
+         .. attr:: gallery-name
+            :type: str
+            :required:
+
+            The name of the image gallery.
+
+         .. attr:: name
+            :type: str
+            :required:
+
+            The name of the image.
+
+         .. attr:: version
+            :type: str
+
+            The image version.  Omit to use the latest version.
+
+      .. attr:: community-gallery-image
+         :type: dict
+
+         Specifies a community gallery image to use by ID.  Either this field,
+         :attr:`providers.[azure].cloud-images.shared-gallery-image`,
+         :attr:`providers.[azure].cloud-images.image-reference`,
+         :attr:`providers.[azure].cloud-images.image-id`, or
+         :attr:`providers.[azure].cloud-images.image-filter` must be
+         provided.
+
+         .. attr:: gallery-name
+            :type: str
+            :required:
+
+            The name of the image gallery.
+
+         .. attr:: name
+            :type: str
+            :required:
+
+            The name of the image.
+
+         .. attr:: version
+            :type: str
+
+            The image version.  Omit to use the latest version.
 
       .. attr:: image-reference
          :type: dict
 
          Specifies a public image to use.  Either this field,
+         :attr:`providers.[azure].cloud-images.shared-gallery-image`,
+         :attr:`providers.[azure].cloud-images.community-gallery-image`,
          :attr:`providers.[azure].cloud-images.image-id`, or
          :attr:`providers.[azure].cloud-images.image-filter` must be
          provided.

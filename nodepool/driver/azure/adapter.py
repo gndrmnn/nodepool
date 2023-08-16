@@ -681,7 +681,7 @@ class AzureAdapter(statemachine.Adapter):
             remote_image = self._getImage(image_external_id)
             image_reference = {'id': remote_image['id']}
         elif image_reference:
-            # This is a cloud image with aser supplied image-filter;
+            # This is a cloud image with user supplied image-filter;
             # we already found the reference.
             image = label.cloud_image
         else:
@@ -690,6 +690,28 @@ class AzureAdapter(statemachine.Adapter):
             image = label.cloud_image
             if label.cloud_image.image_reference:
                 image_reference = label.cloud_image.image_reference
+            elif label.cloud_image.community_gallery_image:
+                g = label.cloud_image.community_gallery_image
+                gallery_image_id = (
+                    f"/CommunityGalleries/{g['gallery-name']}"
+                    f"/Images/{g['name']}"
+                )
+                if g.get('version'):
+                    gallery_image_id += f"/Versions/{g['version']}"
+                image_reference = {
+                    'communityGalleryImageId': gallery_image_id
+                }
+            elif label.cloud_image.shared_gallery_image:
+                g = label.cloud_image.shared_gallery_image
+                gallery_image_id = (
+                    f"/SharedGalleries/{g['gallery-name']}"
+                    f"/Images/{g['name']}"
+                )
+                if g.get('version'):
+                    gallery_image_id += f"/Versions/{g['version']}"
+                image_reference = {
+                    'sharedGalleryImageId': gallery_image_id
+                }
             else:
                 image_reference = {'id': label.cloud_image.image_id}
         os_profile = {'computerName': hostname}
