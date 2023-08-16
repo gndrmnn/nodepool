@@ -308,7 +308,10 @@
     release:
       jobs:
         - opendev-release-python
-        - zuul-publish-nox-docs
+        - zuul-publish-nox-docs:
+            vars:
+              nox_force_python: "3.11"
+              python_version: "3.11"
         - upload-container-image:
             timeout: *image_build_timeout
             secrets:
