@@ -501,7 +501,7 @@ class StateMachineHandler(NodeRequestHandler):
         ignore = False
         if hasattr(self.pool, 'ignore_provider_quota'):
             ignore = self.pool.ignore_provider_quota
-        if not ignore:
+        if not ignore and self.decline_from_quota:
             cloud_quota = self.manager.estimatedNodepoolQuota()
             cloud_quota.subtract(needed_quota)
 
