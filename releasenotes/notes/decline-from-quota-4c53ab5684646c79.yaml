@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    A new configuration option ``decline-from-quota`` is added for the
+    OpenStack driver. If True (the default and previous behavior), a provider
+    will decline a node request if there is not sufficient quota to satisfy it.
+    If False, the request will be accepted, but will wait until sufficient
+    quota is available to be fulfilled.

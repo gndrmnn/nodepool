@@ -904,6 +904,7 @@ class ConfigPool(ConfigValue, metaclass=abc.ABCMeta):
         self.node_attributes = None
         self.priority = None
         self.ignore_provider_quota = False
+        self.decline_from_quota = True
         self.azs = None
 
     @classmethod
