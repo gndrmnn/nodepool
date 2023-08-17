@@ -85,6 +85,14 @@ class TestShadeIntegration(tests.IntegrationTestCase):
         with open(self.clouds_path, 'w') as h:
             yaml.safe_dump(occ_config, h)
 
+        # Change the provider to force a new OpenStack client object
+        # to be created.
+        with open(configfile) as f:
+            config = yaml.safe_load(f)
+        config['providers'][0]['rate'] = 0.0002
+        with open(configfile, 'w') as f:
+            yaml.safe_dump(config, f)
+
         pool.updateConfig()
         pm = pool.config.provider_managers['real-provider']
         self.assertEqual(pm.adapter._client.auth, auth_data)
