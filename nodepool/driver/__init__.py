@@ -581,6 +581,9 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         declined_reasons = []
         invalid_types = self._invalidNodeTypes()
 
+        if not self.zk.getNodeRequest(self.request.id):
+            declined_reasons.append("node request disappeared")
+
         if self.pool.max_servers <= 0:
             declined_reasons.append('pool is disabled by max_servers')
         elif invalid_types:
