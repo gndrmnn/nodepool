@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The AWS driver now supports volume quota.  It will automatically
+    register the limits from the cloud and ensure that labels that
+    specify EBS volume attributes stay under the limit.
