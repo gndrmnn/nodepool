@@ -343,6 +343,9 @@ Selecting the ``aws`` driver adds the following options to the
 
          The username that should be used when connecting to the node.
 
+         .. warning:: This option is deprecated.  Specify the username
+                      on the diskimage definition itself instead.
+
       .. attr:: connection-type
          :type: string
 

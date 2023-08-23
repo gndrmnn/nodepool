@@ -121,7 +121,7 @@ class AzureProviderDiskImage(ConfigValue):
         self.pause = bool(image.get('pause', False))
         self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
-        self.username = image.get('username')
+        self.username = image.get('username', diskimage.username)
         self.password = image.get('password')
         self.generate_password = image.get('generate-password', False)
         self.key = image.get('key')

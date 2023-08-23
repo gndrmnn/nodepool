@@ -94,7 +94,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.pause = bool(image.get('pause', False))
         self.python_path = image.get('python-path', 'auto')
         self.shell_type = image.get('shell-type')
-        self.username = image.get('username')
+        self.username = image.get('username', diskimage.username)
         self.connection_type = image.get('connection-type', 'ssh')
         self.connection_port = image.get(
             'connection-port',
