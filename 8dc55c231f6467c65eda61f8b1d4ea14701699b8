@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fd31813_d45b5bea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2023-08-24T13:23:22Z",
+      "side": 1,
+      "message": "We are relying on this log event to debug node failure (e.g. is it a provider infra issue, or is it a ssh timeout issue), and without this change, we need to do a second lookup to get the node request info (e.g. from the assignment message). Perhaps there is a better solution, but having as more info on this event sounds useful.\n\nThanks for the prompt review!",
+      "revId": "8dc55c231f6467c65eda61f8b1d4ea14701699b8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
