@@ -40,6 +40,7 @@ providers:
           - name: fake-label
             diskimage: fake-image
             min-ram: 8192
+            console-log: True
             flavor-name: 'Fake'
             instance-properties:
               prop1: foo

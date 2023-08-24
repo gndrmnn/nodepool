@@ -120,6 +120,10 @@ class FakeOpenStackCloud(object):
     def _get_volume_quota():
         return 100, 1000000
 
+    @staticmethod
+    def _get_server_console(name_or_id):
+        return None
+
     def __init__(self, images=None, networks=None):
         self.compute = FakeSession(self)
         self.pause_creates = False
@@ -398,6 +402,9 @@ class FakeOpenStackCloud(object):
             else:
                 self.log.debug("Deleted port ID: %s", port_id)
         self._down_ports = tmp_ports
+
+    def get_server_console(self, name_or_id):
+        return self.__class__._get_server_console(name_or_id)
 
 
 class FakeUploadFailCloud(FakeOpenStackCloud):

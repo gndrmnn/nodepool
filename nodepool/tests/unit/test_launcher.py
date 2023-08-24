@@ -1217,6 +1217,43 @@ class TestLauncher(tests.DBTestCase):
         # exhausting retries
         self._node_launch_keyscan_failure(4, zk.FAILED)
 
+    def test_node_launch_keyscan_failure_console_log(self):
+        log_count = 0
+
+        def fake_get_server_console(name_or_id):
+            nonlocal log_count
+            log_count += 1
+            return f"TEST CONSOLE LOG {log_count}\nSECOND LINE {log_count}"
+
+        with self.assertLogs("nodepool.StateMachineNodeLauncher.fake-provider",
+                             level="INFO") as logs:
+            self.useFixture(fixtures.MockPatchObject(
+                fakeadapter.FakeAdapter.fake_cloud, '_get_server_console',
+                fake_get_server_console
+            ))
+            self._node_launch_keyscan_failure(4, zk.FAILED)
+
+            # Max attempts is 3 so there should be one console log for each
+            # attempt
+            self.assertEqual(log_count, 3)
+
+            check_lines = {
+                "TEST CONSOLE LOG 1",
+                "SECOND LINE 1",
+                "TEST CONSOLE LOG 2",
+                "SECOND LINE 2",
+                "TEST CONSOLE LOG 3",
+                "SECOND LINE 3",
+            }
+
+            for line in logs.output:
+                for c in check_lines:
+                    if line.endswith(c):
+                        check_lines.remove(c)
+                        break
+
+            self.assertFalse(check_lines)
+
     def test_node_launch_with_broken_znodes(self):
         """Test that node launch still works if there are broken znodes"""
         # Create a znode without type
