@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b30ebbd5_84e5ebbf",
+        "filename": "nodepool/tests/unit/test_launcher.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1232,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-24T22:57:18Z",
+      "side": 1,
+      "message": "This is good enough to verify that we at least call the method, which should at least make sure we don\u0027t accidentally drop it again in the future.\n\nIt doesn\u0027t cover the full sequence though, in that we could fail after calling the method and not notice.  If you wrap the launches in a with `self.assertLogs` we can validate that we actually output the test tokens to the logs.",
+      "revId": "304185bdc8f9b930104df7973fe576ab46aeea15",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
