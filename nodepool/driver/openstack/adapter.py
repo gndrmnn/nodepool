@@ -1001,3 +1001,11 @@ class OpenStackAdapter(statemachine.Adapter):
                 key = ('nodepool.provider.%s.leaked.floatingips'
                        % self.provider.name)
                 self._statsd.incr(key, did_clean)
+
+    def getConsoleLog(self, label, external_id):
+        if not label.console_log:
+            return None
+        try:
+            return self._client.get_server_console(external_id)
+        except openstack.exceptions.OpenStackCloudException:
+            return None

@@ -340,6 +340,21 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             except Exception:
                 self.log.exception("Exception while reporting stats:")
 
+            if isinstance(e, exceptions.LaunchKeyscanException):
+                try:
+                    label = self.handler.pool.labels[node.type[0]]
+                    console = self.manager.adapter.getConsoleLog(
+                        label, node.external_id)
+                    if console:
+                        self.log.info('Console log from external id %s:',
+                                      node.external_id)
+                        for line in console.splitlines():
+                            self.log.info(line.rstrip())
+                except NotImplementedError:
+                    pass
+                except Exception:
+                    self.log.exception("Exception while logging console:")
+
             if self.attempts >= self.retries:
                 node.state = zk.FAILED
                 return True
@@ -1232,5 +1247,14 @@ class Adapter:
         """Delete an image from the cloud
 
         :param external_id str: The external id of the image to delete
+        """
+        raise NotImplementedError()
+
+    # The following method is optional
+    def getConsoleLog(self, label, external_id):
+        """Return the console log from the specified server
+
+        :param label ConfigLabel: The label config for the node
+        :param external_id str: The external id of the server
         """
         raise NotImplementedError()
