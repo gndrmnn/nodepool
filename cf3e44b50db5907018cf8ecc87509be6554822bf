@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33c7d334_d3763d09",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-08-25T20:31:26Z",
+      "side": 1,
+      "message": "Actually I noticed when reviewing the Zuul change that there are some bullseye references that need updating in .zuul.yaml:\n\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L64-L65\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L106-L107\nhttps://opendev.org/zuul/nodepool/src/branch/master/.zuul.yaml#L136-L137",
+      "revId": "cf3e44b50db5907018cf8ecc87509be6554822bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
