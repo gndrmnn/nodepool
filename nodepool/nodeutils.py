@@ -94,6 +94,9 @@ def nodescan(ip, port=22, timeout=60, gather_hostkeys=True):
             if e.errno not in [errno.ECONNREFUSED, errno.EHOSTUNREACH, None]:
                 log.exception(
                     'Exception connecting to %s on port %s:' % (ip, port))
+            else:
+                log.debug("Unable to connect to %s on port %s: %s" % (
+                          ip, port, e))
         except Exception:
             log.exception("ssh socket connection failure")
         finally:
