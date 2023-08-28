@@ -710,6 +710,7 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(response['EbsOptimized']['Value'])
 
     def test_aws_diskimage_snapshot(self):
+        self.fake_aws.fail_import_count = 1
         configfile = self.setup_config('aws/diskimage.yaml')
 
         self.useBuilder(configfile)
@@ -753,6 +754,7 @@ class TestDriverAws(tests.DBTestCase):
             ['Throughput'], 200)
 
     def test_aws_diskimage_image(self):
+        self.fake_aws.fail_import_count = 1
         configfile = self.setup_config('aws/diskimage-import-image.yaml')
 
         self.useBuilder(configfile)
