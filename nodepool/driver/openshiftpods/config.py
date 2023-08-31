@@ -83,6 +83,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'volumes': list,
             'volume-mounts': list,
             'labels': dict,
+            'dynamic-labels': dict,
             'annotations': dict,
             'extra-resources': {str: int},
         }

@@ -233,7 +233,8 @@ class TestDriverOpenshift(tests.DBTestCase):
                 'nodepool_node_id': '0000000000',
                 'nodepool_provider_name': 'openshift',
                 'nodepool_pool_name': 'main',
-                'nodepool_node_label': 'pod-extra'
+                'nodepool_node_label': 'pod-extra',
+                'tenant': 'tenant-1',
             },
         })
         self.assertEqual(pod['spec'], {

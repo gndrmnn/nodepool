@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    The Kubernetes and OpenShift drivers now support adding dynamic metadata,
+    i.e. Pod and Namespace labels, with information about the corresponding
+    node request. This is analogous to the existing dynamic tags of the
+    OpenStack, AWS, and Azure drivers.
+
+    See :attr:`providers.[kubernetes].pools.labels.dynamic-labels`,
+    :attr:`providers.[openshift].pools.labels.dynamic-labels`, and
+    :attr:`providers.[openshiftpods].pools.labels.dynamic-labels` for details.
