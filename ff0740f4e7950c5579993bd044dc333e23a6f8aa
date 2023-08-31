@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "075afd89_24bd339f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-31T20:13:03Z",
+      "side": 1,
+      "message": "Exactly what problem is being fixed here?  There should be no overlap between a node used by Zuul and a node used by Nodepool; and there is no type specification of user_data (it\u0027s user defined; that\u0027s why it\u0027s named that way).\n\nIf we did want to merge this, isn\u0027t there a migration issue?",
+      "revId": "ff0740f4e7950c5579993bd044dc333e23a6f8aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
