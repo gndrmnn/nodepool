@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa156cac_92fc253c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-08-31T18:49:10Z",
+      "side": 1,
+      "message": "One thought inline. Probably worth getting more opinions on that before changing anything though as I think it requires a big refactor of the ssh scanning method.",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33856786_1b718234",
@@ -14,6 +31,23 @@
       "writtenOn": "2023-08-31T18:44:30Z",
       "side": 1,
       "message": "Since you mention that this can flood the log, then we might want to use the auto formatting logic of logging to avoid un-necessary work in non debug mode with:\n\n```\n  log.debug(\"Unable to connect to %s on port %s: %s\", ip, port, e)\n```",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bc9da7e_388bfebf",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-08-31T18:49:10Z",
+      "side": 1,
+      "message": "I think I have a preference for recording the last connection error type if the timeout is reached. We know that we\u0027ll have connection errors for every (most?) node booted while we wait for it to boot enough to have an ssh port litsening. But if we have an error after the acceptable timeout knowing what the connection error was for that would be helpful.\n\nRather than spam the logs we could just record that last occurrence. Unfortunately, I think that might mean completely refactoring the loop control here.",
       "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
