@@ -156,22 +156,16 @@ class KubernetesProvider(Provider, QuotaSupport):
                 break
             time.sleep(1)
 
-    def createNamespace(self, node, pool, label, restricted_access=False):
+    def createNamespace(
+            self, node, pool, label, request, restricted_access=False
+    ):
         name = node.id
         namespace = "%s-%s" % (pool, name)
         user = "zuul-worker"
 
         self.log.debug("%s: creating namespace" % namespace)
 
-        k8s_labels = {}
-        if label.labels:
-            k8s_labels.update(label.labels)
-        k8s_labels.update({
-            'nodepool_node_id': node.id,
-            'nodepool_provider_name': self.provider.name,
-            'nodepool_pool_name': pool,
-            'nodepool_node_label': label.name,
-        })
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
 
         # Create the namespace
         ns_body = {
@@ -309,7 +303,7 @@ class KubernetesProvider(Provider, QuotaSupport):
         self.log.info("%s: namespace created" % namespace)
         return resource
 
-    def createPod(self, node, pool, label):
+    def createPod(self, node, pool, label, request):
         container_body = {
             'name': label.name,
             'image': label.image,
@@ -365,16 +359,7 @@ class KubernetesProvider(Provider, QuotaSupport):
                 'privileged': label.privileged,
             }
 
-        k8s_labels = {}
-        if label.labels:
-            k8s_labels.update(label.labels)
-        k8s_labels.update({
-            'nodepool_node_id': node.id,
-            'nodepool_provider_name': self.provider.name,
-            'nodepool_pool_name': pool,
-            'nodepool_node_label': label.name,
-        })
-
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
         k8s_annotations = {}
         if label.annotations:
             k8s_annotations.update(label.annotations)
@@ -391,7 +376,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             'restartPolicy': 'Never',
         }
 
-        resource = self.createNamespace(node, pool, label,
+        resource = self.createNamespace(node, pool, label, request,
                                         restricted_access=True)
         namespace = resource['namespace']
 
@@ -439,3 +424,23 @@ class KubernetesProvider(Provider, QuotaSupport):
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota
         return QuotaInformation()
+
+    def _getK8sLabels(self, label, node, pool, request):
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+
+        for k, v in label.dynamic_labels.items():
+            try:
+                k8s_labels[k] = v.format(request=request.getSafeAttributes())
+            except Exception:
+                self.log.exception("Error formatting tag %s", k)
+
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
+
+        return k8s_labels

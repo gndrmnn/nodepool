@@ -45,6 +45,8 @@ providers:
             shell-type: csh
             labels:
               environment: qa
+            dynamic-labels:
+              tenant: "{{request.tenant_name}}"
             privileged: true
             node-selector:
               storageType: ssd
