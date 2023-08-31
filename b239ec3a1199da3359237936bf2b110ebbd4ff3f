@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33856786_1b718234",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2023-08-31T18:44:30Z",
+      "side": 1,
+      "message": "Since you mention that this can flood the log, then we might want to use the auto formatting logic of logging to avoid un-necessary work in non debug mode with:\n\n```\n  log.debug(\"Unable to connect to %s on port %s: %s\", ip, port, e)\n```",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
