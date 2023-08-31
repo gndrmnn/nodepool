@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The Kubernetes driver now supports adding dynamic metadata, i.e. Pod and
+    Namespace labels, with information about the corresponding node request.
+    This is analogous to the existing dynamic tags of the OpenStack, AWS, and
+    Azure drivers.
+
+    See :attr:`providers.[kubernetes].pools.labels.dynamic-labels` for details.
