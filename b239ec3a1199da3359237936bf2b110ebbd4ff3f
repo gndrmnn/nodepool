@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e840ebe5_786199d1",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-31T18:51:56Z",
+      "side": 1,
+      "message": "Not resolved.",
+      "parentUuid": "46931a7c_d48050f5",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33856786_1b718234",
         "filename": "nodepool/nodeutils.py",
         "patchSetId": 1
@@ -82,6 +100,24 @@
       "writtenOn": "2023-08-31T18:51:26Z",
       "side": 1,
       "message": "It\u0027s just an extra exception handler.",
+      "parentUuid": "0bc9da7e_388bfebf",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba27f422_19640751",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-31T18:51:56Z",
+      "side": 1,
+      "message": "Not resolved.",
       "parentUuid": "0bc9da7e_388bfebf",
       "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
