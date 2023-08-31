@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46931a7c_d48050f5",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-31T18:50:25Z",
+      "side": 1,
+      "message": "The exact reason that the condition above exists is because this happens all the time, is expected, and is extremely verbose.  I don\u0027t think we should log it.\n\nI think what would be acceptable is, at the end of the timeout sequence, you logged the final error in this way.",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33856786_1b718234",
