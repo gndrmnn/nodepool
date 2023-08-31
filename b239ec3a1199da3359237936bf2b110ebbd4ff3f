@@ -139,6 +139,24 @@
       "parentUuid": "0bc9da7e_388bfebf",
       "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d18f723_24189877",
+        "filename": "nodepool/nodeutils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-08-31T19:06:24Z",
+      "side": 1,
+      "message": "...",
+      "parentUuid": "e976853f_eae26000",
+      "revId": "b239ec3a1199da3359237936bf2b110ebbd4ff3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
