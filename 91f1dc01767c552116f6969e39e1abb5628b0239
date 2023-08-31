@@ -16,6 +16,24 @@
       "message": "The protocol should not allow this to happen.  This method is called very often and the additional ZK traffic is not desirable.\n\nSomething like this needs a test reproduction and if there is a protocol problem, likely a different fix that doesn\u0027t involve zk operations here.",
       "revId": "91f1dc01767c552116f6969e39e1abb5628b0239",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2d53fbf_f94d690f",
+        "filename": "nodepool/driver/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2023-08-31T20:06:00Z",
+      "side": 1,
+      "message": "Is there some other way to do it without invoking zookeeper? If you drop this patch and run the test in https://review.opendev.org/c/zuul/nodepool/+/891635 it will hang because the node becomes pending (but will never be fulfilled because of the test setup) and then request is deleted.\n\nIn practice I guess maybe a node would never be stuck in pending state forever.... but it seems like handling that might be a good idea anyway?\n\nAlternative, we drop this if there is a way to \"unstick\" the node in the test in the next patch, I couldn\u0027t figure out a way to do it.",
+      "parentUuid": "f96cfb2d_8a858277",
+      "revId": "91f1dc01767c552116f6969e39e1abb5628b0239",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
