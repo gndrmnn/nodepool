@@ -33,10 +33,12 @@ class K8SLauncher(NodeLauncher):
         self.log.debug("Creating resource")
         if self.label.type == "namespace":
             resource = self.handler.manager.createNamespace(
-                self.node, self.handler.pool.name, self.label)
+                self.node, self.handler.pool.name, self.label,
+                self.handler.request)
         else:
             resource = self.handler.manager.createPod(
-                self.node, self.handler.pool.name, self.label)
+                self.node, self.handler.pool.name, self.label,
+                self.handler.request)
 
         self.node.state = zk.READY
         self.node.python_path = self.label.python_path

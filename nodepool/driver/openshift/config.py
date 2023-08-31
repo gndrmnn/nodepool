@@ -94,6 +94,7 @@ class OpenshiftPool(ConfigPool):
             pl.volumes = label.get('volumes')
             pl.volume_mounts = label.get('volume-mounts')
             pl.labels = label.get('labels')
+            pl.dynamic_labels = label.get('dynamic-labels', {})
             pl.annotations = label.get('annotations')
             pl.pool = self
             self.labels[pl.name] = pl
@@ -162,6 +163,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'volumes': list,
             'volume-mounts': list,
             'labels': dict,
+            'dynamic-labels': dict,
             'annotations': dict,
             'extra-resources': {str: int},
         }
