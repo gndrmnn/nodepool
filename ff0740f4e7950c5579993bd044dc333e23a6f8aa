@@ -16,6 +16,23 @@
       "message": "Exactly what problem is being fixed here?  There should be no overlap between a node used by Zuul and a node used by Nodepool; and there is no type specification of user_data (it\u0027s user defined; that\u0027s why it\u0027s named that way).\n\nIf we did want to merge this, isn\u0027t there a migration issue?",
       "revId": "ff0740f4e7950c5579993bd044dc333e23a6f8aa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "741a583d_04343d2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-09-01T07:44:25Z",
+      "side": 1,
+      "message": "Specifically, this broke the stats reporting because the user_data field is not explicitly deserialized in all places. In other drivers, we just set user_data as a dict and let kazoo do the de-/serialization. But here, for some reason, we json.loads/dumps explicitly and end up with a string instead of a dict if we don\u0027t pass it through json.loads.\n\nThe exception was\n```\n2023-07-06 14:23:18,362 ERROR zuul.Scheduler: Error in periodic stats:\nTraceback (most recent call last):\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/scheduler.py\", line 448, in runStats\n    self._runStats()\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/scheduler.py\", line 605, in _runStats\n    self.nodepool.emitStatsTotals(self.abide)\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/nodepool.py\", line 540, in emitStatsTotals\n    if node.user_data.get(\u0027zuul_system\u0027) !\u003d self.system_id:\nAttributeError: \u0027str\u0027 object has no attribute \u0027get\u0027\n```\n\nSide note: we have this fix running in prod already for several weeks now.",
+      "revId": "ff0740f4e7950c5579993bd044dc333e23a6f8aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
