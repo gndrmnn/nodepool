@@ -120,6 +120,10 @@ class ImportImageTaskPaginator:
         if 'ImportTaskIds' in kw:
             tasks = [t for t in tasks
                      if t['ImportTaskId'] in kw['ImportTaskIds']]
+            if not tasks:
+                raise botocore.exceptions.ClientError(
+                    {'Error': {'Code': 'InvalidConversionTaskId.Malformed'}},
+                    'DescribeImportImageTasks')
         # A page of tasks
         ret = [{'ImportImageTasks': tasks}]
 

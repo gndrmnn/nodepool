@@ -1042,6 +1042,14 @@ class TestDriverAws(tests.DBTestCase):
                 # Probably not found
                 break
 
+    def test_aws_get_import_image_task(self):
+        # A unit test of the unusual error handling for missing tasks
+        configfile = self.setup_config('aws/diskimage.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        adapter = pool.getProviderManager('ec2-us-west-2').adapter
+        self.assertIsNone(adapter._getImportImageTask("fake-id"))
+
     def test_aws_provisioning_spot_instances(self):
         # Test creating a spot instances instead of an on-demand on.
         req = self.requestNode('aws/aws-spot.yaml', 'ubuntu1404-spot')
