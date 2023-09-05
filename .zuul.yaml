@@ -210,11 +210,9 @@
     parent: nodepool-functional-container-openstack-release-base
     vars:
       nodepool_diskimage:
-        base_element: centos-minimal
-        release: 9-stream
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
-        env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+        base_element: ubuntu-minimal
+        release: focal
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
 
 - job:
     name: nodepool-functional-container-openstack-siblings-base
@@ -243,11 +241,9 @@
     parent: nodepool-functional-container-openstack-siblings-base
     vars:
       nodepool_diskimage:
-        base_element: centos-minimal
-        release: 9-stream
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
-        env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+        base_element: ubuntu-minimal
+        release: focal
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
 
 - job:
     name: nodepool-nox-py311
