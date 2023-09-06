@@ -359,6 +359,9 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
                         "Error in creating the server."
                         " Compute service reports fault: {reason}".format(
                             reason=self.server['fault']['message']))
+                    error_message = self.server['fault']['message'].lower()
+                    if all(s in error_message for s in ('exceeds', 'quota')):
+                        raise exceptions.QuotaException("Quota exceeded")
                 raise exceptions.LaunchStatusException("Server in error state")
             else:
                 return
