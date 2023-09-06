@@ -566,6 +566,7 @@ class OpenStackAdapter(statemachine.Adapter):
                 wait=True,
                 md5=md5,
                 sha256=sha256,
+                timeout=self.provider.image_upload_timeout,
                 **metadata)
         return image.id
 

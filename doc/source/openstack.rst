@@ -205,6 +205,15 @@ Selecting the OpenStack driver adds the following options to the
      the cleanup interval has elapsed. This value can be reduced if the
      instance spawn time on the provider is reliably quicker.
 
+  .. attr:: image-upload-timeout
+     :type: int seconds
+     :default: 3600
+
+     How long to wait for an image upload.  Note that in the case of a
+     timeout, it may be possible to leak an image upload in a manner
+     that Nodepool will be unable to detect and will require manual
+     identification and cleanup.
+
   .. attr:: diskimages
      :type: list
 
