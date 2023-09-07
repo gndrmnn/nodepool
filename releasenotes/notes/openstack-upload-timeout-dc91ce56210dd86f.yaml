@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    An upload timeout can be configured on OpenStack providers for use
+    in the case that image uploads to a provider take longer than the
+    default of one hour.

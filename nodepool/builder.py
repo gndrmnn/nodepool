@@ -39,9 +39,6 @@ from nodepool.version import get_version_string
 
 MINS = 60
 HOURS = 60 * MINS
-# How long to wait for an image save
-IMAGE_TIMEOUT = 6 * HOURS
-
 # How long to wait between checks for ZooKeeper connectivity if it disappears.
 SUSPEND_WAIT_TIME = 30
 

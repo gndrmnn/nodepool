@@ -171,6 +171,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.rate = None
         self.boot_timeout = None
         self.launch_timeout = None
+        self.image_upload_timeout = None
         self.clean_floating_ips = None
         self.port_cleanup_interval = None
         self.diskimages = {}
@@ -206,6 +207,8 @@ class OpenStackProviderConfig(ProviderConfig):
         self.boot_timeout = self.provider.get('boot-timeout', 60)
         self.launch_timeout = self.provider.get('launch-timeout', 3600)
         self.launch_retries = self.provider.get('launch-retries', 3)
+        self.image_upload_timeout = self.provider.get(
+            'image-upload-timeout', 3600)
         self.clean_floating_ips = self.provider.get('clean-floating-ips')
         self.port_cleanup_interval = self.provider.get(
             'port-cleanup-interval',
@@ -340,6 +343,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'region-name': str,
             v.Required('cloud'): str,
             'boot-timeout': int,
+            'image-upload-timeout': int,
             'launch-timeout': int,
             'launch-retries': int,
             'nodepool-id': str,
