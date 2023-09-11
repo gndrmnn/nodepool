@@ -16,6 +16,24 @@
       "message": "Nit: this is an amusing typo.  :)",
       "revId": "2e556712c8333d0ea9f8789a056162e86f877a0c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7791359_48355738",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-09-11T08:50:28Z",
+      "side": 1,
+      "message": "Whoops, I fixed it.",
+      "parentUuid": "edbbe98d_3fa8bcf1",
+      "revId": "2e556712c8333d0ea9f8789a056162e86f877a0c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
