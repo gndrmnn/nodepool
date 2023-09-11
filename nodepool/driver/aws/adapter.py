@@ -824,10 +824,19 @@ class AwsAdapter(statemachine.Adapter):
         paginator = self.ec2_client.get_paginator(
             'describe_import_image_tasks')
         with self.non_mutating_rate_limiter:
-            for page in paginator.paginate(ImportTaskIds=[task_id]):
-                for task in page['ImportImageTasks']:
-                    # Return the first and only task
-                    return task
+            try:
+                for page in paginator.paginate(ImportTaskIds=[task_id]):
+                    for task in page['ImportImageTasks']:
+                        # Return the first and only task
+                        return task
+            except botocore.exceptions.ClientError as error:
+                if (error.response['Error']['Code'] ==
+                    'InvalidConversionTaskId.Malformed'):
+                    # In practice, this can mean that the task no
+                    # longer exists
+                    pass
+                else:
+                    raise
         return None
 
     def _listImportSnapshotTasks(self):
