@@ -33,6 +33,23 @@
       "message": "recheck",
       "revId": "1ee7c7bc878f395eea2ab7bf565ed01f4bd4017e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eee1e3d_3d5a0c75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33934
+      },
+      "writtenOn": "2023-09-12T15:33:42Z",
+      "side": 1,
+      "message": "Is there some way we can get something that works for our use case? I _really_ hate forking upstream code, so if there is anything I can do to prevent that I will.\n\nAlso, it is pretty much just half of ignore_provider_quota so maybe there some way we can integrate it from that angle?",
+      "revId": "1ee7c7bc878f395eea2ab7bf565ed01f4bd4017e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
