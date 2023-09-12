@@ -246,14 +246,14 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         instance = None
         node = self.node
         statsd_key = 'ready'
+        state_machine = self.state_machine
 
         try:
-            if self.state_machine is None:
+            if state_machine is None:
                 if self.start_future and self.start_future.done():
                     self.start_future.result()
                 else:
                     return
-            state_machine = self.state_machine
             if self.start_time is None:
                 self.start_time = time.monotonic()
             if (state_machine.complete and self.keyscan_future
