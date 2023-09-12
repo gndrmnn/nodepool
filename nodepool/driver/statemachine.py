@@ -309,25 +309,25 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                 "Lost ZooKeeper session trying to launch for node %s",
                 node.id)
             node.state = zk.FAILED
-            if state_machine:
-                node.external_id = state_machine.external_id
+            if self.state_machine:
+                node.external_id = self.state_machine.external_id
             statsd_key = 'error.zksession'
         except exceptions.QuotaException:
             self.log.info("Aborting node %s due to quota failure", node.id)
             node.state = zk.ABORTED
-            if state_machine:
-                node.external_id = state_machine.external_id
+            if self.state_machine:
+                node.external_id = self.state_machine.external_id
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
             self.manager.invalidateQuotaCache()
         except Exception as e:
             self.log.exception("Launch attempt %d/%d for node %s, failed:",
                                self.attempts, self.retries, node.id)
-            if state_machine and state_machine.external_id:
+            if self.state_machine and self.state_machine.external_id:
                 # If we're deleting, don't overwrite the node external
                 # id, because we may make another delete state machine
                 # below.
-                node.external_id = state_machine.external_id
+                node.external_id = self.state_machine.external_id
                 self.zk.storeNode(node)
 
             if hasattr(e, 'statsd_key'):
