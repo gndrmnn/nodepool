@@ -33,6 +33,23 @@
       "message": "Specifically, this broke the stats reporting because the user_data field is not explicitly deserialized in all places. In other drivers, we just set user_data as a dict and let kazoo do the de-/serialization. But here, for some reason, we json.loads/dumps explicitly and end up with a string instead of a dict if we don\u0027t pass it through json.loads.\n\nThe exception was\n```\n2023-07-06 14:23:18,362 ERROR zuul.Scheduler: Error in periodic stats:\nTraceback (most recent call last):\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/scheduler.py\", line 448, in runStats\n    self._runStats()\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/scheduler.py\", line 605, in _runStats\n    self.nodepool.emitStatsTotals(self.abide)\n  File \"/opt/zuul/lib/python3.10/site-packages/zuul/nodepool.py\", line 540, in emitStatsTotals\n    if node.user_data.get(\u0027zuul_system\u0027) !\u003d self.system_id:\nAttributeError: \u0027str\u0027 object has no attribute \u0027get\u0027\n```\n\nSide note: we have this fix running in prod already for several weeks now.",
       "revId": "ff0740f4e7950c5579993bd044dc333e23a6f8aa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72e27b8a_77d1a2b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-09-13T12:05:11Z",
+      "side": 1,
+      "message": "Yes, correct, metastatic is the only driver that sets user_data, I should\u0027ve looked that up again, it\u0027s been a few weeks.\nSo, the field is usually set by zuul only, cf. https://opendev.org/zuul/zuul/src/branch/master/zuul/nodepool.py#L321\nZuul sets this as a dict, instead of json string (as the metastatic driver does here) and expects a dict coming back from kazoo. But the metastatic driver setting this after explicitly serializing the dict results in user_data being an escaped json string in zk. This is unexpected on the zuul-side. Instead setting it as a dict would make it\n1. compatible with zuul and\n2. a simpler solution in nodepool (skipping the json.loads/.dumps).\nI don\u0027t see an advantage in explicitly serializing/deserializing the user_data.",
+      "revId": "ff0740f4e7950c5579993bd044dc333e23a6f8aa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
