@@ -672,7 +672,9 @@ class OpenStackAdapter(statemachine.Adapter):
     # This method is wrapped with an LRU cache in the constructor.
     def _listFlavors(self):
         with Timer(self.log, 'API call list_flavors'):
-            return self._client.list_flavors(get_extra=False)
+            flavors = self._client.list_flavors(get_extra=False)
+            flavors.sort(key=operator.itemgetter('ram', 'name'))
+            return flavors
 
     # This method is only used by the nodepool alien-image-list
     # command and only works with the openstack driver.
@@ -681,9 +683,7 @@ class OpenStackAdapter(statemachine.Adapter):
             return self._client.list_images()
 
     def _getFlavors(self):
-        flavors = self._listFlavors()
-        flavors.sort(key=operator.itemgetter('ram', 'name'))
-        return flavors
+        return self._listFlavors()
 
     def _findFlavorByName(self, flavor_name):
         for f in self._getFlavors():
