@@ -672,7 +672,9 @@ class OpenStackAdapter(statemachine.Adapter):
     # This method is wrapped with an LRU cache in the constructor.
     def _listFlavors(self):
         with Timer(self.log, 'API call list_flavors'):
-            return self._client.list_flavors(get_extra=False)
+            flavors = self._client.list_flavors(get_extra=False)
+            flavors.sort(key=operator.itemgetter('ram', 'name'))
+            return flavors
 
     # This method is only used by the nodepool alien-image-list
     # command and only works with the openstack driver.
@@ -680,26 +682,21 @@ class OpenStackAdapter(statemachine.Adapter):
         with Timer(self.log, 'API call list_images'):
             return self._client.list_images()
 
-    def _getFlavors(self):
-        flavors = self._listFlavors()
-        flavors.sort(key=operator.itemgetter('ram', 'name'))
-        return flavors
-
     def _findFlavorByName(self, flavor_name):
-        for f in self._getFlavors():
+        for f in self._listFlavors():
             if flavor_name in (f['name'], f['id']):
                 return f
         raise Exception("Unable to find flavor: %s" % flavor_name)
 
     def _findFlavorByRam(self, min_ram, flavor_name):
-        for f in self._getFlavors():
+        for f in self._listFlavors():
             if (f['ram'] >= min_ram
                     and (not flavor_name or flavor_name in f['name'])):
                 return f
         raise Exception("Unable to find flavor with min ram: %s" % min_ram)
 
     def _findFlavorById(self, flavor_id):
-        for f in self._getFlavors():
+        for f in self._listFlavors():
             if f['id'] == flavor_id:
                 return f
         raise Exception("Unable to find flavor with id: %s" % flavor_id)
