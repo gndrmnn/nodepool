@@ -130,19 +130,11 @@ class OpenshiftProvider(Provider, QuotaSupport):
                 break
             time.sleep(1)
 
-    def createProject(self, node, pool, project, label):
+    def createProject(self, node, pool, project, label, request):
         self.log.debug("%s: creating project" % project)
         # Create the project
 
-        k8s_labels = {}
-        if label.labels:
-            k8s_labels.update(label.labels)
-        k8s_labels.update({
-            'nodepool_node_id': node.id,
-            'nodepool_provider_name': self.provider.name,
-            'nodepool_pool_name': pool,
-            'nodepool_node_label': label.name,
-        })
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
 
         proj_body = {
             'apiVersion': 'project.openshift.io/v1',
@@ -228,7 +220,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
         self.log.info("%s: project created" % project)
         return resource
 
-    def createPod(self, node, pool, project, pod_name, label):
+    def createPod(self, node, pool, project, pod_name, label, request):
         self.log.debug("%s: creating pod in project %s" % (pod_name, project))
         container_body = {
             'name': label.name,
@@ -286,15 +278,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
                 'privileged': label.privileged,
             }
 
-        k8s_labels = {}
-        if label.labels:
-            k8s_labels.update(label.labels)
-        k8s_labels.update({
-            'nodepool_node_id': node.id,
-            'nodepool_provider_name': self.provider.name,
-            'nodepool_pool_name': pool,
-            'nodepool_node_label': label.name,
-        })
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
 
         k8s_annotations = {}
         if label.annotations:
@@ -355,3 +339,23 @@ class OpenshiftProvider(Provider, QuotaSupport):
     def unmanagedQuotaUsed(self):
         # TODO: return real quota information about quota
         return QuotaInformation()
+
+    def _getK8sLabels(self, label, node, pool, request):
+        k8s_labels = {}
+        if label.labels:
+            k8s_labels.update(label.labels)
+
+        for k, v in label.dynamic_labels.items():
+            try:
+                k8s_labels[k] = v.format(request=request.getSafeAttributes())
+            except Exception:
+                self.log.exception("Error formatting tag %s", k)
+
+        k8s_labels.update({
+            'nodepool_node_id': node.id,
+            'nodepool_provider_name': self.provider.name,
+            'nodepool_pool_name': pool,
+            'nodepool_node_label': label.name,
+        })
+
+        return k8s_labels

@@ -37,6 +37,11 @@ providers:
             image: docker.io/fedora:28
             labels:
               environment: qa
+            dynamic-labels:
+              # Note: we double the braces to deal with unit-test
+              # pre-processing of this file.  The output and actual
+              # file syntax is single braces.
+              tenant: "{{request.tenant_name}}"
             privileged: true
             node-selector:
               storageType: ssd
