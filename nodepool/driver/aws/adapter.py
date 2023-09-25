@@ -856,12 +856,21 @@ class AwsAdapter(statemachine.Adapter):
             return QUOTA_CODES.get(key)[market_type_option]
 
     def _getQuotaForInstanceType(self, instance_type, market_type_option):
-        itype = self._getInstanceType(instance_type)
-        cores = itype['InstanceTypes'][0]['VCpuInfo']['DefaultCores']
-        vcpus = itype['InstanceTypes'][0]['VCpuInfo']['DefaultVCpus']
-        ram = itype['InstanceTypes'][0]['MemoryInfo']['SizeInMiB']
-        code = self._getQuotaCodeForInstanceType(instance_type,
-                                                 market_type_option)
+        try:
+            itype = self._getInstanceType(instance_type)
+            cores = itype['InstanceTypes'][0]['VCpuInfo']['DefaultCores']
+            vcpus = itype['InstanceTypes'][0]['VCpuInfo']['DefaultVCpus']
+            ram = itype['InstanceTypes'][0]['MemoryInfo']['SizeInMiB']
+            code = self._getQuotaCodeForInstanceType(instance_type,
+                                                     market_type_option)
+        except botocore.exceptions.ClientError as error:
+            if error.response['Error']['Code'] == 'InvalidInstanceType':
+                self.log.exception("Error querying instance type: %s",
+                                   instance_type)
+                # Re-raise as a configuration exception so that the
+                # statemachine driver resets quota.
+                raise exceptions.RuntimeConfigurationException(str(error))
+            raise
         # We include cores to match the overall cores quota (which may
         # be set as a tenant resource limit), and include vCPUs for the
         # specific AWS quota code which in for a specific instance

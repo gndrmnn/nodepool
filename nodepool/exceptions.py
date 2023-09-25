@@ -47,6 +47,12 @@ class QuotaException(Exception):
     pass
 
 
+class RuntimeConfigurationException(Exception):
+    """Indicates a fatal and permanent configuration error
+    detected at runtime."""
+    pass
+
+
 class TimeoutException(Exception):
     pass
 

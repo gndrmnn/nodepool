@@ -301,6 +301,13 @@ class Provider(ProviderNotifications):
         # determine their own leaked instances.
         pass
 
+    def errorLabels(self):
+        """Return a list of labels which this provider has determined are
+        in a permanent error state (for example, the cloud indicates
+        that the configuration is invalid).
+        """
+        return []
+
 
 class LabelRecorder(object):
     def __init__(self):
@@ -416,11 +423,13 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
         :returns: A list of node type names that are invalid, or an empty
             list if all are valid.
         '''
-        invalid = []
+        invalid = set()
         valid = self.provider.getSupportedLabels(self.pool.name)
         for ntype in self.request.node_types:
             if ntype not in valid:
-                invalid.append(ntype)
+                invalid.add(ntype)
+        for ntype in self.manager.errorLabels():
+            invalid.add(ntype)
         return invalid
 
     def _waitForNodeSet(self):
