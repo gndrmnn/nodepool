@@ -33,6 +33,23 @@
       "message": "recheck",
       "revId": "9249e125a72bd05d80d9ea2f54db8914cd0cf1a0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bacd64b_3dd96380",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-09-25T20:22:39Z",
+      "side": 1,
+      "message": "How about you just move this up to line 250?  Then change line 251 to drop self?  That way we can keep this method simple?",
+      "revId": "9249e125a72bd05d80d9ea2f54db8914cd0cf1a0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
