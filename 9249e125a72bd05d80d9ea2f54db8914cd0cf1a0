@@ -50,6 +50,24 @@
       "message": "How about you just move this up to line 250?  Then change line 251 to drop self?  That way we can keep this method simple?",
       "revId": "9249e125a72bd05d80d9ea2f54db8914cd0cf1a0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20bd836e_9298361b",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2023-09-26T12:44:15Z",
+      "side": 1,
+      "message": "That\u0027s what I had in PS1 of this change. But self.state_machine might be None at line 250 and I think a later assignment of self.state_machine would break the reference we create here.",
+      "parentUuid": "7bacd64b_3dd96380",
+      "revId": "9249e125a72bd05d80d9ea2f54db8914cd0cf1a0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
