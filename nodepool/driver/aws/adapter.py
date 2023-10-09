@@ -377,9 +377,18 @@ class AwsAdapter(statemachine.Adapter):
             quota = self._getQuotaForInstanceType(
                 instance.instance_type,
                 SPOT if instance.instance_lifecycle == 'spot' else ON_DEMAND)
+
             for attachment in instance.block_device_mappings:
-                volume = volumes.get(attachment['Ebs']['VolumeId'])
+                volume_id = attachment['Ebs']['VolumeId']
+                volume = volumes.get(volume_id)
+                if volume is None:
+                    self.log.warning(
+                        "Volume $s of instance %s could not be found",
+                        volume_id, instance.id)
+                    self._listVolumes.cache_clear()
+                    continue
                 quota.add(self._getQuotaForVolume(volume))
+
             yield AwsInstance(self.provider, instance, quota)
 
     def getQuotaLimits(self):
