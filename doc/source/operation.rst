@@ -689,6 +689,19 @@ Since these calls reflect the internal operations of the
 ``openstacksdk``, the exact keys logged may vary across providers and
 releases.
 
+Kubernetes API metrics
+^^^^^^^^^^^^^^^^^^^^^^
+
+Low level details (timing, counter) of CoreV1 API calls are also logged by
+Nodepool. The naming of the metrics follows the convention established by ``openstacksdk``:
+``nodepool.kubernetes.<provider>.coreV1.<method>.<resource>.<status>``, where status can be
+one of the following:
+
+* HTTP status code (200, 500, ...)
+* ``failed`` if the API call resulted in an exception within Nodepool
+* ``over_1000`` if the call took more than one second to complete
+* ``attempted`` for every call regardless of its outcome
+
 Internal metrics
 ^^^^^^^^^^^^^^^^
 
