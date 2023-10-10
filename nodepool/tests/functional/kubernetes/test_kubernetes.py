@@ -38,3 +38,12 @@ class TestKubernetes(tests.DBTestCase):
         pod = self.waitForNodes("pod-fedora", 1)
         self.assertEqual(1, len(pod))
         self.assertEqual(pod[0].connection_type, "kubectl")
+
+        self.assertReportedStat(
+            'nodepool.kubernetes.microk8s.coreV1.POST.namespaced_pods.201',
+            kind='c'
+        )
+        self.assertReportedStat(
+            'nodepool.kubernetes.microk8s.coreV1.GET.namespaced_pods.200',
+            kind='c'
+        )

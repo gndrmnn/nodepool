@@ -41,7 +41,8 @@ class KubernetesProvider(Provider, QuotaSupport):
         self._statsd = stats.get_client()
         self.ready = False
         _, _, self.k8s_client, self.rbac_client = get_client(
-            self.log, provider.context, k8s_client.RbacAuthorizationV1Api)
+            self.log, provider.name, provider.context,
+            k8s_client.RbacAuthorizationV1Api)
         self.namespace_names = set()
         for pool in provider.pools.values():
             self.namespace_names.add(pool.name)
