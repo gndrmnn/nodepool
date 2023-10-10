@@ -33,23 +33,6 @@ mappings:
       state: "$1"
 
   # type: timer, counter
-  - match: nodepool.task.*.*
-    name: nodepool_task
-    match_metric_type: counter
-    help: Nodepool task timings
-    labels:
-      provider: "$1"
-      task: "$2"
-
-  - match: nodepool.task.*.*
-    name: nodepool_task_timer
-    match_metric_type: timer
-    help: Nodepool task timings
-    labels:
-      provider: "$1"
-      task: "$2"
-
-  # type: timer, counter
   - match: nodepool\.launch\.provider\.([^.]+)\.([^.]+)\.(ready|error\..+)$
     name: nodepool_launch_by_provider_az
     match_type: regex
