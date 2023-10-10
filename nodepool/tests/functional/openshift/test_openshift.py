@@ -48,6 +48,14 @@ class TestOpenShift(tests.DBTestCase):
         nodes = self.waitForNodes("openshift-pod", 1)
         self.assertEqual(1, len(nodes))
         self.assertEqual(nodes[0].connection_type, "kubectl")
+        self.assertReportedStat(
+            'nodepool.kubernetes.openshift.coreV1.POST.namespaced_pods.201',
+            kind='c'
+        )
+        self.assertReportedStat(
+            'nodepool.kubernetes.openshift.coreV1.GET.namespaced_pods.200',
+            kind='c'
+        )
 
     def test_pods(self):
         configfile = self.setup_config('pods.yaml')
@@ -57,3 +65,11 @@ class TestOpenShift(tests.DBTestCase):
         nodes = self.waitForNodes("openshift-pod", 1)
         self.assertEqual(1, len(nodes))
         self.assertEqual(nodes[0].connection_type, "kubectl")
+        self.assertReportedStat(
+            'nodepool.kubernetes.openshift.coreV1.POST.namespaced_pods.201',
+            kind='c'
+        )
+        self.assertReportedStat(
+            'nodepool.kubernetes.openshift.coreV1.GET.namespaced_pods.200',
+            kind='c'
+        )
