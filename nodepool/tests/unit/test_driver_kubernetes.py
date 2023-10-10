@@ -20,25 +20,40 @@ import time
 
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
+from nodepool.driver.utils_k8s import createApiClientClassWithStatsD
+
+
+class FakeApi:
+    log = None
+    class configuration:
+        host = "http://localhost:8080"
+        verify_ssl = False
+
+    def __call_api(self, resource_path, method, *args, **kwargs):
+        if self.log:
+            self.log.debug(
+            "K8s Fake API client called: %s %s" % (method, resource_path)
+        )
+        # TODO enable setting return status somewhere
+        return None, 200, {}
 
 
 class FakeCoreClient(object):
-    def __init__(self):
+    def __init__(self, log, provider_name):
         self.namespaces = []
         self._pod_requests = []
 
-        class FakeApi:
-            class configuration:
-                host = "http://localhost:8080"
-                verify_ssl = False
-        self.api_client = FakeApi()
+        self.api_client = createApiClientClassWithStatsD(FakeApi)(
+            provider_name, log)
 
     def list_namespace(self):
+        self.api_client.__call_api('/api/v1/namespaces', 'GET')
         class FakeNamespaces:
             items = self.namespaces
         return FakeNamespaces
 
     def create_namespace(self, ns_body):
+        self.api_client.__call_api('/api/v1/namespaces', 'POST')
         class FakeNamespace:
             class metadata:
                 name = ns_body['metadata']['name']
@@ -47,6 +62,7 @@ class FakeCoreClient(object):
         return FakeNamespace
 
     def delete_namespace(self, name, body):
+        self.api_client.__call_api('/api/v1/namespaces/{name}', 'DELETE')
         to_delete = None
         for namespace in self.namespaces:
             if namespace.metadata.name == name:
@@ -57,9 +73,13 @@ class FakeCoreClient(object):
         self.namespaces.remove(to_delete)
 
     def create_namespaced_service_account(self, ns, sa_body):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/serviceaccounts', 'POST')
         return
 
     def read_namespaced_service_account(self, user, ns):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/serviceaccounts/{name}', 'GET')
         class FakeSA:
             class secret:
                 name = "fake"
@@ -67,17 +87,25 @@ class FakeCoreClient(object):
         return FakeSA
 
     def create_namespaced_secret(self, ns, secret_body):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/secrets', 'POST')
         return
 
     def read_namespaced_secret(self, name, ns):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/secrets/{name}', 'GET')
         class FakeSecret:
             data = {'ca.crt': 'ZmFrZS1jYQ==', 'token': 'ZmFrZS10b2tlbg=='}
         return FakeSecret
 
     def create_namespaced_pod(self, ns, pod_body):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/pods', 'POST')
         self._pod_requests.append((ns, pod_body))
 
     def read_namespaced_pod(self, name, ns):
+        self.api_client.__call_api(
+            '/api/v1/namespaces/{namespace}/pods/{name}', 'GET')
         class FakePod:
             class status:
                 phase = "Running"
@@ -100,10 +128,12 @@ class TestDriverKubernetes(tests.DBTestCase):
 
     def setUp(self):
         super().setUp()
-        self.fake_k8s_client = FakeCoreClient()
+        self.fake_k8s_client = None
         self.fake_rbac_client = FakeRbacClient()
 
-        def fake_get_client(log, context, ctor=None):
+        def fake_get_client(log, provider_name, context, ctor=None):
+            if self.fake_k8s_client is None:
+                self.fake_k8s_client = FakeCoreClient(log, provider_name)
             return None, None, self.fake_k8s_client, self.fake_rbac_client
 
         self.useFixture(fixtures.MockPatch(
@@ -157,6 +187,10 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'env': []
             }],
         })
+        self.assertReportedStat(
+            'nodepool.kubernetes.kubespray.coreV1.GET.namespaced_pods.200',
+            value='1', kind='c')
+        
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
@@ -223,6 +257,9 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'name': 'my-csi-inline-vol'
             }],
         })
+        self.assertReportedStat(
+            'nodepool.kubernetes.kubespray.coreV1.GET.namespaced_pods.200',
+            value='1', kind='c')
 
     def test_kubernetes_native(self):
         configfile = self.setup_config('kubernetes.yaml')

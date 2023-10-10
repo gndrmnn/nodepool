@@ -42,7 +42,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             # The OpenshiftPods driver subclasses this but doesn't
             # want this initialization.  TODO: unify the two.
             _, _, self.k8s_client, self.os_client = get_client(
-                self.log, provider.context, DynamicClient)
+                self.log, provider.name, provider.context, DynamicClient)
             self.project_names = set()
             for pool in provider.pools.values():
                 self.project_names.add(pool.name)
