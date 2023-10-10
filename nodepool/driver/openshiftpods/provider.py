@@ -32,7 +32,7 @@ class OpenshiftPodsProvider(OpenshiftProvider):
     def __init__(self, provider, *args):
         super().__init__(provider, _skip_init=True)
         self.token, self.ca_crt, self.k8s_client, _ = get_client(
-            self.log, provider.context)
+            self.log, provider.name, provider.context)
         self.pod_names = set()
         for pool in provider.pools.values():
             self.pod_names.update(pool.labels.keys())

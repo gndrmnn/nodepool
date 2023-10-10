@@ -133,7 +133,7 @@ class TestDriverOpenshift(tests.DBTestCase):
         self.fake_os_client = FakeOpenshiftClient()
         self.fake_k8s_client = FakeCoreClient()
 
-        def fake_get_client(log, context, ctor=None):
+        def fake_get_client(log, provider_name, context, ctor=None):
             return None, None, self.fake_k8s_client, self.fake_os_client
 
         self.useFixture(fixtures.MockPatch(
