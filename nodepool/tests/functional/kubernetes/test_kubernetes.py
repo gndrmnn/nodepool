@@ -38,3 +38,8 @@ class TestKubernetes(tests.DBTestCase):
         pod = self.waitForNodes("pod-fedora", 1)
         self.assertEqual(1, len(pod))
         self.assertEqual(pod[0].connection_type, "kubectl")
+
+        # Trigger exception to see reported stats, they should appear in debug
+        self.assertReportedStat(
+            'nodepool.kubernetes.microk8s.NOPE'
+        )
