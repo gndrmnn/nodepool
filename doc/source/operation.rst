@@ -680,7 +680,12 @@ OpenStack API metrics
 
 Low level details on the timing of OpenStack API calls will be logged
 by ``openstacksdk``. These calls are logged under
-``nodepool.task.<provider>.<api-call>``.  The API call name is of the
+``openstack.api.<provider>.<api-call>`` by default. It is possible to override
+the ``openstack.api`` prefix on a per-cloud basis, as explained in OpenStack SDK's
+`"statistics reporting" <https://docs.openstack.org/openstacksdk/latest/user/guides/stats.html>`__ page in the documentation.
+
+
+The API call name is of the
 generic format ``<service-type>.<method>.<operation>``. For example, the
 ``GET /servers`` call to the ``compute`` service becomes
 ``compute.GET.servers``.

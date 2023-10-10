@@ -32,6 +32,11 @@ mappings:
     labels:
       state: "$1"
 
+  # these metrics for low-level OpenStack API calls
+  # assume a specific clouds.yaml configuration where each cloud statsd
+  # prefix is set to "nodepool.task.<cloudprovider>", see
+  # https://docs.openstack.org/openstacksdk/latest/user/guides/stats.html#statsd
+
   # type: timer, counter
   - match: nodepool.task.*.*
     name: nodepool_task
@@ -40,7 +45,6 @@ mappings:
     labels:
       provider: "$1"
       task: "$2"
-
   - match: nodepool.task.*.*
     name: nodepool_task_timer
     match_metric_type: timer
