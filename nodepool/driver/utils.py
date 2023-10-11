@@ -385,16 +385,18 @@ class RateLimitInstance:
         self.msg = msg
 
     def __enter__(self):
+        self.enter_time = time.monotonic()
         self.delay = self.limiter._enter()
         self.start_time = time.monotonic()
 
     def __exit__(self, etype, value, tb):
         end_time = time.monotonic()
         self.limiter._exit(etype, value, tb)
-        self.logger("%s in %ss after %ss delay",
+        self.logger("%s in %ss after %ss delay (lock delay %ss)",
                     self.msg,
                     end_time - self.start_time,
-                    self.delay)
+                    self.delay,
+                    self.start_time - self.enter_time)
 
 
 class RateLimiter:

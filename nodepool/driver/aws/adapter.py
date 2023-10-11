@@ -935,19 +935,22 @@ class AwsAdapter(statemachine.Adapter):
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed volumes"):
             return list(self.ec2.volumes.all())
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed AMIs"):
             return list(self.ec2.images.filter(Owners=['self']))
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed snapshots"):
             return list(self.ec2.snapshots.filter(OwnerIds=['self']))
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
@@ -957,7 +960,8 @@ class AwsAdapter(statemachine.Adapter):
             return []
 
         bucket = self.s3.Bucket(bucket_name)
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed S3 objects"):
             return list(bucket.objects.all())
 
     def _getLatestImageIdByFilters(self, image_filters):
