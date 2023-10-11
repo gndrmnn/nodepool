@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ccb7fcb_1bcc33b3",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2023-10-11T14:30:22Z",
+      "side": 1,
+      "message": "I don\u0027t think we should clear this, because it\u0027s somewhat likely to happen again in the next item in the loop.",
+      "revId": "736475369188cdc54b998ce8dd2871004f7e4ec8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
