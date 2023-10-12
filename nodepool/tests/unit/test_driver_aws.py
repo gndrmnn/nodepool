@@ -51,19 +51,25 @@ class FakeAwsAdapter(AwsAdapter):
 
         # Note: boto3 doesn't handle ipv6 addresses correctly
         # when in fake mode so we need to intercept the
-        # create_instances call and validate the args we supply.
-        def _fake_create_instances(*args, **kwargs):
-            self.__testcase.create_instance_calls.append(kwargs)
-            return self.ec2.create_instances_orig(*args, **kwargs)
+        # run_instances call and validate the args we supply.
+        def _fake_run_instances(*args, **kwargs):
+            self.__testcase.run_instance_calls.append(kwargs)
+            return self.ec2_client.run_instances_orig(*args, **kwargs)
 
-        self.ec2.create_instances_orig = self.ec2.create_instances
-        self.ec2.create_instances = _fake_create_instances
+        def _fake_get_paginator(*args, **kwargs):
+            try:
+                return self.__testcase.fake_aws.get_paginator(*args, **kwargs)
+            except NotImplementedError:
+                return self.ec2_client.get_paginator_orig(*args, **kwargs)
+
+        self.ec2_client.run_instances_orig = self.ec2_client.run_instances
+        self.ec2_client.run_instances = _fake_run_instances
         self.ec2_client.import_snapshot = \
             self.__testcase.fake_aws.import_snapshot
         self.ec2_client.import_image = \
             self.__testcase.fake_aws.import_image
-        self.ec2_client.get_paginator = \
-            self.__testcase.fake_aws.get_paginator
+        self.ec2_client.get_paginator_orig = self.ec2_client.get_paginator
+        self.ec2_client.get_paginator = _fake_get_paginator
 
         # moto does not mock service-quotas, so we do it ourselves:
         def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
@@ -123,7 +129,7 @@ class TestDriverAws(tests.DBTestCase):
             CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
 
         # A list of args to create instance for validation
-        self.create_instance_calls = []
+        self.run_instance_calls = []
 
         # TEST-NET-3
         ipv6 = False
@@ -626,22 +632,20 @@ class TestDriverAws(tests.DBTestCase):
 
         # Make sure we make the call to AWS as expected
         self.assertEqual(
-            self.create_instance_calls[0]['NetworkInterfaces']
+            self.run_instance_calls[0]['NetworkInterfaces']
             [0]['Ipv6AddressCount'], 1)
 
         # This is like what we should get back from AWS, verify the
         # statemachine instance object has the parameters set
         # correctly.
-        instance = Dummy()
-        instance.id = 'test'
-        instance.tags = []
-        instance.private_ip_address = '10.0.0.1'
-        instance.public_ip_address = '1.2.3.4'
-        instance.subnet = Dummy()
-        instance.subnet.availability_zone = 'us-west-2b'
-        iface = Dummy()
-        iface.ipv6_addresses = [{'Ipv6Address': 'fe80::dead:beef'}]
-        instance.network_interfaces = [iface]
+        instance = {}
+        instance['InstanceId'] = 'test'
+        instance['Tags'] = []
+        instance['PrivateIpAddress'] = '10.0.0.1'
+        instance['PublicIpAddress'] = '1.2.3.4'
+        instance['Placement'] = {'AvailabilityZone': 'us-west-2b'}
+        iface = {'Ipv6Addresses': [{'Ipv6Address': 'fe80::dead:beef'}]}
+        instance['NetworkInterfaces'] = [iface]
         provider = Dummy()
         provider.region_name = 'us-west-2'
         awsi = AwsInstance(provider, instance, None)
@@ -752,10 +756,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
-            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Iops'], 2000)
         self.assertEqual(
-            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
 
     def test_aws_diskimage_image(self):
@@ -795,10 +799,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
-            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Iops'], 2000)
         self.assertEqual(
-            self.create_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
 
     def test_aws_diskimage_removal(self):
