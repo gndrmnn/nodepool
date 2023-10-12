@@ -988,7 +988,8 @@ class AwsAdapter(statemachine.Adapter):
             return instances
 
     def _listVolumes(self):
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed volumes"):
             paginator = self.ec2_client.get_paginator('describe_volumes')
             volumes = []
             for page in paginator.paginate():
@@ -997,7 +998,8 @@ class AwsAdapter(statemachine.Adapter):
 
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed images"):
             paginator = self.ec2_client.get_paginator('describe_images')
             images = []
             for page in paginator.paginate(Owners=['self']):
@@ -1006,7 +1008,8 @@ class AwsAdapter(statemachine.Adapter):
 
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed snapshots"):
             paginator = self.ec2_client.get_paginator('describe_snapshots')
             snapshots = []
             for page in paginator.paginate(OwnerIds=['self']):
@@ -1019,7 +1022,8 @@ class AwsAdapter(statemachine.Adapter):
             return []
 
         bucket = self.s3.Bucket(bucket_name)
-        with self.non_mutating_rate_limiter:
+        with self.non_mutating_rate_limiter(
+                self.log.debug, "Listed S3 objects"):
             return list(bucket.objects.all())
 
     def _getLatestImageIdByFilters(self, image_filters):
