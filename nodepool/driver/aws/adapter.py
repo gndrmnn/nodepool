@@ -101,23 +101,22 @@ SPOT = 1
 class AwsInstance(statemachine.Instance):
     def __init__(self, provider, instance, quota):
         super().__init__()
-        self.external_id = instance.id
-        self.metadata = tag_list_to_dict(instance.tags)
-        self.private_ipv4 = instance.private_ip_address
+        self.external_id = instance['InstanceId']
+        self.metadata = tag_list_to_dict(instance.get('Tags'))
+        self.private_ipv4 = instance['PrivateIpAddress']
         self.private_ipv6 = None
-        self.public_ipv4 = instance.public_ip_address
+        self.public_ipv4 = instance.get('PublicIpAddress')
         self.public_ipv6 = None
         self.cloud = 'AWS'
         self.region = provider.region_name
         self.az = None
         self.quota = quota
 
-        if instance.subnet:
-            self.az = instance.subnet.availability_zone
+        self.az = instance['Placement']['AvailabilityZone']
 
-        for iface in instance.network_interfaces[:1]:
-            if iface.ipv6_addresses:
-                v6addr = iface.ipv6_addresses[0]
+        for iface in instance['NetworkInterfaces'][:1]:
+            if iface.get('Ipv6Addresses'):
+                v6addr = iface['Ipv6Addresses'][0]
                 self.public_ipv6 = v6addr['Ipv6Address']
         self.interface_ip = (self.public_ipv4 or self.public_ipv6 or
                              self.private_ipv4 or self.private_ipv6)
@@ -210,9 +209,9 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         if self.state == self.INSTANCE_CREATING:
             self.instance = self.adapter._refresh(self.instance)
 
-            if self.instance.state["Name"].lower() == "running":
+            if self.instance['State']['Name'].lower() == "running":
                 self.state = self.COMPLETE
-            elif self.instance.state["Name"].lower() == "terminated":
+            elif self.instance['State']['Name'].lower() == "terminated":
                 raise exceptions.LaunchStatusException(
                     "Instance in terminated state")
             else:
@@ -313,20 +312,21 @@ class AwsAdapter(statemachine.Adapter):
         self._tagAmis()
         for instance in self._listInstances():
             try:
-                if instance.state["Name"].lower() == "terminated":
+                if instance['State']['Name'].lower() == "terminated":
                     continue
             except botocore.exceptions.ClientError:
                 continue
-            yield AwsResource(tag_list_to_dict(instance.tags),
-                              AwsResource.TYPE_INSTANCE, instance.id)
+            yield AwsResource(tag_list_to_dict(instance.get('Tags')),
+                              AwsResource.TYPE_INSTANCE,
+                              instance['InstanceId'])
         for volume in self._listVolumes():
             try:
-                if volume.state.lower() == "deleted":
+                if volume['State'].lower() == "deleted":
                     continue
             except botocore.exceptions.ClientError:
                 continue
-            yield AwsResource(tag_list_to_dict(volume.tags),
-                              AwsResource.TYPE_VOLUME, volume.id)
+            yield AwsResource(tag_list_to_dict(volume.get('Tags')),
+                              AwsResource.TYPE_VOLUME, volume['VolumeId'])
         for ami in self._listAmis():
             try:
                 if ami.state.lower() == "deleted":
@@ -370,21 +370,21 @@ class AwsAdapter(statemachine.Adapter):
     def listInstances(self):
         volumes = {}
         for volume in self._listVolumes():
-            volumes[volume.volume_id] = volume
+            volumes[volume['VolumeId']] = volume
         for instance in self._listInstances():
-            if instance.state["Name"].lower() == "terminated":
+            if instance['State']["Name"].lower() == "terminated":
                 continue
             quota = self._getQuotaForInstanceType(
-                instance.instance_type,
-                SPOT if instance.instance_lifecycle == 'spot' else ON_DEMAND)
-
-            for attachment in instance.block_device_mappings:
+                instance['InstanceType'],
+                SPOT if instance.get('InstanceLifecycle') == 'spot'
+                else ON_DEMAND)
+            for attachment in instance['BlockDeviceMappings']:
                 volume_id = attachment['Ebs']['VolumeId']
                 volume = volumes.get(volume_id)
                 if volume is None:
                     self.log.warning(
                         "Volume %s of instance %s could not be found",
-                        volume_id, instance.id)
+                        volume_id, instance['InstanceId'])
                     continue
                 quota.add(self._getQuotaForVolume(volume))
 
@@ -892,13 +892,13 @@ class AwsAdapter(statemachine.Adapter):
         return QuotaInformation(**args)
 
     def _getQuotaForVolume(self, volume):
-        volume_type = volume.volume_type
+        volume_type = volume['VolumeType']
         vquota_codes = VOLUME_QUOTA_CODES.get(volume_type, {})
         args = {}
-        if 'iops' in vquota_codes and getattr(volume, 'iops', None):
-            args[vquota_codes['iops']] = volume.iops
-        if 'storage' in vquota_codes and getattr(volume, 'size', None):
-            args[vquota_codes['storage']] = volume.size
+        if 'iops' in vquota_codes and volume.get('Iops'):
+            args[vquota_codes['iops']] = volume['Iops']
+        if 'storage' in vquota_codes and volume.get('Size'):
+            args[vquota_codes['storage']] = volume['Size']
         return QuotaInformation(**args)
 
     def _getQuotaForVolumeType(self, volume_type, storage=None, iops=None):
@@ -920,7 +920,7 @@ class AwsAdapter(statemachine.Adapter):
 
     def _refresh(self, obj):
         for instance in self._listInstances():
-            if instance.id == obj.id:
+            if instance['InstanceId'] == obj['InstanceId']:
                 return instance
         return obj
 
@@ -929,8 +929,8 @@ class AwsAdapter(statemachine.Adapter):
             return obj
 
         for instance in self._listInstances():
-            if instance.id == obj.id:
-                if instance.state["Name"].lower() == "terminated":
+            if instance['InstanceId'] == obj['InstanceId']:
+                if instance['State']['Name'].lower() == "terminated":
                     return None
                 return instance
         return None
@@ -939,12 +939,21 @@ class AwsAdapter(statemachine.Adapter):
     def _listInstances(self):
         with self.non_mutating_rate_limiter(
                 self.log.debug, "Listed instances"):
-            return list(self.ec2.instances.all())
+            paginator = self.ec2_client.get_paginator('describe_instances')
+            instances = []
+            for page in paginator.paginate():
+                for res in page['Reservations']:
+                    instances.extend(res['Instances'])
+            return instances
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         with self.non_mutating_rate_limiter:
-            return list(self.ec2.volumes.all())
+            paginator = self.ec2_client.get_paginator('describe_volumes')
+            volumes = []
+            for page in paginator.paginate():
+                volumes.extend(page['Volumes'])
+            return volumes
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listAmis(self):
@@ -1119,9 +1128,11 @@ class AwsAdapter(statemachine.Adapter):
             }
 
         with self.rate_limiter(log.debug, "Created instance"):
-            log.debug(f"Creating VM {hostname}")
-            instances = self.ec2.create_instances(**args)
-            log.debug(f"Created VM {hostname} as instance {instances[0].id}")
+            log.debug("Creating VM %s", hostname)
+            resp = self.ec2_client.run_instances(**args)
+            instances = resp['Instances']
+            log.debug("Created VM %s as instance %s",
+                      hostname, instances[0]['InstanceId'])
             return instances[0]
 
     def _deleteThread(self):
@@ -1159,7 +1170,7 @@ class AwsAdapter(statemachine.Adapter):
         if log is None:
             log = self.log
         for instance in self._listInstances():
-            if instance.id == external_id:
+            if instance['InstanceId'] == external_id:
                 break
         else:
             log.warning(f"Instance not found when deleting {external_id}")
@@ -1167,21 +1178,22 @@ class AwsAdapter(statemachine.Adapter):
         if immediate:
             with self.rate_limiter(log.debug, "Deleted instance"):
                 log.debug(f"Deleting instance {external_id}")
-                instance.terminate()
+                self.ec2_client.terminate_instances(
+                    InstanceIds=[instance['InstanceId']])
         else:
             self.delete_queue.put((external_id, log))
         return instance
 
     def _deleteVolume(self, external_id):
         for volume in self._listVolumes():
-            if volume.id == external_id:
+            if volume['VolumeId'] == external_id:
                 break
         else:
             self.log.warning(f"Volume not found when deleting {external_id}")
             return None
         with self.rate_limiter(self.log.debug, "Deleted volume"):
             self.log.debug(f"Deleting volume {external_id}")
-            volume.delete()
+            self.ec2_client.delete_volume(VolumeId=volume['VolumeId'])
         return volume
 
     def _deleteAmi(self, external_id):
