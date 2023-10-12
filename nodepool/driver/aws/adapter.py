@@ -282,7 +282,6 @@ class AwsAdapter(statemachine.Adapter):
         self.aws = boto3.Session(
             region_name=self.provider.region_name,
             profile_name=self.provider.profile_name)
-        self.ec2 = self.aws.resource('ec2')
         self.ec2_client = self.aws.client("ec2")
         self.s3 = self.aws.resource('s3')
         self.s3_client = self.aws.client('s3')
@@ -329,20 +328,20 @@ class AwsAdapter(statemachine.Adapter):
                               AwsResource.TYPE_VOLUME, volume['VolumeId'])
         for ami in self._listAmis():
             try:
-                if ami.state.lower() == "deleted":
-                    continue
-            except (botocore.exceptions.ClientError, AttributeError):
-                continue
-            yield AwsResource(tag_list_to_dict(ami.tags),
-                              AwsResource.TYPE_AMI, ami.id)
-        for snap in self._listSnapshots():
-            try:
-                if snap.state.lower() == "deleted":
+                if ami['State'].lower() == "deleted":
                     continue
             except botocore.exceptions.ClientError:
                 continue
-            yield AwsResource(tag_list_to_dict(snap.tags),
-                              AwsResource.TYPE_SNAPSHOT, snap.id)
+            yield AwsResource(tag_list_to_dict(ami.get('Tags')),
+                              AwsResource.TYPE_AMI, ami['ImageId'])
+        for snap in self._listSnapshots():
+            try:
+                if snap['State'].lower() == "deleted":
+                    continue
+            except botocore.exceptions.ClientError:
+                continue
+            yield AwsResource(tag_list_to_dict(snap.get('Tags')),
+                              AwsResource.TYPE_SNAPSHOT, snap['SnapshotId'])
         if self.provider.object_storage:
             for obj in self._listObjects():
                 with self.non_mutating_rate_limiter:
@@ -542,14 +541,17 @@ class AwsAdapter(statemachine.Adapter):
         # Tag the snapshot
         try:
             with self.non_mutating_rate_limiter:
-                snap = self.ec2.Snapshot(
-                    task['SnapshotTaskDetail']['SnapshotId'])
+                resp = self.ec2_client.describe_snapshots(
+                    SnapshotIds=[task['SnapshotTaskDetail']['SnapshotId']])
+                snap = resp['Snapshots'][0]
             with self.rate_limiter:
-                snap.create_tags(Tags=task['Tags'])
+                self.ec2_client.create_tags(
+                    Resources=[task['SnapshotTaskDetail']['SnapshotId']],
+                    Tags=task['Tags'])
         except Exception:
             self.log.exception("Error tagging snapshot:")
 
-        volume_size = provider_image.volume_size or snap.volume_size
+        volume_size = provider_image.volume_size or snap['VolumeSize']
         # Register the snapshot as an AMI
         with self.rate_limiter:
             bdm = {
@@ -578,10 +580,10 @@ class AwsAdapter(statemachine.Adapter):
 
         # Tag the AMI
         try:
-            with self.non_mutating_rate_limiter:
-                ami = self.ec2.Image(register_response['ImageId'])
             with self.rate_limiter:
-                ami.create_tags(Tags=task['Tags'])
+                self.ec2_client.create_tags(
+                    Resources=[register_response['ImageId']],
+                    Tags=task['Tags'])
         except Exception:
             self.log.exception("Error tagging AMI:")
 
@@ -649,20 +651,19 @@ class AwsAdapter(statemachine.Adapter):
 
         # Tag the AMI
         try:
-            with self.non_mutating_rate_limiter:
-                ami = self.ec2.Image(task['ImageId'])
             with self.rate_limiter:
-                ami.create_tags(Tags=task['Tags'])
+                self.ec2_client.create_tags(
+                    Resources=[task['ImageId']],
+                    Tags=task['Tags'])
         except Exception:
             self.log.exception("Error tagging AMI:")
 
         # Tag the snapshot
         try:
-            with self.non_mutating_rate_limiter:
-                snap = self.ec2.Snapshot(
-                    task['SnapshotDetails'][0]['SnapshotId'])
             with self.rate_limiter:
-                snap.create_tags(Tags=task['Tags'])
+                self.ec2_client.create_tags(
+                    Resources=[task['SnapshotDetails'][0]['SnapshotId']],
+                    Tags=task['Tags'])
         except Exception:
             self.log.exception("Error tagging snapshot:")
 
@@ -674,8 +675,8 @@ class AwsAdapter(statemachine.Adapter):
         snaps = set()
         self.log.debug(f"Deleting image {external_id}")
         for ami in self._listAmis():
-            if ami.id == external_id:
-                for bdm in ami.block_device_mappings:
+            if ami['ImageId'] == external_id:
+                for bdm in ami.get('BlockDeviceMappings', []):
                     snapid = bdm.get('Ebs', {}).get('SnapshotId')
                     if snapid:
                         snaps.add(snapid)
@@ -692,18 +693,15 @@ class AwsAdapter(statemachine.Adapter):
         # import task.
         to_examine = []
         for ami in self._listAmis():
-            if ami.id in self.not_our_images:
+            if ami['ImageId'] in self.not_our_images:
                 continue
-            try:
-                if ami.tags:
-                    continue
-            except (botocore.exceptions.ClientError, AttributeError):
+            if ami.get('Tags'):
                 continue
 
             # This has no tags, which means it's either not a nodepool
             # image, or it's a new one which doesn't have tags yet.
-            if ami.name.startswith('import-ami-'):
-                task = self._getImportImageTask(ami.name)
+            if ami['Name'].startswith('import-ami-'):
+                task = self._getImportImageTask(ami['Name'])
                 if task:
                     # This was an import image (not snapshot) so let's
                     # try to find tags from the import task.
@@ -712,25 +710,28 @@ class AwsAdapter(statemachine.Adapter):
                         self.provider.name):
                         # Copy over tags
                         self.log.debug(
-                            f"Copying tags from import task {ami.name} to AMI")
+                            "Copying tags from import task %s to AMI",
+                            ami['Name'])
                         with self.rate_limiter:
-                            ami.create_tags(Tags=task['Tags'])
+                            self.ec2_client.create_tags(
+                                Resources=[ami['ImageId']],
+                                Tags=task['Tags'])
                         continue
 
             # This may have been a snapshot import; try to copy over
             # any tags from the snapshot import task, otherwise, mark
             # it as an image we can ignore in future runs.
-            if len(ami.block_device_mappings) < 1:
-                self.not_our_images.add(ami.id)
+            if len(ami.get('BlockDeviceMappings', [])) < 1:
+                self.not_our_images.add(ami['ImageId'])
                 continue
-            bdm = ami.block_device_mappings[0]
+            bdm = ami['BlockDeviceMappings'][0]
             ebs = bdm.get('Ebs')
             if not ebs:
-                self.not_our_images.add(ami.id)
+                self.not_our_images.add(ami['ImageId'])
                 continue
             snapshot_id = ebs.get('SnapshotId')
             if not snapshot_id:
-                self.not_our_images.add(ami.id)
+                self.not_our_images.add(ami['ImageId'])
                 continue
             to_examine.append((ami, snapshot_id))
         if not to_examine:
@@ -750,33 +751,37 @@ class AwsAdapter(statemachine.Adapter):
         for ami, snapshot_id in to_examine:
             tags = task_map.get(snapshot_id)
             if not tags:
-                self.not_our_images.add(ami.id)
+                self.not_our_images.add(ami['ImageId'])
                 continue
             metadata = tag_list_to_dict(tags)
             if (metadata.get('nodepool_provider_name') == self.provider.name):
                 # Copy over tags
                 self.log.debug(
-                    f"Copying tags from import task to image {ami.id}")
+                    "Copying tags from import task to image %s",
+                    ami['ImageId'])
                 with self.rate_limiter:
-                    ami.create_tags(Tags=tags)
+                    self.ec2_client.create_tags(
+                        Resources=[ami['ImageId']],
+                        Tags=task['Tags'])
             else:
-                self.not_our_images.add(ami.id)
+                self.not_our_images.add(ami['ImageId'])
 
     def _tagSnapshots(self):
         # See comments for _tagAmis
         to_examine = []
         for snap in self._listSnapshots():
-            if snap.id in self.not_our_snapshots:
+            if snap['SnapshotId'] in self.not_our_snapshots:
                 continue
             try:
-                if snap.tags:
+                if snap.get('Tags'):
                     continue
             except botocore.exceptions.ClientError:
                 # We may have cached a snapshot that doesn't exist
                 continue
 
-            if 'import-ami' in snap.description:
-                match = re.match(r'.*?(import-ami-\w*)', snap.description)
+            if 'import-ami' in snap.get('Description', ''):
+                match = re.match(r'.*?(import-ami-\w*)',
+                                 snap.get('Description', ''))
                 task = None
                 if match:
                     task_id = match.group(1)
@@ -792,7 +797,9 @@ class AwsAdapter(statemachine.Adapter):
                             f"Copying tags from import task {task_id}"
                             " to snapshot")
                         with self.rate_limiter:
-                            snap.create_tags(Tags=task['Tags'])
+                            self.ec2_client.create_tags(
+                                Resources=[snap['SnapshotId']],
+                                Tags=task['Tags'])
                         continue
 
             # This may have been a snapshot import; try to copy over
@@ -814,19 +821,22 @@ class AwsAdapter(statemachine.Adapter):
             task_map[task_snapshot_id] = task['Tags']
 
         for snap in to_examine:
-            tags = task_map.get(snap.id)
+            tags = task_map.get(snap['SnapshotId'])
             if not tags:
-                self.not_our_snapshots.add(snap.id)
+                self.not_our_snapshots.add(snap['SnapshotId'])
                 continue
             metadata = tag_list_to_dict(tags)
             if (metadata.get('nodepool_provider_name') == self.provider.name):
                 # Copy over tags
                 self.log.debug(
-                    f"Copying tags from import task to snapshot {snap.id}")
+                    "Copying tags from import task to snapshot %s",
+                    snap['SnapshotId'])
                 with self.rate_limiter:
-                    snap.create_tags(Tags=tags)
+                    self.ec2_client.create_tags(
+                        Resources=[snap['SnapshotId']],
+                        Tags=tags)
             else:
-                self.not_our_snapshots.add(snap.id)
+                self.not_our_snapshots.add(snap['SnapshotId'])
 
     def _getImportImageTask(self, task_id):
         paginator = self.ec2_client.get_paginator(
@@ -959,13 +969,21 @@ class AwsAdapter(statemachine.Adapter):
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
-            return list(self.ec2.images.filter(Owners=['self']))
+            paginator = self.ec2_client.get_paginator('describe_images')
+            images = []
+            for page in paginator.paginate(Owners=['self']):
+                images.extend(page['Images'])
+            return images
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
-            return list(self.ec2.snapshots.filter(OwnerIds=['self']))
+            paginator = self.ec2_client.get_paginator('describe_snapshots')
+            snapshots = []
+            for page in paginator.paginate(OwnerIds=['self']):
+                snapshots.extend(page['Snapshots'])
+            return snapshots
 
     @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listObjects(self):
@@ -1017,7 +1035,8 @@ class AwsAdapter(statemachine.Adapter):
     # This method is wrapped with an LRU cache in the constructor.
     def _getImage(self, image_id):
         with self.non_mutating_rate_limiter:
-            return self.ec2.Image(image_id)
+            resp = self.ec2_client.describe_images(ImageIds=[image_id])
+            return resp['Images'][0]
 
     def _submitCreateInstance(self, label, image_external_id,
                               tags, hostname, log):
@@ -1098,8 +1117,8 @@ class AwsAdapter(statemachine.Adapter):
         # TODO: Flavors can also influence whether or not the VM spawns with a
         # volume -- we basically need to ensure DeleteOnTermination is true.
         # However, leaked volume detection may mitigate this.
-        if hasattr(image, 'block_device_mappings'):
-            bdm = image.block_device_mappings
+        if image.get('BlockDeviceMappings'):
+            bdm = image['BlockDeviceMappings']
             mapping = copy.deepcopy(bdm[0])
             if 'Ebs' in mapping:
                 mapping['Ebs']['DeleteOnTermination'] = True
@@ -1198,26 +1217,26 @@ class AwsAdapter(statemachine.Adapter):
 
     def _deleteAmi(self, external_id):
         for ami in self._listAmis():
-            if ami.id == external_id:
+            if ami['ImageId'] == external_id:
                 break
         else:
             self.log.warning(f"AMI not found when deleting {external_id}")
             return None
         with self.rate_limiter:
             self.log.debug(f"Deleting AMI {external_id}")
-            ami.deregister()
+            self.ec2_client.deregister_image(ImageId=ami['ImageId'])
         return ami
 
     def _deleteSnapshot(self, external_id):
         for snap in self._listSnapshots():
-            if snap.id == external_id:
+            if snap['SnapshotId'] == external_id:
                 break
         else:
             self.log.warning(f"Snapshot not found when deleting {external_id}")
             return None
         with self.rate_limiter:
             self.log.debug(f"Deleting Snapshot {external_id}")
-            snap.delete()
+            self.ec2_client.delete_snapshot(SnapshotId=snap['SnapshotId'])
         return snap
 
     def _deleteObject(self, external_id):
