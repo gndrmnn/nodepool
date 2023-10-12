@@ -289,6 +289,8 @@ class BaseTestCase(testtools.TestCase):
                     continue
                 if t.name.startswith("openstack-api"):
                     continue
+                if t.name.startswith("aws-api"):
+                    continue
                 if t.name.startswith("keyscan-"):
                     continue
                 if t.name.startswith("start-"):

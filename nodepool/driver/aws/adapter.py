@@ -26,7 +26,11 @@ import queue
 import time
 import urllib.parse
 
-from nodepool.driver.utils import QuotaInformation, RateLimiter
+from nodepool.driver.utils import (
+    QuotaInformation,
+    LazyExecutorTTLCache,
+    RateLimiter,
+)
 from nodepool.driver import statemachine
 from nodepool import exceptions
 
@@ -288,6 +292,40 @@ class AwsAdapter(statemachine.Adapter):
         self.s3 = self.aws.resource('s3')
         self.s3_client = self.aws.client('s3')
         self.aws_quotas = self.aws.client("service-quotas")
+
+        workers = 10
+        self.log.info("Create executor with max workers=%s", workers)
+        self.api_executor = ThreadPoolExecutor(
+            thread_name_prefix=f'aws-api-{provider_config.name}',
+            max_workers=workers)
+
+        # Use a lazy TTL cache for these.  This uses the TPE to
+        # asynchronously update the cached values, meanwhile returning
+        # the previous cached data if available.  This means every
+        # call after the first one is instantaneous.
+        self._listInstances = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listInstances)
+        self._listVolumes = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listVolumes)
+        self._listAmis = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listAmis)
+        self._listSnapshots = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listSnapshots)
+        self._listObjects = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self._listObjects)
+        # In addition to _listInstances we also need to cache the
+        # AwsInstances as accessing the attributes of the EC2 instances
+        # creates additional API requests due to lazy loading (boto3
+        # calls them 'autoload properties').
+        self.listInstances = LazyExecutorTTLCache(
+            CACHE_TTL, self.api_executor)(
+                self.listInstances)
+
         # In listResources, we reconcile AMIs which appear to be
         # imports but have no nodepool tags, however it's possible
         # that these aren't nodepool images.  If we determine that's
@@ -298,6 +336,7 @@ class AwsAdapter(statemachine.Adapter):
 
     def stop(self):
         self.create_executor.shutdown()
+        self.api_executor.shutdown()
         self._running = False
 
     def getCreateStateMachine(self, hostname, label, image_external_id,
@@ -927,30 +966,25 @@ class AwsAdapter(statemachine.Adapter):
                 return instance
         return None
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listInstances(self):
         with self.non_mutating_rate_limiter(
                 self.log.debug, "Listed instances"):
             return list(self.ec2.instances.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listVolumes(self):
         with self.non_mutating_rate_limiter:
             return list(self.ec2.volumes.all())
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listAmis(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.images.filter(Owners=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listSnapshots(self):
         # Note: this is overridden in tests due to the filter
         with self.non_mutating_rate_limiter:
             return list(self.ec2.snapshots.filter(OwnerIds=['self']))
 
-    @cachetools.func.ttl_cache(maxsize=1, ttl=CACHE_TTL)
     def _listObjects(self):
         bucket_name = self.provider.object_storage.get('bucket-name')
         if not bucket_name:
