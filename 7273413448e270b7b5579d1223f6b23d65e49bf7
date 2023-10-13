@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79bd47ac_bf72b704",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7186
+      },
+      "writtenOn": "2023-10-13T07:12:13Z",
+      "side": 1,
+      "message": "Alright, I\u0027ll rework this plug metrics emission with the rate limiter.",
+      "revId": "7273413448e270b7b5579d1223f6b23d65e49bf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
