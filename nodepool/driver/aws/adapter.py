@@ -1,5 +1,5 @@
 # Copyright 2018 Red Hat
-# Copyright 2022 Acme Gating, LLC
+# Copyright 2022-2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -98,6 +98,7 @@ VOLUME_QUOTA_CODES = {
 }
 
 CACHE_TTL = 10
+SERVICE_QUOTA_CACHE_TTL = 300
 ON_DEMAND = 0
 SPOT = 1
 
@@ -281,6 +282,15 @@ class AwsAdapter(statemachine.Adapter):
         # of mutating requests by default.
         self.non_mutating_rate_limiter = RateLimiter(self.provider.name,
                                                      self.provider.rate * 10.0)
+        # Experimentally, this rate limit refreshes tokens at
+        # something like 0.16/second, so if we operated at the rate
+        # limit, it would take us almost a minute to determine the
+        # quota.  Instead, we're going to just use the normal provider
+        # rate and rely on caching to avoid going over the limit.  At
+        # the of writing, we'll issue bursts of 5 requests every 5
+        # minutes.
+        self.quota_service_rate_limiter = RateLimiter(self.provider.name,
+                                                      self.provider.rate)
         self.image_id_by_filter_cache = cachetools.TTLCache(
             maxsize=8192, ttl=(5 * 60))
         self.aws = boto3.Session(
@@ -316,6 +326,12 @@ class AwsAdapter(statemachine.Adapter):
         self._listObjects = LazyExecutorTTLCache(
             CACHE_TTL, self.api_executor)(
                 self._listObjects)
+        self._listEC2Quotas = LazyExecutorTTLCache(
+            SERVICE_QUOTA_CACHE_TTL, self.api_executor)(
+                self._listEC2Quotas)
+        self._listEBSQuotas = LazyExecutorTTLCache(
+            SERVICE_QUOTA_CACHE_TTL, self.api_executor)(
+                self._listEBSQuotas)
 
         # In listResources, we reconcile AMIs which appear to be
         # imports but have no nodepool tags, however it's possible
@@ -425,13 +441,16 @@ class AwsAdapter(statemachine.Adapter):
         # Get the instance and volume types that this provider handles
         instance_types = {}
         volume_types = set()
+        ec2_quotas = self._listEC2Quotas()
+        ebs_quotas = self._listEBSQuotas()
         for pool in self.provider.pools.values():
             for label in pool.labels.values():
                 if label.instance_type not in instance_types:
                     instance_types[label.instance_type] = set()
                 instance_types[label.instance_type].add(
                     SPOT if label.use_spot else ON_DEMAND)
-                volume_types.add(label.volume_type)
+                if label.volume_type:
+                    volume_types.add(label.volume_type)
         args = dict(default=math.inf)
         for instance_type in instance_types:
             for market_type_option in instance_types[instance_type]:
@@ -444,13 +463,12 @@ class AwsAdapter(statemachine.Adapter):
                         "Unknown quota code for instance type: %s",
                         instance_type)
                     continue
-                with self.non_mutating_rate_limiter:
-                    self.log.debug("Getting EC2 quota limits for %s", code)
-                    response = self.aws_quotas.get_service_quota(
-                        ServiceCode='ec2',
-                        QuotaCode=code,
-                    )
-                    args[code] = response['Quota']['Value']
+                if code not in ec2_quotas:
+                    self.log.warning(
+                        "AWS quota code %s for instance type: %s not known",
+                        code, instance_type)
+                    continue
+                args[code] = ec2_quotas[code]
         for volume_type in volume_types:
             vquota_codes = VOLUME_QUOTA_CODES.get(volume_type)
             if not vquota_codes:
@@ -461,18 +479,17 @@ class AwsAdapter(statemachine.Adapter):
             for resource, code in vquota_codes.items():
                 if code in args:
                     continue
-                with self.non_mutating_rate_limiter:
-                    self.log.debug("Getting EBS quota limits for %s", code)
-                    response = self.aws_quotas.get_service_quota(
-                        ServiceCode='ebs',
-                        QuotaCode=code,
-                    )
-                    value = response['Quota']['Value']
-                    # Unit mismatch: storage limit is in TB, but usage
-                    # is in GB.  Translate the limit to GB.
-                    if resource == 'storage':
-                        value *= 1000
-                    args[code] = value
+                if code not in ebs_quotas:
+                    self.log.warning(
+                        "AWS quota code %s for volume type: %s not known",
+                        code, volume_type)
+                    continue
+                value = ebs_quotas[code]
+                # Unit mismatch: storage limit is in TB, but usage
+                # is in GB.  Translate the limit to GB.
+                if resource == 'storage':
+                    value *= 1000
+                args[code] = value
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
@@ -976,6 +993,23 @@ class AwsAdapter(statemachine.Adapter):
                     return None
                 return instance
         return None
+
+    def _listServiceQuotas(self, service_code):
+        with self.quota_service_rate_limiter(
+                self.log.debug, f"Listed {service_code} quotas"):
+            paginator = self.aws_quotas.get_paginator(
+                'list_service_quotas')
+            quotas = {}
+            for page in paginator.paginate(ServiceCode=service_code):
+                for quota in page['Quotas']:
+                    quotas[quota['QuotaCode']] = quota['Value']
+            return quotas
+
+    def _listEC2Quotas(self):
+        return self._listServiceQuotas('ec2')
+
+    def _listEBSQuotas(self):
+        return self._listServiceQuotas('ebs')
 
     def _listInstances(self):
         with self.non_mutating_rate_limiter(

@@ -1,5 +1,5 @@
 # Copyright (C) 2018 Red Hat
-# Copyright 2022 Acme Gating, LLC
+# Copyright 2022-2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -73,23 +73,53 @@ class FakeAwsAdapter(AwsAdapter):
 
         # moto does not mock service-quotas, so we do it ourselves:
         def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
-            # This is a simple fake that only returns the number
-            # of cores.
-            if self.__quotas is None:
-                return {'Quota': {'Value': 100}}
+            if ServiceCode == 'ec2':
+                qdict = self.__ec2_quotas
+            elif ServiceCode == 'ebs':
+                qdict = self.__ebs_quotas
             else:
-                return {'Quota': {'Value': self.__quotas.get(QuotaCode)}}
+                raise NotImplementedError(
+                    f"Quota code {ServiceCode} not implemented")
+            return {'Quota': {'Value': qdict.get(QuotaCode)}}
         self.aws_quotas.get_service_quota = _fake_get_service_quota
 
+        def _fake_list_service_quotas(ServiceCode, *args, **kwargs):
+            if ServiceCode == 'ec2':
+                qdict = self.__ec2_quotas
+            elif ServiceCode == 'ebs':
+                qdict = self.__ebs_quotas
+            else:
+                raise NotImplementedError(
+                    f"Quota code {ServiceCode} not implemented")
+            quotas = []
+            for code, value in qdict.items():
+                quotas.append(
+                    {'Value': value, 'QuotaCode': code}
+                )
+            return {'Quotas': quotas}
+        self.aws_quotas.list_service_quotas = _fake_list_service_quotas
 
-def aws_quotas(quotas):
-    """Specify a set of AWS quota values for use by a test method.
+
+def ec2_quotas(quotas):
+    """Specify a set of AWS EC2 quota values for use by a test method.
 
     :arg dict quotas: The quota dictionary.
     """
 
     def decorator(test):
-        test.__aws_quotas__ = quotas
+        test.__aws_ec2_quotas__ = quotas
+        return test
+    return decorator
+
+
+def ebs_quotas(quotas):
+    """Specify a set of AWS EBS quota values for use by a test method.
+
+    :arg dict quotas: The quota dictionary.
+    """
+
+    def decorator(test):
+        test.__aws_ebs_quotas__ = quotas
         return test
     return decorator
 
@@ -165,11 +195,8 @@ class TestDriverAws(tests.DBTestCase):
         self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
         test_name = self.id().split('.')[-1]
         test = getattr(self, test_name)
-        if hasattr(test, '__aws_quotas__'):
-            quotas = getattr(test, '__aws_quotas__')
-        else:
-            quotas = None
-        self.patchAdapter(quotas=quotas)
+        self.patchAdapter(ec2_quotas=getattr(test, '__aws_ec2_quotas__', None),
+                          ebs_quotas=getattr(test, '__aws_ebs_quotas__', None))
 
     def tearDown(self):
         self.mock_ec2.stop()
@@ -183,12 +210,27 @@ class TestDriverAws(tests.DBTestCase):
         kw['instance_profile_arn'] = self.instance_profile_arn
         return super().setup_config(*args, **kw)
 
-    def patchAdapter(self, quotas=None):
+    def patchAdapter(self, ec2_quotas=None, ebs_quotas=None):
+        default_ec2_quotas = {
+            'L-1216C47A': 100,
+            'L-43DA4232': 100,
+            'L-34B43A08': 100,
+        }
+        default_ebs_quotas = {
+            'L-D18FCD1D': 100.0,
+            'L-7A658B76': 100.0,
+        }
+        if ec2_quotas is None:
+            ec2_quotas = default_ec2_quotas
+        if ebs_quotas is None:
+            ebs_quotas = default_ebs_quotas
         self.patch(nodepool.driver.aws.adapter, 'AwsAdapter', FakeAwsAdapter)
         self.patch(nodepool.driver.aws.adapter.AwsAdapter,
                    '_FakeAwsAdapter__testcase', self)
         self.patch(nodepool.driver.aws.adapter.AwsAdapter,
-                   '_FakeAwsAdapter__quotas', quotas)
+                   '_FakeAwsAdapter__ec2_quotas', ec2_quotas)
+        self.patch(nodepool.driver.aws.adapter.AwsAdapter,
+                   '_FakeAwsAdapter__ebs_quotas', ebs_quotas)
 
     def requestNode(self, config_path, label):
         # A helper method to perform a single node request
@@ -247,7 +289,7 @@ class TestDriverAws(tests.DBTestCase):
         for node in nodes:
             self.waitForNodeDeletion(node)
 
-    @aws_quotas({
+    @ec2_quotas({
         'L-1216C47A': 2,
         'L-43DA4232': 448,
         'L-34B43A08': 2
@@ -302,7 +344,7 @@ class TestDriverAws(tests.DBTestCase):
         req3 = self.waitForNodeRequest(req3)
         self.assertSuccess(req3)
 
-    @aws_quotas({
+    @ec2_quotas({
         'L-43DA4232': 448,
         'L-1216C47A': 200,
         'L-34B43A08': 200
@@ -355,7 +397,7 @@ class TestDriverAws(tests.DBTestCase):
         req3 = self.waitForNodeRequest(req3)
         self.assertSuccess(req3)
 
-    @aws_quotas({
+    @ec2_quotas({
         'L-1216C47A': 1000,
         'L-43DA4232': 1000,
     })
@@ -400,7 +442,7 @@ class TestDriverAws(tests.DBTestCase):
         req2 = self.waitForNodeRequest(req2)
         self.assertSuccess(req2)
 
-    @aws_quotas({
+    @ec2_quotas({
         'L-1216C47A': 1000,
         'L-43DA4232': 1000,
     })
@@ -444,8 +486,10 @@ class TestDriverAws(tests.DBTestCase):
         # Assert that the second request is still being deferred
         req2 = self.waitForNodeRequest(req2, (zk.REQUESTED,))
 
-    @aws_quotas({
+    @ec2_quotas({
         'L-1216C47A': 200,  # instance
+    })
+    @ebs_quotas({
         'L-D18FCD1D': 1.0,  # gp2 storage (TB)
         'L-7A658B76': 1.0,  # gp3 storage (TB)
     })
