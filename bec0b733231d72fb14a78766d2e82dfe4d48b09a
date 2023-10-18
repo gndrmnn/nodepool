@@ -16,6 +16,24 @@
       "message": "Looks like we need a `get()` here.\n\n\tTraceback (most recent call last):\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/launcher.py\", line 491, in run\n\t    for chunk in self._assignHandlers():\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/launcher.py\", line 242, in _assignHandlers\n\t    reasons_to_decline \u003d rh.getDeclinedReasons()\n\t\t                 ^^^^^^^^^^^^^^^^^^^^^^^\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/__init__.py\", line 600, in getDeclinedReasons\n\t    elif not self.hasProviderQuota(self.request.node_types):\n\t\t     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/statemachine.py\", line 520, in hasProviderQuota\n\t    cloud_quota \u003d self.manager.estimatedNodepoolQuota()\n\t\t          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/utils.py\", line 325, in estimatedNodepoolQuota\n\t    nodepool_quota.subtract(self.unmanagedQuotaUsed())\n\t\t                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/statemachine.py\", line 836, in unmanagedQuotaUsed\n\t    for instance in self.adapter.listInstances():\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/aws/adapter.py\", line 425, in listInstances\n\t    yield AwsInstance(self.provider, instance, quota)\n\t\t  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\t  File \"/opt/nodepool/lib/python3.11/site-packages/nodepool/driver/aws/adapter.py\", line 110, in __init__\n\t    self.private_ipv4 \u003d instance[\u0027PrivateIpAddress\u0027]\n\t\t                ~~~~~~~~^^^^^^^^^^^^^^^^^^^^\n\tKeyError: \u0027PrivateIpAddress\u0027",
       "revId": "bec0b733231d72fb14a78766d2e82dfe4d48b09a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec91044b_e57ae853",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2023-10-18T04:57:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1ec4136_4f2b3142",
+      "revId": "bec0b733231d72fb14a78766d2e82dfe4d48b09a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
