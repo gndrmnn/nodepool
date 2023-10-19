@@ -34,6 +34,8 @@ providers:
     pools:
       - name: main
         max-servers: 96
+        node-attributes:
+          foo: bar
         labels:
           - name: backing-label
             cloud-image: fake-image

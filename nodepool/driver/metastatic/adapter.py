@@ -117,6 +117,7 @@ class MetastaticInstance(statemachine.Instance):
             self.private_ipv4 = backing_node.private_ipv4
             self.az = backing_node.az
             self.region = backing_node.region
+            self.attributes = backing_node.attributes
             # Image overrides:
             self.username = backing_node.username
             self.python_path = backing_node.python_path
