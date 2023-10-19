@@ -104,6 +104,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.assertEqual(bn1.host_keys, node1.host_keys)
         self.assertEqual(['ssh-rsa FAKEKEY'], node1.host_keys)
         self.assertEqual(bn1.id, node1.driver_data['backing_node'])
+        self.assertEqual(bn1.attributes, node1.attributes)
 
         # Allocate a second node, should have same backing node
         node2 = self._requestNode()
