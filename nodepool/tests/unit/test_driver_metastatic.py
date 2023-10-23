@@ -115,6 +115,7 @@ class TestDriverMetastatic(tests.DBTestCase):
             'testattr': 'backing',
         })
         self.assertEqual(node1.attributes, {
+            'backattr': 'back',
             'metaattr': 'meta',
             'testattr': 'metastatic',
         })

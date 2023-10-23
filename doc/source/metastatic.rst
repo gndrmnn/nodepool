@@ -88,8 +88,14 @@ itself, which is "meta".
        .. attr:: node-attributes
           :type: dict
 
-          A dictionary of key-value pairs that will be stored with the node data
-          in ZooKeeper. The keys and values can be any arbitrary string.
+          A dictionary of key-value pairs that will be stored with the
+          node data in ZooKeeper. The keys and values can be any
+          arbitrary string.
+
+          The metastatic driver will automatically use the values
+          supplied by the backing node as default values.  Any values
+          specified here for top-level dictionary keys will override
+          those supplied by the backing node.
 
        .. attr:: max-servers
           :type: int
