@@ -79,6 +79,7 @@ class MetastaticPool(ConfigPool):
         self.load(pool_config)
 
     def load(self, pool_config):
+        super().load(pool_config)
         self.name = pool_config['name']
         self.max_servers = pool_config.get('max-servers', math.inf)
         for label in pool_config.get('labels', []):
