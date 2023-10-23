@@ -85,6 +85,12 @@ class TestDriverMetastatic(tests.DBTestCase):
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.startPool(pool)
         manager = pool.getProviderManager('fake-provider')
+
+        pool_worker = pool.getPoolWorkers('meta-provider')[0]
+        pool_config = pool_worker.getPoolConfig()
+        self.assertEqual(pool_config.max_servers, 10)
+        self.assertEqual(pool_config.priority, 1)
+
         manager.adapter._client.create_image(name="fake-image")
 
         # Request a node, verify that there is a backing node, and it
@@ -104,6 +110,14 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.assertEqual(bn1.host_keys, node1.host_keys)
         self.assertEqual(['ssh-rsa FAKEKEY'], node1.host_keys)
         self.assertEqual(bn1.id, node1.driver_data['backing_node'])
+        self.assertEqual(bn1.attributes, {
+            'backattr': 'back',
+            'testattr': 'backing',
+        })
+        self.assertEqual(node1.attributes, {
+            'metaattr': 'meta',
+            'testattr': 'metastatic',
+        })
 
         # Allocate a second node, should have same backing node
         node2 = self._requestNode()
