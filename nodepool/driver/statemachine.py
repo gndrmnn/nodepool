@@ -193,6 +193,16 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if hasattr(instance, attr):
                 setattr(node, attr, getattr(instance, attr))
 
+        # As a special case for metastatic, if we got node_attributes
+        # from the backing driver, use them as default values and let
+        # the values from the pool override.
+        instance_node_attrs = getattr(instance, 'node_attributes', None)
+        if instance_node_attrs is not None:
+            attrs = instance_node_attrs.copy()
+            if node.attributes:
+                attrs.update(node.attributes)
+            node.attributes = attrs
+
         self.zk.storeNode(node)
 
     def runDeleteStateMachine(self):
@@ -1004,6 +1014,12 @@ class Instance:
     * connection_port: str
     * connection_type: str
     * host_keys: [str]
+
+    This is extremely optional, in fact, it's difficult to imagine
+    that it's useful for anything other than the metastatic driver:
+
+    * node_attributes: dict
+
     """
     def __init__(self):
         self.ready = False

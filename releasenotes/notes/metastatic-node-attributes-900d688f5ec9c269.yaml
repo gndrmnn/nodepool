@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The metastatic driver will now automatically use the
+    `node-attributes` from backing nodes as default values for
+    `node-attributes` of metastatic nodes.  Any `node-attribute`
+    values specified in the metastatic pool config will override those
+    from the backing node.
