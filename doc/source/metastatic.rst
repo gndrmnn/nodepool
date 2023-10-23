@@ -85,6 +85,12 @@ itself, which is "meta".
           to apply to all pools within that provider, or it can be
           overridden here for a specific pool.
 
+       .. attr:: node-attributes
+          :type: dict
+
+          A dictionary of key-value pairs that will be stored with the node data
+          in ZooKeeper. The keys and values can be any arbitrary string.
+
        .. attr:: max-servers
           :type: int
 

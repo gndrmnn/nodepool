@@ -34,6 +34,9 @@ providers:
     pools:
       - name: main
         max-servers: 96
+        node-attributes:
+          backattr: back
+          testattr: backing
         labels:
           - name: backing-label
             cloud-image: fake-image
@@ -45,6 +48,10 @@ providers:
     pools:
       - name: main
         max-servers: 10
+        priority: 1
+        node-attributes:
+          metaattr: meta
+          testattr: metastatic
         labels:
           - name: user-label
             backing-label: backing-label
