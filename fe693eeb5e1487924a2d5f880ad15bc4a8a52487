@@ -16,6 +16,23 @@
       "message": "verified on opendev install running against rax cloud",
       "revId": "fe693eeb5e1487924a2d5f880ad15bc4a8a52487",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f134a23_e2314344",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2023-10-31T18:20:00Z",
+      "side": 1,
+      "message": "https://review.opendev.org/c/openstack/openstacksdk/+/899718 This is the fix in openstacksdk. Hopefully the next release includes it and we\u0027ll be all set from there.",
+      "revId": "fe693eeb5e1487924a2d5f880ad15bc4a8a52487",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
