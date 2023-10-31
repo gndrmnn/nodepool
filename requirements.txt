@@ -9,7 +9,8 @@ PrettyTable>=0.6,<0.8
 # 0.99.0 - 0.102 lead to BadRequestException: Client Error [...] Bad networks format
 # This was due to not properly handling nova api microversions properly. 0.103
 # fixes this.
-openstacksdk>=0.103.0
+# 2.0.0 broke cinder v2 api limits listing.
+openstacksdk>=0.103.0,!=2.0.0
 diskimage-builder>=3.27.0
 voluptuous
 kazoo>=2.8.0
