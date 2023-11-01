@@ -17,10 +17,10 @@ import logging
 import os
 import tempfile
 import time
-from unittest.mock import patch
 from functools import wraps
 
 import yaml
+import fixtures
 
 import googleapiclient.discovery
 import googleapiclient.errors
@@ -278,71 +278,67 @@ class TestDriverGce(tests.DBTestCase):
 
         self._wait_for_provider(pool, 'gcloud-provider')
 
-        with patch('nodepool.driver.statemachine.nodescan') as nodescan:
-            nodescan.return_value = 'MOCK KEY'
-            req = zk.NodeRequest()
-            req.state = zk.REQUESTED
-            req.tenant_name = 'tenant-1'
-            req.node_types.append(label)
-            self.zk.storeNodeRequest(req)
+        self.useFixture(fixtures.MonkeyPatch(
+            'nodepool.driver.statemachine.NodescanRequest.FAKE', True))
 
-            self.log.debug("Waiting for request %s", req.id)
-            req = self.waitForNodeRequest(req)
-            self.log.debug("Finished request %s", req.id)
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
+        req.node_types.append(label)
+        self.zk.storeNodeRequest(req)
 
-            if is_valid_config is False:
-                self.assertEqual(req.state, zk.FAILED)
-                self.assertEqual(req.nodes, [])
-                return
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.log.debug("Finished request %s", req.id)
 
-            self.assertEqual(req.state, zk.FULFILLED)
-            self.assertNotEqual(req.nodes, [])
+        if is_valid_config is False:
+            self.assertEqual(req.state, zk.FAILED)
+            self.assertEqual(req.nodes, [])
+            return
 
-            node = self.zk.getNode(req.nodes[0])
-            self.assertEqual(node.allocated_to, req.id)
-            self.assertEqual(node.state, zk.READY)
-            self.assertIsNotNone(node.launcher)
-            self.assertEqual(node.connection_type, 'ssh')
-            self.assertEqual(node.attributes,
-                             {'key1': 'value1', 'key2': 'value2'})
-            self.assertEqual(node.cloud, 'Google')
-            self.assertEqual(node.region, 'us-central1')
-            self.assertEqual(node.az, 'us-central1-a')
-            if host_key_checking:
-                nodescan.assert_called_with(
-                    node.interface_ip,
-                    port=22,
-                    timeout=60,
-                    gather_hostkeys=True)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
 
-            # A new request will be paused and for lack of quota
-            # until this one is deleted
-            req2 = zk.NodeRequest()
-            req2.state = zk.REQUESTED
-            req2.node_types.append(label)
-            self.zk.storeNodeRequest(req2)
-            req2 = self.waitForNodeRequest(
-                req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-            self.assertEqual(req2.state, zk.PENDING)
-            # It could flip from PENDING to one of the others,
-            # so sleep a bit and be sure
-            time.sleep(1)
-            req2 = self.waitForNodeRequest(
-                req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
-            self.assertEqual(req2.state, zk.PENDING)
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'Google')
+        self.assertEqual(node.region, 'us-central1')
+        self.assertEqual(node.az, 'us-central1-a')
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
 
-            node.state = zk.DELETING
-            self.zk.storeNode(node)
+        # A new request will be paused and for lack of quota
+        # until this one is deleted
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append(label)
+        self.zk.storeNodeRequest(req2)
+        req2 = self.waitForNodeRequest(
+            req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+        self.assertEqual(req2.state, zk.PENDING)
+        # It could flip from PENDING to one of the others,
+        # so sleep a bit and be sure
+        time.sleep(1)
+        req2 = self.waitForNodeRequest(
+            req2, (zk.PENDING, zk.FAILED, zk.FULFILLED))
+        self.assertEqual(req2.state, zk.PENDING)
 
-            self.waitForNodeDeletion(node)
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
 
-            req2 = self.waitForNodeRequest(req2,
-                                           (zk.FAILED, zk.FULFILLED))
-            self.assertEqual(req2.state, zk.FULFILLED)
-            node = self.zk.getNode(req2.nodes[0])
-            node.state = zk.DELETING
-            self.zk.storeNode(node)
-            self.waitForNodeDeletion(node)
+        self.waitForNodeDeletion(node)
+
+        req2 = self.waitForNodeRequest(req2,
+                                       (zk.FAILED, zk.FULFILLED))
+        self.assertEqual(req2.state, zk.FULFILLED)
+        node = self.zk.getNode(req2.nodes[0])
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
 
     def test_gce_machine(self):
         self._test_gce_machine('debian-stretch-f1-micro')
