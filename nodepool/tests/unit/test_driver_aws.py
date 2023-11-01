@@ -36,10 +36,6 @@ from nodepool.driver.aws.adapter import AwsInstance, AwsAdapter
 from nodepool.tests.unit.fake_aws import FakeAws
 
 
-def fake_nodescan(*args, **kw):
-    return ['ssh-rsa FAKEKEY']
-
-
 class Dummy:
     pass
 
@@ -137,6 +133,9 @@ class TestDriverAws(tests.DBTestCase):
         StateMachineProvider.MAXIMUM_SLEEP = 1
         AwsAdapter.IMAGE_UPLOAD_SLEEP = 1
 
+        self.useFixture(fixtures.MonkeyPatch(
+            'nodepool.driver.statemachine.NodescanRequest.FAKE', True))
+
         aws_id = 'AK000000000000000000'
         aws_key = '0123456789abcdef0123456789abcdef0123456789abcdef'
         self.useFixture(
@@ -192,7 +191,6 @@ class TestDriverAws(tests.DBTestCase):
             GroupName='zuul-nodes', VpcId=self.vpc['Vpc']['VpcId'],
             Description='Zuul Nodes')
         self.security_group_id = self.security_group['GroupId']
-        self.patch(nodepool.driver.statemachine, 'nodescan', fake_nodescan)
         test_name = self.id().split('.')[-1]
         test = getattr(self, test_name)
         self.patchAdapter(ec2_quotas=getattr(test, '__aws_ec2_quotas__', None),
