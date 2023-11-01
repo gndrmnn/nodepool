@@ -1,5 +1,5 @@
 # Copyright 2019 Red Hat
-# Copyright 2021-2022 Acme Gating, LLC
+# Copyright 2021-2023 Acme Gating, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -14,16 +14,20 @@
 # under the License.
 
 
-import time
+from concurrent.futures.thread import ThreadPoolExecutor
+import errno
+import fcntl
 import logging
 import math
+import os
 import random
+import select
+import socket
 import threading
-from concurrent.futures.thread import ThreadPoolExecutor
+import time
 
 from nodepool.driver import Driver, NodeRequestHandler, Provider
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
-from nodepool.nodeutils import nodescan, Timer
 from nodepool.logconfig import get_annotated_logger
 from nodepool import stats
 from nodepool import exceptions
@@ -31,31 +35,7 @@ from nodepool.zk import zookeeper as zk
 
 from kazoo import exceptions as kze
 import cachetools
-
-
-def keyscan(host_key_checking, node_id, interface_ip,
-            connection_type, connection_port,
-            timeout, log):
-    """A standalone function for scanning keys to pass to a thread/process
-    pool executor
-    """
-
-    keys = []
-    if not host_key_checking:
-        return keys
-    try:
-        if (connection_type == 'ssh' or
-            connection_type == 'network_cli'):
-            gather_hostkeys = True
-        else:
-            gather_hostkeys = False
-        with Timer(log, 'Keyscan'):
-            keys = nodescan(interface_ip, port=connection_port,
-                            timeout=timeout, gather_hostkeys=gather_hostkeys)
-    except Exception:
-        raise exceptions.LaunchKeyscanException(
-            "Can't scan instance %s key" % node_id)
-    return keys
+import paramiko
 
 
 class StateMachineNodeLauncher(stats.StatsReporter):
@@ -89,6 +69,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         self.attempts = 0
         self.retries = self.manager.provider.launch_retries
         self.state_machine = None
+        self.nodescan_request = None
         # To handle deletions:
         self.delete_state_machine = None
 
@@ -150,7 +131,6 @@ class StateMachineNodeLauncher(stats.StatsReporter):
 
         self.zk.storeNode(self.node)
 
-        self.keyscan_future = None
         # Windows computer names can be no more than 15 chars long.
         hostname = 'np' + self.node.id
         metadata = {'nodepool_node_id': self.node.id,
@@ -256,9 +236,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             state_machine = self.state_machine
             if self.start_time is None:
                 self.start_time = time.monotonic()
-            if (state_machine.complete and self.keyscan_future
-                and self.keyscan_future.done()):
-                keys = self.keyscan_future.result()
+            if (state_machine.complete and self.nodescan_request
+                and self.nodescan_request.complete):
+                keys = self.nodescan_request.result()
                 if keys:
                     node.host_keys = keys
                 self.log.debug(f"Node {node.id} is ready")
@@ -287,19 +267,17 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if not node.external_id and state_machine.external_id:
                 node.external_id = state_machine.external_id
                 self.zk.storeNode(node)
-            if state_machine.complete and not self.keyscan_future:
+            if state_machine.complete and not self.nodescan_request:
                 self.updateNodeFromInstance(instance)
                 self.log.debug("Submitting keyscan request for %s",
                                node.interface_ip)
                 label = self.handler.pool.labels[self.node.type[0]]
-                future = self.manager.keyscan_worker.submit(
-                    keyscan,
+                self.nodescan_request = NodescanRequest(
+                    node,
                     label.host_key_checking,
-                    node.id, node.interface_ip,
-                    node.connection_type, node.connection_port,
                     self.manager.provider.boot_timeout,
                     self.log)
-                self.keyscan_future = future
+                self.manager.nodescan_worker.addRequest(self.nodescan_request)
         except kze.SessionExpiredError:
             # Our node lock is gone, leaving the node state as BUILDING.
             # This will get cleaned up in ZooKeeper automatically, but we
@@ -312,6 +290,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if state_machine:
                 node.external_id = state_machine.external_id
             statsd_key = 'error.zksession'
+            self.manager.nodescan_worker.removeRequest(self.nodescan_request)
+            self.nodescan_request = None
         except exceptions.QuotaException:
             self.log.info("Aborting node %s due to quota failure", node.id)
             node.state = zk.ABORTED
@@ -320,6 +300,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.zk.storeNode(node)
             statsd_key = 'error.quota'
             self.manager.invalidateQuotaCache()
+            self.manager.nodescan_worker.removeRequest(self.nodescan_request)
+            self.nodescan_request = None
         except Exception as e:
             self.log.exception("Launch attempt %d/%d for node %s, failed:",
                                self.attempts, self.retries, node.id)
@@ -354,6 +336,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     pass
                 except Exception:
                     self.log.exception("Exception while logging console:")
+
+            self.manager.nodescan_worker.removeRequest(self.nodescan_request)
+            self.nodescan_request = None
 
             if self.attempts >= self.retries:
                 node.state = zk.FAILED
@@ -658,7 +643,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.deleters = []
         self.launchers = []
         self._zk = None
-        self.keyscan_worker = None
+        self.nodescan_worker = NodescanWorker()
         self.create_state_machine_thread = None
         self.delete_state_machine_thread = None
         self.start_machine_start_worker = None
@@ -676,13 +661,7 @@ class StateMachineProvider(Provider, QuotaSupport):
         self.running = True
         self._zk = zk_conn
 
-        # Matching the workers in openstack/adapter.py
-        # TODO: unify thread pool handling across drivers
-        workers = 10
-        self.log.info("Create keyscan executor with max workers=%s", workers)
-        self.keyscan_worker = ThreadPoolExecutor(
-            thread_name_prefix=f'keyscan-{self.provider.name}',
-            max_workers=workers)
+        self.nodescan_worker.start()
         self.create_state_machine_thread = threading.Thread(
             target=self._runCreateStateMachines,
             daemon=True)
@@ -713,8 +692,7 @@ class StateMachineProvider(Provider, QuotaSupport):
             while self.launchers or self.deleters:
                 time.sleep(1)
             self.running = False
-        if self.keyscan_worker:
-            self.keyscan_worker.shutdown()
+        self.nodescan_worker.stop()
         if self.state_machine_start_worker:
             self.state_machine_start_worker.shutdown()
         self.adapter.stop()
@@ -731,6 +709,7 @@ class StateMachineProvider(Provider, QuotaSupport):
             self.delete_state_machine_thread.join()
         if self.stop_thread:
             self.stop_thread.join()
+        self.nodescan_worker.join()
         self.log.debug("Joined")
 
     def _runStateMachines(self, create_or_delete, state_machines):
@@ -1082,6 +1061,378 @@ class StateMachine:
 
     def advance(self):
         pass
+
+
+class NodescanEvent(threading.Event):
+    """A subclass of event that will wake the NodescanWorker poll"""
+    def __init__(self, worker, *args, **kw):
+        super().__init__(*args, **kw)
+        self._zuul_worker = worker
+
+    def set(self):
+        super().set()
+        try:
+            os.write(self._zuul_worker.wake_write, b'\n')
+        except Exception:
+            pass
+
+
+class NodescanWorker:
+    """Handles requests for nodescans.
+
+    This class has a single thread that drives nodescan requests
+    submitted by any provider's pools.
+
+    """
+    # This process is highly scalable, except for paramiko which
+    # spawns a thread for each ssh connection.  To avoid thread
+    # overload, we set a max value for concurrent requests.
+    # Simultaneous requests higher than this value will be queued.
+    MAX_REQUESTS = 100
+
+    def __init__(self):
+        self.wake_read, self.wake_write = os.pipe()
+        fcntl.fcntl(self.wake_read, fcntl.F_SETFL, os.O_NONBLOCK)
+        self._running = False
+        self._active_requests = []
+        self._pending_requests = []
+        self.poll = select.epoll()
+        self.poll.register(self.wake_read, select.EPOLLIN)
+
+    def start(self):
+        self._running = True
+        self.thread = threading.Thread(target=self.run, daemon=True)
+        self.thread.start()
+
+    def stop(self):
+        self._running = False
+        os.write(self.wake_write, b'\n')
+
+    def join(self):
+        self.thread.join()
+
+    def addRequest(self, request):
+        """Submit a nodescan request"""
+        request.setWorker(self)
+        if len(self._active_requests) >= self.MAX_REQUESTS:
+            self._pending_requests.append(request)
+        else:
+            self._active_requests.append(request)
+            try:
+                self._advance(request, False)
+            except Exception as e:
+                request.fail(e)
+            if request.complete:
+                self.removeRequest(request)
+
+    def removeRequest(self, request):
+        """Remove the request and cleanup"""
+        if request is None:
+            return
+        request.cleanup()
+        try:
+            self._active_requests.remove(request)
+        except ValueError:
+            pass
+        try:
+            self._pending_requests.remove(request)
+        except ValueError:
+            pass
+
+    def registerDescriptor(self, fd):
+        """Register the fd with the poll object"""
+        # Oneshot means that once it triggers, it will automatically
+        # be removed.  That's great for us since we only use this for
+        # detecting when the initial connection is complete and have
+        # no further use.
+        self.poll.register(
+            fd, select.EPOLLOUT | select.EPOLLERR |
+            select.EPOLLHUP | select.EPOLLONESHOT)
+
+    def unRegisterDescriptor(self, fd):
+        """Unregister the fd with the poll object"""
+        try:
+            self.poll.unregister(fd)
+        except Exception:
+            pass
+
+    def _advance(self, request, socket_ready):
+        # A helper method to encapsulate the advance + log sequence
+        old_state = request.state
+        request.advance(socket_ready)
+        if request.state != old_state:
+            request.log.info(
+                "Nodescan request for %s advanced "
+                "from %s to %s %s",
+                request.node.id, old_state, request.state, request.iteration)
+
+    def run(self):
+        while self._running:
+            # Set the poll timeout to 1 second so that we check all
+            # requests for timeouts every second.  This could be
+            # increased to a few seconds without significant impact.
+            timeout = 1
+            while (self._pending_requests and
+                   len(self._active_requests) < self.MAX_REQUESTS):
+                # If we have room for more requests, add them and set
+                # the timeout to 0 so that we immediately start
+                # advancing them.
+                request = self._pending_requests.pop(0)
+                self._active_requests.append(request)
+                timeout = 0
+            ready = self.poll.poll(timeout=timeout)
+            ready = [x[0] for x in ready]
+            if self.wake_read in ready:
+                # Empty the wake pipe
+                while True:
+                    try:
+                        os.read(self.wake_read, 1024)
+                    except BlockingIOError:
+                        break
+            for request in self._active_requests:
+                try:
+                    socket_ready = (request.sock and
+                                    request.sock.fileno() in ready)
+                    self._advance(request, socket_ready)
+                except Exception as e:
+                    request.fail(e)
+                if request.complete:
+                    self.removeRequest(request)
+
+
+class NodescanRequest:
+    """A state machine for a nodescan request.
+
+    When complete, use the result() method to obtain the keys or raise
+    an exception if an errer was encountered during processing.
+
+    """
+
+    START = 'start'
+    CONNECTING_INIT = 'connecting'
+    NEGOTIATING_INIT = 'negotiating'
+    CONNECTING_KEY = 'connecting key'
+    NEGOTIATING_KEY = 'negotiating key'
+    COMPLETE = 'complete'
+
+    def __init__(self, node, host_key_checking, timeout, log):
+        self.state = self.START
+        self.iteration = 'init'
+        self.node = node
+        self.host_key_checking = host_key_checking
+        self.timeout = timeout
+        self.log = log
+        self.complete = False
+        self.keys = []
+        if (node.connection_type == 'ssh' or
+            node.connection_type == 'network_cli'):
+            self.gather_hostkeys = True
+        else:
+            self.gather_hostkeys = False
+        self.ip = node.interface_ip
+        self.port = node.connection_port
+        if 'fake' not in self.ip:
+            addrinfo = socket.getaddrinfo(self.ip, self.port)[0]
+            self.family = addrinfo[0]
+            self.sockaddr = addrinfo[4]
+        self.sock = None
+        self.transport = None
+        self.event = None
+        self.key_types = None
+        self.key_index = None
+        self.key_type = None
+        self.start_time = time.monotonic()
+        self.worker = None
+        self.exception = None
+
+    def setWorker(self, worker):
+        """Store a reference to the worker thread so we register and unregister
+        the socket file descriptor from the polling object"""
+        self.worker = worker
+
+    def fail(self, exception):
+        """Declare this request a failure and store the related exception"""
+        self.exception = exception
+        self.cleanup()
+        self.complete = True
+        self.state = self.COMPLETE
+
+    def cleanup(self):
+        """Try to close everything and unregister from the worker"""
+        self._close()
+
+    def result(self):
+        """Return the resulting keys, or raise an exception"""
+        if self.exception:
+            raise self.exception
+        return self.keys
+
+    def _close(self):
+        if self.transport:
+            try:
+                self.transport.close()
+            except Exception:
+                pass
+            self.transport = None
+            self.event = None
+        if self.sock:
+            self.worker.unRegisterDescriptor(self.sock)
+            try:
+                self.sock.close()
+            except Exception:
+                pass
+            self.sock = None
+
+    def _checkTimeout(self):
+        now = time.monotonic()
+        if now - self.start_time > self.timeout:
+            raise Exception(
+                f"Timeout connecting to {self.ip} on port {self.port}")
+
+    def _checkTransport(self):
+        # This stanza is from
+        # https://github.com/paramiko/paramiko/blob/main/paramiko/transport.py
+        if not self.transport.active:
+            e = self.transport.get_exception()
+            if e is not None:
+                raise e
+            raise paramiko.exceptions.SSHException("Negotiation failed.")
+
+    def _connect(self):
+        if self.sock:
+            self.worker.unRegisterDescriptor(self.sock)
+        self.sock = socket.socket(self.family, socket.SOCK_STREAM)
+        # Set nonblocking so we can poll for connection completion
+        self.sock.setblocking(False)
+        try:
+            self.sock.connect(self.sockaddr)
+        except BlockingIOError:
+            self.state = self.CONNECTING_INIT
+        self.worker.registerDescriptor(self.sock)
+
+    def _start(self):
+        # Use our Event subclass that will wake the worker when the
+        # event is set.
+        self.event = NodescanEvent(self.worker)
+        # Return the socket to blocking mode as we hand it off to paramiko.
+        self.sock.setblocking(True)
+        self.transport = paramiko.transport.Transport(self.sock)
+        if self.key_type is not None:
+            opts = self.transport.get_security_options()
+            opts.key_types = [self.key_type]
+        # This starts a thread.
+        self.transport.start_client(
+            event=self.event, timeout=self.timeout)
+
+    def _nextKey(self):
+        self._close()
+        self.key_index += 1
+        if self.key_index >= len(self.key_types):
+            self.state = self.COMPLETE
+            return True
+        self.key_type = self.key_types[self.key_index]
+        self._connect()
+        self.state = self.CONNECTING_KEY
+        self.iteration = self.key_type
+
+    def advance(self, socket_ready):
+        if self.state == self.START:
+            if self.worker is None:
+                raise Exception("Request not registered with worker")
+            if 'fake' in self.ip:
+                if self.gather_hostkeys:
+                    self.keys = ['ssh-rsa FAKEKEY']
+                self.state = self.COMPLETE
+            else:
+                if not self.host_key_checking:
+                    self.state = self.COMPLETE
+                else:
+                    self._connect()
+
+        if self.state == self.CONNECTING_INIT:
+            if not socket_ready:
+                self._checkTimeout()
+                return
+            eno = self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            if eno:
+                if eno in [errno.ECONNREFUSED, errno.EHOSTUNREACH]:
+                    # Try again
+                    self.state = self.START
+                    self._checkTimeout()
+                    self._connect()
+                    return
+                raise Exception(
+                    f"Error {eno} connecting to {self.ip} on port {self.port}")
+            if self.gather_hostkeys:
+                self._start()
+                self.state = self.NEGOTIATING_INIT
+            else:
+                self.state = self.COMPLETE
+
+        if self.state == self.NEGOTIATING_INIT:
+            if not self.event.is_set():
+                self._checkTimeout()
+                return
+            # This will raise an exception on ssh errors
+            try:
+                self._checkTransport()
+            except Exception:
+                self.log.exception(
+                    f"SSH error connecting to {self.ip} on port {self.port}")
+                # Try again
+                self._close()
+                self.state = self.START
+                self._checkTimeout()
+                self._connect()
+                return
+            # This is our first successful connection.  Now that
+            # we've done it, start again specifying the first key
+            # type.
+            opts = self.transport.get_security_options()
+            self.key_types = opts.key_types
+            self.key_index = -1
+            self._nextKey()
+
+        if self.state == self.CONNECTING_KEY:
+            if not socket_ready:
+                self._checkTimeout()
+                return
+            eno = self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+            if eno:
+                self.log.error(
+                    f"Error {eno} connecting to {self.ip} on port {self.port}")
+                self._nextKey()
+                return
+            self._start()
+            self.state = self.NEGOTIATING_KEY
+
+        if self.state == self.NEGOTIATING_KEY:
+            if not self.event.is_set():
+                self._checkTimeout()
+                return
+            # This will raise an exception on ssh errors
+            try:
+                self._checkTransport()
+            except Exception as e:
+                msg = str(e)
+                if 'no acceptable host key' not in msg:
+                    # We expect some host keys to not be valid
+                    # when scanning only log if the error isn't
+                    # due to mismatched host key types.
+                    self.log.exception(
+                        f"SSH error connecting to {self.ip} "
+                        f"on port {self.port}")
+                self._nextKey()
+                return
+            key = self.transport.get_remote_server_key()
+            if key:
+                self.keys.append("%s %s" % (key.get_name(), key.get_base64()))
+                self.log.debug('Added ssh host key: %s', key.get_name())
+            self._nextKey()
+
+        if self.state == self.COMPLETE:
+            self._close()
+            self.complete = True
 
 
 class Adapter:
