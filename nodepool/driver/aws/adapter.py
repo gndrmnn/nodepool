@@ -197,7 +197,6 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
     def advance(self):
         if self.state == self.START:
-            self.external_id = self.hostname
             self.create_future = self.adapter._submitCreateInstance(
                 self.label, self.image_external_id,
                 self.tags, self.hostname, self.log)
@@ -208,6 +207,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
             if instance is None:
                 return
             self.instance = instance
+            self.external_id = instance['InstanceId']
             self.quota = self.adapter.getQuotaForLabel(self.label)
             self.state = self.INSTANCE_CREATING
 
