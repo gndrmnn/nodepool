@@ -5,6 +5,8 @@
         name: collect-container-logs
       vars:
         container_command: podman
+      apply:
+        become: yes
     - name: Copy nodepool logs
       ignore_errors: yes
       block:
