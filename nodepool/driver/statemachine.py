@@ -1169,7 +1169,7 @@ class NodescanWorker:
         old_state = request.state
         request.advance(socket_ready)
         if request.state != old_state:
-            request.log.info(
+            request.log.debug(
                 "Nodescan request for %s advanced "
                 "from %s to %s %s",
                 request.node.id, old_state, request.state, request.iteration)
@@ -1254,6 +1254,7 @@ class NodescanRequest:
         self.start_time = time.monotonic()
         self.worker = None
         self.exception = None
+        self.connect_start_time = None
 
     def setWorker(self, worker):
         """Store a reference to the worker thread so we register and unregister
@@ -1318,6 +1319,7 @@ class NodescanRequest:
             self.sock.connect(self.sockaddr)
         except BlockingIOError:
             self.state = self.CONNECTING_INIT
+        self.connect_start_time = time.monotonic()
         self.worker.registerDescriptor(self.sock)
 
     def _start(self):
@@ -1361,7 +1363,13 @@ class NodescanRequest:
 
         if self.state == self.CONNECTING_INIT:
             if not socket_ready:
+                # Check the overall timeout
                 self._checkTimeout()
+                # If we're still here, then don't let any individual
+                # connection attempt last more than 10 seconds:
+                if time.monotonic() - self.connect_start_time >= 10:
+                    self._close()
+                    self.state = self.START
                 return
             eno = self.sock.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
             if eno:
@@ -1369,10 +1377,12 @@ class NodescanRequest:
                     self.log.exception(
                         f"Error {eno} connecting to {self.ip} "
                         f"on port {self.port}")
-                # Try again
+                # Try again.  Don't immediately start to reconnect
+                # since econnrefused can happen very quickly, so we
+                # could end up busy-waiting.
+                self._close()
                 self.state = self.START
                 self._checkTimeout()
-                self._connect()
                 return
             if self.gather_hostkeys:
                 self._start()
@@ -1434,7 +1444,9 @@ class NodescanRequest:
                         f"SSH error connecting to {self.ip} "
                         f"on port {self.port}")
                 self._nextKey()
-                return
+
+        # Check if we're still in the same state
+        if self.state == self.NEGOTIATING_KEY:
             key = self.transport.get_remote_server_key()
             if key:
                 self.keys.append("%s %s" % (key.get_name(), key.get_base64()))
