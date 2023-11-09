@@ -13,6 +13,7 @@ tenant-resource-limits:
     max-cores: 1024
 
 labels:
+  - name: ubuntu-invalid
   - name: ubuntu
 
 providers:
@@ -32,7 +33,11 @@ providers:
           key1: value1
           key2: value2
         labels:
-          - name: ubuntu
+          - name: ubuntu-invalid
             cloud-image: ubuntu
             instance-type: t3.nope
+            key-name: zuul
+          - name: ubuntu
+            cloud-image: ubuntu
+            instance-type: t3.medium
             key-name: zuul

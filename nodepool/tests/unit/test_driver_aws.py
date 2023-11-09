@@ -756,9 +756,20 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(response['EbsOptimized']['Value'])
 
     def test_aws_invalid_instance_type(self):
-        req = self.requestNode('aws/aws-invalid.yaml', 'ubuntu')
+        req = self.requestNode('aws/aws-invalid.yaml', 'ubuntu-invalid')
         self.assertEqual(req.state, zk.FAILED)
         self.assertEqual(req.nodes, [])
+
+        # Make sure other instance types are not affected
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
+        req.node_types.append('ubuntu')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 1)
 
     def test_aws_diskimage_snapshot(self):
         self.fake_aws.fail_import_count = 1
