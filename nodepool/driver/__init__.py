@@ -429,7 +429,8 @@ class NodeRequestHandler(NodeRequestHandlerNotifications,
             if ntype not in valid:
                 invalid.add(ntype)
         for ntype in self.manager.errorLabels():
-            invalid.add(ntype)
+            if ntype in self.re.node_types:
+                invalid.add(ntype)
         return invalid
 
     def _waitForNodeSet(self):
