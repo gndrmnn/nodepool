@@ -283,8 +283,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                 self.nodescan_request = NodescanRequest(
                     node,
                     label.host_key_checking,
-                    self.manager.provider.boot_timeout,
-                    self.log)
+                    self.manager.provider.boot_timeout)
                 self.manager.nodescan_worker.addRequest(self.nodescan_request)
         except kze.SessionExpiredError:
             # Our node lock is gone, leaving the node state as BUILDING.
@@ -1225,13 +1224,12 @@ class NodescanRequest:
     # For unit testing
     FAKE = False
 
-    def __init__(self, node, host_key_checking, timeout, log):
+    def __init__(self, node, host_key_checking, timeout):
         self.state = self.START
         self.iteration = 'init'
         self.node = node
         self.host_key_checking = host_key_checking
         self.timeout = timeout
-        self.log = log
         self.complete = False
         self.keys = []
         if (node.connection_type == 'ssh' or
@@ -1255,6 +1253,10 @@ class NodescanRequest:
         self.worker = None
         self.exception = None
         self.connect_start_time = None
+
+        logger = logging.getLogger("nodepool.NodescanRequest")
+        self.log = get_annotated_logger(logger,
+                                        node_id=node.id)
 
     def setWorker(self, worker):
         """Store a reference to the worker thread so we register and unregister

@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-
 from nodepool import tests
 from nodepool.nodeutils import iterate_timeout
 from nodepool.zk.zookeeper import Node
@@ -113,8 +111,7 @@ class TestNodescanWorker(tests.BaseTestCase):
         node.connection_port = 22
         node.connection_type = 'ssh'
         worker.start()
-        log = logging.getLogger('nodepool.test')
-        request = NodescanRequest(node, True, 300, log)
+        request = NodescanRequest(node, True, 300)
         worker.addRequest(request)
         for _ in iterate_timeout(30, Exception, 'nodescan'):
             if request.complete:
@@ -141,8 +138,7 @@ class TestNodescanWorker(tests.BaseTestCase):
         node.connection_port = 22
         node.connection_type = 'ssh'
         worker.start()
-        log = logging.getLogger('nodepool.test')
-        request = NodescanRequest(node, True, 1, log)
+        request = NodescanRequest(node, True, 1)
         worker.addRequest(request)
         for _ in iterate_timeout(30, Exception, 'nodescan'):
             if request.complete:
@@ -169,8 +165,7 @@ class TestNodescanWorker(tests.BaseTestCase):
         node.connection_port = 22
         node.connection_type = 'ssh'
         worker.start()
-        log = logging.getLogger('nodepool.test')
-        request = NodescanRequest(node, True, 1, log)
+        request = NodescanRequest(node, True, 1)
         worker.addRequest(request)
         for _ in iterate_timeout(30, Exception, 'nodescan'):
             if request.complete:
@@ -210,9 +205,8 @@ class TestNodescanWorker(tests.BaseTestCase):
         node2.connection_port = 22
         node2.connection_type = 'ssh'
 
-        log = logging.getLogger('nodepool.test')
-        request1 = NodescanRequest(node1, True, 300, log)
-        request2 = NodescanRequest(node2, True, 300, log)
+        request1 = NodescanRequest(node1, True, 300)
+        request2 = NodescanRequest(node2, True, 300)
         worker.addRequest(request1)
         worker.addRequest(request2)
         worker.start()
