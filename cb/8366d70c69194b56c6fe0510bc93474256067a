@@ -1,0 +1,11 @@
+Verified+2: Zuul
+Code-Review+2: Tobias Henkel <tobias.henkel@bmw.de>
+Workflow+1: Tobias Henkel <tobias.henkel@bmw.de>
+Code-Review+2: Simon Westphahl <simon.westphahl@bmw.de>
+Code-Review+1: Andrei Dmitriev <andrei.dmitriev@nokia.com>
+Submitted-by: Zuul
+Submitted-at: Tue, 28 Nov 2023 12:45:48 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/899084
+Comments-Total: 2
+Project: zuul/nodepool
+Branch: refs/heads/master
