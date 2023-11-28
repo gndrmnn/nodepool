@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15cbe68b_cb826c80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35923
+      },
+      "writtenOn": "2023-11-28T11:06:48Z",
+      "side": 1,
+      "message": "LGTM, using almost the same solution (without default logic) to this in our env.",
+      "revId": "cb8366d70c69194b56c6fe0510bc93474256067a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
