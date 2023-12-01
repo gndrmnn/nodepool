@@ -15,8 +15,10 @@
 # limitations under the License.
 
 import fixtures
+import json
 import logging
 import time
+from urllib import request
 
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
@@ -572,3 +574,40 @@ class TestDriverKubernetes(tests.DBTestCase):
 
         servers = manager.listNodes()
         self.assertEqual(len(servers), 1)
+
+    def test_node_list_k8s_json(self):
+        # TODO: generalize the k8s test infrastructure (fake client,
+        # etc) and move this to test_webapp
+        configfile = self.setup_config('kubernetes.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        webapp = self.useWebApp(pool, port=0)
+        webapp.start()
+        port = webapp.server.socket.getsockname()[1]
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('kubernetes-namespace')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        req = request.Request(
+            "http://localhost:%s/node-list" % port)
+        req.add_header('Accept', 'application/json')
+        f = request.urlopen(req)
+        self.assertEqual(f.info().get('Content-Type'),
+                         'application/json')
+        data = f.read()
+        objs = json.loads(data.decode('utf8'))
+        # We don't check the value of 'locked' because we may get a
+        # cached value returned.
+        self.assertDictContainsSubset({'id': '0000000000',
+                                       'ipv6': None,
+                                       'label': ['kubernetes-namespace'],
+                                       'provider': 'kubespray',
+                                       'public_ipv4': None,
+                                       'connection_port': 'redacted',
+                                       'state': 'ready'}, objs[0])

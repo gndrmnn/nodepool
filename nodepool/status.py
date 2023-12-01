@@ -142,6 +142,14 @@ def node_list(zk, node_id=None):
         else:
             if zk.getNodeLockContenders(node):
                 locked = "locked"
+        port = node.connection_port
+        try:
+            int(port)
+        except (ValueError, TypeError):
+            # The port field is being used to carry connection
+            # information which may contain credentials (e.g., k8s
+            # service account).  Suppress it.
+            port = "redacted"
         values = [
             node.id,
             node.provider,
@@ -157,7 +165,7 @@ def node_list(zk, node_id=None):
             node.private_ipv4,
             node.az,
             node.username,
-            node.connection_port,
+            port,
             node.launcher,
             node.allocated_to,
             node.hold_job,

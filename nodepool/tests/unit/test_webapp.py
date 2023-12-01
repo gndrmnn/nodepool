@@ -232,6 +232,7 @@ class TestWebApp(tests.DBTestCase):
                                        'label': ['fake-label'],
                                        'provider': 'fake-provider',
                                        'public_ipv4': 'fake',
+                                       'connection_port': 22,
                                        'state': 'ready'}, objs[0])
         self.assertTrue('locked' in objs[0])
         # specify valid node_id
@@ -251,6 +252,7 @@ class TestWebApp(tests.DBTestCase):
                                        'label': ['fake-label'],
                                        'provider': 'fake-provider',
                                        'public_ipv4': 'fake',
+                                       'connection_port': 22,
                                        'state': 'ready'}, objs[0])
         self.assertTrue('locked' in objs[0])
         # node_id not found
