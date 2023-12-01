@@ -50,6 +50,9 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
             'user': 'zuul-worker',
         }
         self.node.connection_type = "kubectl"
+        pool = self.handler.provider.pools.get(self.node.pool)
+        self.node.resources = self.handler.manager.quotaNeededByLabel(
+            self.node.type[0], pool).get_resources()
         self.node.cloud = self.provider_config.context
         self.node.host_id = pod_node_id
         self.zk.storeNode(self.node)

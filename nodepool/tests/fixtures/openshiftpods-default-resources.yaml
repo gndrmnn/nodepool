@@ -1,0 +1,42 @@
+zookeeper-servers:
+  - host: {zookeeper_host}
+    port: {zookeeper_port}
+    chroot: {zookeeper_chroot}
+
+zookeeper-tls:
+  ca: {zookeeper_ca}
+  cert: {zookeeper_cert}
+  key: {zookeeper_key}
+
+labels:
+  - name: pod-default
+  - name: pod-custom-cpu
+  - name: pod-custom-mem
+  - name: pod-custom-storage
+  - name: pod-custom-gpu
+
+providers:
+  - name: openshift
+    driver: openshiftpods
+    context: admin-cluster.local
+    pools:
+      - name: main
+        default-label-cpu: 2
+        default-label-memory: 1024
+        default-label-storage: 10
+        labels:
+          - name: pod-default
+            image: test
+          - name: pod-custom-cpu
+            image: test
+            cpu: 4
+          - name: pod-custom-mem
+            image: test
+            memory: 2048
+          - name: pod-custom-storage
+            image: test
+            storage: 20
+          - name: pod-custom-gpu
+            image: test
+            gpu-resource: gpu-vendor.example/example-gpu
+            gpu: 0.5
