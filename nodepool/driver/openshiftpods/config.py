@@ -72,7 +72,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'cpu-limit': int,
             'memory-limit': int,
             'storage-limit': int,
-            'gpu': str,
+            'gpu': float,
             'gpu-resource': str,
             'python-path': str,
             'shell-type': str,
