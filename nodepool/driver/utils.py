@@ -51,7 +51,8 @@ class NodeLauncher(threading.Thread,
             describing the provider launching this node.
         '''
         threading.Thread.__init__(self, name="NodeLauncher-%s" % node.id)
-        stats.StatsReporter.__init__(self)
+        launcher = handler.pw.nodepool
+        stats.StatsReporter.__init__(self, launcher.statsd)
         logger = logging.getLogger("nodepool.NodeLauncher")
         request = handler.request
         self.log = get_annotated_logger(logger,

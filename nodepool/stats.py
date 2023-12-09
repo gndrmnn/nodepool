@@ -50,9 +50,9 @@ class StatsReporter(object):
     '''
     Class adding statsd reporting functionality.
     '''
-    def __init__(self):
+    def __init__(self, statsd_client):
         super(StatsReporter, self).__init__()
-        self._statsd = get_client()
+        self._statsd = statsd_client
 
     def recordLaunchStats(self, subkey, dt):
         '''
