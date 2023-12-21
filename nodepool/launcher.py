@@ -259,7 +259,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                 if (provider.max_concurrency > 0 and
                         active_threads >= provider.max_concurrency):
                     self.log.debug("Request handling limited: %s "
-                                   "active threads ",
+                                   "active threads "
                                    "with max concurrency of %s",
                                    active_threads, provider.max_concurrency)
                     continue
