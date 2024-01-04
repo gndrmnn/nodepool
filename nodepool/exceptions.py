@@ -31,6 +31,9 @@ class LaunchKeyscanException(Exception):
     statsd_key = 'error.keyscan'
 
 
+class CapacityException(Exception):
+    statsd_key = 'error.capacity'
+
 class BuilderError(RuntimeError):
     pass
 

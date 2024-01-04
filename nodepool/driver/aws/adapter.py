@@ -1120,6 +1120,10 @@ class AwsAdapter(statemachine.Adapter):
                 # Re-raise as a quota exception so that the
                 # statemachine driver resets quota.
                 raise exceptions.QuotaException(str(error))
+            if error.response['Error']['Code'] == 'InsufficientInstanceCapacity':
+                # Re-raise as CapacityException so it would have "error.capacity"
+                # statsd_key, which can be handled differently than "error.unknown"
+                raise exceptions.CapacityException(str(error))
             raise
 
     def _createInstance(self, label, image_external_id,
