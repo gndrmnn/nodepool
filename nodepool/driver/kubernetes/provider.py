@@ -257,12 +257,18 @@ class KubernetesProvider(Provider, QuotaSupport):
                     'name': role_name,
                 },
                 'rules': [{
+                    'apiGroups': ["apps"],
+                    'resources': ["deployments", "replicasets"],
+                    'verbs': all_verbs,
+                }, {
+                    'apiGroups': ["batch"],
+                    'resources': ["cronjobs", "jobs"],
+                    'verbs': all_verbs,
+                }, {
                     'apiGroups': [""],
                     'resources': ["pods", "pods/exec", "pods/log",
                                   "pods/portforward", "services",
-                                  "endpoints", "crontabs", "jobs",
-                                  "deployments", "replicasets",
-                                  "configmaps", "secrets"],
+                                  "endpoints", "configmaps", "secrets"],
                     'verbs': all_verbs,
                 }]
             }
