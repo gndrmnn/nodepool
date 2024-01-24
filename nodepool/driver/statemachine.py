@@ -1143,12 +1143,8 @@ class NodescanWorker:
             self._pending_requests.append(request)
         else:
             self._active_requests.append(request)
-            try:
-                self._advance(request, False)
-            except Exception as e:
-                request.fail(e)
-            if request.complete:
-                self.removeRequest(request)
+            # If the poll is sleeping, wake it up for immediate action
+            os.write(self.wake_write, b'\n')
 
     def removeRequest(self, request):
         """Remove the request and cleanup"""
