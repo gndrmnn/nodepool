@@ -24,6 +24,7 @@ labels:
   - name: ubuntu1404-with-tags
   - name: ubuntu1404-with-shell-type
   - name: ubuntu1404-ebs-optimized
+  - name: ubuntu1404-imdsv2
 
 providers:
   - name: ec2-us-west-2
@@ -115,3 +116,8 @@ providers:
             ebs-optimized: True
             instance-type: t3.medium
             key-name: zuul
+          - name: ubuntu1404-imdsv2
+            cloud-image: ubuntu1404
+            instance-type: t3.medium
+            key-name: zuul
+            imdsv2: required
