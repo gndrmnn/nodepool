@@ -512,6 +512,12 @@ class AwsAdapter(statemachine.Adapter):
         bucket = self.s3.Bucket(bucket_name)
         object_filename = f'{image_name}.{image_format}'
         extra_args = {'Tagging': urllib.parse.urlencode(metadata)}
+
+        # There is no IMDS support option for the import_image call
+        if (provider_image.import_method == 'image' and
+            provider_image.imds_support == 'v2.0'):
+            raise Exception("IMDSv2 requires 'snapshot' import method")
+
         with open(filename, "rb") as fobj:
             with self.rate_limiter:
                 bucket.upload_fileobj(fobj, object_filename,
@@ -618,7 +624,7 @@ class AwsAdapter(statemachine.Adapter):
             if provider_image.throughput:
                 bdm['Ebs']['Throughput'] = provider_image.throughput
 
-            register_response = self.ec2_client.register_image(
+            args = dict(
                 Architecture=provider_image.architecture,
                 BlockDeviceMappings=[bdm],
                 RootDeviceName='/dev/sda1',
@@ -626,6 +632,9 @@ class AwsAdapter(statemachine.Adapter):
                 EnaSupport=provider_image.ena_support,
                 Name=image_name,
             )
+            if provider_image.imds_support == 'v2.0':
+                args['ImdsSupport'] = 'v2.0'
+            register_response = self.ec2_client.register_image(**args)
 
         # Tag the AMI
         try:
@@ -1209,6 +1218,17 @@ class AwsAdapter(statemachine.Adapter):
                     'SpotInstanceType': 'one-time',
                     'InstanceInterruptionBehavior': 'terminate'
                 }
+            }
+
+        if label.imdsv2 == 'required':
+            args['MetadataOptions'] = {
+                'HttpTokens': 'required',
+                'HttpEndpoint': 'enabled',
+            }
+        elif label.imdsv2 == 'optional':
+            args['MetadataOptions'] = {
+                'HttpTokens': 'optional',
+                'HttpEndpoint': 'enabled',
             }
 
         with self.rate_limiter(log.debug, "Created instance"):

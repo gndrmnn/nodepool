@@ -431,6 +431,15 @@ Selecting the ``aws`` driver adds the following options to the
          :value:`providers.[aws].diskimages.import-method.snapshot`
          import method.
 
+      .. attr:: imds-support
+         :type: str
+
+         To enforce usage of IMDSv2 by default on instances created
+         from the image, set this value to `v2.0`.  If omitted, IMDSv2
+         is optional by default.  This is only supported using the
+         :value:`providers.[aws].diskimages.import-method.snapshot`
+         import method.
+
       .. attr:: import-method
          :default: snapshot
 
@@ -668,6 +677,29 @@ Selecting the ``aws`` driver adds the following options to the
 
                  ARN identifier of the profile.
                  Mutually exclusive with :attr:`providers.[aws].pools.labels.iam-instance-profile.name`
+
+           .. attr:: imdsv2
+              :type: str
+
+              Specify whether IMDSv2 is required.  If this is omitted,
+              then AWS defaults are used (usually equivalent to
+              `optional` but may be influenced by the image used).
+
+              .. value:: optional
+
+                 Allows usage of IMDSv2 but do not require it.  This
+                 sets the following metadata options:
+
+                 * `HttpTokens` is `optional`
+                 * `HttpEndpoint` is `enabled`
+
+              .. value:: required
+
+                 Require IMDSv2.  This sets the following metadata
+                 options:
+
+                 * `HttpTokens` is `required`
+                 * `HttpEndpoint` is `enabled`
 
            .. attr:: key-name
               :type: string

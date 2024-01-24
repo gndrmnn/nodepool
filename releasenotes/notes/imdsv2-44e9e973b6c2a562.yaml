@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Support for requiring IMDSv2 in AWS is now available using these options:
+    :attr:`providers.[aws].pools.labels.imdsv2` and
+    :attr:`providers.[aws].diskimages.imds-support`

@@ -52,6 +52,11 @@ class FakeAwsAdapter(AwsAdapter):
             self.__testcase.run_instance_calls.append(kwargs)
             return self.ec2_client.run_instances_orig(*args, **kwargs)
 
+        # The ImdsSupport parameter isn't handled by moto
+        def _fake_register_image(*args, **kwargs):
+            self.__testcase.register_image_calls.append(kwargs)
+            return self.ec2_client.register_image_orig(*args, **kwargs)
+
         def _fake_get_paginator(*args, **kwargs):
             try:
                 return self.__testcase.fake_aws.get_paginator(*args, **kwargs)
@@ -60,6 +65,8 @@ class FakeAwsAdapter(AwsAdapter):
 
         self.ec2_client.run_instances_orig = self.ec2_client.run_instances
         self.ec2_client.run_instances = _fake_run_instances
+        self.ec2_client.register_image_orig = self.ec2_client.register_image
+        self.ec2_client.register_image = _fake_register_image
         self.ec2_client.import_snapshot = \
             self.__testcase.fake_aws.import_snapshot
         self.ec2_client.import_image = \
@@ -157,8 +164,9 @@ class TestDriverAws(tests.DBTestCase):
             Bucket='nodepool',
             CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
 
-        # A list of args to create instance for validation
+        # A list of args to method calls for validation
         self.run_instance_calls = []
+        self.register_image_calls = []
 
         # TEST-NET-3
         ipv6 = False
@@ -568,6 +576,9 @@ class TestDriverAws(tests.DBTestCase):
         response = instance.describe_attribute(Attribute='ebsOptimized')
         self.assertFalse(response['EbsOptimized']['Value'])
 
+        self.assertFalse(
+            'MetadataOptions' in self.run_instance_calls[0])
+
         node.state = zk.USED
         self.zk.storeNode(node)
         self.waitForNodeDeletion(node)
@@ -755,6 +766,20 @@ class TestDriverAws(tests.DBTestCase):
         response = instance.describe_attribute(Attribute='ebsOptimized')
         self.assertTrue(response['EbsOptimized']['Value'])
 
+    def test_aws_imdsv2(self):
+        req = self.requestNode('aws/aws.yaml',
+                               'ubuntu1404-imdsv2')
+        node = self.assertSuccess(req)
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        self.assertEqual(
+            self.run_instance_calls[0]['MetadataOptions']['HttpTokens'],
+            'required')
+        self.assertEqual(
+            self.run_instance_calls[0]['MetadataOptions']['HttpEndpoint'],
+            'enabled')
+
     def test_aws_invalid_instance_type(self):
         req = self.requestNode('aws/aws-invalid.yaml', 'ubuntu-invalid')
         self.assertEqual(req.state, zk.FAILED)
@@ -782,6 +807,7 @@ class TestDriverAws(tests.DBTestCase):
 
         ec2_image = self.ec2.Image(image.external_id)
         self.assertEqual(ec2_image.state, 'available')
+        self.assertFalse('ImdsSupport' in self.register_image_calls[0])
         self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
                         in ec2_image.tags)
         self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
@@ -857,6 +883,60 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(
             self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
+
+    def test_aws_diskimage_snapshot_imdsv2(self):
+        self.fake_aws.fail_import_count = 1
+        configfile = self.setup_config('aws/diskimage-imdsv2-snapshot.yaml')
+
+        self.useBuilder(configfile)
+
+        image = self.waitForImage('ec2-us-west-2', 'fake-image')
+        self.assertEqual(image.username, 'another_user')
+
+        ec2_image = self.ec2.Image(image.external_id)
+        self.assertEqual(ec2_image.state, 'available')
+        self.assertEqual(
+            self.register_image_calls[0]['ImdsSupport'], 'v2.0')
+
+        self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
+                        in ec2_image.tags)
+        self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
+                        in ec2_image.tags)
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('diskimage')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.username, 'another_user')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Iops'], 2000)
+        self.assertEqual(
+            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Throughput'], 200)
+
+    def test_aws_diskimage_image_imdsv2(self):
+        self.fake_aws.fail_import_count = 1
+        configfile = self.setup_config('aws/diskimage-imdsv2-image.yaml')
+
+        with testtools.ExpectedException(Exception, "IMDSv2 requires"):
+            self.useBuilder(configfile)
 
     def test_aws_diskimage_removal(self):
         configfile = self.setup_config('aws/diskimage.yaml')
