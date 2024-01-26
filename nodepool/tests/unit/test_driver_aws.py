@@ -21,7 +21,7 @@ import urllib.parse
 
 import boto3
 import botocore.exceptions
-from moto import mock_ec2, mock_s3, mock_iam
+from moto import mock_aws
 import testtools
 
 from nodepool import config as nodepool_config
@@ -122,9 +122,7 @@ def ebs_quotas(quotas):
 
 class TestDriverAws(tests.DBTestCase):
     log = logging.getLogger("nodepool.TestDriverAws")
-    mock_ec2 = mock_ec2()
-    mock_s3 = mock_s3()
-    mock_iam = mock_iam()
+    mock_aws = mock_aws()
 
     def setUp(self):
         super().setUp()
@@ -144,9 +142,7 @@ class TestDriverAws(tests.DBTestCase):
             fixtures.EnvironmentVariable('AWS_SECRET_ACCESS_KEY', aws_key))
 
         self.fake_aws = FakeAws()
-        self.mock_ec2.start()
-        self.mock_s3.start()
-        self.mock_iam.start()
+        self.mock_aws.start()
 
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
@@ -197,8 +193,7 @@ class TestDriverAws(tests.DBTestCase):
                           ebs_quotas=getattr(test, '__aws_ebs_quotas__', None))
 
     def tearDown(self):
-        self.mock_ec2.stop()
-        self.mock_s3.stop()
+        self.mock_aws.stop()
         super().tearDown()
 
     def setup_config(self, *args, **kw):

@@ -1,0 +1,4 @@
+- hosts: all
+  roles:
+    - name: Collect k8s logs for debugging purposes
+      role: collect-kubernetes-logs

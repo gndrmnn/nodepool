@@ -6,3 +6,4 @@
     - role: ensure-nox
     - role: ensure-kubernetes
       ensure_kubernetes_type: microk8s
+      ensure_kubernetes_microk8s_channel: '1.28/stable'
