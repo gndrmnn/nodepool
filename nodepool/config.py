@@ -114,6 +114,8 @@ class Config(ConfigValue):
         self.max_hold_age = None
         self.webapp = None
         self.tenant_resource_limits = {}
+        # Last modified timestamps of loaded config files
+        self.config_mtimes = {}
 
     def __eq__(self, other):
         if isinstance(other, Config):
@@ -132,6 +134,9 @@ class Config(ConfigValue):
                     self.tenant_resource_limits == other.tenant_resource_limits
                     )
         return False
+
+    def setConfigPathMtime(self, path, mtime):
+        self.config_mtimes[path] = mtime
 
     def setElementsDir(self, value):
         self.elements_dir = value
@@ -428,6 +433,7 @@ def openConfig(path, env):
 
 
 def loadConfig(config_path, env=os.environ):
+    config_mtime = os.stat(config_path).st_mtime_ns
     config = openConfig(config_path, env)
 
     # Call driver config reset now to clean global hooks like openstacksdk
@@ -449,11 +455,13 @@ def loadConfig(config_path, env=os.environ):
     newconfig.setProviders(config.get('providers'))
     newconfig.setZooKeeperTLS(config.get('zookeeper-tls'))
     newconfig.setTenantResourceLimits(config.get('tenant-resource-limits'))
+    newconfig.setConfigPathMtime(config_path, config_mtime)
 
     return newconfig
 
 
 def loadSecureConfig(config, secure_config_path, env=os.environ):
+    secure_mtime = os.stat(secure_config_path).st_mtime_ns
     secure = openConfig(secure_config_path, env)
     if not secure:   # empty file
         return
@@ -466,3 +474,19 @@ def loadSecureConfig(config, secure_config_path, env=os.environ):
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
     config.setZooKeeperTLS(secure.get('zookeeper-tls'))
+    config.setConfigPathMtime(secure_config_path, secure_mtime)
+
+
+def checkRecentConfig(config, config_path, secure_path=None):
+    current_config_mtime = config.config_mtimes.get(config_path, 0)
+    new_config_mtime = os.stat(config_path).st_mtime_ns
+    if current_config_mtime != new_config_mtime:
+        return False
+
+    if secure_path:
+        current_secure_mtime = config.config_mtimes.get(secure_path, 0)
+        new_secure_mtime = os.stat(secure_path).st_mtime_ns
+        if current_secure_mtime != new_secure_mtime:
+            return False
+
+    return True
