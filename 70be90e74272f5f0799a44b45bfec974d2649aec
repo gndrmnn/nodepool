@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e573e74_aaaf1435",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-01-26T00:03:10Z",
+      "side": 1,
+      "message": "recheck seems like some sort of k8s connectivity failure. Worth finding out if it is a consistent fail",
+      "revId": "70be90e74272f5f0799a44b45bfec974d2649aec",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
