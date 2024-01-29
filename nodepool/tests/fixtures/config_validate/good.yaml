@@ -21,6 +21,7 @@ labels:
   - name: trusty-static
   - name: kubernetes-namespace
   - name: pod-fedora
+  - name: pod-custom
   - name: openshift-project
   - name: openshift-pod
   - name: centos-ami
@@ -145,6 +146,10 @@ providers:
         labels:
           - name: kubernetes-namespace
             type: namespace
+          - name: pod-custom
+            type: pod
+            spec:
+              k8s: goes here
           - name: pod-fedora
             type: pod
             image: docker.io/fedora:28
