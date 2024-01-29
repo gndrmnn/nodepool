@@ -420,3 +420,39 @@ Selecting the openshift pods driver adds the following options to the
             Sets the `volumeMounts` flag on the container.  If
             supplied, this should be a list of OpenShift Container
             VolumeMount definitions.
+
+         .. attr:: spec
+            :type: dict
+
+            This attribute is exclusive with all other label
+            attributes except
+            :attr:`providers.[openshiftpods].pools.labels.name`
+            :attr:`providers.[openshiftpods].pools.labels.annotations`,
+            :attr:`providers.[openshiftpods].pools.labels.labels` and
+            :attr:`providers.[openshiftpods].pools.labels.dynamic-labels`.
+            If a `spec` is provided, then Nodepool will supply the
+            contents of this value verbatim to OpenShift as the
+            ``spec`` attribute of the OpenShift ``Pod`` definition.
+            No other Nodepool attributes are used, including any
+            default values set at the provider level (such as
+            `default-label-cpu` and similar).
+
+            This attribute allows for the creation of arbitrary
+            complex pod definitions but the user is responsible for
+            ensuring that they are suitable.  The first container in
+            the pod is expected to be a long-running container that
+            hosts a shell environment for running commands.  The
+            following minimal definition matches what Nodepool itself
+            normally creates and is recommended as a starting point:
+
+            .. code-block:: yaml
+
+               labels:
+                 - name: custom-pod
+                   spec:
+                     containers:
+                       - name: custom-pod
+                         image: ubuntu:jammy
+                         imagePullPolicy: IfNotPresent
+                         command: ["/bin/sh", "-c"]
+                         args: ["while true; do sleep 30; done;"]

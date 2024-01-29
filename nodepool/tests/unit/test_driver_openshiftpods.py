@@ -441,3 +441,55 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
                 'memory': '1024Mi'
             },
         })
+
+    def test_openshift_pod_custom(self):
+        # Test a pod with a custom spec
+        configfile = self.setup_config('openshiftpods.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.tenant_name = 'tenant-1'
+        req.node_types.append('pod-custom')
+        self.zk.storeNodeRequest(req)
+
+        self.log.debug("Waiting for request %s", req.id)
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'kubectl')
+        self.assertEqual(node.connection_port.get('token'), 'fake-token')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(node.cloud, 'service-account.local')
+        self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
+        ns, pod = self.fake_k8s_client._pod_requests[0]
+        self.assertEqual(pod['metadata'], {
+            'name': 'pod-custom-0000000000',
+            'annotations': {},
+            'labels': {
+                'nodepool_node_id': '0000000000',
+                'nodepool_provider_name': 'openshift',
+                'nodepool_pool_name': 'main',
+                'nodepool_node_label': 'pod-custom'
+            },
+        })
+        self.assertEqual(pod['spec'], {
+            'containers': [{
+                'name': 'pod-custom',
+                'image': 'ubuntu:jammy',
+                'imagePullPolicy': 'IfNotPresent',
+                'command': ['/bin/sh', '-c'],
+                'args': ['while true; do sleep 30; done;'],
+            }],
+        })
+
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+
+        self.waitForNodeDeletion(node)
