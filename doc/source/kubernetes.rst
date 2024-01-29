@@ -491,3 +491,38 @@ Selecting the kubernetes driver adds the following options to the
             label type.  Sets the `volumeMounts` flag on the
             container.  If supplied, this should be a list of
             Kubernetes Container VolumeMount definitions.
+
+         .. attr:: spec
+            :type: dict
+
+            This attribute is exclusive with all other label
+            attributes except
+            :attr:`providers.[kubernetes].pools.labels.name` and
+            :attr:`providers.[kubernetes].pools.labels.type`.  If a
+            `spec` is provided, then Nodepool will supply the contents
+            of this value verbatim to Kubernetes as the ``spec``
+            attribute of the Kubernetes ``Pod`` definition.  No other
+            Nodepool attributes are used, including any default values
+            set at the provider level (such as `default-label-cpu` and
+            similar).
+
+            This attribute allows for the creation of arbitrary
+            complex pod definitions but the user is responsible for
+            ensuring that they are suitable.  The first container in
+            the pod is expected to be a long-running container that
+            hosts a shell environment for running commands.  The
+            following minimal definition matches what Nodepool itself
+            normally creates and is recommended as a starting point:
+
+            .. code-block:: yaml
+
+               labels:
+                 - name: custom-pod
+                   type: pod
+                   spec:
+                     containers:
+                       - name: custom-pod
+                         image: ubuntu:jammy
+                         imagePullPolicy: IfNotPresent
+                         command: ["/bin/sh", "-c"]
+                         args: ["while true; do sleep 30; done;"]

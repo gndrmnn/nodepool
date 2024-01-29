@@ -61,7 +61,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             v.Required('value'): str,
         }
 
-        openshift_label = {
+        openshift_label_from_nodepool = {
             v.Required('name'): str,
             v.Required('image'): str,
             'image-pull': str,
@@ -88,10 +88,17 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'extra-resources': {str: int},
         }
 
+        openshift_label_from_user = {
+            v.Required('name'): str,
+            v.Required('type'): str,
+            'spec': dict,
+        }
+
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
-            v.Required('labels'): [openshift_label],
+            v.Required('labels'): [v.Any(openshift_label_from_nodepool,
+                                         openshift_label_from_user)],
             'max-cores': int,
             'max-ram': int,
             'max-resources': {str: int},
