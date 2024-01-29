@@ -15,6 +15,7 @@ tenant-resource-limits:
 labels:
   - name: pod-fedora
   - name: pod-extra
+  - name: pod-custom
   - name: openshift-project
   - name: pod-fedora-secret
 
@@ -58,3 +59,12 @@ providers:
             volume-mounts:
               - name: my-csi-inline-vol
                 mountPath: /data
+          - name: pod-custom
+            type: pod
+            spec:
+              containers:
+                - name: pod-custom
+                  image: ubuntu:jammy
+                  imagePullPolicy: IfNotPresent
+                  command: ["/bin/sh", "-c"]
+                  args: ["while true; do sleep 30; done;"]

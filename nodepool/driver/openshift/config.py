@@ -57,6 +57,7 @@ class OpenshiftPool(ConfigPool):
             pl = OpenshiftLabel()
             pl.name = label['name']
             pl.type = label['type']
+            pl.spec = label.get('spec')
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.image_pull_secrets = label.get('image-pull-secrets', [])
@@ -140,7 +141,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             v.Required('value'): str,
         }
 
-        openshift_label = {
+        openshift_label_from_nodepool = {
             v.Required('name'): str,
             v.Required('type'): str,
             'image': str,
@@ -168,10 +169,20 @@ class OpenshiftProviderConfig(ProviderConfig):
             'extra-resources': {str: int},
         }
 
+        openshift_label_from_user = {
+            v.Required('name'): str,
+            v.Required('type'): str,
+            v.Required('spec'): dict,
+            'labels': dict,
+            'dynamic-labels': dict,
+            'annotations': dict,
+        }
+
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
-            v.Required('labels'): [openshift_label],
+            v.Required('labels'): [v.Any(openshift_label_from_nodepool,
+                                         openshift_label_from_user)],
             'max-cores': int,
             'max-ram': int,
             'max-resources': {str: int},

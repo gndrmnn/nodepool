@@ -222,6 +222,36 @@ class OpenshiftProvider(Provider, QuotaSupport):
 
     def createPod(self, node, pool, project, pod_name, label, request):
         self.log.debug("%s: creating pod in project %s" % (pod_name, project))
+        if label.spec:
+            pod_body = self.getPodBodyCustom(node, pool, pod_name, label,
+                                             request)
+        else:
+            pod_body = self.getPodBodyNodepool(node, pool, pod_name, label,
+                                               request)
+        self.k8s_client.create_namespaced_pod(project, pod_body)
+
+    def getPodBodyCustom(self, node, pool, pod_name, label, request):
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
+
+        k8s_annotations = {}
+        if label.annotations:
+            k8s_annotations.update(label.annotations)
+
+        pod_body = {
+            'apiVersion': 'v1',
+            'kind': 'Pod',
+            'metadata': {
+                'name': pod_name,
+                'labels': k8s_labels,
+                'annotations': k8s_annotations,
+            },
+            'spec': label.spec,
+            'restartPolicy': 'Never',
+        }
+
+        return pod_body
+
+    def getPodBodyNodepool(self, node, pool, pod_name, label, request):
         container_body = {
             'name': label.name,
             'image': label.image,
@@ -296,7 +326,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'restartPolicy': 'Never',
         }
 
-        self.k8s_client.create_namespaced_pod(project, pod_body)
+        return pod_body
 
     def waitForPod(self, project, pod_name):
         for retry in range(300):
