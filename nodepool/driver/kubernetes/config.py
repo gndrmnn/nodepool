@@ -55,6 +55,7 @@ class KubernetesPool(ConfigPool):
             pl = KubernetesLabel()
             pl.name = label['name']
             pl.type = label['type']
+            pl.spec = label.get('spec')
             pl.image = label.get('image')
             pl.image_pull = label.get('image-pull', 'IfNotPresent')
             pl.python_path = label.get('python-path', 'auto')
@@ -133,7 +134,7 @@ class KubernetesProviderConfig(ProviderConfig):
             v.Required('value'): str,
         }
 
-        k8s_label = {
+        k8s_label_from_nodepool = {
             v.Required('name'): str,
             v.Required('type'): str,
             'image': str,
@@ -160,10 +161,17 @@ class KubernetesProviderConfig(ProviderConfig):
             'extra-resources': {str: int},
         }
 
+        k8s_label_from_user = {
+            v.Required('name'): str,
+            v.Required('type'): str,
+            'spec': dict,
+        }
+
         pool = ConfigPool.getCommonSchemaDict()
         pool.update({
             v.Required('name'): str,
-            v.Required('labels'): [k8s_label],
+            v.Required('labels'): [v.Any(k8s_label_from_nodepool,
+                                         k8s_label_from_user)],
             'max-cores': int,
             'max-ram': int,
             'max-resources': {str: int},

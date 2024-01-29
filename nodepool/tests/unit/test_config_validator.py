@@ -93,3 +93,12 @@ class TestConfigValidation(tests.BaseTestCase):
         validator = ConfigValidator(config)
         ret = validator.validate()
         self.assertEqual(ret, 1)
+
+    def test_k8s_spec_duplicate(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'k8s_spec_duplicate.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)

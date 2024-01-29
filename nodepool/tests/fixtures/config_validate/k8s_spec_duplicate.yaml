@@ -1,0 +1,43 @@
+elements-dir: /etc/nodepool/elements
+images-dir: /opt/nodepool_dib
+
+zookeeper-servers:
+  - host: zk1.openstack.org
+    port: 2181
+    chroot: /test
+
+labels:
+  - name: pod-fedora
+
+providers:
+  - name: kubespray
+    driver: kubernetes
+    context: admin-cluster.local
+    pools:
+      - name: main
+        labels:
+          - name: pod-fedora
+            type: pod
+            spec:
+              k8s: goes here
+            image: docker.io/fedora:28
+            cpu: 2
+            memory: 512
+            env:
+              - name: FOO
+                value: hello
+              - name: BAR
+                value: world
+            node-selector:
+              storageType: ssd
+            privileged: true
+            volumes:
+              - name: my-csi-inline-vol
+                csi:
+                  driver: inline.storage.kubernetes.io
+            volume-mounts:
+              - mountPath: "/data"
+                name: my-csi-inline-vol
+            scheduler-name: niftyScheduler
+            labels:
+              environment: qa
