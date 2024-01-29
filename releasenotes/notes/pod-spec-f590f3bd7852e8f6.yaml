@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    It is now possible to provide an custom pod definition for the
+    Kubernetes and OpenShift drivers using the
+    :attr:`providers.[kubernetes].pools.labels.spec`,
+    :attr:`providers.[openshift].pools.labels.spec` and
+    :attr:`providers.[openshiftpods].pools.labels.spec` attributes.  These
+    can be used to supply parameters not otherwise supported by
+    Nodepool, or to create complex pods with multiple containers.

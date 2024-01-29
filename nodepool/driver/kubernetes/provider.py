@@ -304,6 +304,50 @@ class KubernetesProvider(Provider, QuotaSupport):
         return resource
 
     def createPod(self, node, pool, label, request):
+        if label.spec:
+            pod_body = self.getPodBodyCustom(node, pool, label, request)
+        else:
+            pod_body = self.getPodBodyNodepool(node, pool, label, request)
+        resource = self.createNamespace(node, pool, label, request,
+                                        restricted_access=True)
+        namespace = resource['namespace']
+        self.k8s_client.create_namespaced_pod(namespace, pod_body)
+
+        for retry in range(300):
+            pod = self.k8s_client.read_namespaced_pod(label.name, namespace)
+            if pod.status.phase == "Running":
+                break
+            self.log.debug("%s: pod status is %s", namespace, pod.status.phase)
+            time.sleep(1)
+        if retry == 299:
+            raise exceptions.LaunchNodepoolException(
+                "%s: pod failed to initialize (%s)" % (
+                    namespace, pod.status.phase))
+        resource["pod"] = label.name
+        node.host_id = pod.spec.node_name
+        return resource
+
+    def getPodBodyCustom(self, node, pool, label, request):
+        k8s_labels = self._getK8sLabels(label, node, pool, request)
+        k8s_annotations = {}
+        if label.annotations:
+            k8s_annotations.update(label.annotations)
+
+        pod_body = {
+            'apiVersion': 'v1',
+            'kind': 'Pod',
+            'metadata': {
+                'name': label.name,
+                'labels': k8s_labels,
+                'annotations': k8s_annotations,
+            },
+            'spec': label.spec,
+            'restartPolicy': 'Never',
+        }
+
+        return pod_body
+
+    def getPodBodyNodepool(self, node, pool, label, request):
         container_body = {
             'name': label.name,
             'image': label.image,
@@ -335,8 +379,15 @@ class KubernetesProvider(Provider, QuotaSupport):
             resources['requests'] = requests
         if limits:
             resources['limits'] = limits
+
         if resources:
             container_body['resources'] = resources
+        if label.volume_mounts:
+            container_body['volumeMounts'] = label.volume_mounts
+        if label.privileged is not None:
+            container_body['securityContext'] = {
+                'privileged': label.privileged,
+            }
 
         spec_body = {
             'containers': [container_body]
@@ -344,20 +395,10 @@ class KubernetesProvider(Provider, QuotaSupport):
 
         if label.node_selector:
             spec_body['nodeSelector'] = label.node_selector
-
         if label.scheduler_name:
             spec_body['schedulerName'] = label.scheduler_name
-
         if label.volumes:
             spec_body['volumes'] = label.volumes
-
-        if label.volume_mounts:
-            container_body['volumeMounts'] = label.volume_mounts
-
-        if label.privileged is not None:
-            container_body['securityContext'] = {
-                'privileged': label.privileged,
-            }
 
         k8s_labels = self._getK8sLabels(label, node, pool, request)
         k8s_annotations = {}
@@ -376,25 +417,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             'restartPolicy': 'Never',
         }
 
-        resource = self.createNamespace(node, pool, label, request,
-                                        restricted_access=True)
-        namespace = resource['namespace']
-
-        self.k8s_client.create_namespaced_pod(namespace, pod_body)
-
-        for retry in range(300):
-            pod = self.k8s_client.read_namespaced_pod(label.name, namespace)
-            if pod.status.phase == "Running":
-                break
-            self.log.debug("%s: pod status is %s", namespace, pod.status.phase)
-            time.sleep(1)
-        if retry == 299:
-            raise exceptions.LaunchNodepoolException(
-                "%s: pod failed to initialize (%s)" % (
-                    namespace, pod.status.phase))
-        resource["pod"] = label.name
-        node.host_id = pod.spec.node_name
-        return resource
+        return pod_body
 
     def getRequestHandler(self, poolworker, request):
         return handler.KubernetesNodeRequestHandler(poolworker, request)
