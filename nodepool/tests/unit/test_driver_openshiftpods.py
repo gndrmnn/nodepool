@@ -485,7 +485,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
                 'image': 'ubuntu:jammy',
                 'imagePullPolicy': 'IfNotPresent',
                 'command': ['/bin/sh', '-c'],
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
             }],
         })
 

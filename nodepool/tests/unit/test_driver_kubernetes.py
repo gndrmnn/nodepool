@@ -155,7 +155,7 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'image': 'docker.io/fedora:28',
                 'imagePullPolicy': 'IfNotPresent',
                 'command': ['/bin/sh', '-c'],
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
                 'env': []
             }],
         })
@@ -206,7 +206,7 @@ class TestDriverKubernetes(tests.DBTestCase):
         })
         self.assertEqual(pod['spec'], {
             'containers': [{
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
                 'command': ['/bin/sh', '-c'],
                 'env': [],
                 'image': 'docker.io/fedora:28',
@@ -655,7 +655,7 @@ class TestDriverKubernetes(tests.DBTestCase):
                 'image': 'ubuntu:jammy',
                 'imagePullPolicy': 'IfNotPresent',
                 'command': ['/bin/sh', '-c'],
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
             }],
         })
 

@@ -185,7 +185,7 @@ class TestDriverOpenshift(tests.DBTestCase):
                 'image': 'docker.io/fedora:28',
                 'imagePullPolicy': 'IfNotPresent',
                 'command': ['/bin/sh', '-c'],
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
                 'env': []
             }],
             'imagePullSecrets': [],
@@ -239,7 +239,7 @@ class TestDriverOpenshift(tests.DBTestCase):
         })
         self.assertEqual(pod['spec'], {
             'containers': [{
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
                 'command': ['/bin/sh', '-c'],
                 'env': [],
                 'image': 'docker.io/fedora:28',
@@ -661,7 +661,7 @@ class TestDriverOpenshift(tests.DBTestCase):
                 'image': 'ubuntu:jammy',
                 'imagePullPolicy': 'IfNotPresent',
                 'command': ['/bin/sh', '-c'],
-                'args': ['while true; do sleep 30; done;'],
+                'args': ['sleep infinity'],
             }],
         })
 

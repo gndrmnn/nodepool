@@ -456,4 +456,4 @@ Selecting the openshift pods driver adds the following options to the
                          image: ubuntu:jammy
                          imagePullPolicy: IfNotPresent
                          command: ["/bin/sh", "-c"]
-                         args: ["while true; do sleep 30; done;"]
+                         args: ["sleep infinity"]
