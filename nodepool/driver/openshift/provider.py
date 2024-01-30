@@ -257,7 +257,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             'image': label.image,
             'imagePullPolicy': label.image_pull,
             'command': ["/bin/sh", "-c"],
-            'args': ["while true; do sleep 30; done;"],
+            'args': ["sleep infinity"],
             'env': label.env,
         }
 
