@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a514499f_583f4bc8",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:58:03Z",
+      "side": 1,
+      "message": "I think we can also drop the /bin/sh call too, using: `command: [\"sleep\", \"infinity\"]` and dropping the `args` attribute.",
+      "revId": "aee4f7cbd99050d31bbbd147c11f1e9653201f84",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
