@@ -24,6 +24,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbe097e2_ab80f04d",
+        "filename": "doc/source/openshift-pods.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T23:59:14Z",
+      "side": 1,
+      "message": "Gah, every time!  I\u0027ll fix.",
+      "parentUuid": "56b5e937_07d9dd5d",
+      "revId": "015d07cf2f423a4f824cb2fcc2b9c43ffe5ea925",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b6b16e2e_66bd970c",
@@ -37,6 +55,24 @@
       "writtenOn": "2024-01-30T23:52:38Z",
       "side": 1,
       "message": "Why is the host_id None for openshift but not k8s or openshift pods?",
+      "revId": "015d07cf2f423a4f824cb2fcc2b9c43ffe5ea925",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92655177_93a3fbb0",
+        "filename": "nodepool/tests/unit/test_driver_openshift.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T23:59:14Z",
+      "side": 1,
+      "message": "It looks like it\u0027s because the openshift driver just never sets it.  All the tests in this file match this behavior.\n\nThat should be fixed, but not relevant to this change.",
+      "parentUuid": "b6b16e2e_66bd970c",
       "revId": "015d07cf2f423a4f824cb2fcc2b9c43ffe5ea925",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
