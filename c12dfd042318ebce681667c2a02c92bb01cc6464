@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27b7ecbd_ec50fbf5",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T20:20:17Z",
+      "side": 1,
+      "message": "No, it only works for pod.  I think it makes sense to keep the pod type and use specs with it.  The structure is still the same: Nodepool delivers a Pod to Zuul.",
+      "parentUuid": "bdb9d9a3_29032d3c",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be9e632c_1aaa6fa0",
@@ -35,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e970cff7_660e3e62",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T20:20:17Z",
+      "side": 1,
+      "message": "Ack, I\u0027ll update.",
+      "parentUuid": "be9e632c_1aaa6fa0",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68f81553_75e03b1f",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-01-30T20:01:45Z",
       "side": 1,
       "message": "Perhaps we can use a simpler?:\n```\n  command: [\"sleep\", \"infinity\"]\n```",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd4c5499_6401c140",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T20:20:17Z",
+      "side": 1,
+      "message": "That sounds good, but let\u0027s do that in a followup since that\u0027s a distinct change and this one is well tested and doesn\u0027t really need to change.",
+      "parentUuid": "68f81553_75e03b1f",
       "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -75,6 +129,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cce93b3_534f5b9e",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T20:20:17Z",
+      "side": 1,
+      "message": "Yep (technically it works without it, but it\u0027s a better/more expressive schema with it, so we should include it).",
+      "parentUuid": "7887a739_d37d77df",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "023eb496_161072f8",
@@ -88,6 +160,24 @@
       "writtenOn": "2024-01-30T20:01:45Z",
       "side": 1,
       "message": "Is this actually used? The openshiftpods documentation doesn\u0027t mention any label type.",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c917549_6437491e",
+        "filename": "nodepool/driver/openshiftpods/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-01-30T20:20:17Z",
+      "side": 1,
+      "message": "Nope we should drop that.",
+      "parentUuid": "023eb496_161072f8",
       "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
