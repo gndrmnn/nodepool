@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdb9d9a3_29032d3c",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:01:45Z",
+      "side": 1,
+      "message": "I wonder if we should use a new type here, does custom spec works for namespaces?",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be9e632c_1aaa6fa0",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:01:45Z",
+      "side": 1,
+      "message": "It looks like annotations are also taken into account.",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68f81553_75e03b1f",
+        "filename": "doc/source/kubernetes.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:01:45Z",
+      "side": 1,
+      "message": "Perhaps we can use a simpler?:\n```\n  command: [\"sleep\", \"infinity\"]\n```",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7887a739_d37d77df",
+        "filename": "nodepool/driver/kubernetes/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:01:45Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the spec be Required?",
+      "range": {
+        "startLine": 167,
+        "startChar": 13,
+        "endLine": 167,
+        "endChar": 17
+      },
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "023eb496_161072f8",
+        "filename": "nodepool/driver/openshiftpods/config.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-01-30T20:01:45Z",
+      "side": 1,
+      "message": "Is this actually used? The openshiftpods documentation doesn\u0027t mention any label type.",
+      "revId": "c12dfd042318ebce681667c2a02c92bb01cc6464",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
