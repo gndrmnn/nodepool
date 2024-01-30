@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56b5e937_07d9dd5d",
+        "filename": "doc/source/openshift-pods.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-01-30T23:52:38Z",
+      "side": 1,
+      "message": "I don\u0027t think the openshift pods driver has a type field since it only does pods.",
+      "range": {
+        "startLine": 452,
+        "startChar": 19,
+        "endLine": 452,
+        "endChar": 28
+      },
+      "revId": "015d07cf2f423a4f824cb2fcc2b9c43ffe5ea925",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6b16e2e_66bd970c",
+        "filename": "nodepool/tests/unit/test_driver_openshift.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-01-30T23:52:38Z",
+      "side": 1,
+      "message": "Why is the host_id None for openshift but not k8s or openshift pods?",
+      "revId": "015d07cf2f423a4f824cb2fcc2b9c43ffe5ea925",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
