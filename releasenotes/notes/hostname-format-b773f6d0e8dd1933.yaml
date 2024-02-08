@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The hostname-format option, previously available for the OpenStack
+    and AWS drivers, but unused for some time, has been removed.
+    Remove any uses of it from nodepool config files before upgrading;
+    otherwise they will fail config validation.

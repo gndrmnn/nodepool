@@ -176,7 +176,6 @@ class OpenStackProviderConfig(ProviderConfig):
         self.port_cleanup_interval = None
         self.diskimages = {}
         self.cloud_images = {}
-        self.hostname_format = None
         self.image_name_format = None
         self.post_upload_hook = None
         super().__init__(provider)
@@ -213,10 +212,6 @@ class OpenStackProviderConfig(ProviderConfig):
         self.port_cleanup_interval = self.provider.get(
             'port-cleanup-interval',
             600
-        )
-        self.hostname_format = self.provider.get(
-            'hostname-format',
-            '{label.name}-{provider.name}-{node.id}'
         )
         self.image_name_format = self.provider.get(
             'image-name-format',
@@ -348,7 +343,6 @@ class OpenStackProviderConfig(ProviderConfig):
             'launch-retries': int,
             'nodepool-id': str,
             'rate': v.Coerce(float),
-            'hostname-format': str,
             'image-name-format': str,
             'clean-floating-ips': bool,
             'port-cleanup-interval': int,

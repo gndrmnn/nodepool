@@ -45,7 +45,6 @@ Selecting the OpenStack driver adds the following options to the
           launch-timeout: 900
           launch-retries: 3
           image-name-format: '{image_name}-{timestamp}'
-          hostname-format: '{label.name}-{provider.name}-{node.id}'
           post-upload-hook: /usr/bin/custom-hook
           diskimages:
             - name: trusty
@@ -80,7 +79,6 @@ Selecting the OpenStack driver adds the following options to the
           region-name: 'region1'
           rate: 1.0
           image-name-format: '{image_name}-{timestamp}'
-          hostname-format: '{label.name}-{provider.name}-{node.id}'
           diskimages:
             - name: precise
               meta:
@@ -155,12 +153,6 @@ Selecting the OpenStack driver adds the following options to the
      :type: string
 
      The region name if the provider cloud has multiple regions.
-
-  .. attr:: hostname-format
-     :type: string
-     :default: {label.name}-{provider.name}-{node.id}
-
-     Hostname template to use for the spawned instance.
 
   .. attr:: image-name-format
      :type: string
