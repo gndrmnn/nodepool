@@ -187,6 +187,7 @@ class GceProviderConfig(ProviderConfig):
             v.Required('zone'): str,
             'cloud-images': [provider_cloud_images],
             'boot-timeout': int,
+            'launch-timeout': int,
             'launch-retries': int,
             'rate-limit': int,
         })
