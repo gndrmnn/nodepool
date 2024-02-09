@@ -2803,3 +2803,49 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(len(req3.nodes), 1)
         node3 = self.zk.getNode(req3.nodes[0])
         self.assertEqual(node3.provider, 'low-provider')
+
+    def test_requests_by_provider_stats(self):
+        configfile = self.setup_config('node_two_providers_two_labels.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        self.waitForImage('fake-provider2', 'fake-image')
+
+        nodepool.launcher.LOCK_CLEANUP = 1
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        req.requestor = 'unit-test'
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('fake-label2')
+        req2.requestor = 'unit-test'
+        self.zk.storeNodeRequest(req2)
+
+        req2 = self.waitForNodeRequest(req2)
+        self.assertEqual(req2.state, zk.FULFILLED)
+
+        pool_id = pool.getPoolWorkers("fake-provider")[0].launcher_id
+        pool_id2 = pool.getPoolWorkers("fake-provider2")[0].launcher_id
+
+        self.assertReportedStat(
+            'nodepool.'
+            'provider.'
+            'fake-provider.'
+            f'{pool_id}.'
+            'handleable_requests',
+            value='1', kind='g')
+        self.assertReportedStat(
+            'nodepool.'
+            'provider.'
+            'fake-provider2.'
+            f'{pool_id2}.'
+            'handleable_requests',
+            value='2', kind='g')
