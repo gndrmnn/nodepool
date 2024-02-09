@@ -66,6 +66,7 @@ RUN \
       binutils \
       curl \
       dnf \
+      dnf-plugins-core \
       debian-keyring \
       dosfstools \
       gdisk \
@@ -92,17 +93,6 @@ RUN \
 #
 RUN apt-get install -y --install-recommends podman containernetworking-plugins uidmap libsemanage-common \
   && printf '[engine]\ncgroup_manager="cgroupfs"\nevents_logger="file"\n' > /etc/containers/containers.conf
-
-# There is a Debian package in the NEW queue currently for dnf-plugins-core
-#  https://ftp-master.debian.org/new/dnf-plugins-core_4.0.21-1~exp1.html
-# Until this is generally available; manually install "dnf download"
-# for the yum-minimal element
-RUN \
-  git clone https://github.com/rpm-software-management/dnf-plugins-core \
-  && mkdir /usr/lib/python3/dist-packages/dnf-plugins \
-  && cp -r dnf-plugins-core/plugins/dnfpluginscore /usr/lib/python3/dist-packages \
-  && cp dnf-plugins-core/plugins/download.py /usr/lib/python3/dist-packages/dnf-plugins \
-  && rm -rf dnf-plugins-core
 
 # Cleanup
 RUN \
