@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4cda794_ace85dbb",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2024-02-09T14:19:45Z",
+      "side": 1,
+      "message": "This fetches the node requests directly from zk which I think is not really needed for a gauge statistic. I think using nodeRequestIterator with cached ids would be good enough for the statistics and not hit zk at all.",
+      "revId": "888561532e32d4e4022ad47cf9c21bc9ab3a24bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab76e550_4ebb9d97",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2024-02-09T14:19:45Z",
+      "side": 1,
+      "message": "The print should be removed.",
+      "revId": "888561532e32d4e4022ad47cf9c21bc9ab3a24bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
