@@ -180,3 +180,31 @@ class StatsReporter(object):
                 key = key_template % (tenant, k)
                 pipeline.gauge(key, lim)
         pipeline.send()
+
+    def updateNodeRequestStats(self, zk_conn):
+        if not self._statsd:
+            return
+
+        pipeline = self._statsd.pipeline()
+
+        provider_requests = {}
+        for pool in zk_conn.getRegisteredPools():
+            provider_requests[(pool.provider_name, pool.id)] = 0
+            for node_request in zk_conn.nodeRequestIterator(cached_ids=True):
+                if all(
+                        label in pool.supported_labels
+                        for label in node_request.node_types
+                ):
+                    provider_requests[(pool.provider_name, pool.id)] += 1
+
+        for (provider_name,
+             pool_id), requests_count in provider_requests.items():
+            # nodepool.provider.PROVIDER.POOL_ID.handleable_requests
+            provider_name = ("nodepool."
+                             "provider."
+                             f"{provider_name}."
+                             f"{pool_id}."
+                             "handleable_requests")
+            pipeline.gauge(provider_name, requests_count)
+
+        pipeline.send()

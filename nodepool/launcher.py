@@ -1019,6 +1019,7 @@ class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
             self.stats_event.clear()
             try:
                 self.updateNodeStats(zk)
+                self.updateNodeRequestStats(zk)
             except Exception:
                 self.log.exception("Exception while reporting stats:")
             time.sleep(1)
