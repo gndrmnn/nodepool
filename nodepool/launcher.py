@@ -1019,6 +1019,9 @@ class StatsWorker(BaseCleanupWorker, stats.StatsReporter):
             self.stats_event.clear()
             try:
                 self.updateNodeStats(zk)
+                self.updateRequestsByProvider(zk.getRegisteredPools(),
+                                              zk.nodeRequestIterator(
+                                                  cached_ids=True))
             except Exception:
                 self.log.exception("Exception while reporting stats:")
             time.sleep(1)

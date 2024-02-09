@@ -180,3 +180,31 @@ class StatsReporter(object):
                 key = key_template % (tenant, k)
                 pipeline.gauge(key, lim)
         pipeline.send()
+
+    def updateRequestsByProvider(self, pools, node_iterator):
+        if not self._statsd:
+            return
+
+        pipeline = self._statsd.pipeline()
+
+        node_requests = list(node_iterator)
+
+        provider_requests = {}
+        for pool in pools:
+            provider_requests[provider_name := pool.provider_name] = 0
+            for node_request in node_requests:
+                if all(
+                        label in pool.supported_labels
+                        for label in node_request.node_types
+                ):
+                    provider_requests[provider_name] += 1
+
+        for provider_name, requests_count in provider_requests.items():
+            # nodepool.provider.PROVIDER.handleable_requests
+            provider_name = ("nodepool."
+                             "provider."
+                             f"{provider_name}."
+                             "handleable_requests")
+            pipeline.gauge(provider_name, requests_count)
+
+        pipeline.send()

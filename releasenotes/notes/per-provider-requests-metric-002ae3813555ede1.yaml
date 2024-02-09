@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Nodepool now exports a new metric called nodepool.provider.<provider>.handleable_requests
+    This gauge shows providers, and the number of open node requests which they can handle.
