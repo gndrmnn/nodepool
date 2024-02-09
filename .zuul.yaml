@@ -194,11 +194,13 @@
     parent: nodepool-functional-container-openstack-release-base
     vars:
       nodepool_diskimage:
-        base_element: centos-minimal
-        release: 9-stream
-        mirror: "http://{{ zuul_site_mirror_fqdn }}/centos"
+        base_element: ubuntu-minimal
+        release: jammy
+        mirror: "http://{{ zuul_site_mirror_fqdn }}/ubuntu"
         env-vars:
-          DIB_SIMPLE_INIT_NETWORKMANAGER: '1'
+          DIB_APT_LOCAL_CACHE: "0"
+          DIB_DEBOOTSTRAP_EXTRA_ARGS: "--no-check-gpg"
+          DIB_DISABLE_APT_CLEANUP: "1"
 
 - job:
     name: nodepool-functional-container-openstack-siblings-base
