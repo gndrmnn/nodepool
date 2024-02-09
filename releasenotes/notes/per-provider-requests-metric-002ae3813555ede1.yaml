@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Nodepool now exports a new metric called
+    :zuul:stat:`nodepool.provider.<provider>.pool.<pool>.addressable_requests`.
+    This gauge shows provider pools, and the number of open node requests
+    which they can address.
