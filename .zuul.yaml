@@ -266,8 +266,14 @@
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - zuul-quick-start:
-            requires: zuul-container-image
-            dependencies: nodepool-build-image
+            requires:
+              - nodepool-container-image
+              - zuul-container-image
+            dependencies:
+              - name: zuul-build-image
+                soft: true
+              - name: nodepool-build-image
+                soft: true
         - build-python-release
     gate:
       jobs:
