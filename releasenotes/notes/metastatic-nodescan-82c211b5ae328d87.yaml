@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The metastatic driver now includes the
+    :attr:`providers.[metastatic].pools.host-key-checking` and
+    :attr:`providers.[metastatic].pools.labels.host-key-checking`
+    options.  This can be used to verify that a backing node is still
+    functioning correctly before allocating new metastatic nodes to
+    it.

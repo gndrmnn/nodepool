@@ -344,6 +344,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             if isinstance(e, exceptions.LaunchKeyscanException):
                 try:
                     label = self.handler.pool.labels[node.type[0]]
+                    self.manager.adapter.notifyNodescanFailure(
+                        label, node.external_id)
                     console = self.manager.adapter.getConsoleLog(
                         label, node.external_id)
                     if console:
@@ -1651,7 +1653,7 @@ class Adapter:
         """
         raise NotImplementedError()
 
-    # The following method is optional
+    # The following methods are optional
     def getConsoleLog(self, label, external_id):
         """Return the console log from the specified server
 
@@ -1659,3 +1661,11 @@ class Adapter:
         :param external_id str: The external id of the server
         """
         raise NotImplementedError()
+
+    def notifyNodescanFailure(self, label, external_id):
+        """Notify the adapter of a nodescan failure
+
+        :param label ConfigLabel: The label config for the node
+        :param external_id str: The external id of the server
+        """
+        pass

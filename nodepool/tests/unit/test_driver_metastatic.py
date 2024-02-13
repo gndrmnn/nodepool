@@ -17,11 +17,13 @@ import json
 import logging
 import os
 
+import fixtures
 import testtools
 
 from nodepool import tests
 from nodepool.zk import zookeeper as zk
 from nodepool.driver.statemachine import StateMachineProvider
+import nodepool.driver.statemachine
 from nodepool.cmd.config_validator import ConfigValidator
 
 
@@ -222,6 +224,82 @@ class TestDriverMetastatic(tests.DBTestCase):
         manager.adapter._client.create_image(name="fake-image")
 
         # Delete the metastatic node and verify that backing is deleted
+        node1.state = zk.DELETING
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+        self.waitForNodeDeletion(bn1)
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [])
+
+    def test_metastatic_nodescan(self):
+        # Test that a nodescan failure takes a backing node out of service
+
+        counter = -1
+        # bn1, node1, node2
+        fail = [False, False, True]
+        orig_advance = nodepool.driver.statemachine.NodescanRequest.advance
+
+        def handler(*args, **kw):
+            nonlocal counter, fail
+            counter += 1
+            if counter >= len(fail):
+                return orig_advance(*args, **kw)
+            if fail[counter]:
+                raise nodepool.exceptions.ConnectionTimeoutException()
+            return orig_advance(*args, **kw)
+
+        self.useFixture(fixtures.MonkeyPatch(
+            'nodepool.driver.statemachine.NodescanRequest.advance',
+            handler))
+
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager.adapter._client.create_image(name="fake-image")
+
+        # Launch one metastatic node on a backing node
+        node1 = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 2)
+        bn1 = nodes[1]
+        self.assertEqual(bn1.provider, 'fake-provider')
+        self.assertEqual(bn1.id, node1.driver_data['backing_node'])
+
+        # Launch a second one with a failed nodescan; should have a
+        # second backing node
+        node2 = self._requestNode()
+        nodes = self._getNodes()
+        bn2 = nodes[3]
+        # Reload bn1 since the userdata failed
+        self.assertEqual(bn1.id, nodes[1].id)
+        bn1 = nodes[1]
+        self.assertNotEqual(bn1.id, bn2.id)
+        self.assertEqual(nodes, [node1, bn1, node2, bn2])
+        self.assertEqual(bn2.id, node2.driver_data['backing_node'])
+
+        # Allocate a third node, should use the second backing node
+        node3 = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [node1, bn1, node2, bn2, node3])
+        self.assertEqual(bn2.id, node3.driver_data['backing_node'])
+
+        # Delete node3, verify that both backing nodes exist
+        node3.state = zk.DELETING
+        self.zk.storeNode(node3)
+        self.waitForNodeDeletion(node3)
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [node1, bn1, node2, bn2])
+
+        # Delete node2, verify that only the first backing node exists
+        node2.state = zk.DELETING
+        self.zk.storeNode(node2)
+        self.waitForNodeDeletion(node2)
+        self.waitForNodeDeletion(bn2)
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [node1, bn1])
+
+        # Delete node1, verify that no nodes exist
         node1.state = zk.DELETING
         self.zk.storeNode(node1)
         self.waitForNodeDeletion(node1)

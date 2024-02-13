@@ -220,6 +220,8 @@ class BackingNodeRecord:
         self.last_used = time.time()
 
     def hasAvailableSlot(self):
+        if self.failed:
+            return False
         return None in self.allocated_nodes
 
     def isEmpty(self):
@@ -297,6 +299,8 @@ class MetastaticAdapter(statemachine.Adapter):
                         # The label doesn't exist in our config any more,
                         # it must have been removed.
                         grace_time = 0
+                    if bnr.failed:
+                        grace_time = 0
                     if (bnr.isEmpty() and
                         now - bnr.last_used > grace_time):
                         self.log.info("Backing node %s has been idle for "
@@ -325,6 +329,21 @@ class MetastaticAdapter(statemachine.Adapter):
     def getQuotaForLabel(self, label):
         return QuotaInformation(instances=1)
 
+    def notifyNodescanFailure(self, label, external_id):
+        with self.allocation_lock:
+            backing_node_records = self.backing_node_records.get(
+                label.name, [])
+            for bnr in backing_node_records:
+                if bnr.backsNode(external_id):
+                    self.log.info(
+                        "Nodescan failure of %s on %s, failing backing node",
+                        external_id, bnr.node_id)
+                    bnr.failed = True
+                    backing_node = self._getNode(bnr.node_id)
+                    backing_node.user_data = self._makeBackingNodeUserData(bnr)
+                    self.zk.storeNode(backing_node)
+                    return
+
     # Local implementation below
 
     def _init(self):
@@ -352,6 +371,7 @@ class MetastaticAdapter(statemachine.Adapter):
                     backing_node_record = BackingNodeRecord(user_data['label'],
                                                             user_data['slots'])
                     backing_node_record.node_id = node.id
+                    backing_node_record.failed = user_data.get('failed', False)
                     self.log.info("Found backing node %s for %s",
                                   node.id, user_data['label'])
                     self._addBackingNode(user_data['label'],
@@ -381,6 +401,9 @@ class MetastaticAdapter(statemachine.Adapter):
         # if we have room for the label, allocate and return existing slot
         # otherwise, make a new backing node
         with self.allocation_lock:
+            # First, find out if we're retrying a request for the same
+            # node id; if so, immediately deallocate the old one.
+            self._deallocateBackingNodeInner(node_id)
             backing_node_record = None
             for bnr in self.backing_node_records.get(label.name, []):
                 if bnr.hasAvailableSlot():
@@ -411,15 +434,26 @@ class MetastaticAdapter(statemachine.Adapter):
     def _deallocateBackingNode(self, node_id):
         self._init()
         with self.allocation_lock:
-            for label_name, backing_node_records in \
-                self.backing_node_records.items():
-                for bn in backing_node_records:
-                    if bn.backsNode(node_id):
-                        slot = bn.deallocateSlot(node_id)
-                        self.log.info(
-                            "Unassigned node %s from backing node %s slot %s",
-                            node_id, bn.node_id, slot)
-                        return
+            self._deallocateBackingNodeInner(node_id)
+
+    def _deallocateBackingNodeInner(self, node_id):
+        for label_name, backing_node_records in \
+            self.backing_node_records.items():
+            for bnr in backing_node_records:
+                if bnr.backsNode(node_id):
+                    slot = bnr.deallocateSlot(node_id)
+                    self.log.info(
+                        "Unassigned node %s from backing node %s slot %s",
+                        node_id, bnr.node_id, slot)
+                    return
+
+    def _makeBackingNodeUserData(self, bnr):
+        return json.dumps({
+            'owner': self.my_id,
+            'label': bnr.label_name,
+            'slots': bnr.slot_count,
+            'failed': bnr.failed,
+        })
 
     def _checkBackingNodeRequests(self):
         self._init()
@@ -452,11 +486,7 @@ class MetastaticAdapter(statemachine.Adapter):
                     node = self._getNode(node_id)
                     self.zk.lockNode(node, blocking=True, timeout=30,
                                      ephemeral=False, identifier=self.my_id)
-                    node.user_data = json.dumps({
-                        'owner': self.my_id,
-                        'label': bnr.label_name,
-                        'slots': bnr.slot_count,
-                    })
+                    node.user_data = self._makeBackingNodeUserData(bnr)
                     node.state = zk.IN_USE
                     self.zk.storeNode(node)
                     self.zk.deleteNodeRequest(request)

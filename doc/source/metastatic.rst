@@ -107,6 +107,23 @@ itself, which is "meta".
           to apply to all pools within that provider, or it can be
           overridden here for a specific pool.
 
+       .. attr:: host-key-checking
+          :type: bool
+          :default: False
+
+          Whether to validate SSH host keys.  When true, this helps
+          ensure that nodes are ready to receive SSH connections
+          before they are supplied to the requestor.  When set to
+          false, nodepool-launcher will not attempt to ssh-keyscan
+          nodes after they are booted.  Unlike other drivers, this
+          defaults to false here because it is presumed that the
+          backing node has already been checked for connectivity.
+          Enabling it here will cause the launcher to check
+          connectivity each time it allocates a new slot on the
+          backing node, and if a check fails, it will mark the backing
+          node as failed and stop allocating any more slots on that
+          node.
+
        .. attr:: node-attributes
           :type: dict
 
@@ -175,3 +192,23 @@ itself, which is "meta".
              last requested node is deleted to see if new requests
              arrive for this label before deleting the backing node.
              Set this value to the amount of time in seconds to wait.
+
+          .. attr:: host-key-checking
+             :type: bool
+             :default: False
+
+             Whether to validate SSH host keys.  When true, this helps
+             ensure that nodes are ready to receive SSH connections
+             before they are supplied to the requestor.  When set to
+             false, nodepool-launcher will not attempt to ssh-keyscan
+             nodes after they are booted.  Unlike other drivers, this
+             defaults to false here because it is presumed that the
+             backing node has already been checked for connectivity.
+             Enabling it here will cause the launcher to check
+             connectivity each time it allocates a new slot on the
+             backing node, and if a check fails, it will mark the backing
+             node as failed and stop allocating any more slots on that
+             node.
+
+             .. note:: This value will override the value for
+                       :attr:`providers.[metastatic].pools.host-key-checking`.
