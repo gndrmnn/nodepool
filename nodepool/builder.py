@@ -132,6 +132,10 @@ class BaseWorker(threading.Thread):
             self.log.debug("Detected ZooKeeper server changes")
             self._zk.resetHosts(list(new_config.zookeeper_servers.values()))
 
+    def _checkConfigRecent(self):
+        return self._config and nodepool_config.checkRecentConfig(
+            self._config, self._config_path, self._secure_path)
+
     def _readConfig(self):
         new_config = nodepool_config.loadConfig(self._config_path)
         if self._secure_path:
@@ -585,15 +589,14 @@ class CleanupWorker(BaseWorker):
         '''
         Body of run method for exception handling purposes.
         '''
-        new_config = self._readConfig()
-        if not self._config:
+        if not self._checkConfigRecent():
+            new_config = self._readConfig()
+            if not self._config:
+                self._config = new_config
+            self._checkForZooKeeperChanges(new_config)
+            provider_manager.ProviderManager.reconfigure(
+                self._config, new_config, self._zk, only_image_manager=True)
             self._config = new_config
-
-        self._checkForZooKeeperChanges(new_config)
-        provider_manager.ProviderManager.reconfigure(self._config, new_config,
-                                                     self._zk,
-                                                     only_image_manager=True)
-        self._config = new_config
 
         self._cleanup()
         self._emitBuildRequestStats()
@@ -648,8 +651,7 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
-                new_config = self._readConfig()
-                if new_config != self._config:
+                if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
                     return
@@ -761,8 +763,7 @@ class BuildWorker(BaseWorker):
             if not self._running or self._zk.suspended or self._zk.lost:
                 return
             try:
-                new_config = self._readConfig()
-                if new_config != self._config:
+                if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
                     return
@@ -1036,13 +1037,13 @@ class BuildWorker(BaseWorker):
         '''
         Body of run method for exception handling purposes.
         '''
-        # NOTE: For the first iteration, we expect self._config to be None
-        new_config = self._readConfig()
-        if not self._config:
+        if not self._checkConfigRecent():
+            new_config = self._readConfig()
+            if not self._config:
+                self._config = new_config
+            self._checkForZooKeeperChanges(new_config)
             self._config = new_config
 
-        self._checkForZooKeeperChanges(new_config)
-        self._config = new_config
         self._checkForScheduledImageUpdates()
         self._checkForManualBuildRequest()
 
@@ -1059,15 +1060,14 @@ class UploadWorker(BaseWorker):
         '''
         Reload the nodepool configuration file.
         '''
-        new_config = self._readConfig()
-        if not self._config:
+        if not self._checkConfigRecent():
+            new_config = self._readConfig()
+            if not self._config:
+                self._config = new_config
+            self._checkForZooKeeperChanges(new_config)
+            provider_manager.ProviderManager.reconfigure(
+                self._config, new_config, self._zk, only_image_manager=True)
             self._config = new_config
-
-        self._checkForZooKeeperChanges(new_config)
-        provider_manager.ProviderManager.reconfigure(self._config, new_config,
-                                                     self._zk,
-                                                     only_image_manager=True)
-        self._config = new_config
 
     def _uploadImage(self, build_id, upload_id, image_name, images, provider,
                      username, python_path, shell_type):
