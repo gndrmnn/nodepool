@@ -493,6 +493,52 @@ The following metrics are produced by a ``nodepool-builder`` process:
    Number of manual build requests outstanding (does not include
    currently running builds).
 
+.. zuul:stat:: nodepool.image.<diskimage name>.image_build_requests
+   :type: gauge
+
+   Number of manual build requests outstanding (does not include
+   currently running builds) for the specified image.
+
+.. zuul:stat:: nodepool.builder.<hostname>.current_builds
+   :type: gauge
+
+   The number of builds currently in progress.
+
+.. zuul:stat:: nodepool.builder.<hostname>.current_uploads
+   :type: gauge
+
+   The number of uploads currently in progress.
+
+.. zuul:stat:: nodepool.builder.<hostname>.build_workers
+   :type: gauge
+
+   The number of simultaneous build workers configured for this builder.
+
+.. zuul:stat:: nodepool.builder.<hostname>.upload_workers
+   :type: gauge
+
+   The number of simultaneous upload workers configured for this builder.
+
+.. zuul:stat:: nodepool.builder.<hostname>.image.<image name>.build.state
+   :type: gauge
+
+   Indicates whether a builder is currently building an image.  The
+   value will be one of the following constants:
+
+   0: idle
+   1: building
+   3: paused
+
+.. zuul:stat:: nodepool.builder.<hostname>.image.<image name>.provider.<provider name>.upload.state
+   :type: gauge
+
+   Indicates whether a builder is currently uploading an image.  The
+   value will be one of the following constants:
+
+   0: idle
+   2: uploading
+   3: paused
+
 
 Nodepool launcher
 ~~~~~~~~~~~~~~~~~

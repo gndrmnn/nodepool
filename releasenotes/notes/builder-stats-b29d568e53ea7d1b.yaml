@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    The following new statsd keys are available for builders:
+
+    * :zuul:stat:`nodepool.image.<diskimage name>.image_build_requests`
+    * :zuul:stat:`nodepool.builder.<hostname>.current_builds`
+    * :zuul:stat:`nodepool.builder.<hostname>.current_uploads`
+    * :zuul:stat:`nodepool.builder.<hostname>.build_workers`
+    * :zuul:stat:`nodepool.builder.<hostname>.upload_workers`
+    * :zuul:stat:`nodepool.builder.<hostname>.image.<image name>.build.state`
+    * :zuul:stat:`nodepool.builder.<hostname>.image.<image name>.provider.<provider name>.upload.state`
