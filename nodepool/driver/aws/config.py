@@ -103,7 +103,7 @@ class AwsProviderDiskImage(ConfigValue):
         self.architecture = image.get('architecture', 'x86_64')
         self.ena_support = image.get('ena-support', True)
         self.volume_size = image.get('volume-size', None)
-        self.volume_type = image.get('volume-type', 'gp2')
+        self.volume_type = image.get('volume-type', 'gp3')
         self.import_method = image.get('import-method', 'snapshot')
         self.iops = image.get('iops', None)
         self.throughput = image.get('throughput', None)

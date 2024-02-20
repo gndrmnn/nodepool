@@ -415,7 +415,7 @@ Selecting the ``aws`` driver adds the following options to the
 
       .. attr:: volume-type
          :type: str
-         :default: gp2
+         :default: gp3
 
          The root `EBS volume type`_ for the image.
          Only used with the
