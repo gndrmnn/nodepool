@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The default :attr:`providers.[aws].diskimages.volume-type` for
+    AWS diskimages has been changed from `gp2` to `gp3`.
