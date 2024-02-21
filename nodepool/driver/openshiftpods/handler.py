@@ -50,6 +50,7 @@ class OpenshiftPodLauncher(OpenshiftLauncher):
             'user': 'zuul-worker',
         }
         self.node.connection_type = "kubectl"
+        self.node.username = self.label.username
         pool = self.handler.provider.pools.get(self.node.pool)
         self.node.resources = self.handler.manager.quotaNeededByLabel(
             self.node.type[0], pool).get_resources()

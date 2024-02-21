@@ -47,6 +47,7 @@ class OpenshiftLauncher(NodeLauncher):
             resource['pod'] = self.label.name
             self.node.connection_type = "kubectl"
             self.node.interface_ip = self.label.name
+            self.node.username = self.label.username
         else:
             self.node.connection_type = "project"
 

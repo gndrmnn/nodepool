@@ -86,6 +86,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'dynamic-labels': dict,
             'annotations': dict,
             'extra-resources': {str: int},
+            'username': str,
         }
 
         openshift_label_from_user = {
@@ -94,6 +95,7 @@ class OpenshiftPodsProviderConfig(OpenshiftProviderConfig):
             'labels': dict,
             'dynamic-labels': dict,
             'annotations': dict,
+            'username': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

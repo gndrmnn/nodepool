@@ -268,6 +268,13 @@ Selecting the kubernetes driver adds the following options to the
 
             The ImagePullPolicy, can be IfNotPresent, Always or Never.
 
+         .. attr:: username
+            :type: str
+
+            If the container image used for a pod specifies a user,
+            then set the same value here so that clients can be
+            configured to communicate with the pod properly.
+
          .. attr:: labels
             :type: dict
 

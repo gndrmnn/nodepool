@@ -97,6 +97,7 @@ class OpenshiftPool(ConfigPool):
             pl.labels = label.get('labels')
             pl.dynamic_labels = label.get('dynamic-labels', {})
             pl.annotations = label.get('annotations')
+            pl.username = label.get('username')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -167,6 +168,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'dynamic-labels': dict,
             'annotations': dict,
             'extra-resources': {str: int},
+            'username': str,
         }
 
         openshift_label_from_user = {
@@ -176,6 +178,7 @@ class OpenshiftProviderConfig(ProviderConfig):
             'labels': dict,
             'dynamic-labels': dict,
             'annotations': dict,
+            'username': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

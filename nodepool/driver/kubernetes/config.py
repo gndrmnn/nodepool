@@ -94,6 +94,7 @@ class KubernetesPool(ConfigPool):
             pl.labels = label.get('labels')
             pl.dynamic_labels = label.get('dynamic-labels', {})
             pl.annotations = label.get('annotations')
+            pl.username = label.get('username')
             pl.pool = self
             self.labels[pl.name] = pl
             full_config.labels[label['name']].pools.append(self)
@@ -159,6 +160,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'dynamic-labels': dict,
             'annotations': dict,
             'extra-resources': {str: int},
+            'username': str,
         }
 
         k8s_label_from_user = {
@@ -168,6 +170,7 @@ class KubernetesProviderConfig(ProviderConfig):
             'labels': dict,
             'dynamic-labels': dict,
             'annotations': dict,
+            'username': str,
         }
 
         pool = ConfigPool.getCommonSchemaDict()

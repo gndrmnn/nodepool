@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The username for a pod container image may now be specified in the
+    Kubernetes and OpenShift drivers using the
+    :attr:`providers.[kubernetes].pools.labels.username`,
+    :attr:`providers.[openshift].pools.labels.username` and
+    :attr:`providers.[openshiftpods].pools.labels.username` attributes.

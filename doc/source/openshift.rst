@@ -279,6 +279,13 @@ Selecting the openshift driver adds the following options to the
                    image-pull-secrets:
                      - name: registry-secret
 
+         .. attr:: username
+            :type: str
+
+            If the container image used for a pod specifies a user,
+            then set the same value here so that clients can be
+            configured to communicate with the pod properly.
+
          .. attr:: labels
             :type: dict
 

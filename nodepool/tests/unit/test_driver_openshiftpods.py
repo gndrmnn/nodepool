@@ -113,6 +113,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.cloud, 'service-account.local')
         self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
+        self.assertEqual(node.username, None)
 
         node.state = zk.DELETING
         self.zk.storeNode(node)
@@ -468,6 +469,7 @@ class TestDriverOpenshiftPods(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.cloud, 'service-account.local')
         self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
+        self.assertEqual(node.username, 'ubuntu')
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['metadata'], {
             'name': 'pod-custom-0000000000',

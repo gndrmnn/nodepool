@@ -42,6 +42,7 @@ providers:
           - name: pod-extra
             type: pod
             image: docker.io/fedora:28
+            username: ubuntu
             python-path: '/usr/bin/python3'
             shell-type: csh
             labels:

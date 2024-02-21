@@ -138,6 +138,7 @@ class TestDriverKubernetes(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.cloud, 'admin-cluster.local')
         self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
+        self.assertEqual(node.username, None)
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['metadata'], {
             'name': 'pod-fedora',
@@ -191,6 +192,7 @@ class TestDriverKubernetes(tests.DBTestCase):
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(node.cloud, 'admin-cluster.local')
         self.assertEqual(node.host_id, 'k8s-default-pool-abcd-1234')
+        self.assertEqual(node.username, 'ubuntu')
         ns, pod = self.fake_k8s_client._pod_requests[0]
         self.assertEqual(pod['metadata'], {
             'name': 'pod-extra',

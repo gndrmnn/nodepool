@@ -36,6 +36,7 @@ providers:
           - name: pod-extra
             type: pod
             image: docker.io/fedora:28
+            username: ubuntu
             labels:
               environment: qa
             dynamic-labels:
