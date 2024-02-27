@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d169367_85f5d708",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-02-27T17:11:54Z",
+      "side": 1,
+      "message": "OpenDev doesn\u0027t appear to set this config option so we\u0027re good to land this from the OpenDev side.",
+      "revId": "e097731339c111fb3752e07950c9a8c218a0a714",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
