@@ -42,6 +42,8 @@ class ConfigValidator:
             'pause': bool,
             'elements': [str],
             'formats': [str],
+            'keep-formats': [str],
+            'delete-after-upload': bool,
             'parent': str,
             'release': v.Any(str, int),
             'rebuild-age': int,

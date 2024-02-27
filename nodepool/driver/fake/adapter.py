@@ -410,12 +410,16 @@ class FakeOpenStackCloud(object):
 class FakeUploadFailCloud(FakeOpenStackCloud):
     log = logging.getLogger("nodepool.FakeUploadFailCloud")
 
-    def __init__(self, *args, times_to_fail=None, **kw):
+    def __init__(self, *args, times_to_fail=None, fail_callback=None, **kw):
         super(FakeUploadFailCloud, self).__init__(*args, **kw)
         self.times_to_fail = times_to_fail
         self.times_failed = 0
+        self.fail_callback = fail_callback
 
     def create_image(self, **kwargs):
+        if self.fail_callback:
+            if not self.fail_callback(kwargs):
+                return super(FakeUploadFailCloud, self).create_image(**kwargs)
         if self.times_to_fail is None:
             raise exceptions.BuilderError("Test fail image upload.")
         self.times_failed += 1

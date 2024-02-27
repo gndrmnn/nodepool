@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Nodepool-builder may now be configured to delete disk image files
+    after uploads are complete, but while the corresponding images are
+    still in service.  The :attr:`diskimages.delete-after-upload` and
+    :attr:`diskimages.keep-formats` configuration options may be used
+    to configure this behavior.

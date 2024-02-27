@@ -305,7 +305,9 @@ class DiskImage(ConfigValue):
         self.dib_cmd = 'disk-image-create'
         self.elements = []
         self.env_vars = {}
-        self.image_types = set([])
+        self.image_types = set()
+        self.delete_after_upload = False
+        self.keep_image_types = set()
         self.pause = False
         self.python_path = 'auto'
         self.shell_type = None
@@ -343,6 +345,10 @@ class DiskImage(ConfigValue):
         image_types = config.get('formats', None)
         if image_types:
             self.image_types = set(image_types)
+        keep_image_types = config.get('keep-formats', None)
+        if keep_image_types:
+            self.keep_image_types = set(keep_image_types)
+        self.delete_after_upload = config.get('delete-after-upload', False)
         pause = config.get('pause', None)
         if pause:
             self.pause = pause
