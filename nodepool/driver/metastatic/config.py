@@ -45,7 +45,8 @@ class MetastaticLabel(ConfigValue):
         self.cloud_image = MetastaticCloudImage()
         self.max_parallel_jobs = label.get('max-parallel-jobs', 1)
         self.grace_time = label.get('grace-time', 60)
-        self.host_key_checking = self.pool.host_key_checking
+        self.host_key_checking = label.get('host-key-checking',
+                                           self.pool.host_key_checking)
 
     @staticmethod
     def getSchema():
@@ -54,6 +55,7 @@ class MetastaticLabel(ConfigValue):
             v.Required('backing-label'): str,
             'max-parallel-jobs': int,
             'grace-time': int,
+            'host-key-checking': bool,
         }
 
     def isBackingConfigEqual(self, other):
@@ -74,7 +76,9 @@ class MetastaticPool(ConfigPool):
         self.labels = {}
         # We will just use the interface_ip of the backing node
         self.use_internal_ip = False
-        self.host_key_checking = False
+        # Allow extra checking of the backing node to detect failure
+        # after it's already running.
+        self.host_key_checking = pool_config.get('host-key-checking', False)
 
         self.load(pool_config)
 
@@ -95,6 +99,7 @@ class MetastaticPool(ConfigPool):
             v.Required('name'): str,
             v.Required('labels'): [label],
             'max-servers': int,
+            'host-key-checking': bool,
         })
         return pool
 

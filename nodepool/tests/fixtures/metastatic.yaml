@@ -49,6 +49,7 @@ providers:
       - name: main
         max-servers: 10
         priority: 1
+        host-key-checking: true
         node-attributes:
           metaattr: meta
           testattr: metastatic
@@ -57,3 +58,4 @@ providers:
             backing-label: backing-label
             max-parallel-jobs: 2
             grace-time: 2
+            host-key-checking: true
