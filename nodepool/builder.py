@@ -50,6 +50,17 @@ DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
 BUILD_PROCESS_POLL_TIMEOUT = 30 * 1000
 
 
+def removeDibItem(filename, log):
+    if filename is None:
+        return
+    try:
+        os.remove(filename)
+        log.info("Removed DIB file %s" % filename)
+    except OSError as e:
+        if e.errno != 2:    # No such file or directory
+            raise e
+
+
 class DibImageFile(object):
     '''
     Class used as an API to finding locally built DIB image files, and
@@ -239,16 +250,6 @@ class CleanupWorker(BaseWorker):
         :param ImageBuild build: The build we want to delete.
         :param Logger log: A logging object for log output.
         '''
-        def removeDibItem(filename):
-            if filename is None:
-                return
-            try:
-                os.remove(filename)
-                log.info("Removed DIB file %s" % filename)
-            except OSError as e:
-                if e.errno != 2:    # No such file or directory
-                    raise e
-
         base = "-".join([image_name, build_id])
         files = DibImageFile.from_image_id(images_dir, base)
         if not files:
@@ -264,8 +265,8 @@ class CleanupWorker(BaseWorker):
                 path, ext = filename.rsplit('.', 1)
                 manifest_dir = path + ".d"
             items = [filename, f.md5_file, f.sha256_file]
-            list(map(removeDibItem, items))
-
+            for item in items:
+                removeDibItem(item, log)
         try:
             shutil.rmtree(manifest_dir)
             log.info("Removed DIB manifest %s" % manifest_dir)
@@ -387,6 +388,8 @@ class CleanupWorker(BaseWorker):
                     self.log.info("Deleting on-disk build: "
                                   "%s-%s", image_name, build_id)
                     self._deleteLocalBuild(image_name, build_id)
+                self._pruneLocalBuildFormats(
+                    known_providers, image_name, build_id)
             except Exception:
                 self.log.exception("Exception cleaning up local build %s:",
                                    local_build)
@@ -403,6 +406,46 @@ class CleanupWorker(BaseWorker):
                     continue
                 seen.add(name_and_id)
                 yield name_and_id
+
+    def _pruneLocalBuildFormats(self, providers, image_name, build_id):
+        '''If the diskimage is configured to delete local builds afetr
+        upload, this method will do so.
+
+        For this to happen, the diskimage must have the
+        delete-after-upload option set.  We then check each format and
+        delete it only if the upload of that format is complete for
+        all providers and we are not configuret to keep that format
+        with keep-formats.
+
+        '''
+        images_dir = self._config.images_dir
+        diskimage = self._config.diskimages.get(image_name)
+        if not diskimage.delete_after_upload:
+            return
+        to_keep = set(diskimage.keep_image_types)
+        # Examine the currently uploaded images and determine which
+        # formats need to be kept for future uploads.
+        for provider in providers:
+            if not provider.manage_images:
+                continue
+            if image_name not in provider.diskimages:
+                continue
+            upload = self._zk.getMostRecentBuildImageUploads(
+                1, image_name, build_id, provider.name, zk.READY)
+            if not upload:
+                to_keep.add(provider.image_type)
+
+        base = "-".join([image_name, build_id])
+        files = DibImageFile.from_image_id(images_dir, base)
+        if not files:
+            return
+
+        for f in files:
+            if f.extension in to_keep:
+                continue
+            image_path = f.to_path(images_dir)
+            for item in [image_path, f.md5_file, f.sha256_file]:
+                removeDibItem(item, self.log)
 
     def _emitBuildRequestStats(self):
         '''Emit general build request stats
