@@ -358,6 +358,29 @@ Options
       In case the diskimage is not used by any provider and no formats
       are configured, the image won't be built.
 
+   .. attr:: delete-after-upload
+      :type: bool
+      :default: False
+
+      When set to ``True``, the builder will delete the disk image
+      file from disk after all uploads are complete.  If more than one
+      format is built, this is performed individually for each format
+      (so that, for example, if all `vhd` uploads are complete but not
+      `qcow2`, then the `qcow2` files will remain while `vhd` are
+      deleted).
+
+      The diskimage manifest directories are retained as long as any
+      uploaded image is present.
+
+   .. attr:: keep-formats
+      :type: list
+
+      If :attr:`diskimages.delete-after-upload` is set, this setting
+      may be used to retain images of certain formats even after their
+      uploads are complete.  For example, setting this value to
+      `["qcow2"]` will retain `qcow2` images while deleting all other
+      formats.
+
    .. attr:: rebuild-age
       :type: int
       :default: 86400
