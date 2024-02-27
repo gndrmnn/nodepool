@@ -82,6 +82,7 @@ providers:
     rate: 0.001
     port-cleanup-interval: 0
     post-upload-hook: /usr/bin/upload-hook
+    launch-timeout: 1500
     diskimages:
       - name: trusty
         pause: False
@@ -211,6 +212,9 @@ providers:
     driver: aws
     region-name: us-east-2
     profile-name: default
+    launch-timeout: 1500
+    launch-retries: 5
+    boot-timeout: 120
     cloud-images:
       - name: centos-ami
         image-id: ami-cfdafaaa
@@ -227,6 +231,45 @@ providers:
             key-name: zuul
             volume-type: gp2
             volume-size: 80
+
+
+  - name: gce-uscentral1
+    driver: gce
+    project: nodepool-123456
+    region: us-central1
+    zone: us-central1-a
+    launch-timeout: 1500
+    launch-retries: 5
+    boot-timeout: 120
+    cloud-images:
+      - name: debian-stretch
+        image-project: debian-cloud
+        image-family: debian-9
+        username: zuul
+        key: ssh-rsa ...
+    pools:
+      - name: main
+        max-servers: 8
+        labels:
+          - name: debian-stretch
+            instance-type: f1-micro
+            cloud-image: debian-stretch
+            volume-type: standard
+            volume-size: 10
+
+  - name: meta-provider
+    driver: metastatic
+    launch-timeout: 1500
+    launch-retries: 5
+    boot-timeout: 120
+    pools:
+      - name: main
+        max-servers: 10
+        labels:
+          - name: small-node
+            backing-label: large-node
+            max-parallel-jobs: 2
+            grace-time: 600
 
   - name: openshift-single-project
     driver: openshiftpods

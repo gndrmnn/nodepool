@@ -59,6 +59,28 @@ itself, which is "meta".
 
       A unique name for this provider configuration.
 
+   .. attr:: boot-timeout
+      :type: int seconds
+      :default: 60
+
+      Once an instance is active, how long to try connecting to the
+      image via SSH.  If the timeout is exceeded, the node launch is
+      aborted and the instance deleted.
+
+   .. attr:: launch-timeout
+      :type: int seconds
+      :default: 3600
+
+      The time to wait from issuing the command to create a new instance
+      until that instance is reported as "active".  If the timeout is
+      exceeded, the node launch is aborted and the instance deleted.
+
+   .. attr:: launch-retries
+      :default: 3
+
+      The number of times to retry launching a node before considering
+      the job failed.
+
    .. attr:: pools
        :type: list
 

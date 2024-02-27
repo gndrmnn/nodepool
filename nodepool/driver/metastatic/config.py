@@ -145,6 +145,9 @@ class MetastaticProviderConfig(ProviderConfig):
 
         provider = ProviderConfig.getCommonSchemaDict()
         provider.update({
+            'boot-timeout': int,
+            'launch-timeout': int,
+            'launch-retries': int,
             v.Required('pools'): [pool],
         })
         return v.Schema(provider)

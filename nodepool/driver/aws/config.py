@@ -346,6 +346,7 @@ class AwsProviderConfig(ProviderConfig):
             'diskimages': [provider_diskimages],
             'hostname-format': str,
             'boot-timeout': int,
+            'launch-timeout': int,
             'launch-retries': int,
             'object-storage': object_storage,
             'image-format': v.Any('ova', 'vhd', 'vhdx', 'vmdk', 'raw'),
@@ -354,6 +355,7 @@ class AwsProviderConfig(ProviderConfig):
             'max-cores': int,
             'max-ram': int,
             'max-resources': {str: int},
+            'post-upload-hook': str,
         })
         return v.Schema(provider)
 
