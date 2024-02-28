@@ -344,7 +344,6 @@ class AwsProviderConfig(ProviderConfig):
             'profile-name': str,
             'cloud-images': [provider_cloud_images],
             'diskimages': [provider_diskimages],
-            'hostname-format': str,
             'boot-timeout': int,
             'launch-timeout': int,
             'launch-retries': int,
