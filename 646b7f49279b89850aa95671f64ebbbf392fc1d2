@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0be64d4d_f1236b14",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-02-28T14:29:43Z",
+      "side": 1,
+      "message": "This means this gauge will be either 0 or 1, right?",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c8b6de7_a52bd571",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-02-28T14:29:43Z",
+      "side": 1,
+      "message": "Do we have to sanitize the image name here (no dots, spaces, ...) and also in other places where we use that in a metric?",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
