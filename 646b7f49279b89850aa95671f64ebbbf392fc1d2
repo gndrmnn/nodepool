@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d78f689_bf39e3cb",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-02-28T14:32:09Z",
+      "side": 1,
+      "message": "Currently, yes.",
+      "parentUuid": "0be64d4d_f1236b14",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c8b6de7_a52bd571",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-02-28T14:29:43Z",
       "side": 1,
       "message": "Do we have to sanitize the image name here (no dots, spaces, ...) and also in other places where we use that in a metric?",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d15771bb_2dae3420",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-02-28T14:32:09Z",
+      "side": 1,
+      "message": "That is something to consider, but since we don\u0027t in similar places, I don\u0027t think we should here. Strictly speaking, including dots isn\u0027t terrible, just weird.  The rest get translated by statsd anyway.",
+      "parentUuid": "3c8b6de7_a52bd571",
       "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
