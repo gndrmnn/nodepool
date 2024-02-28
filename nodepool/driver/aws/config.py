@@ -105,6 +105,10 @@ class AwsProviderDiskImage(ConfigValue):
         self.volume_size = image.get('volume-size', None)
         self.volume_type = image.get('volume-type', 'gp3')
         self.import_method = image.get('import-method', 'snapshot')
+        self.imds_support = image.get('imds-support', None)
+        if (self.imds_support == 'v2.0' and
+            self.import_method != 'snapshot'):
+            raise Exception("IMDSv2 requires 'snapshot' import method")
         self.iops = image.get('iops', None)
         self.throughput = image.get('throughput', None)
 
@@ -128,6 +132,7 @@ class AwsProviderDiskImage(ConfigValue):
             'volume-size': int,
             'volume-type': str,
             'import-method': v.Any('snapshot', 'image'),
+            'imds-support': v.Any('v2.0', None),
             'iops': int,
             'throughput': int,
             'tags': dict,
@@ -180,6 +185,7 @@ class AwsLabel(ConfigValue):
         self.dynamic_tags = label.get('dynamic-tags', {})
         self.host_key_checking = self.pool.host_key_checking
         self.use_spot = bool(label.get('use-spot', False))
+        self.imdsv2 = label.get('imdsv2', None)
 
     @staticmethod
     def getSchema():
@@ -202,6 +208,7 @@ class AwsLabel(ConfigValue):
             'tags': dict,
             'dynamic-tags': dict,
             'use-spot': bool,
+            'imdsv2': v.Any(None, 'required', 'optional'),
         }
 
 
