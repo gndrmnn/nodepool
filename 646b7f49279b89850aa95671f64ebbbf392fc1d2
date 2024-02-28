@@ -86,6 +86,24 @@
       "message": "Could we end up publishing stale metrics when all the upload and build workers are busy?",
       "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a27ca532_e1b4f968",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 709,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-02-28T14:42:04Z",
+      "side": 1,
+      "message": "Yes, but the metrics are from the perspective of the individual builder, so that kind of makes sense.  If we don\u0027t like that, we could move the paused check out of this thread and into the cleanup thread; or we could drop it and just have idle/building.",
+      "parentUuid": "a4461eba_3d1e2d36",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
