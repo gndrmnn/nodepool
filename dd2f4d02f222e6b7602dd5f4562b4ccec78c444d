@@ -33,6 +33,91 @@
       "message": "recheck",
       "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79b3c4d0_310613cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-02-29T16:03:44Z",
+      "side": 1,
+      "message": "A provider can have multiple pools, each with potentially overlapping sets of supported_labels. In such a case, I think we would be counting the same request(s) multiple times per provider.\nSo I think we should sum them up not per pool.provider_name but a tuple (pool.id, pool.provider_name) and have the metric name include the pool.id. So any consumer of the metric can do the desired reduction (max, min, sum, ... by provider_name, pool_id, ...) .\n\nThis would look something like so\n\n```\nfor pool in zk_conn.getRegisteredProviders():\n  key \u003d (pool.id, pool.provider_name)\n  if key not in provider_requests:\n    provider_requests[key] \u003d 0\n  ...\n  for (pool_id, provider_name), requests_count in provider_requests.items():\n    metric_name \u003d (\"nodepool.\"\n                   \"provider.\"\n                   f\"{provider_name}.\"\n                   f\"{pool_id}.\"\n                   \"handleable_requests\")\n    pipeline.gauge(metric_name, requests_count)\n```\n\nOr, to keep it simpler, we could also skip the provider_name here and sum only by the pool.id, as this is directly relatable to the provider anyway. But this would offload parsing provider_name to the metric consumer (so this would be simpler here but more complex on the consumer side).",
+      "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c6e348e_2b55a3fb",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-02-29T16:03:44Z",
+      "side": 1,
+      "message": "- To align this with the other method(s) here, I\u0027d call it `updateNodeRequestStats`\n- I\u0027d just pass in a `zk_conn` parameter (like in `updateNodeStats`) and get the required objects from zk here (`zk_conn.getRegisteredPools`, `zk_conn.nodeRequestIterator`)",
+      "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bfb5287_839767e8",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-02-29T16:03:44Z",
+      "side": 1,
+      "message": "Converting this to a list is not necessary. You can iterate directly over the iterator (in the for loop below) and save one round of iteration.\n(`list(x)` iterates over `x`)",
+      "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "344ae0ab_22ec8315",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-02-29T16:03:44Z",
+      "side": 1,
+      "message": "`for pool in zk_conn.getRegisteredPools()` (see above)",
+      "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "822398f5_d5ef65b5",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-02-29T16:03:44Z",
+      "side": 1,
+      "message": "`for node_request in zk.nodeRequestIterator(cached_ids\u003dTrue)` (see above)",
+      "revId": "dd2f4d02f222e6b7602dd5f4562b4ccec78c444d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
