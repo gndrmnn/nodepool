@@ -144,22 +144,6 @@ class BaseComponent(ZooKeeperBase):
                 include_data=True,
             )
 
-        if not COMPONENT_REGISTRY.registry:
-            return
-
-        # Wait 5 seconds for the component to appear in our local
-        # cache so that operations which rely on lists of available
-        # labels, etc, behave more synchronously.
-        for x in range(50):
-            registered = set()
-            for kind, components in COMPONENT_REGISTRY.registry.all():
-                for component in components:
-                    registered.add(component.path)
-            if self.path in registered:
-                return
-            time.sleep(0.1)
-        self.log.info("Did not see component registration for %s", path)
-
     def unregister(self):
         with self.register_lock:
             self.log.info("Unregistering component in ZooKeeper %s", self.path)
