@@ -36,6 +36,7 @@ class TestComponentRegistry(tests.DBTestCase):
             version=get_version_string())
         launcher.content.update({
             'id': "launcher-Poolworker.provider-main-" + uuid.uuid4().hex,
+            'name': 'main',
             'provider_name': 'provider',
             'supported_labels': [],
             'state': launcher.RUNNING,
