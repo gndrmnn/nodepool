@@ -16,6 +16,57 @@
       "message": "recheck",
       "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3c2e0d0_14d9b2aa",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-05T21:13:19Z",
+      "side": 1,
+      "message": "The name seems a little ambiguous -- after all, if the provider could handle it, it would have done so already.  Providers don\u0027t delay handling requests, they fulfill them as quickly as possible.  But they can be constrained by the cloud quota, tenant quota, max_servers, or max_concurrency.\n\nI think a better term might be \"addressible\", though I\u0027m open to others.\n\nI\u0027m also a bit curious about how this could be used.  It seems it might be tempting to use it to gauge backlog for a given provider, but it needs to be considered in terms of the other data points (quota, max*, etc), not all of which are emitted as stats or readily comparable to this one.\n\nFinally, we should insert another element in the name:\n\n  nodepool.provider.\u003cprovider\u003e.pool.\u003cpool\u003e.x\n\nBecause otherwise we could have collisions with other metrics.  We\u0027ve learned that while that usually doesn\u0027t matter, there are some metrics combinations that don\u0027t work (specifically, subkeys under a guage).  So adding the extra \".pool\" ensures we don\u0027t collide in the future.  (Plus, even if it\u0027s technically okay, there\u0027s already confusion with the metric above.)\n\nPlease use \"provider\", and \"pool\" for the metasyntactic names for consistency with the other metric documentation.",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52f4b63e_305011a0",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-05T21:13:19Z",
+      "side": 1,
+      "message": "Maybe just:\n  if not getattr(pool, \u0027name\u0027):\n\nThat way we handdle the case of an empty name and do so succinctly.",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9497517_0d0d77ed",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-05T21:13:19Z",
+      "side": 1,
+      "message": "This will loop through the full set of node requests once for every provider-pool in the system.  That means this method doesn\u0027t just scale with the size of the request load, it compounds that with the size of the system.  It\u0027s still linear, but with a higher multiple than necessary.\n\nIf, instead, you did something like this, we would only iterate through the provider-pool list once, and then only iterate through the request list once:\n\n  for every registered pool:\n    initialize pool_counters[(provider, pool)] \u003d Counter(\u0027requests\u0027)\n    for every label supported by the pool:\n      append counter to counters_by_label[label]\n  for every node request:\n    for every label in the request:\n      for every counter in counters_by_label[label]:\n        increment counter(\u0027requests\u0027)\n  for every counter in pool_counters:\n    emit stat",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
