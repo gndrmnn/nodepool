@@ -108,6 +108,7 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.assertEqual(bn1.python_path, node1.python_path)
         self.assertEqual('auto', node1.python_path)
         self.assertEqual(bn1.shell_type, node1.shell_type)
+        self.assertEqual(bn1.cloud, node1.cloud)
         self.assertEqual(None, node1.shell_type)
         self.assertEqual(bn1.host_keys, node1.host_keys)
         self.assertEqual(['ssh-rsa FAKEKEY'], node1.host_keys)
