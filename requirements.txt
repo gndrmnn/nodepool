@@ -11,6 +11,8 @@ PrettyTable>=0.6,<0.8
 # fixes this.
 # 2.0.0 broke cinder v2 api limits listing.
 openstacksdk>=0.103.0,!=2.0.0
+# Needed for rax api_key use after MFA becomes required
+rackspaceauth
 diskimage-builder>=3.27.0
 voluptuous
 kazoo>=2.8.0
