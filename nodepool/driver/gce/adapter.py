@@ -290,10 +290,16 @@ class GceAdapter(statemachine.Adapter):
 
     def _getQuotaForMachineType(self, machine_type):
         mtype = self._getMachineType(machine_type)
-        return QuotaInformation(
-            cores=mtype['guestCpus'],
-            instances=1,
-            ram=mtype['memoryMb'])
+        try:
+            qi = QuotaInformation(
+                cores=mtype['guestCpus'],
+                instances=1,
+                ram=mtype['memoryMb'])
+        except Exception:
+            self.log.exception("Machine type has bad format: %s", mtype)
+            self._getMachineType.cache_clear()
+            raise
+        return qi
 
     def _getInstance(self, hostname):
         for instance in self._listInstances():
