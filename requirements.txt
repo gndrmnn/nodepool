@@ -13,7 +13,7 @@ PrettyTable>=0.6,<0.8
 openstacksdk>=0.103.0,!=2.0.0
 diskimage-builder>=3.27.0
 voluptuous
-kazoo>=2.8.0
+kazoo==2.9.0
 Paste
 WebOb>=1.8.1
 openshift>=0.13.1,<0.14.0
