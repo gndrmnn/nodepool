@@ -139,6 +139,60 @@
       "parentUuid": "a09af42f_79c9d4c3",
       "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a31d33e_1fb9527d",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-07T19:46:00Z",
+      "side": 1,
+      "message": "True, and distinct variable names probably would have been a good idea in retrospect.  But I think this probably looks more confusing in review than in the code; the two classes handle images differently enough that it wasn\u0027t confusing when working on it.  My line of thinking at the time was: They both have an image status, but each just has a different data format for the value.",
+      "parentUuid": "a09af42f_79c9d4c3",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01657d80_8bca34d6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-07T19:46:00Z",
+      "side": 1,
+      "message": "True, and distinct variable names probably would have been a good idea in retrospect.  But I think this probably looks more confusing in review than in the code; the two classes handle images differently enough that it wasn\u0027t confusing when working on it.  My line of thinking at the time was: They both have an image status, but each just has a different data format for the value.",
+      "parentUuid": "a09af42f_79c9d4c3",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c607097_37ccfee6",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-07T19:46:00Z",
+      "side": 1,
+      "message": "True, and distinct variable names probably would have been a good idea in retrospect.  But I think this probably looks more confusing in review than in the code; the two classes handle images differently enough that it wasn\u0027t confusing when working on it.  My line of thinking at the time was: They both have an image status, but each just has a different data format for the value.",
+      "parentUuid": "a09af42f_79c9d4c3",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
