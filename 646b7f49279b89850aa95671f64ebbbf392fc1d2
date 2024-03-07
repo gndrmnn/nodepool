@@ -121,6 +121,24 @@
       "message": "We access _image_status for upload workers when reporting in the cleanup method this way:\n\n```\nupload_worker._image_status.get(image_name, {}).items()\n```\n\nHere in the build worker we have a different type for _image_status which is to just assign constant integer values rather than dicts to the keys. Personally I find this mismatch a bit confusing particularly since the attribute name is the same and is initialized in the base class. Maybe use two different keys initialized in the appropriate worker to make this more clear or use a consistent type?",
       "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fdb4624_3a5cdaeb",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-03-07T19:45:32Z",
+      "side": 1,
+      "message": "We discussed this really quickly and decided it isn\u0027t worth the churn and effort to rewrite this change. But something to try and be aware of in the future.",
+      "parentUuid": "a09af42f_79c9d4c3",
+      "revId": "646b7f49279b89850aa95671f64ebbbf392fc1d2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
