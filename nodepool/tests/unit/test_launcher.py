@@ -2833,8 +2833,18 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req2.state, zk.FULFILLED)
 
         self.assertReportedStat(
-            'nodepool.provider.fake-provider.main.handleable_requests',
+            'nodepool.'
+            'provider.'
+            'fake-provider.'
+            'pool.'
+            'main.'
+            'addressable_requests',
             value='1', kind='g')
         self.assertReportedStat(
-            'nodepool.provider.fake-provider2.main.handleable_requests',
+            'nodepool.'
+            'provider.'
+            'fake-provider2.'
+            'pool.'
+            'main.'
+            'addressable_requests',
             value='2', kind='g')

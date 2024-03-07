@@ -632,10 +632,10 @@ Provider Metrics
 
    Number of leaked volumes removed automatically by Nodepool.
 
-.. zuul:stat:: nodepool.provider.<provider_name>.<pool_name>.handleable_requests
+.. zuul:stat:: nodepool.provider.<provider>.pool.<pool>.addressable_requests
    :type: gauge
 
-   Number of open node requests a provider pool can handle.
+   Number of open node requests a provider pool can address.
 
 
 Launch metrics

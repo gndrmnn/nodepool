@@ -186,28 +186,35 @@ class StatsReporter(object):
             return
 
         pipeline = self._statsd.pipeline()
-
         provider_requests = {}
+
+        provider_supported_labels = {}
         for pool in zk_conn.getRegisteredPools():
             if not hasattr(pool, "name") or pool.name is None:
                 # skip pools without name attribute for backward compatibility
                 continue
+            provider_supported_labels[
+                (pool.provider_name, pool.name)] = pool.supported_labels
             provider_requests[(pool.provider_name, pool.name)] = 0
-            for node_request in zk_conn.nodeRequestIterator(cached_ids=True):
+
+        for node_request in zk_conn.nodeRequestIterator(cached_ids=True):
+            for (provider, pool), supported_labels in (
+                    provider_supported_labels.items()):
                 if all(
-                        label in pool.supported_labels
+                        label in supported_labels
                         for label in node_request.node_types
                 ):
-                    provider_requests[(pool.provider_name, pool.name)] += 1
+                    provider_requests[(provider, pool)] += 1
 
         for (provider_name,
              pool_name), requests_count in provider_requests.items():
-            # nodepool.provider.PROVIDER.POOL.handleable_requests
+            # nodepool.provider.PROVIDER.pool.POOL.handleable_requests
             metric = ("nodepool."
                       "provider."
                       f"{provider_name}."
+                      "pool."
                       f"{pool_name}."
-                      "handleable_requests")
+                      "addressable_requests")
             pipeline.gauge(metric, requests_count)
 
         pipeline.send()
