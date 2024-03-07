@@ -49,6 +49,12 @@ DEFAULT_QEMU_IMAGE_COMPAT_OPTIONS = "--qemu-img-options 'compat=0.10'"
 # DIB process polling timeout, in milliseconds
 BUILD_PROCESS_POLL_TIMEOUT = 30 * 1000
 
+# Constants for image processing status
+STATUS_IDLE = 0
+STATUS_BUILDING = 1
+STATUS_UPLOADING = 2
+STATUS_PAUSED = 3
+
 
 class DibImageFile(object):
     '''
@@ -120,6 +126,8 @@ class BaseWorker(threading.Thread):
         self._statsd = stats.get_client()
         self._interval = interval
         self._builder_id = builder_id
+        # Record what this worker is doing for each image
+        self._image_status = {}
 
     def _checkForZooKeeperChanges(self, new_config):
         '''
@@ -158,7 +166,8 @@ class CleanupWorker(BaseWorker):
     '''
 
     def __init__(self, name, builder_id, config_path, secure_path,
-                 interval, zk):
+                 interval, zk, builder):
+        self.builder = builder
         super(CleanupWorker, self).__init__(builder_id, config_path,
                                             secure_path, interval, zk)
         self.log = logging.getLogger(
@@ -412,14 +421,41 @@ class CleanupWorker(BaseWorker):
         '''
         if not self._statsd:
             return
-        count = 0
+        request_count = 0
+        pipeline = self._statsd.pipeline()
         for image_name in self._zk.getImageNames():
+            this_image_request_count = 0
             request = self._zk.getBuildRequest(image_name)
             if request and request.pending:
-                count += 1
-        pipeline = self._statsd.pipeline()
+                request_count += 1
+                this_image_request_count += 1
+            # Determine an overall build/upload state
+            build_status = STATUS_IDLE
+            for build_worker in self.builder._build_workers:
+                build_status = max(
+                    build_worker._image_status.get(
+                        image_name, STATUS_IDLE),
+                    build_status)
+            key = (f'nodepool.builder.{self._hostname}.image.'
+                   f'{image_name}.build.state')
+            pipeline.gauge(key, build_status)
+            upload_status_by_provider = {}
+            for upload_worker in self.builder._upload_workers:
+                for provider_name, provider_status in \
+                    upload_worker._image_status.get(image_name, {}).items():
+                    upload_status_by_provider[provider_name] = max(
+                        provider_status, upload_status_by_provider.get(
+                            provider_name, STATUS_IDLE))
+            for provider_name, upload_status in \
+                upload_status_by_provider.items():
+                key = (f'nodepool.builder.{self._hostname}.image.{image_name}.'
+                       f'provider.{provider_name}.upload.state')
+                pipeline.gauge(key, upload_status)
+            key = f'nodepool.image.{image_name}.image_build_requests'
+            pipeline.gauge(key, this_image_request_count)
         key = 'nodepool.image_build_requests'
-        pipeline.gauge(key, count)
+        pipeline.gauge(key, request_count)
+
         pipeline.send()
 
     def _cleanupCurrentProviderUploads(self, provider, image, build_id):
@@ -670,10 +706,13 @@ class BuildWorker(BaseWorker):
         '''
         # Check if diskimage builds are paused.
         if diskimage.pause:
+            self._image_status[diskimage.name] = STATUS_PAUSED
             return
         if self._zk.getImagePaused(diskimage.name):
+            self._image_status[diskimage.name] = STATUS_PAUSED
             return
 
+        self._image_status[diskimage.name] = STATUS_IDLE
         if not diskimage.image_types:
             # We don't know what formats to build.
             return
@@ -703,10 +742,13 @@ class BuildWorker(BaseWorker):
                         return
 
                     self.log.info("Building image %s" % diskimage.name)
+                    self._image_status[diskimage.name] = STATUS_BUILDING
                     self._buildWrapper(diskimage)
             except exceptions.ZKLockException:
                 # Lock is already held. Skip it.
                 pass
+            finally:
+                self._image_status[diskimage.name] = STATUS_IDLE
 
     def _buildWrapper(self, diskimage):
         '''
@@ -779,10 +821,13 @@ class BuildWorker(BaseWorker):
         '''
         # Check if diskimage builds are paused.
         if diskimage.pause:
+            self._image_status[diskimage.name] = STATUS_PAUSED
             return
         if self._zk.getImagePaused(diskimage.name):
+            self._image_status[diskimage.name] = STATUS_PAUSED
             return
 
+        self._image_status[diskimage.name] = STATUS_IDLE
         if not diskimage.image_types:
             # We don't know what formats to build.
             return
@@ -800,6 +845,7 @@ class BuildWorker(BaseWorker):
 
                 self.log.info(
                     "Manual build request for image %s" % diskimage.name)
+                self._image_status[diskimage.name] = STATUS_BUILDING
                 data = self._buildWrapper(diskimage)
 
                 # Remove request on a successful build
@@ -809,6 +855,8 @@ class BuildWorker(BaseWorker):
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
             pass
+        finally:
+            self._image_status[diskimage.name] = STATUS_IDLE
 
     def _buildImage(self, build_id, diskimage):
         '''
@@ -1241,10 +1289,15 @@ class UploadWorker(BaseWorker):
 
         :returns: True if an upload was attempted, False otherwise.
         '''
+
+        self._image_status.setdefault(image.name, {})
+
         # Check if image uploads are paused.
         if provider.diskimages.get(image.name).pause:
+            self._image_status[image.name][provider.name] = STATUS_PAUSED
             return False
 
+        self._image_status[image.name][provider.name] = STATUS_IDLE
         # Search for the most recent 'ready' image build
         builds = self._zk.getMostRecentBuilds(1, image.name,
                                               zk.READY)
@@ -1300,6 +1353,8 @@ class UploadWorker(BaseWorker):
                 upnum = self._zk.storeImageUpload(
                     image.name, build.id, provider.name, data)
 
+                self._image_status[image.name][provider.name] =\
+                    STATUS_UPLOADING
                 data = self._uploadImage(build.id, upnum, image.name,
                                          local_images, provider,
                                          build.username, build.python_path,
@@ -1312,6 +1367,8 @@ class UploadWorker(BaseWorker):
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
             return False
+        finally:
+            self._image_status[image.name][provider.name] = STATUS_IDLE
 
     def run(self):
 
@@ -1467,7 +1524,7 @@ class NodePoolBuilder(object):
                 self._janitor = CleanupWorker(
                     0, builder_id,
                     self._config_path, self._secure_path,
-                    self.cleanup_interval, self.zk)
+                    self.cleanup_interval, self.zk, self)
                 self._janitor.start()
 
             # Wait until all threads are running. Otherwise, we have a race

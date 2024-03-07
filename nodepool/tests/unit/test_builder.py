@@ -17,6 +17,7 @@ import os
 import uuid
 import fixtures
 import mock
+import socket
 import time
 
 from nodepool import builder, tests
@@ -478,6 +479,14 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                 '4096', 'g')
         self.assertReportedStat('nodepool.dib_image_build.'
                                 'fake-image-vhd.vhd.size', '4096', 'g')
+        hostname = socket.gethostname()
+        self.assertReportedStat(f'nodepool.builder.{hostname}.'
+                                'image.fake-image-default-format.'
+                                'build.state', '0', 'g')
+        self.assertReportedStat(f'nodepool.builder.{hostname}.'
+                                'image.fake-image-default-format.'
+                                'provider.fake-provider-default-format.'
+                                'upload.state', '0', 'g')
 
     def test_diskimage_build_parents(self):
         configfile = self.setup_config('node_diskimage_parents.yaml')
