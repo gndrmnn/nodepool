@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "723d1d1e_e1055c6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36785
+      },
+      "writtenOn": "2024-03-07T15:12:53Z",
+      "side": 1,
+      "message": "Sorry, that was a mistake, should be fixed now.",
+      "revId": "77d91b8014089dda51bcf8f7e0a5475f720669e7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
