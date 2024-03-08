@@ -22,6 +22,7 @@ import string
 
 import cachetools.func
 
+from urllib.parse import urlparse
 from nodepool.driver.utils import QuotaInformation, RateLimiter
 from nodepool.driver import statemachine
 from nodepool import exceptions
@@ -651,6 +652,23 @@ class AzureAdapter(statemachine.Adapter):
         }
         if label.user_data:
             spec['properties']['userData'] = label.user_data
+
+        # build resource id for all configured User-assigned Identities
+        uai_resource_ids = set()
+        for uai in label.user_assigned_identities:
+            uai_rg_name = uai.get("resource-group", self.resource_group)
+            uai_url = self.azul.managed_identities.url(
+                resourceGroupName=uai_rg_name, resourceName=uai['name'])
+            uai_resource_ids.add(urlparse(uai_url).path)
+
+        # adding empty userAssignedIdentities is not allowed by Azure
+        if uai_resource_ids:
+            spec['identity'] = {
+                'type': 'UserAssigned',
+                'userAssignedIdentities': {
+                    rid: {} for rid in uai_resource_ids
+                },
+            }
 
         with self.rate_limiter:
             self.log.debug(f"Creating VM {hostname}")

@@ -749,6 +749,32 @@ section of the configuration.
 
              If given, the size of the operating system disk, in GiB.
 
+          .. attr:: user-assigned-identities
+             :type: dict
+             :default: None
+
+             `User-assigned Managed Identities`_ to assign to the VM.
+             Useful for giving access to services without needing any secrets.
+
+             .. attr:: name
+                :required:
+                :type: str
+
+                The name of the User-assigned Managed Identity.
+
+             .. attr:: resource-group
+                :type: str
+
+                Overrides :attr:`providers.[azure].resource-group`.
+
+             For example:
+
+             .. code-block:: yaml
+
+                user-assigned-identities:
+                  - name: myLocalIdentity
+                  - name: myRemoteIdentity
+                    resource-group: remote-rg
 
 .. _`Azure CLI`: https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest
 
@@ -757,3 +783,5 @@ section of the configuration.
 .. _`Azure User Data`: https://docs.microsoft.com/en-us/azure/virtual-machines/user-data
 
 .. _`Azure Custom Data`: https://docs.microsoft.com/en-us/azure/virtual-machines/custom-data
+
+.. _`User-assigned Managed Identities`: https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/qs-configure-rest-vm
