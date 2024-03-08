@@ -401,6 +401,16 @@ class FakeAzureFixture(fixtures.Fixture):
             callback=self._put_sas,
             content_type='application/json')
 
+        user_assigned_identities_re = re.compile(
+            'https://management.azure.com/subscriptions/'
+            + f'{self.subscription_id}/providers/'
+            + 'Microsoft.ManagedIdentity/userAssignedIdentities'
+            + '\\?api-version=2018-11-30')
+        self.responses.add_callback(
+            responses.GET, user_assigned_identities_re,
+            callback=self._get_user_assigned_identities,
+            content_type='application/json')
+
         self._setup_crud(ResourceGroupsCRUD, '2020-06-01',
                          resource_grouped=False)
 
@@ -520,6 +530,22 @@ class FakeAzureFixture(fixtures.Fixture):
                     }
                 }
             ]}
+        return (200, {}, json.dumps(data))
+
+    def _get_user_assigned_identities(self, request):
+        data = {
+            'value': [
+                {
+                    "id": "/subscriptions/../userAssignedIdentities/foo",
+                    "name": "foo",
+                    "properties": {
+                        "clientId": "4024ab25-56a8-4370-aea6-6389221caf29",
+                        "principalId": "25cc773c-7f05-40fc-a104-32d2300754ad",
+                    },
+                    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+                }
+            ]
+        }
         return (200, {}, json.dumps(data))
 
     def _get_async(self, request):

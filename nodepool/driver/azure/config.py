@@ -193,6 +193,8 @@ class AzureLabel(ConfigValue):
         self.custom_data = self._encodeData(label.get('custom-data', None))
         self.host_key_checking = self.pool.host_key_checking
         self.volume_size = label.get('volume-size')
+        self.user_assigned_identities = label.get(
+            'user-assigned-identities', [])
 
     def _encodeData(self, s):
         if not s:
@@ -215,6 +217,7 @@ class AzureLabel(ConfigValue):
             'user-data': str,
             'custom-data': str,
             'volume-size': int,
+            'user-assigned-identities': [str],
         }
 
 

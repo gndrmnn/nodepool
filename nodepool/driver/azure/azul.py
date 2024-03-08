@@ -204,6 +204,13 @@ class AzureProviderCRUD(AzureCRUD):
         return self._list()
 
 
+class AzureManagedIdentityCRUD(AzureCRUD):
+    base_url = 'providers/Microsoft.ManagedIdentity/userAssignedIdentities'
+
+    def list(self):
+        return self._list()
+
+
 class AzureDictResponse(dict):
     def __init__(self, response, *args):
         super().__init__(*args)
@@ -268,6 +275,9 @@ class AzureCloud:
             providerId='Microsoft.Compute',
             resource='skus',
             apiVersion='2019-04-01')
+        self.managed_identities = AzureManagedIdentityCRUD(
+            self,
+            apiVersion='2018-11-30')
 
     def get(self, url, codes=[200]):
         return self.request('GET', url, None, codes)

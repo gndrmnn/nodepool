@@ -504,6 +504,11 @@ class AzureAdapter(statemachine.Adapter):
         with self.rate_limiter:
             return self.azul.virtual_machines.list(self.resource_group)
 
+    @cachetools.func.ttl_cache(maxsize=1, ttl=10)
+    def _listManagedIdentities(self):
+        with self.rate_limiter:
+            return self.azul.managed_identities.list()
+
     def _createVirtualMachine(self, label, image_external_id,
                               image_reference, tags, hostname, nic):
         if image_external_id:
@@ -651,6 +656,28 @@ class AzureAdapter(statemachine.Adapter):
         }
         if label.user_data:
             spec['properties']['userData'] = label.user_data
+
+        # find all user assigned (managed) identities
+        managed_identities = {}
+        for managed_identity in self._listManagedIdentities():
+            mi_id = managed_identity['properties']['clientId']
+            if mi_id in label.user_assigned_identities:
+                managed_identities[mi_id] = managed_identity
+
+        # fail if some identities are not found
+        if len(managed_identities) < len(label.user_assigned_identities):
+            missing = set(managed_identities.keys()).symmetric_difference(
+                label.user_assigned_identities)
+            raise Exception(f"Unable to find managed identities: {missing}")
+
+        # adding empty userAssignedIdentities is not allowed by Azure
+        if managed_identities:
+            spec['identity'] = {
+                'type': 'UserAssigned',
+                'userAssignedIdentities': {
+                    v['id']: {} for v in managed_identities.values()
+                },
+            }
 
         with self.rate_limiter:
             self.log.debug(f"Creating VM {hostname}")
