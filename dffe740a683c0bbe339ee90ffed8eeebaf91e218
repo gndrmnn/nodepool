@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dabfae66_fb4798e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-03-08T18:23:27Z",
+      "side": 1,
+      "message": "There is a print() in the test code path that I think may have been there for debugging purposes. Not sure that we need it anymore. Inline comment has the location.",
+      "revId": "dffe740a683c0bbe339ee90ffed8eeebaf91e218",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f1e4ff4_3f68ff80",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-03-08T18:23:27Z",
+      "side": 1,
+      "message": "Was this a debugging print? I don\u0027t think we want this to remain in the final merged change?",
+      "revId": "dffe740a683c0bbe339ee90ffed8eeebaf91e218",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
