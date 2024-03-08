@@ -268,6 +268,11 @@ class AzureCloud:
             providerId='Microsoft.Compute',
             resource='skus',
             apiVersion='2019-04-01')
+        self.managed_identities = AzureResourceProviderCRUD(
+            self,
+            providerId='Microsoft.ManagedIdentity',
+            resource='userAssignedIdentities',
+            apiVersion='2023-01-31')
 
     def get(self, url, codes=[200]):
         return self.request('GET', url, None, codes)

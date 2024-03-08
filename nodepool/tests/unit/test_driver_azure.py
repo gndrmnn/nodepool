@@ -99,6 +99,22 @@ class TestDriverAzure(tests.DBTestCase):
             self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
             requests[0]['properties']['userData'],
             'VGhpcyBpcyB0aGUgdXNlciBkYXRh')  # This is the user data
+        self.assertEqual(
+            self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
+            requests[0]['identity'],
+            {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    f"/subscriptions/{self.fake_azure.subscription_id}/"
+                    "resourceGroups/nodepool/"
+                    "providers/Microsoft.ManagedIdentity/"
+                    "userAssignedIdentities/localid": {},
+                    f"/subscriptions/{self.fake_azure.subscription_id}/"
+                    "resourceGroups/othergroup/"
+                    "providers/Microsoft.ManagedIdentity/"
+                    "userAssignedIdentities/otherid": {},
+                }
+            })
         tags = (self.fake_azure.crud['Microsoft.Compute/virtualMachines'].
                 requests[0]['tags'])
         self.assertEqual(tags.get('team'), 'DevOps')

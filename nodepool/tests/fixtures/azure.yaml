@@ -93,6 +93,10 @@ providers:
               dynamic-tenant: "Tenant is {{request.tenant_name}}"
             user-data: "This is the user data"
             custom-data: "This is the custom data"
+            user-assigned-identities:
+              - name: localid
+              - name: otherid
+                resource-group: othergroup
           - name: image-by-name
             cloud-image: image-by-name
             hardware-profile:
