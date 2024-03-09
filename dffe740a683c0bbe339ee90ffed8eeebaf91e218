@@ -33,6 +33,24 @@
       "message": "Was this a debugging print? I don\u0027t think we want this to remain in the final merged change?",
       "revId": "dffe740a683c0bbe339ee90ffed8eeebaf91e218",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "286cd1c0_e3ad5634",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-09T15:38:57Z",
+      "side": 1,
+      "message": "Oopn, done.",
+      "parentUuid": "6f1e4ff4_3f68ff80",
+      "revId": "dffe740a683c0bbe339ee90ffed8eeebaf91e218",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
