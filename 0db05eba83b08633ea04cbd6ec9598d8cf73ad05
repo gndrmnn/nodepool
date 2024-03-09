@@ -34,6 +34,47 @@
       "parentUuid": "2a0643b0_556ecd9c",
       "revId": "0db05eba83b08633ea04cbd6ec9598d8cf73ad05",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14e537aa_938c454b",
+        "filename": "nodepool/driver/azure/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-09T19:53:56Z",
+      "side": 1,
+      "message": "I think your second idea sounds good.  It mirrors how we handle subnets with {network: {resource-group: foo, network: bar}}\n\nAlso, I think it\u0027s better to use the resource-group + identity name rather than the identity client id, since the client id is randomly generated so the user would have to go look it up.  An alternative would be to ask the user to supply the ARM, which you can look up using the web ui in azure, but it\u0027s not as obvious, and I don\u0027t think we\u0027ve done that yet in nodepool, so this is better.\n\nSide note: we do perform validation that we can resolve the subnet by getting the network object from azure and then storing its id (rather than constructing the id blind).  But we perform that validation at startup rather than at instance creation time, so if there\u0027s a problem it\u0027s caught early.  I do still think it\u0027s okay to construct the user assigned identity ARM blind and catch the error at launch time, but if you did want to validate the ARM using a get call like I suggested earlier, you might consider doing it at startup right after we do that for the networks.  That would have the benefit of performing validation before any launches happen.\n\nI wrote a lot of extra info here; the only important part is the first sentence of this comment.  :)",
+      "parentUuid": "eba8e41a_a334d4c8",
+      "revId": "0db05eba83b08633ea04cbd6ec9598d8cf73ad05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a900897f_444e80af",
+        "filename": "nodepool/driver/azure/azul.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-09T19:53:56Z",
+      "side": 1,
+      "message": "If this stays, there\u0027s a later revision we might want to start with: 2023-01-31.",
+      "range": {
+        "startLine": 280,
+        "startChar": 34,
+        "endLine": 280,
+        "endChar": 36
+      },
+      "revId": "0db05eba83b08633ea04cbd6ec9598d8cf73ad05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
