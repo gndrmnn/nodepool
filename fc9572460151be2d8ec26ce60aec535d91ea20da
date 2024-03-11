@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8316938a_971a0ec0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-03-11T13:56:50Z",
+      "side": 1,
+      "message": "Patched and tested in our test env, it cleans up the leaked snapshots.",
+      "revId": "fc9572460151be2d8ec26ce60aec535d91ea20da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
