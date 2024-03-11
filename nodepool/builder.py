@@ -681,6 +681,7 @@ class BuildWorker(BaseWorker):
         '''
         Check every DIB image to see if it has aged out and needs rebuilt.
         '''
+        self.log.debug('Checking for scheduled image updates')
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
@@ -690,6 +691,7 @@ class BuildWorker(BaseWorker):
                 if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
+                    self.log.debug('Config changed')
                     return
                 self._checkImageForScheduledImageUpdates(diskimage)
             except Exception:
@@ -799,6 +801,7 @@ class BuildWorker(BaseWorker):
         '''
         Query ZooKeeper for any manual image build requests.
         '''
+        self.log.debug('Checking for manual image build requests')
         for diskimage in self._config.diskimages.values():
             # Check if we've been told to shutdown
             # or if ZK connection is suspended
@@ -808,6 +811,7 @@ class BuildWorker(BaseWorker):
                 if not self._checkConfigRecent():
                     # If our config isn't up to date then return and start
                     # over with a new config load.
+                    self.log.debug('Config changed')
                     return
                 self._checkImageForManualBuildRequest(diskimage)
             except Exception:
