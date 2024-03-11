@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "91659bdb_e38d39f8",
+        "filename": "nodepool/driver/azure/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-11T15:55:47Z",
+      "side": 1,
+      "message": "That works for me.  I think the only thing missing at this point is a test that exercises the new code.  If it\u0027s not clear how to do that, I can add one; just let me know.",
+      "parentUuid": "a565b35c_75b41564",
+      "revId": "0db05eba83b08633ea04cbd6ec9598d8cf73ad05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a900897f_444e80af",
         "filename": "nodepool/driver/azure/azul.py",
         "patchSetId": 1
