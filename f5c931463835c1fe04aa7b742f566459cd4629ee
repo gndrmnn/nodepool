@@ -16,6 +16,24 @@
       "message": "You could say `:default: The provider\u0027s resource group` -- we do that elsewhere in this file.",
       "revId": "f5c931463835c1fe04aa7b742f566459cd4629ee",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33a9d23d_80e0c58f",
+        "filename": "doc/source/azure.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 36867
+      },
+      "writtenOn": "2024-03-12T08:09:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9b77bf3_1eb3543f",
+      "revId": "f5c931463835c1fe04aa7b742f566459cd4629ee",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
