@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ad63117e_d0ef80a8",
+        "filename": "nodepool/driver/azure/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 36867
+      },
+      "writtenOn": "2024-03-12T08:10:21Z",
+      "side": 1,
+      "message": "I would probably not get this right on the first try so please help.",
+      "parentUuid": "91659bdb_e38d39f8",
+      "revId": "0db05eba83b08633ea04cbd6ec9598d8cf73ad05",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a900897f_444e80af",
         "filename": "nodepool/driver/azure/azul.py",
         "patchSetId": 1
