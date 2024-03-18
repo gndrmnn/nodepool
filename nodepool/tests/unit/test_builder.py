@@ -593,3 +593,32 @@ class TestNodePoolBuilder(tests.DBTestCase):
         post_file = os.path.join(
             images_dir, f'fake-image-{image.build_id}.qcow2.post')
         self.assertTrue(os.path.exists(post_file), 'Post hook file exists')
+
+    def test_cleanup_image_format(self):
+        def fail_callback(args):
+            return 'fail' in args['nodepool_provider_name']
+
+        fake_client = fakeadapter.FakeUploadFailCloud(
+            fail_callback=fail_callback)
+
+        def get_fake_client(*args, **kwargs):
+            return fake_client
+
+        self.useFixture(fixtures.MockPatchObject(
+            fakeadapter.FakeAdapter, '_getClient',
+            get_fake_client))
+
+        configfile = self.setup_config('node_diskimage_cleanup_formats.yaml')
+        self.useBuilder(configfile)
+        build = self.waitForBuild('fake-image', check_files=False)
+        self.waitForImage('fake-provider-qcow2', 'fake-image')
+        self.waitForImage('fake-provider-raw', 'fake-image')
+
+        self.assertEqual(set(build._formats), set(['qcow2', 'raw', 'vhd']))
+        base = "-".join(['fake-image', build.id])
+        files = builder.DibImageFile.from_image_id(
+            self._config_images_dir.path, base)
+        self.assertEqual(2, len(files))
+        files.sort(key=lambda x: x.extension)
+        self.assertEqual('qcow2', files[0].extension)
+        self.assertEqual('vhd', files[1].extension)
