@@ -1031,10 +1031,22 @@ class TestDriverAws(tests.DBTestCase):
 
     def test_aws_resource_cleanup_import_snapshot(self):
         # This tests the import_snapshot path
+
+        # Create a valid, non-leaked image to test id collisions, and
+        # that it is not deleted.
+        configfile = self.setup_config('aws/diskimage.yaml')
+        self.useBuilder(configfile)
+        current_image = self.waitForImage('ec2-us-west-2', 'fake-image')
+
+        # Assert the image exists
+        self.ec2.Image(current_image.external_id).state
+
         # Start by setting up leaked resources
+        # Use low numbers to intentionally collide with the current
+        # image to ensure we test the non-uniqueness of upload ids.
         image_tags = [
-            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
-            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_build_id', 'Value': '0000000001'},
+            {'Key': 'nodepool_upload_id', 'Value': '0000000001'},
             {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
         ]
 
@@ -1115,12 +1127,25 @@ class TestDriverAws(tests.DBTestCase):
                 # Probably not found
                 break
 
+        # Assert the non-leaked image still exists
+        self.ec2.Image(current_image.external_id).state
+
     def test_aws_resource_cleanup_import_image(self):
         # This tests the import_image path
+
+        # Create a valid, non-leaked image to test id collisions, and
+        # that it is not deleted.
+        configfile = self.setup_config('aws/diskimage.yaml')
+        self.useBuilder(configfile)
+        current_image = self.waitForImage('ec2-us-west-2', 'fake-image')
+
+        # Assert the image exists
+        self.ec2.Image(current_image.external_id).state
+
         # Start by setting up leaked resources
         image_tags = [
-            {'Key': 'nodepool_build_id', 'Value': '0000000042'},
-            {'Key': 'nodepool_upload_id', 'Value': '0000000042'},
+            {'Key': 'nodepool_build_id', 'Value': '0000000001'},
+            {'Key': 'nodepool_upload_id', 'Value': '0000000001'},
             {'Key': 'nodepool_provider_name', 'Value': 'ec2-us-west-2'}
         ]
 
@@ -1178,6 +1203,9 @@ class TestDriverAws(tests.DBTestCase):
             except botocore.exceptions.ClientError:
                 # Probably not found
                 break
+
+        # Assert the non-leaked image still exists
+        self.ec2.Image(current_image.external_id).state
 
     def test_aws_get_import_image_task(self):
         # A unit test of the unusual error handling for missing tasks

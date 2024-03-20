@@ -871,9 +871,9 @@ class StateMachineProvider(Provider, QuotaSupport):
         known_uploads = set()
         uploads = self._zk.getProviderUploads(self.provider.name)
         for image in uploads.values():
-            for build in image.values():
+            for build_id, build in image.items():
                 for upload in build:
-                    known_uploads.add(upload.id)
+                    known_uploads.add(f'{build_id}-{upload.id}')
 
         newly_leaked_nodes = {}
         newly_leaked_uploads = {}
@@ -882,7 +882,13 @@ class StateMachineProvider(Provider, QuotaSupport):
             if pn != self.provider.name:
                 continue
             node_id = resource.metadata.get('nodepool_node_id')
+            build_id = resource.metadata.get('nodepool_build_id')
             upload_id = resource.metadata.get('nodepool_upload_id')
+            # Make a truly unique upload id
+            if upload_id:
+                build_upload_id = f'{build_id}-{upload_id}'
+            else:
+                build_upload_id = None
             if node_id and node_id not in known_nodes:
                 newly_leaked_nodes[node_id] = resource
                 if node_id in self.possibly_leaked_nodes:
@@ -898,9 +904,9 @@ class StateMachineProvider(Provider, QuotaSupport):
                     except Exception:
                         self.log.exception("Unable to delete leaked "
                                            f"resource for node {node_id}")
-            if upload_id and upload_id not in known_uploads:
-                newly_leaked_uploads[upload_id] = resource
-                if upload_id in self.possibly_leaked_uploads:
+            if build_upload_id and build_upload_id not in known_uploads:
+                newly_leaked_uploads[build_upload_id] = resource
+                if build_upload_id in self.possibly_leaked_uploads:
                     # We've seen this twice now, so it's not a race
                     # condition.
                     try:
@@ -911,8 +917,9 @@ class StateMachineProvider(Provider, QuotaSupport):
                                       resource.plural_metric_name))
                             self._statsd.incr(key, 1)
                     except Exception:
-                        self.log.exception("Unable to delete leaked "
-                                           f"resource for upload {upload_id}")
+                        self.log.exception(
+                            "Unable to delete leaked "
+                            f"resource for upload {build_upload_id}")
         self.possibly_leaked_nodes = newly_leaked_nodes
         self.possibly_leaked_uploads = newly_leaked_uploads
 
