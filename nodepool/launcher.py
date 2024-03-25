@@ -33,6 +33,7 @@ from nodepool import config as nodepool_config
 from nodepool.zk import zookeeper as zk
 from nodepool.zk import ZooKeeperClient
 from nodepool.zk.components import LauncherComponent, PoolComponent
+from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.driver.utils import QuotaInformation, QuotaSupport
 from nodepool.logconfig import get_annotated_logger
 from nodepool.version import get_version_string
@@ -444,6 +445,22 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
     def getProviderManager(self):
         return self.nodepool.getProviderManager(self.provider_name)
 
+    def waitForComponentRegistration(self, timeout=5.0):
+        # Wait 5 seconds for the component to appear in our local
+        # cache so that operations which rely on lists of available
+        # labels, etc, behave more synchronously.
+        elapsed = 0.0
+        while elapsed < timeout:
+            for component in COMPONENT_REGISTRY.registry.all(
+                    self.component_info.kind):
+                if self.component_info.path == component.path:
+                    return True
+            time.sleep(0.1)
+            elapsed += 0.1
+        self.log.info("Did not see component registration for %s",
+                      self.component_info.path)
+        return False
+
     def run(self):
         self.running = True
 
@@ -472,6 +489,14 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
                     time.sleep(SUSPEND_WAIT_TIME)
                 if did_suspend:
                     self.log.info("ZooKeeper available. Resuming")
+
+                # Verify that our own component is in the registry as
+                # a proxy for determining that the registry is likely
+                # to have up to date infor for all the other
+                # components.
+                if not self.waitForComponentRegistration():
+                    # Check if we're still running and then keep waiting.
+                    continue
 
                 pool_config = self.getPoolConfig()
                 self.component_info.supported_labels = list(pool_config.labels)

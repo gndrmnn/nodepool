@@ -42,13 +42,19 @@ class TestComponentRegistry(tests.DBTestCase):
         })
         launcher.register()
 
-        launcher_pools = self.zk.getRegisteredPools()
-        self.assertEqual(1, len(launcher_pools))
-        self.assertEqual(launcher.id, list(launcher_pools)[0].id)
+        for _ in iterate_timeout(10, Exception,
+                                 "node in registry"):
+            launcher_pools = self.zk.getRegisteredPools()
+            if (len(launcher_pools) == 1 and
+                launcher.id == list(launcher_pools)[0].id):
+                break
 
         launcher.unregister()
-        launcher_pools = self.zk.getRegisteredPools()
-        self.assertEqual(0, len(launcher_pools))
+        for _ in iterate_timeout(10, Exception,
+                                 "node not in registry"):
+            launcher_pools = self.zk.getRegisteredPools()
+            if len(launcher_pools) == 0:
+                break
 
 
 class TestZooKeeper(tests.DBTestCase):
