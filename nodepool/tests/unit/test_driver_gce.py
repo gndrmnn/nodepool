@@ -21,6 +21,7 @@ from functools import wraps
 
 import yaml
 import fixtures
+import testtools
 
 import googleapiclient.discovery
 import googleapiclient.errors
@@ -342,3 +343,34 @@ class TestDriverGce(tests.DBTestCase):
 
     def test_gce_machine(self):
         self._test_gce_machine('debian-stretch-f1-micro')
+
+    @_test_with_pool
+    def test_machine_type_error(self, pool):
+        self.startPool(pool)
+        self._wait_for_provider(pool, 'gcloud-provider')
+
+        # Just return an empty dict
+        def fakeMachineTypeFactory():
+            class FakeQuery:
+                def execute(self):
+                    return {}
+
+            class FakeMachineTypes:
+                def get(**kw):
+                    return FakeQuery()
+            return FakeMachineTypes
+
+        adapter = pool.getProviderManager('gcloud-provider').adapter
+
+        # Test the working path
+        qi = adapter._getQuotaForMachineType('f1-micro')
+        self.assertEqual(qi.quota['compute']['cores'], 1)
+
+        # Return some garbage data
+        self.patch(adapter.compute, 'machineTypes', fakeMachineTypeFactory)
+        with testtools.ExpectedException(KeyError):
+            adapter._getQuotaForMachineType('n1-standard-2')
+
+        # Verify we don't get the cached value from earlier
+        with testtools.ExpectedException(KeyError):
+            adapter._getQuotaForMachineType('f1-micro')
