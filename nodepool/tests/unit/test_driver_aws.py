@@ -398,6 +398,22 @@ class TestDriverAws(tests.DBTestCase):
         req3 = self.waitForNodeRequest(req3)
         self.assertSuccess(req3)
 
+    def test_aws_multi_quota_unknown(self):
+        # Test multiple instance type quotas (standard, high-mem and spot)
+        configfile = self.setup_config('aws/aws-quota.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.start()
+
+        # We don't have quota information for this node type; make
+        # sure we can still launch a node with it.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('unknown')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
     @ec2_quotas({
         'L-1216C47A': 1000,
         'L-43DA4232': 1000,
