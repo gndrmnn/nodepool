@@ -425,6 +425,8 @@ class AwsAdapter(statemachine.Adapter):
                 instance['InstanceType'],
                 SPOT if instance.get('InstanceLifecycle') == 'spot'
                 else ON_DEMAND)
+            if not quota:
+                continue
             for attachment in instance['BlockDeviceMappings']:
                 volume_id = attachment['Ebs']['VolumeId']
                 volume = volumes.get(volume_id)
@@ -929,7 +931,12 @@ class AwsAdapter(statemachine.Adapter):
         m = self.instance_key_re.match(instance_type)
         if m:
             key = m.group(1)
-            return QUOTA_CODES.get(key)[market_type_option]
+            code = QUOTA_CODES.get(key)
+            if code:
+                return code[market_type_option]
+            else:
+                return None
+
 
     def _getQuotaForInstanceType(self, instance_type, market_type_option):
         try:
@@ -956,6 +963,11 @@ class AwsAdapter(statemachine.Adapter):
         args = dict(cores=cores, ram=ram, instances=1)
         if code:
             args[code] = vcpus
+        else:
+            self.log.warning(
+                "Unknown quota code for instance type: %s",
+                instance_type)
+            return None
 
         return QuotaInformation(**args)
 
