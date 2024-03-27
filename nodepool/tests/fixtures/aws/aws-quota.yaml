@@ -17,6 +17,7 @@ labels:
   - name: high
   - name: spot
   - name: on-demand
+  - name: unknown
 
 providers:
   - name: ec2-us-west-2
@@ -51,4 +52,8 @@ providers:
           - name: on-demand
             cloud-image: ubuntu1404
             instance-type: m6i.32xlarge
+            key-name: zuul
+          - name: unknown
+            cloud-image: ubuntu1404
+            instance-type: is4gen.medium
             key-name: zuul

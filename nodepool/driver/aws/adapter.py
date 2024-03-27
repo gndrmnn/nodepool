@@ -459,9 +459,6 @@ class AwsAdapter(statemachine.Adapter):
                 if code in args:
                     continue
                 if not code:
-                    self.log.warning(
-                        "Unknown quota code for instance type: %s",
-                        instance_type)
                     continue
                 if code not in ec2_quotas:
                     self.log.warning(
@@ -929,7 +926,13 @@ class AwsAdapter(statemachine.Adapter):
         m = self.instance_key_re.match(instance_type)
         if m:
             key = m.group(1)
-            return QUOTA_CODES.get(key)[market_type_option]
+            code = QUOTA_CODES.get(key)
+            if code:
+                return code[market_type_option]
+            self.log.warning(
+                "Unknown quota code for instance type: %s",
+                instance_type)
+        return None
 
     def _getQuotaForInstanceType(self, instance_type, market_type_option):
         try:
@@ -1012,6 +1015,7 @@ class AwsAdapter(statemachine.Adapter):
             for page in paginator.paginate(ServiceCode=service_code):
                 for quota in page['Quotas']:
                     quotas[quota['QuotaCode']] = quota['Value']
+
             return quotas
 
     def _listEC2Quotas(self):
