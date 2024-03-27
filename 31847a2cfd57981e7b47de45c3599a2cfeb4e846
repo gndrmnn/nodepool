@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6758fd20_3edbe9e9",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-27T16:25:57Z",
+      "side": 1,
+      "message": "We don\u0027t need this because we\u0027re always going to return a quota info object (see comment below).",
+      "revId": "31847a2cfd57981e7b47de45c3599a2cfeb4e846",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ec17d8d_d42a6cb9",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-27T16:25:57Z",
+      "side": 1,
+      "message": "returning None isn\u0027t necessary in python (that\u0027s the default), but it\u0027s fine to do so explicitly for clarity.  But it\u0027s a little weird to do it here and not also at the top level.  If you want to add it for clarity, I\u0027d probably just do it there.",
+      "revId": "31847a2cfd57981e7b47de45c3599a2cfeb4e846",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "668b9a6b_87a2ba62",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-03-27T16:25:57Z",
+      "side": 1,
+      "message": "We want to return as much quota information as we can here, even if it\u0027s only \"instances\u003d1\" or maybe the cores and ram, so we should not return None here.",
+      "revId": "31847a2cfd57981e7b47de45c3599a2cfeb4e846",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
