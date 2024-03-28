@@ -348,7 +348,9 @@ class DiskImage(ConfigValue):
         keep_image_types = config.get('keep-formats', None)
         if keep_image_types:
             self.keep_image_types = set(keep_image_types)
-        self.delete_after_upload = config.get('delete-after-upload', False)
+        delete_after_upload = config.get('delete-after-upload', None)
+        if delete_after_upload is not None:
+            self.delete_after_upload = delete_after_upload
         pause = config.get('pause', None)
         if pause:
             self.pause = pause

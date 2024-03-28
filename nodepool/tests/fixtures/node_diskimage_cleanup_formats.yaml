@@ -61,10 +61,12 @@ providers:
             min-ram: 8192
 
 diskimages:
-  - name: fake-image
+  - name: parent
     delete-after-upload: true
     keep-formats:
       - qcow2
+  - name: fake-image
+    parent: parent
     elements:
       - fedora
       - vm
