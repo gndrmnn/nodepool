@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9795656b_61644398",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-02T22:45:01Z",
+      "side": 1,
+      "message": "Why doesn\u0027t this check prevent the breakage from happening? Uploads only happen after dib has completed right? And this would prevent any deletion from occurring until uploads are done?",
+      "revId": "6a71686b6ba09eff5575a740a7b29f60427540ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2456c83_f94bf3ed",
+        "filename": "nodepool/tests/unit/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-02T22:45:01Z",
+      "side": 1,
+      "message": "Note I think the intermediate vhd files may have a bit of extra string content in their paths. I\u0027m not sure that matters here though?",
+      "revId": "6a71686b6ba09eff5575a740a7b29f60427540ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
