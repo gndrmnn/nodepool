@@ -609,13 +609,41 @@ class TestNodePoolBuilder(tests.DBTestCase):
             get_fake_client))
 
         configfile = self.setup_config('node_diskimage_cleanup_formats.yaml')
-        self.useBuilder(configfile)
-        build = self.waitForBuild('fake-image', check_files=False)
-        self.waitForImage('fake-provider-qcow2', 'fake-image')
-        self.waitForImage('fake-provider-raw', 'fake-image')
 
+        # We need to make the image build process pause so we can introduce
+        # a simulated ZK session loss. The fake dib process will sleep while
+        # the pause file is present in the images directory supplied to it.
+        pause_file = os.path.join(self._config_images_dir.path,
+                                  "fake-image-create.pause")
+        open(pause_file, 'w')
+
+        bldr = self.useBuilder(configfile)
+        build = self.waitForBuild('fake-image', check_files=False,
+                                  states=(zk.BUILDING,))
         self.assertEqual(set(build._formats), set(['qcow2', 'raw', 'vhd']))
         base = "-".join(['fake-image', build.id])
+
+        # Create an in-progress image build file that we should ensure
+        # is not deleted.
+        intermediate_path = (
+            os.path.join(self._config_images_dir.path, base) +
+            '.vhd'
+        )
+        open(intermediate_path, 'w')
+
+        # Force a cleanup cycle to make sure we don't delete our
+        # intermediate image file
+        bldr._janitor._cleanup()
+
+        files = builder.DibImageFile.from_image_id(
+            self._config_images_dir.path, base)
+        self.assertEqual(1, len(files))
+        self.assertEqual('vhd', files[0].extension)
+
+        # Allow the fake-image-create to continue by removing the pause file
+        os.remove(pause_file)
+        self.waitForImage('fake-provider-qcow2', 'fake-image')
+        self.waitForImage('fake-provider-raw', 'fake-image')
         files = builder.DibImageFile.from_image_id(
             self._config_images_dir.path, base)
         self.assertEqual(2, len(files))

@@ -397,8 +397,9 @@ class CleanupWorker(BaseWorker):
                     self.log.info("Deleting on-disk build: "
                                   "%s-%s", image_name, build_id)
                     self._deleteLocalBuild(image_name, build_id)
-                self._pruneLocalBuildFormats(
-                    known_providers, image_name, build_id)
+                if build and build.state == zk.READY:
+                    self._pruneLocalBuildFormats(
+                        known_providers, image_name, build_id)
             except Exception:
                 self.log.exception("Exception cleaning up local build %s:",
                                    local_build)
