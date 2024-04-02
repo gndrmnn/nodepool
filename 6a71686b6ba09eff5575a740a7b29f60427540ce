@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74b4dac1_b9365c72",
+        "filename": "nodepool/builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-04-02T22:49:26Z",
+      "side": 1,
+      "message": "If the uploads haven\u0027t started, then there\u0027s nothing to add to the keep list.",
+      "parentUuid": "9795656b_61644398",
+      "revId": "6a71686b6ba09eff5575a740a7b29f60427540ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2456c83_f94bf3ed",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-04-02T22:45:01Z",
       "side": 1,
       "message": "Note I think the intermediate vhd files may have a bit of extra string content in their paths. I\u0027m not sure that matters here though?",
+      "revId": "6a71686b6ba09eff5575a740a7b29f60427540ce",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c4971fb_70ac3b90",
+        "filename": "nodepool/tests/unit/test_builder.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-04-02T22:49:26Z",
+      "side": 1,
+      "message": "The .vhd-intermidate file may be what you\u0027re thinking of, but it doesn\u0027t pass the regex to make the builder think there is anything on disk.  I believe the scenario we saw in opendev had at least one complete image file to trip that code path.  So this is more simulating that than the specific .vhd-intermediate file (which is also part of that process).",
+      "parentUuid": "c2456c83_f94bf3ed",
       "revId": "6a71686b6ba09eff5575a740a7b29f60427540ce",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
