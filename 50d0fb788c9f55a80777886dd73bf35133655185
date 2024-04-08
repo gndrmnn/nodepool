@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71673dd5_d57b1d99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36867
+      },
+      "writtenOn": "2024-04-08T11:21:19Z",
+      "side": 1,
+      "message": "Hi James! Do you have an ETA. when this will be released ?",
+      "revId": "50d0fb788c9f55a80777886dd73bf35133655185",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
