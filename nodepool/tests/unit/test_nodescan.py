@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from nodepool import exceptions
 from nodepool import tests
 from nodepool.nodeutils import iterate_timeout
 from nodepool.zk.zookeeper import Node
@@ -143,7 +144,8 @@ class TestNodescanWorker(tests.BaseTestCase):
         for _ in iterate_timeout(30, Exception, 'nodescan'):
             if request.complete:
                 break
-        with testtools.ExpectedException(Exception):
+        with testtools.ExpectedException(
+                exceptions.ConnectionTimeoutException):
             request.result()
         worker.stop()
         worker.join()
@@ -170,7 +172,7 @@ class TestNodescanWorker(tests.BaseTestCase):
         for _ in iterate_timeout(30, Exception, 'nodescan'):
             if request.complete:
                 break
-        with testtools.ExpectedException(Exception):
+        with testtools.ExpectedException(exceptions.ConnectionTimeoutException):
             request.result()
         worker.stop()
         worker.join()
