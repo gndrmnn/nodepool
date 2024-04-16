@@ -625,6 +625,30 @@ class TestLauncher(tests.DBTestCase):
         self.assertEqual(req.state, zk.FAILED)
         self.assertNotEqual(req.declined_by, [])
 
+    def test_fail_request_on_launch_timeout(self):
+        '''
+        Test that provider launch timeout fails the request.
+        '''
+        configfile = self.setup_config('node_launch_timeout.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+        client = pool.getProviderManager('fake-provider').adapter._getClient()
+        client._create_server_timeout = 2
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('fake-label')
+        self.zk.storeNodeRequest(req)
+
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(0, manager.adapter.createServer_fails)
+        self.assertEqual(req.state, zk.FAILED)
+        self.assertNotEqual(req.declined_by, [])
+
     def test_az_change_recover(self):
         '''
         Test that nodepool recovers from az change in the cloud.
