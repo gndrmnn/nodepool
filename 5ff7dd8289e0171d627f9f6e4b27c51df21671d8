@@ -22,6 +22,30 @@
       },
       "revId": "5ff7dd8289e0171d627f9f6e4b27c51df21671d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "726b532a_2b847c69",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2024-04-17T17:55:47Z",
+      "side": 1,
+      "message": "This is how all the existing symlinks look like, see also the referenced upstream commit:\n\n```\nroot@3a64208f93fa:/# ls -l /usr/share/debootstrap/scripts/jammy\nlrwxrwxrwx 1 root root 5 Dec 20 19:25 /usr/share/debootstrap/scripts/jammy -\u003e gutsy\n```\n\nThese are simply relative to the target basename.",
+      "parentUuid": "5196df4d_de8febe2",
+      "range": {
+        "startLine": 87,
+        "startChar": 10,
+        "endLine": 87,
+        "endChar": 15
+      },
+      "revId": "5ff7dd8289e0171d627f9f6e4b27c51df21671d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
