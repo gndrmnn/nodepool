@@ -79,6 +79,13 @@ RUN \
       zstd \
       debootstrap
 
+# NOTE(frickler) 2024-04-17: We want to support building Ubuntu 24.04,
+# we could either install debootstrap from sid or just create this
+# symlink ourselves which is the only functional change that is
+# actually needed.
+# https://salsa.debian.org/installer-team/debootstrap/-/commit/1223abb5e0c02f9145002e5838f909fe69bbb403
+RUN ln -s gutsy /usr/share/debootstrap/scripts/noble
+
 # Podman install mainly for the "containerfile" elements of dib that
 # build images from extracts of upstream containers.
 # --install-recommends is important for getting some reccommends like
