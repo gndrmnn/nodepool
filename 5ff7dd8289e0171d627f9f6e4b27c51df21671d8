@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5196df4d_de8febe2",
+        "filename": "Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-17T15:26:51Z",
+      "side": 1,
+      "message": "Nit, should this be a fully rooted path to make it more clear what the symlink target is relative to on the filesystem?",
+      "range": {
+        "startLine": 87,
+        "startChar": 10,
+        "endLine": 87,
+        "endChar": 15
+      },
+      "revId": "5ff7dd8289e0171d627f9f6e4b27c51df21671d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
