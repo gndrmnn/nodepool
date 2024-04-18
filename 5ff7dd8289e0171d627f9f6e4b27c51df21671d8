@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4de88885_3c55dd44",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2024-04-18T05:40:14Z",
+      "side": 1,
+      "message": "See https://review.opendev.org/c/openstack/diskimage-builder/+/915915 for verification, I also tested the build locally.",
+      "revId": "5ff7dd8289e0171d627f9f6e4b27c51df21671d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5196df4d_de8febe2",
