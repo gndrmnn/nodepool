@@ -1144,6 +1144,103 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
+        if label.fleet:
+            return self._createFleet(label, image_id, tags, hostname, log)
+        else:
+            return self._runInstace(label, image_id, tags, hostname, log)
+
+    def _createFleet(self, label, image_id, tags, hostname, log):
+        log.info('Creating instance with fleet')
+
+        overrides = []
+
+        instance_types = label.fleet.get('instance-types', [])
+        for instance_type in instance_types:
+            overrides.append({
+                'ImageId': image_id,
+                'InstanceType': instance_type,
+                'SubnetId': label.pool.subnet_id,
+            })
+
+        instance_requirements = label.fleet.get('instance-requirements')
+        if instance_requirements:
+            requirements = {
+                'VCpuCount': {
+                    'Min': instance_requirements.get('vcpu-count').get('min'),
+                    'Max': instance_requirements.get('vcpu-count').get('max'),
+                },
+                'MemoryMiB': {
+                    'Min': instance_requirements.get('memory-mib').get('min'),
+                    'Max': instance_requirements.get('memory-mib').get('max'),
+                },
+            }
+            overrides.append({
+                'ImageId': image_id,
+                'SubnetId': label.pool.subnet_id,
+                'InstanceRequirements': requirements,
+            })
+
+        if label.use_spot:
+            capacity_type_option = {
+                'SpotOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot',
+                },
+            }
+        else:
+            capacity_type_option = {
+                'OnDemandOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'on-demand',
+                },
+            }
+
+        args = {
+            **capacity_type_option,
+            'LaunchTemplateConfigs': [
+                {
+                    'LaunchTemplateSpecification': {
+                        'LaunchTemplateName': label.fleet['template-name'],
+                        'Version': '$Latest',
+                    },
+                    'Overrides': overrides,
+                },
+            ],
+            'Type': 'instant',
+            'TagSpecifications': [
+                {
+                    'ResourceType': 'instance',
+                    'Tags': tag_dict_to_list(tags),
+                },
+                {
+                    'ResourceType': 'volume',
+                    'Tags': tag_dict_to_list(tags),
+                },
+            ],
+        }
+
+        with self.rate_limiter(log.debug, "Created fleet"):
+            log.debug("Creating VM with fleet %s", hostname)
+            log.info("EC2 create fleet: %s", args)  # log.debug
+            resp = self.ec2_client.create_fleet(**args)
+            log.info("EC2 create fleet result: %s", resp)  # log.debug
+
+            instance_id = resp['Instances'][0]['InstanceIds'][0]
+
+            describe_instances_result = self.ec2_client.describe_instances(
+                InstanceIds=[instance_id]
+            )
+            log.debug("Created VM %s as instance %s", hostname, instance_id)
+
+            return describe_instances_result['Reservations'][0]['Instances'][0]
+
+    def _runInstace(self, label, image_id, tags, hostname, log):
         args = dict(
             ImageId=image_id,
             MinCount=1,
