@@ -1,0 +1,81 @@
+zookeeper-servers:
+  - host: zk
+    port: 2281
+zookeeper-tls:
+  cert: /var/certs/certs/client.pem
+  key: /var/certs/keys/clientkey.pem
+  ca: /var/certs/certs/cacert.pem
+
+labels:
+  - name: ubuntu-test
+
+providers:
+  - name: ec2-eu-central-1
+    driver: aws
+    region-name: eu-central-1
+    cloud-images:
+      - name: ubuntu-test
+        image-id: ami-023adaba598e661ac
+        username: admin
+    pools:
+      - name: pool-1
+        max-servers: 10
+        subnet-id: subnet-a93f59c1
+        security-group-id: sg-ee779185
+        host-key-checking: false
+        labels:
+          - name: ubuntu-test
+            use-spot: false # default - not necessary
+            cloud-image: ubuntu-test
+            key-name: cmr-eu-central-1 # TODO: is optional when using fleet, as it has to be configured in the template
+            tags:
+              key1: value1
+            instance-type: m5.large # TODO: this shouldn't be necessary, but the quota
+            fleet:
+              template-name: project-1-gp3-100gb-gp3-1000-iops-125-throughput
+              allocation-strategy: prioritized
+              instance-types:
+                - m7i.large
+                - m6a.large
+                - m6i.large
+                - m5.large
+      - name: pool-2
+        max-servers: 10
+        subnet-id: subnet-dacc64a0
+        security-group-id: sg-ee779185
+        host-key-checking: false
+        labels:
+          - name: ubuntu-test
+            use-spot: true
+            cloud-image: ubuntu-test
+            key-name: cmr-eu-central-1 # TODO: is optional when using fleet, as it has to be configured in the template
+            tags:
+              key1: value1
+            instance-type: m5.large # TODO: this shouldn't be necessary, but the quota
+            fleet:
+              template-name: project-1-gp3-100gb-gp3-1000-iops-125-throughput
+              allocation-strategy: price-capacity-optimized
+              instance-requirements:
+                vcpu-count:
+                  min: 4
+                  max: 4
+                memory-mib:
+                  min: 16384
+                  max: 16384
+#      - name: pool-3
+#        max-servers: 10
+#        subnet-id: subnet-073f074d
+#        security-group-id: sg-ee779185
+#        host-key-checking: false
+#        labels:
+#          - name: ubuntu-test
+#            cloud-image: ubuntu-test
+#            key-name: cmr-eu-central-1
+#            tags:
+#              key1: value1
+#            instance-type: m5.large
+#            fleet:
+#              instance-types:
+#                - m7i.large
+#                - m6i.large
+#                - m5.large

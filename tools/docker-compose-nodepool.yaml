@@ -1,0 +1,54 @@
+version: '2.1'
+
+services:
+  zk:
+    image: docker.io/zookeeper
+    hostname: examples_zk_1.examples_default
+    volumes:
+      - "./ca:/var/certs:z"
+      - "./zoo.cfg:/conf/zoo.cfg:z"
+      - "zk-data:/data"
+      - "zk-datalog:/datalog"
+    command: "sh -c 'exec zkServer.sh start-foreground'"
+    networks:
+      - zuul
+  launcher:
+    depends_on:
+      - zk
+    image: quay.io/zuul-ci/nodepool-launcher
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      no_proxy: "${no_proxy},gerrit"
+      PBR_VERSION: "1.2.3"
+    volumes:
+      - "./nodepool.yaml:/etc/nodepool/nodepool.yaml"
+      - "./ca:/var/certs:z"
+      # python3 /nodepool_source/tools/load-test.py --label ubuntu-test
+      - "/Users/cmr/workspaceZuul/nodepool:/nodepool_source"
+      - "/Users/cmr/.aws/config:/root/.aws/config"
+      - "/Users/cmr/.aws/credentials:/root/.aws/credentials"
+    ports:
+      - "8005:8005"
+    command: "sh -c 'cd /nodepool_source && pip3 install --editable . && exec nodepool-launcher -f'"
+    networks:
+      - zuul
+
+volumes:
+  sshkey:
+  nodessh:
+  logs:
+  lib-zuul-scheduler:
+  lib-zuul-web:
+  lib-zuul-executor:
+  zk-data:
+  zk-datalog:
+  lib-mysql:
+  gerrit-etc:
+  gerrit-db:
+  gerrit-git:
+  gerrit-index:
+  gerrit-cache:
+
+networks:
+  zuul:
