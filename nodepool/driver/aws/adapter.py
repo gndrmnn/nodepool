@@ -14,6 +14,8 @@
 # under the License.
 
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, Any
+
 import cachetools.func
 import copy
 import functools
@@ -1144,106 +1146,170 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
-        args = dict(
-            ImageId=image_id,
-            MinCount=1,
-            MaxCount=1,
-            KeyName=label.key_name,
-            EbsOptimized=label.ebs_optimized,
-            InstanceType=label.instance_type,
-            NetworkInterfaces=[{
-                'AssociatePublicIpAddress': label.pool.public_ipv4,
-                'DeviceIndex': 0}],
-            TagSpecifications=[
-                {
-                    'ResourceType': 'instance',
-                    'Tags': tag_dict_to_list(tags),
-                },
-                {
-                    'ResourceType': 'volume',
-                    'Tags': tag_dict_to_list(tags),
-                },
-            ]
-        )
+        if label.fleet:
+            log.info("Running EC2 create_fleet...")
 
-        if label.pool.security_group_id:
-            args['NetworkInterfaces'][0]['Groups'] = [
-                label.pool.security_group_id
-            ]
-        if label.pool.subnet_id:
-            args['NetworkInterfaces'][0]['SubnetId'] = label.pool.subnet_id
+            instance_types = label.fleet['instance-types']
+            overrides = []
+            for instance_type in instance_types:
+                overrides.append({
+                    'ImageId': image_id,
+                    'InstanceType': instance_type,
+                    'SubnetId': label.pool.subnet_id
+                })
 
-        if label.pool.public_ipv6:
-            args['NetworkInterfaces'][0]['Ipv6AddressCount'] = 1
+            if label.use_spot:
+                capacity_type_option = dict(SpotOptions={
+                    'AllocationStrategy': label.fleet['allocation-strategy']
+                },TargetCapacitySpecification={
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot'
+                })
+            else:
+                capacity_type_option = dict(OnDemandOptions={
+                    'AllocationStrategy': label.fleet['allocation-strategy']
+                },TargetCapacitySpecification={
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'on-demand'
+                })
 
-        if label.userdata:
-            args['UserData'] = label.userdata
+            args = dict(
+                capacity_type_option,
+                LaunchTemplateConfigs=[
+                    {
+                        'LaunchTemplateSpecification': {
+                            'LaunchTemplateName': label.fleet['template-name'],
+                            'Version': '$Latest'
+                        },
+                        'Overrides': overrides
+                    },
+                ],
+                Type='instant',
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'instance',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                    {
+                        'ResourceType': 'volume',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                ]
+            )
 
-        if label.iam_instance_profile:
-            if 'name' in label.iam_instance_profile:
-                args['IamInstanceProfile'] = {
-                    'Name': label.iam_instance_profile['name']
+            log.info("EC2 create fleet: %s", args)
+            result = self.ec2_client.create_fleet(**args)
+            log.info("EC2 create fleet result: %s", result)
+
+            instance = result['Instances'][0]
+            instance_id = instance.get('InstanceIds')[0]
+
+            describe_instances_result = self.ec2_client.describe_instances(
+                InstanceIds=[instance_id]
+            )
+
+            return describe_instances_result['Reservations'][0]['Instances'][0]
+        else:
+            args = dict(
+                ImageId=image_id,
+                MinCount=1,
+                MaxCount=1,
+                KeyName=label.key_name,
+                EbsOptimized=label.ebs_optimized,
+                InstanceType=label.instance_type,
+                NetworkInterfaces=[{
+                    'AssociatePublicIpAddress': label.pool.public_ipv4,
+                    'DeviceIndex': 0}],
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'instance',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                    {
+                        'ResourceType': 'volume',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                ]
+            )
+
+            if label.pool.security_group_id:
+                args['NetworkInterfaces'][0]['Groups'] = [
+                    label.pool.security_group_id
+                ]
+            if label.pool.subnet_id:
+                args['NetworkInterfaces'][0]['SubnetId'] = label.pool.subnet_id
+
+            if label.pool.public_ipv6:
+                args['NetworkInterfaces'][0]['Ipv6AddressCount'] = 1
+
+            if label.userdata:
+                args['UserData'] = label.userdata
+
+            if label.iam_instance_profile:
+                if 'name' in label.iam_instance_profile:
+                    args['IamInstanceProfile'] = {
+                        'Name': label.iam_instance_profile['name']
+                    }
+                elif 'arn' in label.iam_instance_profile:
+                    args['IamInstanceProfile'] = {
+                        'Arn': label.iam_instance_profile['arn']
+                    }
+
+            # Default block device mapping parameters are embedded in AMIs.
+            # We might need to supply our own mapping before lauching the instance.
+            # We basically want to make sure DeleteOnTermination is true and be
+            # able to set the volume type and size.
+            image = self._getImage(image_id)
+            # TODO: Flavors can also influence whether or not the VM spawns with a
+            # volume -- we basically need to ensure DeleteOnTermination is true.
+            # However, leaked volume detection may mitigate this.
+            if image.get('BlockDeviceMappings'):
+                bdm = image['BlockDeviceMappings']
+                mapping = copy.deepcopy(bdm[0])
+                if 'Ebs' in mapping:
+                    mapping['Ebs']['DeleteOnTermination'] = True
+                    if label.volume_size:
+                        mapping['Ebs']['VolumeSize'] = label.volume_size
+                    if label.volume_type:
+                        mapping['Ebs']['VolumeType'] = label.volume_type
+                    if label.iops:
+                        mapping['Ebs']['Iops'] = label.iops
+                    if label.throughput:
+                        mapping['Ebs']['Throughput'] = label.throughput
+                    # If the AMI is a snapshot, we cannot supply an "encrypted"
+                    # parameter
+                    if 'Encrypted' in mapping['Ebs']:
+                        del mapping['Ebs']['Encrypted']
+                    args['BlockDeviceMappings'] = [mapping]
+
+            # enable EC2 Spot
+            if label.use_spot:
+                args['InstanceMarketOptions'] = {
+                    'MarketType': 'spot',
+                    'SpotOptions': {
+                        'SpotInstanceType': 'one-time',
+                        'InstanceInterruptionBehavior': 'terminate'
+                    }
                 }
-            elif 'arn' in label.iam_instance_profile:
-                args['IamInstanceProfile'] = {
-                    'Arn': label.iam_instance_profile['arn']
+
+            if label.imdsv2 == 'required':
+                args['MetadataOptions'] = {
+                    'HttpTokens': 'required',
+                    'HttpEndpoint': 'enabled',
+                }
+            elif label.imdsv2 == 'optional':
+                args['MetadataOptions'] = {
+                    'HttpTokens': 'optional',
+                    'HttpEndpoint': 'enabled',
                 }
 
-        # Default block device mapping parameters are embedded in AMIs.
-        # We might need to supply our own mapping before lauching the instance.
-        # We basically want to make sure DeleteOnTermination is true and be
-        # able to set the volume type and size.
-        image = self._getImage(image_id)
-        # TODO: Flavors can also influence whether or not the VM spawns with a
-        # volume -- we basically need to ensure DeleteOnTermination is true.
-        # However, leaked volume detection may mitigate this.
-        if image.get('BlockDeviceMappings'):
-            bdm = image['BlockDeviceMappings']
-            mapping = copy.deepcopy(bdm[0])
-            if 'Ebs' in mapping:
-                mapping['Ebs']['DeleteOnTermination'] = True
-                if label.volume_size:
-                    mapping['Ebs']['VolumeSize'] = label.volume_size
-                if label.volume_type:
-                    mapping['Ebs']['VolumeType'] = label.volume_type
-                if label.iops:
-                    mapping['Ebs']['Iops'] = label.iops
-                if label.throughput:
-                    mapping['Ebs']['Throughput'] = label.throughput
-                # If the AMI is a snapshot, we cannot supply an "encrypted"
-                # parameter
-                if 'Encrypted' in mapping['Ebs']:
-                    del mapping['Ebs']['Encrypted']
-                args['BlockDeviceMappings'] = [mapping]
-
-        # enable EC2 Spot
-        if label.use_spot:
-            args['InstanceMarketOptions'] = {
-                'MarketType': 'spot',
-                'SpotOptions': {
-                    'SpotInstanceType': 'one-time',
-                    'InstanceInterruptionBehavior': 'terminate'
-                }
-            }
-
-        if label.imdsv2 == 'required':
-            args['MetadataOptions'] = {
-                'HttpTokens': 'required',
-                'HttpEndpoint': 'enabled',
-            }
-        elif label.imdsv2 == 'optional':
-            args['MetadataOptions'] = {
-                'HttpTokens': 'optional',
-                'HttpEndpoint': 'enabled',
-            }
-
-        with self.rate_limiter(log.debug, "Created instance"):
-            log.debug("Creating VM %s", hostname)
-            resp = self.ec2_client.run_instances(**args)
-            instances = resp['Instances']
-            log.debug("Created VM %s as instance %s",
-                      hostname, instances[0]['InstanceId'])
-            return instances[0]
+            with self.rate_limiter(log.debug, "Created instance"):
+                log.debug("Creating VM %s", hostname)
+                resp = self.ec2_client.run_instances(**args)
+                instances = resp['Instances']
+                log.debug("Created VM %s as instance %s",
+                          hostname, instances[0]['InstanceId'])
+                return instances[0]
 
     def _deleteThread(self):
         while self._running:
