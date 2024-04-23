@@ -1144,6 +1144,40 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
+        log.info("use_fleet: %s", label.use_fleet)
+        if label.use_fleet:
+            log.info("Running EC2 create_fleet...")
+            result = self.ec2_client.create_fleet(
+                SpotOptions={
+                    'AllocationStrategy': 'price-capacity-optimized'
+                },
+                LaunchTemplateConfigs=[
+                    {
+                        'LaunchTemplateSpecification': {
+                            'LaunchTemplateName': 'cc-4cpu-16gb-memory',
+                            'Version': '$Latest'
+                        }
+                    }
+                ],
+                TargetCapacitySpecification={
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot'
+                },
+                Type='instant',
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'instance',
+                        'Tags': [
+                            {
+                                'Key': 'instance-tag1',
+                                'Value': 'instance-value-1'
+                            },
+                        ]
+                    },
+                ]
+            )
+            log.info("EC2 create fleet result: %s", result)
+
         args = dict(
             ImageId=image_id,
             MinCount=1,
