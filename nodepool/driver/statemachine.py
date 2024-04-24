@@ -254,8 +254,11 @@ class StateMachineNodeLauncher(stats.StatsReporter):
                     dt = int(time.monotonic() -
                              self.nodescan_request.start_time)
                     self.log.debug("Scanned keys in %s", dt)
-                except Exception:
-                    self.log.exception("Exception scanning keys:")
+                except Exception as e:
+                    if isinstance(e, exceptions.ConnectionTimeoutException):
+                        self.log.warning("Error scanning keys: %s", str(e))
+                    else:
+                        self.log.exception("Exception scanning keys:")
                     raise exceptions.LaunchKeyscanException(
                         "Can't scan instance %s key" % node.id)
                 if keys:
@@ -322,7 +325,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.manager.nodescan_worker.removeRequest(self.nodescan_request)
             self.nodescan_request = None
         except Exception as e:
-            if isinstance(e, exceptions.TimeoutException):
+            if isinstance(e, (exceptions.TimeoutException,
+                              exceptions.LaunchKeyscanException)):
                 self.log.warning(
                     "Launch attempt %d/%d for node %s, failed: %s",
                     self.attempts, self.retries, node.id, str(e))
