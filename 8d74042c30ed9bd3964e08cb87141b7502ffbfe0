@@ -36,6 +36,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d593f79_aa224d09",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T20:43:03Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "101af437_eb0dc121",
+      "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffd6517e_c1abded5",
@@ -49,6 +67,24 @@
       "writtenOn": "2024-04-24T18:19:33Z",
       "side": 1,
       "message": "See above. Though I note we\u0027re already using this pattern here.",
+      "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac7f1a1b_1dbe5b20",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T20:43:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffd6517e_c1abded5",
       "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
