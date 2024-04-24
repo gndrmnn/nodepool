@@ -46,8 +46,12 @@ class MetastaticLabel(ConfigValue):
         self.max_parallel_jobs = label.get('max-parallel-jobs', 1)
         self.grace_time = label.get('grace-time', 60)
         self.min_retention_time = label.get('min-retention-time', 0)
+        self.max_age = label.get('max-age', None)
         self.host_key_checking = label.get('host-key-checking',
                                            self.pool.host_key_checking)
+        if self.max_age and self.max_age < self.min_retention_time:
+            raise Exception("The max_age must be greater than or "
+                            "equal to the min_retention_time")
 
     @staticmethod
     def getSchema():
@@ -57,6 +61,7 @@ class MetastaticLabel(ConfigValue):
             'max-parallel-jobs': int,
             'grace-time': int,
             'min-retention-time': int,
+            'max-age': int,
             'host-key-checking': bool,
         }
 
@@ -66,7 +71,8 @@ class MetastaticLabel(ConfigValue):
             self.backing_label == other.backing_label and
             self.max_parallel_jobs == other.max_parallel_jobs and
             self.grace_time == other.grace_time and
-            self.min_retention_time == other.min_retention_time
+            self.min_retention_time == other.min_retention_time and
+            self.max_age == other.max_age
         )
 
 

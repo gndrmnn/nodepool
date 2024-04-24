@@ -372,3 +372,47 @@ class TestDriverMetastatic(tests.DBTestCase):
         meta_manager.adapter.listResources()
         nodes = self._getNodes()
         self.waitForNodeDeletion(bn1)
+
+    def test_metastatic_max_age(self):
+        # Test the max-age option
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager.adapter._client.create_image(name="fake-image")
+
+        # Launch one metastatic node on a backing node
+        node1 = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 2)
+        bn1 = nodes[1]
+        self.assertEqual(bn1.provider, 'fake-provider')
+        self.assertEqual(bn1.id, node1.driver_data['backing_node'])
+
+        # Create a second node and verify it uses the same backing node.
+        node2 = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 3)
+        self.assertEqual(bn1.id, node2.driver_data['backing_node'])
+
+        # Delete the second node.
+        node2.state = zk.DELETING
+        self.zk.storeNode(node2)
+        self.waitForNodeDeletion(node2)
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 2)
+
+        # Falsify the launch time so that the node is older than
+        # max_age (300).
+        meta_manager = pool.getProviderManager('meta-provider')
+        bnr = meta_manager.adapter.backing_node_records['user-label'][0]
+        bnr.launched = 0
+
+        # This has the side effect of marking the backing node as failed.
+        meta_manager.adapter.listResources()
+
+        # Create another node and verify it gets a new backing node.
+        node3 = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 4)
+        self.assertNotEqual(bn1.id, node3.driver_data['backing_node'])
