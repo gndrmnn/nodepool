@@ -193,6 +193,16 @@ itself, which is "meta".
              arrive for this label before deleting the backing node.
              Set this value to the amount of time in seconds to wait.
 
+          .. attr:: min-retention-time
+             :type: int
+
+             If this value is set, the backing node will not be
+             deleted unless this amount of time (in seconds) has
+             passed since the backing node was launched.  For backing
+             node resources with minimum billing times, this can be
+             used to ensure that the backing node is retained for at
+             least the minimum billing interval.
+
           .. attr:: host-key-checking
              :type: bool
              :default: False
