@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f9114e9_91eae862",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-04-24T20:51:12Z",
+      "side": 1,
+      "message": "Exactly.",
+      "parentUuid": "319e1f7c_5a351cfe",
+      "revId": "64452f1a263b3457ea6c948376158fe61c5e9a77",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b38fa5f_ae151c40",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-04-24T20:42:43Z",
       "side": 1,
       "message": "Why did we change the exception type here? Wasn\u0027t this effectively a timeout test for deletions before?",
+      "revId": "64452f1a263b3457ea6c948376158fe61c5e9a77",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "385e68ac_ec356aa6",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-04-24T20:51:12Z",
+      "side": 1,
+      "message": "This is cleanup.  This test code was the only place the exception was raised.  It is never explicitly caught, but it was a subclass of TimeoutException, which means it could have theoretically been caught somewhere.  However, this method is a fake for the openstack client, and the openstack client is never going to raise a \"nodepool.exceptions.ServerDeleteException\".  That means this code was incorrectly faking the openstack sdk, and if any code was actually relying on it (I don\u0027t think it was) that would be erroneous too.\n\nWith that cleanup out of the way, I can make the new ServerDeleteTimeoutException and not have it be confused with the defunct ServerDeleteException.",
+      "parentUuid": "9b38fa5f_ae151c40",
       "revId": "64452f1a263b3457ea6c948376158fe61c5e9a77",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
