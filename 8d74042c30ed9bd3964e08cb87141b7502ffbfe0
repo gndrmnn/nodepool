@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "101af437_eb0dc121",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-04-24T19:38:33Z",
+      "side": 1,
+      "message": "I did it this way to match the pattern below, where it\u0027s required.  It\u0027s easier copy-pasta that way, and easier to validate.  We could change it, but I don\u0027t think it\u0027s important.",
+      "parentUuid": "9c409031_813bf196",
+      "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ffd6517e_c1abded5",
         "filename": "nodepool/driver/statemachine.py",
         "patchSetId": 1
