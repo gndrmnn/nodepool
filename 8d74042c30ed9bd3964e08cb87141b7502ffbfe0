@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c409031_813bf196",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T18:19:33Z",
+      "side": 1,
+      "message": "I hate to nitpick this but wouldn\u0027t this be clearer as:\n\n```\n  try:\n    ...\n  except exceptions.ConnectionTimeoutException as e:\n    self.log.warning(...)\n  except:\n    self.log.exception(...)\n```\n    \nThe use of `isinstance` here when `except` is basically type matching for us seems like a confusing way to do it.",
+      "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffd6517e_c1abded5",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T18:19:33Z",
+      "side": 1,
+      "message": "See above. Though I note we\u0027re already using this pattern here.",
+      "revId": "8d74042c30ed9bd3964e08cb87141b7502ffbfe0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
