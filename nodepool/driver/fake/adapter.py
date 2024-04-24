@@ -128,6 +128,7 @@ class FakeOpenStackCloud(object):
         self.compute = FakeSession(self)
         self.pause_creates = False
         self._image_list = images
+        self._create_server_timeout = 0
         if self._image_list is None:
             self._image_list = [
                 Dummy(
@@ -265,10 +266,11 @@ class FakeOpenStackCloud(object):
                   volumes=[],
                   _kw=kw)
         instance_list.append(s)
-        t = threading.Thread(target=self._finish,
-                             name='FakeProvider create',
-                             args=(s, 0.1, done_status))
-        t.start()
+        if not kw.get('_test_timeout'):
+            t = threading.Thread(target=self._finish,
+                                 name='FakeProvider create',
+                                 args=(s, 0.1, done_status))
+            t.start()
         return s.copy()
 
     def _delete(self, name_or_id, instance_list):
@@ -330,6 +332,9 @@ class FakeOpenStackCloud(object):
         return server
 
     def create_server(self, **kw):
+        if self._create_server_timeout:
+            self._create_server_timeout -= 1
+            kw['_test_timeout'] = True
         return self._create(self._server_list, **kw)
 
     def get_server(self, name_or_id):
@@ -472,10 +477,10 @@ class FakeLaunchAndDeleteFailCloud(FakeOpenStackCloud):
 
     def delete_server(self, *args, **kwargs):
         if self.times_to_fail_delete is None:
-            raise exceptions.ServerDeleteException("Test fail server delete.")
+            raise Exception("Test fail server delete.")
         if self.times_failed_delete < self.times_to_fail_delete:
             self.times_failed_delete += 1
-            raise exceptions.ServerDeleteException("Test fail server delete.")
+            raise Exception("Test fail server delete.")
         else:
             self.delete_success = True
             return super().delete_server(*args, **kwargs)

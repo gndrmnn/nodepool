@@ -273,7 +273,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             now = time.monotonic()
             if (now - state_machine.start_time >
                 self.manager.provider.launch_timeout):
-                raise Exception("Timeout waiting for instance creation")
+                raise exceptions.ServerCreateTimeoutException(
+                    "Timeout waiting for instance creation")
 
             if not self.runDeleteStateMachine():
                 return
@@ -321,8 +322,13 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             self.manager.nodescan_worker.removeRequest(self.nodescan_request)
             self.nodescan_request = None
         except Exception as e:
-            self.log.exception("Launch attempt %d/%d for node %s, failed:",
-                               self.attempts, self.retries, node.id)
+            if isinstance(e, exceptions.TimeoutException):
+                self.log.warning(
+                    "Launch attempt %d/%d for node %s, failed: %s",
+                    self.attempts, self.retries, node.id, str(e))
+            else:
+                self.log.exception("Launch attempt %d/%d for node %s, failed:",
+                                   self.attempts, self.retries, node.id)
             if self.state_machine and self.state_machine.external_id:
                 # If we're deleting, don't overwrite the node external
                 # id, because we may make another delete state machine
@@ -429,7 +435,8 @@ class StateMachineNodeDeleter:
         try:
             now = time.monotonic()
             if now - state_machine.start_time > self.DELETE_TIMEOUT:
-                raise Exception("Timeout waiting for instance deletion")
+                raise exceptions.ServerDeleteTimeoutException(
+                    "Timeout waiting for instance deletion")
 
             if state_machine.state == state_machine.START:
                 node.state = zk.DELETING
@@ -451,9 +458,13 @@ class StateMachineNodeDeleter:
         except exceptions.NotFound:
             self.log.info("Instance %s not found in provider %s",
                           node.external_id, node.provider)
-        except Exception:
-            self.log.exception("Exception deleting instance %s from %s:",
-                               node.external_id, node.provider)
+        except Exception as e:
+            if isinstance(e, exceptions.TimeoutException):
+                self.log.warning("Failure deleting instance %s from %s: %s",
+                                 node.external_id, node.provider, str(e))
+            else:
+                self.log.exception("Exception deleting instance %s from %s:",
+                                   node.external_id, node.provider)
             # Don't delete the ZK node in this case, but do unlock it
             if node_exists:
                 self.zk.unlockNode(node)
@@ -1321,7 +1332,7 @@ class NodescanRequest:
     def _checkTimeout(self):
         now = time.monotonic()
         if now - self.start_time > self.timeout:
-            raise Exception(
+            raise exceptions.ConnectionTimeoutException(
                 f"Timeout connecting to {self.ip} on port {self.port}")
 
     def _checkTransport(self):

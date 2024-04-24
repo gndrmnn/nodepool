@@ -69,8 +69,12 @@ class IPAddTimeoutException(TimeoutException):
     statsd_key = 'error.ipadd'
 
 
-class ServerDeleteException(TimeoutException):
-    statsd_key = 'error.serverdelete'
+class ServerCreateTimeoutException(TimeoutException):
+    statsd_key = 'error.servercreatetimeout'
+
+
+class ServerDeleteTimeoutException(TimeoutException):
+    statsd_key = 'error.serverdeletetimeout'
 
 
 class ImageCreateException(TimeoutException):
