@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "319e1f7c_5a351cfe",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T20:42:43Z",
+      "side": 1,
+      "message": "This counter is just here to force multiple failures due to timeouts then an eventual success?",
+      "revId": "64452f1a263b3457ea6c948376158fe61c5e9a77",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b38fa5f_ae151c40",
+        "filename": "nodepool/driver/fake/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-04-24T20:42:43Z",
+      "side": 1,
+      "message": "Why did we change the exception type here? Wasn\u0027t this effectively a timeout test for deletions before?",
+      "revId": "64452f1a263b3457ea6c948376158fe61c5e9a77",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
