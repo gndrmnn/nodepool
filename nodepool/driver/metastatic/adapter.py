@@ -298,6 +298,15 @@ class MetastaticAdapter(statemachine.Adapter):
                     if label_config:
                         grace_time = label_config.grace_time
                         min_time = label_config.min_retention_time
+                        if label_config.max_age:
+                            if now - bnr.launched > label_config.max_age:
+                                # Mark it as failed; even though it
+                                # hasn't really failed, the lifecycle
+                                # is the same: do not allocate any
+                                # more jobs to this node but let any
+                                # remaining ones finish, then delete
+                                # ASAP.
+                                bnr.failed = True
                     else:
                         # The label doesn't exist in our config any more,
                         # it must have been removed.

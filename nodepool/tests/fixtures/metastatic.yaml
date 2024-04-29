@@ -66,6 +66,7 @@ providers:
             backing-label: backing-label
             max-parallel-jobs: 2
             grace-time: 2
+            max-age: 300
             host-key-checking: true
           - name: user-label-min-retention
             backing-label: backing-label-min-retention

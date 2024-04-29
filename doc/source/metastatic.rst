@@ -203,6 +203,18 @@ itself, which is "meta".
              used to ensure that the backing node is retained for at
              least the minimum billing interval.
 
+          .. attr:: max-age
+             :type: int
+
+             If this value is set, the backing node will be removed
+             from service after this amount of time (in seconds) has
+             passed since the backing node was launched.  After a
+             backing node reaches this point, any existing jobs will
+             be permitted to run to completion, but no new metastatic
+             nodes will be created with that backing node and once all
+             metastatic nodes using it have been deleted, then backing
+             node will be deleted.
+
           .. attr:: host-key-checking
              :type: bool
              :default: False
