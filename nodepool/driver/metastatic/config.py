@@ -45,6 +45,7 @@ class MetastaticLabel(ConfigValue):
         self.cloud_image = MetastaticCloudImage()
         self.max_parallel_jobs = label.get('max-parallel-jobs', 1)
         self.grace_time = label.get('grace-time', 60)
+        self.min_retention_time = label.get('min-retention-time', 0)
         self.host_key_checking = label.get('host-key-checking',
                                            self.pool.host_key_checking)
 
@@ -55,6 +56,7 @@ class MetastaticLabel(ConfigValue):
             v.Required('backing-label'): str,
             'max-parallel-jobs': int,
             'grace-time': int,
+            'min-retention-time': int,
             'host-key-checking': bool,
         }
 
@@ -63,7 +65,8 @@ class MetastaticLabel(ConfigValue):
         return (
             self.backing_label == other.backing_label and
             self.max_parallel_jobs == other.max_parallel_jobs and
-            self.grace_time == other.grace_time
+            self.grace_time == other.grace_time and
+            self.min_retention_time == other.min_retention_time
         )
 
 

@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The metastatic driver now supports a
+    :attr:`providers.[metastatic].pools.labels.min-retention-time`
+    attribute to set the minimum retention time for a backing node
+    (useful for cloud resources with minimum billing intervals).

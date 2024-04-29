@@ -218,6 +218,7 @@ class BackingNodeRecord:
         self.request_id = None
         self.allocated_nodes = [None for x in range(slot_count)]
         self.failed = False
+        self.launched = time.time()
         self.last_used = time.time()
 
     def hasAvailableSlot(self):
@@ -296,14 +297,18 @@ class MetastaticAdapter(statemachine.Adapter):
                     label_config = self.provider._getLabel(bnr.label_name)
                     if label_config:
                         grace_time = label_config.grace_time
+                        min_time = label_config.min_retention_time
                     else:
                         # The label doesn't exist in our config any more,
                         # it must have been removed.
                         grace_time = 0
+                        min_time = 0
                     if bnr.failed:
                         grace_time = 0
+                        min_time = 0
                     if (bnr.isEmpty() and
-                        now - bnr.last_used > grace_time):
+                        now - bnr.last_used > grace_time and
+                        now - bnr.launched > min_time):
                         self.log.info("Backing node %s has been idle for "
                                       "%s seconds, releasing",
                                       bnr.node_id, now - bnr.last_used)
@@ -373,6 +378,7 @@ class MetastaticAdapter(statemachine.Adapter):
                                                             user_data['slots'])
                     backing_node_record.node_id = node.id
                     backing_node_record.failed = user_data.get('failed', False)
+                    backing_node_record.launched = user_data.get('launched', 0)
                     self.log.info("Found backing node %s for %s",
                                   node.id, user_data['label'])
                     self._addBackingNode(user_data['label'],
@@ -454,6 +460,7 @@ class MetastaticAdapter(statemachine.Adapter):
             'label': bnr.label_name,
             'slots': bnr.slot_count,
             'failed': bnr.failed,
+            'launched': bnr.launched,
         })
 
     def _checkBackingNodeRequests(self):

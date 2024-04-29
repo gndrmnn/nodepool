@@ -21,6 +21,10 @@ labels:
     min-ready: 0
   - name: user-label
     min-ready: 0
+  - name: backing-label-min-retention
+    min-ready: 0
+  - name: user-label-min-retention
+    min-ready: 0
 
 providers:
   # The backing node provider: a cloud
@@ -42,6 +46,10 @@ providers:
             cloud-image: fake-image
             min-ram: 8192
             flavor-name: 'Fake'
+          - name: backing-label-min-retention
+            cloud-image: fake-image
+            min-ram: 8192
+            flavor-name: 'Fake'
 
   - name: meta-provider
     driver: metastatic
@@ -58,4 +66,9 @@ providers:
             backing-label: backing-label
             max-parallel-jobs: 2
             grace-time: 2
+            host-key-checking: true
+          - name: user-label-min-retention
+            backing-label: backing-label-min-retention
+            grace-time: 2
+            min-retention-time: 300
             host-key-checking: true

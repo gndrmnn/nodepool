@@ -35,11 +35,11 @@ class TestDriverMetastatic(tests.DBTestCase):
         StateMachineProvider.MINIMUM_SLEEP = 0.1
         StateMachineProvider.MAXIMUM_SLEEP = 1
 
-    def _requestNode(self):
+    def _requestNode(self, label='user-label'):
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
         req.tenant_name = 'tenant-1'
-        req.node_types.append('user-label')
+        req.node_types.append(label)
 
         self.zk.storeNodeRequest(req)
         req = self.waitForNodeRequest(req)
@@ -307,3 +307,68 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.waitForNodeDeletion(bn1)
         nodes = self._getNodes()
         self.assertEqual(nodes, [])
+
+    def test_metastatic_min_retention(self):
+        # Test that the metastatic driver honors min-retention
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+
+        pool_worker = pool.getPoolWorkers('meta-provider')[0]
+        pool_config = pool_worker.getPoolConfig()
+        self.assertEqual(pool_config.max_servers, 10)
+        self.assertEqual(pool_config.priority, 1)
+
+        manager.adapter._client.create_image(name="fake-image")
+
+        # Request a node, verify that there is a backing node, and it
+        # has the same connection info
+        node1 = self._requestNode('user-label-min-retention')
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 2)
+        self.assertEqual(nodes[0], node1)
+        self.assertNotEqual(nodes[1], node1)
+        bn1 = nodes[1]
+        self.assertEqual(bn1.provider, 'fake-provider')
+        self.assertEqual(bn1.interface_ip, node1.interface_ip)
+        self.assertEqual(bn1.python_path, node1.python_path)
+        self.assertEqual('auto', node1.python_path)
+        self.assertEqual(bn1.shell_type, node1.shell_type)
+        self.assertEqual(bn1.cloud, node1.cloud)
+        self.assertEqual(None, node1.shell_type)
+        self.assertEqual(bn1.host_keys, node1.host_keys)
+        self.assertEqual(['ssh-rsa FAKEKEY'], node1.host_keys)
+        self.assertEqual(bn1.id, node1.driver_data['backing_node'])
+        self.assertEqual(bn1.attributes, {
+            'backattr': 'back',
+            'testattr': 'backing',
+        })
+        self.assertEqual(node1.attributes, {
+            'backattr': 'back',
+            'metaattr': 'meta',
+            'testattr': 'metastatic',
+        })
+
+        # Delete node, verify that backing node still exists
+        node1.state = zk.DELETING
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # This has the side effect of deleting the backing node when
+        # idle, but it should not in this case because the
+        # min-retention time is not met.
+        meta_manager = pool.getProviderManager('meta-provider')
+        meta_manager.adapter.listResources()
+        nodes = self._getNodes()
+        self.assertEqual(nodes, [bn1])
+        self.assertEqual(nodes[0].state, zk.IN_USE)
+
+        # Falsify the launch time to trigger cleanup:
+        bnr = meta_manager.adapter.backing_node_records[
+            'user-label-min-retention'][0]
+        bnr.launched = 0
+
+        meta_manager.adapter.listResources()
+        nodes = self._getNodes()
+        self.waitForNodeDeletion(bn1)
