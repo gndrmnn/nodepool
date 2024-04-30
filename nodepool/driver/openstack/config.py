@@ -120,6 +120,8 @@ class ProviderPool(ConfigPool):
         self.auto_floating_ip = bool(pool_config.get('auto-floating-ip', True))
         self.host_key_checking = bool(pool_config.get('host-key-checking',
                                                       True))
+        self.use_internal_ip = pool_config.get(
+            'use-internal-ip', self.provider.use_internal_ip)
 
         for label in pool_config.get('labels', []):
             pl = ProviderLabel()
@@ -209,6 +211,7 @@ class OpenStackProviderConfig(ProviderConfig):
         self.image_upload_timeout = self.provider.get(
             'image-upload-timeout', 3600)
         self.clean_floating_ips = self.provider.get('clean-floating-ips')
+        self.use_internal_ip = self.provider.get('use-internal-ip', False)
         self.port_cleanup_interval = self.provider.get(
             'port-cleanup-interval',
             600

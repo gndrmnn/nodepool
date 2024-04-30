@@ -188,6 +188,13 @@ Selecting the OpenStack driver adds the following options to the
      the OpenStack project and will attempt to clean unattached
      floating ips that may have leaked around restarts.
 
+   .. attr:: use-internal-ip
+      :type: bool
+      :default: false
+
+      If OpenStack release is older than Zed, then set this
+      parameter to avoid error and get private IP address correctly.
+
   .. attr:: port-cleanup-interval
      :type: int seconds
      :default: 600
@@ -523,6 +530,14 @@ Selecting the OpenStack driver adds the following options to the
         floating ip for nodes. When zuul instances and nodes are
         deployed in the same internal private network, set the option
         to False to save floating ip for cloud provider.
+
+      .. attr:: use-internal-ip
+         :type: bool
+         :default: false
+
+         If OpenStack release is older than Zed, then set this
+         parameter along to auto-floating-ip to avoid error and get
+         private IP address correctly.
 
      .. attr:: host-key-checking
         :type: bool
