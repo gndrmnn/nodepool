@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e0f13a9f_cb79eb2a",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-04-30T08:19:12Z",
+      "side": 1,
+      "message": "A thought on that: `getattr` throws an error if we don\u0027t supply a third default argument, so we\u0027d need to have `getattr(pool, \u0027name\u0027, None)` here. I think the current form is more readable.",
+      "parentUuid": "52f4b63e_305011a0",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c9497517_0d0d77ed",
         "filename": "nodepool/stats.py",
         "patchSetId": 8
