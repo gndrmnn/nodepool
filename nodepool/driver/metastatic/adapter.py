@@ -307,6 +307,14 @@ class MetastaticAdapter(statemachine.Adapter):
                                 # remaining ones finish, then delete
                                 # ASAP.
                                 bnr.failed = True
+                    if self._getNode(bnr.node_id).backing_remove:
+                        # Mark it as failed; even though it
+                        # hasn't really failed, the lifecycle
+                        # is the same: do not allocate any
+                        # more jobs to this node but let any
+                        # remaining ones finish, then delete
+                        # ASAP.
+                        bnr.failed = True
                     else:
                         # The label doesn't exist in our config any more,
                         # it must have been removed.
