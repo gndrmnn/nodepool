@@ -294,6 +294,15 @@ class MetastaticAdapter(statemachine.Adapter):
             for label_name, backing_node_records in \
                 self.backing_node_records.items():
                 for bnr in backing_node_records[:]:
+                    node = self._getNode(bnr.node_id)
+                    if node and node.backing_remove:
+                        # Mark it as failed; even though it
+                        # hasn't really failed, the lifecycle
+                        # is the same: do not allocate any
+                        # more jobs to this node but let any
+                        # remaining ones finish, then delete
+                        # ASAP.
+                        bnr.failed = True
                     label_config = self.provider._getLabel(bnr.label_name)
                     if label_config:
                         grace_time = label_config.grace_time

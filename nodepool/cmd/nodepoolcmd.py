@@ -87,6 +87,9 @@ class NodePoolCmd(NodepoolApp):
         cmd_delete.add_argument('--now',
                                 action='store_true',
                                 help='delete the node in the foreground')
+        cmd_delete.add_argument('--backing',
+                                action='store_true',
+                                help='delete backing node safely')
 
         cmd_hold = subparsers.add_parser(
             'hold',
@@ -288,6 +291,11 @@ class NodePoolCmd(NodepoolApp):
         node = self.zk.getNode(self.args.id)
         if not node:
             print("Node id %s not found" % self.args.id)
+            return
+
+        if self.args.backing:
+            node.backing_remove = True
+            self.zk.storeNode(node)
             return
 
         self.zk.lockNode(node, blocking=True, timeout=5)
