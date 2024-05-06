@@ -335,6 +335,14 @@ Selecting the OpenStack driver adds the following options to the
         The username that a consumer should use when connecting to the
         node.
 
+     .. attr:: ssh-private-key
+        :type: str
+        :default: unset
+
+        Path to SSH private key on nodepool to check authentication to
+        the node before transfer to a consumer.
+        If parameter is not set, authentication check is not performed.
+
      .. attr:: python-path
         :type: str
         :default: auto
