@@ -46,6 +46,7 @@ class ProviderCloudImage(ConfigValue):
         self.shell_type = None
         self.connection_type = None
         self.connection_port = None
+        self.ssh_private_key = None
 
     @property
     def external_name(self):
@@ -257,6 +258,7 @@ class OpenStackProviderConfig(ProviderConfig):
             i.connection_port = image.get(
                 'connection-port',
                 default_port_mapping.get(i.connection_type, 22))
+            i.ssh_private_key = image.get('ssh-private-key', None)
             self.cloud_images[i.name] = i
 
         for pool in self.provider.get('pools', []):
@@ -284,6 +286,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'username': str,
             'python-path': str,
             'shell-type': str,
+            'ssh-private-key': str,
         }
 
         pool_label_main = {
