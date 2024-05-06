@@ -559,6 +559,7 @@ class Node(BaseModel):
         self.tenant_name = None
         self.driver_data = None
         self.requestor = None
+        self.ssh_private_key = None
 
     def __repr__(self):
         d = self.toDict()
@@ -603,7 +604,8 @@ class Node(BaseModel):
                     self.python_path == other.python_path and
                     self.tenant_name == other.tenant_name and
                     self.driver_data == other.driver_data and
-                    self.requestor == other.requestor)
+                    self.requestor == other.requestor and
+                    self.ssh_private_key == other.ssh_private_key)
         else:
             return False
 
@@ -659,6 +661,7 @@ class Node(BaseModel):
         d['tenant_name'] = self.tenant_name
         d['driver_data'] = self.driver_data
         d['requestor'] = self.requestor
+        d['ssh_private_key'] = self.ssh_private_key
         return d
 
     @staticmethod
@@ -727,6 +730,7 @@ class Node(BaseModel):
         self.tenant_name = d.get('tenant_name')
         self.driver_data = d.get('driver_data')
         self.requestor = d.get('requestor')
+        self.ssh_private_key = d.get('ssh_private_key', None)
 
 
 class NodepoolTreeCache(abc.ABC):
