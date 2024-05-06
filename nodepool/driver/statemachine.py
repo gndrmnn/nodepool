@@ -20,6 +20,7 @@ import fcntl
 import logging
 import math
 import os
+from pathlib import Path
 import random
 import select
 import socket
@@ -129,6 +130,8 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         qi = self.manager.quotaNeededByLabel(label.name, self.handler.pool)
         if qi:
             self.node.resources = qi.get_resources()
+        if isinstance(image, ProviderCloudImage):
+            self.node.ssh_private_key = image.ssh_private_key
 
         self.zk.storeNode(self.node)
 
@@ -1491,6 +1494,21 @@ class NodescanRequest:
                 self.keys.append("%s %s" % (key.get_name(), key.get_base64()))
                 self.log.debug('Added ssh host key: %s', key.get_name())
             self._nextKey()
+            # Need to check SSH private key connection here if specified
+            if (self.node.ssh_private_key and
+                Path(self.node.ssh_private_key).exists()):
+                try:
+                    pkey = paramiko.PKey.from_path(self.node.ssh_private_key)
+                    self.transport.auth_publickey(self.node.username, pkey)
+                except Exception:
+                    self.log.error(
+                        "Can't authenticate with declared SSH private key")
+                    # Try again
+                    self._close()
+                    self.state = self.START
+                    self._checkTimeout()
+                    self._connect()
+                    return
 
         if self.state == self.COMPLETE:
             self._close()
