@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1564cc48_e06029b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9816
+      },
+      "writtenOn": "2024-05-07T13:23:45Z",
+      "side": 1,
+      "message": "recheck to see if the following error is seen consistently.\n\n```\nibm_cloud_sdk_core.api_exception.ApiException: Error: Image not found, Status code: 404\n```",
+      "revId": "4a1421fd327fa7097ea055b81e1053cac11f74b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
