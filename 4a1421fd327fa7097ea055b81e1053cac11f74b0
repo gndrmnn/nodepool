@@ -16,6 +16,23 @@
       "message": "recheck to see if the following error is seen consistently.\n\n```\nibm_cloud_sdk_core.api_exception.ApiException: Error: Image not found, Status code: 404\n```",
       "revId": "4a1421fd327fa7097ea055b81e1053cac11f74b0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc873b94_f42eb0b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9816
+      },
+      "writtenOn": "2024-05-07T15:43:47Z",
+      "side": 1,
+      "message": "recheck job failed because of a different error\n\n```\n2024-05-07T14:46:07+00:00 Wait for certs to be present\n2024-05-07T14:48:08+00:00 Timeout waiting for certs\n```",
+      "revId": "4a1421fd327fa7097ea055b81e1053cac11f74b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
