@@ -14,9 +14,7 @@
 # under the License.
 
 import argparse
-import daemon
 import errno
-import extras
 import io
 import logging
 import logging.config
@@ -26,15 +24,21 @@ import sys
 import threading
 import traceback
 
+import daemon
+import daemon.pidfile
+
+try:
+    import yappi
+except ImportError:
+    yappi = None
+
+try:
+    import objgraph
+except ImportError:
+    objgraph = None
+
 from nodepool.version import version_info as npd_version_info
 from nodepool import logconfig
-
-yappi = extras.try_import('yappi')
-objgraph = extras.try_import('objgraph')
-
-# as of python-daemon 1.6 it doesn't bundle pidlockfile anymore
-# instead it depends on lockfile-0.9.1 which uses pidfile.
-pid_file_module = extras.try_imports(['daemon.pidlockfile', 'daemon.pidfile'])
 
 
 def is_pidfile_stale(pidfile):
@@ -230,7 +234,7 @@ class NodepoolDaemonApp(NodepoolApp):
             return super(NodepoolDaemonApp, self)._do_run()
 
         else:
-            pid = pid_file_module.TimeoutPIDLockFile(self.pidfile, 10)
+            pid = daemon.pidfile.TimeoutPIDLockFile(self.pidfile, 10)
 
             if is_pidfile_stale(pid):
                 pid.break_lock()
