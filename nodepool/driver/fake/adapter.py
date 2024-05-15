@@ -96,7 +96,7 @@ class FakeSession:
     def __init__(self, cloud):
         self.cloud = cloud
 
-    def get(self, uri, headers, params):
+    def get(self, uri, headers, params, timeout):
         if uri == '/servers/detail':
             server_list = []
             for server in self.cloud._server_list:

@@ -36,6 +36,7 @@ from nodepool import version
 from nodepool.nodeutils import Timer
 
 CACHE_TTL = 1
+SERVER_LIST_TIMEOUT_SECS = 30
 
 
 def quota_from_flavor(flavor, label=None, volumes=None):
@@ -729,6 +730,7 @@ class OpenStackAdapter(statemachine.Adapter):
                 uri,
                 headers={"Accept": "application/json"},
                 params=query_params,
+                timeout=SERVER_LIST_TIMEOUT_SECS,
             )
             data = response.json()
 
