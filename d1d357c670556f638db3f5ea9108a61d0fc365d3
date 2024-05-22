@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae3b0f14_f3919537",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31083
+      },
+      "writtenOn": "2024-05-22T11:47:17Z",
+      "side": 1,
+      "message": "This could work if the api_timeout setting is applied to those \"raw\" requests we use for the server list (I\u0027m not 100 % sure there).\nGenerally, I like the idea of a config setting here more than a hard coded value. Thanks for pointing this out!\nWould dedicated timeout values for api calls (e.g. [1]) have precedence over the api_timeout setting?\n\n[1] https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/adapter.py#L572",
+      "revId": "d1d357c670556f638db3f5ea9108a61d0fc365d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
