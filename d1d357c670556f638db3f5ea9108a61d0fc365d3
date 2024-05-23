@@ -16,6 +16,24 @@
       "message": "This could work if the api_timeout setting is applied to those \"raw\" requests we use for the server list (I\u0027m not 100 % sure there).\nGenerally, I like the idea of a config setting here more than a hard coded value. Thanks for pointing this out!\nWould dedicated timeout values for api calls (e.g. [1]) have precedence over the api_timeout setting?\n\n[1] https://opendev.org/zuul/nodepool/src/branch/master/nodepool/driver/openstack/adapter.py#L572",
       "revId": "d1d357c670556f638db3f5ea9108a61d0fc365d3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4dde691_6c3051a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-05-23T23:55:40Z",
+      "side": 1,
+      "message": "The \"raw\" requests are using the keystoneauth session object which is exactly what this option configures.\n\nI would not generalize anything about the image upload api calls.  The code paths taken there are very complex; even with all the OpenDev clouds, I don\u0027t know that we exercise every possible combination of glance features.  I\u0027m trying to say: the answer to your question could theoretically be different for every one of many different possible cloud configurations.  However, since it takes a timeout parameter, I think if it did not honor it and used the session default instead, that would easily be considered a bug.",
+      "parentUuid": "ae3b0f14_f3919537",
+      "revId": "d1d357c670556f638db3f5ea9108a61d0fc365d3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
