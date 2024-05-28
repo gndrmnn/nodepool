@@ -776,7 +776,11 @@ class TestZooKeeper(tests.DBTestCase):
         n3.type = 'label2'
         self.zk.storeNode(n3)
 
-        r = self.zk.getReadyNodesOfTypes(['label1'], cached=False)
+        for _ in iterate_timeout(10, Exception, "wait for cache"):
+            r = self.zk.getReadyNodesOfTypes(['label1'])
+            if len(r.get('label1')) == 2:
+                break
+
         self.assertIn('label1', r)
         self.assertEqual(2, len(r['label1']))
         self.assertIn(n1, r['label1'])
@@ -796,7 +800,12 @@ class TestZooKeeper(tests.DBTestCase):
         n3.type = 'label2'
         self.zk.storeNode(n3)
 
-        r = self.zk.getReadyNodesOfTypes(['label1', 'label3'], cached=False)
+        for _ in iterate_timeout(10, Exception, "wait for cache"):
+            r = self.zk.getReadyNodesOfTypes(['label1', 'label3'])
+            if (len(r.get('label1')) == 2 and
+                len(r.get('label3')) == 1):
+                break
+
         self.assertIn('label1', r)
         self.assertIn('label3', r)
         self.assertEqual(2, len(r['label1']))
