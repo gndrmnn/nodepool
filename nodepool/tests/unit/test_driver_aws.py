@@ -26,6 +26,7 @@ import testtools
 
 from nodepool import config as nodepool_config
 from nodepool import tests
+import nodepool.status
 from nodepool.zk import zookeeper as zk
 from nodepool.nodeutils import iterate_timeout
 import nodepool.driver.statemachine
@@ -49,8 +50,15 @@ class FakeAwsAdapter(AwsAdapter):
         # when in fake mode so we need to intercept the
         # run_instances call and validate the args we supply.
         def _fake_run_instances(*args, **kwargs):
-            self.__testcase.run_instance_calls.append(kwargs)
+            self.__testcase.run_instances_calls.append(kwargs)
+            if self.__testcase.run_instances_exception:
+                raise self.__testcase.run_instances_exception
             return self.ec2_client.run_instances_orig(*args, **kwargs)
+
+        def _fake_allocate_hosts(*args, **kwargs):
+            if self.__testcase.allocate_hosts_exception:
+                raise self.__testcase.allocate_hosts_exception
+            return self.ec2_client.allocate_hosts_orig(*args, **kwargs)
 
         # The ImdsSupport parameter isn't handled by moto
         def _fake_register_image(*args, **kwargs):
@@ -65,6 +73,8 @@ class FakeAwsAdapter(AwsAdapter):
 
         self.ec2_client.run_instances_orig = self.ec2_client.run_instances
         self.ec2_client.run_instances = _fake_run_instances
+        self.ec2_client.allocate_hosts_orig = self.ec2_client.allocate_hosts
+        self.ec2_client.allocate_hosts = _fake_allocate_hosts
         self.ec2_client.register_image_orig = self.ec2_client.register_image
         self.ec2_client.register_image = _fake_register_image
         self.ec2_client.import_snapshot = \
@@ -161,7 +171,9 @@ class TestDriverAws(tests.DBTestCase):
             CreateBucketConfiguration={'LocationConstraint': 'us-west-2'})
 
         # A list of args to method calls for validation
-        self.run_instance_calls = []
+        self.run_instances_calls = []
+        self.run_instances_exception = None
+        self.allocate_hosts_exception = None
         self.register_image_calls = []
 
         # TEST-NET-3
@@ -236,8 +248,8 @@ class TestDriverAws(tests.DBTestCase):
     def requestNode(self, config_path, label):
         # A helper method to perform a single node request
         configfile = self.setup_config(config_path)
-        pool = self.useNodepool(configfile, watermark_sleep=1)
-        self.startPool(pool)
+        self.pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(self.pool)
 
         req = zk.NodeRequest()
         req.state = zk.REQUESTED
@@ -588,7 +600,7 @@ class TestDriverAws(tests.DBTestCase):
         self.assertFalse(response['EbsOptimized']['Value'])
 
         self.assertFalse(
-            'MetadataOptions' in self.run_instance_calls[0])
+            'MetadataOptions' in self.run_instances_calls[0])
 
         node.state = zk.USED
         self.zk.storeNode(node)
@@ -696,7 +708,7 @@ class TestDriverAws(tests.DBTestCase):
 
         # Make sure we make the call to AWS as expected
         self.assertEqual(
-            self.run_instance_calls[0]['NetworkInterfaces']
+            self.run_instances_calls[0]['NetworkInterfaces']
             [0]['Ipv6AddressCount'], 1)
 
         # This is like what we should get back from AWS, verify the
@@ -785,10 +797,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.image_id, 'ubuntu1404')
 
         self.assertEqual(
-            self.run_instance_calls[0]['MetadataOptions']['HttpTokens'],
+            self.run_instances_calls[0]['MetadataOptions']['HttpTokens'],
             'required')
         self.assertEqual(
-            self.run_instance_calls[0]['MetadataOptions']['HttpEndpoint'],
+            self.run_instances_calls[0]['MetadataOptions']['HttpEndpoint'],
             'enabled')
 
     def test_aws_invalid_instance_type(self):
@@ -846,10 +858,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Iops'], 2000)
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
 
     def test_aws_diskimage_image(self):
@@ -889,10 +901,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Iops'], 2000)
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
 
     def test_aws_diskimage_snapshot_imdsv2(self):
@@ -936,10 +948,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(node.attributes,
                          {'key1': 'value1', 'key2': 'value2'})
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Iops'], 2000)
         self.assertEqual(
-            self.run_instance_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
             ['Throughput'], 200)
 
     def test_aws_diskimage_image_imdsv2(self):
@@ -1239,3 +1251,102 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(instance.instance_lifecycle, 'spot')
         # moto doesn't provide the spot_instance_request_id
         # self.assertIsNotNone(instance.spot_instance_request_id)
+
+    def test_aws_dedicated_host(self):
+        req = self.requestNode('aws/aws-dedicated-host.yaml', 'ubuntu')
+        for _ in iterate_timeout(60, Exception,
+                                 "Node request state transition",
+                                 interval=1):
+            # Ensure that we can render the node list (and that our
+            # use of a dictionary for external_id does not cause an
+            # error).
+            node_list = nodepool.status.node_list(self.zk)
+            nodepool.status.output(node_list, 'pretty')
+            nodepool.status.output(node_list, 'json')
+            req = self.zk.getNodeRequest(req.id)
+            if req.state in (zk.FULFILLED,):
+                break
+        node = self.assertSuccess(req)
+
+        self.assertEqual(node.host_keys, ['ssh-rsa FAKEKEY'])
+        self.assertEqual(node.image_id, 'ubuntu1404')
+
+        # Verify instance and host are created
+        reservations = self.ec2_client.describe_instances()['Reservations']
+        instances = [
+            i
+            for r in reservations
+            for i in r['Instances']
+            if i['State']['Name'] != 'terminated'
+        ]
+        self.assertEqual(len(instances), 1)
+        hosts = self.ec2_client.describe_hosts()['Hosts']
+        hosts = [h for h in hosts if h['State'] != 'released']
+        self.assertEqual(len(hosts), 1)
+
+        node.state = zk.USED
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
+        # verify instance and host are deleted
+        reservations = self.ec2_client.describe_instances()['Reservations']
+        instances = [
+            i
+            for r in reservations
+            for i in r['Instances']
+            if i['State']['Name'] != 'terminated'
+        ]
+        self.assertEqual(len(instances), 0)
+        hosts = self.ec2_client.describe_hosts()['Hosts']
+        hosts = [h for h in hosts if h['State'] != 'released']
+        self.assertEqual(len(hosts), 0)
+
+    def test_aws_dedicated_host_instance_failure(self):
+        self.run_instances_exception = Exception("some failure")
+        req = self.requestNode('aws/aws-dedicated-host.yaml', 'ubuntu')
+        self.assertEqual(req.state, zk.FAILED)
+
+        # verify instance and host are deleted
+        provider = self.pool.getProviderManager('ec2-us-west-2')
+        for _ in iterate_timeout(60, Exception,
+                                 "Cloud cleanup",
+                                 interval=1):
+            if not (provider.launchers or provider.deleters):
+                break
+
+        reservations = self.ec2_client.describe_instances()['Reservations']
+        instances = [
+            i
+            for r in reservations
+            for i in r['Instances']
+            if i['State']['Name'] != 'terminated'
+        ]
+        self.assertEqual(len(instances), 0)
+        hosts = self.ec2_client.describe_hosts()['Hosts']
+        hosts = [h for h in hosts if h['State'] != 'released']
+        self.assertEqual(len(hosts), 0)
+
+    def test_aws_dedicated_host_allocation_failure(self):
+        self.allocate_hosts_exception = Exception("some failure")
+        req = self.requestNode('aws/aws-dedicated-host.yaml', 'ubuntu')
+        self.assertEqual(req.state, zk.FAILED)
+
+        # verify instance and host are deleted
+        provider = self.pool.getProviderManager('ec2-us-west-2')
+        for _ in iterate_timeout(60, Exception,
+                                 "Cloud cleanup",
+                                 interval=1):
+            if not (provider.launchers or provider.deleters):
+                break
+
+        reservations = self.ec2_client.describe_instances()['Reservations']
+        instances = [
+            i
+            for r in reservations
+            for i in r['Instances']
+            if i['State']['Name'] != 'terminated'
+        ]
+        self.assertEqual(len(instances), 0)
+        hosts = self.ec2_client.describe_hosts()['Hosts']
+        hosts = [h for h in hosts if h['State'] != 'released']
+        self.assertEqual(len(hosts), 0)
