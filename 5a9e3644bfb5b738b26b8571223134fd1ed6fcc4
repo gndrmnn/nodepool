@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e272df5_06b2d54b",
+        "filename": "doc/source/operation.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-03T17:04:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3c2e0d0_14d9b2aa",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52f4b63e_305011a0",
@@ -70,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1641070d_39c0aa77",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-03T17:04:50Z",
+      "side": 1,
+      "message": "Yes, `getattr(pool, \u0027name\u0027, None)` would be correct.  I\u0027m not going to insist on this change, but I do think it would be better and I recommend becoming accustomed to using more succinct and efficient pythonic constructs like that, as we do elsewhere.",
+      "parentUuid": "e0f13a9f_cb79eb2a",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c9497517_0d0d77ed",
@@ -83,6 +119,24 @@
       "writtenOn": "2024-03-05T21:13:19Z",
       "side": 1,
       "message": "This will loop through the full set of node requests once for every provider-pool in the system.  That means this method doesn\u0027t just scale with the size of the request load, it compounds that with the size of the system.  It\u0027s still linear, but with a higher multiple than necessary.\n\nIf, instead, you did something like this, we would only iterate through the provider-pool list once, and then only iterate through the request list once:\n\n  for every registered pool:\n    initialize pool_counters[(provider, pool)] \u003d Counter(\u0027requests\u0027)\n    for every label supported by the pool:\n      append counter to counters_by_label[label]\n  for every node request:\n    for every label in the request:\n      for every counter in counters_by_label[label]:\n        increment counter(\u0027requests\u0027)\n  for every counter in pool_counters:\n    emit stat",
+      "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18b6a186_721bd6da",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-03T17:04:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9497517_0d0d77ed",
       "revId": "5a9e3644bfb5b738b26b8571223134fd1ed6fcc4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
