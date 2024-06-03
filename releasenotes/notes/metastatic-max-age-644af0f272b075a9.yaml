@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The metastatic driver now supports a
+    :attr:`providers.[metastatic].pools.labels.max-age` attribute to
+    set the maximum age for a backing node.  After this age is
+    reached, the backing node will be gracefully removed from service.
