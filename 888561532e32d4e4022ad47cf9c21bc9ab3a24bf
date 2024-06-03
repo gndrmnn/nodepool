@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4314353f_ca3f6c45",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-03T17:06:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4cda794_ace85dbb",
+      "revId": "888561532e32d4e4022ad47cf9c21bc9ab3a24bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab76e550_4ebb9d97",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-02-09T14:19:45Z",
       "side": 1,
       "message": "The print should be removed.",
+      "revId": "888561532e32d4e4022ad47cf9c21bc9ab3a24bf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "189cea6f_42f307ca",
+        "filename": "nodepool/stats.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-03T17:06:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab76e550_4ebb9d97",
       "revId": "888561532e32d4e4022ad47cf9c21bc9ab3a24bf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
