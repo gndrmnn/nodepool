@@ -501,6 +501,13 @@ Selecting the ``aws`` driver adds the following options to the
 
          A unique name within the provider for this pool of resources.
 
+      .. attr:: availability-zone
+         :type: str
+
+         If provided, instances launched from this pool will be
+         assigned to the specified availibility zone.  If omitted, AWS
+         will select from the available zones.
+
       .. attr:: priority
          :type: int
          :default: 100
@@ -647,6 +654,23 @@ Selecting the ``aws`` driver adds the following options to the
               Refers to provider's diskimages, see
               :attr:`providers.[aws].diskimages`.  Mutually exclusive
               with :attr:`providers.[aws].pools.labels.cloud-image`
+
+           .. attr:: dedicated-host
+              :type: bool
+
+              If set to ``true``, an AWS dedicated host will be
+              allocated for the instance.  Nodepool only supports
+              running a single instance on dedicated hosts, so it will
+              treat the host and the instance launched on it as a
+              matched pair.  The host will not be used for any other
+              instances, and will be released when the associated
+              Nodepool node is deleted.
+
+              If this option is set, the
+              :attr:`providers.[aws].pools.labels.use-spot` option is
+              not available, and
+              :attr:`providers.[aws].pools.availability-zone`
+              option is required.
 
            .. attr:: ebs-optimized
               :type: bool

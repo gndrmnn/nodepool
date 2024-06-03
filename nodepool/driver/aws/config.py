@@ -186,6 +186,14 @@ class AwsLabel(ConfigValue):
         self.host_key_checking = self.pool.host_key_checking
         self.use_spot = bool(label.get('use-spot', False))
         self.imdsv2 = label.get('imdsv2', None)
+        self.dedicated_host = bool(label.get('dedicated-host', False))
+        if self.dedicated_host:
+            if self.use_spot:
+                raise Exception(
+                    "Spot instances can not be used on dedicated hosts")
+            if not self.pool.az:
+                raise Exception(
+                    "Availability-zone is required for dedicated hosts")
 
     @staticmethod
     def getSchema():
@@ -209,6 +217,7 @@ class AwsLabel(ConfigValue):
             'dynamic-tags': dict,
             'use-spot': bool,
             'imdsv2': v.Any(None, 'required', 'optional'),
+            'dedicated-host': bool,
         }
 
 
@@ -243,6 +252,7 @@ class AwsPool(ConfigPool):
         self.max_resources = self.provider.max_resources.copy()
         for k, val in pool_config.get('max-resources', {}).items():
             self.max_resources[k] = val
+        self.az = pool_config.get('availability-zone')
 
     @staticmethod
     def getSchema():
@@ -261,6 +271,7 @@ class AwsPool(ConfigPool):
             'max-cores': int,
             'max-ram': int,
             'max-resources': {str: int},
+            'availability-zone': str,
         })
         return pool
 
