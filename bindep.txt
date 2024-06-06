@@ -22,3 +22,4 @@ python3-dev [compile test platform:dpkg]
 python3-devel [compile test platform:rpm]
 sudo
 docker-compose [test]
+git [compile test]
