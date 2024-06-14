@@ -229,7 +229,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
 
 class AwsAdapter(statemachine.Adapter):
-    IMAGE_UPLOAD_SLEEP = 30
+    IMAGE_UPLOAD_SLEEP = 60
 
     def __init__(self, provider_config):
         # Wrap these instance methods with a per-instance LRU cache so
