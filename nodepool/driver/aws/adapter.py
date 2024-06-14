@@ -229,7 +229,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
 
 class AwsAdapter(statemachine.Adapter):
-    IMAGE_UPLOAD_SLEEP = 30
+    IMAGE_UPLOAD_SLEEP = 60
 
     def __init__(self, provider_config):
         # Wrap these instance methods with a per-instance LRU cache so
@@ -540,6 +540,7 @@ class AwsAdapter(statemachine.Adapter):
         timeout = time.time()
         if self.provider.image_import_timeout:
             timeout += self.provider.image_import_timeout
+        backoff = 1
         while True:
             try:
                 with self.rate_limiter:
@@ -565,7 +566,8 @@ class AwsAdapter(statemachine.Adapter):
                     if time.time() < timeout:
                         self.log.warning("AWS error: '%s' will retry",
                                          str(error))
-                        time.sleep(self.IMAGE_UPLOAD_SLEEP)
+                        time.sleep(self.IMAGE_UPLOAD_SLEEP * backoff)
+                        backoff += 1 if backoff < 10 else 0
                         continue
                 raise
         task_id = import_snapshot_task['ImportTaskId']
@@ -573,8 +575,10 @@ class AwsAdapter(statemachine.Adapter):
         paginator = self.ec2_client.get_paginator(
             'describe_import_snapshot_tasks')
         done = False
+        backoff = 1
         while not done:
-            time.sleep(self.IMAGE_UPLOAD_SLEEP)
+            time.sleep(self.IMAGE_UPLOAD_SLEEP * backoff)
+            backoff += 1 if backoff < 10 else 0
             with self.non_mutating_rate_limiter:
                 for page in paginator.paginate(ImportTaskIds=[task_id]):
                     for task in page['ImportSnapshotTasks']:
@@ -654,6 +658,7 @@ class AwsAdapter(statemachine.Adapter):
         timeout = time.time()
         if self.provider.image_import_timeout:
             timeout += self.provider.image_import_timeout
+        backoff = 1
         while True:
             try:
                 with self.rate_limiter:
@@ -680,7 +685,8 @@ class AwsAdapter(statemachine.Adapter):
                     if time.time() < timeout:
                         self.log.warning("AWS error: '%s' will retry",
                                          str(error))
-                        time.sleep(self.IMAGE_UPLOAD_SLEEP)
+                        time.sleep(self.IMAGE_UPLOAD_SLEEP * backoff)
+                        backoff += 1 if backoff < 10 else 0
                         continue
                 raise
         task_id = import_image_task['ImportTaskId']
@@ -688,8 +694,10 @@ class AwsAdapter(statemachine.Adapter):
         paginator = self.ec2_client.get_paginator(
             'describe_import_image_tasks')
         done = False
+        backoff = 1
         while not done:
-            time.sleep(self.IMAGE_UPLOAD_SLEEP)
+            time.sleep(self.IMAGE_UPLOAD_SLEEP * backoff)
+            backoff += 1 if backoff < 10 else 0
             with self.non_mutating_rate_limiter:
                 for page in paginator.paginate(ImportTaskIds=[task_id]):
                     for task in page['ImportImageTasks']:
