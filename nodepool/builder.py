@@ -1335,7 +1335,8 @@ class UploadWorker(BaseWorker):
         exception handling can treat all provider-image uploads
         indepedently.
 
-        :returns: True if an upload was attempted, False otherwise.
+        :returns: True if an upload was attempted and succeeded,
+                  False otherwise.
         '''
 
         self._image_status.setdefault(image.name, {})
@@ -1411,7 +1412,13 @@ class UploadWorker(BaseWorker):
                 # Set final state
                 self._zk.storeImageUpload(image.name, build.id,
                                           provider.name, data, upnum)
-                return True
+                if data.state == zk.READY:
+                    return True
+                # If we return true after an error, we will get stuck
+                # in a loop where we retry this image repeatedly at
+                # the expense of other providers, so even if we tried,
+                # if we failed, return False.
+                return False
         except exceptions.ZKLockException:
             # Lock is already held. Skip it.
             return False

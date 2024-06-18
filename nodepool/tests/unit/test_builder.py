@@ -183,7 +183,7 @@ class TestNodePoolBuilder(tests.DBTestCase):
             fakeadapter.FakeAdapter, '_getClient',
             get_fake_client))
 
-        configfile = self.setup_config('node.yaml')
+        configfile = self.setup_config('node_two_provider.yaml')
         # NOTE(pabelanger): Disable CleanupWorker thread for nodepool-builder
         # as we currently race it to validate our failed uploads.
         self.useBuilder(configfile, cleanup_interval=0)
@@ -197,9 +197,26 @@ class TestNodePoolBuilder(tests.DBTestCase):
                                                     state=zk.READY)
         self.assertEqual(1, len(newest_builds))
 
-        uploads = self.zk.getUploads('fake-image', newest_builds[0].id,
-                                     'fake-provider', states=[zk.FAILED])
-        self.assertEqual(1, len(uploads))
+        # Assert that it failed once and succeeded once for fake-provider
+        uploads1 = self.zk.getUploads('fake-image', newest_builds[0].id,
+                                      'fake-provider', states=[zk.FAILED])
+        self.assertEqual(1, len(uploads1))
+        uploads2 = self.zk.getUploads('fake-image', newest_builds[0].id,
+                                      'fake-provider', states=[zk.READY])
+        self.assertEqual(1, len(uploads2))
+
+        # Assert that it never failed and succeeded once for fake-provider2
+        uploads3 = self.zk.getUploads('fake-image', newest_builds[0].id,
+                                      'fake-provider2', states=[zk.FAILED])
+        self.assertEqual(0, len(uploads3))
+        uploads4 = self.zk.getUploads('fake-image', newest_builds[0].id,
+                                      'fake-provider2', states=[zk.READY])
+        self.assertEqual(1, len(uploads4))
+
+        # Assert that we performed the upload to the second provider
+        # before we retried the first one (this verifies that we
+        # continue working with other providers after a failure).
+        self.assertTrue(uploads4[0].state_time < uploads2[0].state_time)
 
     def test_provider_addition(self):
         configfile = self.setup_config('node.yaml')
