@@ -1328,6 +1328,24 @@ class AwsAdapter(statemachine.Adapter):
         else:
             self.log.warning(f"Snapshot not found when deleting {external_id}")
             return None
+        if snap['VolumeId'] == 'vol-ffffffff':
+            # This snapshot is from an import-snapshot-task.
+            # We shouldn't clean it up when the task is not completed
+            # otherwise the import-task can be stuck.
+            if 'import-snap' in snap.get('Description', ''):
+                match = re.match(r'.*?(import-snap-\w*)',
+                    snap.get('Description', ''))
+                task = None
+                if match:
+                    task_id = match.group(1)
+                    task = self._getImportImageTask(task_id)
+                if task:
+                    if task['Status'].lower() in ('completed', 'deleted'):
+                        self.log.debug(f"Deleting Snapshot {external_id}"
+                            "from completed import task")
+                        self.ec2_client.delete_snapshot(
+                            SnapshotId=snap['SnapshotId'])
+            return None
         with self.rate_limiter:
             self.log.debug(f"Deleting Snapshot {external_id}")
             self.ec2_client.delete_snapshot(SnapshotId=snap['SnapshotId'])
