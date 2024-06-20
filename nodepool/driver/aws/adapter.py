@@ -1328,6 +1328,10 @@ class AwsAdapter(statemachine.Adapter):
         else:
             self.log.warning(f"Snapshot not found when deleting {external_id}")
             return None
+        if snap['VolumeId'] == 'vol-ffffffff':
+            # This snapshot is from an import-snapshot-task.
+            # The snapshot is manged by AWS and should not be deleted
+            return None
         with self.rate_limiter:
             self.log.debug(f"Deleting Snapshot {external_id}")
             self.ec2_client.delete_snapshot(SnapshotId=snap['SnapshotId'])
