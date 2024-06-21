@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73e452d8_af7026f1",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-06-21T09:11:38Z",
+      "side": 1,
+      "message": "I think this should be moved to line 543. Otherwise we are also measuring the time it takes to get a \"slot\" to import our snapshot.",
+      "revId": "c81cdc0391bd91a7dd52aace92f11dbdec4afc53",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
