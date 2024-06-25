@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09829829_e3d15db1",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-06-25T15:03:32Z",
+      "side": 1,
+      "message": "nit: `isinstance(external_id, str)`",
+      "revId": "ae1dbfeff933eed14cc3f313967b8f7da5602bfa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
