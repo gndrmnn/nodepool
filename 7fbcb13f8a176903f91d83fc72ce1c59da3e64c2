@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7ee63fe_c575e371",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-06-25T23:28:10Z",
+      "side": 1,
+      "message": "Another approach that might help alleviate the cost of doing this is if we carried some extra state in zk that indicates if we believe min ready is met for a label. Then we could just read N values per label rather than the entire node state.\n\nThat said I suspect this is probably fine due to zk cache watchers generally keeping things up to date for us. createMinReady() is called in the main run loop and there is enough other work happening in that loop that we should be checking this infrequently enough that the race between watcher updates and creating more nodes isn\u0027t super likely (but still possible).",
+      "revId": "7fbcb13f8a176903f91d83fc72ce1c59da3e64c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25d14c0a_f7af41ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-06-25T23:28:10Z",
+      "side": 1,
+      "message": "Not approving as I think the two ideas inline are worth considering before we move ahead. But I\u0027m ok with moving ahead with this as is. Should probably try and monitor whether or not OpenDev ends up with many more min ready nodes than anticipated. We currently set min ready to 1 for most things that we don\u0027t set to 0, the exception to that is ubuntu-jammy which is set to 10. I think this means it should be pretty easy to see if we\u0027re over provisioning particularly over weekends when there is less demand from code review activity.",
+      "revId": "7fbcb13f8a176903f91d83fc72ce1c59da3e64c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bf09c8d_26e6c9c4",
+        "filename": "nodepool/launcher.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1309,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-06-25T23:28:10Z",
+      "side": 1,
+      "message": "Another approach for reducing the chances of over creating nodes may be to only create one node per createMinReady call. Basically force nodepool to intentionally be a bit slower at approaching the min ready value. This might make min ready less responsive than some installations would like though. I think it would work for opendev as we generally use min-ready 1 and not large values.",
+      "revId": "7fbcb13f8a176903f91d83fc72ce1c59da3e64c2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
