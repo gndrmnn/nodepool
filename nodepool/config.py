@@ -471,7 +471,9 @@ def loadConfig(config_path, env=os.environ):
 def loadSecureConfig(config, secure_config_path, env=os.environ):
     secure_mtime = os.stat(secure_config_path).st_mtime_ns
     secure = openConfig(secure_config_path, env)
+
     if not secure:   # empty file
+        config.setConfigPathMtime(secure_config_path, secure_mtime)
         return
 
     # Eliminate any servers defined in the normal config
