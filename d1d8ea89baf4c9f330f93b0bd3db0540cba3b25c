@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff4ec7ec_67271814",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-06-27T18:08:29Z",
+      "side": 1,
+      "message": "We don\u0027t seem to initialize self.api_futures anywhere and grepping the repo doesn\u0027t show it set in a parent class.",
+      "revId": "d1d8ea89baf4c9f330f93b0bd3db0540cba3b25c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2aa7c0a_df7e25fa",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-06-27T18:08:29Z",
+      "side": 1,
+      "message": "By popping these completed futures we won\u0027t return their result like we do in _completeApi() below. Would that cause us to miss important events (like the server being created?).",
+      "revId": "d1d8ea89baf4c9f330f93b0bd3db0540cba3b25c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
