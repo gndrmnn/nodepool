@@ -314,8 +314,9 @@ class StateMachineNodeLauncher(stats.StatsReporter):
             statsd_key = 'error.zksession'
             self.manager.nodescan_worker.removeRequest(self.nodescan_request)
             self.nodescan_request = None
-        except exceptions.QuotaException:
-            self.log.info("Aborting node %s due to quota failure", node.id)
+        except exceptions.QuotaException as e:
+            self.log.info("Aborting node %s due to quota failure: %s",
+                          node.id, str(e))
             node.state = zk.ABORTED
             if self.state_machine:
                 node.external_id = self.state_machine.external_id
@@ -1000,7 +1001,7 @@ class Instance:
 
     * ready: bool (whether the instance is ready)
     * deleted: bool (whether the instance is in a deleted state)
-    * external_id: str (the unique id of the instance)
+    * external_id: str or dict (the unique id of the instance)
     * interface_ip: str
     * metadata: dict
 
@@ -1549,7 +1550,7 @@ class Adapter:
         This method should return a new state machine object
         initialized to delete the described instance.
 
-        :param str external_id: The external_id of the instance, as
+        :param str or dict external_id: The external_id of the instance, as
             supplied by a creation StateMachine or an Instance.
         :param log Logger: A logger instance for emitting annotated
             logs related to the request.
@@ -1682,7 +1683,7 @@ class Adapter:
         """Return the console log from the specified server
 
         :param label ConfigLabel: The label config for the node
-        :param external_id str: The external id of the server
+        :param external_id str or dict: The external id of the server
         """
         raise NotImplementedError()
 
@@ -1690,6 +1691,6 @@ class Adapter:
         """Notify the adapter of a nodescan failure
 
         :param label ConfigLabel: The label config for the node
-        :param external_id str: The external id of the server
+        :param external_id str or dict: The external id of the server
         """
         pass

@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Limited support for AWS dedicated hosts is now available using the
+    :attr:`providers.[aws].pools.labels.dedicated-host` option.  This
+    allows for a dedicated host to be allocated to serve a single
+    instance (the dedicated host can not be used for multiple
+    instances).  This enables Nodepool to launch certain instance
+    types which require dedicated hosts.
