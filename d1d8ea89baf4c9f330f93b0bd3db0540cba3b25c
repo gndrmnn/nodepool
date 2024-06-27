@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d6cad3e_4cc651a3",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-27T18:11:59Z",
+      "side": 1,
+      "message": "Oops.  :)",
+      "parentUuid": "ff4ec7ec_67271814",
+      "revId": "d1d8ea89baf4c9f330f93b0bd3db0540cba3b25c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2aa7c0a_df7e25fa",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-06-27T18:08:29Z",
       "side": 1,
       "message": "By popping these completed futures we won\u0027t return their result like we do in _completeApi() below. Would that cause us to miss important events (like the server being created?).",
+      "revId": "d1d8ea89baf4c9f330f93b0bd3db0540cba3b25c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "209da274_35aaad78",
+        "filename": "nodepool/driver/openstack/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-06-27T18:11:59Z",
+      "side": 1,
+      "message": "No, because if anyone is still waiting for it, they will have a pointer to it.\n\n(We\u0027re abusing this method to do a periodic cleanup, since it\u0027s only use is in a periodic cleanup.  It\u0027s counter-intuitive that we would ignore something like that in this method, but that\u0027s really all we\u0027re doing here.  Note that lines 400+ also have some periodic cleanup going on.)",
+      "parentUuid": "d2aa7c0a_df7e25fa",
       "revId": "d1d8ea89baf4c9f330f93b0bd3db0540cba3b25c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
