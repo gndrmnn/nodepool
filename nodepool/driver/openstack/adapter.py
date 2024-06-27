@@ -165,15 +165,18 @@ class OpenStackDeleteStateMachine(statemachine.StateMachine):
     def advance(self):
         if self.state == self.START:
             self.server = self.adapter._getServer(self.external_id)
-            if (self.server and
-                self.adapter._hasFloatingIps() and
-                self.server.get('addresses')):
-                self.floating_ips = self.adapter._getFloatingIps(self.server)
-                for fip in self.floating_ips:
-                    self.adapter._deleteFloatingIp(fip)
-                    self.state = self.FLOATING_IP_DELETING
-            if not self.floating_ips:
-                self.state = self.SERVER_DELETE_SUBMIT
+            if self.server is None:
+                self.state = self.COMPLETE
+            else:
+                if (self.adapter._hasFloatingIps() and
+                    self.server.get('addresses')):
+                    self.floating_ips = self.adapter._getFloatingIps(
+                        self.server)
+                    for fip in self.floating_ips:
+                        self.adapter._deleteFloatingIp(fip)
+                        self.state = self.FLOATING_IP_DELETING
+                if not self.floating_ips:
+                    self.state = self.SERVER_DELETE_SUBMIT
 
         if self.state == self.FLOATING_IP_DELETING:
             fips = []
@@ -191,6 +194,7 @@ class OpenStackDeleteStateMachine(statemachine.StateMachine):
 
         if self.state == self.SERVER_DELETE_SUBMIT:
             self.delete_future = self.adapter._submitApi(
+                ('delete', self.external_id),
                 self.adapter._deleteServer,
                 self.external_id)
             self.state = self.SERVER_DELETE
@@ -302,6 +306,7 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
         if self.state == self.START:
             self.external_id = None
             self.create_future = self.adapter._submitApi(
+                ('create', self.hostname),
                 self.adapter._createServer,
                 self.hostname,
                 image=self.image_external,
@@ -418,9 +423,17 @@ class OpenStackAdapter(statemachine.Adapter):
         # The default http connection pool size is 10; match it for
         # efficiency.
         workers = 10
-        self.log.info("Create executor with max workers=%s", workers)
+        self.log.info("Create api executor with max workers=%s", workers)
         self.api_executor = ThreadPoolExecutor(
             thread_name_prefix=f'openstack-api-{provider_config.name}',
+            max_workers=workers)
+        self.api_futures = {}
+
+        # Match the number of caches below.
+        workers = 3
+        self.log.info("Create list executor with max workers=%s", workers)
+        self.list_executor = ThreadPoolExecutor(
+            thread_name_prefix=f'openstack-list-{provider_config.name}',
             max_workers=workers)
 
         # Use a lazy TTL cache for these.  This uses the TPE to
@@ -428,13 +441,13 @@ class OpenStackAdapter(statemachine.Adapter):
         # the previous cached data if available.  This means every
         # call after the first one is instantaneous.
         self._listServers = LazyExecutorTTLCache(
-            CACHE_TTL, self.api_executor)(
+            CACHE_TTL, self.list_executor)(
                 self._listServers)
         self._listVolumes = LazyExecutorTTLCache(
-            CACHE_TTL, self.api_executor)(
+            CACHE_TTL, self.list_executor)(
                 self._listVolumes)
         self._listFloatingIps = LazyExecutorTTLCache(
-            CACHE_TTL, self.api_executor)(
+            CACHE_TTL, self.list_executor)(
                 self._listFloatingIps)
 
         self._last_image_check_failure = time.time()
@@ -455,6 +468,10 @@ class OpenStackAdapter(statemachine.Adapter):
         return OpenStackDeleteStateMachine(self, external_id, log)
 
     def listResources(self):
+        # Cleanup any leaked futures
+        for key, future in list(self.api_futures.items()):
+            if future.done():
+                self.api_futures.pop(key, None)
         for server in self._listServers():
             if server['status'].lower() == 'deleted':
                 continue
@@ -595,13 +612,21 @@ class OpenStackAdapter(statemachine.Adapter):
             app_version=version.version_info.version_string()
         )
 
-    def _submitApi(self, api, *args, **kw):
-        return self.api_executor.submit(
+    def _submitApi(self, key, api, *args, **kw):
+        future = self.api_futures.pop(key, None)
+        if future:
+            return future
+
+        future = self.api_executor.submit(
             api, *args, **kw)
+        self.api_futures[key] = future
+        future._nodepool_key = key
+        return future
 
     def _completeApi(self, future):
         if not future.done():
             return None
+        self.api_futures.pop(future._nodepool_key, None)
         return future.result()
 
     def _createServer(self, name, image, flavor,
