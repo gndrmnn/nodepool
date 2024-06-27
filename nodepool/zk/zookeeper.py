@@ -2701,7 +2701,7 @@ class ZooKeeper(ZooKeeperBase):
         if node._thread_lock.locked():
             node._thread_lock.release()
 
-    def getReadyNodesOfTypes(self, labels, cached=True):
+    def getReadyNodesOfTypes(self, labels):
         '''
         Query ZooKeeper for unused/ready nodes.
 
@@ -2713,7 +2713,7 @@ class ZooKeeper(ZooKeeperBase):
             those labels.
         '''
         ret = {}
-        for node in self.nodeIterator(cached=cached, cached_ids=cached):
+        for node in self.nodeIterator(cached=True, cached_ids=True):
             if node.state != READY or node.allocated_to:
                 continue
             for label in labels:

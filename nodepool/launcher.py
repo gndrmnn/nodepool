@@ -1282,10 +1282,7 @@ class NodePool(threading.Thread):
         label_names = list(self.config.labels.keys())
         requested_labels = list(self._submittedRequests.keys())
         needed_labels = list(set(label_names) - set(requested_labels))
-
-        # Note we explicitly don't use the cache here because otherwise we can
-        # end up creating more min-ready nodes than we want.
-        ready_nodes = self.zk.getReadyNodesOfTypes(needed_labels, cached=False)
+        ready_nodes = self.zk.getReadyNodesOfTypes(needed_labels)
 
         for label in self.config.labels.values():
             if label.name not in needed_labels:
