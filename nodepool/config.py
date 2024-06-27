@@ -471,6 +471,8 @@ def loadConfig(config_path, env=os.environ):
 def loadSecureConfig(config, secure_config_path, env=os.environ):
     secure_mtime = os.stat(secure_config_path).st_mtime_ns
     secure = openConfig(secure_config_path, env)
+    config.setConfigPathMtime(secure_config_path, secure_mtime)
+
     if not secure:   # empty file
         return
 
@@ -482,7 +484,6 @@ def loadSecureConfig(config, secure_config_path, env=os.environ):
     config.setSecureDiskimageEnv(
         secure.get('diskimages', []), secure_config_path)
     config.setZooKeeperTLS(secure.get('zookeeper-tls'))
-    config.setConfigPathMtime(secure_config_path, secure_mtime)
 
 
 def checkRecentConfig(config, config_path, secure_path=None):
