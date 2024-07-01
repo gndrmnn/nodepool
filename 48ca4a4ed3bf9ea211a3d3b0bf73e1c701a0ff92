@@ -16,6 +16,23 @@
       "message": "recheck",
       "revId": "48ca4a4ed3bf9ea211a3d3b0bf73e1c701a0ff92",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b5aa03e_77f2f7c6",
+        "filename": "nodepool/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-01T11:30:43Z",
+      "side": 1,
+      "message": "I think instead of moving this line up we should just explicitly set it in line #477 for the emtpy config case.\n\nSetting the mtime at the end was done on purpose, so we re-try config loading in case of an error.",
+      "revId": "48ca4a4ed3bf9ea211a3d3b0bf73e1c701a0ff92",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
