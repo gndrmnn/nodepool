@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0485bbf1_5d1828df",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-01T13:53:58Z",
+      "side": 1,
+      "message": "IIRC the import tasks also have tags with the nodepool build/upload id. Could we use those instead for getting the task instead of using regex parsing here?\n\nWe anyways need an API to list import tasks for the cleanup, so we could also use that to get a task by build/upload id. That would also allow us to use a lazy ttl cache instead of hitting the API every time to get a task.",
+      "revId": "bdeaf7bcc1c7360ae271a797a3eb5841c943fe22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cda35e0c_2ff98b67",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1347,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-01T13:53:58Z",
+      "side": 1,
+      "message": "Why do we have a separate delete call here instead of falling through to line 1352?",
+      "revId": "bdeaf7bcc1c7360ae271a797a3eb5841c943fe22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
