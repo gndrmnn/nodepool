@@ -33,6 +33,24 @@
       "message": "Why do we have a separate delete call here instead of falling through to line 1352?",
       "revId": "bdeaf7bcc1c7360ae271a797a3eb5841c943fe22",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83ed3d7c_5e71e5de",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1347,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-02T12:29:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cda35e0c_2ff98b67",
+      "revId": "bdeaf7bcc1c7360ae271a797a3eb5841c943fe22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
