@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e0542db_8fe98e41",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-02T12:29:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0485bbf1_5d1828df",
+      "revId": "bdeaf7bcc1c7360ae271a797a3eb5841c943fe22",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cda35e0c_2ff98b67",
