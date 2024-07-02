@@ -22,6 +22,30 @@
       },
       "revId": "e9fdfa3bf98494e8d62c35d37242de0a4144c212",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef489e40_a9ef25a7",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-02T12:27:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43f8710b_fba173f1",
+      "range": {
+        "startLine": 1339,
+        "startChar": 0,
+        "endLine": 1342,
+        "endChar": 77
+      },
+      "revId": "e9fdfa3bf98494e8d62c35d37242de0a4144c212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
