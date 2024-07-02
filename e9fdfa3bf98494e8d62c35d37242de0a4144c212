@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43f8710b_fba173f1",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-02T11:50:52Z",
+      "side": 1,
+      "message": "Reading this now, I think we want to check the `external_id` as I\u0027m not sure the combination of build and upload ID is guaranteed to be unique.\n\n                snapshot_id \u003d task[\u0027SnapshotTaskDetail\u0027][\u0027SnapshotId\u0027]\n                if snapshot_id !\u003d external_id:\n                    continue",
+      "range": {
+        "startLine": 1339,
+        "startChar": 0,
+        "endLine": 1342,
+        "endChar": 77
+      },
+      "revId": "e9fdfa3bf98494e8d62c35d37242de0a4144c212",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
