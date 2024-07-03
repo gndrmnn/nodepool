@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d7d47f0_d30f5e17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9311
+      },
+      "writtenOn": "2024-07-03T16:22:36Z",
+      "side": 1,
+      "message": "recheck Task Verify tracing information is available failed running on host ubuntu-jammy",
+      "revId": "1aa2775a60b27711b27d31616e33569c17414f4d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
