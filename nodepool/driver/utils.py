@@ -246,6 +246,12 @@ class QuotaInformation:
         '''Return resources value to register in ZK node'''
         return self.quota['compute']
 
+    @staticmethod
+    def from_resources(resources):
+        qi = QuotaInformation()
+        qi.quota['compute'] = resources
+        return qi
+
     def __str__(self):
         return str(self.quota)
 
@@ -364,8 +370,15 @@ class QuotaSupport:
                         # may have changed under it.  It should settle out
                         # eventually when it's deleted.
                         continue
-                    node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
+
+                    # If the node resources is valid, we can use that to
+                    # construct the qi object for the node.
+                    if node.resources['cores']:
+                        node_resources = QuotaInformation.from_resources(
+                            node.resources)
+                    else:
+                        node_resources = self.quotaNeededByLabel(
+                            node.type[0], provider_pool)
                     used_quota.add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
