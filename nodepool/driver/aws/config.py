@@ -173,7 +173,7 @@ class AwsLabel(ConfigValue):
             self.diskimage = None
 
         self.ebs_optimized = bool(label.get('ebs-optimized', False))
-        self.instance_type = label['instance-type']
+        self.instance_type = label.get('instance-type', None)
         self.key_name = label.get('key-name')
         self.volume_type = label.get('volume-type')
         self.volume_size = label.get('volume-size')
@@ -194,6 +194,7 @@ class AwsLabel(ConfigValue):
             if not self.pool.az:
                 raise Exception(
                     "Availability-zone is required for dedicated hosts")
+        self.fleet = label.get('fleet', None)
 
     @staticmethod
     def getSchema():
@@ -201,7 +202,14 @@ class AwsLabel(ConfigValue):
             v.Required('name'): str,
             v.Exclusive('cloud-image', 'image'): str,
             v.Exclusive('diskimage', 'image'): str,
-            v.Required('instance-type'): str,
+            v.Exclusive('instance-type', 'instance'): str,
+            v.Exclusive('fleet', 'instance'): {
+                v.Exclusive('instance-types', 'fleet-instance'): list,
+                v.Exclusive('instance-requirements', 'fleet-instance'): dict,
+                v.Required('allocation-strategy'): v.Any(
+                    'prioritized', 'price-capacity-optimized',
+                    'capacity-optimized', 'diversified', 'lowest-price')
+            },
             v.Required('key-name'): str,
             'ebs-optimized': bool,
             'volume-type': str,
