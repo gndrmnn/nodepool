@@ -15,6 +15,7 @@
 
 
 from concurrent.futures.thread import ThreadPoolExecutor
+import copy
 import errno
 import fcntl
 import logging
@@ -165,6 +166,15 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.az = instance.az
         node.driver_data = instance.driver_data
         node.slot = instance.slot
+
+        # In case of fleet API, the node resources was dummy,
+        # after launche, we can update it with the actual resource.
+        if not node.resources['cores']:
+            label = self.handler.pool.labels[node.type[0]]
+            qi = self.manager.quotaNeededByLabel(
+                label.name, self.handler.pool, instance)
+            if qi:
+                node.resources = qi.get_resources()
 
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
@@ -805,13 +815,17 @@ class StateMachineProvider(Provider, QuotaSupport):
                 ram=math.inf,
                 default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
+    def quotaNeededByLabel(self, ntype, pool, instance=None):
         provider_label = pool.labels[ntype]
-        qi = self.label_quota_cache.get(provider_label)
-        if qi is not None:
-            return qi
+
+        # if instance is not None, means the quota can not be determined
+        # by the label and should not get it from the cache
+        if not instance:
+            qi = self.label_quota_cache.get(provider_label)
+            if qi is not None:
+                return qi
         try:
-            qi = self.adapter.getQuotaForLabel(provider_label)
+            qi = self.adapter.getQuotaForLabel(provider_label, instance)
             self.log.debug("Quota required for %s: %s",
                            provider_label.name, qi)
         except exceptions.RuntimeConfigurationException as e:
@@ -826,7 +840,9 @@ class StateMachineProvider(Provider, QuotaSupport):
             qi = QuotaInformation()
         except NotImplementedError:
             qi = QuotaInformation()
-        self.label_quota_cache.setdefault(provider_label, qi)
+
+        if not instance:
+            self.label_quota_cache.setdefault(provider_label, qi)
         return qi
 
     def unmanagedQuotaUsed(self):
@@ -1016,6 +1032,7 @@ class Instance:
     * host_id: str
     * driver_data: any
     * slot: int
+    * instance_type: str
 
     And the following are even more optional (as they are usually
     already set from the image configuration):
@@ -1048,6 +1065,7 @@ class Instance:
         self.metadata = {}
         self.driver_data = None
         self.slot = None
+        self.instance_type = None
 
     def __repr__(self):
         state = []
@@ -1605,7 +1623,7 @@ class Adapter:
         """
         return QuotaInformation(default=math.inf)
 
-    def getQuotaForLabel(self, label):
+    def getQuotaForLabel(self, label, instance=None):
         """Return information about the quota used for a label
 
         The default implementation returns a simple QuotaInformation
@@ -1614,6 +1632,9 @@ class Adapter:
 
         :param ProviderLabel label: A config object describing
             a label for an instance.
+        :param Instance instance: This is useful in the case that
+            the quota is only known after an instance is launched,
+            e.g. when EC2 fleet API is used.
 
         :returns: A :py:class:`QuotaInformation` object.
         """
