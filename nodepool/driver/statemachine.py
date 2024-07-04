@@ -166,6 +166,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.driver_data = instance.driver_data
         node.slot = instance.slot
 
+        # If we did not know the resource information before
+        # launching, update it now.
+        node.resources = instance.getQuotaInformation().get_resources()
+
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
         for attr in ('username', 'python_path', 'shell_type',
