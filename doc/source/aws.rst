@@ -682,9 +682,80 @@ Selecting the ``aws`` driver adds the following options to the
 
            .. attr:: instance-type
               :type: str
-              :required:
 
               Name of the flavor to use.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.fleet`
+
+           .. attr:: fleet
+              :type: dict
+
+              If sepecifed, EC2 fleet API would be used for launching the instance.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.instance-type`
+
+              .. attr:: instance-types
+                 :type: list
+
+                 Names of the flavors of the instance that to be launched.
+                 Mutually exclusive with :attr:`providers.[aws].pools.labels.fleet.instance-requirements`
+
+              .. attr:: instance-requirements
+                 :type: dict
+
+                 Requirements of the instance to be launched.
+                 Mutually exclusive with :attr:`providers.[aws].pools.labels.fleet.instance-types`
+
+                 .. attr:: vcpu-count
+                    :type: dict
+
+                    Requirements of number of vcpus.
+
+                    .. attr:: min
+                       :type: int
+
+                       The minimum vcpus the instance should have.
+
+                    .. attr:: max
+                       :type: int
+
+                       The maximum vcpus the instance should have.
+
+                 .. attr:: memory-mib
+                    :type: dict
+
+                    Requirements of memroy in MiB.
+
+                    .. attr:: min
+                       :type: int
+
+                       The minimum memory in Mib the instance should have.
+
+                    .. attr:: max
+                       :type: int
+
+                       The maximum memory in Mib the instance should have.
+
+                 .. attr:: cpu-manufacturers
+                    :type: list
+
+                    Allowed values are ``intel``, ``amd`` or ``amazon-web-services``.
+
+                 .. attr:: excluded-instance-types
+                    :type: list
+
+                    The name of flavors that should be excluded.
+
+                 .. attr:: instance-generations
+                    :type: list
+
+                    Allowed values are ``current`` or ``previous``
+
+              .. attr:: allocation-strategy
+                 :type: str
+                 :required:
+
+                 Allowed values for on On-Demand: ``lowest-price`` or ``prioritized``.
+                 Allowed values for Spot: ``price-capacity-optimized``, ``capacity-optimized``,
+                 ``diversified`` or ``lowest-price``
 
            .. attr:: iam-instance-profile
               :type: dict
