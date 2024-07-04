@@ -17,6 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 import cachetools.func
 import copy
 import functools
+import hashlib
 import json
 import logging
 import math
@@ -396,7 +397,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                 return
             self.instance = instance
             self.external_id['instance'] = instance['InstanceId']
-            self.quota = self.adapter.getQuotaForLabel(self.label)
+            self.quota = self.adapter._getQuotaForLabel(self.label)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -412,12 +413,15 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.COMPLETE:
             self.complete = True
+            self.quota = self.adapter._getQuotaForLabel(
+                self.label, self.instance['InstanceType'])
             return AwsInstance(self.adapter.provider, self.instance,
                                self.host, self.quota)
 
 
 class AwsAdapter(statemachine.Adapter):
     IMAGE_UPLOAD_SLEEP = 30
+    LAUNCH_TEMPLATE_PREFIX = 'nodepool-launch-template'
 
     def __init__(self, provider_config):
         # Wrap these instance methods with a per-instance LRU cache so
@@ -532,6 +536,7 @@ class AwsAdapter(statemachine.Adapter):
         # time on that again.
         self.not_our_images = set()
         self.not_our_snapshots = set()
+        self._createLaunchTemplates()
 
     def stop(self):
         self.create_executor.shutdown()
@@ -668,10 +673,18 @@ class AwsAdapter(statemachine.Adapter):
                 if label.dedicated_host:
                     host_types.add(label.instance_type)
                 else:
-                    if label.instance_type not in instance_types:
-                        instance_types[label.instance_type] = set()
-                    instance_types[label.instance_type].add(
-                        SPOT if label.use_spot else ON_DEMAND)
+                    label_instance_types = []
+                    if label.instance_type:
+                        label_instance_types.append(label.instance_type)
+                    elif label.fleet and label.fleet.get('instance-types'):
+                        # Include instance-types from fleet config if available
+                        label_instance_types.extend(
+                            label.fleet.get('instance-types'))
+                    for label_instance_type in label_instance_types:
+                        if label_instance_type not in instance_types:
+                            instance_types[label_instance_type] = set()
+                        instance_types[label_instance_type].add(
+                            SPOT if label.use_spot else ON_DEMAND)
                 if label.volume_type:
                     volume_types.add(label.volume_type)
         args = dict(default=math.inf)
@@ -725,6 +738,13 @@ class AwsAdapter(statemachine.Adapter):
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
+        return self._getQuotaForLabel(label)
+
+    def _getQuotaForLabel(self, label, instance_type=None):
+        # When using the Fleet API, we may need to fill in quota
+        # information from the actual instance, so this internal
+        # method operates on the label alone or label+instance.
+
         # For now, we are optimistically assuming that when an
         # instance is launched on a dedicated host, it is not counted
         # against instance quota.  That may be overly optimistic.  If
@@ -733,9 +753,13 @@ class AwsAdapter(statemachine.Adapter):
         if label.dedicated_host:
             quota = self._getQuotaForHostType(
                 label.instance_type)
+        elif label.fleet and instance_type is None:
+            # For fleet API, do not check quota before launch the instance
+            quota = QuotaInformation(instances=1)
         else:
+            check_instance_type = label.instance_type or instance_type
             quota = self._getQuotaForInstanceType(
-                label.instance_type,
+                check_instance_type,
                 SPOT if label.use_spot else ON_DEMAND)
         if label.volume_type:
             quota.add(self._getQuotaForVolumeType(
@@ -1486,6 +1510,201 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
+        if label.fleet:
+            return self._createFleet(label, image_id, tags, hostname, log)
+        else:
+            return self._runInstance(label, image_id, tags,
+                                     hostname, dedicated_host_id, log)
+
+    def _createLaunchTemplates(self):
+        labels = []
+        for pool_name, pool in self.provider.pools.items():
+            for label_name, label in pool.labels.items():
+                # Create launch templates only for labels which usage fleet
+                if not label.fleet:
+                    continue
+                labels.append(label)
+
+        if not labels:
+            return
+
+        self.log.info("Creating launch templates")
+        tags = {
+            'nodepool_managed': True,
+            'nodepool_provider_name': self.provider.name,
+        }
+        existing_templates = dict()  # for clean up and avoid creation attempt
+        created_templates = set()  # for avoid creation attempt
+        configured_templates = set()  # for clean up
+
+        name_filter = {
+            'Name': 'launch-template-name',
+            'Values': [f'{self.LAUNCH_TEMPLATE_PREFIX}-*'],
+        }
+        paginator = self.ec2_client.get_paginator(
+            'describe_launch_templates')
+        with self.non_mutating_rate_limiter:
+            for page in paginator.paginate(Filters=[name_filter]):
+                for template in page['LaunchTemplates']:
+                    existing_templates[
+                        template['LaunchTemplateName']] = template
+
+        for label in labels:
+            # Create launch templates only for labels which usage fleet
+            if not label.fleet:
+                continue
+
+            ebs_settings = {
+                'DeleteOnTermination': True,
+            }
+            if label.volume_size:
+                ebs_settings['VolumeSize'] = label.volume_size
+            if label.volume_type:
+                ebs_settings['VolumeType'] = label.volume_type
+            if label.iops:
+                ebs_settings['Iops'] = label.iops
+            if label.throughput:
+                ebs_settings['Throughput'] = label.throughput
+            template_data = {
+                'KeyName': label.key_name,
+                'SecurityGroupIds': [label.pool.security_group_id],
+                'BlockDeviceMappings': [
+                    {
+                        'DeviceName': '/dev/sda1',
+                        'Ebs': ebs_settings,
+                    },
+                ],
+            }
+            template_args = dict(
+                LaunchTemplateData=template_data,
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'launch-template',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                ]
+            )
+
+            template_name = self._getLaunchTemplateName(template_args)
+            configured_templates.add(template_name)
+
+            label._launch_template_name = template_name
+            if (template_name in existing_templates or
+                template_name in created_templates):
+                self.log.debug(
+                    'Launch template %s already exists', template_name)
+                continue
+
+            template_args['LaunchTemplateName'] = template_name
+            self.log.debug('Creating launch template %s', template_name)
+            try:
+                self.ec2_client.create_launch_template(**template_args)
+                created_templates.add(template_name)
+                self.log.debug('Launch template %s created', template_name)
+            except botocore.exceptions.ClientError as e:
+                if (e.response['Error']['Code'] ==
+                    'InvalidLaunchTemplateName.AlreadyExistsException'):
+                    self.log.debug(
+                        'Launch template %s already created',
+                        template_name)
+                else:
+                    raise e
+            except Exception:
+                self.log.exception(
+                    'Could not create launch template %s', template_name)
+
+        # remove unused templates
+        for template_name, template in existing_templates.items():
+            if template_name not in configured_templates:
+                # check if the template was created by the current provider
+                tags = template.get('Tags', [])
+                for tag in tags:
+                    if (tag['Key'] == 'nodepool_provider_name' and
+                        tag['Value'] == self.provider.name):
+                        self.ec2_client.delete_launch_template(
+                            LaunchTemplateName=template_name)
+                        self.log.debug("Deleted unused launch template: %s",
+                                       template_name)
+
+    def _getLaunchTemplateName(self, args):
+        hasher = hashlib.sha256()
+        hasher.update(json.dumps(args, sort_keys=True).encode('utf8'))
+        sha = hasher.hexdigest()
+        return (f'{self.LAUNCH_TEMPLATE_PREFIX}-{sha}')
+
+    def _createFleet(self, label, image_id, tags, hostname, log):
+        overrides = []
+
+        instance_types = label.fleet.get('instance-types', [])
+        for instance_type in instance_types:
+            overrides.append({
+                'ImageId': image_id,
+                'InstanceType': instance_type,
+                'SubnetId': label.pool.subnet_id,
+            })
+
+        if label.use_spot:
+            capacity_type_option = {
+                'SpotOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot',
+                },
+            }
+        else:
+            capacity_type_option = {
+                'OnDemandOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'on-demand',
+                },
+            }
+
+        template_name = label._launch_template_name
+
+        args = {
+            **capacity_type_option,
+            'LaunchTemplateConfigs': [
+                {
+                    'LaunchTemplateSpecification': {
+                        'LaunchTemplateName': template_name,
+                        'Version': '$Latest',
+                    },
+                    'Overrides': overrides,
+                },
+            ],
+            'Type': 'instant',
+            'TagSpecifications': [
+                {
+                    'ResourceType': 'instance',
+                    'Tags': tag_dict_to_list(tags),
+                },
+                {
+                    'ResourceType': 'volume',
+                    'Tags': tag_dict_to_list(tags),
+                },
+            ],
+        }
+
+        with self.rate_limiter(log.debug, "Created fleet"):
+            resp = self.ec2_client.create_fleet(**args)
+
+            instance_id = resp['Instances'][0]['InstanceIds'][0]
+
+            describe_instances_result = self.ec2_client.describe_instances(
+                InstanceIds=[instance_id]
+            )
+            log.debug("Created VM %s as instance %s using EC2 Fleet API",
+                      hostname, instance_id)
+
+            return describe_instances_result['Reservations'][0]['Instances'][0]
+
+    def _runInstance(self, label, image_id, tags, hostname,
+                     dedicated_host_id, log):
         args = dict(
             ImageId=image_id,
             MinCount=1,
