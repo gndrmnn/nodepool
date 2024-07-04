@@ -533,6 +533,73 @@ class AwsAdapter(statemachine.Adapter):
         self.not_our_images = set()
         self.not_our_snapshots = set()
 
+        self.log.info("Creating launch templates")
+        tags = {
+            'nodepool_managed': True,
+            'nodepool_provider_name': provider_config.name,
+        }
+        launch_template_prefix = 'nodepool-launch-template'
+        existing_templates = []
+        name_filter = {
+            'Name': 'launch-template-name',
+            'Values': [f'{launch_template_prefix}-*'],
+        }
+        paginator = self.ec2_client.get_paginator(
+            'describe_launch_templates')
+        with self.non_mutating_rate_limiter:
+            for page in paginator.paginate(Filters=[name_filter]):
+                for template in page['LaunchTemplates']:
+                    existing_templates.append(template['LaunchTemplateName'])
+
+        for pool_name, pool in provider_config.pools.items():
+            for label_name, label in pool.labels.items():
+                # ToDo: check if fleet is used
+                # if label.fleet or label.use_fleet:
+                template_name = (f'{launch_template_prefix}-'
+                                 f'{label.volume_type}-{label.volume_size}-'
+                                 f'{label.iops}-{label.throughput}')
+                if template_name in existing_templates:
+                    self.log.debug(
+                        'launch template %s already exist', template_name)
+                    continue
+
+                self.log.debug('Creating launch template %s', template_name)
+                ebs_settings = {
+                    'DeleteOnTermination': True,
+                }
+                if label.volume_size:
+                    ebs_settings['VolumeSize'] = label.volume_size
+                if label.volume_type:
+                    ebs_settings['VolumeType'] = label.volume_type
+                if label.iops:
+                    ebs_settings['Iops'] = label.iops
+                if label.throughput:
+                    ebs_settings['Throughput'] = label.throughput
+                template_data = {
+                    'KeyName': label.key_name,
+                    'BlockDeviceMappings': [
+                        {
+                            'DeviceName': '/dev/sda1',
+                            'Ebs': ebs_settings,
+                        },
+                    ],
+                }
+                try:
+                    self.ec2_client.create_launch_template(
+                        LaunchTemplateName=template_name,
+                        LaunchTemplateData=template_data,
+                        TagSpecifications=[
+                            {
+                                'ResourceType': 'launch-template',
+                                'Tags': tag_dict_to_list(tags),
+                            },
+                        ]
+                    )
+                    self.log.debug('launch template %s created', template_name)
+                except Exception:
+                    self.log.exception(
+                        'Could not create launch template %s', template_name)
+
     def stop(self):
         self.create_executor.shutdown()
         self.api_executor.shutdown()
