@@ -233,6 +233,7 @@ class AwsInstance(statemachine.Instance):
         self.region = provider.region_name
         self.az = None
         self.quota = quota
+        self.instance_type = instance['InstanceType']
 
         self.az = instance.get('Placement', {}).get('AvailabilityZone')
 
@@ -396,7 +397,16 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                 return
             self.instance = instance
             self.external_id['instance'] = instance['InstanceId']
-            self.quota = self.adapter.getQuotaForLabel(self.label)
+
+            if not self.label.instance_type:
+                # For fleet API label, we need to create a copy of the label
+                # and set the instance type for getting quota information
+                label = copy.deepcopy(self.label)
+                label.instance_type = instance['InstanceType']
+            else:
+                label = self.label
+
+            self.quota = self.adapter.getQuotaForLabel(label)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -533,6 +543,84 @@ class AwsAdapter(statemachine.Adapter):
         self.not_our_images = set()
         self.not_our_snapshots = set()
 
+        self.log.info("Creating launch templates")
+        tags = {
+            'nodepool_managed': True,
+            'nodepool_provider_name': provider_config.name,
+        }
+        launch_template_prefix = 'nodepool-launch-template'
+        existing_templates = []
+        name_filter = {
+            'Name': 'launch-template-name',
+            'Values': [f'{launch_template_prefix}-*'],
+        }
+        paginator = self.ec2_client.get_paginator(
+            'describe_launch_templates')
+        with self.non_mutating_rate_limiter:
+            for page in paginator.paginate(Filters=[name_filter]):
+                for template in page['LaunchTemplates']:
+                    existing_templates.append(template['LaunchTemplateName'])
+
+        for pool_name, pool in provider_config.pools.items():
+            for label_name, label in pool.labels.items():
+                # Create launch templates only for labels which usage fleet
+                if not label.fleet:
+                    continue
+
+                template_name = (f'{launch_template_prefix}-'
+                                 f'{label.volume_type}-{label.volume_size}-'
+                                 f'{label.iops}-{label.throughput}')
+                if template_name in existing_templates:
+                    self.log.debug(
+                        'launch template %s already exist', template_name)
+                    continue
+
+                self.log.debug('Creating launch template %s', template_name)
+                ebs_settings = {
+                    'DeleteOnTermination': True,
+                }
+                if label.volume_size:
+                    ebs_settings['VolumeSize'] = label.volume_size
+                if label.volume_type:
+                    ebs_settings['VolumeType'] = label.volume_type
+                if label.iops:
+                    ebs_settings['Iops'] = label.iops
+                if label.throughput:
+                    ebs_settings['Throughput'] = label.throughput
+                template_data = {
+                    'KeyName': label.key_name,
+                    'SecurityGroupIds': [pool.security_group_id],
+                    'BlockDeviceMappings': [
+                        {
+                            'DeviceName': '/dev/sda1',
+                            'Ebs': ebs_settings,
+                        },
+                    ],
+                }
+                try:
+                    self.ec2_client.create_launch_template(
+                        LaunchTemplateName=template_name,
+                        LaunchTemplateData=template_data,
+                        TagSpecifications=[
+                            {
+                                'ResourceType': 'launch-template',
+                                'Tags': tag_dict_to_list(tags),
+                            },
+                        ]
+                    )
+                    self.log.debug('launch template %s created', template_name)
+                except botocore.exceptions.ClientError as e:
+                    if (e.response['Error']['Code'] ==
+                        'InvalidLaunchTemplateName.AlreadyExistsException'):
+                        self.log.debug(
+                            'launch template %s already created',
+                            template_name)
+                    else:
+                        raise e
+                except Exception:
+                    self.log.exception(
+                        'Could not create launch template %s', template_name)
+
     def stop(self):
         self.create_executor.shutdown()
         self.api_executor.shutdown()
@@ -668,17 +756,28 @@ class AwsAdapter(statemachine.Adapter):
                 if label.dedicated_host:
                     host_types.add(label.instance_type)
                 else:
-                    if label.instance_type not in instance_types:
-                        instance_types[label.instance_type] = set()
-                    instance_types[label.instance_type].add(
-                        SPOT if label.use_spot else ON_DEMAND)
+                    label_instance_types = []
+                    if label.instance_type:
+                        label_instance_types.append(label.instance_type)
+                    elif label.fleet and label.fleet.get('instance-types'):
+                        # Include instance-types from fleet config if available
+                        label_instance_types.extend(
+                            label.fleet.get('instance-types'))
+                    for label_instance_type in label_instance_types:
+                        if label_instance_type not in instance_types:
+                            instance_types[label_instance_type] = set()
+                        instance_types[label_instance_type].add(
+                            SPOT if label.use_spot else ON_DEMAND)
                 if label.volume_type:
                     volume_types.add(label.volume_type)
         args = dict(default=math.inf)
+
         for instance_type in instance_types:
             for market_type_option in instance_types[instance_type]:
                 code = self._getQuotaCodeForInstanceType(instance_type,
                                                          market_type_option)
+                self.log.debug(
+                    "Instance type: %s, code: %s", instance_type, code)
                 if code in args:
                     continue
                 if not code:
@@ -722,9 +821,11 @@ class AwsAdapter(statemachine.Adapter):
                 if resource == 'storage':
                     value *= 1000
                 args[code] = value
+
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
+
         # For now, we are optimistically assuming that when an
         # instance is launched on a dedicated host, it is not counted
         # against instance quota.  That may be overly optimistic.  If
@@ -733,6 +834,9 @@ class AwsAdapter(statemachine.Adapter):
         if label.dedicated_host:
             quota = self._getQuotaForHostType(
                 label.instance_type)
+        elif not label.instance_type:
+            # In case of fleet API, we do not check quota before launchen
+            quota = QuotaInformation(instances=1)
         else:
             quota = self._getQuotaForInstanceType(
                 label.instance_type,
@@ -1486,6 +1590,144 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
+        if label.fleet:
+            return self._createFleet(label, image_id, tags, hostname, log)
+        else:
+            return self._runInstace(label, image_id, tags,
+                                    hostname, dedicated_host_id, log)
+
+    def _createFleet(self, label, image_id, tags, hostname, log):
+        log.debug('Creating instance with fleet')
+
+        overrides = []
+
+        instance_types = label.fleet.get('instance-types', [])
+        for instance_type in instance_types:
+            overrides.append({
+                'ImageId': image_id,
+                'InstanceType': instance_type,
+                'SubnetId': label.pool.subnet_id,
+            })
+
+        instance_requirements = label.fleet.get('instance-requirements')
+        if instance_requirements:
+            requirements = dict()
+            if instance_requirements.get('vcpu-count'):
+                requirements['VCpuCount'] = {}
+
+                if instance_requirements.get('vcpu-count').get('min'):
+                    requirements['VCpuCount']['Min'] = (
+                        instance_requirements.get('vcpu-count').get('min'))
+
+                if instance_requirements.get('vcpu-count').get('max'):
+                    requirements['VCpuCount']['Max'] = (
+                        instance_requirements.get('vcpu-count').get('max'))
+
+            if instance_requirements.get('memory-mib'):
+                requirements['MemoryMiB'] = {}
+
+                if instance_requirements.get('memory-mib').get('min'):
+                    requirements['MemoryMiB']['Min'] = (
+                        instance_requirements.get('memory-mib').get('min'))
+
+                if instance_requirements.get('memory-mib').get('max'):
+                    requirements['MemoryMiB']['Max'] = (
+                        instance_requirements.get('memory-mib').get('max'))
+
+            if instance_requirements.get('cpu-manufacturers'):
+                requirements['CpuManufacturers'] = (
+                    instance_requirements.get('cpu-manufacturers'))
+
+            if instance_requirements.get('excluded-instance-types'):
+                requirements['ExcludedInstanceTypes'] = (
+                    instance_requirements.get('excluded-instance-types'))
+
+            if instance_requirements.get('instance-generations'):
+                requirements['InstanceGenerations'] = (
+                    instance_requirements.get('instance-generations'))
+
+            overrides.append({
+                'ImageId': image_id,
+                'SubnetId': label.pool.subnet_id,
+                'InstanceRequirements': requirements,
+            })
+
+        if label.use_spot:
+            capacity_type_option = {
+                'SpotOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot',
+                },
+            }
+        else:
+            capacity_type_option = {
+                'OnDemandOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'on-demand',
+                },
+            }
+
+        # IO settings can not be overriten for now, templates are created by IO
+        # settings combinations, and the templates names are fixed.
+        launch_template_prefix = 'nodepool-launch-template'
+        template_name = (f'{launch_template_prefix}-'
+                         f'{label.volume_type}-{label.volume_size}-'
+                         f'{label.iops}-{label.throughput}')
+        log.debug("Template name: %s", template_name)
+
+        args = {
+            **capacity_type_option,
+            'LaunchTemplateConfigs': [
+                {
+                    'LaunchTemplateSpecification': {
+                        'LaunchTemplateName': template_name,
+                        'Version': '$Latest',
+                    },
+                    'Overrides': overrides,
+                },
+            ],
+            'Type': 'instant',
+            'TagSpecifications': [
+                {
+                    'ResourceType': 'instance',
+                    'Tags': tag_dict_to_list(tags),
+                },
+                {
+                    'ResourceType': 'volume',
+                    'Tags': tag_dict_to_list(tags),
+                },
+            ],
+        }
+
+        with self.rate_limiter(log.debug, "Created fleet"):
+            log.debug("Creating VM with fleet %s", hostname)
+            log.debug("EC2 create fleet: %s", args)
+            resp = self.ec2_client.create_fleet(**args)
+
+            # for debugging
+            log.debug("EC2 create fleet result: %s", resp)
+
+            instance_id = resp['Instances'][0]['InstanceIds'][0]
+
+            describe_instances_result = self.ec2_client.describe_instances(
+                InstanceIds=[instance_id]
+            )
+            log.debug("Created VM %s as instance %s", hostname, instance_id)
+
+            # for debugging
+            log.debug("EC2 describe instances result: %s",
+                      describe_instances_result)
+
+            return describe_instances_result['Reservations'][0]['Instances'][0]
+
+    def _runInstace(self, label, image_id, tags, hostname,
+                    dedicated_host_id, log):
         args = dict(
             ImageId=image_id,
             MinCount=1,

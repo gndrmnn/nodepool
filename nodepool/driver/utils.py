@@ -246,6 +246,12 @@ class QuotaInformation:
         '''Return resources value to register in ZK node'''
         return self.quota['compute']
 
+    @staticmethod
+    def from_resources(resources):
+        qi = QuotaInformation()
+        qi.quota['compute'] = resources
+        return qi
+
     def __str__(self):
         return str(self.quota)
 
@@ -259,12 +265,13 @@ class QuotaSupport:
         self._current_nodepool_quota = {}
 
     @abc.abstractmethod
-    def quotaNeededByLabel(self, label, pool):
+    def quotaNeededByLabel(self, label, pool, instance_type=None):
         """Return quota information about a label
 
         :param str label: The label name
         :param ProviderPool pool: A ProviderPool config object with the label
-
+        :param str instance_type: provided when the label.instance_type is not
+            available, e.g. when EC2 fleet is configured
         :return: QuotaInformation about the label
         """
         pass
@@ -364,12 +371,20 @@ class QuotaSupport:
                         # may have changed under it.  It should settle out
                         # eventually when it's deleted.
                         continue
-                    node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
+
+                    # If the node resources is valid, we can use that to
+                    # construct the qi object for the node.
+                    if node.resources['cores']:
+                        node_resources = QuotaInformation.from_resources(
+                            node.resources)
+                    else:
+                        node_resources = self.quotaNeededByLabel(
+                            node.type[0], provider_pool)
                     used_quota.add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)
+        self.log.debug("used_quota: %s", used_quota)
         return used_quota
 
     def getLabelQuota(self):
