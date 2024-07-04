@@ -1352,3 +1352,33 @@ class TestDriverAws(tests.DBTestCase):
         hosts = self.ec2_client.describe_hosts()['Hosts']
         hosts = [h for h in hosts if h['State'] != 'released']
         self.assertEqual(len(hosts), 0)
+
+    def test_aws_create_launch_templates(self):
+        configfile = self.setup_config('aws/aws-fleet.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        launch_tempaltes = self.ec2_client.\
+            describe_launch_templates()['LaunchTemplates']
+        self.assertEqual(len(launch_tempaltes), 2)
+        lt1 = launch_tempaltes[0]
+        lt2 = launch_tempaltes[1]
+        self.assertEqual(lt1['LaunchTemplateName'],
+                         'nodepool-launch-template-io2-20-2000-None')
+        self.assertEqual(lt2['LaunchTemplateName'],
+                         'nodepool-launch-template-gp3-40-1000-200')
+
+        # Restart pool, the launch templates must be the same and
+        # must not be recreated
+        pool.stop()
+        configfile = self.setup_config('aws/aws-fleet.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        lt_2nd_run = self.ec2_client.\
+            describe_launch_templates()['LaunchTemplates']
+        self.assertEqual(len(lt_2nd_run), 2)
+        self.assertEqual(lt1['LaunchTemplateId'],
+                         lt_2nd_run[0]['LaunchTemplateId'])
+        self.assertEqual(lt2['LaunchTemplateId'],
+                         lt_2nd_run[1]['LaunchTemplateId'])
