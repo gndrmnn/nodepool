@@ -166,6 +166,10 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.driver_data = instance.driver_data
         node.slot = instance.slot
 
+        # If we did not know the resource information before
+        # launching, update it now.
+        node.resources = instance.getQuotaInformation().get_resources()
+
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
         for attr in ('username', 'python_path', 'shell_type',
@@ -807,9 +811,7 @@ class StateMachineProvider(Provider, QuotaSupport):
 
     def quotaNeededByLabel(self, ntype, pool):
         provider_label = pool.labels[ntype]
-        qi = self.label_quota_cache.get(provider_label)
-        if qi is not None:
-            return qi
+
         try:
             qi = self.adapter.getQuotaForLabel(provider_label)
             self.log.debug("Quota required for %s: %s",
@@ -826,6 +828,7 @@ class StateMachineProvider(Provider, QuotaSupport):
             qi = QuotaInformation()
         except NotImplementedError:
             qi = QuotaInformation()
+
         self.label_quota_cache.setdefault(provider_label, qi)
         return qi
 
@@ -1016,6 +1019,7 @@ class Instance:
     * host_id: str
     * driver_data: any
     * slot: int
+    * instance_type: str
 
     And the following are even more optional (as they are usually
     already set from the image configuration):
@@ -1048,6 +1052,7 @@ class Instance:
         self.metadata = {}
         self.driver_data = None
         self.slot = None
+        self.instance_type = None
 
     def __repr__(self):
         state = []
