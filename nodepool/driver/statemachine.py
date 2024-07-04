@@ -15,6 +15,7 @@
 
 
 from concurrent.futures.thread import ThreadPoolExecutor
+import copy
 import errno
 import fcntl
 import logging
@@ -165,6 +166,15 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.az = instance.az
         node.driver_data = instance.driver_data
         node.slot = instance.slot
+
+        # In case of fleet API, the node resources was dummy,
+        # after launche, we can update it with the actual resource.
+        if not node.resources['cores']:
+            label = self.handler.pool.labels[node.type[0]]
+            qi = self.manager.quotaNeededByLabel(
+                label.name, self.handler.pool, instance.instance_type)
+            if qi:
+                node.resources = qi.get_resources()
 
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
@@ -805,13 +815,20 @@ class StateMachineProvider(Provider, QuotaSupport):
                 ram=math.inf,
                 default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
+    def quotaNeededByLabel(self, ntype, pool, instance_type=None):
         provider_label = pool.labels[ntype]
         qi = self.label_quota_cache.get(provider_label)
         if qi is not None:
             return qi
         try:
-            qi = self.adapter.getQuotaForLabel(provider_label)
+            # if instance_type is not available in label (fleet API), we need
+            # to create a deep copy of the label and set the instance type
+            if not provider_label.instance_type and instance_type:
+                provider_label_copy = copy.deepcopy(provider_label)
+                provider_label_copy.instance_type = instance_type
+                qi = self.adapter.getQuotaForLabel(provider_label_copy)
+            else:
+                qi = self.adapter.getQuotaForLabel(provider_label)
             self.log.debug("Quota required for %s: %s",
                            provider_label.name, qi)
         except exceptions.RuntimeConfigurationException as e:
@@ -826,7 +843,11 @@ class StateMachineProvider(Provider, QuotaSupport):
             qi = QuotaInformation()
         except NotImplementedError:
             qi = QuotaInformation()
-        self.label_quota_cache.setdefault(provider_label, qi)
+        # only cache it if the label.instance_type is available
+        # other wise can not determin qi by label.
+        if (hasattr(provider_label, 'instance_type')
+            and provider_label.instance_type):
+            self.label_quota_cache.setdefault(provider_label, qi)
         return qi
 
     def unmanagedQuotaUsed(self):
@@ -1048,6 +1069,7 @@ class Instance:
         self.metadata = {}
         self.driver_data = None
         self.slot = None
+        self.instance_type = None
 
     def __repr__(self):
         state = []
