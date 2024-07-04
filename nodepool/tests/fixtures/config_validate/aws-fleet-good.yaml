@@ -1,0 +1,35 @@
+elements-dir: /etc/nodepool/elements
+images-dir: /opt/nodepool_dib
+
+zookeeper-servers:
+  - host: zk1.openstack.org
+    port: 2181
+    chroot: /test
+
+labels:
+  - name: ubuntu1404-on-demand
+  - name: ubuntu1404-spot
+
+providers:
+  - name: ec2-us-west-2
+    driver: aws
+    region-name: us-west-2
+    cloud-images:
+      - name: ubuntu1404
+        image-id: ami-1e749f67
+        username: ubuntu
+    pools:
+      - name: main
+        max-servers: 10
+        node-attributes:
+          key1: value1
+          key2: value2
+        labels:
+          - name: ubuntu1404-on-demand
+            cloud-image: ubuntu1404
+            key-name: zuul
+            fleet:
+              instance-types:
+                - t3.small
+                - t3.large
+              allocation-strategy: lowest-price
