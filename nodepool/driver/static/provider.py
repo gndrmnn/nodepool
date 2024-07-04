@@ -541,7 +541,7 @@ class StaticNodeProvider(Provider, QuotaSupport):
             ram=math.inf,
             default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
+    def quotaNeededByLabel(self, ntype, pool, instance=None):
         return QuotaInformation(cores=0, instances=1, ram=0, default=1)
 
     def unmanagedQuotaUsed(self):
