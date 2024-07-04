@@ -209,7 +209,7 @@ class GceAdapter(statemachine.Adapter):
             default=math.inf)
 
     def getQuotaForLabel(self, label):
-        return self._getQuotaForMachineType(label.instance_type)
+        return self._getQuotaForMachineType(label.instance_type, instance=None)
 
     # Local implementation below
 
