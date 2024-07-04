@@ -559,6 +559,9 @@ class Node(BaseModel):
         self.tenant_name = None
         self.driver_data = None
         self.requestor = None
+        # For labels with EC2 fleet configurations, we can not get
+        # instance type from label, need to store it separately.
+        self.instance_type = None
 
     def __repr__(self):
         d = self.toDict()
@@ -603,7 +606,8 @@ class Node(BaseModel):
                     self.python_path == other.python_path and
                     self.tenant_name == other.tenant_name and
                     self.driver_data == other.driver_data and
-                    self.requestor == other.requestor)
+                    self.requestor == other.requestor and
+                    self.instance_type == other.instance_type)
         else:
             return False
 
@@ -659,6 +663,7 @@ class Node(BaseModel):
         d['tenant_name'] = self.tenant_name
         d['driver_data'] = self.driver_data
         d['requestor'] = self.requestor
+        d['instance_type'] = self.instance_type
         return d
 
     @staticmethod
@@ -727,6 +732,7 @@ class Node(BaseModel):
         self.tenant_name = d.get('tenant_name')
         self.driver_data = d.get('driver_data')
         self.requestor = d.get('requestor')
+        self.instance_type = d.get('instance_type')
 
 
 class NodepoolTreeCache(abc.ABC):

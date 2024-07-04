@@ -352,7 +352,7 @@ class OpenshiftProvider(Provider, QuotaSupport):
             ram=math.inf,
             default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
+    def quotaNeededByLabel(self, ntype, pool, instance_type=None):
         provider_label = pool.labels[ntype]
         resources = {}
         if provider_label.cpu:

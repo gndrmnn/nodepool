@@ -259,12 +259,13 @@ class QuotaSupport:
         self._current_nodepool_quota = {}
 
     @abc.abstractmethod
-    def quotaNeededByLabel(self, label, pool):
+    def quotaNeededByLabel(self, label, pool, instance_type=None):
         """Return quota information about a label
 
         :param str label: The label name
         :param ProviderPool pool: A ProviderPool config object with the label
-
+        :param str instance_type: provided when the label.instance_type is not
+            available, e.g. when EC2 fleet is configured
         :return: QuotaInformation about the label
         """
         pass
@@ -303,6 +304,9 @@ class QuotaSupport:
 
         '''
 
+        # debug
+        self.log.debug("..... self._current_nodepool_quota: %s",
+                       self._current_nodepool_quota)
         if self._current_nodepool_quota:
             now = time.time()
             if now < self._current_nodepool_quota_timestamp + MAX_QUOTA_AGE:
@@ -345,6 +349,7 @@ class QuotaSupport:
         used_quota = QuotaInformation()
 
         for node in self._zk.nodeIterator(cached_ids=True):
+            self.log.debug("..... node: %s", node)
             if node.provider == self.provider.name:
                 try:
                     if pool and not node.pool == pool.name:
@@ -365,11 +370,13 @@ class QuotaSupport:
                         # eventually when it's deleted.
                         continue
                     node_resources = self.quotaNeededByLabel(
-                        node.type[0], provider_pool)
+                        node.type[0], provider_pool, node.instance_type)
+                    self.log.debug("node_resources: %s", node_resources)
                     used_quota.add(node_resources)
                 except Exception:
                     self.log.exception("Couldn't consider invalid node %s "
                                        "for quota:" % node)
+        self.log.debug("used_quota: %s", used_quota)
         return used_quota
 
     def getLabelQuota(self):

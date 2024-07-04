@@ -165,6 +165,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.az = instance.az
         node.driver_data = instance.driver_data
         node.slot = instance.slot
+        node.instance_type = instance.instance_type
 
         # Optionally, if the node has updated values that we set from
         # the image attributes earlier, set those.
@@ -805,13 +806,13 @@ class StateMachineProvider(Provider, QuotaSupport):
                 ram=math.inf,
                 default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool):
+    def quotaNeededByLabel(self, ntype, pool, instance_type=None):
         provider_label = pool.labels[ntype]
         qi = self.label_quota_cache.get(provider_label)
         if qi is not None:
             return qi
         try:
-            qi = self.adapter.getQuotaForLabel(provider_label)
+            qi = self.adapter.getQuotaForLabel(provider_label, instance_type)
             self.log.debug("Quota required for %s: %s",
                            provider_label.name, qi)
         except exceptions.RuntimeConfigurationException as e:
@@ -826,7 +827,10 @@ class StateMachineProvider(Provider, QuotaSupport):
             qi = QuotaInformation()
         except NotImplementedError:
             qi = QuotaInformation()
-        self.label_quota_cache.setdefault(provider_label, qi)
+        # only cache it if the label.instance_type is available
+        # other wise can not determin qi by label.
+        if provider_label.instance_type:
+            self.label_quota_cache.setdefault(provider_label, qi)
         return qi
 
     def unmanagedQuotaUsed(self):
@@ -1048,6 +1052,7 @@ class Instance:
         self.metadata = {}
         self.driver_data = None
         self.slot = None
+        self.instance_type = None
 
     def __repr__(self):
         state = []
@@ -1605,7 +1610,7 @@ class Adapter:
         """
         return QuotaInformation(default=math.inf)
 
-    def getQuotaForLabel(self, label):
+    def getQuotaForLabel(self, label, instance_type=None):
         """Return information about the quota used for a label
 
         The default implementation returns a simple QuotaInformation
@@ -1614,6 +1619,8 @@ class Adapter:
 
         :param ProviderLabel label: A config object describing
             a label for an instance.
+        :param str instance_type: provided when the label.instance_type is not
+            available, e.g. when EC2 fleet is configured
 
         :returns: A :py:class:`QuotaInformation` object.
         """

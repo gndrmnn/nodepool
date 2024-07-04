@@ -55,6 +55,19 @@ class FakeAwsAdapter(AwsAdapter):
                 raise self.__testcase.run_instances_exception
             return self.ec2_client.run_instances_orig(*args, **kwargs)
 
+        # Note: boto3 doesn't handle all features correctly,
+        # e.g. instance-requirements, volume attributes.
+        # when creating fleet in fake mode, we need to intercept
+        # the create_fleet call and validate the args we supply.
+        # Results are also intercepted for validate instance attributes
+        def _fake_create_fleet(*args, **kwargs):
+            self.__testcase.create_fleet_calls.append(kwargs)
+            if self.__testcase.create_fleet_exception:
+                raise self.__testcase.create_fleet_exception
+            result = self.ec2_client.create_fleet_orig(*args, **kwargs)
+            self.__testcase.create_fleet_results.append(result)
+            return result
+
         def _fake_allocate_hosts(*args, **kwargs):
             if self.__testcase.allocate_hosts_exception:
                 raise self.__testcase.allocate_hosts_exception
@@ -73,6 +86,8 @@ class FakeAwsAdapter(AwsAdapter):
 
         self.ec2_client.run_instances_orig = self.ec2_client.run_instances
         self.ec2_client.run_instances = _fake_run_instances
+        self.ec2_client.create_fleet_orig = self.ec2_client.create_fleet
+        self.ec2_client.create_fleet = _fake_create_fleet
         self.ec2_client.allocate_hosts_orig = self.ec2_client.allocate_hosts
         self.ec2_client.allocate_hosts = _fake_allocate_hosts
         self.ec2_client.register_image_orig = self.ec2_client.register_image
@@ -173,6 +188,9 @@ class TestDriverAws(tests.DBTestCase):
         # A list of args to method calls for validation
         self.run_instances_calls = []
         self.run_instances_exception = None
+        self.create_fleet_calls = []
+        self.create_fleet_results = []
+        self.create_fleet_exception = None
         self.allocate_hosts_exception = None
         self.register_image_calls = []
 
@@ -724,6 +742,7 @@ class TestDriverAws(tests.DBTestCase):
         instance['Placement'] = {'AvailabilityZone': 'us-west-2b'}
         iface = {'Ipv6Addresses': [{'Ipv6Address': 'fe80::dead:beef'}]}
         instance['NetworkInterfaces'] = [iface]
+        instance['InstanceType'] = 'test'
         provider = Dummy()
         provider.region_name = 'us-west-2'
         awsi = AwsInstance(provider, instance, None, None)
@@ -1352,3 +1371,125 @@ class TestDriverAws(tests.DBTestCase):
         hosts = self.ec2_client.describe_hosts()['Hosts']
         hosts = [h for h in hosts if h['State'] != 'released']
         self.assertEqual(len(hosts), 0)
+
+    def test_aws_create_launch_templates(self):
+        configfile = self.setup_config('aws/aws-fleet.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        launch_tempaltes = self.ec2_client.\
+            describe_launch_templates()['LaunchTemplates']
+        self.assertEqual(len(launch_tempaltes), 3)
+        lt1 = launch_tempaltes[0]
+        lt2 = launch_tempaltes[1]
+        self.assertEqual(lt1['LaunchTemplateName'],
+                         'nodepool-launch-template-io2-20-2000-None')
+        self.assertEqual(lt2['LaunchTemplateName'],
+                         'nodepool-launch-template-gp3-40-1000-200')
+
+        lt_version = self.ec2_client.\
+            describe_launch_template_versions(
+                LaunchTemplateId=lt2['LaunchTemplateId'])[
+                    'LaunchTemplateVersions'][0]
+        lt_data = lt_version['LaunchTemplateData']
+        self.assertIsNotNone(lt_data.get('SecurityGroupIds'))
+        ebs_settings = lt_data['BlockDeviceMappings'][0]['Ebs']
+        self.assertTrue(ebs_settings['DeleteOnTermination'])
+        self.assertEqual(ebs_settings['Iops'], 1000)
+        self.assertEqual(ebs_settings['VolumeSize'], 40)
+        self.assertEqual(ebs_settings['VolumeType'], 'gp3')
+        self.assertEqual(ebs_settings['Throughput'], 200)
+
+        # Restart pool, the launch templates must be the same and
+        # must not be recreated
+        pool.stop()
+        configfile = self.setup_config('aws/aws-fleet.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        lt_2nd_run = self.ec2_client.\
+            describe_launch_templates()['LaunchTemplates']
+        self.assertEqual(len(lt_2nd_run), 3)
+        self.assertEqual(lt1['LaunchTemplateId'],
+                         lt_2nd_run[0]['LaunchTemplateId'])
+        self.assertEqual(lt2['LaunchTemplateId'],
+                         lt_2nd_run[1]['LaunchTemplateId'])
+
+    def test_aws_create_fleet(self):
+        req = self.requestNode('aws/aws-fleet.yaml', 'ubuntu1404-on-demand')
+        node = self.assertSuccess(req)
+
+        self.assertEqual(
+            self.create_fleet_calls[0]['OnDemandOptions']
+            ['AllocationStrategy'], 'prioritized')
+        self.assertEqual(
+            self.create_fleet_calls[0]['LaunchTemplateConfigs'][0]
+            ['LaunchTemplateSpecification']['LaunchTemplateName'],
+            'nodepool-launch-template-gp3-40-1000-200')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][0]
+                         ['ResourceType'], 'instance')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][0]
+                         ['Tags'][1]['Key'], 'nodepool_pool_name')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][0]
+                         ['Tags'][1]['Value'], 'main')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][1]
+                         ['ResourceType'], 'volume')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][1]
+                         ['Tags'][1]['Key'], 'nodepool_pool_name')
+        self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][1]
+                         ['Tags'][1]['Value'], 'main')
+        self.assertEqual(
+            self.create_fleet_results[0]['Instances'][0]['Lifecycle'],
+            'on-demand')
+        self.assertIn(self.create_fleet_results[0]['Instances'][0]
+                      ['InstanceType'],
+                      ('t3.nano', 't3.micro', 't3.small', 't3.medium'))
+
+        node.state = zk.USED
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
+    @ec2_quotas({
+        'L-1216C47A': 6,
+        'L-34B43A08': 2
+    })
+    def test_aws_fleet_quota(self):
+        # Test if the quota used by instances launched by fleet API
+        # are taken into account.
+        configfile = self.setup_config('aws/aws-fleet.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        # Create a node request with fleet API.
+        req1 = zk.NodeRequest()
+        req1.state = zk.REQUESTED
+        req1.node_types.append('ubuntu1404-fleet-4core')
+        self.zk.storeNodeRequest(req1)
+        self.log.debug("Waiting for request %s", req1.id)
+        req1 = self.waitForNodeRequest(req1)
+        node1 = self.assertSuccess(req1)
+
+        # Create a second node request with non-fleet API; this should be
+        # over quota so it won't be fulfilled.
+        req2 = zk.NodeRequest()
+        req2.state = zk.REQUESTED
+        req2.node_types.append('ubuntu1404-4core')
+        self.zk.storeNodeRequest(req2)
+        self.log.debug("Waiting for request %s", req2.id)
+        req2 = self.waitForNodeRequest(req2, (zk.PENDING,))
+
+        # Make sure we're paused while we attempt to fulfill the
+        # second request.
+        pool_worker = pool.getPoolWorkers('ec2-us-west-2')
+        for _ in iterate_timeout(30, Exception, 'paused handler'):
+            if pool_worker[0].paused_handlers:
+                break
+
+        # Release the first node so that the second can be fulfilled.
+        node1.state = zk.USED
+        self.zk.storeNode(node1)
+        self.waitForNodeDeletion(node1)
+
+        # Make sure the second high node exists now.
+        req2 = self.waitForNodeRequest(req2)
+        self.assertSuccess(req2)
