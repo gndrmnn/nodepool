@@ -102,3 +102,12 @@ class TestConfigValidation(tests.BaseTestCase):
         validator = ConfigValidator(config)
         ret = validator.validate()
         self.assertEqual(ret, 1)
+
+    def test_aws_fleet_exclusive_error(self):
+        config = os.path.join(os.path.dirname(tests.__file__),
+                              'fixtures', 'config_validate',
+                              'aws-fleet-exclusive-error.yaml')
+
+        validator = ConfigValidator(config)
+        ret = validator.validate()
+        self.assertEqual(ret, 1)
