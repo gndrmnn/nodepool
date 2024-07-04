@@ -682,9 +682,30 @@ Selecting the ``aws`` driver adds the following options to the
 
            .. attr:: instance-type
               :type: str
-              :required:
 
               Name of the flavor to use.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.fleet`
+
+           .. attr:: fleet
+              :type: dict
+
+              If sepecifed, EC2 fleet API would be used for launching the instance.
+              In this case, quota is not checked before launching the instance, but is
+              taken into account after the instance is launched.
+              Mutually exclusive with :attr:`providers.[aws].pools.labels.instance-type`
+
+              .. attr:: instance-types
+                 :type: list
+
+                 Names of the flavors of the instance that to be launched.
+
+              .. attr:: allocation-strategy
+                 :type: str
+                 :required:
+
+                 Allowed values for on On-Demand: ``lowest-price`` or ``prioritized``.
+                 Allowed values for Spot: ``price-capacity-optimized``, ``capacity-optimized``,
+                 ``diversified`` or ``lowest-price``
 
            .. attr:: iam-instance-profile
               :type: dict
