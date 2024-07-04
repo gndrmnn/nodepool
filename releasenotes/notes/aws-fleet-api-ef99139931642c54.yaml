@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The AWS driver now support EC2 Fleet API to launch instances whose
+    types are selected from among a specified set based on certain
+    optimization criteria.
