@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17e9b540_d8f6fcae",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "typo: template",
+      "range": {
+        "startLine": 541,
+        "startChar": 8,
+        "endLine": 541,
+        "endChar": 30
+      },
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5459dc82_12501b24",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "typo: existing",
+      "range": {
+        "startLine": 542,
+        "startChar": 8,
+        "endLine": 542,
+        "endChar": 25
+      },
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4aed42ed_b4606019",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "f-strings should not be used in log messages.",
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de7fc0ce_6994bbb0",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "same here.",
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be801e3a_cd194997",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "f-string shouldn\u0027t be used in  logs",
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77c6fcf6_9dd8e3a2",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-05T12:15:15Z",
+      "side": 1,
+      "message": "This should probably be logged as `log.exception()` (w/o using f-strings)",
+      "revId": "664720fda74cc969d50c58213899c13151f23964",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
