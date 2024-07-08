@@ -15,6 +15,8 @@ tenant-resource-limits:
 labels:
   - name: ubuntu1404-io2
   - name: ubuntu1404-gp3
+  - name: ubuntu1404-on-demand
+  - name: ubuntu1404-spot
 
 providers:
   - name: ec2-us-west-2
@@ -43,6 +45,29 @@ providers:
           - name: ubuntu1404-gp3
             cloud-image: ubuntu1404
             instance-type: t3.medium
+            key-name: zuul
+            volume-type: gp3
+            volume-size: 40
+            iops: 1000
+            throughput: 200
+          - name: ubuntu1404-on-demand
+            cloud-image: ubuntu1404
+            fleet:
+              # in moto instance-types must be specified
+              # even if instance-requirements are sepcified
+              instance-types:
+                - t3.nano
+                - t3.micro
+                - t3.small
+                - t3.medium
+              instance-requirements:
+                vcpu-count:
+                  min: 1
+                  max: 8
+                memory-mib:
+                  min: 1
+                  max: 16000
+              allocation-strategy: prioritized
             key-name: zuul
             volume-type: gp3
             volume-size: 40
