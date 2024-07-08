@@ -667,7 +667,9 @@ class AwsAdapter(statemachine.Adapter):
             for label in pool.labels.values():
                 if label.dedicated_host:
                     host_types.add(label.instance_type)
-                else:
+                # label.instance_type is None for fleet, and in this case
+                # we do not set quota information.
+                elif label.instance_type:
                     if label.instance_type not in instance_types:
                         instance_types[label.instance_type] = set()
                     instance_types[label.instance_type].add(
@@ -725,12 +727,16 @@ class AwsAdapter(statemachine.Adapter):
         return QuotaInformation(**args)
 
     def getQuotaForLabel(self, label):
+        # If fleet is configured, we may not know exact quotas in
+        # advance, and do not check quota beforhand.
+        if label.fleet:
+            quota = QuotaInformation(instances=1)
         # For now, we are optimistically assuming that when an
         # instance is launched on a dedicated host, it is not counted
         # against instance quota.  That may be overly optimistic.  If
         # it is, then we will merge the two quotas below rather than
         # switch.
-        if label.dedicated_host:
+        elif label.dedicated_host:
             quota = self._getQuotaForHostType(
                 label.instance_type)
         else:
@@ -1486,6 +1492,138 @@ class AwsAdapter(statemachine.Adapter):
         else:
             image_id = self._getImageId(label.cloud_image)
 
+        if label.fleet:
+            return self._createFleet(label, image_id, tags, hostname, log)
+        else:
+            return self._runInstace(label, image_id, tags,
+                                    hostname, dedicated_host_id, log)
+
+    def _createFleet(self, label, image_id, tags, hostname, log):
+        log.debug('Creating instance with fleet')
+
+        overrides = []
+
+        instance_types = label.fleet.get('instance-types', [])
+        for instance_type in instance_types:
+            overrides.append({
+                'ImageId': image_id,
+                'InstanceType': instance_type,
+                'SubnetId': label.pool.subnet_id,
+            })
+
+        instance_requirements = label.fleet.get('instance-requirements')
+        if instance_requirements:
+            requirements = dict()
+            if instance_requirements.get('vcpu-count'):
+                requirements['VCpuCount'] = {}
+
+                if instance_requirements.get('vcpu-count').get('min'):
+                    requirements['VCpuCount']['Min'] = (
+                        instance_requirements.get('vcpu-count').get('min'))
+
+                if instance_requirements.get('vcpu-count').get('max'):
+                    requirements['VCpuCount']['Max'] = (
+                        instance_requirements.get('vcpu-count').get('max'))
+
+            if instance_requirements.get('memory-mib'):
+                requirements['MemoryMiB'] = {}
+
+                if instance_requirements.get('memory-mib').get('min'):
+                    requirements['MemoryMiB']['Min'] = (
+                        instance_requirements.get('memory-mib').get('min'))
+
+                if instance_requirements.get('memory-mib').get('max'):
+                    requirements['MemoryMiB']['Max'] = (
+                        instance_requirements.get('memory-mib').get('max'))
+
+            if instance_requirements.get('cpu-manufacturers'):
+                requirements['CpuManufacturers'] = (
+                    instance_requirements.get('cpu-manufacturers'))
+
+            if instance_requirements.get('excluded-instance-types'):
+                requirements['ExcludedInstanceTypes'] = (
+                    instance_requirements.get('excluded-instance-types'))
+
+            if instance_requirements.get('instance-generations'):
+                requirements['InstanceGenerations'] = (
+                    instance_requirements.get('instance-generations'))
+
+            overrides.append({
+                'ImageId': image_id,
+                'SubnetId': label.pool.subnet_id,
+                'InstanceRequirements': requirements,
+            })
+
+        if label.use_spot:
+            capacity_type_option = {
+                'SpotOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'spot',
+                },
+            }
+        else:
+            capacity_type_option = {
+                'OnDemandOptions': {
+                    'AllocationStrategy': label.fleet['allocation-strategy'],
+                },
+                'TargetCapacitySpecification': {
+                    'TotalTargetCapacity': 1,
+                    'DefaultTargetCapacityType': 'on-demand',
+                },
+            }
+
+        # IO settings can not be overriten for now, templates are created by IO
+        # settings combinations, and the templates names are fixed.
+        launch_template_prefix = 'nodepool-launch-template'
+        template_name = (f'{launch_template_prefix}-'
+                         f'{label.volume_type}-{label.volume_size}-'
+                         f'{label.iops}-{label.throughput}')
+        log.debug("Template name: %s", template_name)
+
+        args = {
+            **capacity_type_option,
+            'LaunchTemplateConfigs': [
+                {
+                    'LaunchTemplateSpecification': {
+                        'LaunchTemplateName': template_name,
+                        'Version': '$Latest',
+                    },
+                    'Overrides': overrides,
+                },
+            ],
+            'Type': 'instant',
+            'TagSpecifications': [
+                {
+                    'ResourceType': 'instance',
+                    'Tags': tag_dict_to_list(tags),
+                },
+                {
+                    'ResourceType': 'volume',
+                    'Tags': tag_dict_to_list(tags),
+                },
+            ],
+        }
+
+        with self.rate_limiter(log.debug, "Created fleet"):
+            log.debug("Creating VM with fleet %s", hostname)
+            log.debug("EC2 create fleet: %s", args)
+            resp = self.ec2_client.create_fleet(**args)
+            log.debug("EC2 create fleet result: %s", resp)
+
+            instance_id = resp['Instances'][0]['InstanceIds'][0]
+
+            describe_instances_result = self.ec2_client.describe_instances(
+                InstanceIds=[instance_id]
+            )
+            log.debug("Created VM %s as instance %s", hostname, instance_id)
+
+            return describe_instances_result['Reservations'][0]['Instances'][0]
+
+    def _runInstace(self, label, image_id, tags, hostname,
+                    dedicated_host_id, log):
         args = dict(
             ImageId=image_id,
             MinCount=1,
