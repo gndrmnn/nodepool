@@ -472,6 +472,7 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         pool_config = self.getPoolConfig()
         self.component_info.content.update({
             'id': self.launcher_id,
+            'name': self.pool_name,
             'provider_name': self.provider_name,
             'supported_labels': list(pool_config.labels),
             'state': self.component_info.RUNNING,

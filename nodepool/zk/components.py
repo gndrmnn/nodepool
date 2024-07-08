@@ -199,6 +199,7 @@ class PoolComponent(BaseComponent):
         super().__init__(*args, **kwargs)
         self.initial_state = {
             "id": None,
+            "name": None,
             "provider_name": None,
             "supported_labels": [],
             "priority": 100,
