@@ -833,10 +833,12 @@ class TestDriverAws(tests.DBTestCase):
         ec2_image = self.ec2.Image(image.external_id)
         self.assertEqual(ec2_image.state, 'available')
         self.assertFalse('ImdsSupport' in self.register_image_calls[0])
-        self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
-                        in ec2_image.tags)
-        self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
-                        in ec2_image.tags)
+        # As of 2024-07-09, moto does not set tags, but AWS itself does.
+        tags = self.register_image_calls[0]['TagSpecifications'][0]['Tags']
+        self.assertIn(
+            {'Key': 'diskimage_metadata', 'Value': 'diskimage'}, tags)
+        self.assertIn(
+            {'Key': 'provider_metadata', 'Value': 'provider'}, tags)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.startPool(pool)
@@ -923,10 +925,12 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(
             self.register_image_calls[0]['ImdsSupport'], 'v2.0')
 
-        self.assertTrue({'Key': 'diskimage_metadata', 'Value': 'diskimage'}
-                        in ec2_image.tags)
-        self.assertTrue({'Key': 'provider_metadata', 'Value': 'provider'}
-                        in ec2_image.tags)
+        # As of 2024-07-09, moto does not set tags, but AWS itself does.
+        tags = self.register_image_calls[0]['TagSpecifications'][0]['Tags']
+        self.assertIn(
+            {'Key': 'diskimage_metadata', 'Value': 'diskimage'}, tags)
+        self.assertIn(
+            {'Key': 'provider_metadata', 'Value': 'provider'}, tags)
 
         pool = self.useNodepool(configfile, watermark_sleep=1)
         self.startPool(pool)
@@ -962,6 +966,56 @@ class TestDriverAws(tests.DBTestCase):
 
         with testtools.ExpectedException(Exception, "IMDSv2 requires"):
             self.useBuilder(configfile)
+
+    def test_aws_diskimage_ebs_snapshot_imdsv2(self):
+        self.fake_aws.fail_import_count = 1
+        configfile = self.setup_config(
+            'aws/diskimage-imdsv2-ebs-snapshot.yaml')
+
+        self.useBuilder(configfile)
+
+        image = self.waitForImage('ec2-us-west-2', 'fake-image')
+        self.assertEqual(image.username, 'another_user')
+
+        ec2_image = self.ec2.Image(image.external_id)
+        self.assertEqual(ec2_image.state, 'available')
+        self.assertEqual(
+            self.register_image_calls[0]['ImdsSupport'], 'v2.0')
+
+        # As of 2024-07-09, moto does not set tags, but AWS itself does.
+        tags = self.register_image_calls[0]['TagSpecifications'][0]['Tags']
+        self.assertIn(
+            {'Key': 'diskimage_metadata', 'Value': 'diskimage'}, tags)
+        self.assertIn(
+            {'Key': 'provider_metadata', 'Value': 'provider'}, tags)
+
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+
+        req = zk.NodeRequest()
+        req.state = zk.REQUESTED
+        req.node_types.append('diskimage')
+
+        self.zk.storeNodeRequest(req)
+        req = self.waitForNodeRequest(req)
+
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertNotEqual(req.nodes, [])
+        node = self.zk.getNode(req.nodes[0])
+        self.assertEqual(node.allocated_to, req.id)
+        self.assertEqual(node.state, zk.READY)
+        self.assertIsNotNone(node.launcher)
+        self.assertEqual(node.connection_type, 'ssh')
+        self.assertEqual(node.shell_type, None)
+        self.assertEqual(node.username, 'another_user')
+        self.assertEqual(node.attributes,
+                         {'key1': 'value1', 'key2': 'value2'})
+        self.assertEqual(
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Iops'], 2000)
+        self.assertEqual(
+            self.run_instances_calls[0]['BlockDeviceMappings'][0]['Ebs']
+            ['Throughput'], 200)
 
     def test_aws_diskimage_removal(self):
         configfile = self.setup_config('aws/diskimage.yaml')

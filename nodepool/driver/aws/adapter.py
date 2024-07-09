@@ -13,23 +13,27 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from concurrent.futures import ThreadPoolExecutor
+import base64
 import cachetools.func
+from concurrent.futures import ThreadPoolExecutor
 import copy
 import functools
+import hashlib
 import json
 import logging
 import math
+import queue
 import re
 import threading
-import queue
 import time
 import urllib.parse
+from uuid import uuid4
 
 from nodepool.driver.utils import (
     QuotaInformation,
     LazyExecutorTTLCache,
     RateLimiter,
+    ImageUploader,
 )
 from nodepool.driver import statemachine
 from nodepool import exceptions
@@ -214,6 +218,8 @@ CACHE_TTL = 10
 SERVICE_QUOTA_CACHE_TTL = 300
 ON_DEMAND = 0
 SPOT = 1
+KIB = 1024
+GIB = 1024 ** 3
 
 
 class AwsInstance(statemachine.Instance):
@@ -416,6 +422,100 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                                self.host, self.quota)
 
 
+class EBSSnapshotUploader(ImageUploader):
+    segment_size = 512 * KIB
+
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        self.segment_count = 0
+
+    def shouldRetryException(self, exception):
+        # Strictly speaking, ValidationException is only retryable
+        # if we get a particular message, but that's impractical
+        # to reproduce for testing.
+        # https://docs.aws.amazon.com/ebs/latest/userguide/error-retries.html
+        ex = self.adapter.ebs_client.exceptions
+        if isinstance(exception, (
+                ex.RequestThrottledException,
+                ex.InternalServerException,
+                ex.ValidationException,
+        )):
+            return True
+        return False
+
+    def _rateLimited(self, func):
+        def rateLimitedFunc(*args, **kw):
+            with self.adapter.rate_limiter:
+                return func(*args, **kw)
+        return rateLimitedFunc
+
+    def uploadSegment(self, segment):
+        # There is a default limit of 1000 put requests/second.
+        # Actual value is available as a service quota.  We don't
+        # expect to hit this.  If we do, and we need to rate-limit, we
+        # will need to coordinate with other builders.
+        # https://docs.aws.amazon.com/ebs/latest/userguide/ebs-resource-quotas.html
+        data = segment.data
+        if len(data) < self.segment_size:
+            # Add zeros if the last block is smaller since the
+            # block size in AWS is constant.
+            data = data.ljust(self.segment_size, b'\0')
+        checksum = hashlib.sha256(data)
+        checksum_base64 = base64.b64encode(checksum.digest()).decode('utf-8')
+
+        response = self.retry(
+            self.adapter.ebs_client.put_snapshot_block,
+            SnapshotId=self.snapshot_id,
+            BlockIndex=segment.index,
+            BlockData=data,
+            DataLength=len(data),
+            Checksum=checksum_base64,
+            ChecksumAlgorithm='SHA256',
+        )
+        if (response['Checksum'] != checksum_base64):
+            raise Exception("Checksums do not match; received "
+                            f"{response['Checksum']} expected {checksum}")
+        self.segment_count += 1
+
+    def startUpload(self):
+        # This is used by AWS to ensure idempotency across retries
+        token = uuid4().hex
+        # Volume size is in GiB
+        size = math.ceil(self.size / GIB)
+        response = self.retry(
+            self._rateLimited(self.adapter.ebs_client.start_snapshot),
+            VolumeSize=size,
+            ClientToken=token,
+            Tags=tag_dict_to_list(self.metadata),
+        )
+        self.snapshot_id = response['SnapshotId']
+
+    def finishUpload(self):
+        while True:
+            response = self.retry(
+                self._rateLimited(self.adapter.ebs_client.complete_snapshot),
+                SnapshotId=self.snapshot_id,
+                ChangedBlocksCount=self.segment_count,
+            )
+            if response['Status'] == 'error':
+                raise Exception("Snapshot in error state")
+            if response['Status'] == 'completed':
+                break
+            self.checkTimeout()
+        return self.size, self.snapshot_id
+
+    def abortUpload(self):
+        try:
+            self.finishUpload()
+        except Exception:
+            pass
+        with self.adapter.rate_limiter:
+            snapshot_id = getattr(self, 'snapshot_id', None)
+            if snapshot_id:
+                self.adapter.ec2_client.delete_snapshot(
+                    SnapshotId=self.snapshot_id)
+
+
 class AwsAdapter(statemachine.Adapter):
     IMAGE_UPLOAD_SLEEP = 30
 
@@ -489,6 +589,7 @@ class AwsAdapter(statemachine.Adapter):
         self.s3 = self.aws.resource('s3')
         self.s3_client = self.aws.client('s3')
         self.aws_quotas = self.aws.client("service-quotas")
+        self.ebs_client = self.aws.client('ebs')
 
         workers = 10
         self.log.info("Create executor with max workers=%s", workers)
@@ -748,33 +849,92 @@ class AwsAdapter(statemachine.Adapter):
                     image_format, metadata, md5, sha256):
         self.log.debug(f"Uploading image {image_name}")
 
-        # Upload image to S3
-        bucket_name = self.provider.object_storage['bucket-name']
-        bucket = self.s3.Bucket(bucket_name)
-        object_filename = f'{image_name}.{image_format}'
-        extra_args = {'Tagging': urllib.parse.urlencode(metadata)}
-
         # There is no IMDS support option for the import_image call
         if (provider_image.import_method == 'image' and
             provider_image.imds_support == 'v2.0'):
             raise Exception("IMDSv2 requires 'snapshot' import method")
 
-        with open(filename, "rb") as fobj:
-            with self.rate_limiter:
-                bucket.upload_fileobj(fobj, object_filename,
-                                      ExtraArgs=extra_args)
+        if provider_image.import_method != 'ebs-direct':
+            # Upload image to S3
+            bucket_name = self.provider.object_storage['bucket-name']
+            bucket = self.s3.Bucket(bucket_name)
+            object_filename = f'{image_name}.{image_format}'
+            extra_args = {'Tagging': urllib.parse.urlencode(metadata)}
+
+            with open(filename, "rb") as fobj:
+                with self.rate_limiter:
+                    bucket.upload_fileobj(fobj, object_filename,
+                                          ExtraArgs=extra_args)
 
         if provider_image.import_method == 'image':
             image_id = self._uploadImageImage(
                 provider_image, image_name, filename,
                 image_format, metadata, md5, sha256,
                 bucket_name, object_filename)
-        else:
+        elif provider_image.import_method == 'snapshot':
             image_id = self._uploadImageSnapshot(
                 provider_image, image_name, filename,
                 image_format, metadata, md5, sha256,
                 bucket_name, object_filename)
+        elif provider_image.import_method == 'ebs-direct':
+            image_id = self._uploadImageSnapshotEBS(
+                provider_image, image_name, filename,
+                image_format, metadata)
+        else:
+            raise Exception("Unknown image import method")
         return image_id
+
+    def _registerImage(self, provider_image, image_name, metadata,
+                       volume_size, snapshot_id):
+        # Register the snapshot as an AMI
+        with self.rate_limiter:
+            bdm = {
+                'DeviceName': '/dev/sda1',
+                'Ebs': {
+                    'DeleteOnTermination': True,
+                    'SnapshotId': snapshot_id,
+                    'VolumeSize': volume_size,
+                    'VolumeType': provider_image.volume_type,
+                },
+            }
+            if provider_image.iops:
+                bdm['Ebs']['Iops'] = provider_image.iops
+            if provider_image.throughput:
+                bdm['Ebs']['Throughput'] = provider_image.throughput
+
+            args = dict(
+                Architecture=provider_image.architecture,
+                BlockDeviceMappings=[bdm],
+                RootDeviceName='/dev/sda1',
+                VirtualizationType='hvm',
+                EnaSupport=provider_image.ena_support,
+                Name=image_name,
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'image',
+                        'Tags': tag_dict_to_list(metadata),
+                    },
+                ]
+            )
+            if provider_image.imds_support == 'v2.0':
+                args['ImdsSupport'] = 'v2.0'
+            return self.ec2_client.register_image(**args)
+
+    def _uploadImageSnapshotEBS(self, provider_image, image_name, filename,
+                                image_format, metadata):
+        # Import snapshot
+        uploader = EBSSnapshotUploader(self, self.log, filename, metadata)
+        self.log.debug(f"Importing {image_name} as EBS snapshot")
+        volume_size, snapshot_id = uploader.upload(
+            self.provider.image_import_timeout)
+
+        register_response = self._registerImage(
+            provider_image, image_name, metadata, volume_size, snapshot_id,
+        )
+
+        self.log.debug(f"Upload of {image_name} complete as "
+                       f"{register_response['ImageId']}")
+        return register_response['ImageId']
 
     def _uploadImageSnapshot(self, provider_image, image_name, filename,
                              image_format, metadata, md5, sha256,
@@ -848,43 +1008,10 @@ class AwsAdapter(statemachine.Adapter):
             self.log.exception("Error tagging snapshot:")
 
         volume_size = provider_image.volume_size or snap['VolumeSize']
-        # Register the snapshot as an AMI
-        with self.rate_limiter:
-            bdm = {
-                'DeviceName': '/dev/sda1',
-                'Ebs': {
-                    'DeleteOnTermination': True,
-                    'SnapshotId': task[
-                        'SnapshotTaskDetail']['SnapshotId'],
-                    'VolumeSize': volume_size,
-                    'VolumeType': provider_image.volume_type,
-                },
-            }
-            if provider_image.iops:
-                bdm['Ebs']['Iops'] = provider_image.iops
-            if provider_image.throughput:
-                bdm['Ebs']['Throughput'] = provider_image.throughput
-
-            args = dict(
-                Architecture=provider_image.architecture,
-                BlockDeviceMappings=[bdm],
-                RootDeviceName='/dev/sda1',
-                VirtualizationType='hvm',
-                EnaSupport=provider_image.ena_support,
-                Name=image_name,
-            )
-            if provider_image.imds_support == 'v2.0':
-                args['ImdsSupport'] = 'v2.0'
-            register_response = self.ec2_client.register_image(**args)
-
-        # Tag the AMI
-        try:
-            with self.rate_limiter:
-                self.ec2_client.create_tags(
-                    Resources=[register_response['ImageId']],
-                    Tags=task['Tags'])
-        except Exception:
-            self.log.exception("Error tagging AMI:")
+        snapshot_id = task['SnapshotTaskDetail']['SnapshotId']
+        register_response = self._registerImage(
+            provider_image, image_name, metadata, volume_size, snapshot_id,
+        )
 
         self.log.debug(f"Upload of {image_name} complete as "
                        f"{register_response['ImageId']}")

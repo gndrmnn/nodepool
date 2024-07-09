@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The AWS driver now supports optionally uploading diskimages using
+    the EBS direct APIs.  This may be faster and more efficient since
+    it bypasses S3, but it may incur additional costs.
