@@ -16,16 +16,21 @@ import functools
 import json
 import logging
 import math
-import os
 import random
 import string
 
 import cachetools.func
 
-from nodepool.driver.utils import QuotaInformation, RateLimiter
+from nodepool.driver.utils import (
+    QuotaInformation,
+    RateLimiter,
+    ImageUploader,
+)
 from nodepool.driver import statemachine
 from nodepool import exceptions
 from . import azul
+
+MIB = 1024 ** 2
 
 
 def quota_info_from_sku(sku):
@@ -225,6 +230,104 @@ class AzureCreateStateMachine(statemachine.StateMachine):
                                  self.public_ipv4, self.public_ipv6)
 
 
+class AzureSnapshotUploader(ImageUploader):
+    segment_size = 4 * MIB
+
+    def uploadSegment(self, segment):
+        data = segment.data
+        start = segment.offset
+        end = start + len(data) - 1
+        self.retry(
+            self.adapter.azul.upload_sas_chunk,
+            self.url, start, end, data
+        )
+
+    def startUpload(self):
+        disk_info = {
+            "location": self.adapter.provider.location,
+            "tags": self.metadata,
+            "properties": {
+                "creationData": {
+                    "createOption": "Upload",
+                    "uploadSizeBytes": self.size,
+                }
+            }
+        }
+        self.log.debug("Creating disk for image upload")
+
+        with self.adapter.rate_limiter:
+            r = self.adapter.azul.disks.create(
+                self.adapter.resource_group, self.image_name, disk_info)
+        r = self.adapter.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create disk for image upload")
+        self.disk_id = r['properties']['output']['id']
+
+        disk_grant = {
+            "access": "Write",
+            "durationInSeconds": 24 * 60 * 60,
+        }
+        self.log.debug("Enabling write access to disk for image upload")
+        with self.adapter.rate_limiter:
+            r = self.adapter.azul.disks.post(
+                self.adapter.resource_group, self.image_name,
+                'beginGetAccess', disk_grant)
+        r = self.adapter.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to begin write access on disk")
+        self.url = r['properties']['output']['accessSAS']
+        self.log.debug("Uploading image")
+
+    def finishUpload(self):
+        disk_grant = {}
+        self.log.debug("Disabling write access to disk for image upload")
+        with self.adapter.rate_limiter:
+            r = self.adapter.azul.disks.post(
+                self.adapter.resource_group, self.image_name,
+                'endGetAccess', disk_grant)
+        r = self.adapter.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to end write access on disk")
+
+        image_info = {
+            "location": self.adapter.provider.location,
+            "tags": self.metadata,
+            "properties": {
+                "hyperVGeneration": "V2",
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Linux",
+                        "managedDisk": {
+                            "id": self.disk_id,
+                        },
+                        "osState": "Generalized"
+                    },
+                    "zoneResilient": True
+                }
+            }
+        }
+        self.log.debug("Creating image from disk")
+        with self.adapter.rate_limiter:
+            r = self.adapter.azul.images.create(
+                self.adapter.resource_group, self.image_name, image_info)
+        r = self.adapter.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to create image from disk")
+
+        self.log.debug("Deleting disk for image upload")
+        with self.adapter.rate_limiter:
+            r = self.adapter.azul.disks.delete(self.adapter.resource_group,
+                                               self.image_name)
+        r = self.adapter.azul.wait_for_async_operation(r)
+
+        if r['status'] != 'Succeeded':
+            raise Exception("Unable to delete disk for image upload")
+
+
 class AzureAdapter(statemachine.Adapter):
     log = logging.getLogger("nodepool.driver.azure.AzureAdapter")
 
@@ -328,88 +431,10 @@ class AzureAdapter(statemachine.Adapter):
     def uploadImage(self, provider_image, image_name, filename,
                     image_format, metadata, md5, sha256):
         self.log.debug(f"Uploading image {image_name}")
-        file_sz = os.path.getsize(filename)
-        disk_info = {
-            "location": self.provider.location,
-            "tags": metadata,
-            "properties": {
-                "creationData": {
-                    "createOption": "Upload",
-                    "uploadSizeBytes": file_sz
-                }
-            }
-        }
-        self.log.debug("Creating disk for image upload")
-        with self.rate_limiter:
-            r = self.azul.disks.create(self.resource_group,
-                                       image_name, disk_info)
-        r = self.azul.wait_for_async_operation(r)
 
-        if r['status'] != 'Succeeded':
-            raise Exception("Unable to create disk for image upload")
-        disk_id = r['properties']['output']['id']
-
-        disk_grant = {
-            "access": "Write",
-            "durationInSeconds": 24 * 60 * 60,
-        }
-        self.log.debug("Enabling write access to disk for image upload")
-        with self.rate_limiter:
-            r = self.azul.disks.post(self.resource_group, image_name,
-                                     'beginGetAccess', disk_grant)
-        r = self.azul.wait_for_async_operation(r)
-
-        if r['status'] != 'Succeeded':
-            raise Exception("Unable to begin write access on disk")
-        sas = r['properties']['output']['accessSAS']
-
-        self.log.debug("Uploading image")
-        with open(filename, "rb") as fobj:
-            self.azul.upload_page_blob_to_sas_url(sas, fobj)
-
-        disk_grant = {}
-        self.log.debug("Disabling write access to disk for image upload")
-        with self.rate_limiter:
-            r = self.azul.disks.post(self.resource_group, image_name,
-                                     'endGetAccess', disk_grant)
-        r = self.azul.wait_for_async_operation(r)
-
-        if r['status'] != 'Succeeded':
-            raise Exception("Unable to end write access on disk")
-
-        image_info = {
-            "location": self.provider.location,
-            "tags": metadata,
-            "properties": {
-                "hyperVGeneration": "V2",
-                "storageProfile": {
-                    "osDisk": {
-                        "osType": "Linux",
-                        "managedDisk": {
-                            "id": disk_id,
-                        },
-                        "osState": "Generalized"
-                    },
-                    "zoneResilient": True
-                }
-            }
-        }
-        self.log.debug("Creating image from disk")
-        with self.rate_limiter:
-            r = self.azul.images.create(self.resource_group, image_name,
-                                        image_info)
-        r = self.azul.wait_for_async_operation(r)
-
-        if r['status'] != 'Succeeded':
-            raise Exception("Unable to create image from disk")
-
-        self.log.debug("Deleting disk for image upload")
-        with self.rate_limiter:
-            r = self.azul.disks.delete(self.resource_group, image_name)
-        r = self.azul.wait_for_async_operation(r)
-
-        if r['status'] != 'Succeeded':
-            raise Exception("Unable to delete disk for image upload")
+        uploader = AzureSnapshotUploader(self, self.log, filename, image_name,
+                                         metadata)
+        uploader.upload()
 
         self.log.info(f"Uploaded image {image_name}")
         return image_name

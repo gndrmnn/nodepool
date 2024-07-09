@@ -923,7 +923,8 @@ class AwsAdapter(statemachine.Adapter):
     def _uploadImageSnapshotEBS(self, provider_image, image_name, filename,
                                 image_format, metadata):
         # Import snapshot
-        uploader = EBSSnapshotUploader(self, self.log, filename, metadata)
+        uploader = EBSSnapshotUploader(self, self.log, filename, image_name,
+                                       metadata)
         self.log.debug(f"Importing {image_name} as EBS snapshot")
         volume_size, snapshot_id = uploader.upload(
             self.provider.image_import_timeout)

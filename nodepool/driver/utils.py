@@ -559,13 +559,14 @@ class ImageUploader:
     # Subclasses must implement these
     segment_size = None
 
-    def __init__(self, adapter, log, path, metadata):
+    def __init__(self, adapter, log, path, image_name, metadata):
         if self.segment_size is None:
             raise Exception("Subclass must set block size")
         self.adapter = adapter
         self.log = log
         self.path = path
         self.size = os.path.getsize(path)
+        self.image_name = image_name
         self.metadata = metadata
         self.timeout = None
 
