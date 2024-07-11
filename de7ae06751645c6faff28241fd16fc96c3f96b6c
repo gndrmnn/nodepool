@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6e093f3b_3bff9df7",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-11T14:51:41Z",
+      "side": 1,
+      "message": "I think our changes are dependent on each other, maybe it would be easier to just merge our changes to one change. I can do that if you agree.",
+      "parentUuid": "908552ab_6e2c552a",
+      "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0e8c73d6_42844a50",
         "filename": "nodepool/driver/aws/adapter.py",
         "patchSetId": 4
