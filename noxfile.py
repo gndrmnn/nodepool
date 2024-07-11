@@ -128,3 +128,12 @@ def venv(session):
                     '-r', 'test-requirements.txt')
     session.install('-e', '.')
     session.run(*session.posargs)
+
+
+@nox.session(python='3')
+def bandit(session):
+    set_standard_env_vars(session)
+    session.install('-r', 'requirements.txt',
+                    '-r', 'test-requirements.txt')
+    session.install('-e', '.')
+    session.run('bandit', '-r', '.')

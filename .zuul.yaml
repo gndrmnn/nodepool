@@ -248,6 +248,15 @@
         NODEPOOL_ZK_KEY: /opt/zookeeper/ca/keys/clientkey.pem
     nodeset: ubuntu-jammy
 
+- job:
+    name: nodepool-nox-bandit
+    description: |
+      Test which scans for security vulnerabilities in Python code.
+    parent: nodepool-nox-py311
+    voting: false
+    vars:
+      nox_keyword: bandit
+
 - project:
     queue: zuul
     vars:
@@ -263,6 +272,7 @@
         - nox-linters:
             nodeset: ubuntu-jammy
         - nodepool-nox-py311
+        - nodepool-nox-bandit
         - nodepool-functional-container-openstack-release
         - nodepool-functional-k8s
         - zuul-quick-start:
@@ -279,6 +289,7 @@
         - nox-linters:
             nodeset: ubuntu-jammy
         - nodepool-nox-py311
+        - nodepool-nox-bandit
         - nodepool-functional-k8s
         - zuul-quick-start:
             requires: zuul-container-image
