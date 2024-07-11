@@ -33,6 +33,23 @@
       "message": "If the exception is saying the template name already in use, we should not print the whole stack trace, instead just log a string.\nThe exception would look like\n```\nTraceback (most recent call last):\n  File \"/nodepool/nodepool/driver/aws/adapter.py\", line 598, in __init__\n    self.ec2_client.create_launch_template(\n  File \"/nodepool/.nox/tests/lib/python3.11/site-packages/botocore/client.py\", line 565, in _api_call\n    return self._make_api_call(operation_name, kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/nodepool/.nox/tests/lib/python3.11/site-packages/botocore/client.py\", line 1021, in _make_api_call\n    raise error_class(parsed_response, operation_name)\nbotocore.exceptions.ClientError: An error occurred (InvalidLaunchTemplateName.AlreadyExistsException) when calling the CreateLaunchTemplate operation: Launch template name already in use.\n```",
       "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c7e898d_b7e30bcf",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1369,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-11T14:34:57Z",
+      "side": 1,
+      "message": "Here would also helpful to check the content of the template, if it is the same as configured.",
+      "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
