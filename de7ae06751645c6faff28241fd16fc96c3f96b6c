@@ -36,6 +36,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33da5a12_9a9624ef",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-12T10:13:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e093f3b_3bff9df7",
+      "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e8c73d6_42844a50",
@@ -53,6 +71,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0971bfe4_1e668691",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-12T10:13:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e8c73d6_42844a50",
+      "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c7e898d_b7e30bcf",
@@ -66,6 +102,24 @@
       "writtenOn": "2024-07-11T14:34:57Z",
       "side": 1,
       "message": "Here would also helpful to check the content of the template, if it is the same as configured.",
+      "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ef3e001_ba6d40e9",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 1369,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-12T10:13:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c7e898d_b7e30bcf",
       "revId": "de7ae06751645c6faff28241fd16fc96c3f96b6c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
