@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e9a8a92_3d2ea6bb",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-15T16:18:47Z",
+      "side": 1,
+      "message": "We should know the possible instance_types for fleet api requests, right?  If so, we should include all of them here.",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c652245_49425cbc",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-15T16:18:47Z",
+      "side": 1,
+      "message": "In this line, we\u0027re storing the actual quota resources used by the node -- but only based on the label because we haven\u0027t actually launched it yet.\n\nBut if we do this again below in updateNodeFromInstance, where you\u0027ve stored the instance type, then we would have the actual final resources.\n\nIf we add a method to QuotaInformation to deserialize from the get_resources output, then we can reconstruct the resources from the node record given what we already have.  (See other note.)",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "211d2621_af3dc79b",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-15T16:18:47Z",
+      "side": 1,
+      "message": "This is the thing that requires all the changes to the adapter api.\n\nInstead of passing instance_type\u003dNone to everything, how about we see if node.resources exists, and if it does, skip this call to quotaNeededByLabel and instead deserialize the resources into a QuotaInformation object.  (See other note.)\n\nThat should let us delete almost every line in this patch with instance_type.",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
