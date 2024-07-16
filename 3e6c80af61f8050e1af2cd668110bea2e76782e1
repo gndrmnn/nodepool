@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9159374b_7417c3e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-16T13:44:46Z",
+      "side": 1,
+      "message": "I have addressed the comments in PatchSet 11, please",
+      "revId": "3e6c80af61f8050e1af2cd668110bea2e76782e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}

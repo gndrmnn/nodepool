@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6996f30f_22dd3e21",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-16T13:44:46Z",
+      "side": 1,
+      "message": "The list of `instance_types` is optional in creating fleet API request, user can alternatively or additionally specify `instance-requirements`.\n\nSo it is not guaranteed to know all possible instance_types that the instance could be, but we can make best effort to include the list of `instance_types` here if it is configured.",
+      "parentUuid": "9e9a8a92_3d2ea6bb",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c652245_49425cbc",
@@ -35,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b15d4c16_81b5f2be",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-16T13:44:46Z",
+      "side": 1,
+      "message": "I think it is a good idea, instead of storing the `instance_type`, we can store the `resources` once the instance is launched. So that we do not add the addtional `instance_type` to the node object.\n\nTo avoid adding `instance_type` parameter to the `getQuotaForLabel()` in Adapter, we still need to pass in the actual `instance_type` in some way. I did a trick that and set the actual instance_type to a deepcopied label as a parameter.",
+      "parentUuid": "0c652245_49425cbc",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "211d2621_af3dc79b",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-07-15T16:18:47Z",
       "side": 1,
       "message": "This is the thing that requires all the changes to the adapter api.\n\nInstead of passing instance_type\u003dNone to everything, how about we see if node.resources exists, and if it does, skip this call to quotaNeededByLabel and instead deserialize the resources into a QuotaInformation object.  (See other note.)\n\nThat should let us delete almost every line in this patch with instance_type.",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4794602e_0bb40bc9",
+        "filename": "nodepool/driver/utils.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-16T13:44:46Z",
+      "side": 1,
+      "message": "yep, I uploaded a patch with the changes. Please check the PatchSet 11.",
+      "parentUuid": "211d2621_af3dc79b",
       "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
