@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b75bf733_cf63d20b",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2024-07-18T12:26:42Z",
+      "side": 1,
+      "message": "This should be moved to an own method so it can be reused later when creating the fleet request.\nMaybe something like: getLaunchTemplateNameFromLabel",
+      "range": {
+        "startLine": 561,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "378c4d63e536ca677f8be2b6cb0bc06ec1f1b562",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
