@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1429cf7_1ee446d4",
+        "filename": "nodepool/tests/fixtures/aws/aws-fleet.yaml",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2024-07-18T12:04:47Z",
+      "side": 1,
+      "message": "The label ubuntu1404-spot is twice in the list",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 25
+      },
+      "revId": "e0c1901b405f88ef2b87c83dfe63bc4ad0839f48",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
