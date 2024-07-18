@@ -71,6 +71,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71f20750_79dff0a2",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-18T12:42:33Z",
+      "side": 1,
+      "message": "An update to may previous comment: The trick to set the `instance_type` to the label would not work, because not all label contains `instance_type`. So I think we can not avoid adding new parameters to those functions.",
+      "parentUuid": "b15d4c16_81b5f2be",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "211d2621_af3dc79b",
