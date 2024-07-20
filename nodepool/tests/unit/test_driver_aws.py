@@ -160,6 +160,7 @@ class TestDriverAws(tests.DBTestCase):
 
         self.fake_aws = FakeAws()
         self.mock_aws.start()
+        self.addCleanup(self.mock_aws.stop)
 
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
@@ -211,10 +212,6 @@ class TestDriverAws(tests.DBTestCase):
         test = getattr(self, test_name)
         self.patchAdapter(ec2_quotas=getattr(test, '__aws_ec2_quotas__', None),
                           ebs_quotas=getattr(test, '__aws_ebs_quotas__', None))
-
-    def tearDown(self):
-        self.mock_aws.stop()
-        super().tearDown()
 
     def setup_config(self, *args, **kw):
         kw['subnet_id'] = self.subnet_id
