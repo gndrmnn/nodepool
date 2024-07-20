@@ -16,6 +16,24 @@
       "message": "I addressed some of my comments in an updated patchset.  I think we\u0027re already in a good position to go ahead and manage deleting launch templates that are no longer needed.  I think we should go ahead and do that at startup when we create the launch templates.  We just need to examine the tags and see if the nodepool provider name corresponds to us, and if it\u0027s not a template we know about, delete it.",
       "revId": "bb266194e99a5b4bfc57a709dc0e6d75f07a645f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d64f0f1b_98214a21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 26
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:19:31Z",
+      "side": 1,
+      "message": "unresolving",
+      "parentUuid": "4a41436a_a4f4e6f1",
+      "revId": "bb266194e99a5b4bfc57a709dc0e6d75f07a645f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
