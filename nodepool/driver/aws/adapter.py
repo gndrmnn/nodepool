@@ -536,81 +536,7 @@ class AwsAdapter(statemachine.Adapter):
         # time on that again.
         self.not_our_images = set()
         self.not_our_snapshots = set()
-
-        self.log.info("Creating launch templates")
-        tags = {
-            'nodepool_managed': True,
-            'nodepool_provider_name': provider_config.name,
-        }
-        existing_templates = []
-        name_filter = {
-            'Name': 'launch-template-name',
-            'Values': [f'{self.LAUNCH_TEMPLATE_PREFIX}-*'],
-        }
-        paginator = self.ec2_client.get_paginator(
-            'describe_launch_templates')
-        with self.non_mutating_rate_limiter:
-            for page in paginator.paginate(Filters=[name_filter]):
-                for template in page['LaunchTemplates']:
-                    existing_templates.append(template['LaunchTemplateName'])
-
-        for pool_name, pool in provider_config.pools.items():
-            for label_name, label in pool.labels.items():
-                # Create launch templates only for labels which usage fleet
-                if not label.fleet:
-                    continue
-
-                template_name = self._getLaunchTemplateName(label)
-                if template_name in existing_templates:
-                    self.log.debug(
-                        'launch template %s already exist', template_name)
-                    continue
-
-                self.log.debug('Creating launch template %s', template_name)
-                ebs_settings = {
-                    'DeleteOnTermination': True,
-                }
-                if label.volume_size:
-                    ebs_settings['VolumeSize'] = label.volume_size
-                if label.volume_type:
-                    ebs_settings['VolumeType'] = label.volume_type
-                if label.iops:
-                    ebs_settings['Iops'] = label.iops
-                if label.throughput:
-                    ebs_settings['Throughput'] = label.throughput
-                template_data = {
-                    'KeyName': label.key_name,
-                    'SecurityGroupIds': [pool.security_group_id],
-                    'BlockDeviceMappings': [
-                        {
-                            'DeviceName': '/dev/sda1',
-                            'Ebs': ebs_settings,
-                        },
-                    ],
-                }
-                try:
-                    self.ec2_client.create_launch_template(
-                        LaunchTemplateName=template_name,
-                        LaunchTemplateData=template_data,
-                        TagSpecifications=[
-                            {
-                                'ResourceType': 'launch-template',
-                                'Tags': tag_dict_to_list(tags),
-                            },
-                        ]
-                    )
-                    self.log.debug('launch template %s created', template_name)
-                except botocore.exceptions.ClientError as e:
-                    if (e.response['Error']['Code'] ==
-                        'InvalidLaunchTemplateName.AlreadyExistsException'):
-                        self.log.debug(
-                            'launch template %s already created',
-                            template_name)
-                    else:
-                        raise e
-                except Exception:
-                    self.log.exception(
-                        'Could not create launch template %s', template_name)
+        self._createLaunchTemplates()
 
     def stop(self):
         self.create_executor.shutdown()
@@ -1589,6 +1515,92 @@ class AwsAdapter(statemachine.Adapter):
         else:
             return self._runInstace(label, image_id, tags,
                                     hostname, dedicated_host_id, log)
+
+    def _createLaunchTemplates(self):
+        labels = []
+        for pool_name, pool in self.provider.pools.items():
+            for label_name, label in pool.labels.items():
+                # Create launch templates only for labels which usage fleet
+                if not label.fleet:
+                    continue
+                labels.append(label)
+
+        if not labels:
+            return
+
+        self.log.info("Creating launch templates")
+        tags = {
+            'nodepool_managed': True,
+            'nodepool_provider_name': self.provider.name,
+        }
+        existing_templates = []
+        name_filter = {
+            'Name': 'launch-template-name',
+            'Values': [f'{self.LAUNCH_TEMPLATE_PREFIX}-*'],
+        }
+        paginator = self.ec2_client.get_paginator(
+            'describe_launch_templates')
+        with self.non_mutating_rate_limiter:
+            for page in paginator.paginate(Filters=[name_filter]):
+                for template in page['LaunchTemplates']:
+                    existing_templates.append(template['LaunchTemplateName'])
+
+        for label in labels:
+            # Create launch templates only for labels which usage fleet
+            if not label.fleet:
+                continue
+
+            template_name = self._getLaunchTemplateName(label)
+            if template_name in existing_templates:
+                self.log.debug(
+                    'launch template %s already exist', template_name)
+                continue
+
+            self.log.debug('Creating launch template %s', template_name)
+            ebs_settings = {
+                'DeleteOnTermination': True,
+            }
+            if label.volume_size:
+                ebs_settings['VolumeSize'] = label.volume_size
+            if label.volume_type:
+                ebs_settings['VolumeType'] = label.volume_type
+            if label.iops:
+                ebs_settings['Iops'] = label.iops
+            if label.throughput:
+                ebs_settings['Throughput'] = label.throughput
+            template_data = {
+                'KeyName': label.key_name,
+                'SecurityGroupIds': [label.pool.security_group_id],
+                'BlockDeviceMappings': [
+                    {
+                        'DeviceName': '/dev/sda1',
+                        'Ebs': ebs_settings,
+                    },
+                ],
+            }
+            try:
+                self.ec2_client.create_launch_template(
+                    LaunchTemplateName=template_name,
+                    LaunchTemplateData=template_data,
+                    TagSpecifications=[
+                        {
+                            'ResourceType': 'launch-template',
+                            'Tags': tag_dict_to_list(tags),
+                        },
+                    ]
+                )
+                self.log.debug('launch template %s created', template_name)
+            except botocore.exceptions.ClientError as e:
+                if (e.response['Error']['Code'] ==
+                    'InvalidLaunchTemplateName.AlreadyExistsException'):
+                    self.log.debug(
+                        'launch template %s already created',
+                        template_name)
+                else:
+                    raise e
+            except Exception:
+                self.log.exception(
+                    'Could not create launch template %s', template_name)
 
     def _getLaunchTemplateName(self, label):
         # IO settings can not be overriten for now, launch templates names
