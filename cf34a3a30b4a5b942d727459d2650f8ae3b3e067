@@ -38,6 +38,42 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "39bd2255_e77166f9",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:07:06Z",
+      "side": 1,
+      "message": "Two questions about that:\n1) Should we actually support instance-requirements?  We don\u0027t do anything like that right now with aws single instances.  But we do have something like that for openstack single instances.  But I\u0027m not sure we should, because if someone isn\u0027t careful, they could end up getting a surprise bill if aws adds a new expensive instance-type that meets your criteria.  So one should always include min and max values.  :)\n\n2) Assuming we *do* want to support that, how about we use this API call to get the possible instance types and use that here?\n\nhttps://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_instance_types_from_instance_requirements.html",
+      "parentUuid": "9e9a8a92_3d2ea6bb",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ace2a176_3833b672",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:07:06Z",
+      "side": 1,
+      "message": "Two questions about that:\n1) Should we actually support instance-requirements?  We don\u0027t do anything like that right now with aws single instances.  But we do have something like that for openstack single instances.  But I\u0027m not sure we should, because if someone isn\u0027t careful, they could end up getting a surprise bill if aws adds a new expensive instance-type that meets your criteria.  So one should always include min and max values.  :)\n\n2) Assuming we *do* want to support that, how about we use this API call to get the possible instance types and use that here?\n\nhttps://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/get_instance_types_from_instance_requirements.html",
+      "parentUuid": "9e9a8a92_3d2ea6bb",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c652245_49425cbc",
         "filename": "nodepool/driver/statemachine.py",
         "patchSetId": 9
