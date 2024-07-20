@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c180035c_253895b7",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "We should mention that quota handling is retro-spective not pro-spective when using the fleet api.\n\nAlso, this change could use a release note.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b82423c8_7eea63a9",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "This is a subset of what\u0027s available in the api.  We\u0027re also translating nodepool-style options (lowercase hyphenated) to AWS-style options (camel-case).  If we\u0027re going to support this (and not just instance-types), then we should consider the following questions:\n\n1) Should we support all the options explicitly?  I.e., add options like \"accelerator-names\" to this.  Requesting gpus does not seem far-fetched.\n2) Should we support all the options implicitly?  I.e., remove everything below this level and say \"The supplied dictionary will be passed to AWS verbatim as InstanceRequirements.\"",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "081960c3_2988ea6f",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "From here to the end of the method should probably be a new method, and we should just call \"CreateLaunchTemplates\" here.\n\nMoreover, we should probably actually scan through the list of labels to see if there are any before creating the launch templatse, and if there are none, omit the query to find the list of launch templates, thus saving api calls in the non-fleet case.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfc6b9ec_8e81649a",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "This strategy probably warrants a comment:\n\nThe idea is to create minimal launch templates and override as much as possible.  The fewer launch templates we have, the better, since it\u0027s less extra work for us to manage their lifecycles.\n\nSo below, we create launch templates with only the attributes which can not be overridden later when we use them.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcdbddc7_41615b94",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "The security group ID is not encoded in the name of the launch template, which means that if there is another aws provider using the same volume configuration but a different security group id, they would collide.  We are also setting tags on the launch template, which is good, but they specify this provider, and that\u0027s also not in the launch template name, which means that when we add support for deleting launch templates, we might delete a template created by another provider.\n\nWe might need to change either the contents or names of the launch template in the future, and it may be a little difficult to do so.\n\nHow about we use content-addressible naming for the templates.  Create the entire content of the launch_template call (except for the name) and then generate a sha1 hash of that.  Use that as the launch template name suffix instead of the volume characteristics.\n\nTo make it easier too find the correct launch template to use later, go ahead and store the launch template name on the label object.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f43338d2_b95d5beb",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "Capitalize \"launch\"",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de13af1f_7b38630f",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "There is documentation for the dict contents here, but no validation; this would be fine if we pass the contents through unchanged, but since we currently map only some of them, we should be validating them.  We need to decide which thing we want to do, and either change this code or the mapping code to match.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da7ec9d2_ef87ad0a",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T15:05:56Z",
+      "side": 1,
+      "message": "Sleeps in tests are not reliable because things take varying abouts of time to happen.  That\u0027s why we use iterate_timeout instead.\n\nIt sounds like you\u0027re saying we could get through the iterate_timeout below before even starting to delete a node.  In that case, instead of adding the sleep here, you should adjust the iterate_timeout to also check that there are no instances (or reservations).\n\nAlso, this could be its own change.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
