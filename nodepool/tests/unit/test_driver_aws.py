@@ -1388,10 +1388,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(len(launch_tempaltes), 2)
         lt1 = launch_tempaltes[0]
         lt2 = launch_tempaltes[1]
-        self.assertEqual(lt1['LaunchTemplateName'],
-                         'nodepool-launch-template-io2-20-2000-None')
-        self.assertEqual(lt2['LaunchTemplateName'],
-                         'nodepool-launch-template-gp3-40-1000-200')
+        self.assertTrue(lt1['LaunchTemplateName'].startswith(
+            'nodepool-launch-template'))
+        self.assertTrue(lt2['LaunchTemplateName'].startswith(
+            'nodepool-launch-template'))
 
         lt_version = self.ec2_client.\
             describe_launch_template_versions(
@@ -1428,10 +1428,10 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(
             self.create_fleet_calls[0]['OnDemandOptions']
             ['AllocationStrategy'], 'prioritized')
-        self.assertEqual(
+        self.assertTrue(
             self.create_fleet_calls[0]['LaunchTemplateConfigs'][0]
-            ['LaunchTemplateSpecification']['LaunchTemplateName'],
-            'nodepool-launch-template-gp3-40-1000-200')
+            ['LaunchTemplateSpecification']['LaunchTemplateName'].startswith(
+                'nodepool-launch-template'))
         self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][0]
                          ['ResourceType'], 'instance')
         self.assertEqual(self.create_fleet_calls[0]['TagSpecifications'][0]

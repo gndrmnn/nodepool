@@ -17,6 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 import cachetools.func
 import copy
 import functools
+import hashlib
 import json
 import logging
 import math
@@ -1550,13 +1551,6 @@ class AwsAdapter(statemachine.Adapter):
             if not label.fleet:
                 continue
 
-            template_name = self._getLaunchTemplateName(label)
-            if template_name in existing_templates:
-                self.log.debug(
-                    'launch template %s already exist', template_name)
-                continue
-
-            self.log.debug('Creating launch template %s', template_name)
             ebs_settings = {
                 'DeleteOnTermination': True,
             }
@@ -1578,18 +1572,28 @@ class AwsAdapter(statemachine.Adapter):
                     },
                 ],
             }
+            template_args = dict(
+                LaunchTemplateData=template_data,
+                TagSpecifications=[
+                    {
+                        'ResourceType': 'launch-template',
+                        'Tags': tag_dict_to_list(tags),
+                    },
+                ]
+            )
+
+            template_name = self._getLaunchTemplateName(template_args)
+            label._launch_template_name = template_name
+            if template_name in existing_templates:
+                self.log.debug(
+                    'launch template %s already exist', template_name)
+                continue
+
+            template_args['LaunchTemplateName'] = template_name
+            self.log.debug('Creating launch template %s', template_name)
             try:
-                self.ec2_client.create_launch_template(
-                    LaunchTemplateName=template_name,
-                    LaunchTemplateData=template_data,
-                    TagSpecifications=[
-                        {
-                            'ResourceType': 'launch-template',
-                            'Tags': tag_dict_to_list(tags),
-                        },
-                    ]
-                )
-                self.log.debug('launch template %s created', template_name)
+                self.ec2_client.create_launch_template(**template_args)
+                self.log.debug('Launch template %s created', template_name)
             except botocore.exceptions.ClientError as e:
                 if (e.response['Error']['Code'] ==
                     'InvalidLaunchTemplateName.AlreadyExistsException'):
@@ -1602,12 +1606,11 @@ class AwsAdapter(statemachine.Adapter):
                 self.log.exception(
                     'Could not create launch template %s', template_name)
 
-    def _getLaunchTemplateName(self, label):
-        # IO settings can not be overriten for now, launch templates names
-        # are from IO settings combinations and they are deterministic.
-        return (f'{self.LAUNCH_TEMPLATE_PREFIX}-'
-                f'{label.volume_type}-{label.volume_size}-'
-                f'{label.iops}-{label.throughput}')
+    def _getLaunchTemplateName(self, args):
+        hasher = hashlib.sha256()
+        hasher.update(json.dumps(args, sort_keys=True).encode('utf8'))
+        sha = hasher.hexdigest()
+        return (f'{self.LAUNCH_TEMPLATE_PREFIX}-{sha}')
 
     def _createFleet(self, label, image_id, tags, hostname, log):
         overrides = []
@@ -1684,7 +1687,7 @@ class AwsAdapter(statemachine.Adapter):
                 },
             }
 
-        template_name = self._getLaunchTemplateName(label)
+        template_name = label._launch_template_name
 
         args = {
             **capacity_type_option,
