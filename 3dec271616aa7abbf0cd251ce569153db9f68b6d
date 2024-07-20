@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8cccc4a8_531a1916",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:16:50Z",
+      "side": 1,
+      "message": "I\u0027ve done this in a new revision.",
+      "parentUuid": "081960c3_2988ea6f",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bfc6b9ec_8e81649a",
         "filename": "nodepool/driver/aws/adapter.py",
         "patchSetId": 24
@@ -88,6 +106,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "77fe6ca7_3d2571bc",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:16:50Z",
+      "side": 1,
+      "message": "I\u0027ve done this in a new revision.",
+      "parentUuid": "dcdbddc7_41615b94",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f43338d2_b95d5beb",
         "filename": "nodepool/driver/aws/adapter.py",
         "patchSetId": 24
@@ -99,6 +135,24 @@
       "writtenOn": "2024-07-20T15:05:56Z",
       "side": 1,
       "message": "Capitalize \"launch\"",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ca25403_41d22854",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:16:50Z",
+      "side": 1,
+      "message": "I did this in in a new revision.",
+      "parentUuid": "f43338d2_b95d5beb",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },

@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "44015389_c3d5209e",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:16:50Z",
+      "side": 1,
+      "message": "unresolving",
+      "parentUuid": "ace2a176_3833b672",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c652245_49425cbc",
         "filename": "nodepool/driver/statemachine.py",
         "patchSetId": 9
@@ -121,6 +139,24 @@
       "side": 1,
       "message": "An update to may previous comment: The trick to set the `instance_type` to the label would not work, because not all label contains `instance_type`. So I think we can not avoid adding new parameters to those functions.",
       "parentUuid": "b15d4c16_81b5f2be",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "177d5943_bc85f4f3",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-20T17:16:50Z",
+      "side": 1,
+      "message": "This comment should not have been resolved since your changes did not address my concern.  It\u0027s fine if you didn\u0027t see how to do it, or I didn\u0027t explain it clearly enough -- but in that case you should leave it up to me to decide whether it\u0027s resolved.\n\nAt any rate, we can do this.  I\u0027ve done this in a new revision.",
+      "parentUuid": "71f20750_79dff0a2",
       "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
