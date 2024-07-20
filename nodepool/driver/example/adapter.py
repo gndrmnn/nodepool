@@ -108,7 +108,7 @@ class Adapter(statemachine.Adapter):
     def getQuotaLimits(self):
         return QuotaInformation(default=math.inf)
 
-    def getQuotaForLabel(self, label, instance=None):
+    def getQuotaForLabel(self, label):
         return QuotaInformation(instances=1)
 
     # Local implementation below

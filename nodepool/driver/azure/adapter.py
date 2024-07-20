@@ -320,7 +320,7 @@ class AzureAdapter(statemachine.Adapter):
                                 instances=instances,
                                 default=math.inf)
 
-    def getQuotaForLabel(self, label, instance=None):
+    def getQuotaForLabel(self, label):
         sku = self.skus.get((label.hardware_profile["vm-size"],
                              self.provider.location))
         return quota_info_from_sku(sku)

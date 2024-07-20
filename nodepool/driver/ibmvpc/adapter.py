@@ -459,7 +459,7 @@ class IBMVPCAdapter(statemachine.Adapter):
             instances=instances,
             default=math.inf)
 
-    def getQuotaForLabel(self, label, instance=None):
+    def getQuotaForLabel(self, label):
         profile = self.profiles.get(label.profile)
         return quota_info_from_profile(profile)
 

@@ -430,7 +430,7 @@ class KubernetesProvider(Provider, QuotaSupport):
             ram=math.inf,
             default=math.inf)
 
-    def quotaNeededByLabel(self, ntype, pool, instance=None):
+    def quotaNeededByLabel(self, ntype, pool):
         provider_label = pool.labels[ntype]
         resources = {}
         if provider_label.cpu:

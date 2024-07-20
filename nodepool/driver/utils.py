@@ -265,14 +265,11 @@ class QuotaSupport:
         self._current_nodepool_quota = {}
 
     @abc.abstractmethod
-    def quotaNeededByLabel(self, label, pool, instance=None):
+    def quotaNeededByLabel(self, label, pool):
         """Return quota information about a label
 
         :param str label: The label name
         :param ProviderPool pool: A ProviderPool config object with the label
-        :param str instance: This is useful in the case that
-            the quota is only known after an instance is launched,
-            e.g. when EC2 fleet API is used.
         :return: QuotaInformation about the label
         """
         pass

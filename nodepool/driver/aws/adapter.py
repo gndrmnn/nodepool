@@ -397,7 +397,7 @@ class AwsCreateStateMachine(statemachine.StateMachine):
                 return
             self.instance = instance
             self.external_id['instance'] = instance['InstanceId']
-            self.quota = self.adapter.getQuotaForLabel(self.label)
+            self.quota = self.adapter._getQuotaForLabel(self.label)
             self.state = self.INSTANCE_CREATING
 
         if self.state == self.INSTANCE_CREATING:
@@ -413,6 +413,8 @@ class AwsCreateStateMachine(statemachine.StateMachine):
 
         if self.state == self.COMPLETE:
             self.complete = True
+            self.quota = self.adapter._getQuotaForLabel(
+                self.label, self.instance['InstanceType'])
             return AwsInstance(self.adapter.provider, self.instance,
                                self.host, self.quota)
 
@@ -809,7 +811,14 @@ class AwsAdapter(statemachine.Adapter):
                 args[code] = value
         return QuotaInformation(**args)
 
-    def getQuotaForLabel(self, label, instance=None):
+    def getQuotaForLabel(self, label):
+        return self._getQuotaForLabel(label)
+
+    def _getQuotaForLabel(self, label, instance_type=None):
+        # When using the Fleet API, we may need to fill in quota
+        # information from the actual instance, so this internal
+        # method operates on the label alone or label+instance.
+
         # For now, we are optimistically assuming that when an
         # instance is launched on a dedicated host, it is not counted
         # against instance quota.  That may be overly optimistic.  If
@@ -818,13 +827,13 @@ class AwsAdapter(statemachine.Adapter):
         if label.dedicated_host:
             quota = self._getQuotaForHostType(
                 label.instance_type)
-        elif not label.instance_type and not instance:
+        elif label.fleet and instance_type is None:
             # For fleet API, do not check quota before launch the instance
             quota = QuotaInformation(instances=1)
         else:
-            instance_type = label.instance_type or instance.instance_type
+            check_instance_type = label.instance_type or instance_type
             quota = self._getQuotaForInstanceType(
-                instance_type,
+                check_instance_type,
                 SPOT if label.use_spot else ON_DEMAND)
         if label.volume_type:
             quota.add(self._getQuotaForVolumeType(
