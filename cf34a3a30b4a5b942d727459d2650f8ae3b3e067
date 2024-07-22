@@ -161,6 +161,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6147df4_a25ed023",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "You are right, I should not have resolved this discussion. Resolve it now as it has been fixed in your Patchset.",
+      "parentUuid": "177d5943_bc85f4f3",
+      "revId": "cf34a3a30b4a5b942d727459d2650f8ae3b3e067",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "211d2621_af3dc79b",

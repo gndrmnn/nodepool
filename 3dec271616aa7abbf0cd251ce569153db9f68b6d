@@ -88,6 +88,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e09d9fac_c5c38793",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "8cccc4a8_531a1916",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfc6b9ec_8e81649a",
@@ -101,6 +119,24 @@
       "writtenOn": "2024-07-20T15:05:56Z",
       "side": 1,
       "message": "This strategy probably warrants a comment:\n\nThe idea is to create minimal launch templates and override as much as possible.  The fewer launch templates we have, the better, since it\u0027s less extra work for us to manage their lifecycles.\n\nSo below, we create launch templates with only the attributes which can not be overridden later when we use them.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e25140bd_a6eb5e77",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "bfc6b9ec_8e81649a",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -140,6 +176,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f462ff62_ae786118",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "77fe6ca7_3d2571bc",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f43338d2_b95d5beb",
@@ -175,6 +229,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "627bb152_07420a60",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "0ca25403_41d22854",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de13af1f_7b38630f",
@@ -205,6 +277,24 @@
       "writtenOn": "2024-07-20T15:05:56Z",
       "side": 1,
       "message": "Sleeps in tests are not reliable because things take varying abouts of time to happen.  That\u0027s why we use iterate_timeout instead.\n\nIt sounds like you\u0027re saying we could get through the iterate_timeout below before even starting to delete a node.  In that case, instead of adding the sleep here, you should adjust the iterate_timeout to also check that there are no instances (or reservations).\n\nAlso, this could be its own change.",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "371c26f6_d7caed84",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T09:33:04Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "da7ec9d2_ef87ad0a",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
