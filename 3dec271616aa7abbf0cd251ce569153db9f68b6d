@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fa2dcde2_552aa12b",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-22T08:45:13Z",
+      "side": 1,
+      "message": "I have a slight preference for 2), though we\u0027d loose the advantage of validating the options.",
+      "parentUuid": "b82423c8_7eea63a9",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "081960c3_2988ea6f",
         "filename": "nodepool/driver/aws/adapter.py",
         "patchSetId": 24
