@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "014d908c_db56e541",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T14:21:45Z",
+      "side": 1,
+      "message": "Added in the new patchset.",
+      "parentUuid": "bb6d035c_73ed898d",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b82423c8_7eea63a9",
         "filename": "doc/source/aws.rst",
         "patchSetId": 24
@@ -330,6 +348,24 @@
       "writtenOn": "2024-07-22T09:33:04Z",
       "side": 1,
       "message": "Acknowledged",
+      "parentUuid": "da7ec9d2_ef87ad0a",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0d2f448_4234c24c",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T14:21:45Z",
+      "side": 1,
+      "message": "I saw you have fixed in another change, I removed my changes here in the new patchset.",
       "parentUuid": "da7ec9d2_ef87ad0a",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
