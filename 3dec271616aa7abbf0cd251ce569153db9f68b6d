@@ -54,6 +54,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cba17b9_5793ead6",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:27:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "014d908c_db56e541",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b82423c8_7eea63a9",
@@ -103,6 +121,24 @@
       "side": 1,
       "message": "Once we start to support `InstanceRequirements` I think sooner or later we have to support all options, and in this case option 2 would be a much simpler solution, with the cost of no validation.\n\nAlternatively, also related your question in another comment \"Should we actually support instance-requirements?\": at least for now \u0027InstanceRequirements\u0027 is not the main motivation to use fleet API. So how about we leave out the support of \u0027InstanceRequirements\u0027 in the first iteration, and adding it later when there comes strong user requirement?",
       "parentUuid": "fa2dcde2_552aa12b",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "255f825b_27a8a59b",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:27:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7343bb29_5425d4a9",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -318,6 +354,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f68c413_402e4bde",
+        "filename": "nodepool/driver/aws/config.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:27:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de13af1f_7b38630f",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da7ec9d2_ef87ad0a",
@@ -367,6 +421,24 @@
       "side": 1,
       "message": "I saw you have fixed in another change, I removed my changes here in the new patchset.",
       "parentUuid": "da7ec9d2_ef87ad0a",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dccecf0d_f295763b",
+        "filename": "nodepool/tests/unit/test_driver_aws.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 1333,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:27:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0d2f448_4234c24c",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
