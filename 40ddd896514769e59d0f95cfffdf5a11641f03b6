@@ -24,6 +24,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e399a65_69efe1a9",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 31
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:37:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e39aa4b0_c87b9dd3",
+      "range": {
+        "startLine": 692,
+        "startChar": 17,
+        "endLine": 692,
+        "endChar": 26
+      },
+      "revId": "40ddd896514769e59d0f95cfffdf5a11641f03b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c895c762_2d1450fc",
@@ -47,6 +71,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86d2c460_4c2f2649",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 1596,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:37:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c895c762_2d1450fc",
+      "range": {
+        "startLine": 1596,
+        "startChar": 0,
+        "endLine": 1596,
+        "endChar": 2
+      },
+      "revId": "40ddd896514769e59d0f95cfffdf5a11641f03b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22a60ebd_95d3cd55",
@@ -60,6 +108,24 @@
       "writtenOn": "2024-07-22T16:27:27Z",
       "side": 1,
       "message": "We shouldn\u0027t need this anymore.",
+      "revId": "40ddd896514769e59d0f95cfffdf5a11641f03b6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea6f6a73_d93c111f",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:37:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22a60ebd_95d3cd55",
       "revId": "40ddd896514769e59d0f95cfffdf5a11641f03b6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }

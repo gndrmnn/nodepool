@@ -22,6 +22,30 @@
       },
       "revId": "0c3063a89a60ceb446d005dfc220dcf79629e6d4",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "004d45cf_dcefa91b",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 31
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:37:51Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "8c821ae7_ec3a776c",
+      "range": {
+        "startLine": 812,
+        "startChar": 19,
+        "endLine": 812,
+        "endChar": 21
+      },
+      "revId": "0c3063a89a60ceb446d005dfc220dcf79629e6d4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }

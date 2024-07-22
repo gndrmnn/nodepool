@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cc1ee08_46c395de",
+        "filename": "releasenotes/notes/aws-fleet-api-ef99139931642c54.yaml",
+        "patchSetId": 32
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-22T16:37:51Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to say what we haven\u0027t implemented, but I do get the idea that you want to communicate that if someone is expecting to use instance requirements they may be disappointed.  How about we just describe what we did implement -- that fleet can be used to pick from among a set of instance types.",
+      "revId": "e65d111fb0fe13927803cad9dfc8851fa1204728",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
