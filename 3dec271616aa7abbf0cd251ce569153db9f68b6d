@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb6d035c_73ed898d",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T10:10:17Z",
+      "side": 1,
+      "message": "I can add that.",
+      "parentUuid": "c180035c_253895b7",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b82423c8_7eea63a9",
         "filename": "doc/source/aws.rst",
         "patchSetId": 24
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "I have a slight preference for 2), though we\u0027d loose the advantage of validating the options.",
       "parentUuid": "b82423c8_7eea63a9",
+      "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7343bb29_5425d4a9",
+        "filename": "doc/source/aws.rst",
+        "patchSetId": 24
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-22T10:10:17Z",
+      "side": 1,
+      "message": "Once we start to support `InstanceRequirements` I think sooner or later we have to support all options, and in this case option 2 would be a much simpler solution, with the cost of no validation.\n\nAlternatively, also related your question in another comment \"Should we actually support instance-requirements?\": at least for now \u0027InstanceRequirements\u0027 is not the main motivation to use fleet API. So how about we leave out the support of \u0027InstanceRequirements\u0027 in the first iteration, and adding it later when there comes strong user requirement?",
+      "parentUuid": "fa2dcde2_552aa12b",
       "revId": "3dec271616aa7abbf0cd251ce569153db9f68b6d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
