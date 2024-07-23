@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb940b9_e5f10b8e",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 16068
+      },
+      "writtenOn": "2024-07-23T07:40:55Z",
+      "side": 1,
+      "message": "nit: strictly speaking this filter is already done above and not needed here.",
+      "revId": "a719e8c021ed95c64677c42ce9abc6beea990053",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
