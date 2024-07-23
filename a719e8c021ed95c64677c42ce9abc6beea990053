@@ -16,6 +16,24 @@
       "message": "nit: strictly speaking this filter is already done above and not needed here.",
       "revId": "a719e8c021ed95c64677c42ce9abc6beea990053",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f2a6f1f_718928d8",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 34
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-23T07:55:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fb940b9_e5f10b8e",
+      "revId": "a719e8c021ed95c64677c42ce9abc6beea990053",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
