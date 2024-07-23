@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfa1b6cd_7c912702",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 33
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-07-23T05:18:24Z",
+      "side": 1,
+      "message": "nit: typo `_runInstaNce`",
+      "range": {
+        "startLine": 1706,
+        "startChar": 8,
+        "endLine": 1706,
+        "endChar": 19
+      },
+      "revId": "3b1f900e00dbb9df4c80c54dfd6cd070fbd7d98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
