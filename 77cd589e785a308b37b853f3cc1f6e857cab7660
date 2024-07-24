@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f200b6d7_7b4a1c1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-24T06:23:36Z",
+      "side": 1,
+      "message": "Batchset 3 is a rebase.",
+      "revId": "77cd589e785a308b37b853f3cc1f6e857cab7660",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
