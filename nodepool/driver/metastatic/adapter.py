@@ -322,10 +322,20 @@ class MetastaticAdapter(statemachine.Adapter):
                                       "%s seconds, releasing",
                                       bnr.node_id, now - bnr.last_used)
                         node = self._getNode(bnr.node_id)
+                        
                         node.state = zk.USED
+
                         self.zk.storeNode(node)
-                        self.zk.forceUnlockNode(node)
-                        backing_node_records.remove(bnr)
+                        try:
+                            # Possible exception can be throw in race codition, e.g.
+                            # when the cleanup thread is trying to locking the node.
+                            # But we do not need to retry it, it would be deleted
+                            # by the cleanup thread.
+                            self.zk.forceUnlockNode(node)
+                        finally:
+                            # The bnr should be removed from backing_node_records
+                            # also when exception happens
+                            backing_node_records.remove(bnr)
         return []
 
     def deleteResource(self, resource):
