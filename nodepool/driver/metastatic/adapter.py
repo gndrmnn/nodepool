@@ -324,8 +324,16 @@ class MetastaticAdapter(statemachine.Adapter):
                         node = self._getNode(bnr.node_id)
                         node.state = zk.USED
                         self.zk.storeNode(node)
-                        self.zk.forceUnlockNode(node)
-                        backing_node_records.remove(bnr)
+                        try:
+                            # Possible exception can be throw in race codition, e.g.
+                            # when the cleanup thread is trying to locking the node.
+                            # But we do not need to retry it, it would be deleted
+                            # by the cleanup thread.
+                            self.zk.forceUnlockNode(node)
+                        finally:
+                            # The bnr should be removed from backing_node_records
+                            # also when exception happens
+                            backing_node_records.remove(bnr)
         return []
 
     def deleteResource(self, resource):
@@ -425,6 +433,16 @@ class MetastaticAdapter(statemachine.Adapter):
                 if bnr.hasAvailableSlot():
                     backing_node_record = bnr
                     break
+
+            # double check if the bnr is valid
+            if backing_node_record and backing_node_record.node_id:
+                backing_node = self.adapter._getNode(
+                    self.backing_node_record.node_id)
+                if not backing_node or backing_node.state == zk.USED:
+                    # the bnr is not valid, we need to remove it
+                    self.backing_node_records.remove(backing_node_record)
+                    backing_node_record = None
+
             if backing_node_record is None:
                 req = zk.NodeRequest()
                 req.node_types = [label.backing_label]
