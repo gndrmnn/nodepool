@@ -603,6 +603,18 @@ class DBTestCase(BaseTestCase):
             if not exists:
                 break
 
+    def waitForBnrDeletion(self, bnrs, bnr):
+        for _ in iterate_timeout(ONE_MINUTE, Exception,
+                                 "Backing node record deletion",
+                                 interval=1):
+            exists = False
+            for _bnr in bnrs:
+                if _bnr == bnr:
+                    exists = True
+                    break
+            if not exists:
+                break
+
     def waitForInstanceDeletion(self, manager, instance_id):
         for _ in iterate_timeout(ONE_MINUTE, Exception,
                                  "Cloud instance deletion",
