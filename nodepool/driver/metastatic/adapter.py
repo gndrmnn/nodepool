@@ -321,11 +321,12 @@ class MetastaticAdapter(statemachine.Adapter):
                         self.log.info("Backing node %s has been idle for "
                                       "%s seconds, releasing",
                                       bnr.node_id, now - bnr.last_used)
+                        backing_node_records.remove(bnr)
                         node = self._getNode(bnr.node_id)
                         node.state = zk.USED
                         self.zk.storeNode(node)
                         self.zk.forceUnlockNode(node)
-                        backing_node_records.remove(bnr)
+    
         return []
 
     def deleteResource(self, resource):
@@ -425,6 +426,16 @@ class MetastaticAdapter(statemachine.Adapter):
                 if bnr.hasAvailableSlot():
                     backing_node_record = bnr
                     break
+
+            # double check if the bnr is valid
+            if backing_node_record and backing_node_record.node_id:
+                backing_node = self.adapter._getNode(
+                    self.backing_node_record.node_id)
+                if not backing_node or backing_node.state == zk.USED:
+                    # the bnr is not valid, we need to remove it
+                    self.backing_node_records.remove(backing_node_record)
+                    backing_node_record = None
+
             if backing_node_record is None:
                 req = zk.NodeRequest()
                 req.node_types = [label.backing_label]
