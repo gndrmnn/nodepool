@@ -322,9 +322,10 @@ class MetastaticAdapter(statemachine.Adapter):
                                       "%s seconds, releasing",
                                       bnr.node_id, now - bnr.last_used)
                         node = self._getNode(bnr.node_id)
-                        node.state = zk.USED
-                        self.zk.storeNode(node)
-                        self.zk.forceUnlockNode(node)
+                        if node:
+                            node.state = zk.USED
+                            self.zk.storeNode(node)
+                            self.zk.forceUnlockNode(node)
                         backing_node_records.remove(bnr)
         return []
 
