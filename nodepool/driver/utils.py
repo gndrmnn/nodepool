@@ -370,9 +370,9 @@ class QuotaSupport:
                         # may have changed under it.  It should settle out
                         # eventually when it's deleted.
                         continue
-                    # If the node resources is valid, we can use that to
+                    # If the node resources is not None, we can use that to
                     # construct the qi object for the node.
-                    if node.resources['cores']:
+                    if node.resources:
                         node_resources = QuotaInformation.from_resources(
                             node.resources)
                     else:
