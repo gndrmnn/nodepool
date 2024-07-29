@@ -27,3 +27,5 @@ urllib3>=1.26.0
 ibm-vpc
 ibm-platform-services
 ibm-cos-sdk>=2.11.0
+# workaround for https://github.com/pypa/setuptools/pull/4458
+setuptools<72
