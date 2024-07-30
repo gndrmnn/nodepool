@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "e6001c36_3e5d4473",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-07-30T16:09:53Z",
+      "side": 1,
+      "message": "I believe we originally added the cores check because in the fleet api, we:\n1) Send the create fleet api call\n2) Set node.resources to QuotaInformation(instances\u003d1)\n3) Receive the create fleet api response\n4) Set node.resources to QuotaInformation(instances\u003d1, cores\u003dX)\n\nSo this was originally designed to only trigger once step #4 happened.  However, I think I agree with you that it should be safe to run any time we have a non-null node.resources, so I think this change is okay as written.",
+      "parentUuid": "77785eb3_3ad23867",
+      "revId": "6101d2e724ccef5acf7d4d4662436d9ad6a59567",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9de49fc3_bf7c3236",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
