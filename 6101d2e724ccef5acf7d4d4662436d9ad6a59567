@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a59d357_c8e6b2b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-07-30T13:55:13Z",
+      "side": 1,
+      "message": "I mentioned the fleet api is to try to explain why we do not need to check `cores` here. What I really want to explain is as long as the node.resources is not None, it should be a valid value to return, no matter it is fleet API or not. \nAdding a `cores` check do no harm but seems not necessary?",
+      "parentUuid": "77785eb3_3ad23867",
+      "revId": "6101d2e724ccef5acf7d4d4662436d9ad6a59567",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9de49fc3_bf7c3236",
