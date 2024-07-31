@@ -16,9 +16,11 @@
 # limitations under the License.
 
 import abc
+import concurrent.futures
 import copy
 import logging
 import math
+import os
 import threading
 import time
 from collections import defaultdict
@@ -548,3 +550,114 @@ class LazyExecutorTTLCache:
                     self.last_time = time.monotonic()
                 return self.last_value
         return decorator
+
+
+class Segment:
+    def __init__(self, index, offset, data):
+        self.index = index
+        self.offset = offset
+        self.data = data
+
+
+class ImageUploader:
+    """
+    A helper class for drivers that upload large images in chunks.
+    """
+
+    # These values probably don't need to be changed
+    error_retries = 3
+    concurrency = 10
+
+    # Subclasses must implement these
+    segment_size = None
+
+    def __init__(self, adapter, log, path, metadata):
+        if self.segment_size is None:
+            raise Exception("Subclass must set block size")
+        self.adapter = adapter
+        self.log = log
+        self.path = path
+        self.size = os.path.getsize(path)
+        self.metadata = metadata
+        self.timeout = None
+
+    def shouldRetryException(self, exception):
+        return True
+
+    def uploadSegment(self, segment):
+        pass
+
+    def startUpload(self):
+        pass
+
+    def finishUpload(self):
+        pass
+
+    def abortUpload(self):
+        pass
+
+    # Main API
+    def upload(self, timeout=None):
+        if timeout:
+            self.timeout = time.monotonic() + timeout
+        self.startUpload()
+        try:
+            with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=self.concurrency) as executor:
+                with open(self.path, 'rb') as image_file:
+                    self._uploadInner(executor, image_file)
+            return self.finishUpload()
+        except Exception:
+            self.log.exception("Error uploading image:")
+            self.abortUpload()
+
+    # Subclasses can use this helper method for wrapping retryable calls
+    def retry(self, func, *args, **kw):
+        for x in range(self.error_retries):
+            try:
+                return func(*args, **kw)
+            except Exception as e:
+                if not self.shouldRetryException(e):
+                    raise
+                if x + 1 >= self.error_retries:
+                    raise
+                time.sleep(2 * x)
+
+    def getTimeout(self):
+        if self.timeout is None:
+            return None
+        return self.timeout - time.monotonic()
+
+    def checkTimeout(self):
+        if self.timeout is None:
+            return
+        if self.getTimeout() < 0:
+            raise Exception("Timed out uploading image")
+
+    # Internal methods
+    def _uploadInner(self, executor, image_file):
+        futures = set()
+        for index, offset in enumerate(range(0, self.size, self.segment_size)):
+            segment = Segment(index, offset,
+                              image_file.read(self.segment_size))
+            future = executor.submit(self.uploadSegment, segment)
+            futures.add(future)
+            # Keep the pool of workers supplied with data but without
+            # reading the entire file into memory.
+            if len(futures) >= (self.concurrency * 2):
+                (done, futures) = concurrent.futures.wait(
+                    futures,
+                    timeout=self.getTimeout(),
+                    return_when=concurrent.futures.FIRST_COMPLETED)
+                for future in done:
+                    future.result()
+                # Only check the timeout after waiting (not every pass
+                # through the loop)
+                self.checkTimeout()
+        # We're done reading the file, wait for all uploads to finish
+        (done, futures) = concurrent.futures.wait(
+            futures,
+            timeout=self.getTimeout())
+        for future in done:
+            future.result()
+        self.checkTimeout()

@@ -107,8 +107,9 @@ class AwsProviderDiskImage(ConfigValue):
         self.import_method = image.get('import-method', 'snapshot')
         self.imds_support = image.get('imds-support', None)
         if (self.imds_support == 'v2.0' and
-            self.import_method != 'snapshot'):
-            raise Exception("IMDSv2 requires 'snapshot' import method")
+            self.import_method == 'image'):
+            raise Exception("IMDSv2 requires 'snapshot' or 'ebs-direct' "
+                            "import method")
         self.iops = image.get('iops', None)
         self.throughput = image.get('throughput', None)
 
@@ -131,7 +132,7 @@ class AwsProviderDiskImage(ConfigValue):
             'ena-support': bool,
             'volume-size': int,
             'volume-type': str,
-            'import-method': v.Any('snapshot', 'image'),
+            'import-method': v.Any('snapshot', 'ebs-direct', 'image'),
             'imds-support': v.Any('v2.0', None),
             'iops': int,
             'throughput': int,

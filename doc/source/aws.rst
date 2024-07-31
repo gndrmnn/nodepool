@@ -5,10 +5,10 @@
 AWS Driver
 ----------
 
-If using the AWS driver to upload diskimages, see
-`VM Import/Export service role`_ for information on configuring
-the required permissions in AWS.  You must also create an S3 Bucket
-for use by Nodepool.
+If using the AWS driver to upload diskimages, see `VM Import/Export
+service role`_ for information on configuring the required permissions
+in AWS.  You must also create an S3 Bucket for use by Nodepool if
+uploading images (except when using the ebs-direct upload method).
 
 Selecting the ``aws`` driver adds the following options to the
 :attr:`providers` section of the configuration.
@@ -419,8 +419,9 @@ Selecting the ``aws`` driver adds the following options to the
 
          The root `EBS volume type`_ for the image.
          Only used with the
-         :value:`providers.[aws].diskimages.import-method.snapshot`
-         import method.
+         :value:`providers.[aws].diskimages.import-method.snapshot` or
+         :value:`providers.[aws].diskimages.import-method.ebs-direct`
+         import methods.
 
       .. attr:: volume-size
          :type: int
@@ -428,8 +429,9 @@ Selecting the ``aws`` driver adds the following options to the
          The size of the root EBS volume, in GiB, for the image.  If
          omitted, the volume size reported for the imported snapshot
          will be used.  Only used with the
-         :value:`providers.[aws].diskimages.import-method.snapshot`
-         import method.
+         :value:`providers.[aws].diskimages.import-method.snapshot` or
+         :value:`providers.[aws].diskimages.import-method.ebs-direct`
+         import methods.
 
       .. attr:: imds-support
          :type: str
@@ -437,8 +439,9 @@ Selecting the ``aws`` driver adds the following options to the
          To enforce usage of IMDSv2 by default on instances created
          from the image, set this value to `v2.0`.  If omitted, IMDSv2
          is optional by default.  This is only supported using the
-         :value:`providers.[aws].diskimages.import-method.snapshot`
-         import method.
+         :value:`providers.[aws].diskimages.import-method.snapshot` or
+         :value:`providers.[aws].diskimages.import-method.ebs-direct`
+         import methods.
 
       .. attr:: import-method
          :default: snapshot
@@ -454,6 +457,12 @@ Selecting the ``aws`` driver adds the following options to the
             otherwise support.  However, it is incompatible with some
             operating systems which require special licensing or other
             metadata in AWS.
+
+         .. value:: ebs-direct
+
+            This is similar to the `snapshot` method, but uses the
+            `EBS direct API`_ instead of S3.  This may be faster and
+            more efficient, but it may incur additional costs.
 
          .. value:: image
 
@@ -865,3 +874,4 @@ Selecting the ``aws`` driver adds the following options to the
 .. _`VM Import/Export service role`: https://docs.aws.amazon.com/vm-import/latest/userguide/vmie_prereqs.html#vmimport-role
 .. _`instance quotas`: https://us-west-1.console.aws.amazon.com/servicequotas/home/services/ec2/quotas
 .. _`AWS RegisterImage API documentation`: https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_RegisterImage.html
+.. _`EBS direct API`: https://docs.aws.amazon.com/ebs/latest/userguide/ebs-accessing-snapshot.html
