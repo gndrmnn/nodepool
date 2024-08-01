@@ -1444,6 +1444,11 @@ class TestDriverAws(tests.DBTestCase):
                     'LaunchTemplateVersions'][0]
         lt_data = lt_version['LaunchTemplateData']
         self.assertIsNotNone(lt_data.get('SecurityGroupIds'))
+
+        metadata = lt_data['MetadataOptions']
+        self.assertEqual(metadata['HttpEndpoint'], 'enabled')
+        self.assertEqual(metadata['HttpTokens'], 'required')
+
         ebs_settings = lt_data['BlockDeviceMappings'][0]['Ebs']
         self.assertTrue(ebs_settings['DeleteOnTermination'])
         self.assertEqual(ebs_settings['Iops'], 1000)

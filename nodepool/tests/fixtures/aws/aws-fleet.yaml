@@ -49,6 +49,7 @@ providers:
             iops: 2000
           - name: ubuntu1404-gp3
             cloud-image: ubuntu1404
+            imdsv2: required
             fleet:
               instance-types:
                 - t3.medium
@@ -60,6 +61,7 @@ providers:
             throughput: 200
           - name: ubuntu1404-on-demand
             cloud-image: ubuntu1404
+            imdsv2: required
             fleet:
               instance-types:
                 - t3.nano
@@ -74,6 +76,7 @@ providers:
             throughput: 200
           - name: ubuntu1404-spot
             cloud-image: ubuntu1404
+            imdsv2: required
             fleet:
               instance-types:
                 - t3.nano
@@ -93,6 +96,7 @@ providers:
             key-name: zuul
           - name: ubuntu1404-fleet-4core
             cloud-image: ubuntu1404
+            imdsv2: required
             fleet:
               instance-types:
                 - t3.xlarge

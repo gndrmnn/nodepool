@@ -1697,6 +1697,17 @@ class AwsAdapter(statemachine.Adapter):
                     },
                 ],
             }
+            if label.imdsv2 == 'required':
+                template_data['MetadataOptions'] = {
+                    'HttpTokens': 'required',
+                    'HttpEndpoint': 'enabled',
+                }
+            elif label.imdsv2 == 'optional':
+                template_data['MetadataOptions'] = {
+                    'HttpTokens': 'optional',
+                    'HttpEndpoint': 'enabled',
+                }
+
             template_args = dict(
                 LaunchTemplateData=template_data,
                 TagSpecifications=[
