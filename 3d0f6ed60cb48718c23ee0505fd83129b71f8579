@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7aa89c64_f0523112",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-05T17:00:48Z",
+      "side": 0,
+      "message": "This line is key.  In our documentation:\n\n         The size of the root EBS volume, in GiB, for the image.  If\n         omitted, the volume size reported for the imported snapshot\n         will be used.  Only used with the\n         :value:`providers.[aws].diskimages.import-method.snapshot`\n         import method.\n\nRemoving this line would change the behavior so that users can no longer specify that an image should be created with a larger volume size than the snapshot.  That is something that makes sense to do: it\u0027s possible the user may know that even though a snapshot takes X GB, it\u0027s not actually usable without a root volume of X+Y GB.\n\nI think we should keep this and just correct the unit problem.",
+      "revId": "3d0f6ed60cb48718c23ee0505fd83129b71f8579",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
