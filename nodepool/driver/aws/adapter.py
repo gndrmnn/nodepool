@@ -504,7 +504,7 @@ class EBSSnapshotUploader(ImageUploader):
             if response['Status'] == 'completed':
                 break
             self.checkTimeout()
-        return self.size, self.snapshot_id
+        return self.snapshot_id
 
     def abortUpload(self):
         try:
@@ -908,7 +908,7 @@ class AwsAdapter(statemachine.Adapter):
         return image_id
 
     def _registerImage(self, provider_image, image_name, metadata,
-                       volume_size, snapshot_id):
+                       snapshot_id):
         # Register the snapshot as an AMI
         with self.rate_limiter:
             bdm = {
@@ -916,7 +916,6 @@ class AwsAdapter(statemachine.Adapter):
                 'Ebs': {
                     'DeleteOnTermination': True,
                     'SnapshotId': snapshot_id,
-                    'VolumeSize': volume_size,
                     'VolumeType': provider_image.volume_type,
                 },
             }
@@ -948,11 +947,11 @@ class AwsAdapter(statemachine.Adapter):
         # Import snapshot
         uploader = EBSSnapshotUploader(self, self.log, filename, metadata)
         self.log.debug(f"Importing {image_name} as EBS snapshot")
-        volume_size, snapshot_id = uploader.upload(
+        snapshot_id = uploader.upload(
             self.provider.image_import_timeout)
 
         register_response = self._registerImage(
-            provider_image, image_name, metadata, volume_size, snapshot_id,
+            provider_image, image_name, metadata, snapshot_id,
         )
 
         self.log.debug(f"Upload of {image_name} complete as "
@@ -1030,10 +1029,9 @@ class AwsAdapter(statemachine.Adapter):
         except Exception:
             self.log.exception("Error tagging snapshot:")
 
-        volume_size = provider_image.volume_size or snap['VolumeSize']
         snapshot_id = task['SnapshotTaskDetail']['SnapshotId']
         register_response = self._registerImage(
-            provider_image, image_name, metadata, volume_size, snapshot_id,
+            provider_image, image_name, metadata, snapshot_id,
         )
 
         self.log.debug(f"Upload of {image_name} complete as "
