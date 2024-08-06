@@ -430,6 +430,7 @@ class EBSSnapshotUploader(ImageUploader):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self.segment_count = 0
+        self.size_in_gib = math.ceil(self.size / GIB)
 
     def shouldRetryException(self, exception):
         # Strictly speaking, ValidationException is only retryable
@@ -482,11 +483,9 @@ class EBSSnapshotUploader(ImageUploader):
     def startUpload(self):
         # This is used by AWS to ensure idempotency across retries
         token = uuid4().hex
-        # Volume size is in GiB
-        size = math.ceil(self.size / GIB)
         response = self.retry(
             self._rateLimited(self.adapter.ebs_client.start_snapshot),
-            VolumeSize=size,
+            VolumeSize=self.size_in_gib,
             ClientToken=token,
             Tags=tag_dict_to_list(self.metadata),
         )
@@ -504,7 +503,7 @@ class EBSSnapshotUploader(ImageUploader):
             if response['Status'] == 'completed':
                 break
             self.checkTimeout()
-        return self.size, self.snapshot_id
+        return self.size_in_gib, self.snapshot_id
 
     def abortUpload(self):
         try:
