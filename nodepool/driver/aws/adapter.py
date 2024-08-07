@@ -1708,6 +1708,9 @@ class AwsAdapter(statemachine.Adapter):
                     'HttpEndpoint': 'enabled',
                 }
 
+            if label.userdata:
+                template_data['UserData'] = label.userdata
+
             template_args = dict(
                 LaunchTemplateData=template_data,
                 TagSpecifications=[

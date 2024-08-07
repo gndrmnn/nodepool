@@ -1438,18 +1438,27 @@ class TestDriverAws(tests.DBTestCase):
         self.assertTrue(lt2['LaunchTemplateName'].startswith(
             'nodepool-launch-template'))
 
-        lt_version = self.ec2_client.\
+        # Get details from first launch template
+        lt1_version = self.ec2_client.\
+            describe_launch_template_versions(
+                LaunchTemplateId=lt1['LaunchTemplateId'])[
+                    'LaunchTemplateVersions'][0]
+        lt1_data = lt1_version['LaunchTemplateData']
+        self.assertEqual(lt1_data['UserData'], 'some-command')
+
+        # Get details from second launch template
+        lt2_version = self.ec2_client.\
             describe_launch_template_versions(
                 LaunchTemplateId=lt2['LaunchTemplateId'])[
                     'LaunchTemplateVersions'][0]
-        lt_data = lt_version['LaunchTemplateData']
-        self.assertIsNotNone(lt_data.get('SecurityGroupIds'))
+        lt2_data = lt2_version['LaunchTemplateData']
+        self.assertIsNotNone(lt2_data.get('SecurityGroupIds'))
 
-        metadata = lt_data['MetadataOptions']
+        metadata = lt2_data['MetadataOptions']
         self.assertEqual(metadata['HttpEndpoint'], 'enabled')
         self.assertEqual(metadata['HttpTokens'], 'required')
 
-        ebs_settings = lt_data['BlockDeviceMappings'][0]['Ebs']
+        ebs_settings = lt2_data['BlockDeviceMappings'][0]['Ebs']
         self.assertTrue(ebs_settings['DeleteOnTermination'])
         self.assertEqual(ebs_settings['Iops'], 1000)
         self.assertEqual(ebs_settings['VolumeSize'], 40)
