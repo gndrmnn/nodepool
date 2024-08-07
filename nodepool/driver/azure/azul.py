@@ -350,18 +350,22 @@ class AzureCloud:
             raise Exception("Unhandled async operation result: %s",
                             ret['status'])
 
-    def _upload_chunk(self, url, start, end, data):
+    def upload_sas_chunk(self, url, start, end, data):
+        if 'comp=page' not in url:
+            url += '&comp=page'
         headers = {
             'x-ms-blob-type': 'PageBlob',
             'x-ms-page-write': 'Update',
             'Content-Length': str(len(data)),
             'Range': f'bytes={start}-{end}',
         }
+        requests.put(url, headers=headers, data=data).raise_for_status()
+
+    def _upload_chunk(self, url, start, end, data):
         attempts = 10
         for x in range(attempts):
             try:
-                requests.put(url, headers=headers, data=data).\
-                    raise_for_status()
+                self.upload_sas_chunk(url, start, end, data)
                 break
             except Exception:
                 if x == attempts - 1:
