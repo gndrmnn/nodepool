@@ -47,6 +47,7 @@ providers:
             volume-type: io2
             volume-size: 20
             iops: 2000
+            userdata: some-command
           - name: ubuntu1404-gp3
             cloud-image: ubuntu1404
             imdsv2: required
