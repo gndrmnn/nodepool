@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "38da853c_37a1788d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-12T17:30:51Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand the situation you\u0027re describing.\n\nWhy would the statemachine runner delete the backing node?  It should still be locked by the metastatic driver, which means it\u0027s in use.  The statemachine runner shouldn\u0027t decide to delete it until after the listResources decides it should be allowed to be deleted.",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c5e099c3_24a13f29",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 9
