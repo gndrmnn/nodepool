@@ -1,3 +1,4 @@
+---
 - job:
     description: |
       Test that nodepool works with kubernetes.
