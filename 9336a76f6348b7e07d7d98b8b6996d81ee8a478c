@@ -51,6 +51,23 @@
       "message": "Seeing the same exception and not released  nodes until launcher restart in our environment. Thanks for fix, will also check on our side later.",
       "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe2d9263_924e368e",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-08-13T10:40:25Z",
+      "side": 1,
+      "message": "After this line is executed, the node would be allowed to be removed by the statemachine runner. So it could happen that the statemachine runner and the line below `self.zk.forceUnlockNode(node)` could be trying to delete the node at the same time, which leads to the exception mentioned in the description of this change.",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
