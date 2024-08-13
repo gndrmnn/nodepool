@@ -19,6 +19,7 @@ import queue
 import threading
 import time
 import uuid
+import re
 
 from kazoo import exceptions as kze
 from kazoo.recipe.lock import Lock
@@ -2528,15 +2529,42 @@ class ZooKeeper(ZooKeeperBase):
         node.lock = None
         node._thread_lock.release()
 
+    contenders_re = re.compile(r'^.*?(\d{10})$')
+
     def forceUnlockNode(self, node):
-        '''
-        Forcibly unlock a node.
+        '''Forcibly unlock a node.
+
+        This assumes that we are only using a plain exclusive kazoo
+        Lock recipe (no read/write locks).
 
         :param Node node: The node to unlock.
+
         '''
-        path = self._nodeLockPath(node.id)
+
+        # getNodeLockContenders returns the identifiers but we need
+        # the path, so this simplified approach just gets the lowest
+        # sequence node, which is the lock holder (as long as this is
+        # a plain exclusive lock).
+        lock_path = self._nodeLockPath(node.id)
+        contenders = {}
         try:
-            self.kazoo_client.delete(path, recursive=True)
+            for child in self.kazoo_client.get_children(lock_path):
+                m = self.contenders_re.match(child)
+                if m:
+                    contenders[m.group(1)] = child
+        except kze.NoNodeError:
+            pass
+
+        if not contenders:
+            return
+
+        key = sorted(contenders.keys())[0]
+        lock_id = contenders[key]
+
+        lock_path = self._nodeLockPath(node.id)
+        path = f'{lock_path}/{lock_id}'
+        try:
+            self.kazoo_client.delete(path)
         except kze.NoNodeError:
             pass
 

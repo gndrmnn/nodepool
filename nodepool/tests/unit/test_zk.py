@@ -700,6 +700,25 @@ class TestZooKeeper(tests.DBTestCase):
         with testtools.ExpectedException(npe.ZKLockException):
             self.zk.unlockNode(node)
 
+    def test_forceUnlockNode(self):
+        node = zk.Node('100')
+        self.zk.lockNode(node, ephemeral=False)
+        self.assertIsNotNone(
+            self.zk.kazoo_client.exists(self.zk._nodeLockPath(node.id))
+        )
+        lock_path = self.zk._nodeLockPath(node.id)
+        children = self.zk.kazoo_client.get_children(lock_path)
+        self.assertEqual(1, len(children))
+
+        # Create a node that alpha sorts before the real lock
+        fake_path = f'{lock_path}/aaaa'
+        self.zk.kazoo_client.create(fake_path, sequence=True)
+
+        self.zk.forceUnlockNode(node)
+
+        children = self.zk.kazoo_client.get_children(lock_path)
+        self.assertEqual(['aaaa0000000001'], children)
+
     def _create_node(self):
         node = zk.Node()
         node.state = zk.BUILDING
