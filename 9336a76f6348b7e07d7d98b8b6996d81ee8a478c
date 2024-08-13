@@ -36,6 +36,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "29b11eeb_507c0694",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-13T16:10:08Z",
+      "side": 1,
+      "message": "The launcher should not attempt to delete a node that it can\u0027t lock, and it should not be able to lock the node until we unlock it.\n\nI believe the problem is described here: https://review.opendev.org/c/zuul/nodepool/+/926221",
+      "parentUuid": "38da853c_37a1788d",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c5e099c3_24a13f29",
