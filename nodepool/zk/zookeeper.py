@@ -2529,14 +2529,21 @@ class ZooKeeper(ZooKeeperBase):
         node._thread_lock.release()
 
     def forceUnlockNode(self, node):
-        '''
-        Forcibly unlock a node.
+        '''Forcibly unlock a node.
+
+        This assumes that we are only using a plain exclusive kazoo
+        Lock recipe (no read/write locks).
 
         :param Node node: The node to unlock.
+
         '''
-        path = self._nodeLockPath(node.id)
+        contenders = self.zk.getNodeLockContenders(node)
+        if not contenders:
+            return
+        lock_path = self._nodeLockPath(node.id)
+        path = f'{lock_path}/{contenders[0]}'
         try:
-            self.kazoo_client.delete(path, recursive=True)
+            self.kazoo_client.delete(path)
         except kze.NoNodeError:
             pass
 
