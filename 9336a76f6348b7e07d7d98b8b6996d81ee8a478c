@@ -54,6 +54,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf1afa46_1aa38ddc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-08-14T11:55:15Z",
+      "side": 1,
+      "message": "I agree, and I think my statement does not contradict with yours. \nWhat I am trying to says is when the state machine runner tries to lock the node for deleting, it creates the lock contender under that node. i.e. in your example of your change description:\nA] call forceUnlockNode\nA] delete node/lock/contender0\nB] create node/lock/contender1\nA] delete node/lock\nthe \"B\" here is probably the state machine runner.",
+      "parentUuid": "29b11eeb_507c0694",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c5e099c3_24a13f29",
@@ -67,6 +85,23 @@
       "writtenOn": "2024-08-02T08:33:31Z",
       "side": 1,
       "message": "Seeing the same exception and not released  nodes until launcher restart in our environment. Thanks for fix, will also check on our side later.",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7826c90b_5eb97969",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-08-14T11:55:15Z",
+      "side": 1,
+      "message": "Do you think it make sense to also merge my change in addition to yours?\n\nBecause your changes fixed the underlying issue that caused the exception. \nAnd my change:\n1. Avoid bnr not being deleted when other exceptions that could possibly happen again in the future.\n2. In case the node enters a invalid status for some reason, it checks if the corresponding node of the bnr is in valid status before trying to use it.",
       "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
