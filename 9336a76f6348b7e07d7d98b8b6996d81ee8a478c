@@ -74,6 +74,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a9e88e55_506fa348",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "You said:\n\u003e I think as soon as the following two lines are executed, the node is allowed to be deleted:\n\u003e\n\u003e\u003e node.state \u003d zk.USED\n\u003e\u003e self.zk.storeNode(node)\n\nBut that\u0027s not true, only after the lock is deleted (the next line after those) will the launcher try to delete the node.\n\nAnyway, your last comment is correct, so regardless of how we got here, we both understand the issue now.",
+      "parentUuid": "cf1afa46_1aa38ddc",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c5e099c3_24a13f29",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 9
@@ -106,6 +124,47 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a628279_e147db6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "We could add some safety, yes.  It will need some changes; I\u0027ll leave comments to that effect.",
+      "parentUuid": "7826c90b_5eb97969",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d53220e_d899e79f",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "Now that the underlying issue is fixed in the other change, we should not move this line.  It is safer this way, so that we don\u0027t leak records.  If we move it and encounter an error after this line, we may never allow the backing node to be deleted.",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 2
+      },
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe2d9263_924e368e",
@@ -119,6 +178,75 @@
       "writtenOn": "2024-08-13T10:40:25Z",
       "side": 1,
       "message": "After this line is executed, the node would be allowed to be removed by the statemachine runner. So it could happen that the statemachine runner and the line below `self.zk.forceUnlockNode(node)` could be trying to delete the node at the same time, which leads to the exception mentioned in the description of this change.",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dbf544a_64977f36",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "As discussed elsewhere, it\u0027s only after line 328 that the launcher will remove it.",
+      "parentUuid": "fe2d9263_924e368e",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "541efeff_c6cf430f",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "This is one of two lines that can possibly cause our internal state to get out of sync with ZK.\n\nIf it succeeds in saving the state to ZK, but then raises an exception, the internal and zk states will still have the same values.  And we will still hold the lock, and we will not have removed the backing node.  So we\u0027ll try it again later.\n\nIf it fails before saving the state to ZK, then the node will have the \"IN_USE\" state in zk, but \"USED\" in memory.  They mean the same thing to nodepool, so it doesn\u0027t really matter.  The part about holding the lock and keeping the backing node applies to this too.\n\nSo this should be harmless.",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f8f5cc8_de78273d",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "If this fails in such a way that the node is deleted from ZK but raises an exception after that, then we may end up with a similar situation to the original error.\n\nInstead of checking the node state below (which is resource intensive), why don\u0027t we make this section robust against a nonexistent node.\n\nSo this whole section should read:\n\n```\n  node \u003d self._getNode(bnr.node_id)\n  if node:\n    node.state\u003dUSED\n    storeNode(node)\n    self.zk.forceUnlockNode(node) \n  backing_node_records.remove(bnr)\n```",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51fb601e_01b111fa",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-14T23:18:34Z",
+      "side": 1,
+      "message": "Rather than extra traffic to ZK that shouldn\u0027t be necessary, let\u0027s make the section above safe for missing nodes.",
       "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
