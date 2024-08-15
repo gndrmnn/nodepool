@@ -1444,7 +1444,8 @@ class TestDriverAws(tests.DBTestCase):
                 LaunchTemplateId=lt1['LaunchTemplateId'])[
                     'LaunchTemplateVersions'][0]
         lt1_data = lt1_version['LaunchTemplateData']
-        self.assertEqual(lt1_data['UserData'], 'some-command')
+        lt1_userdata = base64.b64decode(lt1_data['UserData']).decode()
+        self.assertEqual(lt1_userdata, 'some-command')
 
         # Get details from second launch template
         lt2_version = self.ec2_client.\
