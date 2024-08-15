@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a05baed3_c1a06fa7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-15T20:39:44Z",
+      "side": 1,
+      "message": "We need a new commit message.  Something like\n\nAdd a test for backing node deletion errors\n\nThis adds a test to confirm that if a backing node is externally\ndeleted, that the metastatic driver will eventually remove its\ninternal backing node record.",
+      "revId": "495e963dfd35a7d35705e465b56be2defe0f8d64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32cca8d2_209a12e3",
+        "filename": "nodepool/tests/__init__.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-15T20:39:44Z",
+      "side": 1,
+      "message": "This should be in the metastatic driver since it\u0027s the only thing that has a bnr.  I think you should just inline the contents of this method into that one test method.",
+      "revId": "495e963dfd35a7d35705e465b56be2defe0f8d64",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
