@@ -1709,7 +1709,9 @@ class AwsAdapter(statemachine.Adapter):
                 }
 
             if label.userdata:
-                template_data['UserData'] = label.userdata
+                userdata_base64 = base64.b64encode(
+                    label.userdata.encode('ascii')).decode('utf-8')
+                template_data['UserData'] = userdata_base64
 
             template_args = dict(
                 LaunchTemplateData=template_data,
