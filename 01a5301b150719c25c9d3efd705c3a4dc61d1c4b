@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6948be80_70e9dcac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33134
+      },
+      "writtenOn": "2024-08-15T12:45:03Z",
+      "side": 1,
+      "message": "I Updated the code accordingly in the latest patch set.",
+      "revId": "01a5301b150719c25c9d3efd705c3a4dc61d1c4b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
