@@ -1,0 +1,10 @@
+Code-Review+2: James E. Blair <jim@acmegating.com>
+Workflow+1: Simon Westphahl <simon.westphahl@bmw.de>
+Verified+2: Zuul
+Code-Review+2: Simon Westphahl <simon.westphahl@bmw.de>
+Submitted-by: Zuul
+Submitted-at: Mon, 19 Aug 2024 07:58:52 +0000
+Reviewed-on: https://review.opendev.org/c/zuul/nodepool/+/926411
+Comments-Total: 2
+Project: zuul/nodepool
+Branch: refs/heads/master
