@@ -294,6 +294,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b4cf069_088c0a69",
+        "filename": "nodepool/driver/metastatic/adapter.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1
+      },
+      "writtenOn": "2024-08-20T16:16:46Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "68d9cc02_20997848",
+      "revId": "9336a76f6348b7e07d7d98b8b6996d81ee8a478c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51fb601e_01b111fa",
