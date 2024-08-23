@@ -399,6 +399,8 @@ class KubernetesProvider(Provider, QuotaSupport):
             spec_body['schedulerName'] = label.scheduler_name
         if label.volumes:
             spec_body['volumes'] = label.volumes
+        if label.tolerations:
+            spec_body['tolerations'] = label.tolerations
 
         k8s_labels = self._getK8sLabels(label, node, pool, request)
         k8s_annotations = {}

@@ -457,6 +457,14 @@ Selecting the kubernetes driver adds the following options to the
             A map of key-value pairs to ensure the Kubernetes scheduler
             places the Pod on a node with specific node labels.
 
+         .. attr:: tolerations
+            :type: list
+
+            Only used by the
+            :value:`providers.[kubernetes].pools.labels.type.pod` label type;
+            A list of objects to indicate what node taints the pods can
+            tolerate.
+
          .. attr:: scheduler-name
             :type: str
 

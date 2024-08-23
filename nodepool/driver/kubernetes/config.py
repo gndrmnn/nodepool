@@ -87,6 +87,7 @@ class KubernetesPool(ConfigPool):
             pl.gpu_resource = label.get('gpu-resource')
             pl.env = label.get('env', [])
             pl.node_selector = label.get('node-selector')
+            pl.tolerations = label.get('tolerations')
             pl.privileged = label.get('privileged')
             pl.scheduler_name = label.get('scheduler-name')
             pl.volumes = label.get('volumes')

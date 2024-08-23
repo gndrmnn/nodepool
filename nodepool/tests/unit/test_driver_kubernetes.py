@@ -219,6 +219,9 @@ class TestDriverKubernetes(tests.DBTestCase):
                 }],
             }],
             'nodeSelector': {'storageType': 'ssd'},
+            'tolerations': [
+                    {'key': 'example-key', 'operator': 'Exists', 'effect': 'NoSchedule'}
+            ],
             'schedulerName': 'myscheduler',
             'volumes': [{
                 'csi': {'driver': 'inline.storage.kubernetes.io'},
