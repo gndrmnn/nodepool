@@ -1,0 +1,5 @@
+---
+features:
+  - The pool configuration for the Kubernetes driver now accepts a `tolerations` attribute
+    that can specify the required tolerations for the POD node type. This will allow to have
+    Kubernetes nodes dedicated to CI workloads while scheduling other system pods elsewhere.
