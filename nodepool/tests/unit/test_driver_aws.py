@@ -762,6 +762,8 @@ class TestDriverAws(tests.DBTestCase):
         self.assertNotIn({"Key": "Name", "Value": "ignored-name"}, tag_list)
         self.assertIn(
             {"Key": "dynamic-tenant", "Value": "Tenant is tenant-1"}, tag_list)
+        self.assertIn(
+            {"Key": "tenant-name", "Value": "my-tenant"}, tag_list)
 
     def test_aws_min_ready(self):
         # Test dynamic tag formatting without a real node request
@@ -780,6 +782,8 @@ class TestDriverAws(tests.DBTestCase):
         self.assertNotIn({"Key": "Name", "Value": "ignored-name"}, tag_list)
         self.assertIn(
             {"Key": "dynamic-tenant", "Value": "Tenant is None"}, tag_list)
+        self.assertIn(
+            {"Key": "tenant-name", "Value": "my-tenant"}, tag_list)
 
     def test_aws_shell_type(self):
         req = self.requestNode('aws/shell-type.yaml',

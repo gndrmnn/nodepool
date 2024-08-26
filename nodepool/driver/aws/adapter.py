@@ -338,10 +338,12 @@ class AwsCreateStateMachine(statemachine.StateMachine):
         self.metadata = metadata
         self.tags = label.tags.copy() or {}
         for k, v in label.dynamic_tags.items():
-            try:
-                self.tags[k] = v.format(request=request.getSafeAttributes())
-            except Exception:
-                self.log.exception("Error formatting tag %s", k)
+            if k not in self.tags.keys():
+                try:
+                    self.tags[k] = v.format(
+                        request=request.getSafeAttributes())
+                except Exception:
+                    self.log.exception("Error formatting tag %s", k)
         self.tags.update(metadata)
         self.tags['Name'] = hostname
         self.hostname = hostname

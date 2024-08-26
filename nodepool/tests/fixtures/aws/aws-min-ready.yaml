@@ -40,8 +40,10 @@ providers:
             tags:
               has-tags: true
               Name: ignored-name
+              tenant-name: my-tenant
             dynamic-tags:
               # Note: we double the braces to deal with unit-test
               # pre-processing of this file.  The output and actual
               # file syntax is single braces.
               dynamic-tenant: "Tenant is {{request.tenant_name}}"
+              tenant-name: "{{request.tenant_name}}"
