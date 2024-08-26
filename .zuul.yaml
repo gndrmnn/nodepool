@@ -256,10 +256,7 @@
       jobs:
         - opendev-buildset-registry
         - nodepool-build-image
-        - zuul-nox-docs:
-            vars:
-              nox_force_python: "3.11"
-              python_version: "3.11"
+        - zuul-nox-docs
         - nox-linters:
             nodeset: ubuntu-jammy
         - nodepool-nox-py311
@@ -272,10 +269,7 @@
     gate:
       jobs:
         - nodepool-upload-image
-        - zuul-nox-docs:
-            vars:
-              nox_force_python: "3.11"
-              python_version: "3.11"
+        - zuul-nox-docs
         - nox-linters:
             nodeset: ubuntu-jammy
         - nodepool-nox-py311
