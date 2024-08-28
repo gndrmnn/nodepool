@@ -21,6 +21,7 @@ import fixtures
 import testtools
 
 from nodepool import tests
+from nodepool.nodeutils import iterate_timeout
 from nodepool.zk import zookeeper as zk
 from nodepool.driver.statemachine import StateMachineProvider
 import nodepool.driver.statemachine
@@ -416,3 +417,54 @@ class TestDriverMetastatic(tests.DBTestCase):
         nodes = self._getNodes()
         self.assertEqual(len(nodes), 4)
         self.assertNotEqual(bn1.id, node3.driver_data['backing_node'])
+
+    def test_metastatic_invalid_node_state(self):
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+
+        pool_worker = pool.getPoolWorkers('meta-provider')[0]
+        pool_config = pool_worker.getPoolConfig()
+        self.assertEqual(pool_config.max_servers, 10)
+        self.assertEqual(pool_config.priority, 1)
+
+        manager.adapter._client.create_image(name='fake-image')
+
+        node = self._requestNode()
+        nodes = self._getNodes()
+        self.assertEqual(len(nodes), 2)
+        bn = nodes[1]
+
+        meta_manager = pool.getProviderManager('meta-provider')
+        self.assertEqual(
+            len(meta_manager.adapter.backing_node_records['user-label']), 1)
+        bnr = meta_manager.adapter.backing_node_records['user-label'][0]
+
+        # Simulate the case that the backing node is deleted but bnr not
+        bn.state = zk.DELETING
+        self.zk.storeNode(bn)
+        self.zk.forceUnlockNode(bn)
+        self.waitForNodeDeletion(bn)
+        self.assertEqual(
+            len(meta_manager.adapter.backing_node_records['user-label']), 1)
+
+        # Delete the node, this should also deallocate the slot in bnr
+        node.state = zk.DELETING
+        self.zk.storeNode(node)
+        self.waitForNodeDeletion(node)
+
+        # The bnr should be deleted after grace time
+        for _ in iterate_timeout(60, Exception,
+                                 "Backing node record deletion",
+                                 interval=1):
+            exists = False
+            for _bnr in meta_manager.adapter.backing_node_records[
+                    'user-label']:
+                if _bnr == bnr:
+                    exists = True
+                    break
+            if not exists:
+                break
+        self.assertEqual(
+            len(meta_manager.adapter.backing_node_records['user-label']), 0)
