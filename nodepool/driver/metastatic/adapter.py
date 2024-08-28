@@ -321,10 +321,18 @@ class MetastaticAdapter(statemachine.Adapter):
                         self.log.info("Backing node %s has been idle for "
                                       "%s seconds, releasing",
                                       bnr.node_id, now - bnr.last_used)
+                        # Set the bnr to failed just in case something
+                        # goes wrong after this point, we won't use it
+                        # any more.
+                        bnr.failed = True
                         node = self._getNode(bnr.node_id)
-                        node.state = zk.USED
-                        self.zk.storeNode(node)
-                        self.zk.forceUnlockNode(node)
+                        if node:
+                            # In case the node was already removed due
+                            # to an error, allow the bnr to still be
+                            # cleaned up.
+                            node.state = zk.USED
+                            self.zk.storeNode(node)
+                            self.zk.forceUnlockNode(node)
                         backing_node_records.remove(bnr)
         return []
 
