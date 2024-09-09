@@ -326,6 +326,11 @@ class PoolWorker(threading.Thread, stats.StatsReporter):
         for r in self.request_handlers:
             log = get_annotated_logger(self.log, event_id=r.request.event_id,
                                        node_request_id=r.request.id)
+            if (not r.request.lock) or (not r.request.lock.is_still_valid()):
+                log.error("Removing request handler (lost zookeeper lock)")
+                if r.request.lock:
+                    self.zk.unlockNodeRequest(r.request)
+                continue
             try:
                 if not r.poll():
                     active_handlers.append(r)
@@ -609,7 +614,6 @@ class CleanupWorker(BaseCleanupWorker):
         :param NodeRequest req: The lost NodeRequest object.
         '''
         # Double check the state after the lock
-        req = zk_conn.getNodeRequest(req.id)
         if req.state != zk.PENDING:
             return
 
@@ -618,7 +622,10 @@ class CleanupWorker(BaseCleanupWorker):
         for node in zk_conn.nodeIterator():
             if node.allocated_to == req.id:
                 try:
-                    zk_conn.lockNode(node)
+                    # We use a timeout here just in case another
+                    # thread in this process is dealing with the node.
+                    # We'll try again later.
+                    zk_conn.lockNode(node, timeout=30)
                 except exceptions.ZKLockException:
                     log.warning(
                         "Unable to grab lock to deallocate node %s from "

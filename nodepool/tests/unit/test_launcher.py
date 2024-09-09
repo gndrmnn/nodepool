@@ -20,6 +20,7 @@ import fixtures
 import mock
 import socket
 import testtools
+import threading
 
 from nodepool import tests
 import nodepool.exceptions
@@ -2208,6 +2209,46 @@ class TestLauncher(tests.DBTestCase):
         # Any znodes created for the request should eventually get deleted.
         while self.zk.countPoolNodes('fake-provider', 'main'):
             time.sleep(0)
+
+    def test_launchNode_session_lost(self):
+        '''
+        Test ZK session lost during launch().
+        '''
+
+        # use a config with min-ready of 0
+        configfile = self.setup_config('node_launch_retry.yaml')
+        self.useBuilder(configfile)
+        self.waitForImage('fake-provider', 'fake-image')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        pool.cleanup_interval = 5
+        self.startPool(pool)
+
+        event = threading.Event()
+
+        # This forces a ZK connection loss (the session is lost)
+        # during a node launch.
+        def disconnect():
+            self.log.debug("Test induced ZK disconnection")
+            pool.zk.client.client.stop()
+            pool.zk.client.client.start()
+            event.set()
+
+        with mock.patch('nodepool.driver.statemachine.'
+                        'StateMachineNodeLauncher.launch') as mock_launch:
+            mock_launch.side_effect = disconnect
+
+            req = zk.NodeRequest()
+            req.state = zk.REQUESTED
+            req.node_types.append('fake-label')
+            self.zk.storeNodeRequest(req)
+            event.wait()
+
+        # The wait above ensures we've gone through at least one
+        # failed attempt.  After that, the request should be reset and
+        # it should succeed.
+        req = self.waitForNodeRequest(req)
+        self.assertEqual(req.state, zk.FULFILLED)
+        self.assertEqual(len(req.nodes), 1)
 
     @mock.patch('nodepool.driver.statemachine.'
                 'StateMachineProvider.invalidateQuotaCache')

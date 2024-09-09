@@ -22,7 +22,6 @@ import uuid
 import re
 
 from kazoo import exceptions as kze
-from kazoo.recipe.lock import Lock
 from kazoo.recipe.election import Election
 from kazoo.protocol.states import (
     EventType,
@@ -32,8 +31,9 @@ from kazoo.protocol.states import (
 
 from nodepool import exceptions as npe
 from nodepool.logconfig import get_annotated_logger
-from nodepool.zk.components import COMPONENT_REGISTRY
 from nodepool.zk import ZooKeeperBase
+from nodepool.zk.components import COMPONENT_REGISTRY
+from nodepool.zk.locks import SessionAwareLock
 from nodepool.zk.vendor.states import AddWatchMode
 from nodepool.nodeutils import Attributes
 
@@ -1385,7 +1385,7 @@ class ZooKeeper(ZooKeeperBase):
     def _getImageBuildLock(self, image, blocking=True, timeout=None):
         lock_path = self._imageBuildLockPath(image)
         try:
-            lock = Lock(self.kazoo_client, lock_path)
+            lock = SessionAwareLock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -1405,7 +1405,7 @@ class ZooKeeper(ZooKeeperBase):
                              blocking=True, timeout=None):
         lock_path = self._imageBuildIdLockPath(image, build_id)
         try:
-            lock = Lock(self.kazoo_client, lock_path)
+            lock = SessionAwareLock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -1427,7 +1427,7 @@ class ZooKeeper(ZooKeeperBase):
         lock_path = self._imageUploadNumberLockPath(image, build_id,
                                                     provider, upload_number)
         try:
-            lock = Lock(self.kazoo_client, lock_path)
+            lock = SessionAwareLock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -1449,7 +1449,7 @@ class ZooKeeper(ZooKeeperBase):
                             blocking=True, timeout=None):
         lock_path = self._imageUploadLockPath(image, build_id, provider)
         try:
-            lock = Lock(self.kazoo_client, lock_path)
+            lock = SessionAwareLock(self.kazoo_client, lock_path)
             have_lock = lock.acquire(blocking, timeout)
         except kze.LockTimeout:
             raise npe.TimeoutException(
@@ -2402,7 +2402,7 @@ class ZooKeeper(ZooKeeperBase):
             raise npe.ZKLockException("Did not get thread lock on %s" % path)
         try:
             try:
-                lock = Lock(self.kazoo_client, path)
+                lock = SessionAwareLock(self.kazoo_client, path)
                 have_lock = lock.acquire(blocking, timeout)
             except kze.LockTimeout:
                 raise npe.TimeoutException(
@@ -2437,12 +2437,17 @@ class ZooKeeper(ZooKeeperBase):
 
         :raises: ZKLockException if the request is not currently locked.
         '''
-        if request.lock is None:
-            raise npe.ZKLockException(
-                "Request %s does not hold a lock" % request)
-        request.lock.release()
-        request.lock = None
-        request._thread_lock.release()
+        try:
+            if request.lock is None:
+                raise npe.ZKLockException(
+                    "Request %s does not hold a lock" % request)
+            request.lock.release()
+            request.lock = None
+        finally:
+            try:
+                request._thread_lock.release()
+            except RuntimeError:
+                pass
 
     def lockNode(self, node, blocking=True, timeout=None,
                  ephemeral=True, identifier=None):
@@ -2480,7 +2485,7 @@ class ZooKeeper(ZooKeeperBase):
             raise npe.ZKLockException("Did not get thread lock on %s" % path)
         try:
             try:
-                lock = Lock(self.kazoo_client, path, identifier)
+                lock = SessionAwareLock(self.kazoo_client, path, identifier)
                 have_lock = lock.acquire(blocking, timeout, ephemeral)
             except kze.LockTimeout:
                 raise npe.TimeoutException(
@@ -2523,11 +2528,18 @@ class ZooKeeper(ZooKeeperBase):
 
         :raises: ZKLockException if the node is not currently locked.
         '''
-        if node.lock is None:
-            raise npe.ZKLockException("Node %s does not hold a lock" % node)
-        node.lock.release()
-        node.lock = None
-        node._thread_lock.release()
+        try:
+            if node.lock is None:
+                raise npe.ZKLockException("Node %s does not hold a lock" %
+                                          node)
+            node.lock.release()
+            node.lock = None
+            node._thread_lock.release()
+        finally:
+            try:
+                node._thread_lock.release()
+            except RuntimeError:
+                pass
 
     contenders_re = re.compile(r'^.*?(\d{10})$')
 
@@ -2573,7 +2585,7 @@ class ZooKeeper(ZooKeeperBase):
         Return the contenders for a node lock.
         '''
         path = self._nodeLockPath(node.id)
-        lock = Lock(self.kazoo_client, path)
+        lock = SessionAwareLock(self.kazoo_client, path)
         return lock.contenders()
 
     def getNodes(self):

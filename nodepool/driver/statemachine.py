@@ -764,6 +764,16 @@ class StateMachineProvider(Provider, QuotaSupport):
                     node_id = None
                     if sm.node:
                         node_id = sm.node.id
+                        if ((not sm.node.lock) or
+                            (not sm.node.lock.is_still_valid())):
+                            self.log.error(
+                                f"Removing {create_or_delete} state machine "
+                                f"for {node_id} from runner "
+                                "(lost zookeeper lock)")
+                            to_remove.append(sm)
+                            if sm.node.lock:
+                                self._zk.unlockNode(sm.node)
+                            continue
                     sm.runStateMachine()
                     if sm.complete:
                         self.log.debug(
