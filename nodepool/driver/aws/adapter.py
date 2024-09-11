@@ -1833,13 +1833,42 @@ class AwsAdapter(statemachine.Adapter):
 
             instance_id = resp['Instances'][0]['InstanceIds'][0]
 
-            describe_instances_result = self.ec2_client.describe_instances(
-                InstanceIds=[instance_id]
-            )
-            log.debug("Created VM %s as instance %s using EC2 Fleet API",
-                      hostname, instance_id)
+            # We have the ID, but the instance may not be ready yet
+            backoff_time = 1
+            while backoff_time < 300:
+                try:
+                    describe_instances_result = (
+                        self.ec2_client.describe_instances(
+                            InstanceIds=[instance_id]))
+                except botocore.exceptions.ClientError as error:
+                    if (error.response['Error']['Code'] ==
+                        'InvalidInstanceID.NotFound'):
+                        # Wait before retry
+                        backoff_time *= 2
+                        log.debug("Exception while describing instant %s "
+                                  "retiring in %d s", instance_id,
+                                  backoff_time)
+                        time.sleep(backoff_time)
+                        continue
+                    # Raise all other exceptions
+                    raise
 
-            return describe_instances_result['Reservations'][0]['Instances'][0]
+                # Sometimes the instance list is empty
+                if not describe_instances_result['Reservations']:
+                    backoff_time *= 2
+                    log.debug("Empty result list for instant %s retiring in "
+                              "%d s", instance_id, backoff_time)
+                    time.sleep(backoff_time)
+                    continue
+
+                log.debug("Created VM %s as instance %s using EC2 Fleet API",
+                          hostname, instance_id)
+                return describe_instances_result['Reservations'][0][
+                    'Instances'][0]
+            else:
+                raise Exception(
+                    "Couldn't get instance details with describe_instances"
+                    "for %s", instance_id)
 
     def _runInstance(self, label, image_id, tags, hostname,
                      dedicated_host_id, log):

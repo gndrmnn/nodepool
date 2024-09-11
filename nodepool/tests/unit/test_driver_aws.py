@@ -98,6 +98,8 @@ class FakeAwsAdapter(AwsAdapter):
             self.__testcase.fake_aws.import_image
         self.ec2_client.get_paginator_orig = self.ec2_client.get_paginator
         self.ec2_client.get_paginator = _fake_get_paginator
+        self.ec2_client.describe_instances = \
+            self.__testcase.fake_aws.describe_instances
 
         # moto does not mock service-quotas, so we do it ourselves:
         def _fake_get_service_quota(ServiceCode, QuotaCode, *args, **kwargs):
@@ -1503,6 +1505,12 @@ class TestDriverAws(tests.DBTestCase):
         self.assertEqual(len(lt_2nd_run), 2)
 
     def test_aws_create_fleet_on_demand(self):
+        # This simulates that the instance is not propagated in all systems.
+        # This triggers a retry while we wait for the full instance details
+        # with describe_instance. We fake describe_instances so that it returns
+        # errors until the count is 0
+        self.fake_aws.fail_describe_instances = 3
+
         req = self.requestNode('aws/aws-fleet.yaml', 'ubuntu1404-on-demand')
         node = self.assertSuccess(req)
 

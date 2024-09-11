@@ -142,6 +142,7 @@ class FakeAws:
         self.ec2 = boto3.resource('ec2', region_name='us-west-2')
         self.ec2_client = boto3.client('ec2', region_name='us-west-2')
         self.fail_import_count = 0
+        self.fail_describe_instances = 0
 
     def import_snapshot(self, *args, **kw):
         while self.fail_import_count:
@@ -228,6 +229,19 @@ class FakeAws:
         if name == 'describe_import_snapshot_tasks':
             return ImportSnapshotTaskPaginator(self)
         raise NotImplementedError()
+
+    def describe_instances(self, *args, **kw):
+        # Only when instances is given
+        if kw.get('InstanceIds'):
+            while self.fail_describe_instances:
+                self.fail_describe_instances -= 1
+                # As last error we return empty instance list
+                if self.fail_describe_instances == 0:
+                    return {'Reservations': []}
+                raise botocore.exceptions.ClientError(
+                    {'Error': {'Code': 'InvalidInstanceID.NotFound'}},
+                    'DescribeInstances')
+        return self.ec2_client.describe_instances(*args, **kw)
 
     def _listAmis(self):
         return list(self.ec2.images.filter())
