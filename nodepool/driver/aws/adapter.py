@@ -1833,13 +1833,14 @@ class AwsAdapter(statemachine.Adapter):
 
             instance_id = resp['Instances'][0]['InstanceIds'][0]
 
-            describe_instances_result = self.ec2_client.describe_instances(
-                InstanceIds=[instance_id]
-            )
             log.debug("Created VM %s as instance %s using EC2 Fleet API",
                       hostname, instance_id)
 
-            return describe_instances_result['Reservations'][0]['Instances'][0]
+            # Only return instance id in creating state, the state machine will
+            # refresh until the instance object is returned otherwise it can
+            # happen that the instance does not exist yet due to the AWS
+            # eventual consistency
+            return {'InstanceId': instance_id, 'State': {'Name': 'creating'}}
 
     def _runInstance(self, label, image_id, tags, hostname,
                      dedicated_host_id, log):
