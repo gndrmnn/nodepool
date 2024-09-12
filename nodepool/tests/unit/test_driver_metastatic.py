@@ -23,6 +23,7 @@ import testtools
 from nodepool import tests
 from nodepool.nodeutils import iterate_timeout
 from nodepool.zk import zookeeper as zk
+from nodepool.driver.metastatic.adapter import MetastaticInstance
 from nodepool.driver.statemachine import StateMachineProvider
 import nodepool.driver.statemachine
 from nodepool.cmd.config_validator import ConfigValidator
@@ -162,6 +163,19 @@ class TestDriverMetastatic(tests.DBTestCase):
         self.waitForNodeDeletion(bn1)
         nodes = self._getNodes()
         self.assertEqual(nodes, [node3, bn2])
+
+    def test_metastatic_mod_label(self):
+        configfile = self.setup_config('metastatic.yaml')
+        pool = self.useNodepool(configfile, watermark_sleep=1)
+        self.startPool(pool)
+        manager = pool.getProviderManager('fake-provider')
+        manager.adapter._client.create_image(name="fake-image")
+
+        # Request a node, verify that there is a backing node, and it
+        # has the same connection info
+        node = self._requestNode()
+        test_node = MetastaticInstance(backing_node=None, slot=0, node=node)
+        self.assertEqual(test_node.label_mods["metastatic"], True)
 
     def test_metastatic_startup(self):
         configfile = self.setup_config('metastatic.yaml')

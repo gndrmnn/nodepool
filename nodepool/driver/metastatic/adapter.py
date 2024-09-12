@@ -137,6 +137,7 @@ class MetastaticInstance(statemachine.Instance):
         }
         self.external_id = node.id
         self.slot = slot
+        self.label_mods.update({"metastatic": True})
 
     def getQuotaInformation(self):
         return QuotaInformation(instances=1)
