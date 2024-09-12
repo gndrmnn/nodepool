@@ -1097,6 +1097,7 @@ class TestZKModel(tests.BaseTestCase):
         o.hold_job = 'hold job'
         o.host_keys = ['key1', 'key2']
         o.attributes = {'executor-zone': 'vpn'}
+        o.instance_properties = {}
 
         d = o.toDict()
         self.assertNotIn('id', d)
@@ -1120,6 +1121,7 @@ class TestZKModel(tests.BaseTestCase):
         self.assertEqual(d['hold_job'], o.hold_job)
         self.assertEqual(d['host_keys'], o.host_keys)
         self.assertEqual(d['attributes'], o.attributes)
+        self.assertEqual(d['instance_properties'], o.instance_properties)
 
     def test_Node_fromDict(self):
         now = int(time.time())
