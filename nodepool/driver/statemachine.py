@@ -165,6 +165,7 @@ class StateMachineNodeLauncher(stats.StatsReporter):
         node.az = instance.az
         node.driver_data = instance.driver_data
         node.slot = instance.slot
+        node.label_mods = instance.label_mods
 
         # If we did not know the resource information before
         # launching, update it now.
@@ -1052,6 +1053,10 @@ class Instance:
         self.metadata = {}
         self.driver_data = None
         self.slot = None
+        # TODO: Figure out better naming for container?
+        # Holds flags coming from label(s) that modify the node request,
+        # such as `spot` instance for AWS, `fleet` API or a metastatic node
+        self.label_mods = {}
 
     def __repr__(self):
         state = []

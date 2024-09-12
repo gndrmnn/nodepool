@@ -223,7 +223,7 @@ GIB = 1024 ** 3
 
 
 class AwsInstance(statemachine.Instance):
-    def __init__(self, provider, instance, host, quota):
+    def __init__(self, provider, instance, host, quota, label=None):
         super().__init__()
         self.external_id = dict()
         if instance:
@@ -248,6 +248,9 @@ class AwsInstance(statemachine.Instance):
                 self.public_ipv6 = v6addr.get('Ipv6Address')
         self.interface_ip = (self.public_ipv4 or self.public_ipv6 or
                              self.private_ipv4 or self.private_ipv6)
+        if label:
+            self.label_mods["spot"] = label.use_spot
+            self.label_mods["fleet"] = label.fleet
 
     def getQuotaInformation(self):
         return self.quota
@@ -420,8 +423,11 @@ class AwsCreateStateMachine(statemachine.StateMachine):
             self.complete = True
             self.quota = self.adapter._getQuotaForLabel(
                 self.label, self.instance['InstanceType'])
-            return AwsInstance(self.adapter.provider, self.instance,
-                               self.host, self.quota)
+            )
+            return AwsInstance(
+                self.adapter.provider, self.instance, self.host, self.quota,
+                self.label
+            )
 
 
 class EBSSnapshotUploader(ImageUploader):
