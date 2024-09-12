@@ -16,6 +16,24 @@
       "message": "This method is intended to be very fast; it runs in a threadpool executor with limited resources, so if we sleep at all, we will consume one of those slots and reduce the overall throughput for node creation.\n\nLet\u0027s take a different approach:\n\nInstead of returning an instance object here, return a synthetic instance object, like:\n\n  return {\u0027InstanceId\u0027: instance_id}\n\nThe state machine will automatically refresh that until it receives a real instance object with a state attribute.\n\nThat means this method will return even more quickly than it does now, resulting in better overall throughput.\n\n(Another implication is that the earliest state update that can happen will be after the next periodic instance list.  That means that in the exceptionally unlikely case that the instance becomes \"running\" instantaneously, we will wait an extra 0-10 seconds before we recognize that.  In practice, instances are never instantaneously available, so this will have no effect, so we can disregard that.)",
       "revId": "8252e981e4adacb6c420d51610e61573e61a6f1b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b39fed5_538ba41c",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 28088
+      },
+      "writtenOn": "2024-09-12T11:10:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ec79e61_6d9e2421",
+      "revId": "8252e981e4adacb6c420d51610e61573e61a6f1b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
