@@ -742,12 +742,29 @@ class TestDriverAws(tests.DBTestCase):
         instance['InstanceType'] = 'test'
         provider = Dummy()
         provider.region_name = 'us-west-2'
-        awsi = AwsInstance(provider, instance, None, None)
+        awsi = AwsInstance(provider, instance, None, None, None)
         self.assertEqual(awsi.public_ipv4, '1.2.3.4')
         self.assertEqual(awsi.private_ipv4, '10.0.0.1')
         self.assertEqual(awsi.public_ipv6, 'fe80::dead:beef')
         self.assertIsNone(awsi.private_ipv6)
         self.assertEqual(awsi.public_ipv4, awsi.interface_ip)
+
+    def test_aws_instance_properties(self):
+        # In the scope of the test, no parameters related to the AWS Instance
+        # is relevant. No need to set any parameters.
+        # Mock the AWS response with an empty dict.
+        instance = {}
+
+        provider = Dummy()
+        provider.region_name = 'us-west-2'
+
+        label = Dummy()
+        label.use_spot = True
+        label.fleet = "fleet_flag"
+
+        awsi = AwsInstance(provider, instance, None, None, label)
+        self.assertEqual(awsi.instance_properties["spot"], True)
+        self.assertEqual(awsi.instance_properties["fleet"], "fleet_flag")
 
     def test_aws_tags(self):
         req = self.requestNode('aws/aws.yaml', 'ubuntu1404-with-tags')
