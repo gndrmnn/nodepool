@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28d2e57e_80c74bc0",
+        "filename": "nodepool/driver/aws/adapter.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-09-16T13:58:24Z",
+      "side": 1,
+      "message": "nit: Can we make that a mandatory parameter?",
+      "revId": "fa6a31a1cb62e1579c1064960c9e750a8a7fca5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "309f51e2_22c8eee5",
+        "filename": "nodepool/driver/statemachine.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-09-16T13:58:24Z",
+      "side": 1,
+      "message": "Maybe `instance_properties`?",
+      "range": {
+        "startLine": 1059,
+        "startChar": 13,
+        "endLine": 1059,
+        "endChar": 23
+      },
+      "revId": "fa6a31a1cb62e1579c1064960c9e750a8a7fca5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f4001f7_79bc8b20",
+        "filename": "nodepool/zk/zookeeper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 27582
+      },
+      "writtenOn": "2024-09-16T13:58:24Z",
+      "side": 1,
+      "message": "I think we should also add/extend a test to make sure this is correctly serialized to Zookeeper as this will be part of the Zuul-Nodepool API.",
+      "revId": "fa6a31a1cb62e1579c1064960c9e750a8a7fca5f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
