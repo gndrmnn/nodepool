@@ -92,6 +92,20 @@
         dest: /etc/nodepool/docker-compose.yaml
         mode: 0600
 
+    - name: Change git repo ownership
+      # Git doesn't want to perform actions against local git repos owned
+      # by a user other than the one invoking the git commands for security
+      # reasons. We run podman-compose below as root which should run the
+      # builder as root. Therefore we need to chown the git repos to root
+      # so that we can use them as the source of information for the builds.
+      file:
+        path: /home/zuul/src/
+        state: directory
+        owner: 'root'
+        group: 'root'
+        recurse: true
+      become: yes
+
     - name: Run podman compose pull
       shell:
         cmd: podman-compose pull
