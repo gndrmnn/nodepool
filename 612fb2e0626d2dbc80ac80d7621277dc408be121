@@ -33,6 +33,23 @@
       "message": "recheck failure is pretty surely unrelated, failing for a couple of weeks. our logging seems to be not too helpful though, holding a node for debugging",
       "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0b4b9ad_656a01a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-09-17T16:06:05Z",
+      "side": 1,
+      "message": "recheck autohold is in place to debug the functional k8s job.",
+      "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
