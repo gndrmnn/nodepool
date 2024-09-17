@@ -16,6 +16,23 @@
       "message": "I think we\u0027re seeing this because of the bookworm update to the job, which must bring in the new git that enforces the ownership.\n\nThis LGTM but not too excited to debug the microk8s issue which seems unrelated",
       "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "081fe633_33f6fabf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 13252
+      },
+      "writtenOn": "2024-09-17T05:11:42Z",
+      "side": 1,
+      "message": "recheck failure is pretty surely unrelated, failing for a couple of weeks. our logging seems to be not too helpful though, holding a node for debugging",
+      "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
