@@ -50,6 +50,23 @@
       "message": "recheck autohold is in place to debug the functional k8s job.",
       "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65b5a00f_c1245979",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4146
+      },
+      "writtenOn": "2024-09-17T17:50:09Z",
+      "side": 1,
+      "message": "recheck k8s job should be fixed now",
+      "revId": "612fb2e0626d2dbc80ac80d7621277dc408be121",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
