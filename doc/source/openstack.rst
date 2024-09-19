@@ -670,6 +670,13 @@ Selecting the OpenStack driver adds the following options to the
            When booting an image from volume, how big should the
            created volume be.
 
+        .. attr:: volume-type
+           :type: string
+           :default: None
+
+           When booting an image from volume, what should be the backing
+           volume type.
+
         .. attr:: instance-properties
            :type: dict
            :default: None

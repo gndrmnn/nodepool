@@ -66,6 +66,7 @@ class ProviderLabel(ConfigValue):
         self.console_log = False
         self.boot_from_volume = False
         self.volume_size = None
+        self.volume_type = None
         self.instance_properties = None
         self.userdata = None
         self.networks = []
@@ -149,6 +150,7 @@ class ProviderPool(ConfigPool):
             pl.boot_from_volume = bool(label.get('boot-from-volume',
                                                  False))
             pl.volume_size = label.get('volume-size', 50)
+            pl.volume_type = label.get('volume-type', None)
             pl.instance_properties = label.get('instance-properties',
                                                {})
             pl.dynamic_instance_properties = label.get(
@@ -296,6 +298,7 @@ class OpenStackProviderConfig(ProviderConfig):
             'console-log': bool,
             'boot-from-volume': bool,
             'volume-size': int,
+            'volume-type': str,
             'instance-properties': dict,
             'dynamic-instance-properties': dict,
             'userdata': str,

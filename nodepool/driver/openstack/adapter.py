@@ -313,6 +313,7 @@ class OpenStackCreateStateMachine(statemachine.StateMachine):
                 security_groups=self.label.pool.security_groups,
                 boot_from_volume=self.label.boot_from_volume,
                 volume_size=self.label.volume_size,
+                volume_type=self.label.volume_type,
                 instance_properties=self.metadata,
                 userdata=self.label.userdata)
             self.state = self.SERVER_CREATING_SUBMIT
@@ -608,7 +609,8 @@ class OpenStackAdapter(statemachine.Adapter):
                       az=None, key_name=None, config_drive=True,
                       networks=None, security_groups=None,
                       boot_from_volume=False, volume_size=50,
-                      instance_properties=None, userdata=None):
+                      volume_type=None, instance_properties=None,
+                      userdata=None):
         if not networks:
             networks = []
         if not isinstance(image, dict):
@@ -621,7 +623,19 @@ class OpenStackAdapter(statemachine.Adapter):
                            config_drive=config_drive)
         if boot_from_volume:
             create_args['boot_from_volume'] = boot_from_volume
-            create_args['volume_size'] = volume_size
+
+            if not volume_type:
+                # Let openstack create a volume
+                create_args['volume_size'] = volume_size
+            else:
+                # Since a volume_type was specified, create the volume manually
+                with Timer(self.log, 'API call create_volume'):
+                    volume = self._client.block_storage.create_volume(
+                        size=volume_size,
+                        volume_type=volume_type,
+                    )
+                create_args['boot_volume'] = volume.id
+
             # NOTE(pabelanger): Always cleanup volumes when we delete a server.
             create_args['terminate_volume'] = True
         if key_name:
