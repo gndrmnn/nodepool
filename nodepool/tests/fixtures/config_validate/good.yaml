@@ -64,6 +64,7 @@ providers:
             min-ram: 8192
             boot-from-volume: True
             volume-size: 100
+            volume-type: ssd
             instance-properties:
               a_key: a_value
               b_key: b_value
